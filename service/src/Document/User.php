@@ -139,6 +139,8 @@ class User
     /** @ODM\Hash */
     protected $locationSettings = array(
 
+        'status' => 'on',
+
         'friends' => array(
             'permitted_users' => array(),
             'permitted_circles' => array(),

@@ -34,7 +34,7 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function location($with)
+    public function location()
     {
         $data     = $this->request->request->all();
         $settings = $this->user->getLocationSettings();
@@ -45,6 +45,12 @@ class Settings extends Base
 
         $this->user->setLocationSettings($data);
         $settings = $this->user->getLocationSettings();
+
+        if ($settings['status'] == 'off') {
+            $this->user->setVisible(false);
+        } else {
+            $this->user->setVisible(true);
+        }
 
         return $this->persistAndReturn($settings);
     }
@@ -170,7 +176,6 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function accountSettings()
     {
         $data = $this->request->request->all();
