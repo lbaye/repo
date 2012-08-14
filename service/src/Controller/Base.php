@@ -93,4 +93,27 @@ abstract class Base
             exit;
         }
     }
+
+    protected function _filterByPermission($documents)
+    {
+        $permittedDocs = array();
+
+        foreach($documents as $doc) {
+            if($doc->isPermittedFor($this->user)) {
+                $permittedDocs[] = $doc;
+            }
+        }
+
+        return $permittedDocs;
+    }
+
+    protected function _toArrayAll(array $results)
+    {
+        $gatheringItems = array();
+        foreach ($results as $place) {
+            $gatheringItems[] = $place->toArray();
+        }
+
+        return $gatheringItems;
+    }
 }

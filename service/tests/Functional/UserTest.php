@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 class UserTest extends \PHPUnit_Framework_TestCase
 {
     protected $endpoint;
-    protected $headers = array('Auth-Token' => '6d16c898c3e9184cf35e65854376685a7f7092a5');
+    protected $headers = array('Auth-Token' => '6d16c898c3e9184cf35e65854376685a7f7USER1');
 
     public function setUp()
     {
