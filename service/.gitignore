@@ -1,0 +1,7 @@
+app/cache
+tests/log
+vendor
+composer.phar
+.idea
+.nbproject
+.svn

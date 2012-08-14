@@ -1,0 +1,4 @@
+search_all:
+  pattern: /search
+  defaults: { _controller: Controller\Search::all }
+  requirements: { _method: POST }

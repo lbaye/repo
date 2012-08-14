@@ -1,0 +1,34 @@
+all_places:
+  pattern: /places
+  defaults: { _controller: Controller\Place::index }
+  requirements: { _method: GET }
+
+a_place:
+  pattern:  /places/{id}
+  defaults: { _controller: Controller\Place::getById }
+  requirements: { _method: GET }
+
+places_of_user:
+  pattern:  /users/{userId}/places
+  defaults: { _controller: Controller\Place::getByUser }
+  requirements: { _method: GET }
+
+my_places:
+  pattern:  /me/places
+  defaults: { _controller: Controller\Place::getByCurrentUser }
+  requirements: { _method: GET }
+
+new_place:
+  pattern:  /places
+  defaults: { _controller: Controller\Place::create }
+  requirements: { _method: POST }
+
+edit_place:
+  pattern:  /places/{id}
+  defaults: { _controller: Controller\Place::update }
+  requirements: { _method: PUT }
+
+delete_place:
+  pattern:  /places/{id}
+  defaults: { _controller: Controller\Place::delete }
+  requirements: { _method: DELETE }

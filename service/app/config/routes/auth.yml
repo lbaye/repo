@@ -1,0 +1,34 @@
+user_registration:
+  pattern: /auth/registration
+  defaults: { _controller: Controller\Auth::create }
+  requirements: { _method: POST }
+
+user_login:
+  pattern: /auth/login
+  defaults: { _controller: Controller\Auth::login }
+  requirements: { _method: POST }
+
+fb_login:
+  pattern: /auth/login/fb
+  defaults: { _controller: Controller\Auth::fbLogin }
+  requirements: { _method: POST }
+
+forget_password:
+  pattern: /auth/forgot_pass/{email}
+  defaults: { _controller: Controller\Auth::getPassword }
+  requirements: { _method: GET }
+
+reset_password:
+  pattern: /auth/reset_pass
+  defaults: { _controller: Controller\Auth::resetPassword }
+  requirements: { _method: POST }
+
+check_password_token:
+  pattern: /auth/pass/token/{passwordToken}
+  defaults: { _controller: Controller\Auth::confirmPassToken }
+  requirements: { _method: GET }
+
+change_password:
+  pattern: /auth/change_pass
+  defaults: { _controller: Controller\Auth::changePassword }
+  requirements: { _method: PUT }

@@ -1,0 +1,24 @@
+create_message:
+  pattern: /messages/
+  defaults: { _controller: Controller\Messages::create }
+  requirements: { _method: POST }
+
+create_message2:
+  pattern: /messages
+  defaults: { _controller: Controller\Messages::create }
+  requirements: { _method: POST }
+
+sent_messages:
+  pattern: /messages/sent
+  defaults: { _controller: Controller\Messages::getByCurrentUser }
+  requirements: { _method: GET }
+
+delete_message:
+  pattern:  /messages/{id}
+  defaults: { _controller: Controller\Messages::delete }
+  requirements: { _method: DELETE }
+
+inbox_messages:
+  pattern: /messages/inbox
+  defaults: { _controller: Controller\Messages::getInbox }
+  requirements: { _method: GET }

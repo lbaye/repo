@@ -1,0 +1,9 @@
+all_venues:
+  pattern: /venues
+  defaults: { _controller: Controller\Venue::index }
+  requirements: { _method: GET }
+
+a_venue:
+  pattern:  /venues/{id}
+  defaults: { _controller: Controller\Venue::getById }
+  requirements: { _method: GET }

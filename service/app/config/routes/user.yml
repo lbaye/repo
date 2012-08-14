@@ -1,0 +1,54 @@
+current_user:
+  pattern: /me
+  defaults: { _controller: Controller\User::getCurrentUser }
+  requirements: { _method: GET }
+
+all_users:
+  pattern: /users
+  defaults: { _controller: Controller\User::get }
+  requirements: { _method: GET }
+
+user_by_id:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::getById }
+  requirements: { _method: GET }
+
+user_by_email:
+  pattern:  /users/email/{email}
+  defaults: { _controller: Controller\User::getByEmail }
+  requirements: { _method: GET }
+
+new_user:
+  pattern:  /users
+  defaults: { _controller: Controller\User::create }
+  requirements: { _method: POST }
+
+edit_user:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::update }
+  requirements: { _method: PUT }
+
+delete_user:
+  pattern:  /users/{id}
+  defaults: { _controller: Controller\User::delete }
+  requirements: { _method: DELETE }
+
+create_circle:
+  pattern: /me/circles
+  defaults: { _controller: Controller\User::addCircle}
+  requirements: { _method: POST}
+
+get_circles:
+  pattern: /me/circles
+  defaults: { _controller: Controller\User::getCircles}
+  requirements: { _method: GET}
+
+block_user:
+  pattern: /users/block/{id}
+  defaults: { _controller: Controller\User::blockUser}
+  requirements: { _method: PUT}
+
+list:
+  pattern: /list
+  defaults: { _controller: Controller\AllList::index}
+  requirements: { _method: GET}

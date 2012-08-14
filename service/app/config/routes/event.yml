@@ -1,0 +1,35 @@
+all_events:
+  pattern: /events
+  defaults: { _controller: Controller\Gathering::index, type: event }
+  requirements: { _method: GET }
+
+a_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::getById, type: event }
+  requirements: { _method: GET }
+
+
+events_of_user:
+  pattern:  /users/{user}/events
+  defaults: { _controller: Controller\Gathering::getByUser, type: event }
+  requirements: { _method: GET }
+
+my_events:
+  pattern:  /me/events
+  defaults: { _controller: Controller\Gathering::getByCurrentUser, type: event  }
+  requirements: { _method: GET }
+
+new_event:
+  pattern:  /events
+  defaults: { _controller: Controller\Gathering::create, type: event }
+  requirements: { _method: POST }
+
+edit_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::update, type: event }
+  requirements: { _method: PUT }
+
+delete_event:
+  pattern:  /events/{id}
+  defaults: { _controller: Controller\Gathering::delete, type: event }
+  requirements: { _method: DELETE }

@@ -1,0 +1,31 @@
+mongodb:
+  host: '127.0.0.1'
+  port: 27017
+  database: 'socialmaps'
+
+gearman:
+  host: '127.0.0.1'
+  port: 4730
+
+solruser:
+  host: '127.0.0.1'
+  port: 8080
+  path: '/solr/user'
+
+solrplace:
+  host: '127.0.0.1'
+  port: 8080
+  path: '/solr/place'
+
+solrdeal:
+  host: '127.0.0.1'
+  port: 8080
+  path: '/solr/deal'
+
+swiftmailer:
+    transport:  smtp
+    encryption: ssl
+    auth_mode:  login
+    host:       smtp.gmail.com
+    username:   salayhin@rightbrainsolution.com
+    password:   shawon4742

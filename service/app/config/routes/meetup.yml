@@ -1,0 +1,36 @@
+
+all_meetups:
+  pattern: /meetups
+  defaults: { _controller: Controller\Gathering::index, type: meetup }
+  requirements: { _method: GET }
+
+a_meetup:
+  pattern:  /meetups/{id}
+  defaults: { _controller: Controller\Gathering::getById, type: meetup  }
+  requirements: { _method: GET }
+
+
+meetups_of_user:
+  pattern:  /users/{user}/meetups
+  defaults: { _controller: Controller\Gathering::getByUser, type: meetup }
+  requirements: { _method: GET }
+
+my_meetups:
+  pattern:  /me/meetups
+  defaults: { _controller: Controller\Gathering::getByCurrentUser, type: meetup  }
+  requirements: { _method: GET }
+
+new_meetup:
+  pattern:  /meetups
+  defaults: { _controller: Controller\Gathering::create, type: meetup }
+  requirements: { _method: POST }
+
+edit_meetup:
+  pattern:  /meetups/{id}
+  defaults: { _controller: Controller\Gathering::update, type: meetup  }
+  requirements: { _method: PUT }
+
+delete_meetup:
+  pattern:  /meetups/{id}
+  defaults: { _controller: Controller\Gathering::delete, type: meetup  }
+  requirements: { _method: DELETE }

@@ -1,0 +1,14 @@
+send_friend_requests:
+  pattern: /request/friend/{friendId}
+  defaults: { _controller: Controller\User::sendFriendRequest}
+  requirements: { _method: POST}
+
+get_friend_requests:
+  pattern: /request/friend
+  defaults: { _controller: Controller\User::getFriendRequest}
+  requirements: { _method: GET}
+
+accept_friend_requests:
+  pattern: /request/friend/{friendId}/accept
+  defaults: { _controller: Controller\User::acceptFriendRequest, response: "accept" }
+  requirements: { _method: PUT}

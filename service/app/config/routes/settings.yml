@@ -1,0 +1,44 @@
+notification_settings:
+  pattern: /settings/notifications
+  defaults: { _controller: Controller\Settings::notifications}
+  requirements: { _method: PUT|GET }
+
+platform_settings:
+  pattern: /settings/platforms
+  defaults: { _controller: Controller\Settings::platforms}
+  requirements: { _method: PUT|GET}
+
+layers_settings:
+  pattern: /settings/layers
+  defaults: { _controller: Controller\Settings::layers}
+  requirements: { _method: PUT|GET}
+
+account_settings:
+  pattern: /settings/account_settings
+  defaults: { _controller: Controller\Settings::accountSettings}
+  requirements: { _method: PUT|GET}
+
+sharing_preference_settings:
+  pattern: /settings/sharing_preference_settings
+  defaults: { _controller: Controller\Settings::sharingPreference}
+  requirements: { _method: PUT|GET}
+
+current_location:
+  pattern: /current-location
+  defaults: { _controller: Controller\Settings::currentLocation}
+  requirements: { _method: PUT|GET}
+
+location_sharing:
+  pattern: /settings/share/location/{with}
+  defaults: { _controller: Controller\Settings::location}
+  requirements: { _method: PUT}
+
+geo_fence_settings:
+  pattern: /settings/geo_fence
+  defaults: { _controller: Controller\Settings::geoFence}
+  requirements: { _method: PUT|GET}
+
+all_settings:
+  pattern: /settings/all
+  defaults: { _controller: Controller\Settings::getAll }
+  requirements: { _method: GET }
