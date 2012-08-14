@@ -8,7 +8,12 @@ use Respect\Validation\Validator;
 /**
  * @ODM\Document(collection="messages",repositoryClass="Repository\Message")
  */
-class Message {
+class Message
+{
+    # Define status constants
+    const STATUS_READ = 'read';
+    const STATUS_UNREAD = 'unread';
+
     /** @ODM\Id */
     protected $id;
 
@@ -24,6 +29,9 @@ class Message {
     /** @ODM\ReferenceOne(targetDocument="Message", simple=true) */
     protected $thread;
 
+    /** @ODM\ReferenceMany(targetDocument="Message", simple=true) */
+    protected $replies = array();
+
     /** @ODM\Hash */
     protected $recipients;
 
@@ -33,10 +41,15 @@ class Message {
     /** @ODM\Date */
     protected $updateDate;
 
-    public function toArray() {
+    /** @ODM\String */
+    protected $status = self::STATUS_UNREAD;
+
+    public function toArray()
+    {
         $fieldsToExpose = array(
-            'id', 'subject', 'content', 'sender',
-            'recipients', 'createDate', 'updateDate', 'thread');
+            'id', 'subject', 'content', 'sender', 'recipients', 'createDate',
+            'updateDate', 'status'
+        );
 
         $result = array();
 
@@ -44,10 +57,23 @@ class Message {
             $result[$field] = $this->{"get{$field}"}();
         }
 
+        # Add object and list of objects
+        if (!empty($this->thread))
+            $result['thread'] = $this->thread->toArray();
+        else
+            $result['thread'] = null;
+
+        if ($this->replies->count() > 0) {
+            $result['replies'] = $this->toArrayOfArrays($this->getReplies());
+        } else {
+            $result['replies'] = array();
+        }
+
         return $result;
     }
 
-    public function isValid() {
+    public function isValid()
+    {
         try {
             if (empty($this->thread)) {
                 Validator::create()->notEmpty()->assert($this->getSubject());
@@ -63,69 +89,123 @@ class Message {
         return true;
     }
 
-    public function setContent($content) {
+    public function setContent($content)
+    {
         $this->content = $content;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         return $this->content;
     }
 
-    public function setCreateDate($createDate) {
+    public function setCreateDate($createDate)
+    {
         $this->createDate = $createDate;
     }
 
-    public function getCreateDate() {
+    public function getCreateDate()
+    {
         return $this->createDate;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setRecipients($recipients) {
+    public function setRecipients($recipients)
+    {
         $this->recipients = $recipients;
     }
 
-    public function getRecipients() {
+    public function getRecipients()
+    {
         return $this->recipients;
     }
 
-    public function setSender($sender) {
+    public function setSender($sender)
+    {
         $this->sender = $sender;
     }
 
-    public function getSender() {
+    public function getSender()
+    {
         return $this->sender;
     }
 
-    public function setSubject($subject) {
+    public function setSubject($subject)
+    {
         $this->subject = $subject;
     }
 
-    public function getSubject() {
+    public function getSubject()
+    {
         return $this->subject;
     }
 
-    public function setUpdateDate($updateDate) {
+    public function setUpdateDate($updateDate)
+    {
         $this->updateDate = $updateDate;
     }
 
-    public function getUpdateDate() {
+    public function getUpdateDate()
+    {
         return $this->updateDate;
     }
 
-    public function setThread($thread) {
+    public function setThread($thread)
+    {
         $this->thread = $thread;
     }
 
-    public function getThread() {
+    public function getThread()
+    {
         return $this->thread;
     }
 
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setReplies($replies)
+    {
+        $this->replies = $replies;
+    }
+
+    public function getReplies()
+    {
+        return $this->replies;
+    }
+
+    private function toArrayOfArrays(\Doctrine\ODM\MongoDB\PersistentCollection $collection)
+    {
+        $replies = array();
+        $iterator = $collection->getIterator();
+        foreach ($iterator as $key => $value) {
+            $reply = array(
+                'id' => $value->getId(),
+                'subject' => $value->getSubject(),
+                'content' => $value->getContent(),
+                'sender' => $value->getSender(),
+                'createDate' => $value->getCreateDate(),
+                'updateDate' => $value->getUpdateDate()
+            );
+            $replies[] = $reply;
+        }
+
+        return $replies;
+    }
 
 }
