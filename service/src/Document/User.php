@@ -138,7 +138,19 @@ class User
 
     /** @ODM\Hash */
     protected $locationSettings = array(
-        'friends' => true, 'strangers' => true, 'max_time' => 60, // in minutes
+
+        'friends' => array(
+            'permitted_users' => array(),
+            'permitted_circles' => array(),
+            'duration' => 0,
+            'radius' => 2
+        ),
+
+        'strangers' => array(
+            'duration' => 0,
+            'radius' => 2
+        )
+
     );
 
     /** @ODM\Hash */
@@ -159,12 +171,14 @@ class User
 
     /** @ODM\Hash */
     protected $notificationSettings = array(
-        'friend_requests'  => array('sm' => true, 'mail' => true),
-        'posts_by_friends' => array('sm' => true, 'mail' => true),
-        'comments'         => array('sm' => true, 'mail' => true),
-        'messages'         => array('sm' => true, 'mail' => true),
-        'proximity_alerts' => array('sm' => true, 'mail' => true),
-        'recommendations'  => array('sm' => true, 'mail' => true),
+        'friend_requests'       => array('sm' => true, 'mail' => true),
+        'posts_by_friends'      => array('sm' => true, 'mail' => true),
+        'comments'              => array('sm' => true, 'mail' => true),
+        'messages'              => array('sm' => true, 'mail' => true),
+        'recommendations'       => array('sm' => true, 'mail' => true),
+        'proximity_alerts'      => array('sm' => true, 'mail' => true),
+        'offline_notifications' => array('sm' => true, 'mail' => true),
+        'proximity_radius'      => 0
     );
 
     /** @ODM\Hash */
@@ -186,34 +200,27 @@ class User
 
     /** @var array */
     public $defaultSettings = array(
-        'unit' => 'meter' //meter,feet,yards
+        'unit' => 'meter'
     );
 
-    /** @ODM\Hash */
+    /**
+     * @ODM\Hash
+     *
+     * Possible options: all, friends, none, circles
+     */
     protected $sharingPreferenceSettings = array(
-
-        // Possible options: all, friends, none, circles
-        'profile_information' => array(
-            'firstName'          => 'all',
-            'lastName'           => 'all',
-            'email'              => 'all',
-            'dateOfBirth'        => 'all',
-            'bio'                => 'all',
-            'interests'          => 'all',
-            'workStatus'         => 'all',
-            'relationshipStatus' => 'all',
-            'address'            => 'all',
-            'friendRequest'      => 'all',
-            'circles'            => 'all'
-        ),
-
-        'newsfeed' => array(
-            'friends' => true,
-            'strangers' => true,
-            'public' => true,
-            'family' => true
-        ),
-
+        'firstName'          => 'all',
+        'lastName'           => 'all',
+        'email'              => 'all',
+        'dateOfBirth'        => 'all',
+        'bio'                => 'all',
+        'interests'          => 'all',
+        'workStatus'         => 'all',
+        'relationshipStatus' => 'all',
+        'address'            => 'all',
+        'friendRequest'      => 'all',
+        'circles'            => 'all',
+        'newsfeed'           => 'all'
     );
 
     public function isValid()

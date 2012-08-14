@@ -28,7 +28,7 @@ class Settings extends Base
     }
 
     /**
-     * PUT /settings/share/location/{with}
+     * PUT /settings/share/location
      *
      * @param $with
      *
@@ -36,49 +36,17 @@ class Settings extends Base
      */
     public function location($with)
     {
-        if (!in_array($with, array('friends', 'strangers'))) {
+        $data     = $this->request->request->all();
+        $settings = $this->user->getLocationSettings();
 
-            $this->response->setContent(json_encode(array('result' => 'Nothing to set for ' . $with)));
-            $this->response->setStatusCode(404);
-
-            return $this->response;
-
-        } else {
-
-            $data     = $this->request->request->all();
-            $settings = $this->user->getLocationSettings();
-
-            if (empty($data['enabled'])) {
-
-                $settings[$with] = false;
-
-            } elseif ($data['enabled'] == '1') {
-
-                $settings[$with] = true;
-
-                if (isset($data['users'])) {
-                    // @TODO: check if real users
-                    // $users = $this->userRepository->getAllByIds(explode(',', $data['users']));
-
-                    $settings['permitted_users'] = explode(',', $data['users']);
-//                    foreach($users as $user) {
-//                        $settings['permitted_users'][] = $user->getId();
-//                    }
-//                    \Doctrine\Common\Util\Debug::dump($settings, 3); die;
-                }
-
-                if (isset($data['circles'])) {
-                    $settings['permitted_circles'] = explode(',', $data['circles']);
-                }
-
-                if (isset($data['max_time'])) {
-                    $settings['max_time'] = intval($data['max_time']);
-                }
-            }
-
-            $this->user->setLocationSettings($settings);
-            return $this->persistAndReturn($settings);
+        if ($this->request->getMethod() == 'GET') {
+            return $this->returnResponse($settings);
         }
+
+        $this->user->setLocationSettings($data);
+        $settings = $this->user->getLocationSettings();
+
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -127,13 +95,22 @@ class Settings extends Base
 
         foreach ($options as $opt) {
 
-            if (isset($data[$opt . '_sm'])) {
-                $settings[$opt]['sm'] = (boolean)$data[$opt . '_sm'];
+            if ($opt != 'proximity_radius') {
+
+                if (isset($data[$opt . '_sm'])) {
+                    $settings[$opt]['sm'] = (boolean) $data[$opt . '_sm'];
+                }
+
+                if (isset($data[$opt . '_mail'])) {
+                    $settings[$opt]['mail'] = (boolean) $data[$opt . '_mail'];
+                }
+
+            } else {
+
+                $settings[$opt] = $data[$opt];
+
             }
 
-            if (isset($data[$opt . '_mail'])) {
-                $settings[$opt]['mail'] = (boolean)$data[$opt . '_mail'];
-            }
         }
 
         $this->user->setNotificationSettings($settings);
