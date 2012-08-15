@@ -27,5 +27,6 @@ swiftmailer:
     encryption: ssl
     auth_mode:  login
     host:       smtp.gmail.com
-    username:   salayhin@rightbrainsolution.com
-    password:   shawon4742
+    port:       587
+    username:   test@socialmaps.com
+    password:   123456

@@ -117,15 +117,24 @@ abstract class Content
 
     public function isPermittedFor(\Document\User $user)
     {
-        if($this->getPermission() == 'public') {
+        if($this->getPermission() == 'public' || $this->getOwner() == $user) {
             return true;
         } else if($this->getPermission() == 'private') {
-            return ($this->getOwner() == $user);
-        } else {
-            return in_array($user->getId(), $this->getPermittedUsers());
-            // Todo : Check if in permitted circles
+            return false;
+        } else if($this->getPermittedUsers() && in_array($user->getId(), $this->getPermittedUsers())) {
+            return true;
+        } else if($permittedCircles = $this->getPermittedCircles()) {
+            $circleUsers = array();
+
+            foreach($this->getOwner()->getCircles() as $circle) {
+                if(in_array($circle->getId(), $permittedCircles)){
+                    $circleUsers = array_merge($circleUsers, $circle->getFriends());
+                }
+            }
+            return in_array($user->getId(), $circleUsers);
         }
-        return true;
+
+        return false;
     }
 
     public function share($type, array $users = null, array $circles = null)

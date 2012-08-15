@@ -37,6 +37,7 @@ class Gathering extends Base
     /**
      * GET /meetups
      * GET /events
+     * GET /plans
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -50,7 +51,9 @@ class Gathering extends Base
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
 
         if (!empty($gatheringObjs)) {
-            $this->response->setContent(json_encode($gatheringObjs));
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+
+            $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
             $this->response->setStatusCode(200);
         } else {
             $this->response->setContent(json_encode(array('message' => 'No meetups found')));

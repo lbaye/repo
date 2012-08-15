@@ -35,7 +35,6 @@ class Search extends Base
 
         $results['people'] = $this->people($data);
         $results['places'] = $this->places($data);
-        $results['deals']  = $this->deals($data);
 
         $this->response->setContent(json_encode($results));
         $this->response->setStatusCode(200);
@@ -43,14 +42,12 @@ class Search extends Base
         return $this->response;
     }
 
-    /** TODO: Finalize people search */
     protected function people($data)
     {
-        $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
+        $location = array('lat' => (float) $data['lat'], 'lng' => (float) $data['lng']);
         $keywords = $data['keyword'];
 
         $people = $this->userRepository->search($keywords, $location);
-
         return $people;
     }
 

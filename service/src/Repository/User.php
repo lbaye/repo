@@ -702,16 +702,17 @@ class User extends DocumentRepository
 
     public function search($keyword = null, $location = array(), $limit = 20)
     {
-        $users = $this->createQueryBuilder()
-        //->field('firstName')->equals(new \MongoRegex('/^' . $keyword . '/'))
-        //->field('lastName')->equals(new \MongoRegex('/^' . $keyword . '/'))
-            ->field('currentLocation.lat')->near($location['lat'])
-            ->field('currentLocation.lng')->near($location['lng'])
+        $query = $this->createQueryBuilder()
+            ->field('currentLocation.latitude')->near($location['lat'])
+            ->field('currentLocation.longitude')->near($location['lng'])
             ->field('id')->notIn($this->currentUser->getBlockedBy())
             ->field('visible')->equals(true)
-            ->limit($limit)
-            ->getQuery()
-            ->execute();
+            ->limit($limit);
+
+        $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+        $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+
+        $users = $query->getQuery()->execute();
 
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }

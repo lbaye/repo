@@ -28,51 +28,31 @@ class Settings extends Base
     }
 
     /**
-     * PUT /settings/share/location/{with}
+     * PUT /settings/share/location
      *
      * @param $with
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function location($with)
+    public function location()
     {
-        if (!in_array($with, array('friends', 'strangers'))) {
+        $data     = $this->request->request->all();
+        $settings = $this->user->getLocationSettings();
 
-            $this->response->setContent(json_encode(array('result' => 'Nothing to set for ' . $with)));
-            $this->response->setStatusCode(404);
-
-            return $this->response;
-        } else {
-
-            $data = $this->request->request->all();
-            $settings = $this->user->getLocationSettings();
-
-            if (empty($data['enabled'])) {
-                $settings[$with] = false;
-            } elseif ($data['enabled'] == '1') {
-                $settings[$with] = true;
-                if (isset($data['users'])) {
-                    // @TODO: check if real users
-                    // $users = $this->userRepository->getAllByIds(explode(',', $data['users']));
-
-                    $settings['permitted_users'] = explode(',', $data['users']);
-//                    foreach($users as $user) {
-//                        $settings['permitted_users'][] = $user->getId();
-//                    }
-//                    \Doctrine\Common\Util\Debug::dump($settings, 3); die;
-                }
-                if (isset($data['circles'])) {
-                    $settings['permitted_circles'] = explode(',', $data['circles']);
-                }
-                if (isset($data['max_time'])) {
-                    $settings['max_time'] = intval($data['max_time']);
-                }
-            }
-
-            $this->user->setLocationSettings($settings);
-            return $this->_persistAndReturn($settings);
+        if ($this->request->getMethod() == 'GET') {
+            return $this->returnResponse($settings);
         }
 
+        $this->user->setLocationSettings($data);
+        $settings = $this->user->getLocationSettings();
+
+        if ($settings['status'] == 'off') {
+            $this->user->setVisible(false);
+        } else {
+            $this->user->setVisible(true);
+        }
+
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -82,11 +62,11 @@ class Settings extends Base
      */
     public function geoFence()
     {
-        $data = $this->request->request->all();
+        $data     = $this->request->request->all();
         $settings = $this->user->getGeoFence();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($settings);
+            return $this->returnResponse($settings);
         }
 
         if (isset($data['lat'])) {
@@ -100,7 +80,7 @@ class Settings extends Base
         $this->user->setGeoFence($settings);
         $this->_updateVisibility($this->user);
 
-        return $this->_persistAndReturn($settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -110,22 +90,37 @@ class Settings extends Base
      */
     public function notifications()
     {
-        $data = $this->request->request->all();
+        $data     = $this->request->request->all();
         $settings = $this->user->getNotificationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($settings);
+            return $this->returnResponse($settings);
         }
-        ;
 
         $options = array_keys($settings);
+
         foreach ($options as $opt) {
-            if (isset($data[$opt . '_sm'])) $settings[$opt]['sm'] = (boolean)$data[$opt . '_sm'];
-            if (isset($data[$opt . '_mail'])) $settings[$opt]['mail'] = (boolean)$data[$opt . '_mail'];
+
+            if ($opt != 'proximity_radius') {
+
+                if (isset($data[$opt . '_sm'])) {
+                    $settings[$opt]['sm'] = (boolean) $data[$opt . '_sm'];
+                }
+
+                if (isset($data[$opt . '_mail'])) {
+                    $settings[$opt]['mail'] = (boolean) $data[$opt . '_mail'];
+                }
+
+            } else {
+
+                $settings[$opt] = $data[$opt];
+
+            }
+
         }
 
         $this->user->setNotificationSettings($settings);
-        return $this->_persistAndReturn($settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -135,20 +130,21 @@ class Settings extends Base
      */
     public function platforms()
     {
-        $data = $this->request->request->all();
+        $data     = $this->request->request->all();
         $settings = $this->user->getPlatformSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($settings);
+            return $this->returnResponse($settings);
         }
 
         $options = array_keys($settings);
         foreach ($options as $opt) {
-            if (isset($data[$opt])) $settings[$opt] = (boolean)$data[$opt];
+            if (isset($data[$opt]))
+                $settings[$opt] = (boolean)$data[$opt];
         }
 
         $this->user->setPlatformSettings($settings);
-        return $this->_persistAndReturn($settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -158,20 +154,21 @@ class Settings extends Base
      */
     public function layers()
     {
-        $data = $this->request->request->all();
+        $data     = $this->request->request->all();
         $settings = $this->user->getLayersSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($settings);
+            return $this->returnResponse($settings);
         }
 
         $options = array_keys($settings);
         foreach ($options as $opt) {
-            if (isset($data[$opt])) $settings[$opt] = (boolean)$data[$opt];
+            if (isset($data[$opt]))
+                $settings[$opt] = (boolean)$data[$opt];
         }
 
         $this->user->setLayersSettings($settings);
-        return $this->_persistAndReturn($settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -179,23 +176,22 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function accountSettings()
     {
         $data = $this->request->request->all();
 
-        if ($this->request->getMethod() == 'GET')
-        {
-            return $this->_return($this->user->toArrayDetailed());
+        if ($this->request->getMethod() == 'GET') {
+            return $this->returnResponse($this->user->toArrayDetailed());
         }
 
         try {
 
             $user = $this->userRepository->updateAccountSettings($data);
-            if (!empty($data['avatar']))
-            {
-                $this->userRepository->saveAvatarImage($user->getId(),$data['avatar']);
+
+            if (!empty($data['avatar'])) {
+                $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
+
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
 
@@ -218,7 +214,6 @@ class Settings extends Base
         return $this->response;
     }
 
-
     /**
      * PUT /settings/sharing_preference_settings
      *
@@ -230,19 +225,13 @@ class Settings extends Base
         $settings = $this->user->getSharingPreferenceSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($settings);
+            return $this->returnResponse($settings);
         }
 
-        $options = array_keys($settings);
-        foreach ($options as $opt) {
-            if (isset($data[$opt . '_friends'])) $settings[$opt]['friends'] = (boolean)$data[$opt . '_friends'];
-            if (isset($data[$opt . '_strangers'])) $settings[$opt]['strangers'] = (boolean)$data[$opt . '_strangers'];
-            if (isset($data[$opt . '_public'])) $settings[$opt]['public'] = (boolean)$data[$opt . '_public'];
-            if (isset($data[$opt . '_family'])) $settings[$opt]['family'] = (boolean)$data[$opt . '_family'];
-        }
+        $this->user->setSharingPreferenceSettings($data);
+        $settings = $this->user->getSharingPreferenceSettings();
 
-        $this->user->getSharingPreferenceSettings($settings);
-        return $this->_persistAndReturn($settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -257,7 +246,7 @@ class Settings extends Base
         $location = $this->user->getCurrentLocation();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_return($location);
+            return $this->returnResponse($location);
         }
 
         if (array_key_exists('lat', $data) && array_key_exists('lng', $data)) {
@@ -268,7 +257,8 @@ class Settings extends Base
             $this->user->setCurrentLocation($location);
             $this->_updateVisibility($this->user);
 
-            return $this->_persistAndReturn($location);
+            return $this->persistAndReturn($location);
+
         } else {
 
             $this->response->setContent(json_encode(array('message' => 'Invalid location (lat and lng required)')));
@@ -297,15 +287,15 @@ class Settings extends Base
 
     }
 
-    private function _persistAndReturn($result)
+    private function persistAndReturn($result)
     {
         $this->dm->persist($this->user);
         $this->dm->flush();
 
-        return $this->_return($result);
+        return $this->returnResponse($result);
     }
 
-    private function _return($result)
+    private function returnResponse($result)
     {
         $this->response->setContent(json_encode(array('result' => $result)));
         $this->response->setStatusCode(200);
@@ -318,26 +308,27 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function getAll()
     {
-        $location           = $this->user->getLocationSettings();
-        $geoFence           = $this->user->getGeoFence();
-        $notification       = $this->user->getNotificationSettings();
-        $platform           = $this->user->getPlatformSettings();
-        $layers             = $this->user->getLayersSettings();
-        $account            = $this->user->toArrayDetailed();
-        $sharingPreference  = $this->user->getSharingPreferenceSettings();
-        $currentLocation    = $this->user->getCurrentLocation();
+        $location          = $this->user->getLocationSettings();
+        $geoFence          = $this->user->getGeoFence();
+        $notification      = $this->user->getNotificationSettings();
+        $platform          = $this->user->getPlatformSettings();
+        $layers            = $this->user->getLayersSettings();
+        $account           = $this->user->toArrayDetailed();
+        $sharingPreference = $this->user->getSharingPreferenceSettings();
+        $currentLocation   = $this->user->getCurrentLocation();
 
-        $this->response->setContent(json_encode(array('location'          => $location,
-                                                      'geoFence'          => $geoFence,
-                                                      'notification'      => $notification,
-                                                      'platform'         => $platform,
-                                                      'layers'            => $layers,
-                                                      'account'           => $account,
-                                                      'sharingPreference' => $sharingPreference,
-                                                      'currentLocation'   => $currentLocation )));
+        $this->response->setContent(json_encode(array(
+                                                    'location'          => $location,
+                                                    'geoFence'          => $geoFence,
+                                                    'notification'      => $notification,
+                                                    'platform'          => $platform,
+                                                    'layers'            => $layers,
+                                                    'account'           => $account,
+                                                    'sharingPreference' => $sharingPreference,
+                                                    'currentLocation'   => $currentLocation
+                                                )));
         $this->response->setStatusCode(200);
 
         return $this->response;

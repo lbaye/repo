@@ -22,7 +22,7 @@ class Gathering extends DocumentRepository
     public function getAll($limit = 20, $offset = 0)
     {
         $results = $this->findBy(array(), null, $limit, $offset);
-        return $this->_toArrayAll($results);
+        return $results;
     }
 
     public function insert($gatheringObj)
@@ -93,8 +93,8 @@ class Gathering extends DocumentRepository
             $users = $this->trimInvalidUsers($data['guests']);
             $gathering->setGuests($users);
         }
-        if(isset($data['sharing'])){
-            $gathering->share($data['sharing'], @$data['permittedUsers'], @$data['permittedCircles']);
+        if(isset($data['permission'])){
+            $gathering->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
         $gathering->setLocation(new \Document\Location($data));
