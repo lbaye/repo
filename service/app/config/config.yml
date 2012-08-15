@@ -23,10 +23,14 @@ solrdeal:
   path: '/solr/deal'
 
 swiftmailer:
-    transport:  smtp
-    encryption: ssl
-    auth_mode:  login
-    host:       smtp.gmail.com
-    port:       587
-    username:   test@socialmaps.com
-    password:   123456
+  transport:  smtp
+  encryption: ssl
+  auth_mode:  login
+  host:       smtp.gmail.com
+  port:       587
+  username:   test@socialmaps.com
+  password:   123456
+
+facebook:
+  appId: 197770310286117
+  secret: d31a93b130c927645f8f1a97d2bd66e9

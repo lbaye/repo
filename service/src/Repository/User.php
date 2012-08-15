@@ -2,25 +2,15 @@
 
 namespace Repository;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Repository\Base as BaseRepository;
 use Document\User as UserDocument;
 
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class User extends DocumentRepository
+class User extends BaseRepository
 {
-    /**
-     * @var UserDocument
-     */
-    private $currentUser;
-
-    public function setCurrentUser($user)
-    {
-        $this->currentUser = $user;
-    }
-
     public function validateLogin($data)
     {
         if (empty($data)) {
@@ -43,9 +33,7 @@ class User extends DocumentRepository
         }
 
         $user = $this->map($data);
-
         $user->setLastLogin(new \DateTime());
-
         $user = $this->findOneBy(array('facebookId' => $data['facebookId']));
 
         if (is_null($user)) {
@@ -53,8 +41,6 @@ class User extends DocumentRepository
         } else {
             return $user;
         }
-
-
     }
 
     public function getByEmail($email)
@@ -533,8 +519,8 @@ class User extends DocumentRepository
     private function _toArrayAll($results)
     {
         $users = array();
-        foreach ($results as $deal) {
-            $users[] = $deal->toArray();
+        foreach ($results as $user) {
+            $users[] = $user->toArray();
         }
 
         return $users;
@@ -717,4 +703,19 @@ class User extends DocumentRepository
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
+    public function getFacebookUsers($start = null, $limit = null)
+    {
+        $query = $this->createQueryBuilder()->field('facebookAuthToken')->exists(true);
+
+        if ($start != null) {
+            $query->skip($start);
+        }
+
+        if ($limit != null) {
+            $query->limit($limit);
+        }
+
+        $users = $query->getQuery()->execute();
+        return (count($users)) ? $users : array();
+    }
 }
