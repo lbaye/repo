@@ -48,9 +48,7 @@ public class LoginActivity extends Activity {
 	private Runnable requestRunnable, forgotpassRunnable;
 	private Handler mHandler;
 
-	String[] permissions = { "offline_access", "publish_stream", "user_photos",
-			"publish_checkins", "photo_upload","email" };
-	String tempURLString;
+		String tempURLString;
 	// Response responseObject;
 
 	String responseString = "";
@@ -96,7 +94,7 @@ public class LoginActivity extends Activity {
 		 * Source Tag: login_tag
 		 */
 		btnFBLogin.init(this, Constant.AUTHORIZE_ACTIVITY_RESULT_CODE,
-				FBUtility.mFacebook, permissions);
+				FBUtility.mFacebook, Constant.facebookPermissions);
 
 		if (FBUtility.mFacebook.isSessionValid()) {
 			Log.e("LoginActivity", "isSessionValid=true");
