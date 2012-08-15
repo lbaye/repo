@@ -66,19 +66,25 @@ class Gathering extends Base
     /**
      * GET /meetups/{id}
      * GET /events/{id}
+     * GET /plans/{id}
      *
-     * @param $id  meetup id
+     * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getById($id, $type)
     {
         $this->_initRepository($type);
-        $meetup = $this->gatheringRepository->find($id);
+        $gathering = $this->gatheringRepository->find($id);
 
-        if (null !== $meetup) {
-            $this->response->setContent(json_encode($meetup->toArray()));
-            $this->response->setStatusCode(200);
+        if (null !== $gathering) {
+            if($gathering->isPermittedFor($this->user)){
+                $this->response->setContent(json_encode($gathering->toArray()));
+                $this->response->setStatusCode(200);
+            } else {
+                $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));
+                $this->response->setStatusCode(403);
+            }
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);

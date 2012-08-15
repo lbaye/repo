@@ -51,6 +51,17 @@ class EventsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['lat'], $retrieved->location->lat);
     }
 
+    public function testEventAccessWillCheckPermission()
+    {
+        // Accessing User1's private Event
+        list($responseCodeForUser1, $responseBody) = sendGetRequest($this->endpoint .'/5020cb1c757df2ff12000000', array(), $this->user1Headers);
+        list($responseCodeForUser2, $responseBody) = sendGetRequest($this->endpoint .'/5020cb1c757df2ff12000000', array(), $this->user2Headers);
+
+        $this->assertEquals(200, $responseCodeForUser1);
+        $this->assertEquals(403, $responseCodeForUser2);
+
+    }
+
     public function testEventListing()
     {
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint, array(), $this->user1Headers);

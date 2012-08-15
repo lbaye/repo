@@ -4,8 +4,8 @@ function removeAll() {
 		if(names[i] == "system.indexes") continue;
 		
 		db[names[i]].dropIndexes();
-	    db[names[i]].remove({});
-	    //db[names[i]].drop();
+	    //db[names[i]].remove({});
+	    db[names[i]].drop();
     }
 }
 removeAll();

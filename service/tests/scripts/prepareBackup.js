@@ -536,7 +536,7 @@ db.getCollection("events").insert({
 /** meetup records **/
 db.getCollection("meetups").insert({
   "_id": ObjectId("5003e8bc757df2020d0f0000"),
-  "title": "Test Bradcrumb",
+  "title": "Test Meetup",
   "description": "A message here",
   "duration": "1 hour",
   "guests": [
@@ -557,6 +557,32 @@ db.getCollection("meetups").insert({
 });
 db.getCollection("meetups").insert({
   "_id": ObjectId("5003e8bc757df2020d0f0001"),
+  "title": "Another Test Meetup",
+  "description": "A message here",
+  "duration": "1 hour",
+  "guests": [
+    "5003e8bc757df2020d000006",
+    "5003e8bc757df2020d000000"
+  ],
+  "location": {
+    "lat": 90.5,
+    "lng": 80.87,
+    "title": "Test Meetup"
+  },
+  "time": ISODate("2012-08-09T20:20:00.0Z"),
+  "owner": ObjectId("5003e8bc757df2020d000006"),
+  "permission": "custom",
+  "permittedUsers": [
+    "5003e8bc757df2020d000000",
+    "5003dffe757df2010d000000"
+  ],
+  "permittedCircles": [
+    "5003e8bc757df2020d000001"
+  ],
+  "createDate": ISODate("2012-08-09T08:12:42.0Z")
+});
+db.getCollection("meetups").insert({
+  "_id": ObjectId("5003e8bc757df2020d0f0033"),
   "title": "Test Meetup",
   "description": "A message here",
   "duration": "1 hour",
@@ -570,15 +596,10 @@ db.getCollection("meetups").insert({
     "title": "Test Meetup"
   },
   "time": ISODate("2012-08-09T20:20:00.0Z"),
-  "owner": ObjectId("5003e8bc757df2020d000000"),
-  "permission": "custom",
-  "permittedUsers": [
-    "5003e8bc757df2020d000000",
-    "5003dffe757df2010d000000"
-  ],
-  "permittedCircles": [
-    "5003e8bc757df2020d000001"
-  ],
+  "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "private",
+  "permittedUsers": [],
+  "permittedCircles": [],
   "createDate": ISODate("2012-08-09T08:12:42.0Z")
 });
 
@@ -599,6 +620,21 @@ db.getCollection("plans").insert({
   "createDate": ISODate("2012-08-09T08:12:42.0Z")
 });
 db.getCollection("plans").insert({
+  "_id": ObjectId("5003e8bc757df2020d0f0068"),
+  "title": "Private Plan",
+  "location": {
+    "lat": 90.5,
+    "lng": 80.87,
+    "title": "Test Planned place"
+  },
+  "time": ISODate("2012-08-09T20:20:00.0Z"),
+  "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "private",
+  "permittedUsers": [],
+  "permittedCircles": [],
+  "createDate": ISODate("2012-08-09T08:12:42.0Z")
+});
+db.getCollection("plans").insert({
   "_id": ObjectId("5003e8bc757df2020d0f0061"),
   "title": "Test Plan 2",
   "location": {
@@ -607,7 +643,7 @@ db.getCollection("plans").insert({
     "title": "Test Plan 2"
   },
   "time": ISODate("2012-08-09T20:20:00.0Z"),
-  "owner": ObjectId("5003e8bc757df2020d000000"),
+  "owner": ObjectId("5003e8bc757df2020d000006"),
   "permission": "custom",
   "permittedUsers": [
     "5003e8bc757df2020d000000",

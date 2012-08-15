@@ -45,7 +45,8 @@ class VenueTest extends \PHPUnit_Framework_TestCase
 
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint, array(), $this->headers);
         $venues = json_decode($responseBody);
-        if(empty($venues)){
+
+        if($venues == null) {
             $this->markTestSkipped("Cannot test venues API without internet!");
         } else {
             $this->assertEquals(204, $responseCode);
