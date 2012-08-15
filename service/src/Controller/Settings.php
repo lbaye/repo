@@ -41,8 +41,8 @@ class Settings extends Base
             return $this->returnResponse($settings);
         }
 
-        $this->user->setLocationSettings($data);
-        $settings = $this->user->getLocationSettings();
+        $settings = array_merge($settings, $data);
+        $this->user->setLocationSettings($settings);
 
         if ($settings['status'] == 'off') {
             $this->user->setVisible(false);
