@@ -3,11 +3,6 @@ create_message:
   defaults: { _controller: Controller\Messages::create }
   requirements: { _method: POST }
 
-read_message:
-  pattern: /messages/{id}
-  defaults: { _controller: Controller\Messages::getById }
-  requirements: { _method: GET }
-
 create_message2:
   pattern: /messages
   defaults: { _controller: Controller\Messages::create }
@@ -17,11 +12,6 @@ sent_messages:
   pattern: /messages/sent
   defaults: { _controller: Controller\Messages::getByCurrentUser }
   requirements: { _method: GET }
-
-delete_message:
-  pattern:  /messages/{id}
-  defaults: { _controller: Controller\Messages::delete }
-  requirements: { _method: DELETE }
 
 inbox_messages:
   pattern: /messages/inbox
@@ -46,3 +36,13 @@ replies_since_message:
   defaults: { _controller: Controller\Messages::getRepliesByLastVisitedSince }
   requirements:
     _method: GET
+
+delete_message:
+  pattern:  /messages/{id}
+  defaults: { _controller: Controller\Messages::delete }
+  requirements: { _method: DELETE }
+
+read_message:
+  pattern: /messages/{id}
+  defaults: { _controller: Controller\Messages::getById }
+  requirements: { _method: GET }

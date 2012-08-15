@@ -141,7 +141,11 @@ class Messages extends Base
             # Find all replies since <specific date> and order them by create date
             $this->generateResponse(
                 $this->messageRepository->
-                        getRepliesSince($message, $since), 200);
+                        getRepliesSince($message, $since),
+                200,
+                array(
+                    'except' => array('replies', 'thread', 'recipients')
+                ));
 
         } catch (\Exception $e) {
             $this->generate500($e->getMessage());
@@ -165,13 +169,11 @@ class Messages extends Base
         return $this->response;
     }
 
-    private function generateResponse($hash, $code = 200)
+    private function generateResponse($hash, $code = 200, $options = array())
     {
         if (!empty($hash)) {
             $this->response->setContent(
-                $this->serializer->serialize($hash, array(
-                    'except' => array('thread', 'recipients', 'replies')
-                ))
+                $this->serializer->serialize($hash, $options)
             );
             $this->response->setStatusCode($code);
         } else {
