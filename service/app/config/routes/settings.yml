@@ -31,7 +31,7 @@ current_location:
 location_sharing:
   pattern: /settings/share/location
   defaults: { _controller: Controller\Settings::location }
-  requirements: { _method: PUT}
+  requirements: { _method: PUT|GET}
 
 geo_fence_settings:
   pattern: /settings/geo_fence
