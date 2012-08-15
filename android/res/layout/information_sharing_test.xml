@@ -1,0 +1,2250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/header"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="23dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_back"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_3" />
+
+        <Button
+            android:id="@+id/btnNotification"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bubble_count_icon"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/breadcrumbLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/layoutHeader"
+        android:background="@drawable/img_settings_header_bg"
+        android:gravity="center_vertical|left"
+        android:orientation="horizontal"
+        android:paddingLeft="15dip" >
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_settings" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:text="@string/informationSharing"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewBody"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/linearLayoutFoot"
+        android:layout_below="@+id/breadcrumbLayout"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#F7F7F7"
+            android:orientation="vertical" >
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/newsFeedContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/newsFeedValue"
+                my:exphandle="@+id/newsFeedExpand" >
+
+                <LinearLayout
+                    android:id="@id/newsFeedValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/newsFeedExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextNewsfeed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/newsfeedSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextNewsfeed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconNewsfeed"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:id="@+id/custom_radio_container_news_feed"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@android:color/transparent"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/profilePicContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/profilePicValue"
+                my:exphandle="@+id/profilePicExpand" >
+
+                <LinearLayout
+                    android:id="@id/profilePicValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/profilePicExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextProfilePic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ProfilePictureSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextProfilePic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconProfilePic"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+					<LinearLayout
+                        android:id="@+id/custom_radio_container_profil_pic"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@android:color/transparent"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                    
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/emailContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/emailValue"
+                my:exphandle="@+id/emailExpand" >
+
+                <LinearLayout
+                    android:id="@id/emailValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/emailExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/emailSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconEmail"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupEmail"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersEmail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyEmail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneEmail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyEmail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomEmail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/nameContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/nameValue"
+                my:exphandle="@+id/nameExpand" >
+
+                <LinearLayout
+                    android:id="@id/nameValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/nameExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nameSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconName"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupName"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/userNameContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/userNameValue"
+                my:exphandle="@+id/userNameExpand" >
+
+                <LinearLayout
+                    android:id="@id/userNameValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/userNameExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/usernameSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconUserName"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupUserName"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/genderContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/genderValue"
+                my:exphandle="@+id/genderExpand" >
+
+                <LinearLayout
+                    android:id="@id/genderValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/genderExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextGender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/genderSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextGender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconGender"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupGender"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/dobContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/dobValue"
+                my:exphandle="@+id/dobExpand" >
+
+                <LinearLayout
+                    android:id="@id/dobValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/dobExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextDob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dobSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextDob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconDob"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupDob"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersDob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyDob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneDob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyDob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomDob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/biographyContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/biographyValue"
+                my:exphandle="@+id/biographyExpand" >
+
+                <LinearLayout
+                    android:id="@id/biographyValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/biographyExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextBiography"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/biographySharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextBiography"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconBiography"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupBiography"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersBiography"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyBiography"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneBiography"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyBiography"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomBiography"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/interestsContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/interestsValue"
+                my:exphandle="@+id/interestsExpand" >
+
+                <LinearLayout
+                    android:id="@id/interestsValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/interestsExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextInterests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/interestsSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextInterests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconInterests"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupInterests"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersInterests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyInterests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneInterests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyInterests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomInterests"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/addressContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/addressValue"
+                my:exphandle="@+id/addressExpand" >
+
+                <LinearLayout
+                    android:id="@id/addressValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/addressExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/addressSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconAddress"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupAddress"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/serviceContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/serviceValue"
+                my:exphandle="@+id/serviceExpand" >
+
+                <LinearLayout
+                    android:id="@id/serviceValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/serviceExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextService"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/serviceSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextService"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconService"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupService"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomService"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/relationshipStatusContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/relationshipStatusValue"
+                my:exphandle="@+id/relationshipStatusExpand" >
+
+                <LinearLayout
+                    android:id="@id/relationshipStatusValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@id/relationshipStatusExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/toptextRelationshipStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/relationshipStatusSharingLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/bottomtextRelationshipStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/toggleIconRelationshipStatus"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center_vertical"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="35dp"
+                            android:layout_marginLeft="25dp"
+                            android:gravity="center_vertical" >
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="7dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="30dp"
+                                    android:background="#6B696B" />
+                            </LinearLayout>
+
+                            <RadioGroup
+                                android:id="@+id/radioGroupRelationshipStatus"
+                                android:layout_width="fill_parent"
+                                android:layout_height="35dp"
+                                android:layout_alignParentTop="true"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <RadioButton
+                                    android:id="@+id/radioAllUsersRelationshipStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector"
+                                    android:checked="true" />
+
+                                <RadioButton
+                                    android:id="@+id/radioFriendsOnlyRelationshipStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioNoOneRelationshipStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCirclesOnlyRelationshipStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".22"
+                                    android:button="@drawable/radiobutton_selector" />
+
+                                <RadioButton
+                                    android:id="@+id/radioCustomRelationshipStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".12"
+                                    android:button="@drawable/radiobutton_selector" />
+                            </RadioGroup>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemAllUsersLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemFriendsOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemNoOneLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCirclesOnlyLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:text="@string/menuItemCustomLabel"
+                                android:textColor="@color/gray_dark"
+                                android:textSize="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@color/gray_light" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutFoot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="10dip" >
+
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="60dip"
+            android:layout_height="30dip"
+            android:background="@drawable/btn_update_dark" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Socialmaps</string>
+    <string name="app_version">0.0.1</string>
+    <string name="login">Login</string>
+    <string name="passwordLabel">Password</string>
+    <string name="passwordreminder">Remember me</string>
+    <string name="createaccount">Create Account</string>
+    <string name="fblogin">Facebook Login</string>
+    <string name="registration">Registration</string>
+    <string name="required">*</string>
+    <string name="profilepicturereq">Choose a profile picture...</string>
+    <string name="firstNameLabel">Firstname</string>
+    <string name="genderLabel">Gender</string>
+    <string name="lastNameLabel">Lastname</string>
+    <string name="userNameLabel">Username</string>
+    <string name="age">Age</string>
+    <string name="bio">Biography</string>
+    <string name="emailLabel">Email</string>
+    <string name="streetAddress">Street Address:</string>
+    <string name="city">City:</string>
+    <string name="country">Country:</string>
+    <string name="zipCode">ZIP Code:</string>
+    <string name="service">Service:</string>
+    <string name="relationshipstatus">Relationship Status:</string>
+
+    <string-array name="relationshipOptions">
+        <item>Select...</item>
+        <item>Single</item>
+        <item>Married</item>
+        <item>Complicated</item>
+    </string-array>
+    
+    <string-array name="genderOptions">
+        <item>Gender...</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="takephoto">Take Photo</string>
+    <string name="licenseterms">I agree to the SM Terms of Services and Privacy Policy</string>
+    <string name="submit">Submit</string>
+    <string name="status">Status</string>
+    <string name="photo">Photo</string>
+    <string name="geotag">Geo-tag</string>
+    <string name="name">Name</string>
+    <string name="ageprofile">Age:</string>
+    <string name="livesin">Lives in:</string>
+    <string name="work">Work:</string>
+    <string name="studies">Studies:</string>
+    <string name="moreinfo">More Info...</string>
+    <string name="photos">Photos</string>
+    <string name="messages">Messages</string>
+    <string name="friends">Friends</string>
+    <string name="events">Events</string>
+    <string name="breadcrumbs">Breadcrumbs</string>
+    <string name="forgotpassword">Forgot password...</string>
+    <string name="title">Title</string>
+    <string name="send">Send</string>
+    <string name="dobLabel">Date of Birth:</string>
+    <string name="selectdate">Select Date</string>
+    <string name="people">People</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="shops">Shops</string>
+    <string name="bars">Bars</string>
+    <string name="hotels">Hotels</string>
+    <string name="museums">Museums</string>
+    <string name="businesses">Businesses</string>
+    <string name="myplaces">My Places</string>
+    <string name="reviews">Reviews</string>
+    <string name="interests">Interests</string>
+    <string name="tips">Tips</string>
+    <string name="venue">Venue</string>
+    <string name="venues">Venues</string>
+    <string name="deal">Deal</string>
+    <string name="apparel">Apparel</string>
+    <string name="tech">Tech</string>
+    <string name="meals">Meals</string>
+    <string name="accomodation">Accomodation</string>
+    <string name="sports">Sports</string>
+    <string name="deals">Deals</string>
+    <string name="myproducts">My Products</string>
+    <string name="passwordrecovery">Password Recovery</string>
+    <string name="settings">Settings</string>
+    <string name="accountSettings">Account Settings</string>
+    <string name="informationSharing">Information Sharing</string>
+    <string name="locationSharing">Location Sharing</string>
+    <string name="notifications">Notifications</string>
+    <string name="platforms">Platforms</string>
+    <string name="layers">Layers</string>
+    <string name="distanceUnitLabel">Units</string>
+    <string name="metricUnitLabel">Metric</string>
+    <string name="imperialUnitLabel">Imperial</string>
+
+    <string-array name="distanceUnitsOptions">
+        <item>Meter</item>
+        <item>Feet</item>
+    </string-array>
+
+    <string name="update">Update</string>
+    <string name="changePassword">Change Password</string>
+    <string name="clearHistory">Clear History</string>
+    <string name="deleteAccount">DeleteAccount</string>
+    <string name="changePasswordTitle">Change Password</string>
+    <string name="oldPasswordLabel">Old Password</string>
+    <string name="newPasswordLabel">New Password</string>
+    <string name="confirmPasswordLabel">Retype Password</string>
+    <string name="saveButtonLabel">Save</string>
+    <string name="infosharingsettings">Information Sharing</string>
+    <string name="friendrequest">Friend Request</string>
+    <string name="postbyfriends">Posts By Friends</string>
+    <string name="comments">Comments</string>
+    <string name="proximityalerts">Proximity Alerts</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="offlinenotifications">Offline Notifications</string>
+    <string name="enable">Enable</string>
+    <string name="fb">Facebook</string>
+    <string name="foursq">FourSquare</string>
+    <string name="gplus">Google+</string>
+    <string name="locationsharingpreferences">Location Sharing Preferences</string>
+    <string name="wiki">Wikipedia</string>
+    <string name="tripadvisor">Tripadvisor</string>
+    <string name="foodspotting">Foodspotting</string>
+    <string name="strangers">Strangers</string>
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="username">User Name</string>
+    <string name="email">Email</string>
+    <string name="profilepicture">Profile Picture</string>
+    <string name="dateofbirth">Date of Birth</string>
+    <string name="biography">Biography</string>
+    <string name="streetaddress">Street Address</string>
+    <string name="cityLabel">City</string>
+    <string name="zipcode">ZIP Code</string>
+    <string name="countrylabel">Country</string>
+    <string name="servicelabel">Service</string>
+    <string name="relationshipstatuslabel">Relationship Status</string>
+    <string name="splashSliderLength">100</string>
+    <string name="forgotPassDesc">Enter your email to reset your password:</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="requiredText">Required</string>
+	<string name="moreinformations">More Informations</string>
+	<string name="etcstr">(choose interests, username, etc.)</string>
+	<string name="acclog">Accept and login</string>	
+	<string name="dummytext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lacus leo, sodales ut pellentesque vel, posuere vitae metus. Nulla id nibh sem. Aliquam sed leo leo. Quisque consectetur erat in justo accumsan et eleifend augue egestas. Vivamus volutpat aliquet elit, nec venenatis elit facilisis vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus ac tortor arcu. Suspendisse vel sapien ac leo ultrices viverra porttitor vel tortor. Aliquam tristique nibh quis felis faucibus blandit. Nullam non lorem magna. Fusce vel arcu arcu.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lacus leo, sodales ut pellentesque vel, posuere vitae metus. Nulla id nibh sem. Aliquam sed leo leo. Quisque consectetur erat in justo accumsan et eleifend augue egestas. Vivamus volutpat aliquet elit, nec venenatis elit facilisis vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus ac tortor arcu. Suspendisse vel sapien ac leo ultrices viverra porttitor vel tortor. Aliquam tristique nibh quis felis faucibus blandit. Nullam non lorem magna. Fusce vel arcu arcu. </string>
+	
+	<string name="menuItemMyPlaces">My Places</string>
+	<string name="menuItemDirections">Directions</string>
+	<string name="menuItemBreadcrumbs">Breadcrumbs</string>
+	<string name="menuItemCheckIn">Check-in</string>
+	<string name="menuItemMeetupRequest">Meet-up request</string>
+	<string name="menuItemMapixMode">Mapix mode</string>
+	<string name="menuItemEditFilters">Edit Filters</string>
+	<string name="menuItemAppliedFilterLabel">Currently applied filter: </string>
+	<string name="menuItemShowOnMap">Show on map: </string>
+	<string-array name="savedFilterOptions">
+        <item>Apply a saved filter</item>
+        <item>Filter 1</item>
+        <item>Filter 2</item>
+    </string-array>
+    
+	<string name="menuItemPeopleLabel">People</string>
+	<string name="menuItemPlacesLabel">Places</string>
+	<string name="menuItemDealsLabel">Deals</string>
+	<string name="menuItemShareLocationWithlabel">Share location with:</string>
+	<string name="menuItemAllUsersLabel">All users</string>
+	<string name="menuItemFriendsOnlyLabel">Friends only</string>
+	<string name="menuItemNoOneLabel">No one</string>
+	<string name="menuItemCirclesOnlyLabel">Circles only</string>
+	<string name="menuItemCustomLabel">Custom...</string>
+	<string name="messagesLabel">Messages</string>
+	<string name="friendRequestLabel">Fiend(s) request(s)</string>
+	<string name="notifyLabel">Notifications</string>
+	<string name="friendRequestNameLabel">\u0020 asks you as a friend!</string>
+	<string name="commonFriendNumberLabel">\u0020 friend(s) in common</string>
+	<string name="messageNameLabel">\u0020 says:</string>
+	<string name="eraseHistoryTopLabel">Erase history...</string>
+	<string name="eraseHistoryBottomLabel">Erase all the messages, notifications etc...</string>
+	<string name="confirmEraseLabel">Confirm erase history?</string>
+	<string name="deleteAccountTopLabel">Delete Account...</string>
+	<string name="confirmDeleteLabel">Confirm delete account?</string>
+	<string name="changePassLabel">Change Password...</string>
+	<string name="personalInfoLabel">Personal Information...</string>
+	<string name="onLabel">On</string>
+	<string name="offLabel">Off</string>
+	<string name="proximityAlertExpandedTopText">Set the radius(in km)</string>
+	<string name="proximityAlertExpandedBottomText">Set 0(zero) for disable</string>
+	
+	<string name="newsfeedSharingLabel">Newsfeed</string>
+	<string name="ProfilePictureSharingLabel">Profile picture</string>
+	<string name="emailSharingLabel">Email</string>
+	<string name="nameSharingLabel">Name</string>
+	<string name="usernameSharingLabel">User name</string>
+	<string name="genderSharingLabel">Gender</string>	
+	<string name="dobSharingLabel">Date of Birth</string>
+	<string name="biographySharingLabel">Biography</string>
+	<string name="interestsSharingLabel">Interests</string>
+	<string name="addressSharingLabel">Address</string>
+	<string name="serviceSharingLabel">Service</string>
+	<string name="relationshipStatusSharingLabel">Relationship status</string>
+	
+	<string name="updating_data_text">Updating Data</string>
+	<string name="please_wait_text">Please Wait...</string>
+	<string name="fetching_data_text">Fetching data</string>
+	
+	
+	
+	
+</resources>

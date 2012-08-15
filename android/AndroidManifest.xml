@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.socmaps.ui"
+    android:versionCode="1"
+    android:versionName="0.0.3">
+
+    
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        
+        <activity android:name=".SplashActivity" android:theme="@android:style/Theme.Black.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+        <activity android:name=".LoginActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".RegistrationSMActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".ProfileActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".ForgotPasswordActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".DealsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".HomeActivity" android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" ></activity>
+        <activity android:name=".VenueActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".PeopleActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".AccountSettingsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".ChangePasswordActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".InformationSharingSettingsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".NotificationPreferencesActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".PlatformPreferencesActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".LayerPreferencesActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".LocationSharingPreferencesActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".NotificationActivity" android:theme="@style/TabTheme"></activity>
+        <activity android:name=".MessageNotificationActivity"></activity>
+        <activity android:name=".FriendRequestNotificationActivity"></activity>
+        <activity android:name=".NotifyNotificationActivity"></activity>
+        
+        <uses-library android:name="com.google.android.maps" />
+        
+    </application>
+
+</manifest>

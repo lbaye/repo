@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:padding="0dp" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="20dip"
+        android:layout_marginTop="20dip" >
+
+        <TextView
+            android:id="@+id/notification_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:textColor="#6C6C6C"
+            android:text="2 friends are near you:"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="05/08/2012"
+            android:textColor="#6C6C6C"
+            android:textSize="14dip"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip" >
+
+        <TextView
+            android:layout_marginLeft="5dip"
+            android:id="@+id/common_friends_number_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="John Doe and Sophie Doe are near you at 192 promenade des Anglaise, Nice"
+            android:textColor="#6C6C6C"
+            android:textSize="12dip"
+            />
+
+        
+    </RelativeLayout>
+    
+     
+    
+<View android:layout_width="fill_parent"
+    android:layout_height="2dip"
+    android:background="@drawable/bar"
+    android:layout_marginTop="20dip"/>
+</LinearLayout>
