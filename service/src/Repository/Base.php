@@ -34,8 +34,10 @@ class Base extends DocumentRepository
 
     private function setupGearman()
     {
-        $this->gearmanClient = new \GearmanClient();
-        $this->gearmanClient->addServer($this->conf['gearman']['host'], $this->conf['gearman']['port']);
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient = new \GearmanClient();
+            $this->gearmanClient->addServer($this->conf['gearman']['host'], $this->conf['gearman']['port']);
+        }
     }
 
     public function addTask($eventName, $data)
@@ -44,11 +46,15 @@ class Base extends DocumentRepository
             $this->setupGearman();
         }
 
-        $this->gearmanClient->addTask($eventName, $data);
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient->addTask($eventName, $data);
+        }
     }
 
     protected function runTasks()
     {
-        $this->gearmanClient->runTasks();
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient->runTasks();
+        }
     }
 }
