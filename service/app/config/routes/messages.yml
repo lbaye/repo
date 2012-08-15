@@ -13,12 +13,36 @@ sent_messages:
   defaults: { _controller: Controller\Messages::getByCurrentUser }
   requirements: { _method: GET }
 
+inbox_messages:
+  pattern: /messages/inbox
+  defaults: { _controller: Controller\Messages::getInbox }
+  requirements: { _method: GET }
+
+status_message:
+  pattern: /messages/{id}/status/{status}
+  defaults: { _controller: Controller\Messages::updateStatus }
+  requirements:
+    _method: POST
+    status: read|unread
+
+add_recipient_to_message:
+  pattern: /messages/{id}/recipients
+  defaults: { _controller: Controller\Messages::updateRecipients }
+  requirements:
+    _method: POST
+
+replies_since_message:
+  pattern: /messages/{id}/replies
+  defaults: { _controller: Controller\Messages::getRepliesByLastVisitedSince }
+  requirements:
+    _method: GET
+
 delete_message:
   pattern:  /messages/{id}
   defaults: { _controller: Controller\Messages::delete }
   requirements: { _method: DELETE }
 
-inbox_messages:
-  pattern: /messages/inbox
-  defaults: { _controller: Controller\Messages::getInbox }
+read_message:
+  pattern: /messages/{id}
+  defaults: { _controller: Controller\Messages::getById }
   requirements: { _method: GET }
