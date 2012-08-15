@@ -244,7 +244,6 @@ class User extends BaseRepository
             throw new \InvalidArgumentException();
         }
 
-
         $data['userId'] = $this->currentUser->getId();
         $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
         $data['recipientId'] = $friendId;
@@ -259,16 +258,18 @@ class User extends BaseRepository
 
         $this->dm->flush();
 
-        $notification = array();
-        $notification['objectId'] = $user->getId();
-        $notification['objectType'] = "FriendRequest";
+        $data = array(
+            'userId' => $friendId,
+            'objectId' => $user->getId(),
+            'objectType' => 'FriendRequest',
+            'message' => (
+                !empty($data['message'])
+                    ? $data['message']
+                    : $user->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+        );
 
-        if (empty($notification['message'])) {
-            $notification['message'] = $user->getLastName() . "is inviting you to use socialmaps, download
-                                        the app  and login ";
-        }
-
-        $this->addNotification($friendId, $notification);
+        $this->addTask('new_friend_request', json_encode($data));
+        $this->runTasks();
 
         return $friendRequest;
 

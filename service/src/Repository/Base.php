@@ -36,7 +36,7 @@ class Base extends DocumentRepository
     {
         if (class_exists('\\GearmanClient')) {
             $this->gearmanClient = new \GearmanClient();
-            $this->gearmanClient->addServer($this->conf['gearman']['host'], $this->conf['gearman']['port']);
+            $this->gearmanClient->addServer($this->config['gearman']['host'], $this->config['gearman']['port']);
         }
     }
 
