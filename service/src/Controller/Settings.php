@@ -30,8 +30,6 @@ class Settings extends Base
     /**
      * PUT /settings/share/location
      *
-     * @param $with
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function location()
@@ -228,8 +226,8 @@ class Settings extends Base
             return $this->returnResponse($settings);
         }
 
-        $this->user->setSharingPreferenceSettings($data);
-        $settings = $this->user->getSharingPreferenceSettings();
+        $settings = array_merge($settings, $data);
+        $this->user->setSharingPreferenceSettings($settings);
 
         return $this->persistAndReturn($settings);
     }
