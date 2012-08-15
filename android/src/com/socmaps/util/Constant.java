@@ -19,7 +19,6 @@ public class Constant
 	final static public String FB_APP_ID = "260432304058696";
 	final static public String[] facebookPermissions = { "offline_access", "publish_stream", "user_photos",	"publish_checkins", "photo_upload","email","friends_activities","friends_checkins", "friends_location","user_checkins","user_location" };
 
-	
 	final static public int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
     final static public int PICK_EXISTING_PHOTO_RESULT_CODE = 1;
     
