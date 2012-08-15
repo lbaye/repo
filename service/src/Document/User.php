@@ -222,7 +222,11 @@ class User
         'address'            => 'all',
         'friendRequest'      => 'all',
         'circles'            => 'all',
-        'newsfeed'           => 'all'
+        'newsfeed'           => 'all',
+        'avatar'             => 'all',
+        'username'           => 'all',
+        'name'               => 'all',
+        'gender'             => 'all'
     );
 
     public function isValid()
@@ -267,6 +271,7 @@ class User
             'enabled'    => $this->getEnabled(),
             'lastLogin'  => $this->getLastLogin(),
             'settings'   => $this->getSettings(),
+            'currentLocation'    => $this->getCurrentLocation(),
             'createDate' => $this->getCreateDate(),
             'updateDate' => $this->getUpdateDate()
         );

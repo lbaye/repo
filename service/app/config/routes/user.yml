@@ -51,4 +51,4 @@ block_user:
 list:
   pattern: /list
   defaults: { _controller: Controller\AllList::index}
-  requirements: { _method: GET}
+  requirements: { _method: GET|PUT}

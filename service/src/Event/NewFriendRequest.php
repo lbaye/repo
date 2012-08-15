@@ -21,16 +21,13 @@ class NewFriendRequest extends Base
         $workload = json_decode($job->workload());
         $this->userRepository = $this->services['dm']->getRepository('Document\User');
 
-        $sender = $this->userRepository->find($workload->sender);
-        $receiver = $this->userRepository->find($workload->receiver);
-        $message = $workload->message;
+        $friendRequestData = array(
+            'objectId' => $workload->objectId,
+            'objectType' => $workload->objectType,
+            'message' => $workload->message
+        );
 
-        \Doctrine\Common\Util\Debug::dump($sender);
-        \Doctrine\Common\Util\Debug::dump($receiver);
-        echo $message;
-
-        //TODO: Complete the actual functionality
-
-        return $message;
+        $this->userRepository->addNotification($workload->userId, $friendRequestData);
+        echo 'Added notification for friend request.', PHP_EOL;
     }
 }

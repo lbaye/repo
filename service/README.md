@@ -31,3 +31,10 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     curl http://api.socialmaps.local/hello
 
 5. Enjoy!
+
+6. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
+
+    db.getCollection("deals").ensureIndex({"location":"2d"});
+    db.getCollection("users").ensureIndex({"currentLocation":"2d"});
+    db.getCollection("external_locations").ensureIndex({"coords":"2d"});
+    db.getCollection("external_locations").ensureIndex({"refId":1, "source":1},{"unique": true});

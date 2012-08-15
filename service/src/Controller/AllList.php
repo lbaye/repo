@@ -48,6 +48,32 @@ class AllList extends Base
      */
     public function index($type = 'place')
     {
+
+        if ($this->request->getMethod() == 'PUT') {
+            $data = $this->request->request->all();
+
+            $location = $this->user->getCurrentLocation();
+            if (array_key_exists('lat', $data) && array_key_exists('lng', $data)) {
+
+                $location['lat'] = floatval($data['lat']);
+                $location['lng'] = floatval($data['lng']);
+
+                $this->user->setCurrentLocation($location);
+                $this->_updateVisibility($this->user);
+
+                $this->dm->persist($this->user);
+                $this->dm->flush();
+
+
+            } else {
+
+                $this->response->setContent(json_encode(array('message' => 'Invalid location (lat and lng required)')));
+                $this->response->setStatusCode(417);
+
+                return $this->response;
+            }
+        }
+
         $start = $this->request->get('start', 0);
         $limit = $this->request->get('limit', 20);
 
@@ -59,11 +85,10 @@ class AllList extends Base
 
         $deals = $this->dealRepository->getNearBy($location['lat'], $location['lng']);
 
-        $this->response->setContent(json_encode(array('places' => $places , 'users' => $users , 'deals' => $deals)));
+        $this->response->setContent(json_encode(array('places' => $places, 'users' => $users, 'deals' => $deals)));
         $this->response->setStatusCode(200);
 
         return $this->response;
-
     }
 
 
@@ -73,8 +98,6 @@ class AllList extends Base
 
         $start = $this->request->get('start', 0);
         $limit = $this->request->get('limit', 20);
-
-
 
         if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
@@ -86,7 +109,7 @@ class AllList extends Base
                 $this->response->setContent(json_encode($users));
                 $this->response->setStatusCode(200);
             } else {
-                $this->response->setContent(json_encode(array('message' => 'No deals found')));
+                $this->response->setContent(json_encode(array('message' => 'No user found')));
                 $this->response->setStatusCode(204);
             }
         }
@@ -128,5 +151,40 @@ class AllList extends Base
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
         }
 
+    }
+
+    /**
+     * Update users visibility based on geo-fence settings and current location
+     *
+     * @param \Document\User $user
+     *
+     */
+    private function _updateVisibility(\Document\User $user)
+    {
+        $fnc = $user->getGeoFence();
+
+        if ($fnc['radius'] > 0) {
+            $loc = $user->getCurrentLocation();
+
+            $distance = \Helper\Location::distance($loc['lat'], $loc['lng'], $fnc['lat'], $fnc['lng']);
+            $user->setVisible(($distance > $fnc['radius']));
+        }
+
+    }
+
+    private function persistAndReturn($result)
+    {
+        $this->dm->persist($this->user);
+        $this->dm->flush();
+
+        return $this->returnResponse($result);
+    }
+
+    private function returnResponse($result)
+    {
+        $this->response->setContent(json_encode(array('result' => $result)));
+        $this->response->setStatusCode(200);
+
+        return $this->response;
     }
 }
