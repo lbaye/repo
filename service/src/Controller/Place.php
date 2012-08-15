@@ -51,7 +51,9 @@ class Place extends Base
         $places = $this->LocationMarkRepository->getAll($limit, $start);
 
         if (!empty($places)) {
-            $this->response->setContent(json_encode($places));
+            $permittedDocs = $this->_filterByPermission($places);
+
+            $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
             $this->response->setStatusCode(200);
         } else {
             $this->response->setContent(json_encode(array('message' => 'No places found')));
@@ -75,8 +77,13 @@ class Place extends Base
         $place = $this->LocationMarkRepository->find($id);
 
         if (null !== $place) {
-            $this->response->setContent(json_encode($place->toArray()));
-            $this->response->setStatusCode(200);
+            if($place->isPermittedFor($this->user)){
+                $this->response->setContent(json_encode($place->toArray()));
+                $this->response->setStatusCode(200);
+            } else {
+                $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));
+                $this->response->setStatusCode(403);
+            }
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);

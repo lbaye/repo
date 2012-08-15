@@ -21,8 +21,7 @@ class Gathering extends DocumentRepository
 
     public function getAll($limit = 20, $offset = 0)
     {
-        $results = $this->findBy(array(), null, $limit, $offset);
-        return $results;
+        return $this->findBy(array(), null, $limit, $offset);
     }
 
     public function insert($gatheringObj)

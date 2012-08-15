@@ -667,10 +667,29 @@ db.getCollection("places").insert({
     "address": "Lalmatia, Dhaka"
   },
   "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "public",
+  "permittedUsers": [],
+  "permittedCircles": [],
   "createDate": ISODate("2012-07-16T10:05:04.0Z")
 });
 db.getCollection("places").insert({
-  "_id": ObjectId("5003e6f9757df23405000000"),
+  "_id": ObjectId("5003e750757df2000d000001"),
+  "title": "My Office 3",
+  "type": "place",
+  "location": {
+    "lat": 80,
+    "lng": 56.977,
+    "title": "My Office 2",
+    "address": "Lalmatia, Dhaka"
+  },
+  "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "private",
+  "permittedUsers": [],
+  "permittedCircles": [],
+  "createDate": ISODate("2012-07-16T10:05:04.0Z")
+});
+db.getCollection("places").insert({
+  "_id": ObjectId("5003e6f9757df23405000002"),
   "createDate": ISODate("2012-07-16T10:03:37.0Z"),
   "location": {
     "lat": 20.8674,
@@ -681,8 +700,13 @@ db.getCollection("places").insert({
   "owner": ObjectId("5003e8bc757df2020d000006"),
   "title": "My Home",
   "type": "place",
+  "permission": "public",
+  "permittedUsers": [],
+  "permittedCircles": [],
   "updateDate": ISODate("2012-07-16T10:07:11.0Z")
 });
+
+/** Geotags records **/
 db.getCollection("places").insert({
   "_id": ObjectId("5003e6f9757df23405000008"),
   "createDate": ISODate("2012-07-16T10:03:37.0Z"),
@@ -693,6 +717,9 @@ db.getCollection("places").insert({
     "address": "Lalmatia, Dhaka"
   },
   "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "public",
+  "permittedUsers": [],
+  "permittedCircles": [],
   "title": "My Home",
   "type": "geotag",
   "updateDate": ISODate("2012-07-16T10:07:11.0Z")
@@ -706,7 +733,27 @@ db.getCollection("places").insert({
     "title": "My Home",
     "address": "Lalmatia, Dhaka"
   },
+  "owner": ObjectId("5003dffe757df2010d000000"),
+  "permission": "private",
+  "permittedUsers": [],
+  "permittedCircles": [],
+  "title": "My Private Home",
+  "type": "geotag",
+  "updateDate": ISODate("2012-07-16T10:07:11.0Z")
+});
+db.getCollection("places").insert({
+  "_id": ObjectId("5003e6f9757df23405000099"),
+  "createDate": ISODate("2012-07-16T10:03:37.0Z"),
+  "location": {
+    "lat": 20.8674,
+    "lng": 56.977,
+    "title": "My Home",
+    "address": "Lalmatia, Dhaka"
+  },
   "owner": ObjectId("5003dffe757df2010d000006"),
+  "permission": "public",
+  "permittedUsers": [],
+  "permittedCircles": [],
   "title": "My Home",
   "type": "geotag",
   "updateDate": ISODate("2012-07-16T10:07:11.0Z")
