@@ -8,7 +8,8 @@
         "respect/validation": "dev-master",
         "sami/sami": "dev-master",
         "emran/php-solr-helper": "dev-master",
-        "swiftmailer/swiftmailer": ">=4.2.0,<4.3-dev"
+        "swiftmailer/swiftmailer": ">=4.2.0,<4.3-dev",
+        "facebook/php-sdk": "dev-master"
     },
     "minimum-stability": "dev"
 }
