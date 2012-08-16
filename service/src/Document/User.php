@@ -202,7 +202,8 @@ class User
 
     /** @var array */
     public $defaultSettings = array(
-        'unit' => 'meter'
+        'unit' => 'Metrics',
+        'visible' => true
     );
 
     /**
@@ -255,10 +256,7 @@ class User
         return true;
     }
 
-    public function setDefaultSettings()
-    {
-        $this->setSettings($this->defaultSettings);
-    }
+   
 
     public function toArray()
     {
@@ -439,11 +437,13 @@ class User
         return $this->authToken;
     }
 
-    public function setSettings($settings)
+   public function setSettings($settings)
     {
-        if (empty($this->settings)) {
-            $this->settings = $settings;
-        } else {
+        if (empty($this->settings))
+        {
+            $this->settings = $this->defaultSettings;
+        } else
+        {
             $this->settings = array_merge($this->settings, $settings);
         }
     }
