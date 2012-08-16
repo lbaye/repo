@@ -184,7 +184,7 @@ class Auth extends Base
             throw new \Exception\ResourceNotFoundException();
         } else {
 
-            return new RedirectResponse("http://203.76.126.69/social_maps/web/pass_socialmaps");
+            return new RedirectResponse("http://203.76.126.69/social_maps/web/pass_socialmaps/index.php");
 
         }
     }
