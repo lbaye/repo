@@ -61,9 +61,6 @@ class User
     /** @ODM\String */
     protected $bio;
 
-    /** @ODM\Int */
-    protected $age;
-
     /** @ODM\String */
     protected $interests;
 
@@ -272,7 +269,8 @@ class User
             'currentLocation'    => $this->getCurrentLocation(),
             'createDate'         => $this->getCreateDate(),
             'updateDate'         => $this->getUpdateDate(),
-            'distance'           => $this->getDistance()
+            'distance'           => $this->getDistance(),
+            'age'                => $this->getAge()
         );
 
         return $data;
@@ -307,7 +305,8 @@ class User
             'updateDate'         => $this->getUpdateDate(),
             'blockedUsers'       => $this->getBlockedUsers(),
             'blockedBy'          => $this->getBlockedBy(),
-            'distance'           => $this->getDistance()
+            'distance'           => $this->getDistance(),
+            'age'                => $this->getAge()
         );
 
         if ($this->getCircles()) {
@@ -437,13 +436,11 @@ class User
         return $this->authToken;
     }
 
-   public function setSettings($settings)
+    public function setSettings($settings)
     {
-        if (empty($this->settings))
-        {
+        if (empty($this->settings)) {
             $this->settings = $this->defaultSettings;
-        } else
-        {
+        } else {
             $this->settings = array_merge($this->settings, $settings);
         }
     }
@@ -679,14 +676,16 @@ class User
         return $this->sharingPreferenceSettings;
     }
 
-    public function setAge($age)
-    {
-        $this->age = $age;
-    }
-
     public function getAge()
     {
-        return $this->age;
+        $dob = $this->getDateOfBirth();
+
+        if ($dob) {
+            $age = $dob->diff(new \DateTime());
+            return $age->y;
+        }
+
+        return 0;
     }
 
     public function setForgetPasswordToken($forgetPasswordToken)
