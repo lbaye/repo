@@ -79,9 +79,13 @@ class Search extends Base
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
         $googlePlaces = new \Service\Venue\GooglePlaces($this->config['googlePlace']['apiKey']);
-        $places = $googlePlaces->search($keywords, $location);
 
-        return $places;
+        try {
+            $places = $googlePlaces->search($keywords, $location);
+            return $places;
+        } catch (\Exception $e) {
+            return array();
+        }
     }
 
     /** TODO: Finalize deals search */
