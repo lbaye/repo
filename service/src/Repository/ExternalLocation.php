@@ -24,8 +24,6 @@ class ExternalLocation extends DocumentRepository
     public function getNearBy($location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
-            //->field('currentLocation.latitude')->near($location['lat'])
-            //->field('currentLocation.longitude')->near($location['lng'])
             ->field('coords')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
             ->limit($limit);
 

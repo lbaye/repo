@@ -68,7 +68,6 @@ class ExternalLocation
         $data = array(
             'id' => $this->getId(),
             'email' => '',
-            'external' => true,
             'source' => $this->getSource()
         );
 

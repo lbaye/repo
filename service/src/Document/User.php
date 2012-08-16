@@ -265,7 +265,10 @@ class User
             'createDate'         => $this->getCreateDate(),
             'updateDate'         => $this->getUpdateDate(),
             'distance'           => $this->getDistance(),
-            'age'                => $this->getAge()
+            'age'                => $this->getAge(),
+            'gender'             => $this->getGender(),
+            'relationshipStatus' => $this->getRelationshipStatus(),
+            'address'            => $this->getAddress()
         );
 
         return $data;

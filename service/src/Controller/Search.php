@@ -64,6 +64,9 @@ class Search extends Base
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
         $people = $this->userRepository->search($keywords, $location, self::PEOPLE_THRESHOLD);
+        array_walk($people, function(&$person){
+            $person['external'] = false;
+        });
 
         if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {
 
@@ -71,6 +74,10 @@ class Search extends Base
 
             $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
             $externalPeople = $this->externalLocationRepository->getNearBy($location, $difference);
+
+            array_walk($externalPeople, function(&$person){
+                $person['external'] = true;
+            });
 
             if ($externalPeople) {
                 $people = array_merge($people, $externalPeople);
