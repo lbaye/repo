@@ -10,41 +10,39 @@ use Helper\Image as ImageHelper;
 
 class User extends BaseRepository
 {
-
     public function validateLogin($data)
     {
-        if (empty($data))
-        {
+        if (empty($data)) {
             return false;
         }
 
         $user = $this->map($data);
 
-        $user->setLastLogin(new \DateTime());
+        $user = $this->findOneBy(array(
+            'email'    => $data['email'],
+            'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
+        ));
 
-        $user = $this->findOneBy(array('email' => $data['email'], 'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())));
+        if (!is_null($user)) {
+            return $user;
+        }
 
-        return is_null($user) ? false : $user;
+        return false;
     }
 
     public function validateFbLogin($data)
     {
-        if (empty($data))
-        {
+        if (empty($data)) {
             return false;
         }
 
-        $user = $this->map($data);
-        $user->setLastLogin(new \DateTime());
         $user = $this->findOneBy(array('facebookId' => $data['facebookId']));
 
-        if (is_null($user))
-        {
-            return $this->insert($data);
-        } else
-        {
+        if (!is_null($user)) {
             return $user;
         }
+
+        return false;
     }
 
     public function getByEmail($email)
@@ -61,20 +59,14 @@ class User extends BaseRepository
 
     public function getAll($start, $limit)
     {
-        $results = $this->createQueryBuilder('Document\User')
-                ->limit($limit)
-                ->skip($start)
-                ->getQuery()
-                ->execute();
+        $results = $this->createQueryBuilder('Document\User')->limit($limit)->skip($start)->getQuery()->execute();
 
-        if (count($results) == 0)
-        {
+        if (count($results) == 0) {
             return false;
         }
 
         $users = array();
-        foreach ($results as $user)
-        {
+        foreach ($results as $user) {
             $users[] = $user->toArrayDetailed();
         }
 
@@ -84,77 +76,68 @@ class User extends BaseRepository
     public function getNearBy($lat, $lng, $limit = 20)
     {
         $users = $this->createQueryBuilder()
-                        ->field('currentLocation.lat')->near($lat)
-                        ->field('currentLocation.lng')->near($lng)
-                        ->field('id')->notIn($this->currentUser->getblockedBy())
-                        ->field('visible')->equals(true)
-                        ->limit($limit)
-                        ->getQuery()->execute();
+            ->field('currentLocation.lat')->near($lat)
+            ->field('currentLocation.lng')->near($lng)
+            ->field('id')->notIn($this->currentUser->getblockedBy())
+            ->field('visible')->equals(true)
+            ->limit($limit)
+            ->getQuery()
+            ->execute();
 
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
     public function getAllByIds(array $ids)
     {
-        $users = $this->createQueryBuilder('Document\User')
-                ->field('id')
-                ->in(array($ids))
-                ->getQuery()
-                ->execute();
-
+        $users = $this->createQueryBuilder('Document\User')->field('id')->in(array($ids))->getQuery()->execute();
         return $users;
     }
 
     public function insert($data)
     {
-
         $user = $this->map($data);
 
-        if ($this->exists($data))
-        {
-            throw new \Exception\ResourceAlreadyExistsException($data['email']);
-        }
+        $isFacebookRegistration = !empty($data['facebookAuthToken']) AND (!empty($data['facebookId']));
 
-        if (!empty($data['facebookAuthToken']) AND (!empty($data['facebookId'])))
-        {
+        if ($isFacebookRegistration) {
             $valid = $user->isValidForFb();
-        } else
-        {
+        } else {
             $valid = $user->isValid();
         }
 
-        if ($valid !== true)
-        {
+        if ($valid !== true) {
             throw new \InvalidArgumentException('Invalid request', 406);
         }
 
-        if ((!empty($data['facebookAuthToken'])) AND (!empty($data['facebookId'])))
-        {
+        if ($this->exists($data)) {
+            throw new \Exception\ResourceAlreadyExistsException(($isFacebookRegistration) ? $data['facebookId'] : $data['email']);
+        }
+
+        if ($isFacebookRegistration) {
             $user->setRegMedia("fb");
-        } else
-        {
+        } else {
             $user->setRegMedia("sm");
         }
 
-
-
-        if (is_null($user->getSettings()))
-        {
-
+        if (is_null($user->getSettings())) {
             $user->setSettings($user->defaultSettings);
-        } else
-        {
+        } else {
             $user->setSettings(array_merge($user->defaultSettings, $user->getSettings()));
         }
 
-        if (is_null($user->getEnabled()))
-        {
+        if (is_null($user->getEnabled())) {
             $user->setEnabled(true);
+        }
+
+        // For FB users, their ID is set as default password
+        if ($isFacebookRegistration) {
+            $user->setPassword(SecurityHelper::hash($data['facebookId'], $user->getSalt()));
+        } else {
+            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         }
 
         $user->setConfirmationToken(SecurityHelper::hash(time(), $user->getSalt()));
         $user->setAuthToken(SecurityHelper::hash($user->getEmail(), $user->getSalt()));
-        $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         $user->setCreateDate(new \DateTime());
 
         $this->dm->persist($user);
@@ -169,12 +152,13 @@ class User extends BaseRepository
     {
         $qb = $this->createQueryBuilder('Document\User');
 
-        $results = $qb->addOr($qb->expr()->field('email')->equals($data['email']))
-                ->getQuery()
-                ->execute();
+        if (isset($data['email'])) {
+            $results = $qb->addOr($qb->expr()->field('email')->equals($data['email']))->getQuery()->execute();
+        } else {
+            $results = $qb->addOr($qb->expr()->field('facebookId')->equals($data['facebookId']))->getQuery()->execute();
+        }
 
-        if ($results->count() > 0)
-        {
+        if ($results->count() > 0) {
             return true;
         }
 
@@ -183,47 +167,37 @@ class User extends BaseRepository
 
     public function update($data, $id)
     {
-
-        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail()))
-        {
-            if ($this->exists($data))
-            {
+        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
+            if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
             }
         }
 
         $userDetail = $this->find($id);
 
-        if (false === $userDetail)
-        {
+        if (false === $userDetail) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $user = $this->map($data, $userDetail);
 
-
-        if ($user->getAuthToken() !== $this->currentUser->getAuthToken())
-        {
+        if ($user->getAuthToken() !== $this->currentUser->getAuthToken()) {
             throw new \Exception\UnauthorizedException();
         }
 
-        if ($data['email'] != $user->getEmail())
-        {
-            if (!empty($data['email']) && $this->exists($data))
-            {
+        if ($data['email'] != $user->getEmail()) {
+            if (!empty($data['email']) && $this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
             }
         }
 
-        if (!empty($data['password']))
-        {
+        if (!empty($data['password'])) {
             $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         }
 
         $user->setUpdateDate(new \DateTime());
 
-        if ($user->isValid() === false)
-        {
+        if ($user->isValid() === false) {
             return false;
         }
 
@@ -237,8 +211,7 @@ class User extends BaseRepository
     {
         $user = $this->find($id);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \InvalidArgumentException();
         }
 
@@ -250,13 +223,9 @@ class User extends BaseRepository
     {
         $circle = new \Document\Circle($data);
 
-
-        foreach ($data['friends'] as $friendId)
-        {
+        foreach ($data['friends'] as $friendId) {
             $friend = $this->find($friendId);
-
-            if (!empty($friend))
-            {
+            if (!empty($friend)) {
                 $circle->addFriend($friend);
             }
         }
@@ -275,13 +244,12 @@ class User extends BaseRepository
     {
         $user = $this->find($friendId);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \InvalidArgumentException();
         }
 
-        $data['userId'] = $this->currentUser->getId();
-        $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        $data['userId']      = $this->currentUser->getId();
+        $data['friendName']  = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
         $data['recipientId'] = $friendId;
 
         $friendRequest = new FriendRequest($data);
@@ -295,11 +263,10 @@ class User extends BaseRepository
         $this->dm->flush();
 
         $data = array(
-            'userId' => $friendId,
-            'objectId' => $user->getId(),
+            'userId'     => $friendId,
+            'objectId'   => $user->getId(),
             'objectType' => 'FriendRequest',
-            'message' => (
-            !empty($data['message']) ? $data['message'] : $user->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+            'message'    => (!empty($data['message']) ? $data['message'] : $user->getLastName() . "is inviting you to use socialmaps, download the app and login.")
         );
 
         $this->addTask('new_friend_request', json_encode($data));
@@ -310,20 +277,47 @@ class User extends BaseRepository
 
     public function map(array $data, UserDocument $user = null)
     {
-        if (is_null($user))
-        {
+        if (is_null($user)) {
             $user = new UserDocument();
         }
 
-        $setIfExistFields = array('id', 'firstName', 'lastName', 'gender', 'username', 'email', 'authToken', 'enabled', 'salt',
-            'password', 'oldPassword', 'settings', 'confirmationToken', 'forgetPasswordToken', 'facebookId', 'facebookAuthToken',
-            'avatar', 'source', 'dateOfBirth', 'bio', 'age', 'address', 'interests', 'workStatus', 'circles',
-            'relationshipStatus', 'enabled', 'regMedia', 'lastLogin', 'loginCount', 'createDate', 'updateDate');
+        $setIfExistFields = array(
+            'id',
+            'firstName',
+            'lastName',
+            'gender',
+            'username',
+            'email',
+            'authToken',
+            'enabled',
+            'salt',
+            'password',
+            'oldPassword',
+            'settings',
+            'confirmationToken',
+            'forgetPasswordToken',
+            'facebookId',
+            'facebookAuthToken',
+            'avatar',
+            'source',
+            'dateOfBirth',
+            'bio',
+            'age',
+            'address',
+            'interests',
+            'workStatus',
+            'circles',
+            'relationshipStatus',
+            'enabled',
+            'regMedia',
+            'lastLogin',
+            'loginCount',
+            'createDate',
+            'updateDate'
+        );
 
-        foreach ($setIfExistFields as $field)
-        {
-            if (isset($data[$field]) && !is_null($data[$field]))
-            {
+        foreach ($setIfExistFields as $field) {
+            if (isset($data[$field]) && !is_null($data[$field])) {
                 $user->{"set{$field}"}($data[$field]);
             }
         }
@@ -336,14 +330,27 @@ class User extends BaseRepository
 
     public function settingsMap(array $data, UserDocument $user = null)
     {
-        $setIfExistFields = array('id', 'firstName', 'lastName', 'email', 'avatar', 'gender', 'dateOfBirth',
-            'username', 'address', 'workStatus', 'relationshipStatus',
-            'password', 'settings', 'bio', 'interests', 'updateDate');
+        $setIfExistFields = array(
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'avatar',
+            'gender',
+            'dateOfBirth',
+            'username',
+            'address',
+            'workStatus',
+            'relationshipStatus',
+            'password',
+            'settings',
+            'bio',
+            'interests',
+            'updateDate'
+        );
 
-        foreach ($setIfExistFields as $field)
-        {
-            if (isset($data[$field]) && !is_null($data[$field]))
-            {
+        foreach ($setIfExistFields as $field) {
+            if (isset($data[$field]) && !is_null($data[$field])) {
                 $user->{"set{$field}"}($data[$field]);
             }
         }
@@ -358,8 +365,7 @@ class User extends BaseRepository
     {
         $user = $this->find($userId);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \InvalidArgumentException();
         }
 
@@ -378,19 +384,15 @@ class User extends BaseRepository
     {
         $userDetail = $this->find($userId);
 
-        if (false === $userDetail)
-        {
+        if (false === $userDetail) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $this->updateFriendsCircleList($userId);
-
         $circles = $this->currentUser->getCircles();
 
-        foreach ($circles as &$circle)
-        {
-            if ($circle->getName() == 'friends' && $circle->getType() == 'system')
-            {
+        foreach ($circles as &$circle) {
+            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
                 $circle->addFriend($userDetail);
             }
         }
@@ -407,15 +409,13 @@ class User extends BaseRepository
     {
         $user = $this->find($id);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \InvalidArgumentException();
         }
 
         $defaultCircles = array('friends', 'second_degree');
 
-        foreach ($defaultCircles as $circle)
-        {
+        foreach ($defaultCircles as $circle) {
 
             $data = array();
 
@@ -426,6 +426,7 @@ class User extends BaseRepository
 
             $user->addCircle($circle);
             $this->dm->persist($circle);
+
         }
 
         $this->dm->persist($user);
@@ -436,10 +437,8 @@ class User extends BaseRepository
     {
         $notifications = $this->currentUser->getNotification();
 
-        foreach ($notifications as &$notification)
-        {
-            if ($notification->getId() == $notificationId)
-            {
+        foreach ($notifications as &$notification) {
+            if ($notification->getId() == $notificationId) {
                 $notification->setViewed(true);
             }
         }
@@ -452,32 +451,25 @@ class User extends BaseRepository
 
     public function updateAccountSettings($data)
     {
-
-        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail()))
-        {
-            if ($this->exists($data))
-            {
+        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
+            if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
             }
         }
 
         $user = $this->settingsMap($data, $this->currentUser);
 
-        if ($user->getAuthToken() !== $this->currentUser->getAuthToken())
-        {
+        if ($user->getAuthToken() !== $this->currentUser->getAuthToken()) {
             throw new \Exception\UnauthorizedException();
         }
 
-
-        if (!empty($data['password']))
-        {
+        if (!empty($data['password'])) {
             $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         }
 
         $user->setUpdateDate(new \DateTime());
 
-        if ($user->isValid() === false)
-        {
+        if ($user->isValid() === false) {
             return false;
         }
 
@@ -489,19 +481,15 @@ class User extends BaseRepository
 
     public function getPasswordToken($userId)
     {
-
         $user = $this->find($userId);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $data = array();
 
         $user->setForgetPasswordToken(SecurityHelper::hash(time(), $user->getSalt()));
-
-
         $user = $this->map($data, $user);
 
         return $user->getForgetPasswordToken();
@@ -509,30 +497,20 @@ class User extends BaseRepository
 
     public function generatePassword($length = 8)
     {
-
         $password = "";
-
         $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
         $maxlength = strlen($possible);
 
-        if ($length > $maxlength)
-        {
+        if ($length > $maxlength) {
             $length = $maxlength;
         }
 
         $i = 0;
 
-        while ($i < $length)
-        {
-
+        while ($i < $length) {
             $char = substr($possible, mt_rand(0, $maxlength - 1), 1);
-
-            if (!strstr($password, $char))
-            {
-
+            if (!strstr($password, $char)) {
                 $password .= $char;
-
                 $i++;
             }
         }
@@ -544,17 +522,14 @@ class User extends BaseRepository
     {
         $user = $this->find($friendId);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $circles = $user->getCircles();
 
-        foreach ($circles as &$circle)
-        {
-            if ($circle->getName() == 'friends' && $circle->getType() == 'system')
-            {
+        foreach ($circles as &$circle) {
+            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
                 $circle->addFriend($this->currentUser);
             }
         }
@@ -570,8 +545,7 @@ class User extends BaseRepository
     private function _toArrayAll($results)
     {
         $users = array();
-        foreach ($results as $user)
-        {
+        foreach ($results as $user) {
             $users[] = $user->toArray();
         }
 
@@ -587,15 +561,13 @@ class User extends BaseRepository
     public function resetPassword($data, $userId)
     {
         $userDetail = $this->find($userId);
-        $user = $this->map($data, $userDetail);
+        $user       = $this->map($data, $userDetail);
 
-        if (false === $user)
-        {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        if (!empty($data['password']))
-        {
+        if (!empty($data['password'])) {
             $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         }
 
@@ -613,13 +585,11 @@ class User extends BaseRepository
 
         $passWord = $this->findOneBy(array('password' => SecurityHelper::hash($user->getOldPassword(), $user->getSalt())));
 
-        if (is_null($passWord))
-        {
+        if (is_null($passWord)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        if (!empty($data['password']))
-        {
+        if (!empty($data['password'])) {
             $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         }
 
@@ -633,17 +603,13 @@ class User extends BaseRepository
 
     public function checkOldPassword($password)
     {
-
-        if (empty($password))
-        {
+        if (empty($password)) {
             return false;
         }
 
         $user = $this->currentUser;
 
-
-        if (SecurityHelper::hash($user->getPassword(), $user->getSalt()) != $user->getPassword())
-        {
+        if (SecurityHelper::hash($user->getPassword(), $user->getSalt()) != $user->getPassword()) {
             return false;
         }
 
@@ -652,22 +618,15 @@ class User extends BaseRepository
 
     public function updateLoginCount($id)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail)
-        {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $data = array();
-
-        $user = $this->map($data, $userDetail);
-
         $loginCount = $user->getLoginCount();
         $user->setLoginCount($loginCount + 1);
-
         $user->setLastLogin(new \DateTime());
-        $user->setUpdateDate(new \DateTime());
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -679,8 +638,7 @@ class User extends BaseRepository
     {
         $userDetail = $this->find($id);
 
-        if (false === $userDetail)
-        {
+        if (false === $userDetail) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -699,25 +657,20 @@ class User extends BaseRepository
 
     public function saveAvatarImage($id, $avatar)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail)
-        {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $data = array();
-
-        $user = $this->map($data, $userDetail);
         $filePath = "/avatar/" . $user->getId() . ".jpeg";
+        $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
-        if (base64_decode($avatar, true))
-        {
+        if ($avatarUrl !== false) {
+            $user->setAvatar($avatarUrl);
+        } else {
             ImageHelper::saveImageFromBase64($avatar, $filePath);
             $user->setAvatar($filePath);
-        } else
-        {
-            $user->setAvatar($avatar);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -731,14 +684,13 @@ class User extends BaseRepository
     public function updateForgetPasswordToken($userId, $passwordToken)
     {
         $userDetail = $this->find($userId);
-        $data = array();
-        $user = $this->map($data, $userDetail);
+        $data       = array();
+        $user       = $this->map($data, $userDetail);
 
         $user->setForgetPasswordToken($passwordToken);
         $user->setUpdateDate(new \DateTime());
 
-        if ($user->isValid() === false)
-        {
+        if ($user->isValid() === false) {
             return false;
         }
 
@@ -751,13 +703,12 @@ class User extends BaseRepository
     public function search($keyword = null, $location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
-                ->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
-                ->field('id')->notIn($this->currentUser->getBlockedBy())
-                ->field('visible')->equals(true)
-                ->limit($limit);
+            ->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
+            ->field('id')->notIn($this->currentUser->getBlockedBy())
+            ->field('visible')->equals(true)
+            ->limit($limit);
 
-        if (!is_null($keyword))
-        {
+        if (!is_null($keyword)) {
             $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
             $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
         }
@@ -771,13 +722,11 @@ class User extends BaseRepository
     {
         $query = $this->createQueryBuilder()->field('facebookAuthToken')->exists(true);
 
-        if ($start != null)
-        {
+        if ($start != null) {
             $query->skip($start);
         }
 
-        if ($limit != null)
-        {
+        if ($limit != null) {
             $query->limit($limit);
         }
 

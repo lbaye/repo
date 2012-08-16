@@ -233,11 +233,10 @@ class User
             Validator::create()->email()->assert($this->getEmail());
             Validator::create()->notEmpty()->assert($this->getPassword());
             Validator::create()->notEmpty()->assert($this->getSalt());
+            return true;
         } catch (\InvalidArgumentException $e) {
             return false;
         }
-
-        return true;
     }
 
     public function isValidForFb()
@@ -245,15 +244,11 @@ class User
         try {
             Validator::create()->notEmpty()->assert($this->getFacebookId());
             Validator::create()->notEmpty()->assert($this->getFacebookAuthToken());
-            Validator::create()->email()->assert($this->getEmail());
+            return true;
         } catch (\InvalidArgumentException $e) {
             return false;
         }
-
-        return true;
     }
-
-   
 
     public function toArray()
     {
