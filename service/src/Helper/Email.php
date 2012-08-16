@@ -19,7 +19,7 @@ class Email
         $mailer = Swift_Mailer::newInstance($transport);
 
         $message = Swift_Message::newInstance('Forget password email')
-            ->setFrom(array('info@rightbrainsolution.com' => 'Salayhin'))
+            ->setFrom(array('info@genweb2.com' => 'Forget Password'))
             ->setTo(array($email => "Socialmaps"))
             ->setBody($data);
 
