@@ -263,21 +263,19 @@ class User
     public function toArray()
     {
         $data = array(
-            'id'         => $this->getId(),
-            'email'      => $this->getEmail(),
-            'firstName'  => $this->getFirstName(),
-            'lastName'   => $this->getLastName(),
-            'avatar'     => $this->getAvatar(),
-            'enabled'    => $this->getEnabled(),
-            'lastLogin'  => $this->getLastLogin(),
-            'settings'   => $this->getSettings(),
+            'id'                 => $this->getId(),
+            'email'              => $this->getEmail(),
+            'firstName'          => $this->getFirstName(),
+            'lastName'           => $this->getLastName(),
+            'avatar'             => $this->getAvatar(),
+            'enabled'            => $this->getEnabled(),
+            'lastLogin'          => $this->getLastLogin(),
+            'settings'           => $this->getSettings(),
             'currentLocation'    => $this->getCurrentLocation(),
-            'createDate' => $this->getCreateDate(),
-            'updateDate' => $this->getUpdateDate()
+            'createDate'         => $this->getCreateDate(),
+            'updateDate'         => $this->getUpdateDate(),
+            'distance'           => $this->getDistance()
         );
-
-        if (isset($this->distance))
-            $data['distance'] = floatval($this->distance) * 111.12; // Convert to Km
 
         return $data;
     }
@@ -311,6 +309,7 @@ class User
             'updateDate'         => $this->getUpdateDate(),
             'blockedUsers'       => $this->getBlockedUsers(),
             'blockedBy'          => $this->getBlockedBy(),
+            'distance'           => $this->getDistance()
         );
 
         if ($this->getCircles()) {
@@ -324,10 +323,6 @@ class User
             $data['address'] = $this->getAddress()->toArray();
         } else {
             $data['address'] = null;
-        }
-
-        if (isset($this->distance)) {
-            $data['distance'] = floatval($this->distance) * 111.12; // Convert to Km
         }
 
         return $data;
