@@ -751,8 +751,7 @@ class User extends BaseRepository
     public function search($keyword = null, $location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
-                ->field('currentLocation.latitude')->near($location['lat'])
-                ->field('currentLocation.longitude')->near($location['lng'])
+                ->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
                 ->field('id')->notIn($this->currentUser->getBlockedBy())
                 ->field('visible')->equals(true)
                 ->limit($limit);
