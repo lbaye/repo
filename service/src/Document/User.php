@@ -4,6 +4,7 @@ namespace Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
+
 use Document\Circle;
 
 /**
@@ -12,7 +13,6 @@ use Document\Circle;
  */
 class User
 {
-
     /** @ODM\Id */
     protected $id;
 
@@ -138,28 +138,32 @@ class User
 
     /** @ODM\Hash */
     protected $locationSettings = array(
+
         'status' => 'on',
+
         'friends' => array(
             'permitted_users' => array(),
             'permitted_circles' => array(),
             'duration' => 0,
             'radius' => 2
         ),
+
         'strangers' => array(
             'duration' => 0,
             'radius' => 2
         )
+
     );
 
     /** @ODM\Hash */
     protected $platformSettings = array(
-        'fb' => true,
-        '4sq' => true,
+        'fb'         => true,
+        '4sq'        => true,
         'googlePlus' => true,
-        'gmail' => true,
-        'twitter' => true,
-        'yahoo' => true,
-        'badoo' => true,
+        'gmail'      => true,
+        'twitter'    => true,
+        'yahoo'      => true,
+        'badoo'      => true,
     );
 
     /** @ODM\Hash */
@@ -169,14 +173,14 @@ class User
 
     /** @ODM\Hash */
     protected $notificationSettings = array(
-        'friend_requests' => array('sm' => true, 'mail' => true),
-        'posts_by_friends' => array('sm' => true, 'mail' => true),
-        'comments' => array('sm' => true, 'mail' => true),
-        'messages' => array('sm' => true, 'mail' => true),
-        'recommendations' => array('sm' => true, 'mail' => true),
-        'proximity_alerts' => array('sm' => true, 'mail' => true),
+        'friend_requests'       => array('sm' => true, 'mail' => true),
+        'posts_by_friends'      => array('sm' => true, 'mail' => true),
+        'comments'              => array('sm' => true, 'mail' => true),
+        'messages'              => array('sm' => true, 'mail' => true),
+        'recommendations'       => array('sm' => true, 'mail' => true),
+        'proximity_alerts'      => array('sm' => true, 'mail' => true),
         'offline_notifications' => array('sm' => true, 'mail' => true),
-        'proximity_radius' => 0
+        'proximity_radius'      => 0
     );
 
     /** @ODM\Hash */
@@ -198,8 +202,7 @@ class User
 
     /** @var array */
     public $defaultSettings = array(
-        'unit' => 'Metrics',
-        'visible' => true
+        'unit' => 'meter'
     );
 
     /**
@@ -208,33 +211,31 @@ class User
      * Possible options: all, friends, none, circles
      */
     protected $sharingPreferenceSettings = array(
-        'firstName' => 'all',
-        'lastName' => 'all',
-        'email' => 'all',
-        'dateOfBirth' => 'all',
-        'bio' => 'all',
-        'interests' => 'all',
-        'workStatus' => 'all',
+        'firstName'          => 'all',
+        'lastName'           => 'all',
+        'email'              => 'all',
+        'dateOfBirth'        => 'all',
+        'bio'                => 'all',
+        'interests'          => 'all',
+        'workStatus'         => 'all',
         'relationshipStatus' => 'all',
-        'address' => 'all',
-        'friendRequest' => 'all',
-        'circles' => 'all',
-        'newsfeed' => 'all',
-        'avatar' => 'all',
-        'username' => 'all',
-        'name' => 'all',
-        'gender' => 'all'
+        'address'            => 'all',
+        'friendRequest'      => 'all',
+        'circles'            => 'all',
+        'newsfeed'           => 'all',
+        'avatar'             => 'all',
+        'username'           => 'all',
+        'name'               => 'all',
+        'gender'             => 'all'
     );
 
     public function isValid()
     {
-        try
-        {
+        try {
             Validator::create()->email()->assert($this->getEmail());
             Validator::create()->notEmpty()->assert($this->getPassword());
             Validator::create()->notEmpty()->assert($this->getSalt());
-        } catch (\InvalidArgumentException $e)
-        {
+        } catch (\InvalidArgumentException $e) {
             return false;
         }
 
@@ -243,13 +244,11 @@ class User
 
     public function isValidForFb()
     {
-        try
-        {
+        try {
             Validator::create()->notEmpty()->assert($this->getFacebookId());
             Validator::create()->notEmpty()->assert($this->getFacebookAuthToken());
             Validator::create()->email()->assert($this->getEmail());
-        } catch (\InvalidArgumentException $e)
-        {
+        } catch (\InvalidArgumentException $e) {
             return false;
         }
 
@@ -264,21 +263,19 @@ class User
     public function toArray()
     {
         $data = array(
-            'id' => $this->getId(),
-            'email' => $this->getEmail(),
-            'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'avatar' => $this->getAvatar(),
-            'enabled' => $this->getEnabled(),
-            'lastLogin' => $this->getLastLogin(),
-            'settings' => $this->getSettings(),
-            'currentLocation' => $this->getCurrentLocation(),
-            'createDate' => $this->getCreateDate(),
-            'updateDate' => $this->getUpdateDate()
+            'id'                 => $this->getId(),
+            'email'              => $this->getEmail(),
+            'firstName'          => $this->getFirstName(),
+            'lastName'           => $this->getLastName(),
+            'avatar'             => $this->getAvatar(),
+            'enabled'            => $this->getEnabled(),
+            'lastLogin'          => $this->getLastLogin(),
+            'settings'           => $this->getSettings(),
+            'currentLocation'    => $this->getCurrentLocation(),
+            'createDate'         => $this->getCreateDate(),
+            'updateDate'         => $this->getUpdateDate(),
+            'distance'           => $this->getDistance()
         );
-
-        if (isset($this->distance))
-            $data['distance'] = floatval($this->distance) * 111.12; // Convert to Km
 
         return $data;
     }
@@ -286,55 +283,46 @@ class User
     public function toArrayDetailed()
     {
         $data = array(
-            'id' => $this->getId(),
-            'email' => $this->getEmail(),
-            'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'avatar' => $this->getAvatar(),
-            'deactivated' => $this->getDeactivated(),
-            'authToken' => $this->getAuthToken(),
-            'settings' => $this->getSettings(),
-            'source' => $this->getSource(),
-            'dateOfBirth' => $this->getDateOfBirth(),
-            'bio' => $this->getBio(),
-            'gender' => $this->getGender(),
-            'username' => $this->getUsername(),
-            'interests' => $this->getInterests(),
-            'workStatus' => $this->getWorkStatus(),
+            'id'                 => $this->getId(),
+            'email'              => $this->getEmail(),
+            'firstName'          => $this->getFirstName(),
+            'lastName'           => $this->getLastName(),
+            'avatar'             => $this->getAvatar(),
+            'deactivated'        => $this->getDeactivated(),
+            'authToken'          => $this->getAuthToken(),
+            'settings'           => $this->getSettings(),
+            'source'             => $this->getSource(),
+            'dateOfBirth'        => $this->getDateOfBirth(),
+            'bio'                => $this->getBio(),
+            'gender'             => $this->getGender(),
+            'username'           => $this->getUsername(),
+            'interests'          => $this->getInterests(),
+            'workStatus'         => $this->getWorkStatus(),
             'relationshipStatus' => $this->getRelationshipStatus(),
-            'currentLocation' => $this->getCurrentLocation(),
-            'enabled' => $this->getEnabled(),
-            'visible' => $this->getVisible(),
-            'regMedia' => $this->getRegMedia(),
-            'loginCount' => $this->getLoginCount(),
-            'lastLogin' => $this->getLastLogin(),
-            'createDate' => $this->getCreateDate(),
-            'updateDate' => $this->getUpdateDate(),
-            'blockedUsers' => $this->getBlockedUsers(),
-            'blockedBy' => $this->getBlockedBy(),
-            'distance' => $this->getDistance(),
+            'currentLocation'    => $this->getCurrentLocation(),
+            'enabled'            => $this->getEnabled(),
+            'visible'            => $this->getVisible(),
+            'regMedia'           => $this->getRegMedia(),
+            'loginCount'         => $this->getLoginCount(),
+            'lastLogin'          => $this->getLastLogin(),
+            'createDate'         => $this->getCreateDate(),
+            'updateDate'         => $this->getUpdateDate(),
+            'blockedUsers'       => $this->getBlockedUsers(),
+            'blockedBy'          => $this->getBlockedBy(),
+            'distance'           => $this->getDistance()
         );
 
-        if ($this->getCircles())
-        {
+        if ($this->getCircles()) {
             $circles = $this->getCircles();
-            foreach ($circles as $circle)
-            {
+            foreach ($circles as $circle) {
                 $data['circles'][] = $circle->toArray();
             }
         }
 
-        if ($this->getAddress())
-        {
+        if ($this->getAddress()) {
             $data['address'] = $this->getAddress()->toArray();
-        } else
-        {
+        } else {
             $data['address'] = null;
-        }
-
-        if (isset($this->distance))
-        {
-            $data['distance'] = floatval($this->distance) * 111.12; // Convert to Km
         }
 
         return $data;
@@ -389,6 +377,7 @@ class User
     {
         return $this->lastLogin;
     }
+
 
     public function setPassword($password)
     {
@@ -452,11 +441,9 @@ class User
 
     public function setSettings($settings)
     {
-        if (empty($this->settings))
-        {
-            $this->settings = $this->defaultSettings;
-        } else
-        {
+        if (empty($this->settings)) {
+            $this->settings = $settings;
+        } else {
             $this->settings = array_merge($this->settings, $settings);
         }
     }
@@ -801,35 +788,31 @@ class User
     {
         return $this->oldPassword;
     }
-
-    function getDistance()
+    
+    public function getDistance()
     {
-
-
-        if (isset($this->distance))
-        {
+        if (isset($this->distance)) {
             $metricValue = floatval($this->distance) * 111.12; // Convert to Km
-        } else
-        {
+        } else {
             return 0;
         }
+        
         $unitName = $this->getSettings();
-
         $this->distance = $this->unitConvert($metricValue, $unitName['unit']);
+        
         return $this->distance;
     }
 
-    public function unitConvert($value, $unitName = "Metrics")
+    private function unitConvert($value, $unitName = "Metrics")
     {
-        if ($unitName != "")
-        {
-            if ($unitName == "Imperial")
-            {
-                if (isset($this->$value))
+        if ($unitName != "") {
+            if ($unitName == "Imperial") {
+                if (isset($this->$value)) {
                     $value = $value * 0.6214;
+                }
             }
         }
+        
         return $value;
     }
-
 }

@@ -44,6 +44,11 @@ abstract class Base
         $this->gearmanClient->addServer($this->conf['gearman']['host'], $this->conf['gearman']['port']);
     }
 
+    protected function addTaskBackground($eventName, $data)
+    {
+        $this->gearmanClient->addTaskBackground($eventName, $data);
+    }
+
     protected function addTask($eventName, $data)
     {
         $this->gearmanClient->addTask($eventName, $data);

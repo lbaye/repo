@@ -26,11 +26,26 @@ class FetchFacebookLocation extends Base
         $facebook = new \Service\Location\Facebook();
         $locations = $facebook->getFriendLocation($workload->facebookId, $workload->facebookAuthToken);
 
-        foreach ($locations['data'] as $location) {
-            $location['source'] = 'fb';
-            $savedLocation = $this->externalLocationRepository->insertFromFacebook($location);
-            echo "Added location with ID: ", $savedLocation->getRefId(), PHP_EOL;
-        }
-    }
+        if (count($locations) > 0) {
 
+            foreach ($locations['data'] as $location) {
+
+                $location['source'] = 'fb-public';
+                $location['profile'] = $facebook->getPublicProfile($location['author_uid']);
+                $location['avatar'] = $facebook->getPublicAvatar($location['author_uid']);
+                $location['coords'] = array('longitude' => $location['coords']['longitude'], 'latitude' => $location['coords']['latitude']);
+
+                $savedLocation = $this->externalLocationRepository->insertFromFacebook($location);
+
+                if ($savedLocation) {
+                    echo "Added location with ID: ", $savedLocation->getRefId(), PHP_EOL;
+                } else {
+                    echo "Duplicate location not added.", PHP_EOL;
+                }
+
+            }
+
+        }
+
+    }
 }

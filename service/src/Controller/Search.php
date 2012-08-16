@@ -4,15 +4,23 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
+use Repository\User as UserRepository;
+use Repository\ExternalLocation as ExternalLocationRepository;
 use Helper\Location;
 
 class Search extends Base
 {
+    const PEOPLE_THRESHOLD = 100;
+
     /**
-     * @var userRepository
+     * @var UserRepository
      */
     private $userRepository;
+
+    /**
+     * @var ExternalLocationRepository
+     */
+    private $externalLocationRepository;
 
     /**
      * Initialize the controller.
@@ -45,18 +53,32 @@ class Search extends Base
     protected function people($data)
     {
         $location = array('lat' => (float) $data['lat'], 'lng' => (float) $data['lng']);
-        $keywords = $data['keyword'];
+        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $people = $this->userRepository->search($keywords, $location);
+        $people = $this->userRepository->search($keywords, $location, self::PEOPLE_THRESHOLD);
+
+        if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {
+
+            $difference = self::PEOPLE_THRESHOLD - count($people);
+
+            $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
+            $externalPeople = $this->externalLocationRepository->getNearBy($location, $difference);
+
+            if ($externalPeople) {
+                $people = array_merge($people, $externalPeople);
+            }
+
+        }
+
         return $people;
     }
 
     protected function places($data)
     {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
-        $keywords = $data['keyword'];
+        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $googlePlaces = new \Service\Venue\GooglePlaces('AIzaSyAblaI77qQF6DDi5wbhWKePxK00zdFzg-w');
+        $googlePlaces = new \Service\Venue\GooglePlaces($this->config['googlePlace']['apiKey']);
         $places = $googlePlaces->search($keywords, $location);
 
         return $places;

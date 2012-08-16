@@ -48,11 +48,16 @@ class AllList extends Base
      */
     public function index($type = 'place')
     {
+        $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
+        $this->response->setStatusCode(501);
 
-        if ($this->request->getMethod() == 'PUT') {
+        return $this->response;
+
+        /*if ($this->request->getMethod() == 'PUT') {
+
             $data = $this->request->request->all();
-
             $location = $this->user->getCurrentLocation();
+
             if (array_key_exists('lat', $data) && array_key_exists('lng', $data)) {
 
                 $location['lat'] = floatval($data['lat']);
@@ -64,7 +69,6 @@ class AllList extends Base
                 $this->dm->persist($this->user);
                 $this->dm->flush();
 
-
             } else {
 
                 $this->response->setContent(json_encode(array('message' => 'Invalid location (lat and lng required)')));
@@ -72,6 +76,7 @@ class AllList extends Base
 
                 return $this->response;
             }
+
         }
 
         $start = $this->request->get('start', 0);
@@ -88,13 +93,18 @@ class AllList extends Base
         $this->response->setContent(json_encode(array('places' => $places, 'users' => $users, 'deals' => $deals)));
         $this->response->setStatusCode(200);
 
-        return $this->response;
+        return $this->response;*/
     }
 
 
     public function getUsers()
     {
-        $this->_ensureLoggedIn();
+        $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
+        $this->response->setStatusCode(501);
+
+        return $this->response;
+
+        /*$this->_ensureLoggedIn();
 
         $start = $this->request->get('start', 0);
         $limit = $this->request->get('limit', 20);
@@ -114,14 +124,19 @@ class AllList extends Base
             }
         }
 
-        return $this->response;
+        return $this->response;*/
     }
 
 
     public function getDeals()
     {
+        $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
+        $this->response->setStatusCode(501);
+
+        return $this->response;
+
         //$deals = $query->where('{ "location" : { $near : [81,91] } }')->getQuery()->execute();
-        $location = $this->user->getCurrentLocation();
+        /*$location = $this->user->getCurrentLocation();
 
         if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
@@ -139,9 +154,8 @@ class AllList extends Base
             }
         }
 
-        return $this->response;
+        return $this->response;*/
     }
-
 
     private function _initRepository($type)
     {
@@ -150,7 +164,6 @@ class AllList extends Base
         } else {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
         }
-
     }
 
     /**
