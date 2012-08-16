@@ -248,7 +248,7 @@ class User
             Validator::create()->notEmpty()->assert($this->getFacebookId());
             Validator::create()->notEmpty()->assert($this->getFacebookAuthToken());
             Validator::create()->email()->assert($this->getEmail());
-        } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
             return false;
         }
 

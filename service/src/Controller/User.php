@@ -240,7 +240,7 @@ class User extends Base
             if (!empty($data['avatar'])) {
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
-            $this->response->setContent(json_encode($user->toArray()));
+            $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
         } catch (\Exception\ResourceNotFoundException $e) {
 
