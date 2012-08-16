@@ -101,16 +101,17 @@ class Auth extends Base
             return $this->response;
         }
 
-        $user = $this->userRepository->validateFbLogin($data);
-        $this->userRepository->setCurrentUser($user);
+         try {
 
-        if ($user instanceof \Document\User) {
-            $this->userRepository->updateLoginCount($user->getId());
-            $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
-
+             $user = $this->userRepository->validateFbLogin($data);
+            $this->userRepository->setCurrentUser($user);
             if (!empty($data['avatar'])) {
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
+
+            if ($user instanceof \Document\User) {
+            $this->userRepository->updateLoginCount($user->getId());
+            $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
 
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
@@ -118,8 +119,17 @@ class Auth extends Base
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);
         }
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        } catch (\InvalidArgumentException $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
 
         return $this->response;
+
     }
 
     /**

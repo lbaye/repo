@@ -263,18 +263,17 @@ class User
     public function toArray()
     {
         $data = array(
-            'id'                 => $this->getId(),
-            'email'              => $this->getEmail(),
-            'firstName'          => $this->getFirstName(),
-            'lastName'           => $this->getLastName(),
-            'avatar'             => $this->getAvatar(),
-            'enabled'            => $this->getEnabled(),
-            'lastLogin'          => $this->getLastLogin(),
-            'settings'           => $this->getSettings(),
+            'id'         => $this->getId(),
+            'email'      => $this->getEmail(),
+            'firstName'  => $this->getFirstName(),
+            'lastName'   => $this->getLastName(),
+            'avatar'     => $this->getAvatar(),
+            'enabled'    => $this->getEnabled(),
+            'lastLogin'  => $this->getLastLogin(),
+            'settings'   => $this->getSettings(),
             'currentLocation'    => $this->getCurrentLocation(),
-            'createDate'         => $this->getCreateDate(),
-            'updateDate'         => $this->getUpdateDate(),
-            'external'           => false
+            'createDate' => $this->getCreateDate(),
+            'updateDate' => $this->getUpdateDate()
         );
 
         if (isset($this->distance))
@@ -312,7 +311,6 @@ class User
             'updateDate'         => $this->getUpdateDate(),
             'blockedUsers'       => $this->getBlockedUsers(),
             'blockedBy'          => $this->getBlockedBy(),
-            'external'           => false
         );
 
         if ($this->getCircles()) {
@@ -794,5 +792,32 @@ class User
     public function getOldPassword()
     {
         return $this->oldPassword;
+    }
+    
+    public function getDistance()
+    {
+        if (isset($this->distance)) {
+            $metricValue = floatval($this->distance) * 111.12; // Convert to Km
+        } else {
+            return 0;
+        }
+        
+        $unitName = $this->getSettings();
+        $this->distance = $this->unitConvert($metricValue, $unitName['unit']);
+        
+        return $this->distance;
+    }
+
+    private function unitConvert($value, $unitName = "Metrics")
+    {
+        if ($unitName != "") {
+            if ($unitName == "Imperial") {
+                if (isset($this->$value)) {
+                    $value = $value * 0.6214;
+                }
+            }
+        }
+        
+        return $value;
     }
 }

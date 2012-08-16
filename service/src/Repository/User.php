@@ -166,6 +166,13 @@ class User extends BaseRepository
 
     public function update($data, $id)
     {
+
+        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
+            if ($this->exists($data)) {
+                throw new \Exception\ResourceAlreadyExistsException($data['email']);
+            }
+        }
+
         $userDetail = $this->find($id);
 
         if (false === $userDetail) {
