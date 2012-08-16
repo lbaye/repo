@@ -29,18 +29,72 @@ class ExternalLocation
 
     /** @ODM\Hash */
     protected $coords = array(
-        'latitude' => 0,
-        'longitude' => 0
+        'longitude' => 0,
+        'latitude' => 0
     );
 
     /** @ODM\String */
     protected $refTimestamp;
 
     /** @ODM\Hash */
+    protected $refProfile;
+
+    /** @ODM\Hash */
     protected $refTaggedUserIds;
 
     /** @ODM\String */
     protected $source;
+
+    public function toArray()
+    {
+        $data = array(
+            'id' => $this->getId(),
+            'refId' => $this->getRefId(),
+            'refUserId' => $this->getRefUserId(),
+            'refLocationId' => $this->getRefLocationId(),
+            'refType' => $this->getRefType(),
+            'coords' => $this->getCoords(),
+            'refTimestamp' => $this->getRefTimestamp(),
+            'refProfile' => $this->getRefProfile(),
+            'refTaggedUserIds' => $this->getRefTaggedUserIds(),
+            'source' => $this->getSource()
+        );
+
+        return $data;
+    }
+
+    public function toArrayAsUser()
+    {
+        $data = array(
+            'id' => $this->getId(),
+            'email' => '',
+            'external' => true,
+            'source' => $this->getSource()
+        );
+
+        $coords = $this->getCoords();
+        $data['currentLocation'] = array('lat' => $coords['latitude'], 'lng' => $coords['longitude']);
+
+        $profile = $this->getRefProfile();
+
+        if (isset($profile['first_name'])) {
+            $data['firstName'] = $profile['first_name'];
+        }
+
+        if (isset($profile['last_name'])) {
+            $data['lastName'] = $profile['last_name'];
+        }
+
+        if (isset($profile['gender'])) {
+            $data['gender'] = $profile['gender'];
+        }
+
+        if (isset($profile['avatar'])) {
+            $data['avatar'] = $profile['avatar'];
+        }
+
+        return $data;
+    }
 
     public function setCoords($coords)
     {
@@ -130,5 +184,15 @@ class ExternalLocation
     public function getSource()
     {
         return $this->source;
+    }
+
+    public function setRefProfile($refProfile)
+    {
+        $this->refProfile = $refProfile;
+    }
+
+    public function getRefProfile()
+    {
+        return $this->refProfile;
     }
 }

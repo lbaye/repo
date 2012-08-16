@@ -696,8 +696,10 @@ class User extends BaseRepository
             ->field('visible')->equals(true)
             ->limit($limit);
 
-        $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-        $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+        if (!is_null($keyword)) {
+            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+        }
 
         $users = $query->getQuery()->execute();
 

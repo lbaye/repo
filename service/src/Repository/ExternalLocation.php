@@ -11,10 +11,37 @@ class ExternalLocation extends DocumentRepository
     {
         $externalLocation = $this->map($data);
 
-        $this->dm->persist($externalLocation);
-        $this->dm->flush();
+        try {
+            $this->dm->persist($externalLocation);
+            $this->dm->flush();
+            return $externalLocation;
+        } catch (\MongoCursorException $e) {
+            return false;
+        }
 
-        return $externalLocation;
+    }
+
+    public function getNearBy($location = array(), $limit = 20)
+    {
+        $query = $this->createQueryBuilder()
+            ->field('currentLocation.latitude')->near($location['lat'])
+            ->field('currentLocation.longitude')->near($location['lng'])
+            ->limit($limit);
+
+        $result = $query->getQuery()->execute();
+
+        if (count($result)) {
+
+            $externalUsers = $this->_toArrayAll($result);
+
+            foreach ($externalUsers as &$externalUser) {
+                $externalUser['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $externalUser['currentLocation']['lat'], $externalUser['currentLocation']['lng']);
+            }
+
+            return $externalUsers;
+        }
+
+        return array();
     }
 
     public function map(array $data, ExternalLocationDocument $externalLocation = null)
@@ -31,7 +58,8 @@ class ExternalLocation extends DocumentRepository
             'coords'      => 'coords',
             'timestamp'   => 'refTimestamp',
             'tagged_uids' => 'refTaggedUserIds',
-            'source'      => 'source'
+            'source'      => 'source',
+            'profile'     => 'refProfile'
         );
 
         foreach ($setIfExistFields as $externalField => $field) {
@@ -42,5 +70,15 @@ class ExternalLocation extends DocumentRepository
         }
 
         return $externalLocation;
+    }
+
+    private function _toArrayAll($results)
+    {
+        $users = array();
+        foreach ($results as $user) {
+            $users[] = $user->toArrayAsUser();
+        }
+
+        return $users;
     }
 }

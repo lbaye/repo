@@ -263,17 +263,18 @@ class User
     public function toArray()
     {
         $data = array(
-            'id'         => $this->getId(),
-            'email'      => $this->getEmail(),
-            'firstName'  => $this->getFirstName(),
-            'lastName'   => $this->getLastName(),
-            'avatar'     => $this->getAvatar(),
-            'enabled'    => $this->getEnabled(),
-            'lastLogin'  => $this->getLastLogin(),
-            'settings'   => $this->getSettings(),
+            'id'                 => $this->getId(),
+            'email'              => $this->getEmail(),
+            'firstName'          => $this->getFirstName(),
+            'lastName'           => $this->getLastName(),
+            'avatar'             => $this->getAvatar(),
+            'enabled'            => $this->getEnabled(),
+            'lastLogin'          => $this->getLastLogin(),
+            'settings'           => $this->getSettings(),
             'currentLocation'    => $this->getCurrentLocation(),
-            'createDate' => $this->getCreateDate(),
-            'updateDate' => $this->getUpdateDate()
+            'createDate'         => $this->getCreateDate(),
+            'updateDate'         => $this->getUpdateDate(),
+            'external'           => false
         );
 
         if (isset($this->distance))
@@ -311,6 +312,7 @@ class User
             'updateDate'         => $this->getUpdateDate(),
             'blockedUsers'       => $this->getBlockedUsers(),
             'blockedBy'          => $this->getBlockedBy(),
+            'external'           => false
         );
 
         if ($this->getCircles()) {

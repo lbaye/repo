@@ -17,13 +17,15 @@ class GooglePlaces extends Base
     {
         $params['location'] = $location['lat'] . ',' . $location['lng'];
 
-        if (!empty($keyword)) {
+        if (!is_null($keyword)) {
             $params['keyword'] = $keyword;
+            $params['rankby'] = 'distance';
+        } else {
+            $params['radius'] = '50000';
         }
 
-        $params['key'] = $this->apiKey;
-        $params['rankby'] = 'distance';
         $params['sensor'] = 'false';
+        $params['key'] = urlencode($this->apiKey);
 
         $target = $this->endpoint . "?" . http_build_query($params);
         list($responseCode, $responseBody) = \Helper\Remote::sendGetRequest($target);

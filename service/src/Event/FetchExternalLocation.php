@@ -25,7 +25,7 @@ class FetchExternalLocation extends Base
         echo "Initiating friend location retrieval task for ", count($fbUsers), " facebook users.", PHP_EOL;
 
         foreach ($fbUsers as $fbUser) {
-            $this->addTask('fetch_facebook_location', json_encode(array(
+            $this->addTaskBackground('fetch_facebook_location', json_encode(array(
                 'facebookId' => $fbUser->getFacebookId(),
                 'facebookAuthToken' => $fbUser->getFacebookAuthToken()
             )));
