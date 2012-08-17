@@ -29,10 +29,10 @@ class Message
     /** @ODM\ReferenceOne(targetDocument="Message", simple=true) */
     protected $thread;
 
-    /** @ODM\ReferenceMany(targetDocument="Message", simple=true) */
+    /** @ODM\ReferenceMany(targetDocument="Message", simple=true, cascade={"remove"}) */
     protected $replies = array();
 
-    /** @ODM\Hash */
+    /** @ODM\ReferenceMany(targetDocument="User", simple=true, cascade={"persist"}) */
     protected $recipients;
 
     /** @ODM\Date */
@@ -43,34 +43,6 @@ class Message
 
     /** @ODM\String */
     protected $status = self::STATUS_UNREAD;
-
-    public function toArray()
-    {
-        $fieldsToExpose = array(
-            'id', 'subject', 'content', 'sender', 'recipients', 'createDate',
-            'updateDate', 'status'
-        );
-
-        $result = array();
-
-        foreach ($fieldsToExpose as $field) {
-            $result[$field] = $this->{"get{$field}"}();
-        }
-
-        # Add object and list of objects
-        if (!empty($this->thread))
-            $result['thread'] = $this->thread->toArray();
-        else
-            $result['thread'] = null;
-
-        if ($this->replies->count() > 0) {
-            $result['replies'] = $this->toArrayOfArrays($this->getReplies());
-        } else {
-            $result['replies'] = array();
-        }
-
-        return $result;
-    }
 
     public function isValid()
     {
@@ -189,23 +161,80 @@ class Message
         return $this->replies;
     }
 
-    private function toArrayOfArrays(\Doctrine\ODM\MongoDB\PersistentCollection $collection)
+    public function toArray($detail = true)
+    {
+        $items = $this->buildSerializableFields();
+
+        # Add sender information
+        $items['sender'] = $this->getSender()->toArray(false);
+
+        # Add recipients
+        $items['recipients'] = $this->toArrayOfUsers($this->getRecipients());
+
+        # Add object and list of objects
+        if (!empty($this->thread)) {
+            $items['thread'] = $this->thread->toArray(false);
+        } else {
+            $items['thread'] = null;
+        }
+
+        if ($this->replies->count() > 0) {
+            $items['replies'] = $this->toArrayOfMessages($this->getReplies());
+        } else {
+            $items['replies'] = array();
+        }
+
+        return $items;
+    }
+
+    private function toArrayOfMessages(\Doctrine\ODM\MongoDB\PersistentCollection $collection)
     {
         $replies = array();
         $iterator = $collection->getIterator();
         foreach ($iterator as $key => $value) {
-            $reply = array(
-                'id' => $value->getId(),
-                'subject' => $value->getSubject(),
-                'content' => $value->getContent(),
-                'sender' => $value->getSender(),
-                'createDate' => $value->getCreateDate(),
-                'updateDate' => $value->getUpdateDate()
-            );
-            $replies[] = $reply;
+            try {
+                $reply = array(
+                    'id' => $value->getId(),
+                    'subject' => $value->getSubject(),
+                    'content' => $value->getContent(),
+                    'sender' => $value->getSender()->toArray(false),
+                    'createDate' => $value->getCreateDate(),
+                    'updateDate' => $value->getUpdateDate()
+                );
+                $replies[] = $reply;
+            } catch (\Exception $e) {}
         }
 
         return $replies;
+    }
+
+    private function toArrayOfUsers(\Doctrine\ODM\MongoDB\PersistentCollection $collection)
+    {
+        $users = array();
+        $iterator = $collection->getIterator();
+        foreach ($iterator as $key => $value) {
+            try {
+                $user = $value->toArray(false);
+                $users[] = $user;
+            } catch (\Exception $e) {}
+        }
+
+        return $users;
+    }
+
+    private function buildSerializableFields()
+    {
+        $serializableFields = array(
+            'id', 'subject', 'content', 'createDate',
+            'updateDate', 'status'
+        );
+
+        $result = array();
+
+        foreach ($serializableFields as $field)
+            $result[$field] = $this->{"get{$field}"}();
+
+        return $result;
     }
 
 }

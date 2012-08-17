@@ -47,9 +47,7 @@ class Messages extends Base
             $this->response->setStatusCode(201);
 
         } catch (\Exception $e) {
-            $this->response->setContent(
-                json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            $this->generate500($e->getMessage());
         }
 
         return $this->response;
@@ -198,6 +196,6 @@ class Messages extends Base
 
     private function generate500($message = 'Failed to update object')
     {
-        return $this->generateResponse($message, 500);
+        return $this->generateErrorResponse($message, 500);
     }
 }

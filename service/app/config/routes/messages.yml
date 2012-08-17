@@ -22,14 +22,14 @@ status_message:
   pattern: /messages/{id}/status/{status}
   defaults: { _controller: Controller\Messages::updateStatus }
   requirements:
-    _method: POST
+    _method: POST|PUT
     status: read|unread
 
 add_recipient_to_message:
   pattern: /messages/{id}/recipients
   defaults: { _controller: Controller\Messages::updateRecipients }
   requirements:
-    _method: POST
+    _method: POST|PUT
 
 replies_since_message:
   pattern: /messages/{id}/replies
