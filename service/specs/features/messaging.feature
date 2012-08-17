@@ -1,4 +1,3 @@
-@focus
 Feature: Messaging
   In order to establish communication among two or more SM users
   As a web service user
@@ -59,20 +58,69 @@ Feature: Messaging
     Then I should see http "200" status
     And Response is valid "application/json" formatted
     And Response should have at least "1" item
-    And Response should match "{\"message\":\"Removed Successfully\"}"
+    And Response should match "{\"message\":\"Removed successfully\"}"
 
-  Scenario: List of incoming messages should not include replies
+  Scenario: Inbox should be ordered by update date
     Given I've already setup user account with "test@email.com" and "abcdef"
     And I'm logged in through "test@email.com" and "abcdef"
-    And I've created a message with "subject=Hello 1, content=Hello world" and recipients as "me"
+    And I've created several messages
+    And I've sent few update requests through updating status
 
-    When I'm sending http "GET" request to "/messages/sent"
+    When I'm sending http "GET" request to "/messages/inbox"
 
     Then I should see http "200" status
     And Response is valid "application/json" formatted
-    And Response array of hashes should not have "thread" attribute
+    And Messages are ordered by updating date
 
-  Scenario: List of incoming messages should be ordered by last replay's update date
+  Scenario: Add recipient to an existing message thread
+    Given I've already setup user account with "test@email.com" and "abcdef"
+    And I'm logged in through "test@email.com" and "abcdef"
+    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
+
+    When I'm sending http "POST" request to "/messages/{msg_last_id}/recipients"
+    And I'm posting "recipients[]={create_user['id']}, recipients[]={create_user['id']}"
+
+    Then I should see http "200" status
+    And Response is valid "application/json" formatted
+    And Two recipients are added in the list
+
+  Scenario: Mark message as read
+    Given I've already setup user account with "test@email.com" and "abcdef"
+    And I'm logged in through "test@email.com" and "abcdef"
+    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
+
+    When I'm sending http "POST" request to "/messages/{msg_last_id}/status/read"
+
+    Then I should see http "200" status
+    And Response is valid "application/json" formatted
+    And Response should match "\"status\":\"read\""
+
+  Scenario: Mark message as unread
+    Given I've already setup user account with "test@email.com" and "abcdef"
+    And I'm logged in through "test@email.com" and "abcdef"
+    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
+
+    When I'm sending http "POST" request to "/messages/{msg_last_id}/status/unread"
+
+    Then I should see http "200" status
+    And Response is valid "application/json" formatted
+    And Response should match "\"status\":\"unread\""
+
+  @focus
+  Scenario: Retrieve message replies from specific time
+    Given I've already setup user account with "test@email.com" and "abcdef"
+    And I'm logged in through "test@email.com" and "abcdef"
+    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
+    And I've added several message replies
+
+    When I'm sending http "GET" request to "/messages/{msg_last_id}/replies?since=eval(Time.now - 2.days)"
+
+    Then I should see http "200" status
+    And Response is valid "application/json" formatted
+
+
+
+
 
 
 

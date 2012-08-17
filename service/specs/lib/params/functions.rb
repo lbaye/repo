@@ -38,13 +38,20 @@ module Util
         JSON.load(response.body)
       end
 
+      def update_status(auth_response, id, status)
+        client = ClientUtil.create_client
+        response = client.send(:post, "/messages/#{id}/status/#{status}")
+        response.set_headers('Auth-Token' => auth_response['authToken'])
+        JSON.load(response.body)
+      end
+
       def rand_email
         "user#{rand}@email.com"
       end
 
       module_function :rand, :authenticate, :rand_email,
                       :create_message, :create_user, :create_message_context,
-                      :get_user_by_email
+                      :get_user_by_email, :update_status
     end
   end
 end

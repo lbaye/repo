@@ -5,7 +5,11 @@ module Util
       { }.tap do |_params|
         params.each do |_param|
           parts                = _param.to_s.split('=')
-          _params[parts.first] = _parse_values(parts.last)
+          if parts.first.match /\[\]$/
+            (_params[parts.first] ||= []) << _parse_values(parts.last)
+          else
+            _params[parts.first] = _parse_values(parts.last)
+          end
         end
       end
     end

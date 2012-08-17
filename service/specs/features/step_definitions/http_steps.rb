@@ -9,6 +9,10 @@ When /^I'm sending http "(.*?)" request to "(.*?)"$/ do |http_method, uri|
     uri.gsub!(/\{msg_last_id\}/, (@messages || []).last['id'])
     @response.set_uri("#{@client.service_uri}#{uri}")
   end
+
+  if uri.match(/eval\((.*?)\)/)
+    uri.gsub!(/(eval\((.*?)\))/, "")
+  end
 end
 
 When /^I'm posting "(.*?)"$/ do |str_params|
@@ -16,6 +20,7 @@ When /^I'm posting "(.*?)"$/ do |str_params|
 end
 
 Then /^I should see http "(.*?)" status$/ do |code|
+  p @response.body
   @response.code.should == code
 end
 
