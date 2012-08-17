@@ -267,8 +267,9 @@ class User
             'distance'           => $this->getDistance(),
             'age'                => $this->getAge(),
             'gender'             => $this->getGender(),
+            'address'            => $this->getAddress(),
             'relationshipStatus' => $this->getRelationshipStatus(),
-            'address'            => $this->getAddress()
+            'workStatus'         => $this->getWorkStatus()
         );
 
         return $data;
