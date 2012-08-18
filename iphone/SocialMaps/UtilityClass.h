@@ -15,7 +15,7 @@
 + (void)showAlert:(NSString *)title:(NSString *)subTitle;
 + (NSString*) convertDateToDBFormat:(NSString*)adate ;
 + (NSString*) convertNSDateToDBFormat:(NSDate*)adate;
-+ (int) getAgeFromBirthday:(NSString*)birthday;
++ (int) getAgeFromBirthday:(NSDate*)birthday;
 + (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz;
 + (NSDate*) convertDateFromDisplay:(NSString*) date;
 + (NSString*) convertDateToDisplayFormat:(NSDate*)adate ;

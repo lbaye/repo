@@ -86,7 +86,11 @@
     geofencePrefs = [[[Geofence alloc] init] autorelease];
     locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
     notifPrefs = [[[NotificationPref alloc] init] autorelease];
-    
+    peopleList = [[NSMutableArray alloc] init];
+    placeList  = [[NSMutableArray alloc] init];
+    dealList   = [[NSMutableArray alloc] init];
+    displayList= [[NSMutableArray alloc] init];
+
     // Location coordinates
     currPosition = [[Geolocation alloc] init];
     lastPosition = [[Geolocation alloc] init];

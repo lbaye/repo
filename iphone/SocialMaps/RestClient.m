@@ -85,7 +85,6 @@
     [request setPostValue:userInfo.firstName forKey:@"firstName"];
     [request setPostValue:userInfo.avatar forKey:@"avatar"]; 
     [request setPostValue:userInfo.gender forKey:@"gender"];
-    [request setPostValue:userInfo.dateOfBirth forKey:@"dateOfBirth"];
     [request setPostValue:userInfo.bio forKey:@"bio"];
     [request setPostValue:userInfo.street forKey:@"street"];
     [request setPostValue:userInfo.city forKey:@"city"];
@@ -95,7 +94,7 @@
     [request setPostValue:userInfo.interests forKey:@"interests"];
     [request setPostValue:userInfo.workStatus forKey:@"workStatus"];
     [request setPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
-    [request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    //[request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -111,7 +110,7 @@
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
-        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) {
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) {
             User *aUser = [[User alloc] init];
             
             [aUser setFirstName:[jsonObjects objectForKey:@"firstName"]];
@@ -769,12 +768,13 @@
         }
         [aUserInfo.circles addObject:aCircle];
     }
-    aUserInfo.address.id = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"id" key3:nil];
-    aUserInfo.address.street = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"street" key3:nil];
-    aUserInfo.address.city = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"city" key3:nil];
-    aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
-    aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
-    aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
+    aUserInfo.address = [[Address alloc] init];
+    aUserInfo.address.id = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"id"];
+    aUserInfo.address.street = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"street"];
+    aUserInfo.address.city = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"city"];
+    aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"state"];
+    aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"postCode"];
+    aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"country"];
     
     return aUserInfo;
 }
@@ -1110,8 +1110,6 @@
             {
                 People *people=[[People alloc] init];
 
-                Date *date=[[Date alloc] init];
-
                 [people setUserId:[item objectForKey:@"id"]];
                 [people setEmail:[item objectForKey:@"email"]];                
                 [people setFirstName:[item objectForKey:@"firstName"]];                
@@ -1123,34 +1121,21 @@
                 people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
                 people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
                 people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
-                people.dateOfBirth = [self getNestedKeyVal:item key1:@"dateOfBirth" key2:nil key3:nil];
+                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                 people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
                 people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
                 people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
                 
-                date.date = [self getNestedKeyVal:item key1:@"lastLogin" key2:@"date" key3:nil];
-                date.timezoneType=[self getNestedKeyVal:item key1:@"lastLogin" key2:@"timezone_type" key3:nil];
-                date.timezone=[self getNestedKeyVal:item key1:@"lastLogin" key2:@"timezone" key3:nil];
-                
-                [people setLastLogin:date];
+                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
                 [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
                 
-
-                date.date=[self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                date.timezoneType=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                date.timezone=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];                
-                [people setCreateDate:date];
-                
-        
-                date.date=[self getNestedKeyVal:item key1:@"updateDate" key2:@"date" key3:nil];
-                date.timezoneType=[self getNestedKeyVal:item key1:@"updateDate" key2:@"timezone_type" key3:nil];
-                date.timezone=[self getNestedKeyVal:item key1:@"updateDate" key2:@"timezone" key3:nil]; 
-                [people setUpdateDate:date];
+                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
                 
                 [people setDistance:[item objectForKey:@"distance"]];                
                 [searchLocation.peopleArr addObject:people];
                 
-                NSLog(@"User: first %@  last:%@  id:%@ %d",people.firstName, people.lastName, people.userId);
+                NSLog(@"User: first %@  last:%@  id:%@",people.firstName, people.lastName, people.userId);
             }
             
             //get all places
@@ -1256,23 +1241,11 @@
                 [people setAvatar:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"avatar"]];                
                 [people setEnabled:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"enabled"]];                
                 
-                date.date=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"lastLogin"] objectForKey:@"date"];
-                date.timezoneType=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"lastLogin"] objectForKey:@"timezone_type"];
-                date.timezone=[[[[jsonObjects  objectForKey:@"people"] objectAtIndex:i] objectForKey:@"lastLogin"] objectForKey:@"timezone"];
-                
-                [people setLastLogin:date];
                 [people setSettingUnit:[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"settings"] objectForKey:@"unit"]];
                 
-                date.date=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"date"];
-                date.timezoneType=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone_type"];
-                date.timezone=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone"];                
-                [people setCreateDate:date];
-                
-                
-                date.date=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"updateDate"] objectForKey:@"date"];
-                date.timezoneType=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"updateDate"] objectForKey:@"timezone_type"];
-                date.timezone=[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"updateDate"] objectForKey:@"timezone"];                
-                [people setUpdateDate:date];
+                people.lastLogin = [self getDateFromJsonStruct:jsonObjects name:@"lastLogin"];
+                people.createDate = [self getDateFromJsonStruct:jsonObjects name:@"createDate"];
+                people.updateDate = [self getDateFromJsonStruct:jsonObjects name:@"updateDate"];
                 
                 [people setDistance:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"distance"]];                
                 [searchLocation.peopleArr addObject:people];
@@ -1283,7 +1256,6 @@
             //get all places
             for (int i=0; i<[[jsonObjects  objectForKey:@"places"] count]; i++) 
             {
-                Date *date=[[Date alloc] init];
                 Geolocation *geolocation=[[Geolocation alloc] init];
                 [jsonObjects objectForKey:@"people"];
 
@@ -1412,13 +1384,13 @@
     
     [request addRequestHeader:authToken value:authTokenValue];
 
-    [request addPostValue:platform.facebook forKey:@"fb"];
-    [request addPostValue:platform.fourSquare forKey:@"4sq"];
-    [request addPostValue:platform.googlePlus forKey:@"googlePlus"];
-    [request addPostValue:platform.gmail forKey:@"gmail"];
-    [request addPostValue:platform.twitter forKey:@"twitter"];
-    [request addPostValue:platform.yahoo forKey:@"yahoo"];
-    [request addPostValue:platform.badoo forKey:@"badoo"];
+    [request addPostValue:[NSNumber numberWithBool: platform.facebook] forKey:@"fb"];
+    [request addPostValue:[NSNumber numberWithBool: platform.fourSquare] forKey:@"4sq"];
+    [request addPostValue:[NSNumber numberWithBool: platform.googlePlus] forKey:@"googlePlus"];
+    [request addPostValue:[NSNumber numberWithBool: platform.gmail] forKey:@"gmail"];
+    [request addPostValue:[NSNumber numberWithBool: platform.twitter] forKey:@"twitter"];
+    [request addPostValue:[NSNumber numberWithBool: platform.yahoo] forKey:@"yahoo"];
+    [request addPostValue:[NSNumber numberWithBool: platform.badoo] forKey:@"badoo"];
     // Handle successful REST call
     [request setCompletionBlock:^{
         
@@ -1474,9 +1446,9 @@
     
     [request addRequestHeader:authToken value:authTokenValue];
     
-    [request addPostValue:layer.wikipedia forKey:@"wikipedia"];
-    [request addPostValue:layer.tripadvisor forKey:@"tripadvisor"];
-    [request addPostValue:layer.foodspotting forKey:@"foodspotting"];
+    [request addPostValue:[NSNumber numberWithBool: layer.wikipedia] forKey:@"wikipedia"];
+    [request addPostValue:[NSNumber numberWithBool: layer.tripadvisor] forKey:@"tripadvisor"];
+    [request addPostValue:[NSNumber numberWithBool: layer.foodspotting] forKey:@"foodspotting"];
     // Handle successful REST call
     [request setCompletionBlock:^{
         
@@ -1882,17 +1854,23 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            for (NSDictionary *item in jsonObjects) {
-                NotifRequest *req = [[NotifRequest alloc] init];
-                
-                req.notifSenderId = [self getNestedKeyVal:item key1:@"userId" key2:nil key3:nil];
-                req.notifSender   = [self getNestedKeyVal:item key1:@"friendName" key2:nil key3:nil];
-                req.notifMessage  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
-                NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
-                req.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-                [friendRequests addObject:req];
+            
+            NSString * message = [self getNestedKeyVal:jsonObjects key1:@"message" key2:nil key3:nil];
+            if (message != nil && message.length > 0) {
+                NSLog(@"No friend requests");
+            } else {
+                for (NSDictionary *item in jsonObjects) {
+                    NotifRequest *req = [[NotifRequest alloc] init];
+                    
+                    req.notifSenderId = [self getNestedKeyVal:item key1:@"userId" key2:nil key3:nil];
+                    req.notifSender   = [self getNestedKeyVal:item key1:@"friendName" key2:nil key3:nil];
+                    req.notifMessage  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
+                    NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                    NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                    NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                    req.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                    [friendRequests addObject:req];
+                }
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
             

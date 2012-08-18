@@ -69,18 +69,12 @@
 }
 
 // Calculates the age given the birthday in mm/dd/yyyy format
-+ (int) getAgeFromBirthday:(NSString*)birthday {
-    
-    NSDateFormatter *format = [[NSDateFormatter alloc] init];	
-	[format setDateFormat:@"MM/dd/yyyy"];
-	NSDate *dob = [format dateFromString:birthday];	
-    
-    
++ (int) getAgeFromBirthday:(NSDate*)birthday {
     NSCalendar *sysCalendar = [NSCalendar currentCalendar];
 
     NSDate *now = [NSDate date];
     unsigned int unitFlags =  NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit;
-    NSDateComponents *breakdownInfo = [sysCalendar components:unitFlags fromDate:dob  toDate:now  options:0];
+    NSDateComponents *breakdownInfo = [sysCalendar components:unitFlags fromDate:birthday  toDate:now  options:0];
     
     NSLog(@"Break down: %ddays %dmoths %dyears",[breakdownInfo day], [breakdownInfo month], [breakdownInfo year]);
 

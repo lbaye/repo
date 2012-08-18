@@ -17,12 +17,12 @@
     NSString *lastName;
     NSString *avatar;
     NSString *enabled;
-    Date *lastLogin;    
+    NSDate *lastLogin;    
     NSString *settingUnit;    
     NSString *currentLocationLat;
     NSString *currentLocationLng;
-    Date *createDate;
-    Date *updateDate;
+    NSDate *createDate;
+    NSDate *updateDate;
     NSString *distance;
     NSString *gender;
     NSString *relationsipStatus;
@@ -30,7 +30,7 @@
     NSString *workStatus;
     BOOL external;
     NSString *statusMsg;
-    NSString *dateOfBirth;
+    NSDate *dateOfBirth;
     NSString *age;
 }
 
@@ -40,12 +40,12 @@
 @property(nonatomic,retain) NSString *lastName;
 @property(nonatomic,retain) NSString *avatar;
 @property(nonatomic,retain) NSString *enabled;
-@property(nonatomic,retain) Date *lastLogin;    
+@property(nonatomic,retain) NSDate *lastLogin;    
 @property(nonatomic,retain) NSString *settingUnit;    
 @property(nonatomic,retain) NSString *currentLocationLat;
 @property(nonatomic,retain) NSString *currentLocationLng;
-@property(nonatomic,retain) Date *createDate;
-@property(nonatomic,retain) Date *updateDate;
+@property(nonatomic,retain) NSDate *createDate;
+@property(nonatomic,retain) NSDate *updateDate;
 @property(nonatomic,retain) NSString *distance;
 @property(nonatomic,retain) NSString *gender;
 @property(nonatomic,retain) NSString *relationsipStatus;
@@ -53,7 +53,7 @@
 @property(nonatomic,retain) NSString *workStatus;
 @property(nonatomic) BOOL external;
 @property(nonatomic,retain) NSString *statusMsg;
-@property(nonatomic,retain) NSString *dateOfBirth;
+@property(nonatomic,retain) NSDate *dateOfBirth;
 @property(nonatomic,retain) NSString *age;
 
 

@@ -316,16 +316,13 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
     
-    // Get notifications
-    [smAppDelegate getUserInformation:smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+////    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+////    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
     
-    if (!gotListing) {
-        gotListing = TRUE;
-        RestClient *restClient = [[RestClient alloc] init];
-//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-    }
+    // Get Information
+    [smAppDelegate getUserInformation:smAppDelegate.authToken];
 
     mapAnno = [[MapAnnotation alloc] init];
     mapAnno.currState = MapAnnotationStateNormal;
@@ -516,6 +513,16 @@ ButtonClickCallbackData callBackData;
           oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
           newLocation.coordinate.latitude, newLocation.coordinate.longitude);
 
+    if (!gotListing) {
+        gotListing = TRUE;
+        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
+        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
+        
+        RestClient *restClient = [[RestClient alloc] init];
+//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
     
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.lastPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
@@ -529,7 +536,9 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.currPosition.positionTime = [NSDate date];
         
         // Send new location to server
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     }
 
@@ -1290,8 +1299,6 @@ ButtonClickCallbackData callBackData;
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
-            smAppDelegate.peopleList = [[NSMutableArray alloc] init];
-
             float dist;
             
             for (People *item in listings.peopleArr) {
@@ -1320,7 +1327,6 @@ ButtonClickCallbackData callBackData;
                 [aPerson release];
             }
         } else if (listings.placeArr != nil) {
-            smAppDelegate.placeList = [[NSMutableArray alloc] init];
             float currLat = 23.796526525077528;
             float currLong = 90.41537761688232;
             float dist;
@@ -1340,8 +1346,7 @@ ButtonClickCallbackData callBackData;
 
         }
     }
-    smAppDelegate.dealList = [[NSMutableArray alloc] initWithCapacity:0];
-    smAppDelegate.displayList = [[NSMutableArray alloc] initWithCapacity:0];
+
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
