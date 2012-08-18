@@ -185,8 +185,8 @@ class User extends BaseRepository
             throw new \Exception\UnauthorizedException();
         }
 
-        if ($data['email'] != $user->getEmail()) {
-            if (!empty($data['email']) && $this->exists($data)) {
+        if (!empty($data['email']) && $data['email'] != $user->getEmail()) {
+            if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
             }
         }
@@ -663,13 +663,13 @@ class User extends BaseRepository
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $filePath = "/avatar/" . $user->getId() . ".jpeg";
+        $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
             $user->setAvatar($avatarUrl);
         } else {
-            ImageHelper::saveImageFromBase64($avatar, $filePath);
+            ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
             $user->setAvatar($filePath);
         }
 

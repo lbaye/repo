@@ -154,13 +154,13 @@ class User
 
     /** @ODM\Hash */
     protected $platformSettings = array(
-        'fb' => true,
-        '4sq' => true,
+        'fb'         => true,
+        '4sq'        => true,
         'googlePlus' => true,
-        'gmail' => true,
-        'twitter' => true,
-        'yahoo' => true,
-        'badoo' => true,
+        'gmail'      => true,
+        'twitter'    => true,
+        'yahoo'      => true,
+        'badoo'      => true,
     );
 
     /** @ODM\Hash */
@@ -170,14 +170,14 @@ class User
 
     /** @ODM\Hash */
     protected $notificationSettings = array(
-        'friend_requests' => array('sm' => true, 'mail' => true),
-        'posts_by_friends' => array('sm' => true, 'mail' => true),
-        'comments' => array('sm' => true, 'mail' => true),
-        'messages' => array('sm' => true, 'mail' => true),
-        'recommendations' => array('sm' => true, 'mail' => true),
-        'proximity_alerts' => array('sm' => true, 'mail' => true),
+        'friend_requests'       => array('sm' => true, 'mail' => true),
+        'posts_by_friends'      => array('sm' => true, 'mail' => true),
+        'comments'              => array('sm' => true, 'mail' => true),
+        'messages'              => array('sm' => true, 'mail' => true),
+        'recommendations'       => array('sm' => true, 'mail' => true),
+        'proximity_alerts'      => array('sm' => true, 'mail' => true),
         'offline_notifications' => array('sm' => true, 'mail' => true),
-        'proximity_radius' => 0
+        'proximity_radius'      => 0
     );
 
     /** @ODM\Hash */
@@ -206,25 +206,25 @@ class User
     /**
      * @ODM\Hash
      *
-     * Possible options: all, friends, none, circles
+     * Possible options: all, friends, none, circles, custom
      */
     protected $sharingPreferenceSettings = array(
-        'firstName' => 'all',
-        'lastName' => 'all',
-        'email' => 'all',
-        'dateOfBirth' => 'all',
-        'bio' => 'all',
-        'interests' => 'all',
-        'workStatus' => 'all',
+        'firstName'          => 'all',
+        'lastName'           => 'all',
+        'email'              => 'all',
+        'dateOfBirth'        => 'all',
+        'bio'                => 'all',
+        'interests'          => 'all',
+        'workStatus'         => 'all',
         'relationshipStatus' => 'all',
-        'address' => 'all',
-        'friendRequest' => 'all',
-        'circles' => 'all',
-        'newsfeed' => 'all',
-        'avatar' => 'all',
-        'username' => 'all',
-        'name' => 'all',
-        'gender' => 'all'
+        'address'            => 'all',
+        'friendRequest'      => 'all',
+        'circles'            => 'all',
+        'newsfeed'           => 'all',
+        'avatar'             => 'all',
+        'username'           => 'all',
+        'name'               => 'all',
+        'gender'             => 'all'
     );
 
     public function isValid()
@@ -257,10 +257,24 @@ class User
         );
 
         $detailFields = array(
-            'id', 'email', 'firstName', 'lastName', 'avatar', 'enabled',
-            'lastLogin', 'settings', 'currentLocation', 'createDate',
-            'updateDate', 'distance', 'age', 'gender', 'address',
-            'relationshipStatus', 'workStatus'
+            'id',
+            'email',
+            'firstName',
+            'lastName',
+            'avatar',
+            'enabled',
+            'lastLogin',
+            'settings',
+            'currentLocation',
+            'createDate',
+            'updateDate',
+            'distance',
+            'age',
+            'gender',
+            'address',
+            'relationshipStatus',
+            'workStatus',
+            'dateOfBirth'
         );
 
         $items = array();
@@ -272,8 +286,9 @@ class User
             $targetFields = $shortFields;
         }
 
-        foreach ($targetFields as $field)
+        foreach ($targetFields as $field) {
             $items[$field] = $this->{"get{$field}"}();
+        }
 
         return $items;
     }
@@ -281,34 +296,34 @@ class User
     public function toArrayDetailed()
     {
         $data = array(
-            'id' => $this->getId(),
-            'email' => $this->getEmail(),
-            'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'avatar' => $this->getAvatar(),
-            'deactivated' => $this->getDeactivated(),
-            'authToken' => $this->getAuthToken(),
-            'settings' => $this->getSettings(),
-            'source' => $this->getSource(),
-            'dateOfBirth' => $this->getDateOfBirth(),
-            'bio' => $this->getBio(),
-            'gender' => $this->getGender(),
-            'username' => $this->getUsername(),
-            'interests' => $this->getInterests(),
-            'workStatus' => $this->getWorkStatus(),
+            'id'                 => $this->getId(),
+            'email'              => $this->getEmail(),
+            'firstName'          => $this->getFirstName(),
+            'lastName'           => $this->getLastName(),
+            'avatar'             => $this->getAvatar(),
+            'deactivated'        => $this->getDeactivated(),
+            'authToken'          => $this->getAuthToken(),
+            'settings'           => $this->getSettings(),
+            'source'             => $this->getSource(),
+            'dateOfBirth'        => $this->getDateOfBirth(),
+            'bio'                => $this->getBio(),
+            'gender'             => $this->getGender(),
+            'username'           => $this->getUsername(),
+            'interests'          => $this->getInterests(),
+            'workStatus'         => $this->getWorkStatus(),
             'relationshipStatus' => $this->getRelationshipStatus(),
-            'currentLocation' => $this->getCurrentLocation(),
-            'enabled' => $this->getEnabled(),
-            'visible' => $this->getVisible(),
-            'regMedia' => $this->getRegMedia(),
-            'loginCount' => $this->getLoginCount(),
-            'lastLogin' => $this->getLastLogin(),
-            'createDate' => $this->getCreateDate(),
-            'updateDate' => $this->getUpdateDate(),
-            'blockedUsers' => $this->getBlockedUsers(),
-            'blockedBy' => $this->getBlockedBy(),
-            'distance' => $this->getDistance(),
-            'age' => $this->getAge()
+            'currentLocation'    => $this->getCurrentLocation(),
+            'enabled'            => $this->getEnabled(),
+            'visible'            => $this->getVisible(),
+            'regMedia'           => $this->getRegMedia(),
+            'loginCount'         => $this->getLoginCount(),
+            'lastLogin'          => $this->getLastLogin(),
+            'createDate'         => $this->getCreateDate(),
+            'updateDate'         => $this->getUpdateDate(),
+            'blockedUsers'       => $this->getBlockedUsers(),
+            'blockedBy'          => $this->getBlockedBy(),
+            'distance'           => $this->getDistance(),
+            'age'                => $this->getAge()
         );
 
         if ($this->getCircles()) {
