@@ -10,9 +10,15 @@
 
 @interface UtilityClass : NSObject
 
--(void)showAlert:(NSString *)title:(NSString *)subTitle;
++ (void) showCustomAlert:(NSString*)title subTitle:(NSString*)subTitle
+                 bgColor:(UIColor*) bgColor strokeColor:(UIColor*) strokeColor btnText:(NSString*) btnText;
++ (void)showAlert:(NSString *)title:(NSString *)subTitle;
 + (NSString*) convertDateToDBFormat:(NSString*)adate ;
++ (NSString*) convertNSDateToDBFormat:(NSDate*)adate;
 + (int) getAgeFromBirthday:(NSString*)birthday;
 + (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz;
++ (NSDate*) convertDateFromDisplay:(NSString*) date;
++ (NSString*) convertDateToDisplayFormat:(NSDate*)adate ;
+
 
 @end

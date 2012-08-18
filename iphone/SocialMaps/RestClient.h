@@ -21,6 +21,7 @@
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
+- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects;
 - (void) login:(NSString*) email password:(NSString*)pass;
 - (void) loginFacebook:(User*) userInfo;
 - (void) register:(User*) userInfo;
@@ -51,4 +52,7 @@
 - (void) getNotificationMessages:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
 - (void) declineFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
+- (NSDate*) getDateFromJsonStruct:(NSDictionary*) jsonObjects name:(NSString*) name;
+- (id) getNestedKeyVal:(NSDictionary*)dict key1:(NSString*)key1 key2:(NSString*)key2 key3:(NSString*)key3;
+- (bool) changePassword:(NSString*)passwd oldpasswd:(NSString*)oldpasswd authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
 @end

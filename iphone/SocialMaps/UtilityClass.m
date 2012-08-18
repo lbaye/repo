@@ -7,10 +7,27 @@
 //
 
 #import "UtilityClass.h"
+#import "CustomAlert.h"
 
 @implementation UtilityClass
 
--(void)showAlert:(NSString *)title:(NSString *)subTitle
++ (void) showCustomAlert:(NSString*)title subTitle:(NSString*)subTitle
+                 bgColor:(UIColor*) bgColor strokeColor:(UIColor*) strokeColor btnText:(NSString*) btnText {
+    
+    [CustomAlert setBackgroundColor:bgColor 
+                    withStrokeColor:strokeColor];
+    CustomAlert *alert = [[CustomAlert alloc]
+                               initWithTitle:title
+                               message:subTitle
+                               delegate:nil
+                               cancelButtonTitle:btnText
+                               otherButtonTitles:nil];
+    
+    [alert show];
+    [alert autorelease];
+}
+
++(void)showAlert:(NSString *)title:(NSString *)subTitle
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title 
                                                     message:subTitle 
@@ -31,11 +48,31 @@
     return dbDate;
 }
 
+// Converts date from NSDate to yyyy-mm-dd fromat
++ (NSString*) convertNSDateToDBFormat:(NSDate*)adate {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];	
+	[formatter setDateFormat:@"yyyy-MM-dd"];
+	NSString *stringFromDate = [formatter stringFromDate:adate];
+    return stringFromDate;
+}
+
+
+//
++ (NSString*) convertDateToDisplayFormat:(NSDate*)adate {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MM/dd/yyyy"];
+        
+    NSString *stringFromDate = [formatter stringFromDate:adate];
+    
+    [formatter release];
+    return stringFromDate;
+}
+
 // Calculates the age given the birthday in mm/dd/yyyy format
 + (int) getAgeFromBirthday:(NSString*)birthday {
     
     NSDateFormatter *format = [[NSDateFormatter alloc] init];	
-	[format setDateFormat:@"mm/dd/yyyy"];
+	[format setDateFormat:@"MM/dd/yyyy"];
 	NSDate *dob = [format dateFromString:birthday];	
     
     
@@ -50,7 +87,14 @@
     return [breakdownInfo year];
     
 }
-
+// Converts date in the display format MM/dd/yyyy to NSDate
++ (NSDate*) convertDateFromDisplay:(NSString*) date {
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *convDate = [dateFormatter dateFromString:date];
+    
+    return convDate;
+}
 // Converts date expressed in date:timezone to NSDate
 // date - yyyy-mm-dd HH:mm:ss
 // tmezone type - N
@@ -59,7 +103,7 @@
 + (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz {
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:tz]];
+    //[dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:tz]];
     NSDate *convDate = [dateFormatter dateFromString:date];
 
     NSLog(@"%@:%@:%@ ---> %@", date, tz_type, tz, [convDate description]);

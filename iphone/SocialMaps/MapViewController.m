@@ -74,7 +74,6 @@ __strong NSString *searchText;
 bool searchFlag=FALSE;
 FacebookHelper *fbHelper;
 UserDefault *userDefault;
-UtilityClass *utility;
 
 // Button event handler
 typedef struct {
@@ -344,7 +343,6 @@ ButtonClickCallbackData callBackData;
     [locUpdateBtn addTarget:self action:@selector(updateLocation:) forControlEvents:UIControlEventTouchUpInside];
     [_mapView addSubview:locUpdateBtn];
     
-    utility=[[UtilityClass alloc] init];
     afriend=[[UserFriends alloc] init];
     userNameArray=[[NSMutableArray alloc] init];
     userNameCopyArray=[[NSMutableArray alloc] init];
@@ -424,38 +422,14 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     
 }
-- (id)initWithCoder:(NSCoder *)decoder
+
+/*- (id)initWithCoder:(NSCoder *)decoder
 {
     if (self = [super initWithCoder:decoder])
     {
-//        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//        _mapView.delegate=self;
-//        _mapView.showsUserLocation=YES;
-//        locationManager = [[CLLocationManager alloc] init];
-//        [locationManager setDelegate:self];
-//        [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
-//        [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-//        [locationManager startUpdatingLocation];
-//        gotListing = FALSE;
-//
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
-//        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
-//
-//        // Get notifications
-//        [smAppDelegate getUserInformation:smAppDelegate.authToken];
-//        
-//        if (!gotListing) {
-//            gotListing = TRUE;
-//            RestClient *restClient = [[RestClient alloc] init];
-//            smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//            smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//            [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-//        }
-        
     }
     return self;
-}
+}*/
 
 -(void) displayNotificationCount {
     int ignoreCount = 0;
@@ -547,7 +521,7 @@ ButtonClickCallbackData callBackData;
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.lastPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
-    if (distanceMoved >= 0) { // TODO : use distance
+    if (distanceMoved >= 10) { // TODO : use distance
         // Update the position
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
@@ -571,7 +545,7 @@ ButtonClickCallbackData callBackData;
      MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
      // 4
      [_mapView setRegion:adjustedRegion animated:YES];  
-     [_mapView setCenterCoordinate:zoomLocation animated:YES];
+     //[_mapView setCenterCoordinate:zoomLocation animated:YES];
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
@@ -1078,7 +1052,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"inviting all users %@",selectedRows);
     if([selectedRows count]>50)
     {
-        [utility showAlert:@"Social Maps" :@"Can not request more then 50 friends"];
+        [UtilityClass showAlert:@"Social Maps" :@"Can not request more then 50 friends"];
     }
     else
     {
@@ -1091,7 +1065,7 @@ ButtonClickCallbackData callBackData;
     NSArray *selectedRows = [self.inviteFrndTableView indexPathsForSelectedRows];
     if([selectedRows count]>50)
     {
-        [utility showAlert:@"Social Map" :@"Can not request more then 50 friends"];
+        [UtilityClass showAlert:@"Social Map" :@"Can not request more then 50 friends"];
     }
     else
     {

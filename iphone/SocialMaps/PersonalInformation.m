@@ -10,6 +10,8 @@
 #import "CustomAlert.h"
 #import "PhotoPicker.h"
 #import "AppDelegate.h"
+#import "UtilityClass.h"
+#import "RestClient.h"
 
 #define BUTTON_WIDTH 60
 #define BUTTON_HEIGHT 30
@@ -54,12 +56,14 @@
 @synthesize genderBtn;
 @synthesize selMaleFemale;
 @synthesize arrayGender;
+@synthesize smAppDelegate;
 
 - (id)initWithFrame:(CGRect)frame sender:(id) sender tag:(int)tag
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         self.parent = sender;
         self.tag    = tag;
         self.backgroundColor = [UIColor clearColor];
@@ -146,6 +150,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     email = [self getTextField:itemFrame text:@"Email..." tag:currTag++];
     email.delegate = parent;
+    email.text = smAppDelegate.userAccountPrefs.email;
     [self addSubview:email];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -163,6 +168,7 @@
     gender = [self getTextField:itemFrame text:@"Gender..." tag:currTag++];
     gender.delegate = parent;
     gender.userInteractionEnabled = FALSE;
+    gender.text = smAppDelegate.userAccountPrefs.gender;
     [self addSubview:gender];
     
     // Gender button
@@ -189,6 +195,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     firstName = [self getTextField:itemFrame text:@"First name..." tag:currTag++];
     firstName.delegate = parent;
+    firstName.text = smAppDelegate.userAccountPrefs.firstName;
     [self addSubview:firstName];
     heightOffset += TEXT_HEIGHT + 5;
 
@@ -205,6 +212,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     lastName = [self getTextField:itemFrame text:@"Last name..." tag:currTag++];
     lastName.delegate = parent;
+    lastName.text = smAppDelegate.userAccountPrefs.lastName;
     [self addSubview:lastName];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -221,6 +229,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     userName = [self getTextField:itemFrame text:@"Username..." tag:currTag++];
     userName.delegate = parent;
+    userName.text = smAppDelegate.userAccountPrefs.username;
     [self addSubview:userName];
     heightOffset += TEXT_HEIGHT + 5;
 
@@ -237,6 +246,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, DATE_WIDTH, TEXT_HEIGHT);
     dobText = [self getTextField:itemFrame text:@"mm/dd/yyyy" tag:currTag++];
     dobText.delegate = parent;
+    dobText.text = [UtilityClass convertDateToDisplayFormat: smAppDelegate.userAccountPrefs.dateOfBirth];
     [self addSubview:dobText];
     
     // DOB calander button
@@ -263,6 +273,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     bio = [self getTextField:itemFrame text:@"Biography..." tag:currTag++];
     bio.delegate = parent;
+    bio.text = smAppDelegate.userAccountPrefs.bio;
     [self addSubview:bio];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -279,6 +290,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     streetAddress = [self getTextField:itemFrame text:@"Street address..." tag:currTag++];
     streetAddress.delegate = parent;
+    streetAddress.text = smAppDelegate.userAccountPrefs.address.street;
     [self addSubview:streetAddress];
     heightOffset += TEXT_HEIGHT + 5;
 
@@ -295,6 +307,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     city = [self getTextField:itemFrame text:@"City..." tag:currTag++];
     city.delegate = parent;
+    city.text = smAppDelegate.userAccountPrefs.address.city;
     [self addSubview:city];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -311,6 +324,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     zipCode = [self getTextField:itemFrame text:@"Zip code..." tag:currTag++];
     zipCode.delegate = parent;
+    zipCode.text = smAppDelegate.userAccountPrefs.address.postCode;
     [self addSubview:zipCode];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -327,6 +341,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     country = [self getTextField:itemFrame text:@"Country..." tag:currTag++];
     country.delegate = parent;
+    country.text = smAppDelegate.userAccountPrefs.address.country;
     [self addSubview:country];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -341,9 +356,10 @@
     
     // Service text
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
-    email = [self getTextField:itemFrame text:@"Service..." tag:currTag++];
-    email.delegate = parent;
-    [self addSubview:email];
+    service = [self getTextField:itemFrame text:@"Service..." tag:currTag++];
+    service.delegate = parent;
+    service.text = smAppDelegate.userAccountPrefs.workStatus;
+    [self addSubview:service];
     heightOffset += TEXT_HEIGHT + 5;
     
     // Relationship Label
@@ -357,9 +373,10 @@
     
     // Relationship text
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
-    service = [self getTextField:itemFrame text:@"Relationship status..." tag:currTag++];
-    service.delegate = parent;
-    [self addSubview:service];
+    relationshipStatus = [self getTextField:itemFrame text:@"Relationship status..." tag:currTag++];
+    relationshipStatus.delegate = parent;
+    relationshipStatus.text = smAppDelegate.userAccountPrefs.relationshipStatus;
+    [self addSubview:relationshipStatus];
     heightOffset += TEXT_HEIGHT + 5;
     
     // Submit button
@@ -377,6 +394,27 @@
 
 - (void) submitButtonClicked:(id)sender {
     NSLog(@"PersonalInformation:submitButtonClicked called");
+    
+    // Assign new settings
+    smAppDelegate.userAccountPrefs.email = email.text;
+    smAppDelegate.userAccountPrefs.gender = gender.text;
+    smAppDelegate.userAccountPrefs.firstName = firstName.text;
+    smAppDelegate.userAccountPrefs.lastName = lastName.text;
+    smAppDelegate.userAccountPrefs.username = userName.text;
+    
+    // Convert DOB to NSDate
+    smAppDelegate.userAccountPrefs.dateOfBirth = [UtilityClass convertDateFromDisplay: dobText.text];
+    smAppDelegate.userAccountPrefs.bio = bio.text;
+    smAppDelegate.userAccountPrefs.address.street = streetAddress.text;
+    smAppDelegate.userAccountPrefs.address.city = city.text;
+    smAppDelegate.userAccountPrefs.address.postCode = zipCode.text;
+    smAppDelegate.userAccountPrefs.address.country = country.text;
+    smAppDelegate.userAccountPrefs.workStatus = service.text;
+    smAppDelegate.userAccountPrefs.relationshipStatus = relationshipStatus.text;
+    
+    RestClient *restClient = [[RestClient alloc] init];
+    [restClient setAccountSettings:smAppDelegate.userAccountPrefs :@"Auth-Token" :smAppDelegate.authToken];
+    [self endEditing:TRUE];
 }
 
 - (void) picButtonClicked:(id)sender {

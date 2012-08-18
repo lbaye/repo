@@ -9,7 +9,7 @@
 #import "Address.h"
 
 @implementation Address
-@synthesize userId;
+@synthesize id;
 @synthesize street;
 @synthesize city;
 @synthesize state;

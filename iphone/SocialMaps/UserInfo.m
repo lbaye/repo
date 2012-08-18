@@ -40,5 +40,6 @@
 @synthesize distance;
 @synthesize circles;
 @synthesize address;
+@synthesize age;
 
 @end

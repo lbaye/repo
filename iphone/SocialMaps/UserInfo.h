@@ -21,7 +21,7 @@
     NSString *authToken;
     NSString *settings;
     NSString *source;
-    NSString *dateOfBirth;
+    NSDate  *dateOfBirth;
     NSString *bio;
     NSString *gender;
     NSString *username;
@@ -30,18 +30,19 @@
     NSString *relationshipStatus;
     NSString *currentLocationLat;
     NSString *currentLocationLng;    
-    NSString *enabled;
-    NSString *visible;
+    bool enabled;
+    bool visible;
     NSString *regMedia;
     NSString *loginCount;
-    NSString *lastLogin;
-    Date* createDate;
-    Date* updateDate;
-    NSString *blockedUsers;
-    NSString *blockedBy;
+    NSDate *lastLogin;
+    NSDate* createDate;
+    NSDate* updateDate;
+    NSMutableArray *blockedUsers;
+    NSMutableArray *blockedBy;
     NSString *unit;
-    NSString *distance;
-    NSString *circles;
+    int distance;
+    int age;
+    NSMutableArray *circles;
     Address *address;
 }
 @property(nonatomic,retain) NSString *userId;
@@ -53,7 +54,7 @@
 @property(nonatomic,retain) NSString *authToken;
 @property(nonatomic,retain) NSString *settings;
 @property(nonatomic,retain) NSString *source;
-@property(nonatomic,retain) NSString *dateOfBirth;
+@property(nonatomic,retain) NSDate *dateOfBirth;
 @property(nonatomic,retain) NSString *bio;
 @property(nonatomic,retain) NSString *gender;
 @property(nonatomic,retain) NSString *username;
@@ -62,18 +63,19 @@
 @property(nonatomic,retain) NSString *relationshipStatus;
 @property(nonatomic,retain) NSString *currentLocationLat;
 @property(nonatomic,retain) NSString *currentLocationLng;    
-@property(nonatomic,retain) NSString *enabled;
-@property(nonatomic,retain) NSString *visible;
+@property(atomic) bool enabled;
+@property(atomic) bool visible;
 @property(nonatomic,retain) NSString *regMedia;
 @property(nonatomic,retain) NSString *loginCount;
-@property(nonatomic,retain) NSString *lastLogin;
-@property(nonatomic,retain) Date* createDate;
-@property(nonatomic,retain) Date* updateDate;
-@property(nonatomic,retain) NSString *blockedUsers;
-@property(nonatomic,retain) NSString *blockedBy;
+@property(nonatomic,retain) NSDate *lastLogin;
+@property(nonatomic,retain) NSDate* createDate;
+@property(nonatomic,retain) NSDate* updateDate;
+@property(nonatomic,retain) NSMutableArray *blockedUsers;
+@property(nonatomic,retain) NSMutableArray *blockedBy;
 @property(nonatomic,retain) NSString *unit;
-@property(nonatomic,retain) NSString *distance;
-@property(nonatomic,retain) NSString *circles;
+@property(atomic) int distance;
+@property(atomic) int age;
+@property(nonatomic,retain) NSMutableArray *circles;
 @property(nonatomic,retain) Address *address;
 
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "PhotoPicker.h"
+#import "AppDelegate.h"
 
 @interface PersonalInformation : UIView <PhotoPickerDelegate,UIPickerViewDataSource, 
 UIPickerViewDelegate> {
@@ -27,7 +28,7 @@ UIPickerViewDelegate> {
     UITextField  *zipCode;
     UITextField  *country;
     UITextField  *service;
-    NSString     *relationshipStatus;
+    UITextField     *relationshipStatus;
     UIButton    *submitBtn;
     UIButton    *picBtn;
     id          parent;
@@ -39,6 +40,7 @@ UIPickerViewDelegate> {
     UIDatePicker    *datePickerView;
     UIPickerView *selMaleFemale;
     NSMutableArray         *arrayGender;
+    AppDelegate     *smAppDelegate;
 }
 @property (nonatomic, retain) UITextField  *email;
 @property (nonatomic, retain)UITextField  *password;
@@ -56,7 +58,7 @@ UIPickerViewDelegate> {
 @property (nonatomic, retain)UITextField  *zipCode;
 @property (nonatomic, retain)UITextField  *country;
 @property (nonatomic, retain)UITextField  *service;
-@property (nonatomic, retain)NSString     *relationshipStatus;
+@property (nonatomic, retain)UITextField     *relationshipStatus;
 @property (nonatomic, retain)UIButton    *submitBtn;
 @property (nonatomic, retain)UIButton    *picBtn;
 @property (nonatomic, retain)id          parent;
@@ -68,6 +70,7 @@ UIPickerViewDelegate> {
 @property (nonatomic, retain) UIDatePicker    *datePickerView;
 @property (nonatomic, retain) UIPickerView    *selMaleFemale;
 @property (nonatomic, retain) NSMutableArray       *arrayGender;
+@property (nonatomic, retain) AppDelegate           *smAppDelegate;
 
 - (id)initWithFrame:(CGRect)frame sender:(id) sender tag:(int)tag;
 - (void) photoPickerDone:(bool)status image:(UIImage*)img;

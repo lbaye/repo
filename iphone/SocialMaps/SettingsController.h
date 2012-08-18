@@ -11,10 +11,10 @@
 #import "AppDelegate.h"
 
 @interface SettingsController : UIViewController<CustomCheckboxDelegate> {
-    NSMutableArray *defPlatforms;
+    //NSMutableArray *defPlatforms;
     AppDelegate     *smAppDelegate;
 }
-@property (nonatomic, retain) NSMutableArray *defPlatforms;
+//@property (nonatomic, retain) NSMutableArray *defPlatforms;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 
 @property (retain, nonatomic) IBOutlet UIScrollView *settingsScrollView;

@@ -23,7 +23,7 @@
 @synthesize notifCount;
 @synthesize settingsMainHeader;
 @synthesize backButton;
-@synthesize defPlatforms;
+//@synthesize defPlatforms;
 @synthesize smAppDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -59,9 +59,9 @@
     [super viewDidLoad];
     //settingsScrollView.contentSize = CGSizeMake(310, 960);
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 
-                             [NSNumber numberWithInt:0],
-                             [NSNumber numberWithInt:0], nil] ;
+//    defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 
+//                             [NSNumber numberWithInt:0],
+//                             [NSNumber numberWithInt:0], nil] ;
     // Dummy notification
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
@@ -161,7 +161,11 @@
     [rowView addSubview:lineImage];
     
     NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:smAppDelegate.defPlatforms labels:platforms];
+    NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
+                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
+                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
+    
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
     chkBox.tag = 1001;
     chkBox.backgroundColor = [UIColor clearColor];
     chkBox.delegate = self;
@@ -225,8 +229,12 @@
     lineImage.tag   = 1004;  
     [rowView addSubview:lineImage];
     
-    NSArray *layers = [NSArray arrayWithObjects:@"Wikipedia", @"Tripadvisor", @"Yelp", nil];
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[layers count] default:smAppDelegate.defLayers labels:layers];
+    NSArray *layers = [NSArray arrayWithObjects:@"Wikipedia", @"Tripadvisor", @"Foodspotting", nil];
+    NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool: smAppDelegate.layerPrefs.wikipedia], 
+                       [NSNumber numberWithBool: smAppDelegate.layerPrefs.tripadvisor],
+                       [NSNumber numberWithBool: smAppDelegate.layerPrefs.foodspotting], nil];
+                       
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[layers count] default:def labels:layers];
     chkBox.tag = 1003;
     chkBox.backgroundColor = [UIColor clearColor];
     chkBox.delegate = self;
@@ -349,11 +357,36 @@
 - (void) checkboxClicked:(int)indx withState:(int)clicked sender:(id)sender {
     NSLog(@"index=%d state=%d", indx, clicked);
     CustomCheckbox *chkBox = (CustomCheckbox*) sender;
-    if (chkBox.tag == 1001)
-        [smAppDelegate.defPlatforms replaceObjectAtIndex:indx withObject:[NSNumber numberWithInt:clicked]];
-    else if (chkBox.tag == 1003)
+    if (chkBox.tag == 1001) {
+        switch (indx) {
+            case 0:
+                smAppDelegate.platformPrefs.facebook = clicked;
+                break;
+            case 1:
+                smAppDelegate.platformPrefs.twitter = clicked;
+                break;
+            case 2:
+                smAppDelegate.platformPrefs.fourSquare = clicked;
+                break;
+            default:
+                break;
+        }
+    } else if (chkBox.tag == 1003) {
+        switch (indx) {
+            case 0:
+                smAppDelegate.layerPrefs.wikipedia = clicked;
+                break;
+            case 1:
+                smAppDelegate.layerPrefs.tripadvisor = clicked;
+                break;
+            case 2:
+                smAppDelegate.layerPrefs.foodspotting = clicked;
+                break;
+            default:
+                break;
+        }
         [smAppDelegate.defLayers replaceObjectAtIndex:indx withObject:[NSNumber numberWithInt:clicked]];
-    else if (chkBox.tag >= 10000) {
+    } else if (chkBox.tag >= 10000) {
         int indx = chkBox.tag - 10000; // Auto tagging starts at 10000
         [smAppDelegate.defInfoPref replaceObjectAtIndex:indx withObject:[NSNumber numberWithInt:clicked]];
     }

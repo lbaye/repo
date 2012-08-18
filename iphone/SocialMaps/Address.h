@@ -10,7 +10,7 @@
 
 @interface Address : NSObject
 {
-    NSString *userId;
+    NSString *id;
     NSString *street;
     NSString *city;
     NSString *state;
@@ -18,7 +18,7 @@
     NSString *country;
 }
 
-@property(nonatomic,retain) NSString *userId;
+@property(nonatomic,retain) NSString *id;
 @property(nonatomic,retain) NSString *street;
 @property(nonatomic,retain) NSString *city;
 @property(nonatomic,retain) NSString *state;

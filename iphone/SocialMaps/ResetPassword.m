@@ -7,6 +7,10 @@
 //
 
 #import "ResetPassword.h"
+#import "UtilityClass.h"
+#import "RestClient.h"
+#import "AppDelegate.h"
+
 #define BUTTON_WIDTH 60
 #define BUTTON_HEIGHT 30
 #define TEXT_HEIGHT 37
@@ -55,6 +59,7 @@
     password.tag = 2;
     password.autocapitalizationType = UITextAutocapitalizationTypeNone;
     password.delegate = parent;
+    password.secureTextEntry = TRUE;
     [self addSubview:password];
     
     itemFrame = CGRectMake(30, 5+TEXT_HEIGHT+5, TEXT_WIDTH, TEXT_HEIGHT);
@@ -71,6 +76,7 @@
     passwordNew.tag = 3;
     passwordNew.autocapitalizationType = UITextAutocapitalizationTypeNone;
     passwordNew.delegate = parent;
+    passwordNew.secureTextEntry = TRUE;
     [self addSubview:passwordNew];
     
     itemFrame = CGRectMake(30, 5+2*(TEXT_HEIGHT+5), TEXT_WIDTH, TEXT_HEIGHT);
@@ -87,6 +93,7 @@
     passwordConfirm.tag = 2;
     passwordConfirm.autocapitalizationType = UITextAutocapitalizationTypeNone;
     passwordConfirm.delegate = parent;
+    passwordConfirm.secureTextEntry = TRUE;
     [self addSubview:passwordConfirm];
     
     itemFrame = CGRectMake((self.frame.size.width-BUTTON_WIDTH)/2, 
@@ -104,6 +111,18 @@
 
 - (void) updateButtonClicked:(id)sender {
     NSLog(@"ResetPassword:updateButtonClicked called");
+    if ([passwordNew.text isEqualToString:passwordConfirm.text]) {
+        RestClient *restClient = [[RestClient alloc] init];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        bool stat = [restClient changePassword:passwordNew.text oldpasswd:password.text authToken:@"Auth-Token" authTokenVal:appDelegate.authToken];
+        if (stat == TRUE) {
+            [UtilityClass showCustomAlert:@"Success!" subTitle:@"Successfully changed password!" bgColor:[UIColor grayColor] strokeColor:[UIColor grayColor] btnText:@"Ok"];
+        } else {
+            [UtilityClass showCustomAlert:@"Failure!" subTitle:@"Password change failed!" bgColor:[UIColor redColor] strokeColor:[UIColor redColor] btnText:@"Ok"];
+        }
+    } else {
+        [UtilityClass showCustomAlert:@"Password mismatch" subTitle:@"New password and confirm password do not match!" bgColor:[UIColor redColor] strokeColor:[UIColor redColor] btnText:@"Ok"];
+    }
 }
 
 @end

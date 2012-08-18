@@ -10,21 +10,21 @@
 
 @interface Platform : NSObject
 {
-     NSString *facebook;
-     NSString *fourSquare; 
-     NSString *googlePlus; 
-     NSString *gmail;
-     NSString *twitter; 
-     NSString *yahoo; 
-     NSString *badoo;
+     bool facebook;
+     bool fourSquare; 
+     bool googlePlus; 
+     bool gmail;
+     bool twitter; 
+     bool yahoo; 
+     bool badoo;
 }
 
-@property(nonatomic,retain)  NSString *facebook;
-@property(nonatomic,retain)  NSString *fourSquare; 
-@property(nonatomic,retain)  NSString *googlePlus; 
-@property(nonatomic,retain)  NSString *gmail;
-@property(nonatomic,retain)  NSString *twitter; 
-@property(nonatomic,retain)  NSString *yahoo; 
-@property(nonatomic,retain)  NSString *badoo;
+@property(atomic)  bool facebook;
+@property(atomic)  bool fourSquare; 
+@property(atomic)  bool googlePlus; 
+@property(atomic)  bool gmail;
+@property(atomic)  bool twitter; 
+@property(atomic)  bool yahoo; 
+@property(atomic)  bool badoo;
 
 @end

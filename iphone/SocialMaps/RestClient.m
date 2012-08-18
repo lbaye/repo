@@ -21,6 +21,7 @@
 #import "Notification.h"
 #import "NotifMessage.h"
 #import "NotifRequest.h"
+#import "UserCircle.h"
 
 @implementation RestClient
 
@@ -282,14 +283,15 @@
                 NSLog(@"Arr");
             }
             
-            [platform setFacebook:[[jsonObjects objectForKey:@"result"]valueForKey:@"fb"]];
-            [platform setFourSquare:[[jsonObjects objectForKey:@"result"]valueForKey:@"4sq"]];
-            [platform setGooglePlus:[[jsonObjects objectForKey:@"result"]valueForKey:@"googlePlus"]];
-            [platform setGmail:[[jsonObjects objectForKey:@"result"]valueForKey:@"gmail"]];
-            [platform setTwitter:[[jsonObjects objectForKey:@"result"]valueForKey:@"twitter"]];
-            [platform setYahoo:[[jsonObjects objectForKey:@"result"]valueForKey:@"yahoo"]];
-            [platform setBadoo:[[jsonObjects objectForKey:@"result"]valueForKey:@"badoo"]];
-            NSLog(@"platform.fac: %@",platform.facebook);    
+            platform.facebook = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"fb" key3:nil] boolValue];
+            platform.fourSquare = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"4sq" key3:nil] boolValue];
+            platform.googlePlus = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"googlePlus" key3:nil] boolValue];
+            platform.gmail = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"gmail" key3:nil] boolValue];
+            platform.twitter = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"twitter" key3:nil] boolValue];
+            platform.yahoo = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"yahoo" key3:nil] boolValue];
+            platform.badoo = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"badoo" key3:nil] boolValue];
+
+            NSLog(@"getPlatforms response: %@",jsonObjects);    
                 
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLATFORM_DONE object:platform];
         } 
@@ -347,11 +349,11 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            [layer setWikipedia:[[jsonObjects objectForKey:@"result"] valueForKey:@"wikipedia"]];
-            [layer setTripadvisor:[[jsonObjects objectForKey:@"result"] valueForKey:@"tripadvisor"]];
-            [layer setFoodspotting:[[jsonObjects objectForKey:@"result"] valueForKey:@"foodspotting"]];
+            layer.wikipedia = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"wikipedia" key3:nil] boolValue];
+            layer.tripadvisor = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"tripadvisor" key3:nil] boolValue];
+            layer.foodspotting = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"foodspotting" key3:nil] boolValue];
             
-            NSLog(@"layer.wiki: %@ %@ %@",layer.wikipedia,layer.tripadvisor,[[jsonObjects objectForKey:@"result"] valueForKey:@"wikipedia"]);  
+            NSLog(@"layer.wiki: %d %d %d",layer.wikipedia,layer.tripadvisor,layer.foodspotting);  
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
 
             
@@ -710,11 +712,77 @@
     [request startAsynchronous];
 }
 
+- (NSDate*) getDateFromJsonStruct:(NSDictionary*) jsonObjects name:(NSString*) name {
+    NSString *date = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"date"];
+    NSString *timeZoneType = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"timezone_type"];
+    NSString *timeZone = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"timezone"];
+    
+    return [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+}
+
+- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects {
+    UserInfo *aUserInfo = [[UserInfo alloc] init];
+    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"id" key3:nil];
+    aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"email" key3:nil];
+    aUserInfo.firstName = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"firstName" key3:nil];
+    aUserInfo.lastName = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"lastName" key3:nil];
+    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"id" key3:nil];
+    aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"avatar" key3:nil];
+    aUserInfo.deactivated = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"deactivated" key3:nil];
+    aUserInfo.authToken = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"authToken" key3:nil];
+    aUserInfo.unit = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"settings" key3:@"unit"];
+    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"source" key3:nil];
+    aUserInfo.dateOfBirth = [self getDateFromJsonStruct:jsonObjects name:@"dateOfBirth"];
+    aUserInfo.bio = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"bio" key3:nil];
+    aUserInfo.gender = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"gender" key3:nil];
+    aUserInfo.username = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"username" key3:nil];
+    aUserInfo.interests = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"interests" key3:nil];
+    aUserInfo.workStatus = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"workStatus" key3:nil];
+    aUserInfo.relationshipStatus = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"relationshipStatus" key3:nil];
+    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"source" key3:nil];
+    aUserInfo.currentLocationLat = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"currentLocation" key3:@"lat"];
+    aUserInfo.currentLocationLng = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"currentLocation" key3:@"lng"];
+    aUserInfo.enabled = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"enabled" key3:nil] boolValue];
+    aUserInfo.visible = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"visible" key3:nil] boolValue];
+    aUserInfo.regMedia = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"regMedia" key3:nil];
+    aUserInfo.loginCount = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"loginCount" key3:nil];
+    aUserInfo.lastLogin = [self getDateFromJsonStruct:jsonObjects name:@"lastLogin"];
+    aUserInfo.createDate = [self getDateFromJsonStruct:jsonObjects name:@"createDate"];
+    aUserInfo.updateDate = [self getDateFromJsonStruct:jsonObjects name:@"updateDate"];
+    aUserInfo.blockedUsers = [[NSMutableArray alloc] init];
+    aUserInfo.blockedUsers = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"blockedUsers" key3:nil];
+    aUserInfo.blockedBy = [[NSMutableArray alloc] init];
+    aUserInfo.blockedBy = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"blockedBy" key3:nil];
+    aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"distance" key3:nil] integerValue];
+    aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"age" key3:nil] integerValue];
+    
+    aUserInfo.circles = [[NSMutableArray alloc] init];
+    for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
+        UserCircle *aCircle = [[UserCircle alloc] init];
+        NSString *type = [self getNestedKeyVal:item key1:@"type" key2:nil key3:nil];
+        aCircle.circleName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+        aCircle.friends    = [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil];
+        if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
+            aCircle.type = CircleTypeSystem;
+        } else {
+            aCircle.type = CircleTypeCustom;
+        }
+        [aUserInfo.circles addObject:aCircle];
+    }
+    aUserInfo.address.id = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"id" key3:nil];
+    aUserInfo.address.street = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"street" key3:nil];
+    aUserInfo.address.city = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"city" key3:nil];
+    aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
+    aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
+    aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
+    
+    return aUserInfo;
+}
 -(void)getAccountSettings:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/settings/account_settings",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
-    UserInfo *aUserInfo = [[UserInfo alloc] init];
+    __block UserInfo *aUserInfo = nil;
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"GET"];
@@ -746,39 +814,8 @@
                 NSLog(@"Arr");
             }
             
-            [aUserInfo setUserId:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"id"]];
-            [aUserInfo setEmail:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]];
-            [aUserInfo setFirstName:[[jsonObjects   objectForKey:@"result"] objectForKey:@"firstName"]];
-            [aUserInfo setLastName:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"lastName"]];
-            [aUserInfo setAvatar:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"avatar"]];
-            [aUserInfo setDeactivated:[[jsonObjects   objectForKey:@"result"] objectForKey:@"deactivated"]];
-            [aUserInfo setAuthToken:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"authToken"]];
-            [aUserInfo setSettings:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"settings"]];
-            [aUserInfo setSource:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"source"]];
-            [aUserInfo setDateOfBirth:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"dateOfBirth"]];
-            [aUserInfo setBio:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"bio"]];
-            [aUserInfo setGender:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"gender"]];
-            [aUserInfo setUsername:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"username"]];
-            [aUserInfo setInterests:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"interests"]];
-            [aUserInfo setWorkStatus:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"workStatus"]];
-            [aUserInfo setRelationshipStatus:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"relationshipStatus"]];
-            [aUserInfo setCurrentLocationLat:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"currentLocation"] objectForKey:@"lat"]];
-            [aUserInfo setCurrentLocationLng:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"currentLocation"] objectForKey:@"lng"]];
-            [aUserInfo setEnabled:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"enabled"]];
-            [aUserInfo setRegMedia:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"regMedia"]];
-            [aUserInfo setLoginCount:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"loginCount"]];
-            [aUserInfo setLastLogin:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastLogin"]];
-            [aUserInfo setCreateDate:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"createDate"]];
-            [aUserInfo setUpdateDate:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"updateDate"]];
-            [aUserInfo setBlockedUsers:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"blockedUsers"]];
-            [aUserInfo setBlockedBy:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"blockedBy"]];
-            [aUserInfo setUnit:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"unit"]];
-            [aUserInfo setDistance:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"distance"]];
-            [aUserInfo setCircles:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"circles"]];
-            [aUserInfo setAddress:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"address"]];
-            [aUserInfo setVisible:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"visible"]];
+            aUserInfo = [self parseAccountSettings:jsonObjects];
             
-            NSLog(@"aUserInfo.email: %@  lat: %@",aUserInfo.email,aUserInfo.currentLocationLat);
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
@@ -1545,7 +1582,7 @@
     [request addRequestHeader:authToken value:authTokenValue];    
     [request addPostValue:userInfo.firstName forKey:@"firstName"];
     [request addPostValue:userInfo.lastName forKey:@"lastName"];
-//    [request addPostValue:userInfo.email forKey:@"email"];
+    [request addPostValue:userInfo.email forKey:@"email"];
 //    [request addPostValue:userInfo.p forKey:@"password"];
     [request addPostValue:userInfo.avatar forKey:@"avatar"];
     [request addPostValue:userInfo.gender forKey:@"gender"];
@@ -1558,7 +1595,7 @@
     [request addPostValue:userInfo.settings forKey:@"settings[units]"];
     [request addPostValue:userInfo.bio forKey:@"bio"];
     [request addPostValue:userInfo.interests forKey:@"interests"];
-    [request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    [request setPostValue:[UtilityClass convertNSDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
     
     
     // Handle successful REST call
@@ -1577,38 +1614,9 @@
         
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) 
         {
-            UserInfo *aUserInfo=[[UserInfo alloc] init];
-            [aUserInfo setUserId:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"id"]];
-            [aUserInfo setEmail:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]];
-            [aUserInfo setFirstName:[[jsonObjects   objectForKey:@"result"] objectForKey:@"firstName"]];
-            [aUserInfo setLastName:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"lastName"]];
-            [aUserInfo setAvatar:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"avatar"]];
-            [aUserInfo setDeactivated:[[jsonObjects   objectForKey:@"result"] objectForKey:@"deactivated"]];
-            [aUserInfo setAuthToken:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"authToken"]];
-            [aUserInfo setSettings:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"settings"]];
-            [aUserInfo setSource:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"source"]];
-            [aUserInfo setDateOfBirth:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"dateOfBirth"]];
-            [aUserInfo setBio:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"bio"]];
-            [aUserInfo setGender:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"gender"]];
-            [aUserInfo setUsername:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"username"]];
-            [aUserInfo setInterests:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"interests"]];
-            [aUserInfo setWorkStatus:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"workStatus"]];
-            [aUserInfo setRelationshipStatus:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"relationshipStatus"]];
-            [aUserInfo setCurrentLocationLat:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"currentLocation"] objectForKey:@"lat"]];
-            [aUserInfo setCurrentLocationLng:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"currentLocation"] objectForKey:@"lng"]];
-            [aUserInfo setEnabled:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"enabled"]];
-            [aUserInfo setRegMedia:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"regMedia"]];
-            [aUserInfo setLoginCount:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"loginCount"]];
-            [aUserInfo setLastLogin:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastLogin"]];
-            [aUserInfo setCreateDate:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"createDate"]];
-            [aUserInfo setUpdateDate:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"updateDate"]];
-            [aUserInfo setBlockedUsers:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"blockedUsers"]];
-            [aUserInfo setBlockedBy:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"blockedBy"]];
-            [aUserInfo setUnit:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"unit"]];
-            [aUserInfo setDistance:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"distance"]];
-            [aUserInfo setCircles:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"circles"]];
-            [aUserInfo setAddress:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"address"]];
-            [aUserInfo setVisible:[[jsonObjects  objectForKey:@"result"]  objectForKey:@"visible"]];
+            UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects];
+            
+            NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
         } 
         {
@@ -2100,5 +2108,61 @@
 }
 - (void) declineFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
     
+}
+
+- (bool) changePassword:(NSString*)passwd oldpasswd:(NSString*)oldpasswd authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/auth/change_pass",WS_URL]];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    __block   bool status=FALSE;
+    [request setRequestMethod:@"PUT"];
+        
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request addPostValue:passwd forKey:@"password"];
+    [request addPostValue:oldpasswd forKey:@"oldPassword"];
+
+    
+    NSLog(@"in put method");
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            
+            status = [[self getNestedKeyVal:jsonObjects key1:@"password" key2:nil key3:nil] boolValue];
+            NSLog(@"Change password: %@ to %@, status = %d",oldpasswd, passwd, status);
+            
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
+                    } 
+        else
+        {
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+     }];
+    
+    //[request setDelegate:self];
+    [request startSynchronous];
+
+    return status;
+
 }
 @end

@@ -10,13 +10,13 @@
 
 @interface Layer : NSObject
 {
-    NSString *wikipedia;
-    NSString *tripadvisor;
-    NSString *foodspotting;
+    bool wikipedia;
+    bool tripadvisor;
+    bool foodspotting;
 }
 
-@property(nonatomic,retain)  NSString *wikipedia;
-@property(nonatomic,retain)  NSString *tripadvisor;
-@property(nonatomic,retain)  NSString *foodspotting;
+@property(atomic)  bool wikipedia;
+@property(atomic)  bool tripadvisor;
+@property(atomic)  bool foodspotting;
 
 @end

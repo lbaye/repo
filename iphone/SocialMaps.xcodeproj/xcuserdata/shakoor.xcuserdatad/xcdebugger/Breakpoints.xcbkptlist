@@ -129,6 +129,20 @@
          startingLineNumber = "374"
          endingLineNumber = "374">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/RestClient.m"
+         timestampString = "367008397.504632"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2128"
+         endingLineNumber = "2128"
+         landmarkName = "-changePassword:oldpasswd:authToken:authTokenVal:"
+         landmarkType = "5">
+      </FileBreakpoint>
    </FileBreakpoints>
    <ExceptionBreakpoints>
       <ExceptionBreakpoint
