@@ -18,7 +18,7 @@
     NSString* facebookId;
     NSString* facebookAuthToken;
     NSString* dateOfBirth;
-    //NSString* avatar;
+    NSString* avatar;
     NSString* age;
     NSString* bio;
     NSString* street;
@@ -32,7 +32,7 @@
     NSString* authToken;
     NSString* message;
     UIImage * bg;
-    UIImage * avatar;
+    //UIImage * avatar;
     bool    isOnline;
     NSString    *address;
     NSString    *friendRequest;
@@ -48,7 +48,7 @@
 @property (atomic, retain) NSString *facebookId;
 @property (atomic, retain) NSString *facebookAuthToken;
 @property (atomic, retain) NSString *dateOfBirth;
-@property (atomic, retain) UIImage *avatar;
+@property (atomic, retain) NSString *avatar;
 @property (atomic, retain) NSString *age;
 @property (atomic, retain) NSString *bio;
 @property (atomic, retain) NSString *street;

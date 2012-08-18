@@ -12,11 +12,13 @@
 
 #define NUM_LINES_IN_BRIEF_VIEW 1
 @interface Notification : NSObject {
+    NSString    *notifSenderId;
     NSString    *notifSender;
     NSDate      *notifTime;
     NSString    *notifMessage;
 }
 
+@property (nonatomic,retain) NSString *notifSenderId;
 @property (nonatomic,retain) NSString *notifSender;
 @property (nonatomic,retain) NSDate *notifTime;
 @property (nonatomic,retain) NSString *notifMessage;

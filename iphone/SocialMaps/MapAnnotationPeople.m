@@ -9,6 +9,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
+#import "UtilityClass.h"
 
 @implementation MapAnnotationPeople
 
@@ -20,13 +21,21 @@
 
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem {
     annoView = [super getViewForStateSummary:locItem];
-
+    LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+    
     CGSize lblStringSize = [@"Firstname NAME" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
     UIView *infoView = [annoView viewWithTag:11002];
     
     CGRect lblNameFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2, infoView.frame.size.width-4-ANNO_IMG_WIDTH, lblStringSize.height);
     UILabel *lblName = [[UILabel alloc] initWithFrame:lblNameFrame];
-    lblName.text = [NSString stringWithFormat:@"%@ - Age: %d", locItem.itemName, 45];
+    
+    NSString *age=@""; 
+    if (locItemPeople.userInfo.dateOfBirth != nil )
+        age = [NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:locItemPeople.userInfo.dateOfBirth]];
+    else if ([locItemPeople.userInfo.age intValue] > 0)
+        age = locItemPeople.userInfo.age;
+    
+    lblName.text = [NSString stringWithFormat:@"%@ - Age: %@", locItemPeople.itemName, age];
     lblName.backgroundColor = [UIColor clearColor];
     lblName.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     [infoView addSubview:lblName];
@@ -39,12 +48,12 @@
     CGSize msgContentsize = CGSizeMake(msgFrame.size.width*2, msgFrame.size.height);
     msgView.contentSize = msgContentsize;
     
-    NSString *msg = @"Not doing much...Not doing much...Not doing much...";
+    NSString *msg = locItemPeople.userInfo.statusMsg;
     CGSize msgSize = [msg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
 
     CGRect lblFrame = CGRectMake(0, 0, msgSize.width, msgSize.height);
     UILabel *lblMsg = [[UILabel alloc] initWithFrame:lblFrame];
-    lblMsg.text = [NSString stringWithFormat:@"Not doing much...Not doing much...Not doing much..."];
+    lblMsg.text = locItemPeople.userInfo.statusMsg;
     lblMsg.backgroundColor = [UIColor clearColor];
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
@@ -54,7 +63,7 @@
     [msgView release];
     
     // 119, 184, 0 - green
-    NSString *distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItem.itemDistance];
+    NSString *distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+lblStringSize.height+1+msgFrame.size.height+1, 
@@ -74,14 +83,30 @@
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [super getViewForStateDetailed:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
+    LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
 
     CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
     
-    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b> - Age: <b>%d</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
-                                   @"Firstname", @"NAME", 45, @"Not doing much...Not doing much...Not doing much...", @"600m AWAY", @"1011 Main Street", @"male", @"single", @"Paris", @"Air France"] autorelease];  
+    NSString *age=@""; 
+    if (locItemPeople.userInfo.dateOfBirth != nil )
+        age = [NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:locItemPeople.userInfo.dateOfBirth]];
+    else if ([locItemPeople.userInfo.age intValue] > 0)
+        age = locItemPeople.userInfo.age;
+    
+    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b> - Age: <b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
+                                 locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
+                                 locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
+                                 age, 
+                                 locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
+                                 locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                                 @"", // Address of current location - use CLGeocoder
+                                 locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
+                                 locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
+                                 locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
+                                 locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];  
     [detailView loadHTMLString:detailInfoHtml baseURL:nil];
     detailView.delegate = self;
     [infoView addSubview:detailView];

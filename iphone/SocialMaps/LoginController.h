@@ -9,18 +9,23 @@
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
 #import "Constants.h"
+#import "UserInfo.h"
+
+@class AppDelegate;
 
 @interface LoginController : UIViewController <UITextFieldDelegate> {
     NSString *strUserID;
     NSString *strPassword;
     bool autoLogin;
     Facebook *facebook;
+    AppDelegate *smAppDelegate;
 }
 
 @property (retain, nonatomic) NSString *strUserID;
 @property (retain, nonatomic) NSString *strPassword;
 @property (nonatomic) bool autoLogin;
 @property (retain, nonatomic) Facebook *facebook;
+@property (nonatomic, retain) AppDelegate *smAppDelegate;
 
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 
@@ -39,6 +44,5 @@
 - (IBAction)removeKeyboard:(id)sender;
 - (IBAction)cancelReset:(id)sender;
 - (IBAction)sendReset:(id)sender;
-
 
 @end

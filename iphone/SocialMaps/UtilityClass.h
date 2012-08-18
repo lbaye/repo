@@ -11,5 +11,8 @@
 @interface UtilityClass : NSObject
 
 -(void)showAlert:(NSString *)title:(NSString *)subTitle;
++ (NSString*) convertDateToDBFormat:(NSString*)adate ;
++ (int) getAgeFromBirthday:(NSString*)birthday;
++ (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz;
 
 @end

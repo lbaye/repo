@@ -12,6 +12,7 @@
 #import "User.h"
 #import "CustomAlert.h"
 #import "FacebookHelper.h"
+#import "AppDelegate.h"
 
 @implementation LoginController
 @synthesize txtEmail;
@@ -25,6 +26,7 @@
 @synthesize strPassword;
 @synthesize autoLogin;
 @synthesize facebook;
+@synthesize smAppDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,13 +64,13 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_REG_DONE object:nil];
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-    if (appDelegate.rememberLoginInfo == TRUE) {
+    if (smAppDelegate.rememberLoginInfo == TRUE) {
         [rememberMeSel setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
-        txtEmail.text = appDelegate.email;
-        txtPassword.text = appDelegate.password;
-        NSLog(@"*** email=%@,password=%@,remember=%d",txtEmail.text,txtPassword.text,appDelegate.rememberLoginInfo);
+        txtEmail.text = smAppDelegate.email;
+        txtPassword.text = smAppDelegate.password;
+        NSLog(@"*** email=%@,password=%@,remember=%d",txtEmail.text,txtPassword.text,smAppDelegate.rememberLoginInfo);
     } else {
         [rememberMeSel setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     }
@@ -100,6 +102,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -173,17 +176,20 @@
 
 - (void)loginDone:(NSNotification *)notif
 {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate hideActivityViewer];
-    [appDelegate.window setUserInteractionEnabled:YES];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
     
     User * userInfo = [notif object];
     if (userInfo != nil) {
-        appDelegate.loginCount++;
+        smAppDelegate.loginCount++;
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
-        [prefs setInteger:appDelegate.loginCount forKey:@"loginCount"];
+        [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
+        [prefs setObject:userInfo.authToken forKey:@"authToken"];
+        [prefs synchronize];
 
-        if (appDelegate.loginCount == 1)
+        smAppDelegate.authToken = userInfo.authToken;
+        [smAppDelegate getPreferenceSettings:userInfo.authToken];
+        if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
             [self performSegueWithIdentifier: @"showMapView" sender: self];
@@ -205,9 +211,8 @@
 
 - (void)forgotPWDone:(NSNotification *)notif
 {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate hideActivityViewer];
-    [appDelegate.window setUserInteractionEnabled:YES];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
     
     User * userInfo = [notif object];
     forgotPWView.hidden = TRUE;
@@ -255,9 +260,7 @@
         [loginAlert autorelease];
         
     } else {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        if (appDelegate.rememberLoginInfo == TRUE) {
+        if (smAppDelegate.rememberLoginInfo == TRUE) {
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
             [prefs setObject:txtEmail.text forKey:@"email"];
             [prefs setObject:txtPassword.text forKey:@"password"];
@@ -265,27 +268,30 @@
         }
         RestClient *restClient = [[RestClient alloc] init];
         [restClient login:txtEmail.text password:txtPassword.text];
-        [appDelegate.window setUserInteractionEnabled:NO];
-        [appDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
     }
 
 }
 
 - (void)fbRegDone:(NSNotification *)notif
 {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate hideActivityViewer];
-    [appDelegate.window setUserInteractionEnabled:YES];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
     
     User * regInfo = [notif object];
     if (regInfo != nil) {
-        appDelegate.loginCount++;
+        smAppDelegate.loginCount++;
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
-        [prefs setInteger:appDelegate.loginCount forKey:@"loginCount"];
+        [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
+        [prefs setObject:regInfo.authToken forKey:@"authToken"];
+        [prefs synchronize];
         
-        if (appDelegate.loginCount == 1)
+        smAppDelegate.authToken = regInfo.authToken;
+        [smAppDelegate getPreferenceSettings:regInfo.authToken];
+        if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
-        else
+        else 
             [self performSegueWithIdentifier: @"showMapView" sender: self];
     } else {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
@@ -304,21 +310,19 @@
 
 - (void)fbLoginDone:(NSNotification *)notif
 {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
     User * userInfo = [notif object];
     if (userInfo != nil) {
         // Do registration if first login
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient registerFB:(User *)userInfo];
+        [restClient loginFacebook:(User *)userInfo];
         
-        [appDelegate.window setUserInteractionEnabled:NO];
-        [appDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
         
         //[self performSegueWithIdentifier: @"showMapView" sender: self];
     } else {
-        [appDelegate hideActivityViewer];
-        [appDelegate.window setUserInteractionEnabled:YES];
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
 
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
@@ -338,8 +342,7 @@
 
 - (IBAction)doConnectFB:(id)sender {
     if (![facebook isSessionValid]) {
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [appDelegate showActivityViewer:self.view];
+        [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",
                                 @"user_likes", 
@@ -355,6 +358,7 @@
         [facebook authorize:permissions];
         [permissions release];
     } else {
+        [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
         [self performSegueWithIdentifier: @"showMapView" sender: self];
     }
 }
@@ -364,17 +368,16 @@
 }
 
 - (IBAction)doRememberMe:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
     
-    if (appDelegate.rememberLoginInfo == TRUE) {
-        appDelegate.rememberLoginInfo = FALSE;
+    if (smAppDelegate.rememberLoginInfo == TRUE) {
+        smAppDelegate.rememberLoginInfo = FALSE;
         [sender setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     } else {
-        appDelegate.rememberLoginInfo = TRUE;
+        smAppDelegate.rememberLoginInfo = TRUE;
         [sender setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
     }
-    [prefs setBool:appDelegate.rememberLoginInfo forKey:@"rememberLoginInfo"];
+    [prefs setBool:smAppDelegate.rememberLoginInfo forKey:@"rememberLoginInfo"];
     [prefs synchronize];
 }
 
@@ -391,8 +394,8 @@
     [restClient forgotPassword:txtForgotPWEmail.text];
     [self.view endEditing:YES];
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate.window setUserInteractionEnabled:NO];
-    [appDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    [smAppDelegate showActivityViewer:self.view];
 }
+
 @end

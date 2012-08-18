@@ -17,13 +17,13 @@
     cellIdent = @"peopleItem";
     UITableViewCell *cell = [super getTableViewCell:tv sender:controller];
     
-    //UILabel *lblAddress  = (UILabel*) [cell viewWithTag:2002];
+    UILabel *lblAddress  = (UILabel*) [cell viewWithTag:2002];
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];
     //UILabel *lblDist     = (UILabel*) [cell viewWithTag:2004];
     //UIView *line         = (UIView*) [cell viewWithTag:2005];
     UITextView   *txtMsg = (UITextView*) [cell viewWithTag:2006];  
     if (txtMsg == nil) {
-        CGSize msgStringSize = [userInfo.message sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+        CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
         CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
         
         CGFloat msgHeight = msgRows*msgStringSize.height+16;
@@ -41,9 +41,14 @@
     }
     
 	// Message
-    txtMsg.text = userInfo.message;
+    txtMsg.text = userInfo.statusMsg;
     txtMsg.userInteractionEnabled = FALSE;
     
+    // Debug
+    CGRect tmp = CGRectMake(lblAddress.frame.origin.x,lblAddress.frame.origin.y,cell.frame.size.width, 37);
+    lblAddress.frame = tmp;
+    lblAddress.text = [NSString stringWithFormat:@"%@ %@",userInfo.currentLocationLat,userInfo.currentLocationLng];
+
 	return cell;
 }
 

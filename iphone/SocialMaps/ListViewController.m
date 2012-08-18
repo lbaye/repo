@@ -129,18 +129,18 @@
 //    dealList = [[NSMutableArray alloc] initWithCapacity:0];
 //    smAppDelegate.displayList = [[NSMutableArray alloc] initWithCapacity:0];
     
-    [self getSortedDisplayList];
-    [itemList reloadData];
+    //[self getSortedDisplayList];
+    //[itemList reloadData];
 }
 
 - (void) getSortedDisplayList {
     [smAppDelegate.displayList removeAllObjects];
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
-    if (showPeople == TRUE) 
+    if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
-    if (showPlaces == TRUE) 
+    if (smAppDelegate.showPlaces == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.placeList];
-    if (showDeals == TRUE) 
+    if (smAppDelegate.showDeals == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.dealList];
     
     // Sort by distance
@@ -267,21 +267,21 @@
     switch (btnNum) {
         case 0:
             if (newState == 0)
-                showPeople = FALSE;
+                smAppDelegate.showPeople = FALSE;
             else
-                showPeople = TRUE;
+                smAppDelegate.showPeople = TRUE;
             break;
         case 1:
             if (newState == 0)
-                showPlaces = FALSE;
+                smAppDelegate.showPlaces = FALSE;
             else
-                showPlaces = TRUE;
+                smAppDelegate.showPlaces = TRUE;
             break;
         case 2:
             if (newState == 0)
-                showDeals = FALSE;
+                smAppDelegate.showDeals = FALSE;
             else
-                showDeals = TRUE;
+                smAppDelegate.showDeals = TRUE;
             break;
         default:
             break;

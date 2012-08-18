@@ -15,6 +15,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "UserFriends.h"
+#import "RestClient.h"
 
 @implementation AppDelegate
 
@@ -22,6 +23,7 @@
 @synthesize rememberLoginInfo;
 @synthesize email;
 @synthesize password;
+@synthesize authToken;
 @synthesize loginCount;
 @synthesize activityView;
 @synthesize fbHelper;
@@ -42,7 +44,18 @@
 @synthesize dealList;
 @synthesize displayList;
 @synthesize friendList;
-
+@synthesize platformPrefs;
+@synthesize layerPrefs;
+@synthesize informationPrefs;
+@synthesize userAccountPrefs;
+@synthesize geofencePrefs;
+@synthesize locSharingPrefs;
+@synthesize notifPrefs;
+@synthesize currPosition;
+@synthesize lastPosition;
+@synthesize showDeals;
+@synthesize showPeople;
+@synthesize showPlaces;
 
 - (void)dealloc
 {
@@ -57,12 +70,31 @@
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
     email = [prefs stringForKey:@"email"];
     password = [prefs stringForKey:@"password"];
+    authToken = [prefs stringForKey:@"authToken"];
     loginCount = [prefs integerForKey:@"loginCount"];
-    NSLog(@"email=%@,password=%@,remember=%d, login count=%d",email,password,rememberLoginInfo,
-          loginCount);
+    NSLog(@"email=%@,password=%@,remember=%d, login count=%d, authToken=%@",email,password,rememberLoginInfo,
+          loginCount, authToken);
     
+    // Singleton instance
     fbHelper = [FacebookHelper sharedInstance];
 
+    // Preferences data structure
+    platformPrefs = [[[Platform alloc] init] autorelease];
+    layerPrefs    = [[[Layer alloc] init] autorelease];
+    informationPrefs = [[[InformationPrefs alloc] init] autorelease];
+    userAccountPrefs = [[[UserInfo alloc] init] autorelease];
+    geofencePrefs = [[[Geofence alloc] init] autorelease];
+    locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
+    notifPrefs = [[[NotificationPref alloc] init] autorelease];
+    
+    // Location coordinates
+    currPosition = [[Geolocation alloc] init];
+    lastPosition = [[Geolocation alloc] init];
+                    
+    showPeople = TRUE;
+    showDeals  = FALSE;
+    showPlaces = FALSE;
+    
     msgRead = FALSE;
     notifRead = FALSE;
     ignoreCount = 0;
@@ -146,44 +178,44 @@
     
     // Dummy data
     // starting lat,long 23.795240529083365, 90.41318893432617
-    peopleList = [[NSMutableArray alloc] init];
-    float currLat = 23.795633200965806;
-    float currLong = 90.41279196739197;
-    float dist;
-    for (int i=0; i < 4; i++) {
-        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-        UIImage *icon = [UIImage imageNamed:@"Photo-3.png"];
-        dist = rand()%500;
-        CLLocationCoordinate2D loc;
-        loc.latitude = currLat;
-        loc.longitude = currLong;
-        
-        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"Person %d", i] address:[NSString stringWithFormat:@"Address %d", i] type:ObjectTypePeople category:@"Male" coordinate:loc dist:dist icon:icon bg:bg];
-        currLat += 0.004;
-        currLong += 0.004;
-        dist -= 100;
-        [peopleList addObject:aPerson];
-        [aPerson release];
-    }
-    
-    placeList = [[NSMutableArray alloc] init];
-    currLat = 23.796526525077528;
-    currLong = 90.41537761688232;
-    
-    for (int i=0; i < 3; i++) {
-        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-        UIImage *icon = [UIImage imageNamed:@"user_thumb_only.png"];
-        CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
-        dist = rand()%500;
-        LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:[NSString stringWithFormat:@"Place %d", i] address:[NSString stringWithFormat:@"Place Address %d", i] type:ObjectTypePeople category:@"Bar" coordinate:loc dist:dist icon:icon bg:bg];
-        currLat += 0.004;
-        currLong += 0.004;
-        [placeList addObject:aPlace];
-        [aPlace release];
-    }
-    
-    dealList = [[NSMutableArray alloc] initWithCapacity:0];
-    displayList = [[NSMutableArray alloc] initWithCapacity:0];
+//    peopleList = [[NSMutableArray alloc] init];
+//    float currLat = 23.795633200965806;
+//    float currLong = 90.41279196739197;
+//    float dist;
+//    for (int i=0; i < 4; i++) {
+//        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+//        UIImage *icon = [UIImage imageNamed:@"Photo-3.png"];
+//        dist = rand()%500;
+//        CLLocationCoordinate2D loc;
+//        loc.latitude = currLat;
+//        loc.longitude = currLong;
+//        
+//        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"Person %d", i] address:[NSString stringWithFormat:@"Address %d", i] type:ObjectTypePeople category:@"Male" coordinate:loc dist:dist icon:icon bg:bg];
+//        currLat += 0.004;
+//        currLong += 0.004;
+//        dist -= 100;
+//        [peopleList addObject:aPerson];
+//        [aPerson release];
+//    }
+//    
+//    placeList = [[NSMutableArray alloc] init];
+//    currLat = 23.796526525077528;
+//    currLong = 90.41537761688232;
+//    
+//    for (int i=0; i < 3; i++) {
+//        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+//        UIImage *icon = [UIImage imageNamed:@"user_thumb_only.png"];
+//        CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
+//        dist = rand()%500;
+//        LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:[NSString stringWithFormat:@"Place %d", i] address:[NSString stringWithFormat:@"Place Address %d", i] type:ObjectTypePeople category:@"Bar" coordinate:loc dist:dist icon:icon bg:bg];
+//        currLat += 0.004;
+//        currLong += 0.004;
+//        [placeList addObject:aPlace];
+//        [aPlace release];
+//    }
+//    
+//    dealList = [[NSMutableArray alloc] initWithCapacity:0];
+//    displayList = [[NSMutableArray alloc] initWithCapacity:0];
 
     // Friend list
     friendList = [[NSMutableArray alloc] init];
@@ -196,6 +228,16 @@
         aFriend.userProfileImage = [UIImage imageNamed:imgName];
         [friendList addObject:aFriend];
     }
+    
+    // GCD notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotPlatform:) name:NOTIF_GET_PLATFORM_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotLayer:) name:NOTIF_GET_LAYER_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSharingPrefs:) name:NOTIF_GET_SHARING_PREFS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotAccountSettings:) name:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGeofence:) name:NOTIF_GET_GEOFENCE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotShareLoc:) name:NOTIF_GET_SHARELOC_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifications:) name:NOTIF_GET_NOTIFS_DONE object:nil];
+    
     return YES;
 }
 							
@@ -236,6 +278,13 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_PLATFORM_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LAYER_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_SHARING_PREFS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_GEOFENCE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_SHARELOC_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_NOTIFS_DONE object:nil];
 }
 
 // For iOS 4.2+ support
@@ -265,4 +314,48 @@
 	[activityView release];
 }
 
+
+// Get preferences settings
+//
+- (void) getPreferenceSettings:(NSString*) token {
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getPlatForm:@"Auth-Token" :token];
+    [restClient getLayer:@"Auth-Token" :token];
+    [restClient getSharingPreference:@"Auth-Token" :token];
+    [restClient getAccountSettings:@"Auth-Token" :token];
+    [restClient getShareLocation:@"Auth-Token" :token];
+    [restClient getGeofence:@"Auth-Token" :token];
+    [restClient getNotifications:@"Auth-Token" :token];
+}
+
+// Async call notifications
+//
+- (void)gotPlatform:(NSNotification *)notif {
+    platformPrefs = [notif object];
+    NSLog(@"AppDelegate: gotPlatform - %@", platformPrefs);
+}
+- (void)gotLayer:(NSNotification *)notif {
+    layerPrefs = [notif object];
+    NSLog(@"AppDelegate: gotLayer - %@", layerPrefs);
+}
+- (void)gotSharingPrefs:(NSNotification *)notif {
+    informationPrefs = [notif object];
+    NSLog(@"AppDelegate: gotSharingPrefs - %@", informationPrefs);
+}
+- (void)gotAccountSettings:(NSNotification *)notif {
+    userAccountPrefs = [notif object];
+    NSLog(@"AppDelegate: gotAccountSettings - %@", userAccountPrefs);
+}
+- (void)gotGeofence:(NSNotification *)notif {
+    geofencePrefs = [notif object];
+    NSLog(@"AppDelegate: gotGeofence - %@", geofencePrefs);
+}
+- (void)gotShareLoc:(NSNotification *)notif {
+    locSharingPrefs = [notif object];
+    NSLog(@"AppDelegate: gotShareLoc - %@", locSharingPrefs);
+}
+- (void)gotNotifications:(NSNotification *)notif {
+    notifPrefs = [notif object];
+    NSLog(@"AppDelegate: gotNotifications - %@", notifPrefs);
+}
 @end

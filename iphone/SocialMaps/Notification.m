@@ -14,6 +14,7 @@
 @synthesize notifSender;
 @synthesize notifTime;
 @synthesize notifMessage;
+@synthesize notifSenderId;
 
 - (NSString*) timeAsString {
     NSString *timeStr = nil;

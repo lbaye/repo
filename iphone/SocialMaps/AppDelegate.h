@@ -12,11 +12,20 @@
 #import "ViewController.h"
 #import "LoginController.h"
 #include "FacebookHelper.h"
+#import "Platform.h"
+#import "Layer.h"
+#import "InformationPrefs.h"
+#import "UserInfo.h"
+#import "Geofence.h"
+#import "ShareLocation.h"
+#import "NotificationPref.h"
+#import "Geolocation.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
     bool rememberLoginInfo;
     NSString    *email;
     NSString    *password;
+    NSString    *authToken;
     int         loginCount;
     UIActivityIndicatorView		*activityView;
     FacebookHelper *fbHelper;
@@ -37,11 +46,25 @@
     NSMutableArray *dealList;
     NSMutableArray *displayList;
     NSMutableArray *friendList;
+    // Preferences
+    Platform        *platformPrefs;
+    Layer           *layerPrefs;
+    InformationPrefs    *informationPrefs;
+    UserInfo            *userAccountPrefs;
+    Geofence            *geofencePrefs;
+    ShareLocation       *locSharingPrefs;
+    NotificationPref    *notifPrefs;
+    Geolocation         *currPosition;
+    Geolocation         *lastPosition;
+    bool            showPeople;
+    bool            showPlaces;
+    bool            showDeals;
 }
 
 @property (atomic) bool rememberLoginInfo;
 @property (atomic, copy) NSString *email;
 @property (atomic, copy) NSString *password;
+@property (atomic, copy) NSString *authToken;
 @property (atomic) int loginCount;
 @property (nonatomic, retain) FacebookHelper *fbHelper;
 @property (nonatomic, retain) NSMutableArray *savedFilters;
@@ -61,11 +84,24 @@
 @property (nonatomic, retain)NSMutableArray *dealList;
 @property (nonatomic, retain)NSMutableArray *displayList;
 @property (nonatomic, retain)NSMutableArray *friendList;
+@property (nonatomic, retain)Platform        *platformPrefs;
+@property (nonatomic, retain)Layer           *layerPrefs;
+@property (nonatomic, retain)InformationPrefs    *informationPrefs;
+@property (nonatomic, retain)UserInfo            *userAccountPrefs;
+@property (nonatomic, retain)Geofence            *geofencePrefs;
+@property (nonatomic, retain)ShareLocation       *locSharingPrefs;
+@property (nonatomic, retain)NotificationPref    *notifPrefs;
+@property (nonatomic, retain) Geolocation        *currPosition;
+@property (nonatomic, retain) Geolocation        *lastPosition;
+@property (atomic) bool showPeople;
+@property (atomic) bool showPlaces;
+@property (atomic) bool showDeals;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
 - (void) hideActivityViewer;
 - (void) showActivityViewer:(UIView*)sender;
+- (void) getPreferenceSettings:(NSString*) authToken;
 
 @end

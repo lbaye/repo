@@ -10,8 +10,10 @@
 
 @interface NotifMessage : Notification {
     bool        showDetail;
+    NSString    *notifSubject;
 }
 
 @property (atomic) bool showDetail;
+@property (nonatomic, retain) NSString *notifSubject;
 
 @end

@@ -96,6 +96,10 @@
 		4F5C4B8415D6372C001D510F /* LocationSharingCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8315D6372B001D510F /* LocationSharingCircle.m */; };
 		4F5C4B8815D66DF7001D510F /* LocationSharingPlaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8715D66DF7001D510F /* LocationSharingPlaces.m */; };
 		4F5C4B8B15D67960001D510F /* LocationSharingPlatforms.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8A15D67960001D510F /* LocationSharingPlatforms.m */; };
+		4F6036E115DD4DAD00C1BD4E /* Places.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6036D915DD4DAD00C1BD4E /* Places.m */; };
+		4F6036E215DD4DAD00C1BD4E /* SearchLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */; };
+		4F6036E315DD4DAD00C1BD4E /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6036DD15DD4DAD00C1BD4E /* People.m */; };
+		4F6036E415DD4DAD00C1BD4E /* Geolocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6036DF15DD4DAD00C1BD4E /* Geolocation.m */; };
 		4F6D437C15D598CA008A8C03 /* LocationSharing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6D437B15D598CA008A8C03 /* LocationSharing.m */; };
 		4F713C9115D00213003C4DCF /* CustomCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F713C9015D00213003C4DCF /* CustomCheckbox.m */; };
 		4F713C9315D014F9003C4DCF /* line_arrow_down_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F713C9215D014F9003C4DCF /* line_arrow_down_left.png */; };
@@ -429,6 +433,14 @@
 		4F5C4B8715D66DF7001D510F /* LocationSharingPlaces.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSharingPlaces.m; sourceTree = "<group>"; };
 		4F5C4B8915D6795F001D510F /* LocationSharingPlatforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSharingPlatforms.h; sourceTree = "<group>"; };
 		4F5C4B8A15D67960001D510F /* LocationSharingPlatforms.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSharingPlatforms.m; sourceTree = "<group>"; };
+		4F6036D915DD4DAD00C1BD4E /* Places.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Places.m; sourceTree = "<group>"; };
+		4F6036DA15DD4DAD00C1BD4E /* Places.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Places.h; sourceTree = "<group>"; };
+		4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchLocation.m; sourceTree = "<group>"; };
+		4F6036DC15DD4DAD00C1BD4E /* SearchLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchLocation.h; sourceTree = "<group>"; };
+		4F6036DD15DD4DAD00C1BD4E /* People.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = People.m; sourceTree = "<group>"; };
+		4F6036DE15DD4DAD00C1BD4E /* People.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = People.h; sourceTree = "<group>"; };
+		4F6036DF15DD4DAD00C1BD4E /* Geolocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Geolocation.m; sourceTree = "<group>"; };
+		4F6036E015DD4DAD00C1BD4E /* Geolocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geolocation.h; sourceTree = "<group>"; };
 		4F6D437A15D598C9008A8C03 /* LocationSharing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSharing.h; sourceTree = "<group>"; };
 		4F6D437B15D598CA008A8C03 /* LocationSharing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSharing.m; sourceTree = "<group>"; };
 		4F713C8F15D00213003C4DCF /* CustomCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCheckbox.h; sourceTree = "<group>"; };
@@ -777,6 +789,14 @@
 		4F82577815BD4C7E00760CE1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4F6036D915DD4DAD00C1BD4E /* Places.m */,
+				4F6036DA15DD4DAD00C1BD4E /* Places.h */,
+				4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */,
+				4F6036DC15DD4DAD00C1BD4E /* SearchLocation.h */,
+				4F6036DD15DD4DAD00C1BD4E /* People.m */,
+				4F6036DE15DD4DAD00C1BD4E /* People.h */,
+				4F6036E015DD4DAD00C1BD4E /* Geolocation.h */,
+				4F6036DF15DD4DAD00C1BD4E /* Geolocation.m */,
 				4F1D96A415DCC93B00511624 /* ShareLocation.m */,
 				4F1D96A515DCC93B00511624 /* ShareLocation.h */,
 				4F1D96A615DCC93B00511624 /* Geofence.m */,
@@ -1682,6 +1702,10 @@
 				4F1D96B315DCC93B00511624 /* Date.m in Sources */,
 				4F1D96B415DCC93B00511624 /* Address.m in Sources */,
 				4F1D96B515DCC93B00511624 /* NotificationPref.m in Sources */,
+				4F6036E115DD4DAD00C1BD4E /* Places.m in Sources */,
+				4F6036E215DD4DAD00C1BD4E /* SearchLocation.m in Sources */,
+				4F6036E315DD4DAD00C1BD4E /* People.m in Sources */,
+				4F6036E415DD4DAD00C1BD4E /* Geolocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

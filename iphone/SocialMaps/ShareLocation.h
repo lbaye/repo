@@ -12,7 +12,7 @@
 {
     NSString *status;
     NSMutableArray *permittedUsers;
-    NSString *permittedCircles;
+    NSMutableArray *permittedCircles;
     NSString *friendDuration;
     NSString *friendRadius;
     NSString *strangersDuration;
@@ -21,7 +21,7 @@
 
 @property(nonatomic,retain) NSString *status;
 @property(nonatomic,retain) NSMutableArray *permittedUsers;
-@property(nonatomic,retain) NSString *permittedCircles;
+@property(nonatomic,retain) NSMutableArray *permittedCircles;
 @property(nonatomic,retain) NSString *friendDuration;
 @property(nonatomic,retain) NSString *friendRadius;
 @property(nonatomic,retain) NSString *strangersDuration;

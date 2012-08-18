@@ -20,11 +20,6 @@
     bool            showPlaces;
     bool            showDeals;
     int             selectedItemIndex;
-    //UITableView     *objectLists;
-//    NSMutableArray  *peopleList;
-//    NSMutableArray  *placeList;
-//    NSMutableArray  *dealList;
-    //NSMutableArray  *displayList;
     AppDelegate     *smAppDelegate;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
@@ -32,11 +27,6 @@
 @property (nonatomic) bool showPlaces;
 @property (nonatomic) bool showDeals;
 @property (nonatomic) int selectedItemIndex;
-//@property (nonatomic, retain) UITableView     *objectLists;
-//@property (nonatomic, retain) NSMutableArray  *peopleList;
-//@property (nonatomic, retain) NSMutableArray  *placeList;
-//@property (nonatomic, retain) NSMutableArray  *dealList;
-//@property (nonatomic, retain) NSMutableArray  *displayList;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 
 @property (retain, nonatomic) IBOutlet UIView *listPullupMenu;

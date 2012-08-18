@@ -86,7 +86,21 @@
     
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
     btn.frame = CGRectMake(annoFrame.size.width-24, 23, 23, 23);
-    [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
+    
+    // For external users don't show details
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if (locItemPeople.userInfo.external == false) 
+            [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
+        else
+            [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+
+    } else {
+        locItem.currDisplayState = MapAnnotationStateNormal;
+        [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+
+    }
+
     [annoView bringSubviewToFront:btn];
     CGPoint annoOffset = CGPointMake((200-(ANNO_IMG_WIDTH+12))/2, 0);
     annoView.centerOffset = annoOffset;
@@ -148,7 +162,16 @@
             locItem.currDisplayState = MapAnnotationStateSummary;
             break;
         case MapAnnotationStateSummary:
-            locItem.currDisplayState = MapAnnotationStateDetailed;
+            // Don't show details for non-SM users
+            if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+                LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+                if (locItemPeople.userInfo.external == false) 
+                    locItem.currDisplayState = MapAnnotationStateDetailed;
+                else
+                    locItem.currDisplayState = MapAnnotationStateNormal;
+            } else {
+                locItem.currDisplayState = MapAnnotationStateNormal;
+            }
             break;    
         case MapAnnotationStateDetailed:
             locItem.currDisplayState = MapAnnotationStateNormal;

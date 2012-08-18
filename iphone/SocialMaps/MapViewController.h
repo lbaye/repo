@@ -24,7 +24,9 @@ typedef enum _SHARING_TYPES {
 } SHARING_TYPES;
 
 @interface MapViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate,
-                                UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate,UIScrollViewDelegate, MapAnnotationDelegate, IconDownloaderDelegate> {
+                                UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
+                                UIPickerViewDelegate,UIScrollViewDelegate, 
+                                MapAnnotationDelegate, IconDownloaderDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -40,6 +42,7 @@ typedef enum _SHARING_TYPES {
     AppDelegate         *smAppDelegate;
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
+    bool gotListing;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -53,6 +56,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
+@property (atomic) bool gotListing;
            
 @property (retain, nonatomic) IBOutlet UIView *mapPulldown;
 @property (retain, nonatomic) IBOutlet UIButton *shareAllButton;

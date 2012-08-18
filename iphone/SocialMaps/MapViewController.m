@@ -22,6 +22,10 @@
 #import "NotificationPref.h"
 #import "Geofence.h"
 #import "LocationItemPeople.h"
+#import "LocationItemPlace.h"
+#import "RestClient.h"
+#import "SearchLocation.h"
+#import "MapAnnotationPeople.h"
 
 
 @interface MapViewController ()
@@ -59,6 +63,7 @@
 @synthesize smAppDelegate;
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
+@synthesize gotListing;
 //@synthesize imageDownloadsInProgress;
 
 UserFriends *afriend;
@@ -70,6 +75,13 @@ bool searchFlag=FALSE;
 FacebookHelper *fbHelper;
 UserDefault *userDefault;
 UtilityClass *utility;
+
+// Button event handler
+typedef struct {
+    LocationItemPeople *locItem;
+    UITextView         *txtView;
+} ButtonClickCallbackData;
+ButtonClickCallbackData callBackData;
 
 /*@synthesize friendRequests;
 @synthesize messages;
@@ -103,9 +115,101 @@ UtilityClass *utility;
     [self.view setNeedsDisplay];
 }
 
+
+
+- (void) cancelRequest:(id)sender {
+    [[sender superview] removeFromSuperview];
+}
+// Send the message out
+- (void) sendMessage:(id)sender {
+    [[sender superview] removeFromSuperview];
+    
+    NSString * subject = [NSString stringWithFormat:@"Message from %@ %@", smAppDelegate.userAccountPrefs.firstName,
+                           smAppDelegate.userAccountPrefs.lastName];
+    NSLog(@"Message to Name:%@, from %@ %@", callBackData.locItem.userInfo.firstName, subject, 
+          
+          
+          callBackData.txtView.text);
+
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient sendMessafe:subject content:callBackData.txtView.text recipients:[NSArray arrayWithObject:callBackData.locItem.userInfo.userId] authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
+
+// Send the friend request out
+- (void) sendRequest:(id)sender {
+    NSLog(@"Name:%@, tag=%@", callBackData.locItem.userInfo.firstName, callBackData.txtView.text);
+    [[sender superview] removeFromSuperview];
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient sendFriendRequest:callBackData.locItem.userInfo.userId message:callBackData.txtView.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
 - (void) addFriendSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:addFriendSelected");
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    
+    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 
+                                                                  self.view.frame.origin.y+40, 
+                                                                  self.view.frame.size.width, 
+                                                                   (self.view.frame.size.height-90)/2)];
+    messageView.backgroundColor = [UIColor blackColor];
+
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, messageView.frame.size.width-20, 
+                                                                        messageView.frame.size.height-45)];
+    [textView.layer setCornerRadius:10.0f];
+    [textView.layer setMasksToBounds:YES];
+    textView.backgroundColor = [UIColor whiteColor];
+    textView.delegate = self;
+    textView.tag = 20000;
+    [textView setReturnKeyType: UIReturnKeyDone];
+    [messageView addSubview:textView];
+    
+    // BUttons
+    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelBtn.backgroundColor = [UIColor clearColor];
+    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancelBtn addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect cancelFrame = CGRectMake(messageView.frame.size.width/2-80, messageView.frame.size.height-5-30, 60, 30);
+    cancelBtn.frame = cancelFrame;
+    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    UIImageView *sep = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"sp.png"]];
+    CGRect sepFrame = CGRectMake(messageView.frame.size.width/2, messageView.frame.size.height-5-30, 
+                                 1, 30);
+    sep.frame = sepFrame;
+    [messageView addSubview:sep];
+    
+    callBackData.locItem = locItem;
+    callBackData.txtView = textView;
+    
+    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    sendButton.backgroundColor = [UIColor clearColor];
+    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(sendRequest:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect sendFrame = CGRectMake(messageView.frame.size.width/2+20, messageView.frame.size.height-5-30, 60, 30);
+    sendButton.frame = sendFrame;
+    [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+    [messageView addSubview:cancelBtn];
+    [messageView addSubview:sendButton];
+    
+    [[self view] addSubview:messageView];
+    
 }
+
+// UITextView delegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([text isEqualToString:@"\n"]) {
+        
+        [textView resignFirstResponder];
+        return FALSE;
+    }
+    return TRUE;
+}
+
+// End UITextView delegate
+
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
 }
@@ -114,6 +218,55 @@ UtilityClass *utility;
 }
 - (void) messageSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:messageSelected");
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    
+    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 
+                                                                   self.view.frame.origin.y+40, 
+                                                                   self.view.frame.size.width, 
+                                                                   (self.view.frame.size.height-90)/2)];
+    messageView.backgroundColor = [UIColor blackColor];
+    
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, messageView.frame.size.width-20, 
+                                                                        messageView.frame.size.height-45)];
+    [textView.layer setCornerRadius:10.0f];
+    [textView.layer setMasksToBounds:YES];
+    textView.backgroundColor = [UIColor whiteColor];
+    textView.delegate = self;
+    textView.tag = 20000;
+    [textView setReturnKeyType: UIReturnKeyDone];
+    [messageView addSubview:textView];
+    
+    // BUttons
+    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelBtn.backgroundColor = [UIColor clearColor];
+    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancelBtn addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect cancelFrame = CGRectMake(messageView.frame.size.width/2-80, messageView.frame.size.height-5-30, 60, 30);
+    cancelBtn.frame = cancelFrame;
+    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    UIImageView *sep = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"sp.png"]];
+    CGRect sepFrame = CGRectMake(messageView.frame.size.width/2, messageView.frame.size.height-5-30, 
+                                 1, 30);
+    sep.frame = sepFrame;
+    [messageView addSubview:sep];
+    
+    callBackData.locItem = locItem;
+    callBackData.txtView = textView;
+    
+    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    sendButton.backgroundColor = [UIColor clearColor];
+    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect sendFrame = CGRectMake(messageView.frame.size.width/2+20, messageView.frame.size.height-5-30, 60, 30);
+    sendButton.frame = sendFrame;
+    [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    [messageView addSubview:cancelBtn];
+    [messageView addSubview:sendButton];
+    
+    [[self view] addSubview:messageView];
+
 }
 // MapAnnotation delegate methods
 
@@ -144,8 +297,7 @@ UtilityClass *utility;
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
-}
-*/
+}*/
 
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -153,6 +305,28 @@ UtilityClass *utility;
 {
     [super viewDidLoad];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    _mapView.delegate=self;
+    _mapView.showsUserLocation=YES;
+    locationManager = [[CLLocationManager alloc] init];
+    [locationManager setDelegate:self];
+    [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
+    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    [locationManager startUpdatingLocation];
+    gotListing = FALSE;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
+    smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
+
+    
+    if (!gotListing) {
+        gotListing = TRUE;
+        RestClient *restClient = [[RestClient alloc] init];
+        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
+    
     mapAnno = [[MapAnnotation alloc] init];
     mapAnno.currState = MapAnnotationStateNormal;
     mapAnno.delegate = self;
@@ -210,13 +384,6 @@ UtilityClass *utility;
     [imageDownloadsInProgress retain];
     [imageDownloadsInProgressCopy retain];
     
-    _mapView.delegate=self;
-    _mapView.showsUserLocation=YES;
-    locationManager = [[CLLocationManager alloc] init];
-    [locationManager setDelegate:self];
-    [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
-    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [locationManager startUpdatingLocation];
     _mapPulldown.hidden = TRUE;
     _mapPullupMenu.hidden = TRUE;
     
@@ -239,6 +406,7 @@ UtilityClass *utility;
     pickSavedFilter = [[UIPickerView alloc] initWithFrame:pickerFrame];
     pickSavedFilter.delegate = self;
     pickSavedFilter.hidden = TRUE;
+    pickSavedFilter.showsSelectionIndicator = TRUE;
     [self.view addSubview:pickSavedFilter];
     
     // Dummy saved filters
@@ -249,18 +417,17 @@ UtilityClass *utility;
     [savedFilters addObject:@"Show 2nd degree"];
     
     // Get the notifications
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     // Dummy notification
     int ignoreCount = 0;
-    if (appDelegate.msgRead == TRUE)
-        ignoreCount += [appDelegate.messages count];
+    if (smAppDelegate.msgRead == TRUE)
+        ignoreCount += [smAppDelegate.messages count];
     
-    if (appDelegate.notifRead == TRUE)
-        ignoreCount += [appDelegate.notifications count];
+    if (smAppDelegate.notifRead == TRUE)
+        ignoreCount += [smAppDelegate.notifications count];
     
-    int totalNotif = appDelegate.friendRequests.count+
-                appDelegate.messages.count+appDelegate.notifications.count-appDelegate.ignoreCount-ignoreCount;
+    int totalNotif = smAppDelegate.friendRequests.count+
+                smAppDelegate.messages.count+smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
     
     if (totalNotif == 0)
         _mapNotifCount.text = @"";
@@ -274,6 +441,8 @@ UtilityClass *utility;
 -(void)viewDidDisappear:(BOOL)animated
 {
     userFriendslistArray=[[NSMutableArray alloc] init];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+
 }
 
 - (void)viewDidUnload
@@ -298,21 +467,19 @@ UtilityClass *utility;
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)loadAnnotations:(BOOL)animated
 {
     // 1
     CLLocationCoordinate2D zoomLocation;
-    // Baltimore
-    //zoomLocation.latitude = 39.281516;
-    //zoomLocation.longitude= -76.580806;
     
-    // Genweb2 office
-    zoomLocation.latitude = 23.794936207558262;
-    zoomLocation.longitude= 90.41324257850647;
+    // Current location
+    zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    
     // 2
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
     // 3
-    NSLog(@"MapViewController:viewWillAppear");
+    NSLog(@"MapViewController:loadAnnotations");
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
     for (int i=0; i < smAppDelegate.displayList.count; i++) {
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
@@ -321,10 +488,40 @@ UtilityClass *utility;
     
     // 4
     [_mapView setRegion:adjustedRegion animated:YES];  
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+//    for (id<MKAnnotation> annotation in _mapView.annotations) {
+//        [_mapView removeAnnotation:annotation];
+//    }
+    [self loadAnnotations:animated];
     [super viewWillAppear:animated];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}",
+          oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
+          newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+
+    
+    // Calculate move from last position
+    CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.lastPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
+    
+    CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
+    if (distanceMoved >= 0) { // TODO : use distance
+        // Update the position
+        smAppDelegate.lastPosition = smAppDelegate.currPosition;
+        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
+        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
+        smAppDelegate.currPosition.positionTime = [NSDate date];
+        
+        // Send new location to server
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    }
+
      // 1
      CLLocationCoordinate2D zoomLocation;
      
@@ -381,16 +578,7 @@ UtilityClass *utility;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    //UIButton *button = (UIButton *)sender;
-    /*if ([[segue destinationViewController] isKindOfClass:[NotificationController class]]){
-        NotificationController *vc = [segue destinationViewController];
-        vc.messages = messages;
-        vc.friendRequests = friendRequests;
-        vc.notifications = notifications;
-        vc.msgRead = msgRead;
-        vc.notifRead = notifRead;
-        vc.ignoreCount = ignoreCount;
-    }*/
+
     NSLog(@"In prepareForSegue:MapViewController");
 }
 
@@ -1062,5 +1250,90 @@ UtilityClass *utility;
 
 - (void) updateLocation:(id) sender {
     NSLog(@"MapViewController: updateLocation");
+    [locationManager stopUpdatingLocation];
+    [locationManager startUpdatingLocation];
+    
+    // Send new location to server
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
+
+- (void) getSortedDisplayList {
+    [smAppDelegate.displayList removeAllObjects];
+    NSMutableArray *tempList = [[NSMutableArray alloc] init];
+    if (smAppDelegate.showPeople == TRUE) 
+        [tempList addObjectsFromArray:smAppDelegate.peopleList];
+    if (smAppDelegate.showPlaces == TRUE) 
+        [tempList addObjectsFromArray:smAppDelegate.placeList];
+    if (smAppDelegate.showDeals == TRUE) 
+        [tempList addObjectsFromArray:smAppDelegate.dealList];
+    
+    // Sort by distance
+    NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
+    [smAppDelegate.displayList addObjectsFromArray:sortedArray];
+}
+
+- (void)gotListings:(NSNotification *)notif
+{
+    NSLog(@"In gotListings");
+    SearchLocation * listings = [notif object];
+    if (listings != nil) {
+        if (listings.peopleArr != nil) {
+            smAppDelegate.peopleList = [[NSMutableArray alloc] init];
+
+            float dist;
+            
+            for (People *item in listings.peopleArr) {
+                UIImage *icon;
+                if ([item.avatar length] == 0) {
+                    if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                        icon = [UIImage imageNamed:@"Photo-1.png"];
+                    else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                        icon = [UIImage imageNamed:@"Photo-2.png"];
+                    else
+                        icon = [UIImage imageNamed:@"thum.png"];
+                } else // Need to retrieve avatar image
+                    icon = [UIImage imageNamed:@"thum.png"];
+                
+                UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+                
+                dist = [item.distance doubleValue];
+                CLLocationCoordinate2D loc;
+                loc.latitude = [item.currentLocationLat doubleValue];
+                loc.longitude = [item.currentLocationLng doubleValue];
+                NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+                
+                LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
+                aPerson.userInfo = item;
+                [smAppDelegate.peopleList addObject:aPerson];
+                [aPerson release];
+            }
+        } else if (listings.placeArr != nil) {
+            smAppDelegate.placeList = [[NSMutableArray alloc] init];
+            float currLat = 23.796526525077528;
+            float currLong = 90.41537761688232;
+            float dist;
+            
+            for (int i=0; i < 3; i++) {
+                UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+                UIImage *icon = [UIImage imageNamed:@"user_thumb_only.png"];
+                CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
+                dist = rand()%500;
+                LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:[NSString stringWithFormat:@"Place %d", i] address:[NSString stringWithFormat:@"Place Address %d", i] type:ObjectTypePeople category:@"Bar" coordinate:loc dist:dist icon:icon bg:bg];
+                currLat += 0.004;
+                currLong += 0.004;
+                [smAppDelegate.placeList addObject:aPlace];
+                [aPlace release];
+            }
+            
+
+        }
+    }
+    smAppDelegate.dealList = [[NSMutableArray alloc] initWithCapacity:0];
+    smAppDelegate.displayList = [[NSMutableArray alloc] initWithCapacity:0];
+    [self getSortedDisplayList];
+    [self loadAnnotations:YES];
+    [self.view setNeedsDisplay];
+}
+
 @end

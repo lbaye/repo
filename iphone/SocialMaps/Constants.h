@@ -12,6 +12,17 @@ extern NSString * const NOTIF_REG_DONE;
 extern NSString * const NOTIF_FORGOT_PW_DONE;
 extern NSString * const NOTIF_FBLOGIN_DONE;
 extern NSString * const FB_APPID;
+extern NSString * const NOTIF_GET_PLATFORM_DONE;
+extern NSString * const NOTIF_GET_LAYER_DONE;
+extern NSString * const NOTIF_GET_SHARING_PREFS_DONE;
+extern NSString * const NOTIF_GET_ACCT_SETTINGS_DONE;
+extern NSString * const NOTIF_GET_GEOFENCE_DONE;
+extern NSString * const NOTIF_GET_SHARELOC_DONE;
+extern NSString * const NOTIF_GET_NOTIFS_DONE;
+extern NSString * const NOTIF_GET_LISTINGS_DONE;
+extern NSString * const NOTIF_GET_FRIEND_REQ_DONE;
+extern NSString * const NOTIF_GET_INBOX_DONE;
+extern NSString * const NOTIF_GET_NOTIFICATIONS_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

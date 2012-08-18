@@ -203,6 +203,9 @@ UserDefault *userDefault;
         NSString *lastName;
         NSString *email;
         NSString *fbId;
+        NSString *gender;
+        NSString *userName;
+        NSString *dob;
         if ([result isKindOfClass:[NSArray class]]) {
             result = [result objectAtIndex:0];
         }
@@ -211,16 +214,14 @@ UserDefault *userDefault;
             //NSDictionary *hash = result;
             NSLog(@"Birthday: %@", [result objectForKey:@"birthday"]);
             NSLog(@"Name: %@", [result objectForKey:@"name"]); 
+            firstName = [result objectForKey:@"first_name"];
+            lastName  = [result objectForKey:@"last_name"];
             name = [result objectForKey:@"name"];
-            NSArray *fields = [name componentsSeparatedByString:@" "];
-            int numTokens = [fields count];
-            if (numTokens > 0)
-                firstName = [fields objectAtIndex:0];
-            if (numTokens > 1)
-                lastName = [fields objectAtIndex:numTokens-1];
-            
+            gender = [result objectForKey:@"gender"];
+            dob = [result objectForKey:@"birthday"];
             email = [result objectForKey:@"email"];
             fbId = [result objectForKey:@"id"];
+            userName = [result objectForKey:@"username"]; 
             NSLog(@"first=%@,last=%@,email=%@,id=%@",firstName,lastName,email,fbId);
         }
         if ([result isKindOfClass:[NSData class]])
@@ -237,6 +238,9 @@ UserDefault *userDefault;
         [aUser setFacebookAuthToken:[facebook accessToken]];
         [aUser setEmail:email];
         [aUser setFacebookId:fbId];
+        [aUser setGender:gender];
+        [aUser setDateOfBirth:dob];
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture", userName]], 
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
         frndListFlag=TRUE;
         [self getUserFriendListRequest:self];

@@ -7,11 +7,11 @@
 //
 
 #import "LocationItem.h"
-#import "User.h"
+#import "People.h"
 
 @interface LocationItemPeople : LocationItem {
-    User        *userInfo;
+    People        *userInfo;
 }
-@property (nonatomic, retain) User    *userInfo;
+@property (nonatomic, retain) People    *userInfo;
 
 @end
