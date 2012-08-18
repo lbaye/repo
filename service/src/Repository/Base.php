@@ -47,14 +47,7 @@ class Base extends DocumentRepository
         }
 
         if (class_exists('\\GearmanClient')) {
-            $this->gearmanClient->addTask($eventName, $data);
-        }
-    }
-
-    protected function runTasks()
-    {
-        if (class_exists('\\GearmanClient')) {
-            $this->gearmanClient->runTasks();
+            $this->gearmanClient->doBackground($eventName, $data);
         }
     }
 }

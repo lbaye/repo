@@ -277,7 +277,6 @@ class User extends BaseRepository
         );
 
         $this->addTask('new_friend_request', json_encode($data));
-        $this->runTasks();
 
         return $friendRequest;
     }
