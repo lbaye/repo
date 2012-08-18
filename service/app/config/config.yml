@@ -1,3 +1,6 @@
+web:
+  root: http://203.76.126.69/social_maps/web
+
 mongodb:
   host: '127.0.0.1'
   port: 27017

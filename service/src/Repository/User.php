@@ -670,7 +670,7 @@ class User extends BaseRepository
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            $user->setAvatar($filePath);
+            $user->setAvatar($this->config['web']['root'] . $filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
