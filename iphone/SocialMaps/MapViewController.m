@@ -322,8 +322,8 @@ ButtonClickCallbackData callBackData;
     if (!gotListing) {
         gotListing = TRUE;
         RestClient *restClient = [[RestClient alloc] init];
-        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
     }
 
