@@ -40,7 +40,7 @@ class Auth extends Base
             $user = $this->userRepository->insert($data);
 
             if (!empty($data['avatar'])) {
-                $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
+                $user = $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
             $this->response->setContent(json_encode($user->toArrayDetailed()));
