@@ -244,8 +244,15 @@ class User extends BaseRepository
     {
         $user = $this->find($friendId);
 
-        if (false === $user) {
-            throw new \InvalidArgumentException();
+        if (is_null($user)) {
+            throw new \Exception\ResourceNotFoundException($friendId);
+        }
+
+        $existingFriendRequests = $user->getFriendRequest();
+        foreach ($existingFriendRequests as $existingFriendRequest) {
+            if ($existingFriendRequest->getRecipientId() == $friendId) {
+                throw new \Exception('Friend request previously sent to this user.');
+            }
         }
 
         $data['userId']      = $this->currentUser->getId();
@@ -399,10 +406,18 @@ class User extends BaseRepository
 
         $this->currentUser->setCircles($circles);
 
+        $friendRequests = $this->currentUser->getFriendRequest();
+
+        foreach ($friendRequests as &$friendRequest) {
+            if ($friendRequest->getUserId() == $userId) {
+                $friendRequest->setAccepted(true);
+            }
+        }
+
+        $this->currentUser->setFriendRequest($friendRequests);
+
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
-
-        return $circle;
     }
 
     public function addDefaultCircles($id)
@@ -522,7 +537,7 @@ class User extends BaseRepository
     {
         $user = $this->find($friendId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 

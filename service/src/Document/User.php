@@ -608,6 +608,11 @@ class User
         $this->friendRequest[] = $friendRequest;
     }
 
+    public function setFriendRequest($friendRequest)
+    {
+        $this->friendRequest = $friendRequest;
+    }
+
     public function getFriendRequest()
     {
         return $this->friendRequest;

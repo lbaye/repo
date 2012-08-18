@@ -121,14 +121,16 @@ class User extends Base
     {
         $data = $this->request->request->all();
 
-        $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
-
-        if ($frequest instanceof \Document\FriendRequest) {
+        try {
+            $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
             $this->response->setContent(json_encode($frequest->toArray()));
             $this->response->setStatusCode(200);
-        } else {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
+        } catch (\InvalidArgumentException $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode(404);
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode(400);
         }
 
         return $this->response;
@@ -335,16 +337,25 @@ class User extends Base
     public function acceptFriendRequest($friendId, $response)
     {
         $this->_ensureLoggedIn();
-        $this->userRepository->acceptFriendRequest($friendId);
-        $circles = $this->user->getCircles();
 
-        $result = array();
-        foreach ($circles as $circle) {
-            $result[] = $circle->toArray();
+        try {
+
+            $this->userRepository->acceptFriendRequest($friendId);
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                $result[] = $circle->toArray();
+            }
+
+            $this->response->setContent(json_encode($result));
+            $this->response->setStatusCode(200);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
         }
 
-        $this->response->setContent(json_encode($result));
-        $this->response->setStatusCode(200);
 
         return $this->response;
     }
@@ -365,14 +376,17 @@ class User extends Base
             $user = $this->userRepository->updateNotification($notificationId);
             $this->response->setContent(json_encode($user->toArray()));
             $this->response->setStatusCode(200);
+
         } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
+
         } catch (\Exception\UnauthorizedException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
+
         } catch (\Exception\ResourceAlreadyExistsException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
