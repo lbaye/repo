@@ -671,8 +671,6 @@ class User extends BaseRepository
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
             $user->setAvatar($this->config['web']['root'] . $filePath);
-            var_dump($this->config['web']['root']);
-            die('asi');
         }
 
         $user->setUpdateDate(new \DateTime());
