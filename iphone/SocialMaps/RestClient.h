@@ -44,7 +44,7 @@
 //-(void)setSharingPreference:(InformationPrefs *)informationPrefs:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getSharingPreference:(NSString *)authToken:(NSString *)authTokenValue;
 - (void) updatePosition:(Geolocation*)currLocation authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
-- (void) sendMessafe:(NSString*)subject content:(NSString*)content recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) sendMessage:(NSString*)subject content:(NSString*)content recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) sendFriendRequest:(NSString*)friendId message:(NSString*)message authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getFriendRequests:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;

@@ -1113,7 +1113,7 @@
                 [people setDistance:[item objectForKey:@"distance"]];                
                 [searchLocation.peopleArr addObject:people];
                 
-                NSLog(@"enabled: %@  %@  %@ %d",[item objectForKey:@"enabled"],people.distance,date.timezone,[searchLocation.peopleArr count]);
+                NSLog(@"User: first %@  last:%@  id:%@ %d",people.firstName, people.lastName, people.userId);
             }
             
             //get all places
@@ -1742,7 +1742,7 @@
 }
 
 // Send message to one or more SM users
-- (void) sendMessafe:(NSString*)subject content:(NSString*)content recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
+- (void) sendMessage:(NSString*)subject content:(NSString*)content recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/messages"]];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
@@ -1795,6 +1795,8 @@
 // Send friend request
 - (void) sendFriendRequest:(NSString*)friendId message:(NSString*)message authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/request/friend/%@",WS_URL, friendId]];
+    
+    NSLog(@"SendFriendRequest: friend:%@ token:%@", friendId, authTokenValue);
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"POST"];
@@ -1944,8 +1946,10 @@
             for (NSDictionary *item in jsonObjects) {
                 NotifMessage *msg = [[NotifMessage alloc] init];
                 
-                msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"__identifier__" key3:nil];
-                msg.notifSender   = [self getNestedKeyVal:item key1:@"friendName" key2:nil key3:nil];
+                msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
+                NSString * firstName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
+                NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];
+                msg.notifSender   = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
@@ -2070,19 +2074,7 @@
         
         if (responseStatus == 200 || responseStatus == 201) {
             
-            NotificationPref *notificationPref=[[NotificationPref alloc] init];
-            [notificationPref setFriend_requests_sm:[jsonObjects objectForKey:@"friend_requests_sm"]];
-            [notificationPref setPosts_by_friends_sm:[jsonObjects objectForKey:@"posts_by_friends_sm"]];
-            [notificationPref setComments_sm:[jsonObjects objectForKey:@"comments_sm"]];
-            [notificationPref setMessages_sm:[jsonObjects objectForKey:@"messages_sm"]];
-            [notificationPref setProximity_alerts_sm:[jsonObjects objectForKey:@"proximity_alerts_sm"]];
-            [notificationPref setRecommendations_sm:[jsonObjects objectForKey:@"recommendations_sm"]];
-            [notificationPref setFriend_requests_mail:[jsonObjects objectForKey:@"friend_requests_mail"]];
-            [notificationPref setPosts_by_friends_mail:[jsonObjects objectForKey:@"posts_by_friends_mail"]];
-            [notificationPref setComments_mail:[jsonObjects objectForKey:@"comments_mail"]];
-            [notificationPref setMessages_mail:[jsonObjects objectForKey:@"messages_mail"]];
-            [notificationPref setProximity_alerts_mail:[jsonObjects objectForKey:@"proximity_alerts_mail"]];
-            [notificationPref setRecommendations_mai:[jsonObjects objectForKey:@"recommendations_mail"]];
+
             NSLog(@"acceptFriendRequest successful: %@",jsonObjects);
             
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];

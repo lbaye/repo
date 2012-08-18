@@ -189,6 +189,7 @@
 
         smAppDelegate.authToken = userInfo.authToken;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
+       
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
@@ -289,6 +290,7 @@
         
         smAppDelegate.authToken = regInfo.authToken;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
+        [smAppDelegate getUserInformation:regInfo.authToken];
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else 
@@ -359,6 +361,7 @@
         [permissions release];
     } else {
         [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
+        [smAppDelegate getUserInformation:smAppDelegate.authToken];
         [self performSegueWithIdentifier: @"showMapView" sender: self];
     }
 }

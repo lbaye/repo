@@ -103,5 +103,6 @@
 - (void) hideActivityViewer;
 - (void) showActivityViewer:(UIView*)sender;
 - (void) getPreferenceSettings:(NSString*) authToken;
+- (void) getUserInformation:(NSString*) token ;
 
 @end

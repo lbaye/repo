@@ -132,7 +132,7 @@ ButtonClickCallbackData callBackData;
           callBackData.txtView.text);
 
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient sendMessafe:subject content:callBackData.txtView.text recipients:[NSArray arrayWithObject:callBackData.locItem.userInfo.userId] authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [restClient sendMessage:subject content:callBackData.txtView.text recipients:[NSArray arrayWithObject:callBackData.locItem.userInfo.userId] authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
 
@@ -301,9 +301,8 @@ ButtonClickCallbackData callBackData;
 
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+- (void)viewDidLoad {
+    [super viewDidLoad];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     _mapView.delegate=self;
     _mapView.showsUserLocation=YES;
@@ -313,11 +312,13 @@ ButtonClickCallbackData callBackData;
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     gotListing = FALSE;
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
-
+    
+    // Get notifications
+    [smAppDelegate getUserInformation:smAppDelegate.authToken];
     
     if (!gotListing) {
         gotListing = TRUE;
@@ -326,7 +327,7 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
     }
-    
+
     mapAnno = [[MapAnnotation alloc] init];
     mapAnno.currState = MapAnnotationStateNormal;
     mapAnno.delegate = self;
@@ -416,9 +417,47 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
     
-    // Get the notifications
+    [self displayNotificationCount];
     
-    // Dummy notification
+    // GCD notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    
+}
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if (self = [super initWithCoder:decoder])
+    {
+//        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        _mapView.delegate=self;
+//        _mapView.showsUserLocation=YES;
+//        locationManager = [[CLLocationManager alloc] init];
+//        [locationManager setDelegate:self];
+//        [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
+//        [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+//        [locationManager startUpdatingLocation];
+//        gotListing = FALSE;
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
+//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
+//        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
+//
+//        // Get notifications
+//        [smAppDelegate getUserInformation:smAppDelegate.authToken];
+//        
+//        if (!gotListing) {
+//            gotListing = TRUE;
+//            RestClient *restClient = [[RestClient alloc] init];
+//            smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//            smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//            [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//        }
+        
+    }
+    return self;
+}
+
+-(void) displayNotificationCount {
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
         ignoreCount += [smAppDelegate.messages count];
@@ -427,22 +466,20 @@ ButtonClickCallbackData callBackData;
         ignoreCount += [smAppDelegate.notifications count];
     
     int totalNotif = smAppDelegate.friendRequests.count+
-                smAppDelegate.messages.count+smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
+    smAppDelegate.messages.count+smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
     
     if (totalNotif == 0)
         _mapNotifCount.text = @"";
     else
         _mapNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
-    //_mapNotifCount.text = @"6";
-
 }
-
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     userFriendslistArray=[[NSMutableArray alloc] init];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 }
 
 - (void)viewDidUnload
@@ -1336,4 +1373,15 @@ ButtonClickCallbackData callBackData;
     [self.view setNeedsDisplay];
 }
 
+// GCD async notifications
+- (void)gotNotifMessages:(NSNotification *)notif {
+    smAppDelegate.messages = [notif object];
+    NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.messages);
+    [self displayNotificationCount];
+}
+- (void)gotFriendRequests:(NSNotification *)notif {
+    smAppDelegate.friendRequests = [notif object];
+    NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
+    [self displayNotificationCount];
+}
 @end

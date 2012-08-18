@@ -12,6 +12,7 @@
 #import "TagNotification.h"
 #import "CustomAlert.h"
 #import "MapViewController.h"
+#import "RestClient.h"
 
 @implementation NotificationController
 
@@ -81,7 +82,7 @@
     } else
         msgCount.text   = [NSString stringWithFormat:@"%d",smAppDelegate.messages.count];
     
-    if (smAppDelegate.notifRead == TRUE) {
+    if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
         ignoreCount += [smAppDelegate.notifications count];
     } else
@@ -363,10 +364,14 @@
         
         [acceptAlert show];
         [acceptAlert autorelease];
-        [smAppDelegate.friendRequests removeObjectAtIndex:row];
+        
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient acceptFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        
         if (req.ignored == TRUE)
             smAppDelegate.ignoreCount--;
-        
+        [smAppDelegate.friendRequests removeObjectAtIndex:row];
+
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 
@@ -378,7 +383,8 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
     } else { // Ignore
-        smAppDelegate.ignoreCount++;
+        if (req.ignored == FALSE)
+            smAppDelegate.ignoreCount++;
         req.ignored = TRUE;
     }
     int ignoreCount = 0;
@@ -390,13 +396,13 @@
     int totalCount = smAppDelegate.friendRequests.count+
                         smAppDelegate.messages.count+smAppDelegate.notifications.count-
                         smAppDelegate.ignoreCount-ignoreCount;
-    if (totalCount == 0)
+    if (totalCount <= 0)
         notifCount.text = @"";
     else
         notifCount.text = [NSString stringWithFormat:@"%d",totalCount];
     
     int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
-    if (requestCount == 0)
+    if (requestCount <= 0)
         reqCount.text = @"";
     else
         reqCount.text = [NSString stringWithFormat:@"%d",requestCount];
