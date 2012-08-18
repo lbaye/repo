@@ -31,6 +31,7 @@ class Breadcrumb extends Base
         $this->breadcrumbRepository = $this->dm->getRepository('Document\Breadcrumb');
 
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
     }
 

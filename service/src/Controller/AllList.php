@@ -37,6 +37,7 @@ class AllList extends Base
         $this->dealRepository = $this->dm->getRepository('Document\Deal');
 
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
     }
 

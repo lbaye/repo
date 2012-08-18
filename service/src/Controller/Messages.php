@@ -15,11 +15,13 @@ class Messages extends Base
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
 
-        $this->userRepository = $this->dm->getRepository('Document\User');
         $this->messageRepository = $this->dm->getRepository('Document\Message');
         $this->serializer = \Service\Serializer\Factory::getSerializer('json');
 
+        $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
+
         $this->_ensureLoggedIn();
     }
 

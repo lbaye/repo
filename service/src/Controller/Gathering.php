@@ -29,8 +29,9 @@ class Gathering extends Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository  = $this->dm->getRepository('Document\User');
-
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
+
         $this->_ensureLoggedIn();
     }
 
