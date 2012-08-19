@@ -88,15 +88,29 @@ class User extends Base
     /**
      * GET /request/friend
      *
+     * @param string $status all | accepted | declined
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFriendRequest()
+    public function getFriendRequest($status = 'all')
     {
         $friendRequests = $this->user->getFriendRequest();
         $result         = array();
 
         foreach ($friendRequests as $friendRequest) {
-            $result[] = $friendRequest->toArray();
+            if ($status != 'all') {
+                if ($status == 'accepted') {
+                    if ($friendRequest->getAccepted() === true) {
+                        $result[] = $friendRequest->toArray();
+                    }
+                } else {
+                    if ($friendRequest->getAccepted() !== true) {
+                        $result[] = $friendRequest->toArray();
+                    }
+                }
+            } else {
+                $result[] = $friendRequest->toArray();
+            }
         }
 
         if (empty($result)) {
@@ -327,7 +341,7 @@ class User extends Base
     }
 
     /**
-     * PUT /request/friend/:friendId/accept
+     * PUT /request/friend/:friendId/:response
      *
      * @param $friendId
      * @param $response
@@ -340,7 +354,7 @@ class User extends Base
 
         try {
 
-            $this->userRepository->acceptFriendRequest($friendId);
+            $this->userRepository->acceptFriendRequest($friendId, $response);
             $circles = $this->user->getCircles();
 
             $result = array();

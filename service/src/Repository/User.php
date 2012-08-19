@@ -386,7 +386,7 @@ class User extends BaseRepository
         return $notification;
     }
 
-    public function acceptFriendRequest($userId)
+    public function acceptFriendRequest($userId, $response)
     {
         $userDetail = $this->find($userId);
 
@@ -394,22 +394,26 @@ class User extends BaseRepository
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $this->updateFriendsCircleList($userId);
-        $circles = $this->currentUser->getCircles();
+        if ($response == 'accept') {
 
-        foreach ($circles as &$circle) {
-            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
-                $circle->addFriend($userDetail);
+            $this->updateFriendsCircleList($userId);
+            $circles = $this->currentUser->getCircles();
+
+            foreach ($circles as &$circle) {
+                if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
+                    $circle->addFriend($userDetail);
+                }
             }
-        }
 
-        $this->currentUser->setCircles($circles);
+            $this->currentUser->setCircles($circles);
+
+        }
 
         $friendRequests = $this->currentUser->getFriendRequest();
 
         foreach ($friendRequests as &$friendRequest) {
             if ($friendRequest->getUserId() == $userId) {
-                $friendRequest->setAccepted(true);
+                $friendRequest->setAccepted(($response == 'accept'));
             }
         }
 
@@ -483,9 +487,9 @@ class User extends BaseRepository
 
         $user->setUpdateDate(new \DateTime());
 
-        if ($user->isValid() === false) {
+        /*if ($user->isValid() === false) {
             return false;
-        }
+        }*/
 
         $this->dm->persist($user);
         $this->dm->flush();
