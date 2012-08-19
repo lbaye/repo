@@ -819,7 +819,7 @@ class User
         }
 
         $unitName = $this->getSettings();
-        $this->distance = $this->unitConvert($metricValue, $unitName['unit']);
+        $this->distance = $this->unitConvert($metricValue, @$unitName['unit']);
 
         return $this->distance;
     }
@@ -835,5 +835,46 @@ class User
         }
 
         return $value;
+    }
+
+    public function toArrayFiltered(User $viewer)
+    {
+        $info = $this->toArray();
+        $shearing = $this->getSharingPreferenceSettings();
+
+        foreach($shearing as $field => $value) {
+            if($value == 'all') continue;
+            else if($value == 'none') {
+                if($this->getId() != $viewer->getId()) $info[$field] = null;
+            } else if($value == 'friends') {
+                if(!in_array($viewer->getId(), $this->getFriends())) $info[$field] = null;
+            } else if($value == 'circles') {
+                if(!in_array($viewer->getId(), $this->getCircleFriends())) $info[$field] = null;
+            }
+        }
+
+        return $info;
+    }
+
+    public function getFriends()
+    {
+        $circles = $this->getCircles();
+        foreach($circles as $circle) {
+            if($circle->getName() == 'friends') {
+                return $circle->getFriends();
+            }
+        }
+    }
+
+    public function getCircleFriends()
+    {
+        $circles = $this->getCircles();
+        $friends = array();
+
+        foreach($circles as $circle) {
+           $friends = array_merge($friends, $circle->getFriends());
+        }
+
+        return $friends;
     }
 }
