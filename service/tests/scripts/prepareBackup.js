@@ -103,66 +103,22 @@ db.getCollection("users").insert({
     "distance": NumberInt(0)
   },
   "sharingPreferenceSettings": {
-    "profile_information": {
-      "friends": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "strangers": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "public": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "family": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      }
-    },
-    "newsfeed": {
-      "friends": true,
-      "strangers": true,
-      "public": true,
-      "family": true
-    }
+    "firstName": "all",
+    "lastName": "all",
+    "email": "all",
+    "dateOfBirth": "all",
+    "bio": "all",
+    "interests": "all",
+    "workStatus": "all",
+    "relationshipStatus": "all",
+    "address": "all",
+    "friendRequest": "all",
+    "circles": "all",
+    "newsfeed": "all",
+    "avatar": "all",
+    "username": "all",
+    "name": "all",
+    "gender": "all"
   },
   "currentLocation": {
      "lat": 91,
@@ -197,6 +153,7 @@ db.getCollection("users").insert({
   "email": "salayhin@gmail.com",
   "enabled": true,
   "firstName": "sirajus",
+  "lastName": "saleyhin",
   "geoFence": {
     "lat": NumberInt(0),
     "lng": NumberInt(0),
@@ -259,67 +216,23 @@ db.getCollection("users").insert({
   "settings": {
     "distance": NumberInt(0)
   },
-  "sharingPreferenceSettings": {
-    "profile_information": {
-      "friends": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "strangers": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "public": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "family": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      }
-    },
-    "newsfeed": {
-      "friends": true,
-      "strangers": true,
-      "public": true,
-      "family": true
-    }
+   "sharingPreferenceSettings": {
+    "firstName": "all",
+    "lastName": "all",
+    "email": "all",
+    "dateOfBirth": "all",
+    "bio": "all",
+    "interests": "all",
+    "workStatus": "all",
+    "relationshipStatus": "all",
+    "address": "all",
+    "friendRequest": "all",
+    "circles": "all",
+    "newsfeed": "all",
+    "avatar": "all",
+    "username": "all",
+    "name": "all",
+    "gender": "all"
   },
   "currentLocation": {
      "lat": 90,
@@ -417,66 +330,22 @@ db.getCollection("users").insert({
     "distance": NumberInt(0)
   },
   "sharingPreferenceSettings": {
-    "profile_information": {
-      "friends": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "strangers": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "public": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      },
-      "family": {
-        "firstName": true,
-        "lastName": true,
-        "email": true,
-        "dateOfBirth": true,
-        "bio": true,
-        "interests": true,
-        "workStatus": true,
-        "relationshipStatus": true,
-        "address": true,
-        "friendRequest": true,
-        "circles": true
-      }
-    },
-    "newsfeed": {
-      "friends": true,
-      "strangers": true,
-      "public": true,
-      "family": true
-    }
+    "firstName": "all",
+    "lastName": "all",
+    "email": "all",
+    "dateOfBirth": "all",
+    "bio": "all",
+    "interests": "all",
+    "workStatus": "all",
+    "relationshipStatus": "all",
+    "address": "all",
+    "friendRequest": "all",
+    "circles": "all",
+    "newsfeed": "all",
+    "avatar": "all",
+    "username": "all",
+    "name": "all",
+    "gender": "all"
   },
   "currentLocation": {
      "lat": 90.05,

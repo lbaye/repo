@@ -556,11 +556,11 @@ class User extends BaseRepository
         return $circle;
     }
 
-    private function _toArrayAll($results)
+    private function _toArrayAll($results, $filterFields = false)
     {
         $users = array();
         foreach ($results as $user) {
-            $users[] = $user->toArray();
+            $users[] = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
         }
 
         return $users;
@@ -717,7 +717,6 @@ class User extends BaseRepository
     public function search($keyword = null, $location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
-            ->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
             ->field('id')->notIn($this->currentUser->getBlockedBy())
             ->field('visible')->equals(true)
             ->limit($limit);
@@ -725,11 +724,13 @@ class User extends BaseRepository
         if (!is_null($keyword)) {
             $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
             $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+        } else {
+            $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
         }
 
         $users = $query->getQuery()->execute();
 
-        return (count($users)) ? $this->_toArrayAll($users) : array();
+        return (count($users)) ? $this->_toArrayAll($users, true) : array();
     }
 
     public function getFacebookUsers($start = null, $limit = null)
