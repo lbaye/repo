@@ -30,12 +30,20 @@ class FetchFacebookLocation extends Base
 
             foreach ($locations['data'] as $location) {
 
-                $location['source'] = 'fb-public';
-                $location['profile'] = $facebook->getPublicProfile($location['author_uid']);
-                $location['avatar'] = $facebook->getPublicAvatar($location['author_uid']);
-                $location['coords'] = array('longitude' => $location['coords']['longitude'], 'latitude' => $location['coords']['latitude']);
+                if (!$this->externalLocationRepository->exists($location['id'])) {
 
-                $savedLocation = $this->externalLocationRepository->insertFromFacebook($location);
+                    $location['source'] = 'fb-public';
+                    $location['profile'] = $facebook->getPublicProfile($location['author_uid']);
+                    $location['avatar'] = $facebook->getPublicAvatar($location['author_uid']);
+                    $location['coords'] = array('longitude' => $location['coords']['longitude'], 'latitude' => $location['coords']['latitude']);
+
+                    $savedLocation = $this->externalLocationRepository->insertFromFacebook($location);
+
+                } else {
+
+                    $savedLocation = false;
+
+                }
 
                 if ($savedLocation) {
                     echo "Added location with ID: ", $savedLocation->getRefId(), PHP_EOL;

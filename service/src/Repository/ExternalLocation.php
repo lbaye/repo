@@ -7,6 +7,12 @@ use Document\ExternalLocation as ExternalLocationDocument;
 
 class ExternalLocation extends DocumentRepository
 {
+    public function exists($refId)
+    {
+        $externalLocation = $this->findOneBy(array('refId' => $refId));
+        return is_null($externalLocation) ? false : true;
+    }
+
     public function insertFromFacebook($data)
     {
         $externalLocation = $this->map($data);
