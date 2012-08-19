@@ -88,7 +88,7 @@ class User extends Base
     /**
      * GET /request/friend
      *
-     * @param string $status all | accepted | declined
+     * @param string $status all | accepted | unaccepted
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -104,7 +104,7 @@ class User extends Base
                         $result[] = $friendRequest->toArray();
                     }
                 } else {
-                    if ($friendRequest->getAccepted() !== true) {
+                    if ($friendRequest->getAccepted() === null) {
                         $result[] = $friendRequest->toArray();
                     }
                 }
