@@ -33,7 +33,8 @@ NSString * const NOTIF_GET_NOTIFICATIONS_DONE= @"com.genweb2.socialmaps.getnotif
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
 //NSString * const FB_APPID = @"474672942546031";  // SMTest2
 //NSString * const FB_APPID = @"264070030370962";  // SMTest3
-NSString * const FB_APPID = @"335618886520303";  // SMTest4
+//NSString * const FB_APPID = @"335618886520303";  // SMTest4
+NSString * const FB_APPID = @"272972866144692"; // Social Maps
 
 
 NSString * const kFontName			= @"HelveticaNeue";

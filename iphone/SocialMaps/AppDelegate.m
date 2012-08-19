@@ -25,6 +25,9 @@
 @synthesize password;
 @synthesize authToken;
 @synthesize loginCount;
+@synthesize fbId;
+@synthesize userId;
+@synthesize fbAccessToken;
 @synthesize activityView;
 @synthesize fbHelper;
 @synthesize savedFilters;
@@ -71,10 +74,14 @@
     email = [prefs stringForKey:@"email"];
     password = [prefs stringForKey:@"password"];
     authToken = [prefs stringForKey:@"authToken"];
+    userId = [prefs stringForKey:@"userId"];
+    fbId = [prefs stringForKey:@"FBUserId"];
+    fbAccessToken = [prefs stringForKey:@"FBAccessTokenKey"];
     loginCount = [prefs integerForKey:@"loginCount"];
     NSLog(@"email=%@,password=%@,remember=%d, login count=%d, authToken=%@",email,password,rememberLoginInfo,
           loginCount, authToken);
-    
+    NSLog(@"FB id=%@, FBAuthToken=%@", fbId, fbAccessToken);
+
     // Singleton instance
     fbHelper = [FacebookHelper sharedInstance];
 
@@ -106,65 +113,12 @@
     // Create some dummy data to show
     // Friend requests
     friendRequests = [[NSMutableArray alloc] init];
-//    NotifRequest *fReq = [[NotifRequest alloc] init];
-//    fReq.notifSender = @"John Doe";
-//    fReq.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-(24*60*60)];
-//    fReq.notifMessage = @"Please add me as your friend";
-//    fReq.numCommonFriends = 6;
-//    fReq.ignored = FALSE;
-//    [friendRequests addObject:fReq];
-//    [fReq release];
-//    
-//    fReq = [[NotifRequest alloc] init];
-//    fReq.notifSender = @"Jane Doe";
-//    fReq.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-(24*60*60*3)];
-//    fReq.numCommonFriends = 24;
-//    fReq.ignored = FALSE;
-//    [friendRequests addObject:fReq];
-//    [fReq release];
     
     // Messages
     messages       = [[NSMutableArray alloc] init];
-//    NotifMessage *msg = [[NotifMessage alloc] init];
-//    msg.notifSender = @"Robert Adonis";
-//    msg.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-200];
-//    msg.notifMessage = @"Busy ...Busy ...Busy ...Busy ...Busy ...Busy ...Busy ...Busy ...Busy ...";
-//    msg.showDetail = FALSE;
-//    [messages addObject:msg];
-//    [msg release];
-//    
-//    msg = [[NotifMessage alloc] init];
-//    msg.notifSender = @"Martin Adonis";
-//    msg.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-2000];
-//    msg.notifMessage = @"meeting now ...meeting now ...meeting now ...meeting now ...meeting now ...meeting now ...meeting now ...meeting now ...";
-//    msg.showDetail = FALSE;
-//    [messages addObject:msg];
-//    [msg release];
-//    
-//    msg = [[NotifMessage alloc] init];
-//    msg.notifSender = @"Arif Shakoor";
-//    msg.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-2500];
-//    msg.notifMessage = @"blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ......blah blah blah ...blah blah blah ......blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ...blah blah blah ...";
-//    msg.showDetail = FALSE;
-//    [messages addObject:msg];
-//    [msg release];
     
     // Notifications
     notifications  = [[NSMutableArray alloc] init];
-//    Notification *notif = [[Notification alloc] init];
-//    notif.notifSender = @"2 friends ";
-//    notif.notifTime   = [NSDate dateWithTimeIntervalSinceNow:0];
-//    notif.notifMessage = @"Emran Hasan and Mahmudur Rahman are near you at Gulshan 2";
-//    [notifications addObject:notif];
-//    [notif release];
-//    
-//    TagNotification *tagNotif = [[TagNotification alloc] init];
-//    tagNotif.notifSender = @"Mahadi Hasan";
-//    tagNotif.notifTime   = [NSDate dateWithTimeIntervalSinceNow:-150];
-//    tagNotif.notifMessage = @"Mahadi Hasan tagged you at Genweb2 Eid party";
-//    tagNotif.photo = [UIImage imageNamed:@"tagged_image.png"];
-//    [notifications addObject:tagNotif];
-//    [tagNotif release];
     
     // Setup default platforms
     defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 

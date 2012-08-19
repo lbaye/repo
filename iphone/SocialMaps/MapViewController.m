@@ -5,7 +5,7 @@
 //  Created by Arif Shakoor on 7/23/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
-
+#include "TargetConditionals.h"
 #import "MapViewController.h"
 #import "Location.h"
 #import "NotifMessage.h"
@@ -64,6 +64,7 @@
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
 @synthesize gotListing;
+@synthesize needToCenterMap;
 //@synthesize imageDownloadsInProgress;
 
 UserFriends *afriend;
@@ -316,11 +317,19 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
     
-//    RestClient *restClient = [[RestClient alloc] init];
-////    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-////    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+#if TARGET_IPHONE_SIMULATOR
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+#else
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+#endif
     
+    needToCenterMap = TRUE;
     // Get Information
     [smAppDelegate getUserInformation:smAppDelegate.authToken];
 
@@ -489,6 +498,9 @@ ButtonClickCallbackData callBackData;
     // 3
     NSLog(@"MapViewController:loadAnnotations");
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
+    for (id<MKAnnotation> annotation in _mapView.annotations) {
+        [_mapView removeAnnotation:annotation];
+    }
     for (int i=0; i < smAppDelegate.displayList.count; i++) {
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
         [_mapView addAnnotation:anno];
@@ -512,17 +524,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}",
           oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
           newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-
-    if (!gotListing) {
-        gotListing = TRUE;
-        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
-        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
-        
-        RestClient *restClient = [[RestClient alloc] init];
-//        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//        smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-    }
     
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.lastPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
@@ -540,8 +541,17 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        gotListing = TRUE;
     }
-
+    if (!gotListing) {
+        gotListing = TRUE;
+        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
+        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
+        
+        RestClient *restClient = [[RestClient alloc] init];
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
+/*
      // 1
      CLLocationCoordinate2D zoomLocation;
      
@@ -555,11 +565,15 @@ ButtonClickCallbackData callBackData;
      // 4
      [_mapView setRegion:adjustedRegion animated:YES];  
      //[_mapView setCenterCoordinate:zoomLocation animated:YES];
+ */
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-    [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+    if (needToCenterMap == TRUE) {
+        needToCenterMap = FALSE;
+        [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -1272,6 +1286,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController: updateLocation");
     [locationManager stopUpdatingLocation];
     [locationManager startUpdatingLocation];
+    needToCenterMap = TRUE;
     
     // Send new location to server
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
@@ -1296,35 +1311,39 @@ ButtonClickCallbackData callBackData;
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"In gotListings");
+    [smAppDelegate.peopleList removeAllObjects];
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
             float dist;
             
             for (People *item in listings.peopleArr) {
-                UIImage *icon;
-                if ([item.avatar length] == 0) {
-                    if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                        icon = [UIImage imageNamed:@"Photo-1.png"];
-                    else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                        icon = [UIImage imageNamed:@"Photo-2.png"];
-                    else
+                if (![smAppDelegate.userId isEqualToString:item.userId]) {
+                    UIImage *icon;
+                    if ([item.avatar length] == 0) {
+                        if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                            icon = [UIImage imageNamed:@"Photo-1.png"];
+                        else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                            icon = [UIImage imageNamed:@"Photo-2.png"];
+                        else
+                            icon = [UIImage imageNamed:@"thum.png"];
+                    } else  {// Need to retrieve avatar image
                         icon = [UIImage imageNamed:@"thum.png"];
-                } else // Need to retrieve avatar image
-                    icon = [UIImage imageNamed:@"thum.png"];
-                
-                UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-                
-                dist = [item.distance doubleValue];
-                CLLocationCoordinate2D loc;
-                loc.latitude = [item.currentLocationLat doubleValue];
-                loc.longitude = [item.currentLocationLng doubleValue];
-                NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
-                
-                LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
-                aPerson.userInfo = item;
-                [smAppDelegate.peopleList addObject:aPerson];
-                [aPerson release];
+                    }
+                    
+                    UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+                    
+                    dist = [item.distance doubleValue];
+                    CLLocationCoordinate2D loc;
+                    loc.latitude = [item.currentLocationLat doubleValue];
+                    loc.longitude = [item.currentLocationLng doubleValue];
+                    NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+                    
+                    LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
+                    aPerson.userInfo = item;
+                    [smAppDelegate.peopleList addObject:aPerson];
+                    [aPerson release];
+                }
             }
         } else if (listings.placeArr != nil) {
             float currLat = 23.796526525077528;

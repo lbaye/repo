@@ -27,6 +27,9 @@
     NSString    *password;
     NSString    *authToken;
     int         loginCount;
+    NSString    *userId;
+    NSString    *fbId;
+    NSString    *fbAccessToken;
     UIActivityIndicatorView		*activityView;
     FacebookHelper *fbHelper;
     NSMutableArray      *savedFilters;
@@ -66,6 +69,9 @@
 @property (atomic, copy) NSString *password;
 @property (atomic, copy) NSString *authToken;
 @property (atomic) int loginCount;
+@property (atomic, copy) NSString *userId;
+@property (atomic, copy) NSString *fbId;
+@property (atomic, copy) NSString *fbAccessToken;
 @property (nonatomic, retain) FacebookHelper *fbHelper;
 @property (nonatomic, retain) NSMutableArray *savedFilters;
 @property (nonatomic, retain) UIPickerView *pickSavedFilter;

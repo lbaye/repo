@@ -1860,16 +1860,20 @@
                 NSLog(@"No friend requests");
             } else {
                 for (NSDictionary *item in jsonObjects) {
-                    NotifRequest *req = [[NotifRequest alloc] init];
+                    bool accepted = [[self getNestedKeyVal:item key1:@"accepted" key2:nil key3:nil] boolValue];
                     
-                    req.notifSenderId = [self getNestedKeyVal:item key1:@"userId" key2:nil key3:nil];
-                    req.notifSender   = [self getNestedKeyVal:item key1:@"friendName" key2:nil key3:nil];
-                    req.notifMessage  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
-                    NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                    NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                    NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
-                    req.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-                    [friendRequests addObject:req];
+                    if (accepted == FALSE) {
+                        NotifRequest *req = [[NotifRequest alloc] init];
+                        
+                        req.notifSenderId = [self getNestedKeyVal:item key1:@"userId" key2:nil key3:nil];
+                        req.notifSender   = [self getNestedKeyVal:item key1:@"friendName" key2:nil key3:nil];
+                        req.notifMessage  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
+                        NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                        NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                        NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                        req.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                        [friendRequests addObject:req];
+                    }
                 }
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);

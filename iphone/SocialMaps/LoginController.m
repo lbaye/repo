@@ -185,9 +185,11 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
         [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
         [prefs setObject:userInfo.authToken forKey:@"authToken"];
+        [prefs setObject:userInfo.id forKey:@"userId"];
         [prefs synchronize];
 
         smAppDelegate.authToken = userInfo.authToken;
+        smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
        
         if (smAppDelegate.loginCount == 1)
@@ -286,9 +288,11 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
         [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
         [prefs setObject:regInfo.authToken forKey:@"authToken"];
+        [prefs setObject:regInfo.id forKey:@"userId"];
         [prefs synchronize];
         
         smAppDelegate.authToken = regInfo.authToken;
+        smAppDelegate.userId = regInfo.id;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
         [smAppDelegate getUserInformation:regInfo.authToken];
         if (smAppDelegate.loginCount == 1)
@@ -360,9 +364,15 @@
         [facebook authorize:permissions];
         [permissions release];
     } else {
-        [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
-        [smAppDelegate getUserInformation:smAppDelegate.authToken];
-        [self performSegueWithIdentifier: @"showMapView" sender: self];
+        User *user = [[User alloc] init];
+        user.facebookId = smAppDelegate.fbId;
+        user.facebookAuthToken = smAppDelegate.fbAccessToken;
+
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient loginFacebook:(User *)user];
+
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
     }
 }
 

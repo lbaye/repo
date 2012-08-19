@@ -39,6 +39,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fb272972866144692</string>
 				<string>fb335618886520303</string>
 				<string>fb264070030370962</string>
 				<string>fb171067529694083</string>
