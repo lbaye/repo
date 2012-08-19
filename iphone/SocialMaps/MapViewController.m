@@ -1311,38 +1311,65 @@ ButtonClickCallbackData callBackData;
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"In gotListings");
-    [smAppDelegate.peopleList removeAllObjects];
+    //[smAppDelegate.peopleList removeAllObjects];
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
             float dist;
             
             for (People *item in listings.peopleArr) {
+                // Ignore logged in user
+                
                 if (![smAppDelegate.userId isEqualToString:item.userId]) {
-                    UIImage *icon;
-                    if ([item.avatar length] == 0) {
-                        if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                            icon = [UIImage imageNamed:@"Photo-1.png"];
-                        else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                            icon = [UIImage imageNamed:@"Photo-2.png"];
-                        else
+                    // Do we already have this in the list?
+                    __block NSNumber *indx;
+                    
+                    if ((indx=[smAppDelegate.peopleIndex objectForKey:item.userId]) == nil) {
+                        UIImage *icon;
+                        
+                        if ([item.avatar length] == 0) {
+                            if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                                icon = [UIImage imageNamed:@"Photo-1.png"];
+                            else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
+                                icon = [UIImage imageNamed:@"Photo-2.png"];
+                            else
+                                icon = [UIImage imageNamed:@"thum.png"];
+                        } else  {// Need to retrieve avatar image
                             icon = [UIImage imageNamed:@"thum.png"];
-                    } else  {// Need to retrieve avatar image
-                        icon = [UIImage imageNamed:@"thum.png"];
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:item.avatar]];
+                                UIImage *image = [UIImage imageWithData:imageData];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:[indx intValue]];
+                                    person.itemIcon = image;
+                                    [self mapAnnotationChanged:person];
+                                });
+                            });
+                        }
+                        
+                        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+                        
+                        dist = [item.distance doubleValue];
+                        CLLocationCoordinate2D loc;
+                        loc.latitude = [item.currentLocationLat doubleValue];
+                        loc.longitude = [item.currentLocationLng doubleValue];
+                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+                        
+                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
+                        aPerson.userInfo = item;
+                        [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
+                        [smAppDelegate.peopleList addObject:aPerson];
+                        [aPerson release];
+                    } else {
+                        // Item exists, update location only
+                        LocationItemPeople *aPerson = [smAppDelegate.peopleList objectAtIndex:[indx intValue]];
+                        
+                        CLLocationCoordinate2D loc;
+                        loc.latitude = [item.currentLocationLat doubleValue];
+                        loc.longitude = [item.currentLocationLng doubleValue];
+                        aPerson.coordinate = loc;
+                        
                     }
-                    
-                    UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-                    
-                    dist = [item.distance doubleValue];
-                    CLLocationCoordinate2D loc;
-                    loc.latitude = [item.currentLocationLat doubleValue];
-                    loc.longitude = [item.currentLocationLng doubleValue];
-                    NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
-                    
-                    LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
-                    aPerson.userInfo = item;
-                    [smAppDelegate.peopleList addObject:aPerson];
-                    [aPerson release];
                 }
             }
         } else if (listings.placeArr != nil) {
@@ -1360,8 +1387,7 @@ ButtonClickCallbackData callBackData;
                 currLong += 0.004;
                 [smAppDelegate.placeList addObject:aPlace];
                 [aPlace release];
-            }
-            
+            }            
 
         }
     }

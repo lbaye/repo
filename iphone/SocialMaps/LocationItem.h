@@ -41,7 +41,7 @@ typedef enum _MAP_ANNOTATION_STATE {
 @property (copy) NSString *itemAddress;
 @property (copy) NSString *itemCategory;
 @property (nonatomic) OBJECT_TYPES itemType;
-@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
+@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
 @property (nonatomic) float itemDistance;
 @property (nonatomic, retain) UIImage *itemIcon;
 @property (nonatomic, retain) UIImage *itemBg;

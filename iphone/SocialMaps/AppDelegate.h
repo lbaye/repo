@@ -45,6 +45,7 @@
     NSMutableArray *infoList;
     NSMutableArray *defInfoPref;
     NSMutableArray *peopleList;
+    NSMutableDictionary *peopleIndex;
     NSMutableArray *placeList;
     NSMutableArray *dealList;
     NSMutableArray *displayList;
@@ -86,6 +87,7 @@
 @property (nonatomic, retain)NSMutableArray *infoList;
 @property (nonatomic, retain)NSMutableArray *defInfoPref;
 @property (nonatomic, retain)NSMutableArray *peopleList;
+@property (nonatomic, retain) NSMutableDictionary *peopleIndex;
 @property (nonatomic, retain)NSMutableArray *placeList;
 @property (nonatomic, retain)NSMutableArray *dealList;
 @property (nonatomic, retain)NSMutableArray *displayList;

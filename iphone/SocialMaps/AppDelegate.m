@@ -59,6 +59,7 @@
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
+@synthesize peopleIndex;
 
 - (void)dealloc
 {
@@ -94,6 +95,7 @@
     locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
     notifPrefs = [[[NotificationPref alloc] init] autorelease];
     peopleList = [[NSMutableArray alloc] init];
+    peopleIndex = [[NSMutableDictionary alloc] init];
     placeList  = [[NSMutableArray alloc] init];
     dealList   = [[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];

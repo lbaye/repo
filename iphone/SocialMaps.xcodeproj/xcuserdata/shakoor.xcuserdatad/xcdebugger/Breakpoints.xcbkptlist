@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "352"
-         endingLineNumber = "352">
+         startingLineNumber = "354"
+         endingLineNumber = "354">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -63,11 +63,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "356"
-         endingLineNumber = "356">
+         startingLineNumber = "358"
+         endingLineNumber = "358">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -75,11 +75,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "360"
-         endingLineNumber = "360">
+         startingLineNumber = "362"
+         endingLineNumber = "362">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -87,11 +87,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "364"
-         endingLineNumber = "364">
+         startingLineNumber = "366"
+         endingLineNumber = "366">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -99,11 +99,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "368"
-         endingLineNumber = "368">
+         startingLineNumber = "370"
+         endingLineNumber = "370">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -111,11 +111,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "372"
-         endingLineNumber = "372">
+         startingLineNumber = "374"
+         endingLineNumber = "374">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -123,11 +123,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367079289.447916"
+         timestampString = "367093327.004839"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "376"
-         endingLineNumber = "376">
+         startingLineNumber = "378"
+         endingLineNumber = "378">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
