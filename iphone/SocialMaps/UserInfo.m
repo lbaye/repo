@@ -14,6 +14,7 @@
 @synthesize firstName;
 @synthesize lastName;
 @synthesize avatar;
+@synthesize icon;
 @synthesize deactivated;
 @synthesize authToken;
 @synthesize settings;

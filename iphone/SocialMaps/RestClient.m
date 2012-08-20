@@ -148,10 +148,10 @@
     [request setRequestMethod:@"POST"];
     //[request setPostValue:userInfo.email forKey:@"email"];
     //[request setPostValue:userInfo.password forKey:@"password"];
-    [request setPostValue:userInfo.lastName forKey:@"lastName"];
-    [request setPostValue:userInfo.firstName forKey:@"firstName"];
     [request setPostValue:userInfo.facebookId forKey:@"facebookId"];
     [request setPostValue:userInfo.facebookAuthToken forKey:@"facebookAuthToken"]; 
+    [request setPostValue:userInfo.lastName forKey:@"lastName"];
+    [request setPostValue:userInfo.firstName forKey:@"firstName"];
     [request setPostValue:userInfo.avatar forKey:@"avatar"]; 
     [request setPostValue:userInfo.gender forKey:@"gender"]; 
     [request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
@@ -308,7 +308,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
  
 }
@@ -372,7 +372,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getLayer");
     [request startAsynchronous];
 }
 
@@ -606,7 +606,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getSharingPreference");
     [request startAsynchronous];
 }
 
@@ -707,10 +707,76 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getSharingPreferenceSettings");
     [request startAsynchronous];
 }
+- (NSDate*) getDateFromJsonStruct:(NSDictionary*) jsonObjects name:(NSString*) name {
+    NSString *date = [self getNestedKeyVal:jsonObjects key1:name key2:@"date" key3:nil];
+    NSString *timeZoneType = [self getNestedKeyVal:jsonObjects key1:name key2:@"timezone_type" key3:nil];
+    NSString *timeZone = [self getNestedKeyVal:jsonObjects key1:name key2:@"timezone" key3:nil];
+    
+    return [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+}
 
+- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects {
+    UserInfo *aUserInfo = [[UserInfo alloc] init];
+    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:@"nil" key3:nil];
+    aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:@"nil" key3:nil];
+    aUserInfo.firstName = [self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil];
+    aUserInfo.lastName = [self getNestedKeyVal:jsonObjects key1:@"lastName" key2:nil key3:nil];
+    aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"avatar" key2:nil key3:nil];
+    aUserInfo.deactivated = [self getNestedKeyVal:jsonObjects key1:@"deactivated" key2:nil key3:nil];
+    aUserInfo.authToken = [self getNestedKeyVal:jsonObjects key1:@"authToken" key2:nil key3:nil];
+    aUserInfo.unit = [self getNestedKeyVal:jsonObjects key1:@"settings" key2:@"unit" key3:nil];
+    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"source" key2:nil key3:nil];
+    aUserInfo.dateOfBirth = [self getDateFromJsonStruct:jsonObjects name:@"dateOfBirth"];
+    aUserInfo.bio = [self getNestedKeyVal:jsonObjects key1:@"bio" key2:nil key3:nil];
+    aUserInfo.gender = [self getNestedKeyVal:jsonObjects key1:@"gender" key2:nil key3:nil];
+    aUserInfo.username = [self getNestedKeyVal:jsonObjects key1:@"username" key2:nil key3:nil];
+    aUserInfo.interests = [self getNestedKeyVal:jsonObjects key1:@"interests" key2:nil key3:nil];
+    aUserInfo.workStatus = [self getNestedKeyVal:jsonObjects key1:@"workStatus" key2:nil key3:nil];
+    aUserInfo.relationshipStatus = [self getNestedKeyVal:jsonObjects key1:@"relationshipStatus" key2:nil key3:nil];
+    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"source" key2:nil key3:nil];
+    aUserInfo.currentLocationLat = [self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
+    aUserInfo.currentLocationLng = [self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil];
+    aUserInfo.enabled = [[self getNestedKeyVal:jsonObjects key1:@"enabled" key2:nil key3:nil] boolValue];
+    aUserInfo.visible = [[self getNestedKeyVal:jsonObjects key1:@"visible" key2:nil key3:nil] boolValue];
+    aUserInfo.regMedia = [self getNestedKeyVal:jsonObjects key1:@"regMedia" key2:nil key3:nil];
+    aUserInfo.loginCount = [self getNestedKeyVal:jsonObjects key1:@"loginCount" key2:nil key3:nil];
+    aUserInfo.lastLogin = [self getDateFromJsonStruct:jsonObjects name:@"lastLogin"];
+    aUserInfo.createDate = [self getDateFromJsonStruct:jsonObjects name:@"createDate"];
+    aUserInfo.updateDate = [self getDateFromJsonStruct:jsonObjects name:@"updateDate"];
+    aUserInfo.blockedUsers = [[NSMutableArray alloc] init];
+    aUserInfo.blockedUsers = [self getNestedKeyVal:jsonObjects key1:@"blockedUsers" key2:nil key3:nil];
+    aUserInfo.blockedBy = [[NSMutableArray alloc] init];
+    aUserInfo.blockedBy = [self getNestedKeyVal:jsonObjects key1:@"blockedBy" key2:nil key3:nil];
+    aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil] integerValue];
+    aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"age" key2:nil key3:nil] integerValue];
+    
+    aUserInfo.circles = [[NSMutableArray alloc] init];
+    for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
+        UserCircle *aCircle = [[UserCircle alloc] init];
+        NSString *type = [self getNestedKeyVal:item key1:@"type" key2:nil key3:nil];
+        aCircle.circleName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+        aCircle.friends    = [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil];
+        if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
+            aCircle.type = CircleTypeSystem;
+        } else {
+            aCircle.type = CircleTypeCustom;
+        }
+        [aUserInfo.circles addObject:aCircle];
+    }
+    aUserInfo.address = [[Address alloc] init];
+    aUserInfo.address.id = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"id" key3:nil];
+    aUserInfo.address.street = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"street" key3:nil];
+    aUserInfo.address.city = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"city" key3:nil];
+    aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
+    aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
+    aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
+    
+    return aUserInfo;
+}
+/*
 - (NSDate*) getDateFromJsonStruct:(NSDictionary*) jsonObjects name:(NSString*) name {
     NSString *date = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"date"];
     NSString *timeZoneType = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"timezone_type"];
@@ -778,6 +844,7 @@
     
     return aUserInfo;
 }
+ */
 -(void)getAccountSettings:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/settings/account_settings",WS_URL];
@@ -814,9 +881,9 @@
                 NSLog(@"Arr");
             }
             
-            aUserInfo = [self parseAccountSettings:jsonObjects];
+            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"]];
             
-            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            NSLog(@"getAccountSettings: %@",jsonObjects);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
         } 
@@ -834,7 +901,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getAccountSettings");
     [request startAsynchronous];
 
 }
@@ -898,7 +965,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getGeofence");
     [request startAsynchronous];
 }
 
@@ -966,7 +1033,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getShareLocation");
     [request startAsynchronous];
 }
 
@@ -1037,7 +1104,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getNotifications");
     [request startAsynchronous];
 
 }
@@ -1164,7 +1231,7 @@
                 [place setReference:[item objectForKey:@"reference"]];
                 [place setTypeArr:[item objectForKey:@"types"]];
                 [place setVicinity:[item objectForKey:@"vicinity"] ];
-                [searchLocation.peopleArr addObject:place];
+                [searchLocation.placeArr addObject:place];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
@@ -1183,122 +1250,10 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
--(void)getLocationOld:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue
-{
-    NSString *route = [NSString stringWithFormat:@"%@/search",WS_URL];
-    NSURL *url = [NSURL URLWithString:route];
-    
-    SearchLocation *searchLocation=[[SearchLocation alloc] init];
-    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:authToken value:authTokenValue];
-    [request addPostValue:geolocation.latitude forKey:@"lat"];
-    [request addPostValue:geolocation.longitude forKey:@"lng"];
-    
-    // Handle successful REST call
-    [request setCompletionBlock:^{
-        
-        // Use when fetching text data
-        int responseStatus = [request responseStatusCode];
-        
-        // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
-        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        NSError *error = nil;
-        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
-        
-        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
-        {
-            if ([jsonObjects isKindOfClass:[NSDictionary class]])
-            {
-                // treat as a dictionary, or reassign to a dictionary ivar
-                NSLog(@"dict");
-            }
-            else if ([jsonObjects isKindOfClass:[NSArray class]])
-            {
-                // treat as an array or reassign to an array ivar.
-                NSLog(@"Arr");
-            }
-            
-            People *people=[[People alloc] init];
-            Places *place=[[Places alloc] init];
-            
-            //get all people
-            for (int i=0; i<[[jsonObjects  objectForKey:@"people"] count]; i++) 
-            {
-                Date *date=[[Date alloc] init];
-                [jsonObjects objectForKey:@"people"];
-                [people setUserId:[[[jsonObjects  objectForKey:@"people"] objectAtIndex:i] objectForKey:@"id"]];
-                [people setEmail:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"email"]];                
-                [people setFirstName:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"firstName"]];                
-                [people setLastName:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"lastName"]];                
-                [people setAvatar:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"avatar"]];                
-                [people setEnabled:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"enabled"]];                
-                
-                [people setSettingUnit:[[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"settings"] objectForKey:@"unit"]];
-                
-                people.lastLogin = [self getDateFromJsonStruct:jsonObjects name:@"lastLogin"];
-                people.createDate = [self getDateFromJsonStruct:jsonObjects name:@"createDate"];
-                people.updateDate = [self getDateFromJsonStruct:jsonObjects name:@"updateDate"];
-                
-                [people setDistance:[[[jsonObjects objectForKey:@"people"] objectAtIndex:i] objectForKey:@"distance"]];                
-                [searchLocation.peopleArr addObject:people];
-                
-                NSLog(@"enabled: %@  %@  %@ %d",[[[jsonObjects  objectForKey:@"people"] objectAtIndex:i] objectForKey:@"enabled"],people.distance,date.timezone,[searchLocation.peopleArr count]);
-            }
-            
-            //get all places
-            for (int i=0; i<[[jsonObjects  objectForKey:@"places"] count]; i++) 
-            {
-                Geolocation *geolocation=[[Geolocation alloc] init];
-                [jsonObjects objectForKey:@"people"];
-
-                geolocation.latitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"]objectForKey:@"lat"];
-                geolocation.longitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"]objectForKey:@"lng"];
-                [place setLocation:geolocation];
-                
-                geolocation.latitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"viewport"] objectForKey:@"northeast"]objectForKey:@"lat"];
-                geolocation.longitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"viewport"] objectForKey:@"northeast"]objectForKey:@"lng"];
-                [place setNortheast:geolocation];
-                
-                geolocation.latitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"viewport"] objectForKey:@"southwest"]objectForKey:@"lat"];
-                geolocation.longitude=[[[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"viewport"] objectForKey:@"southwest"]objectForKey:@"lng"];
-                [place setSouthwest:geolocation];
-                
-                [place setIcon:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"icon"] ];
-                [place setID:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"id"] ];
-                [place setName:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"name"] ];
-                [place setReference:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"reference"]];
-                [place setTypeArr:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"types"]];
-                [place setVicinity:[[[jsonObjects  objectForKey:@"places"] objectAtIndex:i] objectForKey:@"vicinity"] ];
-                [searchLocation.peopleArr addObject:place];
-            }
-            
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:aUser];
-        } 
-        else 
-        {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:nil];
-        }
-        [jsonParser release], jsonParser = nil;
-        [jsonObjects release];
-    }];
-    
-    // Handle unsuccessful REST call
-    [request setFailedBlock:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:nil];
-    }];
-    
-    //[request setDelegate:self];
-    NSLog(@"asyn srt");
-    [request startAsynchronous];
-}
 
 -(void)setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue
 {
@@ -1895,7 +1850,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getFriendRequests");
     [request startAsynchronous];
 }
 
@@ -1967,7 +1922,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getInbox");
     [request startAsynchronous];
 
 }
@@ -2036,7 +1991,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt");
+    NSLog(@"asyn srt getNotificationMessages");
     [request startAsynchronous];
 }
 

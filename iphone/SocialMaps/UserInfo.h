@@ -17,6 +17,7 @@
     NSString *firstName;
     NSString *lastName;
     NSString *avatar;
+    UIImage  *icon;
     NSString *deactivated;
     NSString *authToken;
     NSString *settings;
@@ -50,6 +51,7 @@
 @property(nonatomic,retain) NSString *firstName;
 @property(nonatomic,retain) NSString *lastName;
 @property(nonatomic,retain) NSString *avatar;
+@property(nonatomic,retain) UIImage  *icon;
 @property(nonatomic,retain) NSString *deactivated;
 @property(nonatomic,retain) NSString *authToken;
 @property(nonatomic,retain) NSString *settings;

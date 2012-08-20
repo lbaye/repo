@@ -133,6 +133,7 @@ UserDefault *userDefault;
 
 - (void)getUserFriendListRequest:(id)sender
 {
+    frndListFlag=TRUE;
     [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
 }
 
@@ -144,7 +145,7 @@ UserDefault *userDefault;
     NSMutableArray *imageUrlArr=[[NSMutableArray alloc] init];
     
     items= [[(NSDictionary *)result objectForKey:@"data"]retain];
-    NSLog(@"items %d",[items count]);
+    NSLog(@"getUserFriendListFromFB items %d",[items count]);
     friendlist=[[NSMutableArray alloc] initWithCapacity:[items count]];
     for (int i=0; i<[items count]; i++) 
     {

@@ -63,6 +63,7 @@
     bool            showPeople;
     bool            showPlaces;
     bool            showDeals;
+    bool            gotListing;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -104,6 +105,7 @@
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;
+@property (atomic) bool gotListing;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

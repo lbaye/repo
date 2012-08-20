@@ -63,7 +63,6 @@
 @synthesize smAppDelegate;
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
-@synthesize gotListing;
 @synthesize needToCenterMap;
 //@synthesize imageDownloadsInProgress;
 
@@ -97,8 +96,9 @@ ButtonClickCallbackData callBackData;
     
     if ([locItem isKindOfClass:[LocationItemPeople class]])
         pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else
+    else if ([locItem isKindOfClass:[LocationItemPlace class]])
         pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    
     return pin;
 }
 
@@ -303,7 +303,9 @@ ButtonClickCallbackData callBackData;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];  
+    
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     _mapView.delegate=self;
     _mapView.showsUserLocation=YES;
     locationManager = [[CLLocationManager alloc] init];
@@ -311,22 +313,21 @@ ButtonClickCallbackData callBackData;
     [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
-    gotListing = FALSE;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
-    
+//    
 #if TARGET_IPHONE_SIMULATOR
     RestClient *restClient = [[RestClient alloc] init];
     smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
     smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
     [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-#else
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//#else
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 #endif
     
     needToCenterMap = TRUE;
@@ -371,7 +372,7 @@ ButtonClickCallbackData callBackData;
     [userProfileCopyImageArray2 retain];
     [userFriendslistCopyArray retain];
     [userFriendslistKeeperArray retain];
-    fbHelper=[[FacebookHelper alloc] init];
+    fbHelper=[FacebookHelper sharedInstance];
     NSLog(@"frnd arrayk count %d ",[userFriendslistKeeperArray count]);
     if ([userFriendslistArray count]==0)
     {
@@ -426,17 +427,18 @@ ButtonClickCallbackData callBackData;
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
-    
-}
 
-/*- (id)initWithCoder:(NSCoder *)decoder
+}
+/*
+- (id)initWithCoder:(NSCoder *)decoder
 {
     if (self = [super initWithCoder:decoder])
     {
+
     }
     return self;
-}*/
-
+}
+*/
 -(void) displayNotificationCount {
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
@@ -508,15 +510,31 @@ ButtonClickCallbackData callBackData;
     
     // 4
     [_mapView setRegion:adjustedRegion animated:YES];  
+    [_mapView setCenterCoordinate:zoomLocation animated:YES];
+
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    _mapView.showsUserLocation = YES;
+    // 1
+    CLLocationCoordinate2D zoomLocation;
+    
+    // Current location
+    zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    
+    // 2
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
+    [_mapView setRegion:adjustedRegion animated:YES]; 
+    
 //    for (id<MKAnnotation> annotation in _mapView.annotations) {
 //        [_mapView removeAnnotation:annotation];
 //    }
     [self loadAnnotations:animated];
+    
     [super viewWillAppear:animated];
 }
 
@@ -541,31 +559,9 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        gotListing = TRUE;
+        smAppDelegate.gotListing = TRUE;
     }
-    if (!gotListing) {
-        gotListing = TRUE;
-        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
-        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
-        
-        RestClient *restClient = [[RestClient alloc] init];
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-    }
-/*
-     // 1
-     CLLocationCoordinate2D zoomLocation;
-     
-     // Current location
-     zoomLocation.latitude = newLocation.coordinate.latitude;
-     zoomLocation.longitude= newLocation.coordinate.longitude;
-     // 2
-     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
-     // 3
-     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
-     // 4
-     [_mapView setRegion:adjustedRegion animated:YES];  
-     //[_mapView setCenterCoordinate:zoomLocation animated:YES];
- */
+
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
@@ -1287,7 +1283,9 @@ ButtonClickCallbackData callBackData;
     [locationManager stopUpdatingLocation];
     [locationManager startUpdatingLocation];
     needToCenterMap = TRUE;
-    
+    //_mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+    //[_mapView setNeedsDisplay];
+
     // Send new location to server
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
@@ -1336,11 +1334,12 @@ ButtonClickCallbackData callBackData;
                                 icon = [UIImage imageNamed:@"thum.png"];
                         } else  {// Need to retrieve avatar image
                             icon = [UIImage imageNamed:@"thum.png"];
+                            int itemIndex = smAppDelegate.peopleList.count;
                             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                                 NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:item.avatar]];
                                 UIImage *image = [UIImage imageWithData:imageData];
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:[indx intValue]];
+                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
                                     person.itemIcon = image;
                                     [self mapAnnotationChanged:person];
                                 });

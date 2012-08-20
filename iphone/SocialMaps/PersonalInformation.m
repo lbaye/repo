@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "UtilityClass.h"
 #import "RestClient.h"
+#import "NSData+Base64.h"
 
 #define BUTTON_WIDTH 60
 #define BUTTON_HEIGHT 30
@@ -57,6 +58,7 @@
 @synthesize selMaleFemale;
 @synthesize arrayGender;
 @synthesize smAppDelegate;
+@synthesize avatarChanged;
 
 - (id)initWithFrame:(CGRect)frame sender:(id) sender tag:(int)tag
 {
@@ -83,6 +85,8 @@
         arrayGender = [[NSMutableArray alloc] init];
         [arrayGender addObject:@"Female"];
         [arrayGender addObject:@"Male"];
+        
+        avatarChanged = FALSE;
     }
     return self;
 }
@@ -118,8 +122,12 @@
     [picBtn addTarget:self 
                   action:@selector(picButtonClicked:)
         forControlEvents:UIControlEventTouchUpInside];
-    [picBtn setImage:[UIImage imageNamed:@"thum.png"]
+    if (smAppDelegate.userAccountPrefs.icon == nil)
+        [picBtn setImage:[UIImage imageNamed:@"thum.png"]
                forState:UIControlStateNormal];
+    else
+        [picBtn setImage:smAppDelegate.userAccountPrefs.icon
+                forState:UIControlStateNormal];
     [self addSubview:picBtn];
 
     itemFrame = CGRectMake(10+PIC_WIDTH+20, 5+(PIC_HEIGHT-40)/2, 1, 40);
@@ -412,6 +420,13 @@
     smAppDelegate.userAccountPrefs.workStatus = service.text;
     smAppDelegate.userAccountPrefs.relationshipStatus = relationshipStatus.text;
     
+    // Base64 encode avatar is changed
+    if (avatarChanged == TRUE) {
+        NSData *imgdata = UIImagePNGRepresentation(smAppDelegate.userAccountPrefs.icon);
+        NSString *imgBase64Data = [imgdata base64EncodedString];
+        smAppDelegate.userAccountPrefs.avatar = imgBase64Data;
+    }
+    
     RestClient *restClient = [[RestClient alloc] init];
     [restClient setAccountSettings:smAppDelegate.userAccountPrefs :@"Auth-Token" :smAppDelegate.authToken];
     [self endEditing:TRUE];
@@ -426,6 +441,8 @@
     if (status == TRUE) {
         [picBtn setImage:img
                    forState:UIControlStateNormal];
+        smAppDelegate.userAccountPrefs.icon = img;
+        avatarChanged = TRUE;
     } 
     [photoPicker.view removeFromSuperview];
 }

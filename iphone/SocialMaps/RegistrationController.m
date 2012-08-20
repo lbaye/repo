@@ -260,6 +260,7 @@
     if (status == TRUE) {
         [picSelButton setImage:img
                 forState:UIControlStateNormal];
+        regPhoto = img;
     } 
     [photoPicker.view removeFromSuperview];
 }

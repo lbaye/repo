@@ -84,7 +84,7 @@
 // Converts date in the display format MM/dd/yyyy to NSDate
 + (NSDate*) convertDateFromDisplay:(NSString*) date {
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    [dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSDate *convDate = [dateFormatter dateFromString:date];
     
     return convDate;

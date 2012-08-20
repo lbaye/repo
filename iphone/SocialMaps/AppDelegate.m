@@ -60,6 +60,7 @@
 @synthesize showPeople;
 @synthesize showPlaces;
 @synthesize peopleIndex;
+@synthesize gotListing;
 
 - (void)dealloc
 {
@@ -71,6 +72,7 @@
 {
     // Override point for customization after application launch.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    gotListing = FALSE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
     email = [prefs stringForKey:@"email"];
     password = [prefs stringForKey:@"password"];
@@ -278,6 +280,14 @@
 - (void)gotAccountSettings:(NSNotification *)notif {
     userAccountPrefs = [notif object];
     NSLog(@"AppDelegate: gotAccountSettings - %@", userAccountPrefs);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:userAccountPrefs.avatar]];
+        UIImage *image = [UIImage imageWithData:imageData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            userAccountPrefs.icon = image;
+        });
+    });
+
 }
 - (void)gotGeofence:(NSNotification *)notif {
     geofencePrefs = [notif object];

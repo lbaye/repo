@@ -41,6 +41,7 @@ UIPickerViewDelegate> {
     UIPickerView *selMaleFemale;
     NSMutableArray         *arrayGender;
     AppDelegate     *smAppDelegate;
+    bool            avatarChanged;
 }
 @property (nonatomic, retain) UITextField  *email;
 @property (nonatomic, retain)UITextField  *password;
@@ -71,6 +72,7 @@ UIPickerViewDelegate> {
 @property (nonatomic, retain) UIPickerView    *selMaleFemale;
 @property (nonatomic, retain) NSMutableArray       *arrayGender;
 @property (nonatomic, retain) AppDelegate           *smAppDelegate;
+@property (nonatomic) bool avatarChanged;
 
 - (id)initWithFrame:(CGRect)frame sender:(id) sender tag:(int)tag;
 - (void) photoPickerDone:(bool)status image:(UIImage*)img;

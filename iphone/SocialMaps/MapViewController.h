@@ -42,7 +42,6 @@ typedef enum _SHARING_TYPES {
     AppDelegate         *smAppDelegate;
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
-    bool gotListing;
     bool needToCenterMap;
 }
 
@@ -57,7 +56,6 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
-@property (atomic) bool gotListing;
 @property (atomic) bool needToCenterMap;
 
 @property (retain, nonatomic) IBOutlet UIView *mapPulldown;
