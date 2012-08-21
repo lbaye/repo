@@ -371,7 +371,7 @@ class User extends BaseRepository
     {
         $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \InvalidArgumentException();
         }
 
@@ -388,9 +388,9 @@ class User extends BaseRepository
 
     public function acceptFriendRequest($userId, $response)
     {
-        $userDetail = $this->find($userId);
+        $user = $this->find($userId);
 
-        if (false === $userDetail) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -401,7 +401,7 @@ class User extends BaseRepository
 
             foreach ($circles as &$circle) {
                 if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
-                    $circle->addFriend($userDetail);
+                    $circle->addFriend($user);
                 }
             }
 
@@ -427,7 +427,7 @@ class User extends BaseRepository
     {
         $user = $this->find($id);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \InvalidArgumentException();
         }
 
@@ -453,9 +453,7 @@ class User extends BaseRepository
 
     public function updateNotification($notificationId)
     {
-        $notifications = $this->currentUser->getNotification();
-
-        foreach ($notifications as &$notification) {
+        foreach ($this->currentUser->getNotification() as &$notification) {
             if ($notification->getId() == $notificationId) {
                 $notification->setViewed(true);
             }
@@ -482,14 +480,10 @@ class User extends BaseRepository
         }
 
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($user->getPassword(), \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());
-
-        /*if ($user->isValid() === false) {
-            return false;
-        }*/
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -501,7 +495,7 @@ class User extends BaseRepository
     {
         $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -578,15 +572,14 @@ class User extends BaseRepository
 
     public function resetPassword($data, $userId)
     {
-        $userDetail = $this->find($userId);
-        $user       = $this->map($data, $userDetail);
+        $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($data['password'], \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -599,16 +592,14 @@ class User extends BaseRepository
 
     public function changePassword($data)
     {
-        $user = $this->map($data, $this->currentUser);
+        $user = $this->findOneBy(array('password' => SecurityHelper::hash($data['oldPassword'], \Document\User::SALT)));
 
-        $passWord = $this->findOneBy(array('password' => SecurityHelper::hash($user->getOldPassword(), $user->getSalt())));
-
-        if (is_null($passWord)) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($data['password'], \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());

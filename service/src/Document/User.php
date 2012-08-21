@@ -13,6 +13,8 @@ use Document\Circle;
  */
 class User
 {
+    const SALT = 'socialmaps';
+
     /** @ODM\Id */
     protected $id;
 
@@ -38,7 +40,7 @@ class User
     protected $facebookAuthToken;
 
     /** @ODM\String */
-    protected $salt = 'socialmaps';
+    protected $salt = self::SALT;
 
     /** @ODM\String */
     protected $confirmationToken;
