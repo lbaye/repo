@@ -654,15 +654,11 @@ class User extends BaseRepository
 
     public function updateFacebookAuthToken($id, $facebookAuthToken)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
-
-        $data = array();
-
-        $user = $this->map($data, $userDetail);
 
         $user->setFacebookAuthToken($facebookAuthToken);
         $user->setUpdateDate(new \DateTime());
