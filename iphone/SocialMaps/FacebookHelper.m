@@ -140,13 +140,11 @@ UserDefault *userDefault;
 -(void)getUserFriendListFromFB:(id)result
 {
     NSArray * items=[[NSArray alloc] init];
-    NSMutableArray *userNameArr=[[NSMutableArray alloc] init];
-    NSMutableArray *userIdArr=[[NSMutableArray alloc] init];
-    NSMutableArray *imageUrlArr=[[NSMutableArray alloc] init];
     
     items= [[(NSDictionary *)result objectForKey:@"data"]retain];
     NSLog(@"getUserFriendListFromFB items %d",[items count]);
-    friendlist=[[NSMutableArray alloc] initWithCapacity:[items count]];
+    userFriendslistArray=[[NSMutableArray alloc] initWithCapacity:[items count]];
+    userFriendslistIndex = [[NSMutableDictionary alloc] initWithCapacity:[items count]];
     for (int i=0; i<[items count]; i++) 
     {
         NSDictionary *friend = [items objectAtIndex:i];
@@ -157,19 +155,11 @@ UserDefault *userDefault;
         aUserFriend.userName=name;
         aUserFriend.userId=[NSString stringWithFormat:@"%lld",fbid];
         aUserFriend.imageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",aUserFriend.userId];
-        [friendlist addObject:aUserFriend];
-        [userNameArr addObject:aUserFriend.userName];
-        [userIdArr addObject:aUserFriend.userId];
-        [imageUrlArr addObject:aUserFriend.imageUrl];
+        [userFriendslistIndex setObject:[NSNumber numberWithInt:userFriendslistArray.count]  forKey:aUserFriend.userId]; 
+        [userFriendslistArray addObject:aUserFriend];
         
         NSLog(@"id: %@ - Name: %@", aUserFriend.userId, name);
     } 
-    userFriendslistArray=friendlist;
-    userDefault=[[UserDefault alloc ]init];
-//    [userDefault writeDataToUserDefaults:@"userFriendslist" withArray:userFriendslistArray];
-    [userDefault writeArrayToUserDefaults:@"userNameArr" withArray:userNameArr];
-    [userDefault writeArrayToUserDefaults:@"userIdArr" withArray:userIdArr];
-    [userDefault writeArrayToUserDefaults:@"imageUrlArr" withArray:imageUrlArr];
 }
 
 // FBRequestDelegate

@@ -65,12 +65,10 @@
 @synthesize mapAnnoPeople;
 @synthesize needToCenterMap;
 @synthesize filteredList;
-//@synthesize imageDownloadsInProgress;
 
 UserFriends *afriend;
-__strong NSMutableArray *userNameArray,*userNameCopyArray,*userProfileCopyImageArray,*userProfileCopyImageArray2, *userFriendslistCopyArray;
-__strong NSMutableArray *userFriendslistKeeperArray, *selectedIndexArr, *userFriendsInviteIdArr;
-__strong NSMutableDictionary *imageDownloadsInProgressCopy, *imageDownloadsInProgress;
+NSMutableDictionary *imageDownloadsInProgress;
+NSMutableArray *userFriendsInviteIdArr;
 __strong NSString *searchText;
 bool searchFlag=FALSE;
 FacebookHelper *fbHelper;
@@ -286,7 +284,7 @@ ButtonClickCallbackData callBackData;
     [super didReceiveMemoryWarning];
     
     // terminate all pending download connections
-    NSArray *allDownloads = [imageDownloadsInProgressCopy allValues];
+    NSArray *allDownloads = [imageDownloadsInProgress allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
     
     // Release any cached data, images, etc that aren't in use.
@@ -304,7 +302,7 @@ ButtonClickCallbackData callBackData;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];  
-    filteredList = userFriendslistArray;
+    filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -353,29 +351,12 @@ ButtonClickCallbackData callBackData;
     [_mapView addSubview:locUpdateBtn];
     
     afriend=[[UserFriends alloc] init];
-    userNameArray=[[NSMutableArray alloc] init];
-    userNameCopyArray=[[NSMutableArray alloc] init];
-    userProfileCopyImageArray=[[NSMutableArray alloc] init];
-    userProfileCopyImageArray2=[[NSMutableArray alloc] init];
-    userFriendslistCopyArray=[[NSMutableArray alloc] init];
-    userFriendslistKeeperArray=[[NSMutableArray alloc] init];
-    selectedIndexArr=[[NSMutableArray alloc] init];
     userFriendsInviteIdArr=[[NSMutableArray alloc] init];
     userDefault=[[UserDefault alloc] init];
-    userFriendslistCopyArray=userFriendslistArray;
-    userFriendslistKeeperArray=[userFriendslistArray mutableCopy];
     searchText=[[NSString alloc] init];
-    [userFriendslistKeeperArray retain];
-    [userFriendslistCopyArray retain];
-    
-    [userNameArray retain];
-    [userNameCopyArray retain];
-    [userProfileCopyImageArray retain];
-    [userProfileCopyImageArray2 retain];
-    [userFriendslistCopyArray retain];
-    [userFriendslistKeeperArray retain];
+
     fbHelper=[FacebookHelper sharedInstance];
-    NSLog(@"frnd arrayk count %d ",[userFriendslistKeeperArray count]);
+    NSLog(@"frnd arrayk count %d ",[userFriendslistArray count]);
     if ([userFriendslistArray count]==0)
     {
         [inviteFriendView setHidden:YES];
@@ -384,13 +365,10 @@ ButtonClickCallbackData callBackData;
     {
         [inviteFriendView setHidden:NO];
     }
-    [self loadFriendListsData];
+    //[self loadFriendListsData]; TODO: commented this
     
     imageDownloadsInProgress = [NSMutableDictionary dictionary];
-    imageDownloadsInProgressCopy = [NSMutableDictionary dictionary];
-    imageDownloadsInProgressCopy=imageDownloadsInProgress;
     [imageDownloadsInProgress retain];
-    [imageDownloadsInProgressCopy retain];
     
     _mapPulldown.hidden = TRUE;
     _mapPullupMenu.hidden = TRUE;
@@ -460,7 +438,7 @@ ButtonClickCallbackData callBackData;
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    userFriendslistArray=[[NSMutableArray alloc] init];
+    //userFriendslistArray=[[NSMutableArray alloc] init];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
@@ -583,7 +561,7 @@ ButtonClickCallbackData callBackData;
 - (void)dealloc 
 {
     [imageDownloadsInProgress release];
-    [imageDownloadsInProgressCopy release];
+//    [imageDownloadsInProgressCopy release];
     [_mapView release];
     [_mapView release];
     [_mapPulldown release];
@@ -600,12 +578,6 @@ ButtonClickCallbackData callBackData;
     [_selSavedFilter release];
     [_selectedFilter release];
     [_mapPullupMenu release];
-    [userNameArray release];
-    [userNameCopyArray release];
-    [userProfileCopyImageArray release];
-    [userProfileCopyImageArray2 release]; 
-    [userFriendslistCopyArray release];
-    [userFriendslistKeeperArray release];
     [super dealloc];
 }
 
@@ -709,7 +681,6 @@ ButtonClickCallbackData callBackData;
         cell.textLabel.textColor = [UIColor blackColor];
         cell.textLabel.opaque = NO;
         cell.textLabel.backgroundColor = [UIColor whiteColor];	
-        cell.accessoryType=UITableViewCellAccessoryCheckmark;
 		
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0");
@@ -733,14 +704,9 @@ ButtonClickCallbackData callBackData;
         else
         {
             cell.imageView.image = userFriends.userProfileImage;
-//            cell.imageView.image=[userProfileCopyImageArray2 objectAtIndex:indexPath.row];
-//            [userProfileCopyImageArray2 replaceObjectAtIndex:indexPath.row withObject:userFriends.userProfileImage];
         }
-//        if ([userFriendsInviteIdArr containsObject:userFriends.userId])
-//            [cell setSelected:TRUE];
-
     }
-        //[self selectUser:userFriendsInviteIdArr];
+
     return cell;
     
 }
@@ -774,18 +740,17 @@ ButtonClickCallbackData callBackData;
 
 - (void)startIconDownload:(UserFriends *)userFriends forIndexPath:(NSIndexPath *)indexPath
 {
-    IconDownloader *iconDownloader = [imageDownloadsInProgressCopy objectForKey:indexPath];
-    //if (iconDownloader == nil)
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
+    if (iconDownloader == nil)
     {
         iconDownloader = [[IconDownloader alloc] init];
         iconDownloader.userFriends = userFriends;
         iconDownloader.indexPathInTableView = indexPath;
         iconDownloader.delegate = self;
-        [imageDownloadsInProgressCopy setObject:iconDownloader forKey:indexPath];
-        [imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
         NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
         [iconDownloader startDownload];
-        NSLog(@"start downloads ... %d",indexPath.row);
+        NSLog(@"start downloads ... %@ %d",userFriends.userName, indexPath.row);
         [iconDownloader release];   
     }
 }
@@ -793,12 +758,12 @@ ButtonClickCallbackData callBackData;
 // this method is used in case the user scrolled into a set of cells that don't have their app icons yet
 - (void)loadImagesForOnscreenRows
 {
-    if ([userFriendslistCopyArray count] > 0)
+    if ([filteredList count] > 0)
     {
         NSArray *visiblePaths = [self.inviteFrndTableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            UserFriends *userFriends = [userFriendslistCopyArray objectAtIndex:indexPath.row];
+            UserFriends *userFriends = [filteredList objectAtIndex:indexPath.row];
             
             if (!userFriends.userProfileImage) // avoid the app icon download if the app already has an icon
             {
@@ -809,13 +774,17 @@ ButtonClickCallbackData callBackData;
 }
 
 // called by our ImageDownloader when an icon is ready to be displayed
-- (void)appImageDidLoad:(NSIndexPath *)indexPath
+- (void)appImageDidLoad:(NSString *)userId
 {
-    IconDownloader *iconDownloader = [imageDownloadsInProgressCopy objectForKey:indexPath];
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
     if (iconDownloader != nil)
     {
         //UserFriends *friend = [filteredList objectAtIndex:indexPath.row];
         //friend.userProfileImage = iconDownloader.userFriends.userProfileImage;
+        NSNumber *indx = [userFriendslistIndex objectForKey:userId];
+        UserFriends *user = [userFriendslistArray objectAtIndex:[indx intValue]];
+        user.userProfileImage = iconDownloader.userFriends.userProfileImage;
+        
         UITableViewCell *cell = [self.inviteFrndTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
@@ -851,15 +820,11 @@ ButtonClickCallbackData callBackData;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    [self loadFriendListsData];
+    //[self loadFriendListsData]; TODO: commented this
     searchText=friendSearchBar.text;
-    [userNameCopyArray removeAllObjects];
-    [userProfileCopyImageArray2 removeAllObjects];
-    [userFriendslistCopyArray removeAllObjects];
 
     if ([searchText length]>0) 
     {
-//        [self searchResult];
         [self performSelector:@selector(searchResult) withObject:nil afterDelay:0.1];
         searchFlag=true;
         [self.inviteFrndTableView reloadData];
@@ -868,10 +833,10 @@ ButtonClickCallbackData callBackData;
     else
     {
         searchText=@" ";
-        [self loadFriendListsData];
-        imageDownloadsInProgressCopy=imageDownloadsInProgress;
+        //[self loadFriendListsData]; TODO: commented this
+        [filteredList removeAllObjects];
+        filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
         [self.inviteFrndTableView reloadData];
-        NSLog(@"Search length zero %@",userNameCopyArray);
     }
     
 }
@@ -885,19 +850,6 @@ ButtonClickCallbackData callBackData;
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
-//    [self loadFriendListsData];
-//    searchText=friendSearchBar.text;
-//    [userNameCopyArray removeAllObjects];
-//    [userProfileCopyImageArray2 removeAllObjects];
-//    [userFriendslistCopyArray removeAllObjects];
-//    
-//    if ([searchText length]>0) 
-//    {
-//        [self searchResult];
-//        searchFlag=true;
-//        [self.inviteFrndTableView reloadData];
-//        NSLog(@"searchText  %@",searchText);
-//    }
 
     NSLog(@"2");    
 }
@@ -916,10 +868,9 @@ ButtonClickCallbackData callBackData;
     // Deactivate the UISearchBar
     friendSearchBar.text=@"";
     searchText=@"";
-    userNameCopyArray=userNameArray;
-    userFriendslistCopyArray =userFriendslistKeeperArray;
-    imageDownloadsInProgressCopy=imageDownloadsInProgress;
-    filteredList = userFriendslistArray;
+
+    [filteredList removeAllObjects];
+    filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     [self.inviteFrndTableView reloadData];
     NSLog(@"3");
 }
@@ -934,64 +885,25 @@ ButtonClickCallbackData callBackData;
     // api that you are using to do the search
     
     NSLog(@"Search button clicked");
-    [userNameCopyArray removeAllObjects];
-    [userProfileCopyImageArray2 removeAllObjects];
-    [userFriendslistCopyArray removeAllObjects];
     searchText=friendSearchBar.text;
     searchFlag=false;
     [self searchResult];
     [friendSearchBar resignFirstResponder];    
-//    [self.inviteFrndTableView reloadData];
-}
-
--(void)loadFriendListsData
-{
-    userDefault=[[UserDefault alloc] init];
-//    [userDefault writeArrayToUserDefaults:@"userFriendslist" withArray:userFriendslistArray];
-//    userFriendslistArray=[userDefault readDataFromUserDefaults:@"userFriendslist"];
-//    [userDefault writeArrayToUserDefaults:@"userNameArr" withArray:userNameArr];
-//    [userDefault writeArrayToUserDefaults:@"userIdArr" withArray:userIdArr];
-//    [userDefault writeArrayToUserDefaults:@"imageUrlArr" withArray:imageUrlArr];
-    NSMutableArray *friendlist=[[NSMutableArray alloc] init];
-
-    userNameArray=[userDefault readArrayFromUserDefaults:@"userNameArr"];
-    
-    for (int i=0; i<[userNameArray count]; i++)
-    {
-        UserFriends *aUserFriend=[[UserFriends alloc] init];
-        aUserFriend.userName=[[userDefault readArrayFromUserDefaults:@"userNameArr"] objectAtIndex:i];
-        aUserFriend.userId=[[userDefault readArrayFromUserDefaults:@"userIdArr"] objectAtIndex:i];
-        aUserFriend.imageUrl=[[userDefault readArrayFromUserDefaults:@"imageUrlArr"]  objectAtIndex:i];
-        [friendlist addObject:aUserFriend];
-    }
-    
-    userFriendslistArray=friendlist;
-    userNameCopyArray=[[NSMutableArray alloc] init];
-    userNameArray =[[NSMutableArray alloc] init];
-    userProfileCopyImageArray =[[NSMutableArray alloc] init];
-    userProfileCopyImageArray2=[[NSMutableArray alloc] init];
-    
-    for (int count=0; count<[userFriendslistArray count]; count++)
-    {
-        afriend=[userFriendslistArray objectAtIndex:count];
-        [userNameArray addObject:afriend.userName];
-        [userNameCopyArray addObject:afriend.userName];
-        [userProfileCopyImageArray addObject:[UIImage imageNamed:@"girl.png"]];
-        userProfileCopyImageArray2=userProfileCopyImageArray;
-    }
-//    NSLog(@"userNameArray: %@ %d",userNameArray, [userFriendslistArray count]);
 }
 
 -(void)searchResult
 {
     searchText = friendSearchBar.text;
     NSLog(@"in search method..");
+    [filteredList removeAllObjects];
+
     if ([searchText isEqualToString:@""])
     {
         NSLog(@"null string");
         searchText=@" ";
+        filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     }
-    [filteredList removeAllObjects];
+    else
     for (UserFriends *sTemp in userFriendslistArray)
 	{
 		NSRange titleResultsRange = [sTemp.userName rangeOfString:searchText options:NSCaseInsensitiveSearch];		
@@ -999,39 +911,6 @@ ButtonClickCallbackData callBackData;
         {
 			[filteredList addObject:sTemp];
             NSLog(@"filtered friend: %@", sTemp.userName);            
-
-            /*
-            [userProfileCopyImageArray2 addObject:[userProfileCopyImageArray objectAtIndex:index]];
-            NSIndexPath *myIPold = [NSIndexPath indexPathForRow:index inSection:0];
-            NSIndexPath *myIPnew = [NSIndexPath indexPathForRow:[userFriendslistCopyArray indexOfObject:[userFriendslistKeeperArray objectAtIndex:index]] inSection:0];
-            
-            [self.inviteFrndTableView moveRowAtIndexPath:myIPnew toIndexPath:myIPold];
-            
-            if ([imageDownloadsInProgress objectForKey:myIPold]) 
-            {
-                [imageDownloadsInProgressCopy setObject:[imageDownloadsInProgress objectForKey:myIPold] forKey:myIPnew];
-            }
-            else 
-            {
-                IconDownloader *iconDownloader1 = [[IconDownloader alloc] init];
-                iconDownloader1.userFriends = [userFriendslistKeeperArray objectAtIndex:index];
-                iconDownloader1.indexPathInTableView = myIPnew;
-                iconDownloader1.delegate = self;
-                [imageDownloadsInProgressCopy setObject:iconDownloader1 forKey:myIPnew];
-                [imageDownloadsInProgress setObject:iconDownloader1 forKey:myIPnew];
-                
-                IconDownloader *iconDownloader2 = [[IconDownloader alloc] init];
-                iconDownloader2.userFriends = [userFriendslistKeeperArray objectAtIndex:index];
-                iconDownloader2.indexPathInTableView = myIPold;
-                iconDownloader2.delegate = self;
-                [imageDownloadsInProgressCopy setObject:iconDownloader2 forKey:myIPold];
-                [imageDownloadsInProgress setObject:iconDownloader2 forKey:myIPold];
-                
-                [imageDownloadsInProgressCopy setObject:[imageDownloadsInProgress objectForKey:myIPold] forKey:myIPnew];
-            }
-            NSLog(@"prog: %@ old: %@  new: %@",[imageDownloadsInProgress objectForKey:myIPold],myIPold,myIPnew);
-            */
-            ////////
         }
         else
         {
@@ -1043,23 +922,6 @@ ButtonClickCallbackData callBackData;
     [self.inviteFrndTableView reloadData];
 }
 
--(void)selectUser:(NSMutableArray *)selectedUser
-{
-    for (int i=0; i<[selectedUser count]; i++)
-    {
-        int index=[[userDefault readArrayFromUserDefaults:@"userIdArr"] indexOfObject:[selectedUser objectAtIndex:i]];
-        NSString *name=[userNameArray objectAtIndex:index];
-        int row=[userNameCopyArray indexOfObject:name];
-        if (row<10000)
-        {
-            NSIndexPath *indexPath =[NSIndexPath indexPathForRow:row inSection:0]; 
-            [self.inviteFrndTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
-            NSLog(@"selected frnd row: %d",row);
-        }
-    }
-    NSLog(@"selectedUser %@",selectedUser);
-}
-
 -(IBAction)inviteAllUsers:(id)sender
 {        
     for (int i = 0; i < [inviteFrndTableView numberOfSections]; i++) 
@@ -1068,9 +930,7 @@ ButtonClickCallbackData callBackData;
         {
             NSUInteger ints[2] = {i,j};
             NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:ints length:2];
-            UITableViewCell *cell = [inviteFrndTableView cellForRowAtIndexPath:indexPath];
             [inviteFrndTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
-            
         }
     }
     NSArray *selectedRows = [self.inviteFrndTableView indexPathsForSelectedRows];
@@ -1104,15 +964,6 @@ ButtonClickCallbackData callBackData;
 
 -(void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows
 {
-//    for (int i=0; i<[userFriendsInviteIdArr count]; i++)
-//    {
-//        NSIndexPath *indexPath= [[NSIndexPath alloc] init];
-//        indexPath= [selectedRows objectAtIndex:i];
-//        int index=indexPath.row;
-//        UserFriends *auser=[[UserFriends alloc] init];
-//        auser=[userFriendslistKeeperArray objectAtIndex:index];
-//        [requestedFriendsArr addObject:auser.userId];
-//    }
     
     NSLog(@"inviting selected users %@",userFriendsInviteIdArr);
     [fbHelper inviteFriends:userFriendsInviteIdArr];

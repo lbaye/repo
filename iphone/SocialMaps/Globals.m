@@ -12,5 +12,6 @@
 @implementation Globals
 
 NSMutableArray *userFriendslistArray;
+NSMutableDictionary *userFriendslistIndex;
 
 @end

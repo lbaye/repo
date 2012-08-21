@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSMutableArray *userFriendslistArray;
+extern NSMutableDictionary *userFriendslistIndex;
 
 @interface Globals : NSObject 
 

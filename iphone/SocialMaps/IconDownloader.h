@@ -36,6 +36,7 @@
 
 @protocol IconDownloaderDelegate 
 
-- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+//- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+- (void)appImageDidLoad:(NSString *)userId;
 
 @end
