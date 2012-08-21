@@ -89,48 +89,6 @@
     itemList.delegate = self;
     itemList.dataSource = self;
     [self.view sendSubviewToBack:listView];
-    
-    // Dummy data
-    // starting lat,long 23.795240529083365, 90.41318893432617
-//    peopleList = [[NSMutableArray alloc] init];
-//    CLLocationDegrees currLat = 23.795633200965806;
-//    CLLocationDegrees currLong = 90.41279196739197;
-//    float dist;
-//    for (int i=0; i < 4; i++) {
-//        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-//        UIImage *icon = [UIImage imageNamed:@"Photo-3.png"];
-//        dist = rand()%500;
-//        CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
-//        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"Person %d", i] address:[NSString stringWithFormat:@"Address %d", i] type:ObjectTypePeople category:@"Male" coordinate:loc dist:dist icon:icon bg:bg];
-//        currLat += 0.00004;
-//        currLong += 0.00004;
-//        dist -= 100;
-//        [peopleList addObject:aPerson];
-//        [aPerson release];
-//    }
-//    
-//    placeList = [[NSMutableArray alloc] init];
-//    currLat = 23.796526525077528;
-//    currLong = 90.41537761688232;
-//    
-//    for (int i=0; i < 3; i++) {
-//        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-//        UIImage *icon = [UIImage imageNamed:@"user_thumb_only.png"];
-//        CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
-//        dist = rand()%500;
-//        LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:[NSString stringWithFormat:@"Place %d", i] address:[NSString stringWithFormat:@"Place Address %d", i] type:ObjectTypePeople category:@"Bar" coordinate:loc dist:dist icon:icon bg:bg];
-//        currLat += 0.00004;
-//        currLong += 0.00004;
-//        aPlace.delegate = self;
-//        [placeList addObject:aPlace];
-//        [aPlace release];
-//    }
-//
-//    dealList = [[NSMutableArray alloc] initWithCapacity:0];
-//    smAppDelegate.displayList = [[NSMutableArray alloc] initWithCapacity:0];
-    
-    //[self getSortedDisplayList];
-    //[itemList reloadData];
 }
 
 - (void) getSortedDisplayList {

@@ -10,6 +10,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
+#import "AppDelegate.h"
 
 @implementation MapAnnotation
 @synthesize currState;
@@ -24,6 +25,8 @@
         reuseIdent = @"locAnnoPeople";
     else if ([locItem isKindOfClass:[LocationItemPeople class]]) 
         reuseIdent = @"locAnnoPlace";
+    else
+        reuseIdent = @"loggedInUser";
     annoView = [newMapView dequeueReusableAnnotationViewWithIdentifier:reuseIdent];
     if ( annoView == nil ) {
         NSLog(@"MapAnnotation:New MKAnnotationView");
@@ -32,8 +35,23 @@
     if ([newAnnotation isKindOfClass:[LocationItem class]]) {
         LocationItem *locItem = (LocationItem*) newAnnotation;
         return [self getViewForState:currState loc:locItem];
-    } else
-        return nil;
+    } else {
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        CGRect imgFrame = CGRectMake(5, 5, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
+        UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:smAppDelegate.userAccountPrefs.icon withCornerradius:10.0f];
+        [locImage setBorderColor:[UIColor blueColor]];
+        locImage.tag = 11000;
+        CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
+        annoView.frame = annoFrame;
+        annoView.backgroundColor = [UIColor clearColor];
+        [annoView.layer setCornerRadius:5.0f];
+        [annoView.layer setMasksToBounds:YES];
+        [annoView addSubview:locImage];
+        [locImage release];
+        return annoView;
+    }
+    return nil;
 }
 
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {

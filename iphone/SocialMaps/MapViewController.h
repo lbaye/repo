@@ -109,7 +109,6 @@ typedef enum _SHARING_TYPES {
 //-(void)appImageDidLoad:(NSIndexPath *)indexPath;
 -(void)appImageDidLoad:(NSString *)userId;
 -(void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows;
--(void)loadFriendListsData;
 -(void) mapAnnotationChanged:(id <MKAnnotation>) anno;
 -(void) displayNotificationCount;
 @end

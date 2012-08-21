@@ -97,7 +97,9 @@ ButtonClickCallbackData callBackData;
         pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
     else if ([locItem isKindOfClass:[LocationItemPlace class]])
         pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    
+    else if (smAppDelegate.userAccountPrefs.icon != nil) {
+        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    }
     return pin;
 }
 
@@ -319,10 +321,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -860,6 +862,7 @@ ButtonClickCallbackData callBackData;
     // UISearchBar loses focus
     // We don't need to do anything here.
     [self.inviteFrndTableView reloadData];
+    [friendSearchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -872,6 +875,7 @@ ButtonClickCallbackData callBackData;
     [filteredList removeAllObjects];
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     [self.inviteFrndTableView reloadData];
+    [friendSearchBar resignFirstResponder];
     NSLog(@"3");
 }
 
@@ -900,7 +904,7 @@ ButtonClickCallbackData callBackData;
     if ([searchText isEqualToString:@""])
     {
         NSLog(@"null string");
-        searchText=@" ";
+        friendSearchBar.text=@" ";
         filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     }
     else
@@ -1060,6 +1064,7 @@ ButtonClickCallbackData callBackData;
 -(IBAction)closeInviteFrnds:(id)sender
 {
     [inviteFriendView removeFromSuperview];
+    [userFriendslistArray removeAllObjects];
 }
 
 - (void) resetShareButton:(SHARING_TYPES)newSel {
@@ -1167,6 +1172,14 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.displayList addObjectsFromArray:sortedArray];
 }
 
+- (CLLocationDistance) getDistanceFromMe:(CLLocationCoordinate2D) loc {
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithCoordinate:loc altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    
+    return distanceFromMe;
+}
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"In gotListings");
@@ -1209,13 +1222,15 @@ ButtonClickCallbackData callBackData;
                         
                         UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
                         
-                        dist = [item.distance doubleValue];
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
                         NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+
+                        CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         
-                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:dist icon:icon bg:bg];
+                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                        item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
@@ -1229,6 +1244,8 @@ ButtonClickCallbackData callBackData;
                         loc.longitude = [item.currentLocationLng doubleValue];
                         aPerson.coordinate = loc;
                         
+                        CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                        aPerson.itemDistance = distanceFromMe;
                     }
                 }
             }

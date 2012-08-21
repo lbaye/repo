@@ -14,6 +14,7 @@
 #import "LocationSharing.h"
 #import "RadioButtonItem.h"
 #import "SelectFriends.h"
+#import "RestClient.h"
 
 @implementation SettingsController
 @synthesize settingsScrollView;
@@ -80,6 +81,11 @@
 
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    RestClient *restClient = [[RestClient alloc] init];
+    [restClient setLayer:smAppDelegate.layerPrefs :@"Auth-Token" :smAppDelegate.authToken];
+    [restClient setPlatForm:smAppDelegate.platformPrefs :@"Auth-Token" :smAppDelegate.authToken];
+}
 
 - (void)viewDidUnload
 {
