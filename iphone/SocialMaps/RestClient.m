@@ -22,6 +22,7 @@
 #import "NotifMessage.h"
 #import "NotifRequest.h"
 #import "UserCircle.h"
+#import "UserFriends.h"
 
 @implementation RestClient
 
@@ -718,10 +719,14 @@
     return [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
 }
 
-- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects {
-    UserInfo *aUserInfo = [[UserInfo alloc] init];
-    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:@"nil" key3:nil];
-    aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:@"nil" key3:nil];
+- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects user:(UserInfo**)user{
+    UserInfo *aUserInfo;
+    if (user != nil)
+        aUserInfo = *user;
+    else
+        aUserInfo = [[UserInfo alloc] init];
+    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
+    aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:nil key3:nil];
     aUserInfo.firstName = [self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil];
     aUserInfo.lastName = [self getNestedKeyVal:jsonObjects key1:@"lastName" key2:nil key3:nil];
     aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"avatar" key2:nil key3:nil];
@@ -758,7 +763,14 @@
         UserCircle *aCircle = [[UserCircle alloc] init];
         NSString *type = [self getNestedKeyVal:item key1:@"type" key2:nil key3:nil];
         aCircle.circleName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
-        aCircle.friends    = [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil];
+        aCircle.friends = [[NSMutableArray alloc] init];
+        // Get friends for the circle
+        for (NSString *id in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) {
+            UserInfo *afriend = [[UserInfo alloc] init];
+            afriend.userId = id;
+            [aCircle.friends addObject:afriend];
+            NSLog(@"In getAccountSettings: Circle=%@, friend=%@", aCircle.circleName, afriend.userId);
+        }
         if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
             aCircle.type = CircleTypeSystem;
         } else {
@@ -881,7 +893,7 @@
                 NSLog(@"Arr");
             }
             
-            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"]];
+            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
             
             NSLog(@"getAccountSettings: %@",jsonObjects);
             
@@ -905,6 +917,81 @@
     [request startAsynchronous];
 
 }
+
+-(void)getUserInfo:(UserInfo**)userRef tokenStr:(NSString *)authToken tokenValue:(NSString *)authTokenValue
+{
+    __block UserInfo *user = *userRef;
+    NSString *route = [NSString stringWithFormat:@"%@/users/%@",WS_URL, user.userId];
+    NSURL *url = [NSURL URLWithString:route];
+    NSLog(@"///////// RestClient:%@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            [self parseAccountSettings:jsonObjects user:&user];
+            // Load image if present
+            if (user.avatar != nil && ![user.avatar isEqualToString:@""]) {
+                NSLog(@"<<<<<<<<<<<<< Getting image for %@", user.userId);
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.avatar]];
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        user.icon = image;
+                        NSLog(@">>>>>>>>>>>>>> Got image for %@", user.userId);
+                    });
+                });
+            }
+            
+            NSLog(@"getAccountSettings: %@",jsonObjects);
+            
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
+        } 
+        else 
+        {
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getUserInfo");
+    [request startAsynchronous];
+    
+}
+
 
 -(void)getGeofence:(NSString *)authToken:(NSString *)authTokenValue
 {
@@ -1541,7 +1628,7 @@
         
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) 
         {
-            UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects];
+            UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
             
             NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];

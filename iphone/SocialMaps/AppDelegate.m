@@ -16,6 +16,7 @@
 #import "LocationItemPlace.h"
 #import "UserFriends.h"
 #import "RestClient.h"
+#import "UserCircle.h"
 
 @implementation AppDelegate
 
@@ -139,16 +140,16 @@
     defInfoPref = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:0], [NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],nil];
 
     // Friend list
-    friendList = [[NSMutableArray alloc] init];
-    for (int i=0; i <15; i++) {
-        NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
-        UserFriends *aFriend = [[UserFriends alloc] init];
-        aFriend.userId = [NSString stringWithFormat:@"%d", i];
-        aFriend.userName = [NSString stringWithFormat:@"Firstname%d", rand()%15];
-        aFriend.imageUrl = nil;
-        aFriend.userProfileImage = [UIImage imageNamed:imgName];
-        [friendList addObject:aFriend];
-    }
+//    friendList = [[NSMutableArray alloc] init];
+//    for (int i=0; i <15; i++) {
+//        NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
+//        UserFriends *aFriend = [[UserFriends alloc] init];
+//        aFriend.userId = [NSString stringWithFormat:@"%d", i];
+//        aFriend.userName = [NSString stringWithFormat:@"Firstname%d", rand()%15];
+//        aFriend.imageUrl = nil;
+//        aFriend.userProfileImage = [UIImage imageNamed:imgName];
+//        [friendList addObject:aFriend];
+//    }
     
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotPlatform:) name:NOTIF_GET_PLATFORM_DONE object:nil];
@@ -288,6 +289,18 @@
         });
     });
 
+    // Get information about friends
+    for (UserCircle* circle in userAccountPrefs.circles) {
+        NSLog(@"************** Circle = %@", circle.circleName);
+        if([circle.circleName caseInsensitiveCompare:@"friends"] == NSOrderedSame )
+            friendList = circle.friends;
+            
+        for (UserInfo* friend in circle.friends) {
+            NSLog(@"++++++++++ Friend = %@", friend.userId);
+            RestClient *restClient = [[[RestClient alloc] init] autorelease];
+            [restClient getUserInfo:&friend tokenStr:@"Auth-Token" tokenValue:authToken];
+        }
+    }
 }
 - (void)gotGeofence:(NSNotification *)notif {
     geofencePrefs = [notif object];

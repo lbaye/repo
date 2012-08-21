@@ -10,6 +10,7 @@
 #import "CustomCheckbox.h"
 #import "UIImageView+roundedCorner.h"
 #import "UserFriends.h"
+#import "UserInfo.h"
 
 @implementation SelectFriends
 @synthesize friendList;
@@ -135,10 +136,10 @@
     photoScrollView.contentSize = photeSelContentsize;
     float imgWidth = (photoFrame.size.width-35)/4;
     for (int i=0; i<filteredFriends.count; i++) {
-        UserFriends *aFriend = (UserFriends*) [filteredFriends objectAtIndex:i];
+        UserInfo *aFriend = (UserInfo*) [filteredFriends objectAtIndex:i];
         CGRect imgFrame = CGRectMake((i%8)*(imgWidth+10), (i/8)*(imgWidth+35)+5, imgWidth, imgWidth);
         //NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
-        UIImageView *friendImg = [UIImageView imageViewWithRectImage:imgFrame andImage:aFriend.userProfileImage withCornerradius:10.0f];
+        UIImageView *friendImg = [UIImageView imageViewWithRectImage:imgFrame andImage:aFriend.icon withCornerradius:10.0f];
         friendImg.tag = 20000+i;
         friendImg.userInteractionEnabled = YES;
         
@@ -146,7 +147,7 @@
         UILabel *firstName = [[UILabel alloc] initWithFrame:CGRectMake(imgFrame.origin.x, 
                                                                        imgFrame.origin.y+imgFrame.size.height, 
                                                                        imgWidth, 16)];
-        firstName.text = aFriend.userName; 
+        firstName.text = aFriend.firstName; 
         firstName.font = [UIFont fontWithName:@"Helvetica" size:11];
         firstName.backgroundColor = [UIColor clearColor];
         firstName.textColor = [UIColor blackColor];
@@ -157,7 +158,7 @@
         UILabel *lastName = [[UILabel alloc] initWithFrame:CGRectMake(imgFrame.origin.x, 
                                                                        imgFrame.origin.y+imgFrame.size.height+15, 
                                                                        imgWidth, 16)];
-        lastName.text = @"Name"; 
+        lastName.text = aFriend.lastName; 
         lastName.font = [UIFont fontWithName:@"Helvetica" size:11];
         lastName.backgroundColor = [UIColor clearColor];
         lastName.textColor = [UIColor blackColor];
