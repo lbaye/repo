@@ -8,7 +8,7 @@
 
 #import "Constants.h"
 
-//NSString * const WS_URL = @"http://174.143.240.157";
+//NSString * const WS_URL = @"http://174.143.240.157:81";
 //NSString * const WS_URL = @"http://203.76.126.69";
 NSString * const WS_URL = @"http://203.76.126.69/social_maps/web";
 //NSString * const WS_URL = @"http://192.168.1.71/social_maps_git/social-maps-service/web";

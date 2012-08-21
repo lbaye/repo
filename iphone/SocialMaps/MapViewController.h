@@ -43,6 +43,7 @@ typedef enum _SHARING_TYPES {
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
     bool needToCenterMap;
+    NSMutableArray *filteredList;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -57,6 +58,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
 @property (atomic) bool needToCenterMap;
+@property (nonatomic, retain) NSMutableArray *filteredList;
 
 @property (retain, nonatomic) IBOutlet UIView *mapPulldown;
 @property (retain, nonatomic) IBOutlet UIButton *shareAllButton;

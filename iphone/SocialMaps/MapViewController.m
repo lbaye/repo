@@ -64,6 +64,7 @@
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
 @synthesize needToCenterMap;
+@synthesize filteredList;
 //@synthesize imageDownloadsInProgress;
 
 UserFriends *afriend;
@@ -303,6 +304,7 @@ ButtonClickCallbackData callBackData;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];  
+    filteredList = userFriendslistArray;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -319,10 +321,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -651,7 +653,7 @@ ButtonClickCallbackData callBackData;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
-	return [userNameCopyArray count];
+	return [filteredList count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -666,7 +668,7 @@ ButtonClickCallbackData callBackData;
     static NSString *PlaceholderCellIdentifier = @"PlaceholderCell";
     
     // add a placeholder cell while waiting on table data
-    int nodeCount = [userFriendslistCopyArray count];
+    int nodeCount = [filteredList count];
 	
 	if (nodeCount == 0 && indexPath.row == 0)
 	{
@@ -696,10 +698,10 @@ ButtonClickCallbackData callBackData;
     if (nodeCount > 0)
 	{
         // Set up the cell...
-        UserFriends *userFriends = [userFriendslistCopyArray objectAtIndex:indexPath.row];
+        UserFriends *userFriends = [filteredList objectAtIndex:indexPath.row];
         
 		NSString *cellValue;		
-        cellValue=[userNameCopyArray objectAtIndex:indexPath.row];
+        cellValue=userFriends.userName;
         cell.textLabel.textAlignment = UITextAlignmentLeft; 
         cell.textLabel.textColor = [UIColor lightGrayColor];
         cell.textLabel.text = cellValue;
@@ -717,6 +719,7 @@ ButtonClickCallbackData callBackData;
             if (self.inviteFrndTableView.dragging == NO && self.inviteFrndTableView.decelerating == NO)
             {
                 [self startIconDownload:userFriends forIndexPath:indexPath];
+                NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
             }            
             else if(searchFlag==true)
             {
@@ -733,26 +736,28 @@ ButtonClickCallbackData callBackData;
 //            cell.imageView.image=[userProfileCopyImageArray2 objectAtIndex:indexPath.row];
 //            [userProfileCopyImageArray2 replaceObjectAtIndex:indexPath.row withObject:userFriends.userProfileImage];
         }
+//        if ([userFriendsInviteIdArr containsObject:userFriends.userId])
+//            [cell setSelected:TRUE];
+
     }
-   
-    [self selectUser:userFriendsInviteIdArr];
+        //[self selectUser:userFriendsInviteIdArr];
     return cell;
     
 }
 
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UserFriends *aFriend=[filteredList objectAtIndex:indexPath.row];
+    
+    [userFriendsInviteIdArr removeObject:aFriend.userId];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    UserFriends *aUserFriends=[[UserFriends alloc] init];
-    aUserFriends=[userFriendslistArray objectAtIndex:indexPath.row];
-    if ([userFriendsInviteIdArr containsObject:aUserFriends.userId])
-    {
-        [userFriendsInviteIdArr removeObject:aUserFriends.userId];
-    }
-    else
-    {
-        [userFriendsInviteIdArr addObject:aUserFriends.userId];
-    }
-
+    UserFriends *aFriend=[filteredList objectAtIndex:indexPath.row];
+    
+    if ([userFriendsInviteIdArr indexOfObject:aFriend.userId] == NSNotFound)
+        [userFriendsInviteIdArr addObject:aFriend.userId];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath 
@@ -770,7 +775,7 @@ ButtonClickCallbackData callBackData;
 - (void)startIconDownload:(UserFriends *)userFriends forIndexPath:(NSIndexPath *)indexPath
 {
     IconDownloader *iconDownloader = [imageDownloadsInProgressCopy objectForKey:indexPath];
-    if (iconDownloader == nil)
+    //if (iconDownloader == nil)
     {
         iconDownloader = [[IconDownloader alloc] init];
         iconDownloader.userFriends = userFriends;
@@ -809,6 +814,8 @@ ButtonClickCallbackData callBackData;
     IconDownloader *iconDownloader = [imageDownloadsInProgressCopy objectForKey:indexPath];
     if (iconDownloader != nil)
     {
+        //UserFriends *friend = [filteredList objectAtIndex:indexPath.row];
+        //friend.userProfileImage = iconDownloader.userFriends.userProfileImage;
         UITableViewCell *cell = [self.inviteFrndTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
@@ -912,6 +919,7 @@ ButtonClickCallbackData callBackData;
     userNameCopyArray=userNameArray;
     userFriendslistCopyArray =userFriendslistKeeperArray;
     imageDownloadsInProgressCopy=imageDownloadsInProgress;
+    filteredList = userFriendslistArray;
     [self.inviteFrndTableView reloadData];
     NSLog(@"3");
 }
@@ -983,17 +991,15 @@ ButtonClickCallbackData callBackData;
         NSLog(@"null string");
         searchText=@" ";
     }
-    for (NSString *sTemp in userNameArray)
+    [filteredList removeAllObjects];
+    for (UserFriends *sTemp in userFriendslistArray)
 	{
-		NSRange titleResultsRange = [sTemp rangeOfString:searchText options:NSCaseInsensitiveSearch];		
+		NSRange titleResultsRange = [sTemp.userName rangeOfString:searchText options:NSCaseInsensitiveSearch];		
 		if (titleResultsRange.length > 0)
         {
-			[userNameCopyArray addObject:sTemp];
-            int index=[userNameArray indexOfObject:sTemp];
-            NSLog(@"index: %d  %d",index,[userFriendslistKeeperArray count]);            
-            [userFriendslistCopyArray addObject:[userFriendslistArray objectAtIndex:index]];
+			[filteredList addObject:sTemp];
+            NSLog(@"filtered friend: %@", sTemp.userName);            
 
-            
             /*
             [userProfileCopyImageArray2 addObject:[userProfileCopyImageArray objectAtIndex:index]];
             NSIndexPath *myIPold = [NSIndexPath indexPathForRow:index inSection:0];
@@ -1033,7 +1039,7 @@ ButtonClickCallbackData callBackData;
 	}
     searchFlag=false;    
 
-    NSLog(@"userNameCopy %@",userNameCopyArray);
+    NSLog(@"filteredList %@",filteredList);
     [self.inviteFrndTableView reloadData];
 }
 
@@ -1086,9 +1092,13 @@ ButtonClickCallbackData callBackData;
     {
         [UtilityClass showAlert:@"Social Map" :@"Can not request more then 50 friends"];
     }
-    else
+    else if ([selectedRows count]>0)
     {
         [self sendInvitationToSelectedUser:[selectedRows mutableCopy]];
+    }
+    else 
+    {
+        [UtilityClass showAlert:@"Social Map" :@"Please select a friend to invite to Social Maps!"];
     }
 }
 
