@@ -453,11 +453,15 @@ class User extends BaseRepository
 
     public function updateNotification($notificationId)
     {
-        foreach ($this->currentUser->getNotification() as &$notification) {
+        $notifications = $this->currentUser->getNotification();
+
+        foreach ($notifications as &$notification) {
             if ($notification->getId() == $notificationId) {
                 $notification->setViewed(true);
             }
         }
+
+        $this->currentUser->setNotification($notifications);
 
         $this->dm->persist($this->currentUser);
         $this->dm->flush();

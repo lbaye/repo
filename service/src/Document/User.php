@@ -585,6 +585,11 @@ class User
         $this->notification[] = $notification;
     }
 
+    public function setNotification($notification)
+    {
+        $this->notification = $notification;
+    }
+
     public function getNotification()
     {
         return $this->notification;
