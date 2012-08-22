@@ -132,12 +132,13 @@ class User extends BaseRepository
         // For FB users, their ID is set as default password
         if ($isFacebookRegistration) {
             $user->setPassword(SecurityHelper::hash($data['facebookId'], $user->getSalt()));
+            $user->setAuthToken(SecurityHelper::hash($data['facebookId'], $user->getSalt()));
         } else {
             $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setAuthToken(SecurityHelper::hash($user->getEmail(), $user->getSalt()));
         }
 
         $user->setConfirmationToken(SecurityHelper::hash(time(), $user->getSalt()));
-        $user->setAuthToken(SecurityHelper::hash($user->getEmail(), $user->getSalt()));
         $user->setCreateDate(new \DateTime());
 
         $this->dm->persist($user);
@@ -152,13 +153,13 @@ class User extends BaseRepository
     {
         $qb = $this->createQueryBuilder('Document\User');
 
-        if (isset($data['email'])) {
-            $results = $qb->addOr($qb->expr()->field('email')->equals($data['email']))->getQuery()->execute();
+        if (isset($data['facebookId'])) {
+            $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
         } else {
-            $results = $qb->addOr($qb->expr()->field('facebookId')->equals($data['facebookId']))->getQuery()->execute();
+            $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if ($results->count() > 0) {
+        if ($result instanceof \Document\User) {
             return true;
         }
 
