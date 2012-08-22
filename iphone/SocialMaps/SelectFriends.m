@@ -341,8 +341,9 @@
     [filteredFriends removeAllObjects];
     for (int i=0; i<friendList.count; i++)
     {
-        UserFriends *item = [friendList objectAtIndex:i];
-        if ([item.userName rangeOfString:searchText].location != NSNotFound ||
+        UserInfo *item = [friendList objectAtIndex:i];
+        if ([item.firstName rangeOfString:searchText].location != NSNotFound ||
+            [item.lastName rangeOfString:searchText].location != NSNotFound ||
             [searchText isEqualToString:@""])
             [filteredFriends addObject:item];
     }
@@ -355,6 +356,7 @@
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
 {
+    [searchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar

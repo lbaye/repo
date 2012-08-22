@@ -30,9 +30,9 @@ typedef enum _SHARING_TYPES {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
-    bool                showPeople;
-    bool                showPlaces;
-    bool                showDeals;
+//    bool                showPeople;
+//    bool                showPlaces;
+//    bool                showDeals;
     NSMutableArray      *savedFilters;
     UIPickerView        *pickSavedFilter;
     IBOutlet UIView *inviteFriendView;
@@ -49,9 +49,9 @@ typedef enum _SHARING_TYPES {
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
 @property (retain, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) SHARING_TYPES selSharingType;
-@property (nonatomic) bool showPeople;
-@property (nonatomic) bool showPlaces;
-@property (nonatomic) bool showDeals;
+//@property (nonatomic) bool showPeople;
+//@property (nonatomic) bool showPlaces;
+//@property (nonatomic) bool showDeals;
 @property (nonatomic, retain) NSMutableArray *savedFilters;
 @property (nonatomic, retain) UIPickerView *pickSavedFilter;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
@@ -111,4 +111,5 @@ typedef enum _SHARING_TYPES {
 -(void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows;
 -(void) mapAnnotationChanged:(id <MKAnnotation>) anno;
 -(void) displayNotificationCount;
+- (void) getSortedDisplayList;
 @end

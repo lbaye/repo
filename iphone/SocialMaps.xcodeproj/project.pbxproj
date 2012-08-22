@@ -1800,11 +1800,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SocialMaps/SocialMaps-Prefix.pch";
 				INFOPLIST_FILE = "SocialMaps/SocialMaps-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0234C976-9AD8-4AF8-BC47-D0614FC0DF52";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos5.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1821,11 +1822,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SocialMaps/SocialMaps-Prefix.pch";
 				INFOPLIST_FILE = "SocialMaps/SocialMaps-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0234C976-9AD8-4AF8-BC47-D0614FC0DF52";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos5.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

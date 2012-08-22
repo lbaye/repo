@@ -13,7 +13,16 @@
 @synthesize catIcon;
 @synthesize showReview;
 @synthesize delegate;
+@synthesize placeInfo;
 
+- (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
+          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg {
+    
+    if (self = [super initWithName:name address:address type:type category:category coordinate:coord dist:dist icon:icon bg:bg]) {
+        
+    }
+    return self;
+}
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(ListViewController*)controller {
     
     cellIdent = @"placeItem";
@@ -23,7 +32,7 @@
     UIImageView   *catImage = (UIImageView*) [cell viewWithTag:2007];  
     if (catImage == nil) {
         CGRect catImgFrame = CGRectMake(10+itemIcon.size.width+10, 
-                                     cell.frame.size.height/2,
+                                     cell.frame.size.height/2-28,
                                      28, 28);
         catImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sm_icon.png"]];
         catImage.frame = catImgFrame;
@@ -35,7 +44,11 @@
     UIButton   *review = (UIButton*) [cell viewWithTag:2008];  
     if (review == nil) {
         CGRect reviewFrame = CGRectMake(cell.frame.size.width-110, 
-                                        cell.frame.size.height/4*3-37, 100, 37);
+                                        cell.frame.size.height/2
+                                        
+                                        
+                                        
+                                        -37, 100, 37);
         review = [UIButton buttonWithType:UIButtonTypeCustom];
         review.frame = reviewFrame;
         review.backgroundColor = [UIColor clearColor];

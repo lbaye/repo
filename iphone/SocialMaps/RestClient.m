@@ -1264,10 +1264,10 @@
             {
                 People *people=[[People alloc] init];
 
-                [people setUserId:[item objectForKey:@"id"]];
-                [people setEmail:[item objectForKey:@"email"]];                
-                [people setFirstName:[item objectForKey:@"firstName"]];                
-                [people setLastName:[item objectForKey:@"lastName"]];                
+                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
                 people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
                 people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
@@ -1286,7 +1286,7 @@
                 people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
                 people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
                 
-                [people setDistance:[item objectForKey:@"distance"]];                
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];              
                 [searchLocation.peopleArr addObject:people];
                 
                 NSLog(@"User: first %@  last:%@  id:%@",people.firstName, people.lastName, people.userId);
@@ -1297,20 +1297,17 @@
             {
                 Places *place=[[Places alloc] init];
                 
-
-                Geolocation *geolocation=[[Geolocation alloc] init];
+                place.location = [[Geolocation alloc] init];
+                place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
                 
-                geolocation.latitude=[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"];
-                geolocation.longitude=[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"];
-                [place setLocation:geolocation];
+                place.northeast = [[Geolocation alloc] init];
+                place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
                 
-                geolocation.latitude=[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"];
-                geolocation.longitude=[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"];
-                [place setNortheast:geolocation];
-                
-                geolocation.latitude=[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"];
-                geolocation.longitude=[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"];
-                [place setSouthwest:geolocation];
+                place.southwest = [[Geolocation alloc] init];
+                place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
                 
                 [place setIcon:[item objectForKey:@"icon"] ];
                 [place setID:[item objectForKey:@"id"] ];

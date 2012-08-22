@@ -26,6 +26,7 @@
 #import "RestClient.h"
 #import "SearchLocation.h"
 #import "MapAnnotationPeople.h"
+#import "Places.h"
 
 
 @interface MapViewController ()
@@ -52,9 +53,9 @@
 @synthesize selectedFilter = _selectedFilter;
 @synthesize mapPullupMenu = _mapPullupMenu;
 @synthesize selSharingType;
-@synthesize showDeals;
-@synthesize showPeople;
-@synthesize showPlaces;
+//@synthesize showDeals;
+//@synthesize showPeople;
+//@synthesize showPlaces;
 @synthesize savedFilters;
 @synthesize pickSavedFilter;
 @synthesize inviteFriendView;
@@ -180,6 +181,7 @@ ButtonClickCallbackData callBackData;
                                  1, 30);
     sep.frame = sepFrame;
     [messageView addSubview:sep];
+    [sep release];
     
     callBackData.locItem = locItem;
     callBackData.txtView = textView;
@@ -251,6 +253,7 @@ ButtonClickCallbackData callBackData;
                                  1, 30);
     sep.frame = sepFrame;
     [messageView addSubview:sep];
+    [sep release];
     
     callBackData.locItem = locItem;
     callBackData.txtView = textView;
@@ -321,10 +324,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -381,13 +384,20 @@ ButtonClickCallbackData callBackData;
     [_shareCircleButton setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
     [_shareCustomButton setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
     
-    // By default show all annotations
-    showPeople = true;
-    showPlaces = true;
-    showDeals  = true;
-    [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
-    [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
-    [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+    if (smAppDelegate.showPeople == TRUE)
+        [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+    else
+        [_showPeopleButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
+    
+    if (smAppDelegate.showPlaces == TRUE)
+        [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+    else
+        [_showPlacesButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
+        
+    if (smAppDelegate.showDeals == TRUE)
+        [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+    else
+        [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     
     // Picker for choosing saved filter
     CGRect pickerFrame = CGRectMake(0, 120, 320, 216);
@@ -1032,33 +1042,42 @@ ButtonClickCallbackData callBackData;
 }
 
 - (IBAction)peopleClicked:(id)sender {
-    if (showPeople == true) {
-        showPeople = false;
+    if (smAppDelegate.showPeople == true) {
+        smAppDelegate.showPeople = false;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     } else {
-        showPeople = true;
+        smAppDelegate.showPeople = true;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    [self getSortedDisplayList];
+    [self loadAnnotations:YES];
+    [self.view setNeedsDisplay];
 }
 
 - (IBAction)placesClicked:(id)sender {
-    if (showPlaces == true) {
-        showPlaces = false;
+    if (smAppDelegate.showPlaces == true) {
+        smAppDelegate.showPlaces = false;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     } else {
-        showPlaces = true;
+        smAppDelegate.showPlaces = true;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    [self getSortedDisplayList];
+    [self loadAnnotations:YES];
+    [self.view setNeedsDisplay];
 }
 
 - (IBAction)dealsClicked:(id)sender {
-    if (showDeals == true) {
-        showDeals = false;
+    if (smAppDelegate.showDeals == true) {
+        smAppDelegate.showDeals = false;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     } else {
-        showDeals = true;
+        smAppDelegate.showDeals = true;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
+    [self getSortedDisplayList];
+    [self loadAnnotations:YES];
+    [self.view setNeedsDisplay];
 }
 
 -(IBAction)closeInviteFrnds:(id)sender
@@ -1198,29 +1217,20 @@ ButtonClickCallbackData callBackData;
                     
                     if ((indx=[smAppDelegate.peopleIndex objectForKey:item.userId]) == nil) {
                         UIImage *icon;
-                        
+                        NSString *iconPath;
                         if ([item.avatar length] == 0) {
                             if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                                icon = [UIImage imageNamed:@"Photo-1.png"];
+                                iconPath = [[NSBundle mainBundle] pathForResource:@"Photo-1" ofType:@"png"];
                             else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                                icon = [UIImage imageNamed:@"Photo-2.png"];
+                                iconPath = [[NSBundle mainBundle] pathForResource:@"Photo-2" ofType:@"png"];
                             else
-                                icon = [UIImage imageNamed:@"thum.png"];
-                        } else  {// Need to retrieve avatar image
-                            icon = [UIImage imageNamed:@"thum.png"];
-                            int itemIndex = smAppDelegate.peopleList.count;
-                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                                NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:item.avatar]];
-                                UIImage *image = [UIImage imageWithData:imageData];
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
-                                    person.itemIcon = image;
-                                    [self mapAnnotationChanged:person];
-                                });
-                            });
+                                iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+                        } else {
+                            iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
                         }
-                        
-                        UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
+                        icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
+                        NSString *bgPath = [[NSBundle mainBundle] pathForResource:@"listview_bg" ofType:@"png"];
+                        UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
                         
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
@@ -1234,6 +1244,26 @@ ButtonClickCallbackData callBackData;
                         aPerson.userInfo = item;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
+                        
+                        if ([item.avatar length] > 0) {// Need to retrieve avatar image
+                            icon = [UIImage imageNamed:@"thum.png"];
+                            __block int itemIndex = smAppDelegate.peopleList.count-1;
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:item.avatar]];
+                                UIImage* image = [[UIImage alloc] initWithData:imageData];
+                                [imageData release];
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
+                                    person.itemIcon = image;
+                                    //
+                                    //[image release];
+                                    if (smAppDelegate.showPeople == TRUE)
+                                        [self mapAnnotationChanged:person];
+                                });
+                            });
+                        }
+
                         [aPerson release];
                     } else {
                         // Item exists, update location only
@@ -1246,26 +1276,56 @@ ButtonClickCallbackData callBackData;
                         
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemDistance = distanceFromMe;
+                        if (smAppDelegate.showPeople == TRUE)
+                            [self mapAnnotationChanged:aPerson];
                     }
                 }
             }
-        } else if (listings.placeArr != nil) {
-            float currLat = 23.796526525077528;
-            float currLong = 90.41537761688232;
-            float dist;
-            
-            for (int i=0; i < 3; i++) {
-                UIImage *bg = [UIImage imageNamed:@"listview_bg.png"];
-                UIImage *icon = [UIImage imageNamed:@"user_thumb_only.png"];
-                CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(currLat, currLong);
-                dist = rand()%500;
-                LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:[NSString stringWithFormat:@"Place %d", i] address:[NSString stringWithFormat:@"Place Address %d", i] type:ObjectTypePeople category:@"Bar" coordinate:loc dist:dist icon:icon bg:bg];
-                currLat += 0.004;
-                currLong += 0.004;
-                [smAppDelegate.placeList addObject:aPlace];
-                [aPlace release];
-            }            
+        }  
+        if (listings.placeArr != nil) {
+           
+            for (Places *item in listings.placeArr) {
+                __block NSNumber *indx;
+                if ((indx=[smAppDelegate.placeIndex objectForKey:item.ID]) == nil) {
+                    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+                    UIImage *icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
+                    NSString* bgPath = [[NSBundle mainBundle] pathForResource:@"listview_bg" ofType:@"png"];
+                    UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
 
+                    CLLocationCoordinate2D loc;
+                    loc.latitude = [item.location.latitude doubleValue];
+                    loc.longitude = [item.location.longitude doubleValue];
+                    CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                    NSLog(@"Name=%@ Location=%f,%f, distance=%f",item.name, loc.latitude,loc.longitude, distanceFromMe);
+                    
+                   
+                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:@"Bar" coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                    
+                    aPlace.placeInfo = item;
+                    [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeList.count] forKey:item.ID];
+                    [smAppDelegate.placeList addObject:aPlace];
+                    
+                    if ([item.icon length] > 0) {
+                        // Need to retrieve avatar image
+                        icon = [UIImage imageNamed:@"thum.png"];
+                        int itemIndex = smAppDelegate.placeIndex.count-1;
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:item.icon]];
+                            UIImage* image = [[UIImage alloc] initWithData:imageData];
+                            [imageData release];
+
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
+                                place.itemIcon = image;
+                                if (smAppDelegate.showPlaces == TRUE)
+                                    [self mapAnnotationChanged:place];
+                            });
+                        });
+                    }
+                    [aPlace release];
+                    
+                }
+            }
         }
     }
 

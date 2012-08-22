@@ -16,16 +16,16 @@
 
 @interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemPlaceDelegate> {
     OBJECT_TYPES   selectedType;
-    bool            showPeople;
-    bool            showPlaces;
-    bool            showDeals;
+//    bool            showPeople;
+//    bool            showPlaces;
+//    bool            showDeals;
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
-@property (nonatomic) bool showPeople;
-@property (nonatomic) bool showPlaces;
-@property (nonatomic) bool showDeals;
+//@property (nonatomic) bool showPeople;
+//@property (nonatomic) bool showPlaces;
+//@property (nonatomic) bool showDeals;
 @property (nonatomic) int selectedItemIndex;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 

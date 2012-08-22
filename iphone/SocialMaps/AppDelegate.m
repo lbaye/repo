@@ -62,6 +62,7 @@
 @synthesize showPlaces;
 @synthesize peopleIndex;
 @synthesize gotListing;
+@synthesize placeIndex;
 
 - (void)dealloc
 {
@@ -100,6 +101,7 @@
     peopleList = [[NSMutableArray alloc] init];
     peopleIndex = [[NSMutableDictionary alloc] init];
     placeList  = [[NSMutableArray alloc] init];
+    placeIndex = [[NSMutableDictionary alloc] init];
     dealList   = [[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];
 

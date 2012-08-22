@@ -80,12 +80,13 @@
         
         // Icon
         imgIcon = [UIImageView imageViewWithRectImage:iconFrame andImage:itemIcon withCornerradius:.10f];
+        imgIcon.tag = 2010;
         [cell.contentView addSubview:imgIcon];
         
 		// Address
 		lblAddress = [[[UILabel alloc] initWithFrame:addressFrame] autorelease];
 		lblAddress.tag = 2002;
-		lblAddress.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
+		lblAddress.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
 		lblAddress.textColor = [UIColor whiteColor];
 		lblAddress.backgroundColor = [UIColor clearColor];
 		[cell.contentView addSubview:lblAddress];
@@ -103,7 +104,7 @@
 		lblDist.tag = 2004;
         lblDist.textAlignment = UITextAlignmentRight;
         lblDist.textColor = [UIColor whiteColor];
-		lblDist.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kLargeLabelFontSize];
+		lblDist.font = [UIFont fontWithName:@"Helvetica-Bold-Oblique" size:kSmallLabelFontSize];
 		lblDist.textColor = [UIColor whiteColor];
 		lblDist.backgroundColor = [UIColor clearColor];
 		[cell.contentView addSubview:lblDist];
@@ -120,6 +121,7 @@
         lblName     = (UILabel*) [cell viewWithTag:2003];
 		lblDist     = (UILabel*) [cell viewWithTag:2004];
         line        = (UIView*) [cell viewWithTag:2005];
+        imgIcon     = (UIImageView*) [cell viewWithTag:2010];
 	}
     
     // Name
@@ -131,6 +133,9 @@
     // Distance
     lblDist.text = [NSString stringWithFormat:@"%d m", (int)itemDistance];
                     
+    // Icon
+    imgIcon.image = itemIcon;
+    
 	return cell;
 
 }

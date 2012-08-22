@@ -19,9 +19,9 @@
 @synthesize listPulldown;
 @synthesize itemList;
 @synthesize selectedType;
-@synthesize showPeople;
-@synthesize showPlaces;
-@synthesize showDeals;
+//@synthesize showPeople;
+//@synthesize showPlaces;
+//@synthesize showDeals;
 @synthesize selectedItemIndex;
 //@synthesize objectLists;
 //@synthesize peopleList;
@@ -76,12 +76,8 @@
     label.backgroundColor = [UIColor clearColor];
     [listViewfilter addSubview:label];
     
-    showPeople = TRUE;
-    showPlaces = FALSE;
-    showDeals  = FALSE;
-    
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:1],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -197,29 +193,6 @@
     return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)] autorelease];
 }
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-//	CGRect CellFrame   = CGRectMake(0, 0, tableView.frame.size.width, SECTION_HEADER_HEIGHT);
-//	
-//	UIView *header = [[UIView alloc] initWithFrame:CellFrame];
-//    
-//	header.backgroundColor = [UIColor clearColor];
-//    UILabel *tempLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0,
-//                                                                tableView.frame.size.width,
-//                                                                SECTION_HEADER_HEIGHT)];
-//    tempLabel.backgroundColor=[UIColor clearColor];
-//    if (selectedType == ObjectTypePeople)
-//        tempLabel.text= @"People";
-//    else if (selectedType == ObjectTypePlace)
-//        tempLabel.text= @"Placec";
-//    else
-//        tempLabel.text= @"Deals";
-//    [tempLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
-//    [header addSubview: tempLabel];
-//    [tempLabel release];
-//	
-//	return header;
-//}
-//
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender {
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
     switch (btnNum) {

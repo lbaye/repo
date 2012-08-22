@@ -23,7 +23,7 @@
     NSString *reuseIdent = @"locAnno";
     if ([locItem isKindOfClass:[LocationItemPeople class]]) 
         reuseIdent = @"locAnnoPeople";
-    else if ([locItem isKindOfClass:[LocationItemPeople class]]) 
+    else if ([locItem isKindOfClass:[LocationItemPlace class]]) 
         reuseIdent = @"locAnnoPlace";
     else
         reuseIdent = @"loggedInUser";
@@ -34,7 +34,7 @@
     }
     if ([newAnnotation isKindOfClass:[LocationItem class]]) {
         LocationItem *locItem = (LocationItem*) newAnnotation;
-        return [self getViewForState:currState loc:locItem];
+        return [self getViewForState:locItem.currDisplayState loc:locItem];
     } else {
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
@@ -114,7 +114,7 @@
             [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
 
     } else {
-        locItem.currDisplayState = MapAnnotationStateNormal;
+        //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
 
     }
@@ -173,7 +173,7 @@
     NSLog(@"MapAnnotation: changeStateClicked");
     MKAnnotationView *selAnno = (MKAnnotationView*) [sender superview];
     LocationItem *locItem = (LocationItem*) [selAnno annotation];
-    NSLog(@"Name=%@", locItem.itemName);
+    NSLog(@"changeStateClicked Name=%@", locItem.itemName);
     
     switch (locItem.currDisplayState) {
         case MapAnnotationStateNormal:

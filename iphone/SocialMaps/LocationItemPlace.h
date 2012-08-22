@@ -7,6 +7,7 @@
 //
 
 #import "LocationItem.h"
+#import "Places.h"
 
 @protocol LocationItemPlaceDelegate<NSObject>
 - (void) showLocationReview:(int)row;
@@ -16,9 +17,13 @@
     UIImageView     *catIcon;
     UIButton        *showReview;
     id<LocationItemPlaceDelegate> delegate;
+    Places          *placeInfo;
 }
 @property (nonatomic, retain) UIImageView *catIcon;
 @property (nonatomic, retain) UIButton *showReview;
 @property (assign) id<LocationItemPlaceDelegate> delegate;
+@property (nonatomic, retain) Places *placeInfo;
 
+- (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
+          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coordinate dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg;
 @end

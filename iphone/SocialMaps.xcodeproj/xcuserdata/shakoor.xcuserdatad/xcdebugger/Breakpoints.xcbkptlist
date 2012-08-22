@@ -135,11 +135,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367282330.718758"
+         timestampString = "367353588.88602"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2152"
-         endingLineNumber = "2152"
+         startingLineNumber = "2149"
+         endingLineNumber = "2149"
          landmarkName = "-changePassword:oldpasswd:authToken:authTokenVal:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "689"
-         endingLineNumber = "689"
+         startingLineNumber = "698"
+         endingLineNumber = "698"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -163,11 +163,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "781"
-         endingLineNumber = "781"
+         startingLineNumber = "790"
+         endingLineNumber = "790"
          landmarkName = "-appImageDidLoad:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -177,11 +177,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "746"
-         endingLineNumber = "746"
+         startingLineNumber = "755"
+         endingLineNumber = "755"
          landmarkName = "-startIconDownload:forIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "916"
-         endingLineNumber = "916"
+         startingLineNumber = "925"
+         endingLineNumber = "925"
          landmarkName = "-searchResult"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "708"
-         endingLineNumber = "708"
+         startingLineNumber = "717"
+         endingLineNumber = "717"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -219,11 +219,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367274298.991614"
+         timestampString = "367355186.258474"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "904"
-         endingLineNumber = "904"
+         startingLineNumber = "913"
+         endingLineNumber = "913"
          landmarkName = "-searchResult"
          landmarkType = "5">
       </FileBreakpoint>
