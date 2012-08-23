@@ -143,8 +143,8 @@ UserDefault *userDefault;
     
     items= [[(NSDictionary *)result objectForKey:@"data"]retain];
     NSLog(@"getUserFriendListFromFB items %d",[items count]);
-    userFriendslistArray=[[NSMutableArray alloc] initWithCapacity:[items count]];
-    userFriendslistIndex = [[NSMutableDictionary alloc] initWithCapacity:[items count]];
+//    userFriendslistArray=[[NSMutableArray alloc] initWithCapacity:[items count]];
+//    userFriendslistIndex = [[NSMutableDictionary alloc] initWithCapacity:[items count]];
     for (int i=0; i<[items count]; i++) 
     {
         NSDictionary *friend = [items objectAtIndex:i];
@@ -160,6 +160,7 @@ UserDefault *userDefault;
         
         NSLog(@"id: %@ - Name: %@", aUserFriend.userId, name);
     } 
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBFRIENDLIST_DONE object:userFriendslistArray];
 }
 
 // FBRequestDelegate

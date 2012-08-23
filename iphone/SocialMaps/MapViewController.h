@@ -30,28 +30,23 @@ typedef enum _SHARING_TYPES {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
-//    bool                showPeople;
-//    bool                showPlaces;
-//    bool                showDeals;
+
     NSMutableArray      *savedFilters;
     UIPickerView        *pickSavedFilter;
     IBOutlet UIView *inviteFriendView;
     IBOutlet UITableView *inviteFrndTableView;
     IBOutlet UISearchBar *friendSearchBar;
-//    NSMutableDictionary *imageDownloadsInProgress; 
     AppDelegate         *smAppDelegate;
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
     bool needToCenterMap;
     NSMutableArray *filteredList;
+    MapAnnotation *selectedAnno;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
 @property (retain, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) SHARING_TYPES selSharingType;
-//@property (nonatomic) bool showPeople;
-//@property (nonatomic) bool showPlaces;
-//@property (nonatomic) bool showDeals;
 @property (nonatomic, retain) NSMutableArray *savedFilters;
 @property (nonatomic, retain) UIPickerView *pickSavedFilter;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
@@ -59,6 +54,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
 @property (atomic) bool needToCenterMap;
 @property (nonatomic, retain) NSMutableArray *filteredList;
+@property (nonatomic, retain) MapAnnotation *selectedAnno;
 
 @property (retain, nonatomic) IBOutlet UIView *mapPulldown;
 @property (retain, nonatomic) IBOutlet UIButton *shareAllButton;

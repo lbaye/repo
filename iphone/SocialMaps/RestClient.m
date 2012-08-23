@@ -151,11 +151,16 @@
     //[request setPostValue:userInfo.password forKey:@"password"];
     [request setPostValue:userInfo.facebookId forKey:@"facebookId"];
     [request setPostValue:userInfo.facebookAuthToken forKey:@"facebookAuthToken"]; 
-    [request setPostValue:userInfo.lastName forKey:@"lastName"];
-    [request setPostValue:userInfo.firstName forKey:@"firstName"];
-    [request setPostValue:userInfo.avatar forKey:@"avatar"]; 
-    [request setPostValue:userInfo.gender forKey:@"gender"]; 
-    [request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    if (userInfo.lastName != NULL)
+        [request setPostValue:userInfo.lastName forKey:@"lastName"];
+    if (userInfo.firstName != NULL)
+        [request setPostValue:userInfo.firstName forKey:@"firstName"];
+    if (userInfo.avatar != NULL)
+        [request setPostValue:userInfo.avatar forKey:@"avatar"]; 
+    if (userInfo.gender != NULL)
+        [request setPostValue:userInfo.gender forKey:@"gender"]; 
+    if (userInfo.dateOfBirth != NULL)
+        [request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{

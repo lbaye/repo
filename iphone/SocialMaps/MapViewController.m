@@ -66,6 +66,7 @@
 @synthesize mapAnnoPeople;
 @synthesize needToCenterMap;
 @synthesize filteredList;
+@synthesize selectedAnno;
 
 UserFriends *afriend;
 NSMutableDictionary *imageDownloadsInProgress;
@@ -81,13 +82,6 @@ typedef struct {
     UITextView         *txtView;
 } ButtonClickCallbackData;
 ButtonClickCallbackData callBackData;
-
-/*@synthesize friendRequests;
-@synthesize messages;
-@synthesize notifications;
-@synthesize msgRead;
-@synthesize notifRead;
-@synthesize ignoreCount;*/
 
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation {
     LocationItem * locItem = (LocationItem*) newAnnotation;
@@ -113,6 +107,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:mapAnnotationChanged");
     [_mapView removeAnnotation:anno];
     [_mapView addAnnotation:anno];
+    selectedAnno = anno;
     
     [self.view setNeedsDisplay];
 }
@@ -307,6 +302,11 @@ ButtonClickCallbackData callBackData;
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];  
+    
+    // GCD notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -324,10 +324,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -415,10 +415,6 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show 2nd degree"];
     
     [self displayNotificationCount];
-    
-    // GCD notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 
 }
 /*
@@ -562,6 +558,28 @@ ButtonClickCallbackData callBackData;
         needToCenterMap = FALSE;
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     }
+}
+
+// Keep the selected annotation on top
+- (void) mapView:(MKMapView *)aMapView didAddAnnotationViews:(NSArray *)views 
+{
+    for (MKAnnotationView *view in views) 
+    {
+        if ([view annotation] == selectedAnno)
+        //if ([[view annotation] isKindOfClass:[MKUserLocation class]])
+        {
+            [[view superview] bringSubviewToFront:view];
+            break;
+        } 
+        else 
+        {
+            [[view superview] sendSubviewToBack:view];
+        }
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    [mapView bringSubviewToFront:view];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

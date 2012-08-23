@@ -63,6 +63,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forgotPWDone:) name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_REG_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbFriendListDone:) name:NOTIF_FBFRIENDLIST_DONE object:nil];
+    
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
@@ -102,7 +104,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBFRIENDLIST_DONE object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -176,6 +178,7 @@
 
 - (void)loginDone:(NSNotification *)notif
 {
+    NSLog(@"In LoginController:loginDone");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     
@@ -214,6 +217,7 @@
 
 - (void)forgotPWDone:(NSNotification *)notif
 {
+    NSLog(@"In LoginController:forgotPWDone");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     
@@ -248,6 +252,7 @@
 }
 
 - (IBAction)doLogin:(id)sender {
+    NSLog(@"In LoginController:doLogin");
     if ([txtEmail.text isEqualToString:@""] || [txtPassword.text isEqualToString:@""] ||
         txtEmail.text == nil || txtPassword.text == nil){
         [CustomAlert setBackgroundColor:[UIColor redColor] 
@@ -277,8 +282,20 @@
 
 }
 
+- (void)fbFriendListDone:(NSNotification *)notif
+{
+    NSLog(@"In LoginController:fbFriendListDone");
+    User *user = [[User alloc] init];
+    user.facebookId = smAppDelegate.fbId;
+    user.facebookAuthToken = smAppDelegate.fbAccessToken;
+
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient loginFacebook:(User *)user];
+    
+}
 - (void)fbRegDone:(NSNotification *)notif
 {
+    NSLog(@"In LoginController:fbRegDone");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     
@@ -316,6 +333,7 @@
 
 - (void)fbLoginDone:(NSNotification *)notif
 {
+    NSLog(@"In LoginController:fbLoginDone");
     User * userInfo = [notif object];
     if (userInfo != nil) {
         // Do registration if first login
@@ -347,6 +365,7 @@
 
 
 - (IBAction)doConnectFB:(id)sender {
+    NSLog(@"In LoginController:doConnectFB");
     if (![facebook isSessionValid]) {
         [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
@@ -368,6 +387,8 @@
         user.facebookId = smAppDelegate.fbId;
         user.facebookAuthToken = smAppDelegate.fbAccessToken;
 
+        //[smAppDelegate.fbHelper getUserFriendListRequest:self];
+        
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient loginFacebook:(User *)user];
 

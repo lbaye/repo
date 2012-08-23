@@ -17,6 +17,7 @@
 #import "UserFriends.h"
 #import "RestClient.h"
 #import "UserCircle.h"
+#import "Globals.h"
 
 @implementation AppDelegate
 
@@ -90,6 +91,9 @@
     // Singleton instance
     fbHelper = [FacebookHelper sharedInstance];
 
+    userFriendslistArray=[[NSMutableArray alloc] init];
+    userFriendslistIndex = [[NSMutableDictionary alloc] init];
+
     // Preferences data structure
     platformPrefs = [[[Platform alloc] init] autorelease];
     layerPrefs    = [[[Layer alloc] init] autorelease];
@@ -140,18 +144,6 @@
     // Setup information sharing preferences
     infoList = [[NSMutableArray alloc] initWithObjects:@"First name", @"Last name", @"Email", @"Gender", @"Date of birth", @"Bio", @"Address", @"Relationship status",nil];
     defInfoPref = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:0], [NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],[NSNumber numberWithInt:0],nil];
-
-    // Friend list
-//    friendList = [[NSMutableArray alloc] init];
-//    for (int i=0; i <15; i++) {
-//        NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
-//        UserFriends *aFriend = [[UserFriends alloc] init];
-//        aFriend.userId = [NSString stringWithFormat:@"%d", i];
-//        aFriend.userName = [NSString stringWithFormat:@"Firstname%d", rand()%15];
-//        aFriend.imageUrl = nil;
-//        aFriend.userProfileImage = [UIImage imageNamed:imgName];
-//        [friendList addObject:aFriend];
-//    }
     
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotPlatform:) name:NOTIF_GET_PLATFORM_DONE object:nil];
@@ -161,8 +153,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGeofence:) name:NOTIF_GET_GEOFENCE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotShareLoc:) name:NOTIF_GET_SHARELOC_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifications:) name:NOTIF_GET_NOTIFS_DONE object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_NOTIFICATIONS_DONE object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     
     return YES;
 }
@@ -316,12 +306,4 @@
     notifPrefs = [notif object];
     NSLog(@"AppDelegate: gotNotifications - %@", notifPrefs);
 }
-//- (void)gotNotifMessages:(NSNotification *)notif {
-//    messages = [notif object];
-//    NSLog(@"AppDelegate: gotNotifications - %@", notifPrefs);
-//}
-//- (void)gotFriendRequests:(NSNotification *)notif {
-//    friendRequests = [notif object];
-//    NSLog(@"AppDelegate: gotNotifications - %@", notifPrefs);
-//}
 @end
