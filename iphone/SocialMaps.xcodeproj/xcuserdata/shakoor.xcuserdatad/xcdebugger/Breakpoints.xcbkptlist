@@ -23,16 +23,16 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/FacebookHelper.m"
-         timestampString = "365926567.709205"
+         timestampString = "367438314.298422"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "114"
-         endingLineNumber = "114"
+         startingLineNumber = "117"
+         endingLineNumber = "117"
          landmarkName = "-fbSessionInvalidated"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "381"
-         endingLineNumber = "381">
+         startingLineNumber = "363"
+         endingLineNumber = "363">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -63,11 +63,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "385"
-         endingLineNumber = "385">
+         startingLineNumber = "367"
+         endingLineNumber = "367">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -75,11 +75,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "389"
-         endingLineNumber = "389">
+         startingLineNumber = "371"
+         endingLineNumber = "371">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -87,11 +87,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "393"
-         endingLineNumber = "393">
+         startingLineNumber = "375"
+         endingLineNumber = "375">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -99,11 +99,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "397"
-         endingLineNumber = "397">
+         startingLineNumber = "379"
+         endingLineNumber = "379">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -111,11 +111,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "401"
-         endingLineNumber = "401">
+         startingLineNumber = "383"
+         endingLineNumber = "383">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -123,23 +123,23 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "405"
-         endingLineNumber = "405">
+         startingLineNumber = "387"
+         endingLineNumber = "387">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367353588.88602"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2149"
-         endingLineNumber = "2149"
+         startingLineNumber = "2154"
+         endingLineNumber = "2154"
          landmarkName = "-changePassword:oldpasswd:authToken:authTokenVal:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "698"
-         endingLineNumber = "698"
+         startingLineNumber = "716"
+         endingLineNumber = "716"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -163,11 +163,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "790"
-         endingLineNumber = "790"
+         startingLineNumber = "808"
+         endingLineNumber = "808"
          landmarkName = "-appImageDidLoad:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -177,11 +177,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "755"
-         endingLineNumber = "755"
+         startingLineNumber = "773"
+         endingLineNumber = "773"
          landmarkName = "-startIconDownload:forIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "925"
-         endingLineNumber = "925"
+         startingLineNumber = "943"
+         endingLineNumber = "943"
          landmarkName = "-searchResult"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "717"
-         endingLineNumber = "717"
+         startingLineNumber = "735"
+         endingLineNumber = "735"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -219,11 +219,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "367355186.258474"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "913"
-         endingLineNumber = "913"
+         startingLineNumber = "931"
+         endingLineNumber = "931"
          landmarkName = "-searchResult"
          landmarkType = "5">
       </FileBreakpoint>
@@ -233,11 +233,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367282330.718758"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "958"
-         endingLineNumber = "958"
+         startingLineNumber = "963"
+         endingLineNumber = "963"
          landmarkName = "-getUserInfo:tokenStr:tokenValue:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367282330.718758"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "935"
-         endingLineNumber = "935"
+         startingLineNumber = "940"
+         endingLineNumber = "940"
          landmarkName = "-getUserInfo:tokenStr:tokenValue:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -261,11 +261,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367280587.636972"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "723"
-         endingLineNumber = "723"
+         startingLineNumber = "728"
+         endingLineNumber = "728"
          landmarkName = "-parseAccountSettings:user:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -275,12 +275,68 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/AppDelegate.m"
-         timestampString = "367283071.201167"
+         timestampString = "367434736.113754"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "301"
-         endingLineNumber = "301"
+         startingLineNumber = "291"
+         endingLineNumber = "291"
          landmarkName = "-gotAccountSettings:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/FacebookHelper.m"
+         timestampString = "367438314.298422"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "140"
+         endingLineNumber = "140"
+         landmarkName = "-getUserFriendListRequest:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/FacebookHelper.m"
+         timestampString = "367438314.298422"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "147"
+         endingLineNumber = "147"
+         landmarkName = "-getUserFriendListFromFB:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/FacebookHelper.m"
+         timestampString = "367438314.298422"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "193"
+         endingLineNumber = "193"
+         landmarkName = "-request:didLoad:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/LoginController.m"
+         timestampString = "367437449.173518"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "287"
+         endingLineNumber = "287"
+         landmarkName = "-fbFriendListDone:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

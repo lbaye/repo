@@ -1354,12 +1354,16 @@ ButtonClickCallbackData callBackData;
 
 // GCD async notifications
 - (void)gotNotifMessages:(NSNotification *)notif {
-    smAppDelegate.messages = [notif object];
+    NSMutableArray *msg = [notif object];
+    [smAppDelegate.messages removeAllObjects];
+    [smAppDelegate.messages addObjectsFromArray:msg];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.messages);
     [self displayNotificationCount];
 }
 - (void)gotFriendRequests:(NSNotification *)notif {
-    smAppDelegate.friendRequests = [notif object];
+    NSMutableArray *notifs = [notif object];
+    [smAppDelegate.notifications removeAllObjects];
+    [smAppDelegate.notifications addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
     [self displayNotificationCount];
 }

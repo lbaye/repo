@@ -12,6 +12,7 @@
 #import "UserFriends.h"
 #import "Globals.h"
 #import "UserDefault.h"
+#import "AppDelegate.h"
 
 @implementation FacebookHelper
 @synthesize facebook;
@@ -101,7 +102,9 @@ UserDefault *userDefault;
     [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
     [prefs setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [prefs synchronize];
-    
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate.fbAccessToken = [facebook accessToken];
+                          
     [self getUserInfo:self];
 }
 
@@ -143,8 +146,7 @@ UserDefault *userDefault;
     
     items= [[(NSDictionary *)result objectForKey:@"data"]retain];
     NSLog(@"getUserFriendListFromFB items %d",[items count]);
-//    userFriendslistArray=[[NSMutableArray alloc] initWithCapacity:[items count]];
-//    userFriendslistIndex = [[NSMutableDictionary alloc] initWithCapacity:[items count]];
+
     for (int i=0; i<[items count]; i++) 
     {
         NSDictionary *friend = [items objectAtIndex:i];
@@ -160,7 +162,7 @@ UserDefault *userDefault;
         
         NSLog(@"id: %@ - Name: %@", aUserFriend.userId, name);
     } 
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBFRIENDLIST_DONE object:userFriendslistArray];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBFRIENDLIST_DONE object:userFriendslistArray];
 }
 
 // FBRequestDelegate
@@ -214,6 +216,8 @@ UserDefault *userDefault;
             email = [result objectForKey:@"email"];
             fbId = [result objectForKey:@"id"];
             userName = [result objectForKey:@"username"]; 
+            AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            smAppDelegate.fbId = fbId;
             NSLog(@"first=%@,last=%@,email=%@,id=%@",firstName,lastName,email,fbId);
         }
         if ([result isKindOfClass:[NSData class]])
@@ -232,8 +236,8 @@ UserDefault *userDefault;
         [aUser setFacebookId:fbId];
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
-        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture", userName]], 
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture", userName]]; 
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
         
         // Save the FB id
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
