@@ -1865,7 +1865,7 @@
 }
 
 - (void) getFriendRequests:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
-    NSString *route = [NSString stringWithFormat:@"%@/request/friend",WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/request/friend/unaccepted",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *friendRequests = [[NSMutableArray alloc] init];
     
@@ -2084,13 +2084,15 @@
     [request startAsynchronous];
 }
 
-- (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/request/friend/%@/accept",WS_URL, friendId]];    
+// stat - accept/decline
+- (void) respondToFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue 
+                         status:(NSString*) stat {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/request/friend/%@/%@",WS_URL, friendId, stat]];    
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
     
     [request addRequestHeader:authToken value:authTokenValue];
-
+    
     NSLog(@"in put method");
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -2108,14 +2110,14 @@
         
         if (responseStatus == 200 || responseStatus == 201) {
             
-
-            NSLog(@"acceptFriendRequest successful: %@",jsonObjects);
+            
+            NSLog(@"respondToFriendRequest %@ successful: %@",stat, jsonObjects);
             
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
         } 
         else
         {
-            NSLog(@"acceptFriendRequest unsuccessful: status=%d", responseStatus);
+            NSLog(@"respondToFriendRequest %@ unsuccessful: status=%d", stat, responseStatus);
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
@@ -2125,15 +2127,20 @@
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         NSLog(@"acceptFriendRequest unsuccessful: unknown reason");
+         NSLog(@"respondToFriendRequest %@ unsuccessful: unknown reason", stat);
          //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
     //[request setDelegate:self];
     [request startAsynchronous];
 }
+
+- (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
+    [self respondToFriendRequest:friendId authToken:authToken authTokenVal:authTokenValue status:@"accept"];
+}
+
 - (void) declineFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
-    
+    [self respondToFriendRequest:friendId authToken:authToken authTokenVal:authTokenValue status:@"decline"];
 }
 
 - (bool) changePassword:(NSString*)passwd oldpasswd:(NSString*)oldpasswd authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {

@@ -376,6 +376,9 @@
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 
     } else if ([name isEqualToString:@"Decline"]) {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient declineFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        
         [smAppDelegate.friendRequests removeObjectAtIndex:row];
         if (req.ignored == TRUE)
             smAppDelegate.ignoreCount--;
