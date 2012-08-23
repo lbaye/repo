@@ -8,16 +8,16 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="20dip"
+        android:layout_height="30dip"
         android:layout_marginTop="20dip" >
 
         <TextView
             android:id="@+id/sender_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:text="John Doe"
+            android:text=""
             android:textColor="#4C4C4C"
             android:textSize="14dip"
             android:textStyle="bold" />
@@ -25,20 +25,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/sender_name_text_view"
             android:text="@string/messageNameLabel"
             android:textColor="#6C6C6C"
             android:textSize="12dip" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/sentTime"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:text="01:37"
+            android:text=""
             android:textColor="#6C6C6C"
-            android:textSize="14dip"
+            android:textSize="12dip"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -55,12 +56,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             my:collapsedHeight="16dip"
-            my:expcontent="@+id/value"
+            my:expcontent="@+id/senderMessage"
             my:exphandle="@+id/expand" >
 
             
             <TextView
-                android:id="@id/value"
+                android:id="@+id/senderMessage"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 

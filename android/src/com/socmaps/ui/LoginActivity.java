@@ -1,6 +1,8 @@
 package com.socmaps.ui;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,10 +18,13 @@ import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.fb.SessionStore;
 
+import com.socmaps.util.AppStaticStorages;
 import com.socmaps.util.Constant;
 import com.socmaps.util.Data;
 import com.socmaps.util.PreferenceConnector;
 import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.entity.AccountSettingsEntity;
 import com.socmaps.entity.Response;
 import com.socmaps.util.Utility;
 
@@ -27,8 +32,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,11 +51,12 @@ public class LoginActivity extends Activity {
 	Button btnLogin, btnCreateAccount;
 	TextView btnForgotPassword;
 	LoginButton btnFBLogin;
+	Button btnFBLogin2;
 	private ProgressDialog m_ProgressDialog;
 	private Runnable requestRunnable, forgotpassRunnable;
 	private Handler mHandler;
 
-		String tempURLString;
+	String tempURLString;
 	// Response responseObject;
 
 	String responseString = "";
@@ -69,16 +77,38 @@ public class LoginActivity extends Activity {
 
 		mHandler = new Handler();
 
-		try {
+		if (Utility.isLoggedIn(getApplicationContext())) {
+			try {
 
-			etEmail.setText(PreferenceConnector.readString(
-					getApplicationContext(), "email", ""));
-			etPassword.setText(PreferenceConnector.readString(
-					getApplicationContext(), "password", ""));
+				String savedEmail = Utility.getEmail(getApplicationContext());
+				String savedPassword = Utility
+						.getPassword(getApplicationContext());
 
-		} catch (Exception e) {
-			// TODO: handle exception
+				if (savedEmail != null) {
+					etEmail.setText(Utility.getEmail(getApplicationContext()));
+				}
+
+				if (savedPassword != null) {
+					etPassword.setText(Utility
+							.getPassword(getApplicationContext()));
+				}
+
+				chkRememberPassword.setChecked(true);
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
+
+		btnFBLogin2.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				requestUserData();
+
+			}
+		});
 
 		// Create the Facebook Object using the app id.
 		FBUtility.mFacebook = new Facebook(Constant.FB_APP_ID);
@@ -98,14 +128,15 @@ public class LoginActivity extends Activity {
 
 		if (FBUtility.mFacebook.isSessionValid()) {
 			Log.e("LoginActivity", "isSessionValid=true");
-			requestUserData();
+			btnFBLogin.setVisibility(View.GONE);
+			btnFBLogin2.setVisibility(View.VISIBLE);
 		} else {
 			Log.e("LoginActivity", "isSessionValid=false");
 		}
 
 		btnCreateAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
+
 				finish();
 				Intent myIntent = new Intent(LoginActivity.this,
 						RegistrationSMActivity.class);
@@ -178,6 +209,21 @@ public class LoginActivity extends Activity {
 		}
 	};
 
+	private Runnable returnResFb = new Runnable() {
+
+		public void run() {
+
+			// have to do something here
+			// Toast.makeText(getApplicationContext(),pInfo.getUserName(),
+			// Toast.LENGTH_SHORT).show();
+
+			handleResponseFb(responseStatus, responseString);
+
+			if (null != m_ProgressDialog)
+				m_ProgressDialog.dismiss();
+		}
+	};
+
 	private Runnable returnForgotPass = new Runnable() {
 
 		public void run() {
@@ -218,10 +264,10 @@ public class LoginActivity extends Activity {
 	}
 
 	public void handleForgotPassResponse(int status, String response) {
-		Log.d("ForgotPass", status+":"+response);
+		Log.d("ForgotPass", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			//Log.d("ForgotPass", status + ":" + response);
+			// Log.d("ForgotPass", status + ":" + response);
 			Toast.makeText(
 					getApplicationContext(),
 					"Request sent successfully. An email has been sent to your supplied address with detailed instructions.",
@@ -252,7 +298,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void handleResponse(int status, String response) {
-		Log.d("Login", status+":"+response);
+		Log.d("Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
@@ -278,53 +324,173 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void loginSuccess(String response) {
+	public void handleResponseFb(int status, String response) {
+		Log.d("Registration", status + ":" + response);
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+			// Log.d("Login", status+":"+response);
+			fbLoginSuccess(response);
+			break;
 
-		try {
-			JSONObject jsonObject = new JSONObject(response);
+		case Constant.STATUS_BADREQUEST:
+			Toast.makeText(getApplicationContext(),
+					"Bad request. User already exist.", Toast.LENGTH_SHORT)
+					.show();
+			break;
 
-			String id = jsonObject.getString("id");
-			String email = jsonObject.getString("email");
-			String firstName = jsonObject.getString("firstName");
-			String lastName = jsonObject.getString("lastName");
-			String avatar = jsonObject.getString("avatar");
-			String deactivated = jsonObject.getString("deactivated");
-			String authToken = jsonObject.getString("authToken");
-			String source = jsonObject.getString("source");
-			String dateOfBirth = jsonObject.getString("dateOfBirth");
-			String bio = jsonObject.getString("bio");
-			String interests = jsonObject.getString("interests");
-			String workStatus = jsonObject.getString("workStatus");
-			String relationshipStatus = jsonObject
-					.getString("relationshipStatus");
-			String address = jsonObject.getString("address");
-			boolean enabled = jsonObject.getBoolean("enabled");
-			String lastLogin = jsonObject.getString("lastLogin");
-			String updateDate = jsonObject.getString("updateDate");
-			String settings = jsonObject.getString("settings");
-			String circles = jsonObject.getString("circles");
-			String createDate = jsonObject.getString("createDate");
+		default:
+			Toast.makeText(getApplicationContext(),
+					"An unknown error occured.", Toast.LENGTH_SHORT).show();
+			break;
 
-			Log.d("AuthToken", authToken);
+		}
+	}
+
+	public void fbLoginSuccess(String response) {
+
+		String facebookId = FBUtility.userUID;
+		String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
+
+		AccountSettingsEntity accountSettingsEntity = ServerResponseParser
+				.parseUserProfileInfo(response, facebookId, facebookAuthToken,
+						false);
+
+		if (accountSettingsEntity != null) {
+			AppStaticStorages.accountSettingsEntity = accountSettingsEntity;
 
 			// save the authToken, id to the storage
-			Utility.storeSession(id, authToken, LoginActivity.this);
-
-			if (chkRememberPassword.isChecked()) {
-				Utility.storePreferences(etEmail.getText().toString().trim(),
-						etPassword.getText().toString(), true,
-						getApplicationContext());
-			}
+			Utility.storeSession(
+					AppStaticStorages.accountSettingsEntity.getSmID(),
+					AppStaticStorages.accountSettingsEntity.getAuthToken(),
+					LoginActivity.this);
 
 			finish();
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
 			startActivity(myIntent);
-
-		} catch (JSONException e) {
-			// TODO: handle exception
-			Log.e("Parse Error", e.getMessage());
+		} else {
+			Log.e("Facebook Login Error", "Error during parsing response");
 		}
 
+	}
+
+	public void loginSuccess(String response) {
+		AccountSettingsEntity accountSettingsEntity = ServerResponseParser
+				.parseUserProfileInfo(response, false);
+
+		if (accountSettingsEntity != null) {
+			AppStaticStorages.accountSettingsEntity = accountSettingsEntity;
+
+			
+			if (chkRememberPassword.isChecked()) {
+				Utility.storePreferences(etEmail.getText().toString().trim(),
+						etPassword.getText().toString(), true,
+						getApplicationContext());
+			} else {
+				Utility.storePreferences(null,
+						null, false,
+						getApplicationContext());
+			}
+			
+			// save the authToken, id to the storage
+			Utility.storeSession(
+					AppStaticStorages.accountSettingsEntity.getSmID(),
+					AppStaticStorages.accountSettingsEntity.getAuthToken(),
+					LoginActivity.this);
+
+			finish();
+			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
+			startActivity(myIntent);
+		} else {
+			Log.e("Facebook Login Error", "Error during parsing response");
+		}
+
+	}
+
+	public void handleFbResponse(String fbResponse) {
+
+		final String responseText = fbResponse;
+
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			requestRunnable = new Runnable() {
+				public void run() {
+
+					sendFbRegistrationRequest(responseText);
+
+				}
+			};
+			Thread thread = new Thread(null, requestRunnable,
+					"MagentoBackground");
+			thread.start();
+			m_ProgressDialog = ProgressDialog.show(LoginActivity.this, "Login",
+					"Sending request. Please wait...", false);
+
+		} else {
+			Toast.makeText(LoginActivity.this,
+					"Internet Connection Unavailable", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+	}
+
+	public void sendFbRegistrationRequest(String fbResponse) {
+		try {
+			JSONObject jsonObject = new JSONObject(fbResponse);
+
+			FBUtility.userUID = jsonObject.getString("id");
+			// String accessToken = FBUtility.mFacebook.getAccessToken();
+
+			String facebookId = jsonObject.getString("id");
+			String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
+
+			String avatarString = jsonObject.getString("picture");// have to
+																	// check
+
+			String firstName = jsonObject.getString("first_name");
+			String lastName = jsonObject.getString("last_name");
+			String email = jsonObject.getString("email");
+			String gender = jsonObject.getString("gender");
+			String username = jsonObject.getString("username");
+
+			// String location = jsonObject.getString("location");
+			String birthday = jsonObject.getString("birthday");
+			String dob = Utility.parseFbDob(birthday);
+			// String bio = jsonObject.getString("bio");
+			// String relationshipStatus =
+			// jsonObject.getString("relationshipStatus");
+
+			RestClient client = new RestClient(Constant.smFbLoginUrl);
+
+			// client.AddHeader("GData-Version", "2");
+			client.AddParam("facebookId", facebookId);
+			client.AddParam("facebookAuthToken", facebookAuthToken);
+			client.AddParam("email", email);
+			client.AddParam("firstName", firstName);
+			client.AddParam("lastName", lastName);
+			client.AddParam("userName", username);
+			client.AddParam("avatar", avatarString);
+			client.AddParam("gender", gender);
+			// client.AddParam("city", location);
+			client.AddParam("dateOfBirth", dob);
+			// client.AddParam("bio", bio);
+			// client.AddParam("relationshipStatus", relationshipStatus);
+
+			try {
+				client.Execute(RestClient.RequestMethod.POST);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			responseString = client.getResponse();
+			responseStatus = client.getResponseCode();
+
+			runOnUiThread(returnResFb);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			Log.e("FB parse error", e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public void performForgotPass() {
@@ -349,15 +515,15 @@ public class LoginActivity extends Activity {
 		// if button is clicked, close the custom dialog
 		btnSend.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
-				//if( Utility.isValidEmailID(etForgotpassEmail.getText().toString()))
-				if(!etForgotpassEmail.getText().toString().trim().equalsIgnoreCase(""))
-				{
+
+				// if(
+				// Utility.isValidEmailID(etForgotpassEmail.getText().toString()))
+				if (!etForgotpassEmail.getText().toString().trim()
+						.equalsIgnoreCase("")) {
 					sendForgotPasswordRequest();
 					forgotpassDialog.dismiss();
 				}
 
-				
 			}
 		});
 
@@ -376,7 +542,7 @@ public class LoginActivity extends Activity {
 					String url = Constant.smForgotPassUrl + "/" + email;
 
 					Log.e("Forgot URL", url);
-					
+
 					RestClient client = new RestClient(url);
 					// client.AddParam("email", email);
 					// client.AddHeader("GData-Version", "2");
@@ -415,6 +581,7 @@ public class LoginActivity extends Activity {
 		btnLogin = (Button) findViewById(R.id.btnLogin);
 		btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
 		btnFBLogin = (LoginButton) findViewById(R.id.btnFBLogin);
+		btnFBLogin2 = (Button) findViewById(R.id.btnFBLogin2);
 		btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 	}
 
@@ -425,32 +592,12 @@ public class LoginActivity extends Activity {
 
 		// @Override
 		public void onComplete(final String response, final Object state) {
-			JSONObject jsonObject;
+
 			Log.e("FB Data", response);
-			
-			try {
-				jsonObject = new JSONObject(response);
 
-				final String picURL = jsonObject.getString("picture");
-				final String name = jsonObject.getString("name");
-				FBUtility.userUID = jsonObject.getString("id");
+			// handleFbResponse(response)
+			sendFbRegistrationRequest(response);
 
-				mHandler.post(new Runnable() {
-					// @Override
-					public void run() {
-						
-						String accessToken = FBUtility.mFacebook.getAccessToken();
-						
-						Log.e("LoginActivity", "Welcome " + name + "!");
-						Log.e("FB Access token", accessToken);
-						// mUserPic.setImageBitmap(Utility.getBitmap(picURL));
-					}
-				});
-
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 	}
@@ -494,14 +641,14 @@ public class LoginActivity extends Activity {
 	 * Request user name, and picture to show on the main screen.
 	 */
 	public void requestUserData() {
-		
-		
-		
-		
+
 		Log.e("LoginActivity", "Fetching user name, profile pic...");
 		Bundle params = new Bundle();
-		params.putString("fields", "name, picture");
+		params.putString(
+				"fields",
+				"id,email,name,picture,first_name,last_name,username,bio,birthday,location,relationship_status,gender");
 		FBUtility.mAsyncRunner.request("me", params, new UserRequestListener());
+		// FBUtility.mAsyncRunner.request("me", new UserRequestListener());
 	}
 
 }

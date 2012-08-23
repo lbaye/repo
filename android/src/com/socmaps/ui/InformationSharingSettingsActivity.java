@@ -1,23 +1,31 @@
 package com.socmaps.ui;
 
-import com.socmaps.entity.Information;
+import com.socmaps.entity.InformationSharingEntity;
+import com.socmaps.util.AppStaticStorages;
+import com.socmaps.util.Constant;
+import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,19 +33,25 @@ public class InformationSharingSettingsActivity extends Activity  implements OnC
 {
     //ListView lvInformationSharing; For Customized ListView
 	Button btnSave;
-	
-	Button btnBack,btnNotification;
-	
+	Context context;
+	Button btnUpdate,btnBack,btnNotification;
+	ProgressDialog m_ProgressDialog;
 	CheckBox chkFirstName,chkLastName,chkUserName,chkEmail,chkProfilePicture,chkDateOfBirth,chkBiography,chkStreetAddres,
 	chkCity,chkZIPCode,chkCountry,chkService,chkRelationshipStatus;
 	
+	RadioGroup radioGroupNewsFeed,radioGroupProfilePic,
+	radioGroupEmail,radioGroupName,
+	radioGroupUserName,	radioGroupGender,
+	radioGroupDob,radioGroupBiography,
+	radioGroupInterests,radioGroupAddress,
+	radioGroupService,	radioGroupRelationshipStatus;
 	int firstName=0,lastName=0,userName=0,email=0,profilePicture=0,dateOfBirth=0,biography=0,streetAddres=0,
 	city=0,zIPCode=0,country=0,service=0,relationshipStatus=0;
-	
+	String responseString;
+	int responseStatus = 0;
 	
 	ExpandablePanel newsFeedPanel,profilePicPanel,emailPanel,namePanel,userNamePanel,genderPanel,dobPanel,biographyPanel,interestPanel,
 	addressPanel,servicePanel,relationShipStatusPanel;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,11 +72,168 @@ public class InformationSharingSettingsActivity extends Activity  implements OnC
 	    window.setFormat(PixelFormat.RGBA_8888);
 	  }
 	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		if(AppStaticStorages.informationSharingEntity==null)
+		{
+			startDialogAndBgThread();
+		}
+		else
+		{
+			setFieldValues(AppStaticStorages.informationSharingEntity);
+		}
+	}
+	
+	private void startDialogAndBgThread()
+	{
+		if (Utility.isConnectionAvailble(getApplicationContext()))
+		{
+			Thread thread = new Thread(null, getInformationSharingSettingsInfo,"Start update password");
+			thread.start();
+			m_ProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.please_wait_text), getResources()
+					.getString(R.string.fetching_data_text), true);
+		} 
+		else 
+		{
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
+		}
+	}
+	
+	private Runnable getInformationSharingSettingsInfo=new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			RestClient getAccountSettingsClient=new RestClient(Constant.informationSharingSettingsUrl);
+			getAccountSettingsClient.AddHeader(Constant.authTokenParam,Utility.getAuthToken(context));
+			try 
+			{
+				getAccountSettingsClient.Execute(RestClient.RequestMethod.GET);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+
+			responseString = getAccountSettingsClient.getResponse();
+			responseStatus = getAccountSettingsClient.getResponseCode();
+			runOnUiThread(returnResGetInformationSharingSettings);				
+		}
+	};
+	
+	private Runnable returnResGetInformationSharingSettings=new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			m_ProgressDialog.dismiss();
+			handleInformationSharingSettingsResponse(responseStatus, responseString);
+		}
+	};
+	
+	public void handleInformationSharingSettingsResponse(int status, String response)
+	{
+		Log.d("Registration", status + ":" + response);
+		switch (status) 
+		{
+			case Constant.STATUS_SUCCESS:
+				InformationSharingEntity informationSharingEntity=ServerResponseParser.parseInformationSettings(response);
+				setFieldValues(informationSharingEntity);
+				AppStaticStorages.informationSharingEntity=informationSharingEntity;
+				break;
+
+			case Constant.STATUS_BADREQUEST:
+				Toast.makeText(getApplicationContext(),	Utility.parseResponseString(response), Toast.LENGTH_LONG).show();
+				break;
+
+			case Constant.STATUS_NOTFOUND:
+				Toast.makeText(getApplicationContext(),	Utility.parseResponseString(response), Toast.LENGTH_LONG).show();
+			
+				break;
+			default:
+				Toast.makeText(getApplicationContext(),	"An unknown error occured.", Toast.LENGTH_LONG).show();
+				break;
+		}
+	}
+
+	private void setFieldValues(InformationSharingEntity informationSharingEntity)
+	{		
+		setRadioGroupValue(radioGroupNewsFeed,informationSharingEntity.getNewsFeed());		
+		setRadioGroupValue(radioGroupProfilePic,informationSharingEntity.getProfilePicture());		
+		
+		setRadioGroupValue(radioGroupEmail,informationSharingEntity.getEmail());		
+		setRadioGroupValue(radioGroupName,informationSharingEntity.getName());		
+		
+		setRadioGroupValue(radioGroupUserName,informationSharingEntity.getUserName());		
+		setRadioGroupValue(radioGroupGender,informationSharingEntity.getGender());
+		
+		setRadioGroupValue(radioGroupDob,informationSharingEntity.getDateOfBirth());		
+		setRadioGroupValue(radioGroupBiography,informationSharingEntity.getBiography());		
+		
+		setRadioGroupValue(radioGroupInterests,informationSharingEntity.getInterests());		
+		setRadioGroupValue(radioGroupAddress,informationSharingEntity.getAddress());		
+		
+		setRadioGroupValue(radioGroupService,informationSharingEntity.getService());		
+		setRadioGroupValue(radioGroupRelationshipStatus,informationSharingEntity.getRelationshipStatus());		
+	}
+
+	private void setRadioGroupValue(RadioGroup rG,String status)
+	{
+		if("all".equals(status))
+		{
+			((RadioButton)rG.findViewById(R.id.radioAllUsers)).setChecked(true);
+		}
+		else if("friends".equals(status))
+		{
+			((RadioButton)rG.findViewById(R.id.radioFriendsOnly)).setChecked(true);
+		}
+		else if("circles".equals(status))
+		{
+			((RadioButton)rG.findViewById(R.id.radioCirclesOnly)).setChecked(true);			
+		}
+		else if("none".equals(status))
+		{
+			((RadioButton)rG.findViewById(R.id.radioNoOne)).setChecked(true);						
+		}
+		else if("custom".equals(status))
+		{
+			((RadioButton)rG.findViewById(R.id.radioCustom)).setChecked(true);									
+		}
+//		else
+//		{
+//			((RadioButton)rG.findViewById(R.id.radioAllUsers)).setChecked(true);
+//		}
+	}
+
 	private void initialize()
 	{		
+		context = InformationSharingSettingsActivity.this;
 		btnBack = (Button)findViewById(R.id.btnBack);		
 		btnNotification = (Button)findViewById(R.id.btnNotification);
-	
+		btnUpdate = (Button)findViewById(R.id.btnUpdate);
+		
+
+		radioGroupNewsFeed = (RadioGroup) findViewById(R.id.radioGroupNewsFeed);
+		radioGroupProfilePic = (RadioGroup) findViewById(R.id.radioGroupProfilePic);
+		
+		radioGroupEmail = (RadioGroup) findViewById(R.id.radioGroupEmail);
+		radioGroupName = (RadioGroup) findViewById(R.id.radioGroupName);
+		
+		radioGroupUserName = (RadioGroup) findViewById(R.id.radioGroupUserName);
+		radioGroupGender = (RadioGroup) findViewById(R.id.radioGroupGender);
+
+		radioGroupDob = (RadioGroup) findViewById(R.id.radioGroupDob);
+		radioGroupBiography = (RadioGroup) findViewById(R.id.radioGroupBiography);
+		
+		radioGroupInterests = (RadioGroup) findViewById(R.id.radioGroupInterests);
+		radioGroupAddress = (RadioGroup) findViewById(R.id.radioGroupAddress);
+		
+		radioGroupService = (RadioGroup) findViewById(R.id.radioGroupService);
+		radioGroupRelationshipStatus = (RadioGroup) findViewById(R.id.radioGroupRelationshipStatus);
+
 		
 		newsFeedPanel=(ExpandablePanel)findViewById(R.id.newsFeedContainer);
 		profilePicPanel=(ExpandablePanel)findViewById(R.id.profilePicContainer);
@@ -84,7 +255,7 @@ public class InformationSharingSettingsActivity extends Activity  implements OnC
 		
 		btnBack.setOnClickListener(this);
 		btnNotification.setOnClickListener(this);
-		
+		btnUpdate.setOnClickListener(this);
 	}
 	
 	@Override
@@ -99,8 +270,139 @@ public class InformationSharingSettingsActivity extends Activity  implements OnC
 			Intent notificationIntent = new Intent(getApplicationContext(), NotificationActivity.class);
 			startActivity(notificationIntent);	
 		}
+		else if(v == btnUpdate)
+		{
+			updateAllValues();
+		}
 	}
 	
+	private void updateAllValues()
+	{
+		Thread thread = new Thread(null, updateInformationSettingsOptionsThread,"Start update platforms");
+		thread.start();
+
+		m_ProgressDialog = ProgressDialog.show(this,
+				getResources().getString(R.string.please_wait_text),
+				getResources().getString(R.string.updating_data_text), true);
+		m_ProgressDialog.show();
+	}
+	
+	private Runnable updateInformationSettingsOptionsThread = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			sendDataToServer();
+		}
+	};
+
+	private void sendDataToServer()
+	{
+		RestClient client = new RestClient(Constant.informationSharingSettingsUrl);
+
+		client.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
+		
+		client.AddParam("newsfeed", getRadioStatusAsString(radioGroupNewsFeed));
+		client.AddParam("avatar", getRadioStatusAsString(radioGroupProfilePic));
+		
+		client.AddParam("email", getRadioStatusAsString(radioGroupEmail));
+		client.AddParam("name", getRadioStatusAsString(radioGroupName));
+		
+		client.AddParam("username", getRadioStatusAsString(radioGroupUserName));
+		client.AddParam("gender", getRadioStatusAsString(radioGroupGender));
+		
+		client.AddParam("dateOfBirth", getRadioStatusAsString(radioGroupDob));
+		client.AddParam("bio", getRadioStatusAsString(radioGroupBiography));
+		
+		client.AddParam("interests", getRadioStatusAsString(radioGroupInterests));
+		client.AddParam("address", getRadioStatusAsString(radioGroupAddress));
+		
+		client.AddParam("workStatus", getRadioStatusAsString(radioGroupService));
+		client.AddParam("relationshipStatus", getRadioStatusAsString(radioGroupRelationshipStatus));
+
+		try
+		{
+			client.Execute(RestClient.RequestMethod.PUT);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		responseString = client.getResponse();
+
+		responseStatus = client.getResponseCode();
+
+		runOnUiThread(returnRes);
+	}
+	
+	private String getRadioStatusAsString(RadioGroup rG)
+	{
+		int checkedRadioButton = rG.getCheckedRadioButtonId();
+		String status="";
+		switch (checkedRadioButton) 
+		{
+			case R.id.radioAllUsers :
+				status="all";
+				break;
+			case R.id.radioFriendsOnly :
+				status="friends"; 
+				break;		 
+			case R.id.radioNoOne :
+				status="none";
+				break;
+			case R.id.radioCirclesOnly :
+				status="circles"; 
+				break;		 
+			case R.id.radioCustom :
+				status="custom";
+				break;
+		}
+		return status;
+	}
+
+
+	private Runnable returnRes = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			handleResponse(responseStatus, responseString);
+			m_ProgressDialog.dismiss();
+		}
+	};
+	
+	public void handleResponse(int status, String response)
+	{
+		Log.d("Registration", status + ":" + response);
+		switch (status)
+		{
+		case Constant.STATUS_SUCCESS:
+			Toast.makeText(getApplicationContext(),
+					"Information saved successfully!!", Toast.LENGTH_SHORT)
+					.show();
+			AppStaticStorages.informationSharingEntity=ServerResponseParser.parseInformationSettings(response);
+			break;
+
+		case Constant.STATUS_BADREQUEST:
+			Toast.makeText(getApplicationContext(),
+					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		case Constant.STATUS_NOTFOUND:
+			Toast.makeText(getApplicationContext(),
+					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					.show();
+			break;
+		default:
+			Toast.makeText(getApplicationContext(),
+					"An unknown error occured.", Toast.LENGTH_LONG).show();
+			break;
+		}
+	}
+
+
 	
 	private void setExpandListener() {
 		// TODO Auto-generated method stub

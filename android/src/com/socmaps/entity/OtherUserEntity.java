@@ -1,10 +1,10 @@
 package com.socmaps.entity;
 
-public class AccountSettingsEntity 
+public class OtherUserEntity 
 {
 
 	private String smID;
-	private String  email;
+	private String email;
 	private String firstName;
 	private String lastName;
 	private String userName;
@@ -30,12 +30,8 @@ public class AccountSettingsEntity
 	private String country;
 	private String postCode;
 	private String state;
-	
-	private String facebookId;
-	private String facebookAuthToken;
-	
 	private int age;
-	
+	private int distance;
 	
 	
 	
@@ -60,6 +56,26 @@ public class AccountSettingsEntity
 		return email;
 	}
 
+	public void setAge(int age)
+	{
+		this.age = age;
+	}
+
+	public int getAge()
+	{
+		return age;
+	}
+	
+	public void setDistance(int dist)
+	{
+		this.distance = dist;
+	}
+
+	public int getDistance()
+	{
+		return distance;
+	}
+	
 	public void setFirstName(String firstName)
 	{
 		this.firstName = firstName;
@@ -280,35 +296,5 @@ public class AccountSettingsEntity
 		return state;
 	}
 	
-	public void setFacebookId(String facebookId)
-	{
-		this.facebookId = facebookId;
-	}
-
-	public String getFacebookId() 
-	{
-		return facebookId;
-	}
-	
-	
-	public void setFacebookAuthToken(String facebookAuthToken)
-	{
-		this.facebookAuthToken = facebookAuthToken;
-	}
-
-	public String getFacebookAuthToken() 
-	{
-		return facebookAuthToken;
-	}
-	
-	public void setAge(int age)
-	{
-		this.age = age;
-	}
-
-	public int getAge() 
-	{
-		return age;
-	}
 	
 }

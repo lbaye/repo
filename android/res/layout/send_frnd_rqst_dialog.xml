@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dip"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F7F7F7">
+    
+    
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dip"
+        android:textStyle="bold"
+        android:text="Add Friend"
+        android:layout_gravity="center"
+        android:paddingTop="10dip"
+        android:paddingBottom="0dip"
+        android:textColor="#000000"/>
+	<EditText android:layout_width="fill_parent"
+	    android:layout_height="100dip"
+	    android:hint="Enter message(optional)"
+	    android:layout_marginLeft="10dip"
+	    android:layout_marginRight="10dip"
+	    android:layout_marginTop="10dip"
+	    android:gravity="top|left"
+	    android:id="@+id/message_body_text"
+	    />
+	
+	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       
+        
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/img_blank"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:textColor="#000000"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+             />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/img_blank"
+            android:padding="10dp"
+            android:text="@string/send"
+            android:textColor="#000000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+</LinearLayout>

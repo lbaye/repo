@@ -17,7 +17,7 @@ public class Constant
 	*/
 	
 	final static public String FB_APP_ID = "260432304058696";
-	final static public String[] facebookPermissions = { "offline_access", "publish_stream", "user_photos",	"publish_checkins", "photo_upload","email","friends_activities","friends_checkins", "friends_location","user_checkins","user_location" };
+	final static public String[] facebookPermissions = { "offline_access", "publish_stream", "user_photos",	"publish_checkins", "photo_upload","email","friends_activities","friends_checkins", "friends_location","user_checkins","user_location","user_about_me","user_birthday","user_relationships" };
 
 	final static public int AUTHORIZE_ACTIVITY_RESULT_CODE = 0;
     final static public int PICK_EXISTING_PHOTO_RESULT_CODE = 1;
@@ -25,9 +25,11 @@ public class Constant
     //final static public String smServerUrl = "http://174.143.240.157";
     //final static public String smServerUrl = "http://203.76.126.69";
     //final static public String smServerUrl = "http://192.168.1.71/social_maps_final/service/trunk/web";
-    final static public String smServerUrl = "http://203.76.126.69/social_maps_git/social-maps-service/web";
+    //final static public String smServerUrl = "http://203.76.126.69/social_maps_git/social-maps-service/web";
+    final static public String smServerUrl = "http://203.76.126.69/social_maps/web";
 	final static public String smRegistrationUrl = smServerUrl+"/auth/registration";
 	final static public String smLoginUrl = smServerUrl+"/auth/login";
+	final static public String smFbLoginUrl = smServerUrl+"/auth/login/fb";
 	final static public String smForgotPassUrl = smServerUrl+"/auth/forget_password";
 	final static public String smAccountSettingsUrl = smServerUrl+"/settings/account_settings";
 	final static public String smNotificationSettingsUrl = smServerUrl+"/settings/notifications";
@@ -36,6 +38,16 @@ public class Constant
 	final static public String changePasswordUrl=smServerUrl+"/auth/change_pass";
 	final static public String layersSettingsUrl=smServerUrl+"/settings/layers";
 	//final static public String getAccountSettingsUrl=smServerUrl+"/settings/account_settings";
+	final static public String informationSharingSettingsUrl=smServerUrl+"/settings/sharing_preference_settings";
+	final static public String smGetUserUrl=smServerUrl+"/search";
+	
+	final static public String fbFriendListUrl = "https://graph.facebook.com/me/friends?access_token=";
+	
+	final static public String smUpdateLocationUrl=smServerUrl+"/current-location";
+	final static public String smFriendRequestUrl=smServerUrl+"/request/friend";
+	final static public String smMessagesUrl=smServerUrl+"/messages";
+	
+	
     /*
 	GENERAL STATUS CODE:
     400 – Bad Request

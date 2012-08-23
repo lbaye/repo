@@ -24,6 +24,8 @@
     <string name="zipCode">ZIP Code:</string>
     <string name="service">Service:</string>
     <string name="relationshipstatus">Relationship Status:</string>
+    <string name="living_in">Living in \u0020</string>
+    <string name="work_at">Work at \u0020</string>
 
     <string-array name="relationshipOptions">
         <item>Select...</item>
@@ -171,7 +173,7 @@
 	<string name="menuItemCirclesOnlyLabel">Circles only</string>
 	<string name="menuItemCustomLabel">Custom...</string>
 	<string name="messagesLabel">Messages</string>
-	<string name="friendRequestLabel">Fiend(s) request(s)</string>
+	<string name="friendRequestLabel">Friend(s) request(s)</string>
 	<string name="notifyLabel">Notifications</string>
 	<string name="friendRequestNameLabel">\u0020 asks you as a friend!</string>
 	<string name="commonFriendNumberLabel">\u0020 friend(s) in common</string>
@@ -204,8 +206,10 @@
 	<string name="updating_data_text">Updating Data</string>
 	<string name="please_wait_text">Please Wait...</string>
 	<string name="fetching_data_text">Fetching data</string>
+	<string name="inviteSelected">Invite selected</string>
+	<string name="inviteFbTitle">Select Facebook users you want to invite:</string>
 	
-	
+	<string name="sending_request_text">Sending request to server</string>
 	
 	
 </resources>

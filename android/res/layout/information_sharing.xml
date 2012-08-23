@@ -195,42 +195,43 @@
                                 android:layout_alignParentTop="true"
                                 android:gravity="center"
                                 android:orientation="horizontal" >
-
+
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersNewsFeed"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector"
                                     android:checked="true" />
-
+
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyNewsFeed"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
-
+
                                 <RadioButton
-                                    android:id="@+id/radioNoOneNewsFeed"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
-
+
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyNewsFeed"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
-
+
                                 <RadioButton
-                                    android:id="@+id/radioCustomNewsFeed"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
                                     android:button="@drawable/radiobutton_selector" />
+
                             </RadioGroup>
                         </RelativeLayout>
 
@@ -397,7 +398,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersProfilePic"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -405,28 +406,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyProfilePic"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneProfilePic"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyProfilePic"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomProfilePic"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -600,7 +601,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersEmail"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -608,28 +609,28 @@
                                     android:checked="true"/>
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyEmail"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneEmail"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyEmail"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomEmail"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -798,7 +799,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersName"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -806,28 +807,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyName"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneName"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyName"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomName"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -998,7 +999,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersUserName"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1006,28 +1007,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyUserName"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneUserName"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyUserName"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomUserName"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -1198,7 +1199,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersGender"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1206,28 +1207,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyGender"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneGender"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyGender"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomGender"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -1396,7 +1397,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersDob"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1404,28 +1405,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyDob"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneDob"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyDob"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomDob"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -1594,7 +1595,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersBiography"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1602,28 +1603,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyBiography"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneBiography"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyBiography"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomBiography"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -1792,7 +1793,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersInterests"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1800,28 +1801,28 @@
                                     android:checked="true" />
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyInterests"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneInterests"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyInterests"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomInterests"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -1990,7 +1991,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersAddress"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -1998,28 +1999,28 @@
                                     android:checked="true"/>
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyAddress"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneAddress"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyAddress"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomAddress"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -2190,7 +2191,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersService"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -2198,28 +2199,28 @@
                                     android:checked="true"/>
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyService"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneService"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyService"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomService"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"
@@ -2388,7 +2389,7 @@
                                 android:orientation="horizontal" >
 
                                 <RadioButton
-                                    android:id="@+id/radioAllUsersRelationshipStatus"
+                                    android:id="@+id/radioAllUsers"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
@@ -2396,28 +2397,28 @@
                                     android:checked="true"/>
 
                                 <RadioButton
-                                    android:id="@+id/radioFriendsOnlyRelationshipStatus"
+                                    android:id="@+id/radioFriendsOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioNoOneRelationshipStatus"
+                                    android:id="@+id/radioNoOne"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCirclesOnlyRelationshipStatus"
+                                    android:id="@+id/radioCirclesOnly"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".22"
                                     android:button="@drawable/radiobutton_selector" />
 
                                 <RadioButton
-                                    android:id="@+id/radioCustomRelationshipStatus"
+                                    android:id="@+id/radioCustom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight=".12"

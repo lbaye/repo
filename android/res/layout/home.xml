@@ -41,7 +41,7 @@
         
     </RelativeLayout>
 
-    <com.google.android.maps.MapView
+    <com.readystatesoftware.maps.TapControlledMapView
         android:id="@+id/myGMap"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -53,8 +53,10 @@
          />
     
     <!-- 
-    DEBUG KEY: 0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA
-    GENWEB2 KEY: 0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw
+    hasan.mahadi: "0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA"
+    GENWEB2 KEY: "0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw"
+    Masum="0prmApk3Xe_HK1vKiYUE5ziBsLlLJGHAAN-AOIA"
+    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
      -->
 
     <!--  <LinearLayout

@@ -1,12 +1,15 @@
 package com.socmaps.util;
 
 import com.socmaps.ui.AccountSettingsActivity;
+import com.socmaps.ui.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.Window;
 
 public class DialogsAndToasts {
 
@@ -29,6 +32,42 @@ public class DialogsAndToasts {
 	                       });
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+	
+	public static Dialog showExtendedUserInfoDialog(final Context c)
+	{
+		 Dialog dialog = new Dialog(c);
+		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+         dialog.setContentView(R.layout.dialog_on_map_extended);
+        
+         dialog.setCancelable(true);
+        
+         
+         return dialog;
+	}
+	
+	public static Dialog showSendMessage(final Context c)
+	{
+		 Dialog dialog = new Dialog(c);
+		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+         dialog.setContentView(R.layout.send_message_dialog);
+        
+         dialog.setCancelable(true);
+        
+         
+         return dialog;
+	}
+	
+	public static Dialog showAddFrnd(final Context c)
+	{
+		 Dialog dialog = new Dialog(c);
+		 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+         dialog.setContentView(R.layout.send_frnd_rqst_dialog);
+        
+         dialog.setCancelable(true);
+        
+         
+         return dialog;
 	}
 	
 }

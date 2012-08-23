@@ -68,7 +68,7 @@ public class NotifyNotificationActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		notificationListContainer.removeAllViews();
+		/*notificationListContainer.removeAllViews();
 		for(int i=0;i<5;i++)
 		{
 			if(i%2==0)
@@ -81,7 +81,7 @@ public class NotifyNotificationActivity extends Activity {
 				View v=inflater.inflate(R.layout.row_notification_with_image, null);
 				notificationListContainer.addView(v);
 			}
-		}
+		}*/
 	}
 
 	@Override

@@ -1,11 +1,21 @@
 package com.socmaps.ui;
 
+import com.readystatesoftware.mapviewballoons.R;
+import com.socmaps.entity.FriendRequest;
+import com.socmaps.entity.MessageEntity;
+import com.socmaps.util.Constant;
+import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +35,10 @@ public class MessageNotificationActivity extends Activity {
 	LinearLayout messageListContainer;
 	private LayoutInflater inflater;
 	private Context context;
+	
+	ProgressDialog m_ProgressDialog;
+	String messageResponse = "";
+	int messageStatus = 0;
 
 	
 
@@ -35,7 +49,139 @@ public class MessageNotificationActivity extends Activity {
 		
 		initialize();
 		
-		
+		getMessages();
+
+	}
+	
+	public void getMessages() {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			Thread thread = new Thread(null, messagesThread,
+					"Start get messages");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.please_wait_text), getResources()
+					.getString(R.string.sending_request_text), true);
+
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
+		}
+	}
+	
+	private Runnable messagesThread = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smMessagesUrl+"/inbox");
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.GET);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			messageResponse = restClient.getResponse();
+			messageStatus = restClient.getResponseCode();
+
+			runOnUiThread(messageReturnResponse);
+		}
+	};
+	
+	private Runnable messageReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseMessage(messageStatus,
+					messageResponse);
+
+			// dismiss progress dialog if needed
+			m_ProgressDialog.dismiss();
+		}
+	};
+
+	
+	public void handleResponseMessage(int status, String response) {
+		// show proper message through Toast or Dialog
+
+		Log.i("MESSAGE RESPONSE", status + ":" + response);
+
+		if (status == Constant.STATUS_SUCCESS) {
+			try {
+				
+				messageListContainer.removeAllViews();
+				
+				
+				MessageEntity[] messages = ServerResponseParser.parseMessages(response);
+				
+				
+				
+				if(messages != null)
+				{
+					
+					NotificationActivity ta = (NotificationActivity) this.getParent();
+					TabHost th = ta.getMyTabHost();
+					View tab = th.getChildAt(0);
+					TextView tabLabel = (TextView)tab.findViewById(R.id.tvItemCountDisplay);
+					tabLabel.setText(""+messages.length);
+					
+					for(int i=0;i<messages.length;i++)
+					{
+						if(messages[i] != null)
+						{
+							View v=inflater.inflate(R.layout.row_message_list, null);
+							ExpandablePanel panel = (ExpandablePanel)v.findViewById(R.id.foo);
+							panel.setOnExpandListener(colapseExpand());
+							
+							
+							
+							TextView senderName = (TextView)v.findViewById(R.id.sender_name_text_view);
+							TextView sentTime = (TextView)v.findViewById(R.id.sentTime);
+							TextView senderMessage = (TextView)v.findViewById(R.id.senderMessage);
+							
+							
+							String name = "";
+							if(messages[i].getSenderFirstName() != null)
+							{
+								name = messages[i].getSenderFirstName()+" ";
+								
+							}
+							if(messages[i].getSenderLastName() != null)
+							{
+								name += messages[i].getSenderLastName();
+								
+							}
+							
+							senderName.setText(name);
+							
+							if(messages[i].getCreateDate() != null)
+							{
+								sentTime.setText(messages[i].getCreateDate());
+							}
+							if(messages[i].getContent() != null)
+							{
+								senderMessage.setText(messages[i].getContent());
+							}
+							
+							
+							messageListContainer.addView(v);
+						}
+					}
+				}
+
+				
+
+			} catch (Exception e) {
+				Log.e("Parse response", e.getMessage());
+				// TODO: handle exception
+			}
+		}
 
 	}
 	
@@ -78,14 +224,7 @@ public class MessageNotificationActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		messageListContainer.removeAllViews();
-		for(int i=0;i<5;i++)
-		{
-			View v=inflater.inflate(R.layout.row_message_list, null);
-			ExpandablePanel panel = (ExpandablePanel)v.findViewById(R.id.foo);
-			panel.setOnExpandListener(colapseExpand());
-			messageListContainer.addView(v);
-		}
+		
 	}
 
 	@Override

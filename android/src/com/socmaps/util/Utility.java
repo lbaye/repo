@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
@@ -28,6 +29,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -133,6 +136,15 @@ public class Utility {
 		return newtime;
 		// return "2012-01-04 11:49:32";
 	}
+	
+	public static String parseFbDob(String fbdob) {
+		
+		String[] dobArray = fbdob.split("/");
+		
+		String dobFormatted = dobArray[2]+"-"+dobArray[0]+"-"+dobArray[1];
+		
+		return dobFormatted;
+	}
 
 	public static int calculateAge(int year, int month, int day) {
 
@@ -210,6 +222,10 @@ public class Utility {
 	
 	public static String getEmail(Context context) {
 		return PreferenceConnector.readString(context, "email", null);
+	}
+	
+	public static String getPassword(Context context) {
+		return PreferenceConnector.readString(context, "password", null);
 	}
 	
 	
@@ -333,7 +349,16 @@ public class Utility {
 	}
 
 	
-	
+	public static Drawable drawableFromUrl(String url) throws IOException {
+	    Bitmap x;
+
+	    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+	    connection.connect();
+	    InputStream input = connection.getInputStream();
+
+	    x = BitmapFactory.decodeStream(input);
+	    return new BitmapDrawable(x);
+	}
 	
 	
 }

@@ -297,7 +297,7 @@ public class AccountSettingsActivity extends Activity implements
 	private void setFieldValue(AccountSettingsEntity accountSettingsEntity) {
 		if (null != accountSettingsEntity) {
 			// Log.e("profileInfo", profileInfo.getUserName());
-			if(accountSettingsEntity.getDateOfBirth()!=null)
+			if(accountSettingsEntity.getDateOfBirth() != null)
 			{
 				String date=accountSettingsEntity.getDateOfBirth().split("\\s+")[0];
 				setDateValues(date);
@@ -306,9 +306,11 @@ public class AccountSettingsActivity extends Activity implements
 			else
 			{
 				selectedYear=now.get(Calendar.YEAR); 
-				selectedMonth=now.get(Calendar.MONTH);
+				selectedMonth=now.get(Calendar.MONTH)+1;
 				selectedDay=now.get(Calendar.DATE);
 			}
+			
+
 			
 			if(accountSettingsEntity.getEmail()!=null)
 				etEmail.setText(accountSettingsEntity.getEmail());
@@ -373,10 +375,21 @@ public class AccountSettingsActivity extends Activity implements
 	
 	private void setDateValues(String date) {
 		// TODO Auto-generated method stub
-		String[] splits=date.split("-");
-		selectedYear=Integer.parseInt(splits[0]);
-		selectedMonth=Integer.parseInt(splits[1]);
-		selectedDay=Integer.parseInt(splits[2]);
+		
+		try{
+			String[] splits=date.split("-");
+			selectedYear=Integer.parseInt(splits[0]);
+			selectedMonth=Integer.parseInt(splits[1]);
+			selectedDay=Integer.parseInt(splits[2]);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			selectedYear=now.get(Calendar.YEAR); 
+			selectedMonth=now.get(Calendar.MONTH)+1;
+			selectedDay=now.get(Calendar.DATE);
+		}
+		
+		
 	}
 
 
@@ -399,12 +412,22 @@ public class AccountSettingsActivity extends Activity implements
 	};
 	
 	public void handleAccountSettingsResponse(int status, String response) {
-		Log.d("Registration", status + ":" + response);
+		Log.d("Account Settings", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			AccountSettingsEntity accountSettingsEntity=ServerResponseParser.parseAccountSettings(responseString,1);
-			setFieldValue(accountSettingsEntity);
-			AppStaticStorages.accountSettingsEntity=accountSettingsEntity;
+			AccountSettingsEntity accountSettingsEntity=ServerResponseParser.parseUserProfileInfo(responseString,true);
+			
+			if(accountSettingsEntity!=null)
+			{
+				setFieldValue(accountSettingsEntity);
+				AppStaticStorages.accountSettingsEntity=accountSettingsEntity;
+			}
+			else
+			{
+				Log.e("Account Settings", "Error occured during parsing GET response");
+			}
+			
+			
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -474,32 +497,6 @@ public class AccountSettingsActivity extends Activity implements
 		}
 		
 		
-		
-
-		/*pInfo = new ProfileInfo();
-
-		pInfo.setSmID(1);
-		pInfo.setFirstName("John");
-		pInfo.setLastName("Doe");
-		pInfo.setUserName("JDoe");
-		pInfo.setEmail("hasan.mahadi@genweb2.com");
-		pInfo.setDateOfBirth("2012-08-09");
-		pInfo.setBio("My Bio");
-		pInfo.setProfilePic("http://clubpeople.com/Images/features/person128.jpg");
-		pInfo.setGender("male");
-		pInfo.setInterest("My Interest");
-		pInfo.setRegMedia("SM");
-		pInfo.setService("My service");
-		pInfo.setStreetAddress("My Address");
-		pInfo.setPostCode("1207");
-		pInfo.setCity("My City");
-		pInfo.setCountry("My country");
-		pInfo.setRelationshipStatus("single");
-		pInfo.setUnit(1);*/
-
-		//setFieldValue(pInfo);
-
-		// runOnUiThread(returnRes);
 
 	}
 
@@ -598,10 +595,17 @@ public class AccountSettingsActivity extends Activity implements
 						}
 						sb.append(arg1).append("-").append(month).append("-")
 								.append(day);
-						dob = sb.toString();
-						setDateValues(dob);
-						Log.d("dob", dob);
-						tvDateOfBirth.setText(dob);
+						
+						
+						if(dob != null)
+						{
+							dob = sb.toString();
+							setDateValues(dob);
+							Log.d("dob", dob);
+							tvDateOfBirth.setText(dob);
+						}
+						
+						
 					}
 
 				}, selectedYear, selectedMonth-1,
@@ -700,7 +704,7 @@ public class AccountSettingsActivity extends Activity implements
 
 	private void updateLocalValue(String responseString) {
 		// TODO Auto-generated method stub
-		AppStaticStorages.accountSettingsEntity=ServerResponseParser.parseAccountSettings(responseString,2);
+		AppStaticStorages.accountSettingsEntity=ServerResponseParser.parseUserProfileInfo(responseString,false);
 	}
 
 

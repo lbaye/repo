@@ -137,7 +137,14 @@
                     android:layout_height="40dp"
                     android:layout_below="@+id/tvOr"
                     android:background="@drawable/login_button" />
-
+                
+                <Button
+                     android:id="@+id/btnFBLogin2"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/tvOr"
+                    android:background="@drawable/login_button"
+                    android:visibility="gone" />
                 <!--
             <com.socmaps.fb.LoginButton
             android:id="@+id/btnFBLogin"

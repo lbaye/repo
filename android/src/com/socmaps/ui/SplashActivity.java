@@ -106,7 +106,8 @@ public class SplashActivity extends Activity
 				finish();
 				if(Utility.isLoggedIn(getApplicationContext()))
 				{
-					startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+					//startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 				}
 				else
 				{

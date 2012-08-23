@@ -32,9 +32,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.socmaps.entity.AccountSettingsEntity;
 import com.socmaps.entity.Response;
+import com.socmaps.util.AppStaticStorages;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
 public class RegistrationSMActivity extends Activity {
@@ -165,96 +168,84 @@ public class RegistrationSMActivity extends Activity {
 			}
 		});
 
-		btnSubmit.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View v) 
-			{
+		btnSubmit.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
 				boolean flag = true;
-				if (avatar == null)
-				{
+				if (avatar == null) {
 					flag = false;
-					Toast.makeText(getApplicationContext(),	"Profile picture not selected",	Toast.LENGTH_SHORT).show();
-				} 
-				else if (!Utility.isValidEmailID(etEmail.getText().toString()))
-				{
+					Toast.makeText(getApplicationContext(),
+							"Profile picture not selected", Toast.LENGTH_SHORT)
+							.show();
+				} else if (!Utility
+						.isValidEmailID(etEmail.getText().toString())) {
 					flag = false;
 					etEmail.setError("Invalid Email Id");
-				}
-				else if (etPassword.getText().toString().length() == 0) 
-				{
+				} else if (etPassword.getText().toString().length() == 0) {
 					flag = false;
 					etPassword.setError("Password can not be empty.");
-				}
-				else if (etFirstName.getText().toString().length() == 0)
-				{
+				} else if (etFirstName.getText().toString().length() == 0) {
 					flag = false;
 					etFirstName.setError("First name can not be empty.");
-				} 
-				else if (etLastName.getText().toString().length() == 0)
-				{
+				} else if (etLastName.getText().toString().length() == 0) {
 					flag = false;
 					etLastName.setError("Last name can not be empty.");
 				}
-				
-				if (flag)
-				{
-					locationSharingDisclaimerDialog = new Dialog(RegistrationSMActivity.this, android.R.style.Theme_Light_NoTitleBar);
-					locationSharingDisclaimerDialog.setContentView(R.layout.locationsharingdisclaimer);
-					btnAcceptAndLogin = (Button) locationSharingDisclaimerDialog.findViewById(R.id.btnAcceptAndLogin);
-					btnBack = (Button) locationSharingDisclaimerDialog.findViewById(R.id.btnBack);
-					
-					btnBack.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View v)
-						{
+
+				if (flag) {
+					locationSharingDisclaimerDialog = new Dialog(
+							RegistrationSMActivity.this,
+							android.R.style.Theme_Light_NoTitleBar);
+					locationSharingDisclaimerDialog
+							.setContentView(R.layout.locationsharingdisclaimer);
+					btnAcceptAndLogin = (Button) locationSharingDisclaimerDialog
+							.findViewById(R.id.btnAcceptAndLogin);
+					btnBack = (Button) locationSharingDisclaimerDialog
+							.findViewById(R.id.btnBack);
+
+					btnBack.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
 							locationSharingDisclaimerDialog.dismiss();
 						}
 					});
 
-					
-					btnAcceptAndLogin.setOnClickListener(new OnClickListener() 
-					{
-						public void onClick(View v)
-						{
+					btnAcceptAndLogin.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
 							sendRequest();
 							locationSharingDisclaimerDialog.dismiss();
 						}
 
-						private void sendRequest()
-						{
+						private void sendRequest() {
 
-							 
-							{
-								if (Utility
-										.isConnectionAvailble(getApplicationContext())) {
+							if (Utility
+									.isConnectionAvailble(getApplicationContext())) {
 
-									requestRunnable = new Runnable() {
-										public void run() {
+								requestRunnable = new Runnable() {
+									public void run() {
 
-											sendRegistrationRequest();
+										sendRegistrationRequest();
 
-										}
-									};
-									Thread thread = new Thread(null,
-											requestRunnable, "MagentoBackground");
-									thread.start();
-									m_ProgressDialog = ProgressDialog.show(
-											RegistrationSMActivity.this,
-											"Registration",
-											"Sending request. Please wait...",
-											false);
+									}
+								};
+								Thread thread = new Thread(null,
+										requestRunnable, "MagentoBackground");
+								thread.start();
+								m_ProgressDialog = ProgressDialog.show(
+										RegistrationSMActivity.this,
+										"Registration",
+										"Sending request. Please wait...",
+										false);
 
-								} else {
-									Toast.makeText(RegistrationSMActivity.this,
-											"Internet Connection Unavailable",
-											Toast.LENGTH_SHORT).show();
-								}
+							} else {
+								Toast.makeText(RegistrationSMActivity.this,
+										"Internet Connection Unavailable",
+										Toast.LENGTH_SHORT).show();
 							}
+
 						}
 					});
 
 					locationSharingDisclaimerDialog.show();
-				}		
+				}
 
 			}
 		});
@@ -273,7 +264,6 @@ public class RegistrationSMActivity extends Activity {
 			m_ProgressDialog.dismiss();
 		}
 	};
-	
 
 	public void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
@@ -307,11 +297,12 @@ public class RegistrationSMActivity extends Activity {
 			/* Get the image as string */
 			// Normal
 			ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
-			
-			//avatar = Utility..resizeBitmap
-			
-			Bitmap resizedAvatar = Utility.resizeBitmap(avatar, 0, Constant.thumbHeight);
-			
+
+			// avatar = Utility..resizeBitmap
+
+			Bitmap resizedAvatar = Utility.resizeBitmap(avatar, 0,
+					Constant.thumbHeight);
+
 			resizedAvatar.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 			byte[] full_bytes = full_stream.toByteArray();
 			avatarString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
@@ -359,10 +350,27 @@ public class RegistrationSMActivity extends Activity {
 
 	public void registrationSuccess(String response) {
 		// Have to parse response
-		finish();
-		Intent myIntent = new Intent(RegistrationSMActivity.this,
-				HomeActivity.class);
-		startActivity(myIntent);
+
+		AccountSettingsEntity accountSettingsEntity = ServerResponseParser
+				.parseUserProfileInfo(response, false);
+
+		if (accountSettingsEntity != null) {
+			AppStaticStorages.accountSettingsEntity = accountSettingsEntity;
+
+			// save the authToken, id to the storage
+			Utility.storeSession(
+					AppStaticStorages.accountSettingsEntity.getSmID(),
+					AppStaticStorages.accountSettingsEntity.getAuthToken(),
+					RegistrationSMActivity.this);
+
+			finish();
+			Intent myIntent = new Intent(RegistrationSMActivity.this,
+					HomeActivity.class);
+			startActivity(myIntent);
+		} else {
+			Log.e("Facebook Login Error", "Error during parsing response");
+		}
+
 	}
 
 	public boolean onOptionItemSelected(int requestCode) {
@@ -481,7 +489,5 @@ public class RegistrationSMActivity extends Activity {
 				LoginActivity.class);
 		startActivity(myIntent);
 	}
-
-	
 
 }
