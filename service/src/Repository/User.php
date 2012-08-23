@@ -712,8 +712,15 @@ class User extends BaseRepository
 
     public function search($keyword = null, $location = array(), $limit = 20)
     {
+        $exclude = array();
+        $exclude[] = $this->currentUser->getId();
+
+        if ($this->currentUser->getBlockedBy()) {
+            $exclude = array_merge($exclude, $this->currentUser->getBlockedBy());
+        }
+
         $query = $this->createQueryBuilder()
-            ->field('id')->notIn($this->currentUser->getBlockedBy())
+            ->field('id')->notIn($exclude)
             ->field('visible')->equals(true)
             ->limit($limit);
 
@@ -724,9 +731,22 @@ class User extends BaseRepository
             $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
         }
 
-        $users = $query->getQuery()->execute();
+        $result = $query->getQuery()->execute();
 
-        return (count($users)) ? $this->_toArrayAll($users, true) : array();
+        if (count($result)) {
+
+            $friends = $this->currentUser->getFriends();
+            $users = $this->_toArrayAll($result, true);
+
+            foreach ($users as &$user) {
+                $user['isFriend'] = in_array($user['id'], $friends);
+                $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+            }
+
+            return $users;
+        }
+
+        return array();
     }
 
     public function getFacebookUsers($start = null, $limit = null)

@@ -16,6 +16,9 @@ class ExternalLocation
     protected $id;
 
     /** @ODM\String */
+    protected $userId = null;
+
+    /** @ODM\String */
     protected $refId;
 
     /** @ODM\String */
@@ -49,6 +52,7 @@ class ExternalLocation
     {
         $data = array(
             'id' => $this->getId(),
+            'userId' => $this->getUserId(),
             'refId' => $this->getRefId(),
             'refUserId' => $this->getRefUserId(),
             'refLocationId' => $this->getRefLocationId(),
@@ -68,7 +72,8 @@ class ExternalLocation
         $data = array(
             'id' => $this->getId(),
             'email' => '',
-            'source' => $this->getSource()
+            'source' => $this->getSource(),
+            'userId' => $this->getUserId()
         );
 
         $coords = $this->getCoords();
@@ -193,5 +198,16 @@ class ExternalLocation
     public function getRefProfile()
     {
         return $this->refProfile;
+    }
+
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+        return $this;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
     }
 }

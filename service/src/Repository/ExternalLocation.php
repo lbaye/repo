@@ -2,10 +2,10 @@
 
 namespace Repository;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Repository\Base as BaseRepository;
 use Document\ExternalLocation as ExternalLocationDocument;
 
-class ExternalLocation extends DocumentRepository
+class ExternalLocation extends BaseRepository
 {
     public function exists($refId)
     {
@@ -37,9 +37,11 @@ class ExternalLocation extends DocumentRepository
 
         if (count($result)) {
 
+            $friends = $this->currentUser->getFriends();
             $externalUsers = $this->_toArrayAll($result);
 
             foreach ($externalUsers as &$externalUser) {
+                $externalUser['isFriend'] = in_array($externalUser['userId'], $friends);
                 $externalUser['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $externalUser['currentLocation']['lat'], $externalUser['currentLocation']['lng']);
             }
 
@@ -72,6 +74,13 @@ class ExternalLocation extends DocumentRepository
                 $method = "set" . ucfirst($field);
                 $externalLocation->$method($data[$externalField]);
             }
+        }
+
+        $userRepo = $this->dm->getRepository('Document\User');
+        $user = $userRepo->findOneBy(array('facebookId' => $data['author_uid']));
+
+        if ($user instanceof \Document\User) {
+            $externalLocation->setUserId($user->getId());
         }
 
         return $externalLocation;

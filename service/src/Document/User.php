@@ -846,17 +846,24 @@ class User
 
     public function toArrayFiltered(User $viewer)
     {
-        $info = $this->toArray();
+        $info     = $this->toArray();
         $shearing = $this->getSharingPreferenceSettings();
 
-        foreach($shearing as $field => $value) {
-            if($value == 'all') continue;
-            else if($value == 'none') {
-                if($this->getId() != $viewer->getId()) $info[$field] = null;
-            } else if($value == 'friends') {
-                if(!in_array($viewer->getId(), $this->getFriends())) $info[$field] = null;
-            } else if($value == 'circles') {
-                if(!in_array($viewer->getId(), $this->getCircleFriends())) $info[$field] = null;
+        foreach ($shearing as $field => $value) {
+            if ($value == 'all') {
+                continue;
+            } elseif ($value == 'none') {
+                if ($this->getId() != $viewer->getId()) {
+                    $info[$field] = null;
+                }
+            } elseif ($value == 'friends') {
+                if (!in_array($viewer->getId(), $this->getFriends())) {
+                    $info[$field] = null;
+                }
+            } elseif ($value == 'circles') {
+                if (!in_array($viewer->getId(), $this->getCircleFriends())) {
+                    $info[$field] = null;
+                }
             }
         }
 
@@ -866,8 +873,9 @@ class User
     public function getFriends()
     {
         $circles = $this->getCircles();
-        foreach($circles as $circle) {
-            if($circle->getName() == 'friends') {
+
+        foreach ($circles as $circle) {
+            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
                 return $circle->getFriends();
             }
         }
@@ -878,8 +886,10 @@ class User
         $circles = $this->getCircles();
         $friends = array();
 
-        foreach($circles as $circle) {
-           $friends = array_merge($friends, $circle->getFriends());
+        foreach ($circles as $circle) {
+            if ($circle->getType() != 'system') {
+                $friends = array_merge($friends, $circle->getFriends());
+            }
         }
 
         return $friends;

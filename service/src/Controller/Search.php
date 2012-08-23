@@ -42,6 +42,10 @@ class Search extends Base
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
+        $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
+        $this->externalLocationRepository->setCurrentUser($this->user);
+        $this->externalLocationRepository->setConfig($this->config);
+
         $this->_ensureLoggedIn();
     }
 
@@ -65,18 +69,18 @@ class Search extends Base
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
         $people = $this->userRepository->search($keywords, $location, self::PEOPLE_THRESHOLD);
-        array_walk($people, function(&$person){
+        $friends = $this->user->getFriends();
+
+        array_walk($people, function(&$person) use ($friends, $data) {
             $person['external'] = false;
         });
 
         if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {
 
             $difference = self::PEOPLE_THRESHOLD - count($people);
-
-            $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
             $externalPeople = $this->externalLocationRepository->getNearBy($location, $difference);
 
-            array_walk($externalPeople, function(&$person){
+            array_walk($externalPeople, function(&$person) use ($friends) {
                 $person['external'] = true;
             });
 
