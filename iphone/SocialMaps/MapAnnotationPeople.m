@@ -115,7 +115,7 @@
     // Add friend
     UIButton *addFriendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+20, 53, 32);
-    [addFriendBtn addTarget:self action:@selector(addFriendClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [addFriendBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [addFriendBtn setImage:[UIImage imageNamed:@"map_add_friend.png"] forState:UIControlStateNormal];
     addFriendBtn.backgroundColor = [UIColor clearColor];
     addFriendBtn.tag = 11003;
@@ -124,7 +124,7 @@
     // Meet-up request
     UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     meetupBtn.frame = CGRectMake(15, infoView.frame.size.height-15-27, 57, 27);
-    [meetupBtn addTarget:self action:@selector(meetupClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
     meetupBtn.backgroundColor = [UIColor clearColor];
     meetupBtn.tag = 11004;
@@ -133,7 +133,7 @@
     // Directions request
     UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-15-27, 57, 27);
-    [directionBtn addTarget:self action:@selector(directionsClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
     directionBtn.backgroundColor = [UIColor clearColor];
     directionBtn.tag = 11005;
@@ -142,7 +142,7 @@
     // Message request
     UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
-    [messageBtn addTarget:self action:@selector(messageClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
     messageBtn.backgroundColor = [UIColor clearColor];
     messageBtn.tag = 11006;
@@ -163,49 +163,39 @@
 }
 
 // Button click events
-- (void) addFriendClicked:(id) sender {
-    NSLog(@"MapAnnotation: addFriendClicked");
+- (void) handleUserAction:(id) sender {
+    UIButton *btn = (UIButton*)sender ;
+    int tag = btn.tag;
+    MAP_USER_ACTION actionType;
+    NSLog(@"MapAnnotationPeople: performUserAction, tag=%d", tag);
+    
+    switch (tag) {
+        case 11003:
+            actionType = MapAnnoUserActionAddFriend;
+            break;
+        case 11004:
+            actionType = MapAnnoUserActionMeetup;
+            break;    
+        case 11005:
+            actionType = MapAnnoUserActionDirection;
+            break;
+        case 11006:
+            actionType = MapAnnoUserActionMessage;
+            break;
+        default:
+            return;
+            break;
+    }
+    
     MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPeople *locItem = (LocationItemPeople*) [selAnno annotation];
+    LocationItemPlace *locItem = (LocationItemPlace*) [selAnno annotation];
     NSLog(@"Name=%@", locItem.itemName);
     
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(addFriendSelected:)]) {
-        [self.delegate addFriendSelected:[selAnno annotation]];
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(performUserAction:type:)]) {
+        [self.delegate performUserAction:selAnno type:actionType];
     }
 }
 
-- (void) meetupClicked:(id) sender {
-    NSLog(@"MapAnnotation: meetupClicked");
-    MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPeople *locItem = (LocationItemPeople*) [selAnno annotation];
-    NSLog(@"Name=%@", locItem.itemName);
-    
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(meetupRequestSelecetd:)]) {
-        [self.delegate meetupRequestSelected:[selAnno annotation]];
-    }
-}
-
-- (void) directionsClicked:(id) sender {
-    NSLog(@"MapAnnotation: directionsClicked");
-    MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPeople *locItem = (LocationItemPeople*) [selAnno annotation];
-    NSLog(@"Name=%@", locItem.itemName);
-    
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(directionSelected:)]) {
-        [self.delegate directionSelected:[selAnno annotation]];
-    }
-}
-
-- (void) messageClicked:(id) sender {
-    NSLog(@"MapAnnotation: messageClicked");
-    MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPeople *locItem = (LocationItemPeople*) [selAnno annotation];
-    NSLog(@"Name=%@", locItem.itemName);
-    
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(messageSelected:)]) {
-        [self.delegate messageSelected:[selAnno annotation]];
-    }
-}
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 }
 @end

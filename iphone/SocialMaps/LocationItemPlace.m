@@ -34,7 +34,7 @@
         CGRect catImgFrame = CGRectMake(10+itemIcon.size.width+10, 
                                      cell.frame.size.height/2-28,
                                      28, 28);
-        catImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sm_icon.png"]];
+        catImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"category_dining.png"]];
         catImage.frame = catImgFrame;
         catImage.tag   = 2007;
 		
@@ -44,17 +44,12 @@
     UIButton   *review = (UIButton*) [cell viewWithTag:2008];  
     if (review == nil) {
         CGRect reviewFrame = CGRectMake(cell.frame.size.width-110, 
-                                        cell.frame.size.height/2
-                                        
-                                        
-                                        
-                                        -37, 100, 37);
+                                        cell.frame.size.height/2-37, 100, 37);
         review = [UIButton buttonWithType:UIButtonTypeCustom];
         review.frame = reviewFrame;
         review.backgroundColor = [UIColor clearColor];
-        review.titleLabel.text = @"Show reviews";
-        review.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15];
-        
+
+        [review setImage:[UIImage imageNamed:@"review_btn.png"] forState:UIControlStateNormal];
         [review addTarget:self 
                      action:@selector(showReview:)
            forControlEvents:UIControlEventTouchUpInside];
@@ -65,11 +60,19 @@
     }
     
 	// Name
+    CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, 
-                                  cell.frame.size.height/4*3-lblName.frame.size.height, lblName.frame.size.width, lblName.frame.size.height);
+                                  catImage.frame.origin.y+catImage.frame.size.height+5, nameSize.width, nameSize.height);
     lblName.frame = nameFrame;
     
 	return cell;
+}
+
++ (UIImage*) getIconForCategory:(NSString*)cat {
+    // Decide on category icon based on passed in value
+    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"category_dining" ofType:@"png"];
+    UIImage *catIcon = [[UIImage alloc] initWithContentsOfFile:iconPath];
+    return catIcon;
 }
 
 // Button click handlers

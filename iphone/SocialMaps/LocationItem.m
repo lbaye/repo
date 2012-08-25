@@ -52,11 +52,12 @@
     CGSize addressStringSize = [itemAddress sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     
 	CGRect CellFrame   = CGRectMake(0, 0, tv.frame.size.width, [self getRowHeight:tv]);
-    CGRect iconFrame = CGRectMake(10, CellFrame.size.height/4*3/4, CellFrame.size.height/4*3/2, CellFrame.size.height/4*3/2);
+    CGRect addressFrame = CGRectMake(10, CellFrame.size.height-10-addressStringSize.height, addressStringSize.width, addressStringSize.height);
+	CGRect distFrame = CGRectMake(CellFrame.size.width-60, CellFrame.size.height-10-addressStringSize.height, 60, addressStringSize.height);
+
+    CGRect iconFrame = CGRectMake(10, (CellFrame.size.height/2-addressFrame.size.height-10)/2, CellFrame.size.height/2, CellFrame.size.height/2);
 
 	CGRect nameFrame = CGRectMake(iconFrame.size.width+10, CellFrame.size.height/3, nameStringSize.width, nameStringSize.height);
-	CGRect addressFrame = CGRectMake(10, CellFrame.size.height/4*3, addressStringSize.width, addressStringSize.height);
-	CGRect distFrame = CGRectMake(CellFrame.size.width-60, CellFrame.size.height/4*3, 60, addressStringSize.height);
     
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -81,6 +82,7 @@
         // Icon
         imgIcon = [UIImageView imageViewWithRectImage:iconFrame andImage:itemIcon withCornerradius:.10f];
         imgIcon.tag = 2010;
+        imgIcon.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.7];
         [cell.contentView addSubview:imgIcon];
         
 		// Address
@@ -125,13 +127,15 @@
 	}
     
     // Name
+    lblName.frame = nameFrame;
 	lblName.text = itemName;
     
     // Address
+    lblAddress.frame = addressFrame;
     lblAddress.text  = itemAddress;
 	
     // Distance
-    lblDist.text = [NSString stringWithFormat:@"%d m", (int)itemDistance];
+    lblDist.text = [NSString stringWithFormat:@"%dm", (int)itemDistance];
                     
     // Icon
     imgIcon.image = itemIcon;

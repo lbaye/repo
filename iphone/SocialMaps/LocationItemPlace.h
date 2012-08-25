@@ -26,4 +26,5 @@
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
           category:(NSString*)category coordinate:(CLLocationCoordinate2D)coordinate dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg;
++ (UIImage*) getIconForCategory:(NSString*)cat;
 @end

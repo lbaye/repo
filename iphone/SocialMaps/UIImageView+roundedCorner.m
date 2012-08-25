@@ -32,7 +32,13 @@
 }
 + (UIImage*) scaleImage:(UIImage*) img toSize:(CGSize)newSize {
     UIGraphicsBeginImageContext(newSize);
-    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Fill the original rect with black color
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
+    CGContextFillRect(context, CGRectMake(0,0,newSize.width,newSize.height));
+    
+    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height) blendMode:kCGBlendModeNormal alpha:.75];
     UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return scaledImage;

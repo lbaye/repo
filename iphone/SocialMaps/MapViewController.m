@@ -26,6 +26,7 @@
 #import "RestClient.h"
 #import "SearchLocation.h"
 #import "MapAnnotationPeople.h"
+#import "MapAnnotationPlace.h"
 #import "Places.h"
 
 
@@ -64,6 +65,7 @@
 @synthesize smAppDelegate;
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
+@synthesize mapAnnoPlace;
 @synthesize needToCenterMap;
 @synthesize filteredList;
 @synthesize selectedAnno;
@@ -83,6 +85,19 @@ typedef struct {
 } ButtonClickCallbackData;
 ButtonClickCallbackData callBackData;
 
+
+// UITextView delegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([text isEqualToString:@"\n"]) {
+        
+        [textView resignFirstResponder];
+        return FALSE;
+    }
+    return TRUE;
+}
+
+// End UITextView delegate
+
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation {
     LocationItem * locItem = (LocationItem*) newAnnotation;
     
@@ -91,7 +106,7 @@ ButtonClickCallbackData callBackData;
     if ([locItem isKindOfClass:[LocationItemPeople class]])
         pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
     else if ([locItem isKindOfClass:[LocationItemPlace class]])
-        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
     else if (smAppDelegate.userAccountPrefs.icon != nil) {
         pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
     }
@@ -101,18 +116,6 @@ ButtonClickCallbackData callBackData;
 - (void)drawRect:(CGRect)rect {
     NSLog(@"MapViewController:drawRect");
 }
-
-// MapAnnotation delegate methods
-- (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
-    NSLog(@"MapViewController:mapAnnotationChanged");
-    [_mapView removeAnnotation:anno];
-    [_mapView addAnnotation:anno];
-    selectedAnno = anno;
-    
-    [self.view setNeedsDisplay];
-}
-
-
 
 - (void) cancelRequest:(id)sender {
     [[sender superview] removeFromSuperview];
@@ -196,17 +199,16 @@ ButtonClickCallbackData callBackData;
     
 }
 
-// UITextView delegate
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    if ([text isEqualToString:@"\n"]) {
-        
-        [textView resignFirstResponder];
-        return FALSE;
-    }
-    return TRUE;
-}
 
-// End UITextView delegate
+// MapAnnotation delegate methods
+- (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
+    NSLog(@"MapViewController:mapAnnotationChanged");
+    [_mapView removeAnnotation:anno];
+    [_mapView addAnnotation:anno];
+    selectedAnno = anno;
+    
+    [self.view setNeedsDisplay];
+}
 
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
@@ -267,7 +269,34 @@ ButtonClickCallbackData callBackData;
     [[self view] addSubview:messageView];
 
 }
-// MapAnnotation delegate methods
+
+- (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
+    LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
+
+    selectedAnno = [annoView annotation];
+    [self mapAnnotationChanged:[annoView annotation]];
+    [_mapView bringSubviewToFront:annoView];
+    
+    NSLog(@"MapViewController: performUserAction %@ type=%d", locItem.itemName, actionType);
+    
+    switch (actionType) {
+        case MapAnnoUserActionAddFriend:
+            [self addFriendSelected:locItem];
+            break;
+        case MapAnnoUserActionMessage:
+            [self messageSelected:locItem];
+            break;
+        case MapAnnoUserActionMeetup:
+            [self meetupRequestSelected:locItem];
+            break;
+        case MapAnnoUserActionDirection:
+            [self directionSelected:locItem];
+            break;
+        default:
+            break;
+    }
+}
+// MapAnnotation delegate methods end
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -324,10 +353,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -346,6 +375,10 @@ ButtonClickCallbackData callBackData;
     mapAnnoPeople = [[MapAnnotationPeople alloc] init];
     mapAnnoPeople.currState = MapAnnotationStateNormal;
     mapAnnoPeople.delegate = self;
+    
+    mapAnnoPlace = [[MapAnnotationPlace alloc] init];
+    mapAnnoPlace.currState = MapAnnotationStateNormal;
+    mapAnnoPlace.delegate = self;
     
     // Location update button
     UIButton *locUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1307,7 +1340,7 @@ ButtonClickCallbackData callBackData;
                 if ((indx=[smAppDelegate.placeIndex objectForKey:item.ID]) == nil) {
                     NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
                     UIImage *icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
-                    NSString* bgPath = [[NSBundle mainBundle] pathForResource:@"listview_bg" ofType:@"png"];
+                    NSString* bgPath = [[NSBundle mainBundle] pathForResource:@"banner_bar" ofType:@"png"];
                     UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
 
                     CLLocationCoordinate2D loc;

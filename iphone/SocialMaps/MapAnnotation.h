@@ -12,15 +12,24 @@
 
 #define ANNO_IMG_WIDTH  53
 #define ANNO_IMG_HEIGHT 63
+typedef enum _MAP_USER_ACTION {
+    MapAnnoUserActionAddFriend=0,
+    MapAnnoUserActionMeetup,
+    MapAnnoUserActionDirection,
+    MapAnnoUserActionMessage,
+    MapAnnoUserActionEvent,
+    MapAnnoUserActionPlan,
+    MapAnnoUserActionDirectionPlace,
+    MapAnnoUserActionRecommend,
+    MapAnnoUserActionReview,
+    MapAnnoUserActionSave,
+    MapAnnoUserActionMeetupPlace,
+    MapAnnoUserActionCheckin,
+    MapAnnoUserActionGeotag
+} MAP_USER_ACTION;
 
 @protocol MapAnnotationDelegate <NSObject>
-
-- (void) mapAnnotationChanged:(id <MKAnnotation>)anno;
-- (void) addFriendSelected:(id <MKAnnotation>)anno;
-- (void) meetupRequestSelected:(id <MKAnnotation>)anno;
-- (void) directionSelected:(id <MKAnnotation>)anno;
-- (void) messageSelected:(id <MKAnnotation>)anno;
-
+- (void) performUserAction:(MKAnnotationView*)annoView type:(MAP_USER_ACTION) actionType;
 @end
 
 @interface MapAnnotation : NSObject {

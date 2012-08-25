@@ -39,6 +39,7 @@ typedef enum _SHARING_TYPES {
     AppDelegate         *smAppDelegate;
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
+    MapAnnotationPeople *mapAnnoPlace;
     bool needToCenterMap;
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
@@ -52,6 +53,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
+@property (nonatomic, retain) MapAnnotation *mapAnnoPlace;
 @property (atomic) bool needToCenterMap;
 @property (nonatomic, retain) NSMutableArray *filteredList;
 @property (nonatomic, retain) MapAnnotation *selectedAnno;

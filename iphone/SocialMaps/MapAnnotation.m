@@ -113,10 +113,11 @@
         else
             [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
 
-    } else {
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+        [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
+    }else {
         //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
-
     }
 
     [annoView bringSubviewToFront:btn];
@@ -187,6 +188,8 @@
                     locItem.currDisplayState = MapAnnotationStateDetailed;
                 else
                     locItem.currDisplayState = MapAnnotationStateNormal;
+            } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+                locItem.currDisplayState = MapAnnotationStateDetailed;
             } else {
                 locItem.currDisplayState = MapAnnotationStateNormal;
             }
