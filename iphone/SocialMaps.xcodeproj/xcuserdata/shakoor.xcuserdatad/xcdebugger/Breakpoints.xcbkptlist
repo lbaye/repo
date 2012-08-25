@@ -140,7 +140,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "2161"
          endingLineNumber = "2161"
-         landmarkName = "-changePassword:oldpasswd:authToken:authTokenVal:"
+         landmarkName = "-setSharingPreferenceSettings:::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -168,7 +168,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "834"
          endingLineNumber = "834"
-         landmarkName = "-appImageDidLoad:"
+         landmarkName = "-loadImagesForOnscreenRows"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -182,8 +182,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "799"
          endingLineNumber = "799"
-         landmarkName = "-startIconDownload:forIndexPath:"
-         landmarkType = "5">
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -224,7 +224,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "957"
          endingLineNumber = "957"
-         landmarkName = "-searchResult"
+         landmarkName = "-searchBarSearchButtonClicked:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -238,7 +238,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "963"
          endingLineNumber = "963"
-         landmarkName = "-getUserInfo:tokenStr:tokenValue:"
+         landmarkName = "-getAccountSettings::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -252,8 +252,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "940"
          endingLineNumber = "940"
-         landmarkName = "-getUserInfo:tokenStr:tokenValue:"
-         landmarkType = "5">
+         landmarkName = "@implementation RestClient"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -266,7 +266,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "728"
          endingLineNumber = "728"
-         landmarkName = "-parseAccountSettings:user:"
+         landmarkName = "-getSharingPreference::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

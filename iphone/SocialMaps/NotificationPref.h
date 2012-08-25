@@ -10,30 +10,36 @@
 
 @interface NotificationPref : NSObject
 {
-NSString *friend_requests_sm;
-NSString *posts_by_friends_sm;
-NSString *comments_sm;
-NSString *messages_sm;
-NSString *proximity_alerts_sm; 
-NSString *recommendations_sm;
-NSString *friend_requests_mail;
-NSString *posts_by_friends_mail;
-NSString *comments_mail;
-NSString *messages_mail;
-NSString *proximity_alerts_mail; 
-NSString *recommendations_mai;
+bool friend_requests_sm;
+bool posts_by_friends_sm;
+bool comments_sm;
+bool messages_sm;
+bool proximity_alerts_sm; 
+bool recommendations_sm;
+bool friend_requests_mail;
+bool posts_by_friends_mail;
+bool comments_mail;
+bool messages_mail;
+bool proximity_alerts_mail; 
+bool recommendations_mail;
+bool offline_notifications_mail;    
+bool offline_notifications_sm;
+int  proximity_radius;
 }
-@property(nonatomic,retain) NSString *friend_requests_sm;
-@property(nonatomic,retain) NSString *posts_by_friends_sm;
-@property(nonatomic,retain) NSString *comments_sm;
-@property(nonatomic,retain) NSString *messages_sm;
-@property(nonatomic,retain) NSString *proximity_alerts_sm; 
-@property(nonatomic,retain) NSString *recommendations_sm;
-@property(nonatomic,retain) NSString *friend_requests_mail;
-@property(nonatomic,retain) NSString *posts_by_friends_mail;
-@property(nonatomic,retain) NSString *comments_mail;
-@property(nonatomic,retain) NSString *messages_mail;
-@property(nonatomic,retain) NSString *proximity_alerts_mail; 
-@property(nonatomic,retain) NSString *recommendations_mai;
+@property(atomic) bool friend_requests_sm;
+@property(atomic) bool posts_by_friends_sm;
+@property(atomic) bool comments_sm;
+@property(atomic) bool messages_sm;
+@property(atomic) bool proximity_alerts_sm; 
+@property(atomic) bool recommendations_sm;
+@property(atomic) bool friend_requests_mail;
+@property(atomic) bool posts_by_friends_mail;
+@property(atomic) bool comments_mail;
+@property(atomic) bool messages_mail;
+@property(atomic) bool proximity_alerts_mail; 
+@property(atomic) bool recommendations_mail;
+@property(atomic) bool offline_notifications_mail;    
+@property(atomic) bool offline_notifications_sm;
+@property(atomic) int  proximity_radius;
 
 @end

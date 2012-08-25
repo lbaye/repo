@@ -353,10 +353,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];

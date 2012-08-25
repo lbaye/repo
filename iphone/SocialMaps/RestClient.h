@@ -29,7 +29,6 @@
 - (void) forgotPassword:(NSString*)email;
 -(void) getPlatForm:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getLayer:(NSString *)authToken:(NSString *)authTokenValue;
--(void) getSharingPreferenceSettings:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getAccountSettings:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getShareLocation:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getGeofence:(NSString *)authToken:(NSString *)authTokenValue;

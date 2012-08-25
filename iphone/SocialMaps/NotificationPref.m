@@ -20,5 +20,8 @@
 @synthesize comments_mail;
 @synthesize messages_mail;
 @synthesize proximity_alerts_mail; 
-@synthesize recommendations_mai;
+@synthesize recommendations_mail;
+@synthesize offline_notifications_mail;    
+@synthesize offline_notifications_sm;
+@synthesize proximity_radius;
 @end

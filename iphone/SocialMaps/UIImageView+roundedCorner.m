@@ -38,7 +38,7 @@
     CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
     CGContextFillRect(context, CGRectMake(0,0,newSize.width,newSize.height));
     
-    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height) blendMode:kCGBlendModeNormal alpha:.75];
+    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height) blendMode:kCGBlendModeNormal alpha:1.0];
     UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return scaledImage;
