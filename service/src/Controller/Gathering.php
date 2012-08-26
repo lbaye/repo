@@ -80,7 +80,7 @@ class Gathering extends Base
 
         if (null !== $gathering) {
             if($gathering->isPermittedFor($this->user)){
-                $this->response->setContent(json_encode($gathering->toArray()));
+                $this->response->setContent(json_encode($gathering->toArrayDetailed()));
                 $this->response->setStatusCode(200);
             } else {
                 $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));

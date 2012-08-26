@@ -62,6 +62,15 @@ class EventsTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testIndividualEventWillProvideExpandedFormat()
+    {
+        // Accessing User1's private Event
+        list($responseCode, $responseBody) = sendGetRequest($this->endpoint .'/5020cb1c757df2ff12000000', array(), $this->user1Headers);
+        $retrieved = json_decode($responseBody);
+
+        $this->assertObjectHasAttribute('guests', $retrieved);
+    }
+
     public function testEventListing()
     {
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint, array(), $this->user1Headers);
@@ -70,6 +79,9 @@ class EventsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $responseCode);
         $this->assertTrue(is_array($retrieved));
         $this->assertSame(3, count($retrieved));
+
+        // Listing shows short format
+        $this->assertObjectNotHasAttribute('guests', $retrieved[0]);
     }
 
     public function testPrivateEventsAreFilteredFromOthers()

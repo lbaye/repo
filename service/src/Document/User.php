@@ -881,12 +881,14 @@ class User
         }
     }
 
-    public function getCircleFriends()
+    public function getCircleFriends(array $inCircles = null)
     {
         $circles = $this->getCircles();
         $friends = array();
 
         foreach ($circles as $circle) {
+            if(is_array($inCircles) && !in_array($circle->getId(), $inCircles)) continue;
+
             if ($circle->getType() != 'system') {
                 $friends = array_merge($friends, $circle->getFriends());
             }
@@ -894,4 +896,6 @@ class User
 
         return $friends;
     }
+
+
 }
