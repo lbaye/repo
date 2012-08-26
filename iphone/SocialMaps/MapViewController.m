@@ -103,13 +103,13 @@ ButtonClickCallbackData callBackData;
     
     MKAnnotationView *pin = nil;
     
-    if ([locItem isKindOfClass:[LocationItemPeople class]])
-        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if ([locItem isKindOfClass:[LocationItemPlace class]])
-        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if (smAppDelegate.userAccountPrefs.icon != nil) {
-        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    }
+//    if ([locItem isKindOfClass:[LocationItemPeople class]])
+//        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    else if ([locItem isKindOfClass:[LocationItemPlace class]])
+//        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    else if (smAppDelegate.userAccountPrefs.icon != nil) {
+//        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    }
     return pin;
 }
 
@@ -1070,7 +1070,7 @@ ButtonClickCallbackData callBackData;
 //    [rc setPlatForm:aPlatform:@"":@""];
 //    [rc getPlatForm];
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
-    [rc getShareLocation:@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
+    [rc getAllEvents:@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
 }
 
 - (IBAction)gotoBreadcrumbs:(id)sender {
