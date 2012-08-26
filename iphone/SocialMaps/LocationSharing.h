@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SelectFriends.h"
 
-@interface LocationSharing : UIScrollView
+@interface LocationSharing : UIScrollView<SelectFriendsDelegate>
+
 - (UIScrollView*) initWithFrame:(CGRect)scrollFrame;
 - (void) accSettingButtonClicked:(id) sender;
 - (void) accSettingResetButtonClicked:(id) sender;

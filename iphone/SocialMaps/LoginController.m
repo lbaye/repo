@@ -398,6 +398,7 @@
 }
 
 - (IBAction)doForgotPassword:(id)sender {
+    [self.view endEditing:YES];
     forgotPWView.hidden = FALSE;
 }
 
@@ -420,6 +421,7 @@
 }
 
 - (IBAction)cancelReset:(id)sender {
+    [self.view endEditing:YES];
     forgotPWView.hidden = TRUE;
 }
 
