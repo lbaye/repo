@@ -7,22 +7,30 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Date.h"
+#import "Geolocation.h"
 
 @interface Event : NSObject
 {
-    NSString *title;
-    NSString *description;
-    NSString *duration;
-    NSMutableArray *guests;
-    NSString *location;
-    NSString *time;
+    NSString *eventID;
+    NSString *eventName;
+    Date *eventDate;
+    Date *eventCreateDate;
+    NSString *eventShortSummary;
+    NSString *eventAddress;
+    NSString *eventDistance;
+    Geolocation *eventLocation;
+    NSString *willAttend;
 }
 
-@property(nonatomic,retain) NSString *title;
-@property(nonatomic,retain) NSString *description;
-@property(nonatomic,retain) NSString *duration;
-@property(nonatomic,retain) NSMutableArray *guests;
-@property(nonatomic,retain) NSString *location;
-@property(nonatomic,retain) NSString *time;
+@property(nonatomic,retain) NSString *eventID;
+@property(nonatomic,retain) NSString *eventName;
+@property(nonatomic,retain) Date *eventDate;
+@property(nonatomic,retain) Date *eventCreateDate;
+@property(nonatomic,retain) NSString *eventShortSummary;
+@property(nonatomic,retain) NSString *eventAddress;
+@property(nonatomic,retain) NSString *eventDistance;
+@property(nonatomic,retain) Geolocation *eventLocation;
+@property(nonatomic,retain) NSString *willAttend;
 
 @end

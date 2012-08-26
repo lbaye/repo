@@ -9,10 +9,14 @@
 #import "Event.h"
 
 @implementation Event
-@synthesize title;
-@synthesize description;
-@synthesize duration;
-@synthesize guests;
-@synthesize location;
-@synthesize time;
+@synthesize eventID;
+@synthesize eventName;
+@synthesize eventShortSummary;
+@synthesize eventAddress;
+@synthesize eventDistance;
+@synthesize eventLocation;
+@synthesize willAttend;
+@synthesize eventDate;
+@synthesize eventCreateDate;
+
 @end

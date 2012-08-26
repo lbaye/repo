@@ -23,6 +23,7 @@
 #import "NotifRequest.h"
 #import "UserCircle.h"
 #import "UserFriends.h"
+#import "Event.h"
 
 @implementation RestClient
 
@@ -1456,6 +1457,83 @@
     [request startAsynchronous];
 }
 
+-(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    Event *aEvent = [[Event alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            [aEvent setEventID:[[jsonObjects objectAtIndex:0] objectForKey:@"id"]];
+            [aEvent setEventName:[[jsonObjects objectAtIndex:0] objectForKey:@"title"]];
+            
+            Date *date=[[Date alloc] init];
+            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"date"];
+            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone"];            
+            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone_type"];                        
+            [aEvent setEventCreateDate:date];
+
+            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"date"];
+            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone"];            
+            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone_type"];                        
+            [aEvent setEventDate:date];            
+            
+            Geolocation *loc=[[Geolocation alloc] init];
+            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lat"];
+            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lng"];
+            [aEvent setEventLocation:loc];
+            [aEvent setEventAddress:[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"address"]];
+            NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventID,aEvent.eventLocation.latitude);  
+            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:shareLocation];
+        } 
+        else 
+        {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getShareLocation");
+    [request startAsynchronous];
+}
 
 -(void)setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue
 {
