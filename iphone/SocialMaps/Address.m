@@ -17,3 +17,6 @@
 @synthesize country;
 
 @end
+
+
+// Added
