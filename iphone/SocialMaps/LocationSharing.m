@@ -21,6 +21,7 @@
 #import "LocationSharingPlatforms.h"
 #import "SelectFriends.h"
 #import "AppDelegate.h"
+#import "UserCircle.h"
 
 #define ROW_HEIGHT 62
 
@@ -268,8 +269,13 @@
     } else {
         if (parent.tag == 3003) {
             // Show select friends view
-             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            NSMutableArray *circles = [[NSMutableArray alloc] init];
+            for (UserCircle *aCircle in appDelegate.userAccountPrefs.circles) {
+                [circles addObject:aCircle.circleName];
+            }
+            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList circles:circles];
+            selFriends.delegate = self;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                          green:247.0/255.0 
                                                           blue:247.0/255.0 
@@ -368,6 +374,21 @@
     [UIView setAnimationDuration: movementDuration];
     self.frame = CGRectOffset(self.frame, 0, movement);
     [UIView commitAnimations];
+}
+
+// SelectFriends delegate methods
+- (void) selectFriendsDone:(CustomSelection) selection {
+    NSLog(@"LocationSharing:selectFriendsDone");
+    NSLog(@"Selected friends:");
+    for (int i=0; i < selection.friends.count; i++)
+        NSLog(@"id=%@", [selection.friends objectAtIndex:i]);
+    NSLog(@"Selected circles:");
+    for (int i=0; i < selection.circles.count; i++)
+        NSLog(@"id=%@", [selection.circles objectAtIndex:i]);
+    
+}
+- (void) selectFriendsCancelled {
+    NSLog(@"LocationSharing:selectFriendsCancelled");
 }
 
 @end

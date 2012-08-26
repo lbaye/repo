@@ -14,22 +14,28 @@
 
 @implementation SelectFriends
 @synthesize friendList;
+@synthesize circleList;
 @synthesize selectedFriends;
 @synthesize photoScrollView;
 @synthesize circleScrollView;
 @synthesize selectedScrollView;
 @synthesize line2Image;
 @synthesize filteredFriends;
+@synthesize customSelection;
+@synthesize delegate;
 
-- (id) initWithFrame:(CGRect)frame friends:(NSMutableArray*)friends
+- (id) initWithFrame:(CGRect)frame friends:(NSMutableArray*)friends circles:(NSMutableArray*)circles
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         friendList = [[NSMutableArray alloc] initWithArray:friends];
+        circleList = [[NSMutableArray alloc] initWithArray:circles];
         filteredFriends = [[NSMutableArray alloc] initWithArray:friends];
         self.backgroundColor = [UIColor colorWithRed:244.0/255.0 green:244.0/255.0 blue:244.0/255.0 alpha:1.0];
         selectedFriends = [[NSMutableArray alloc] init];
+        customSelection.friends = [[NSMutableArray alloc] init];
+        customSelection.circles = [[NSMutableArray alloc] init];
         for (int i=0; i < filteredFriends.count; i++) {
             [selectedFriends addObject:[NSNumber numberWithInt:0]];
         }
@@ -180,12 +186,14 @@
     CGSize circleSelContentsize = CGSizeMake(circleScrollFrame.size.width, circleScrollFrame.size.height*2);
     circleScrollView.contentSize = circleSelContentsize;
     
-    for (int i=0;i<7;i++) {
+    for (int i=0;i<circleList.count;i++) {
         CustomCheckbox *circle = [[CustomCheckbox alloc] initWithFrame:CGRectMake(0, i*(5+45), circleScrollFrame.size.width, 45) 
                                                             boxLocType:LabelPositionLeft 
                                                               numBoxes:1 
                                                                default:[NSArray arrayWithObject:[NSNumber numberWithInt:0]] 
-                                                                labels:[NSArray arrayWithObject:[NSString stringWithFormat:@"Circle %d (%d)", i+1, rand()%25]]];
+                                                                labels:[NSArray arrayWithObject:[circleList objectAtIndex:i]]];
+        circle.delegate = self;
+        circle.tag = 13000+i;
         [circleScrollView addSubview:circle];
     }
     [photoSel addSubview:circleScrollView];
@@ -297,10 +305,23 @@
 
 - (void) cancelSel:(id) sender {
     [self removeFromSuperview];
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(selectFriendsCancelled)]) {
+        [self.delegate selectFriendsCancelled];
+    }
 }
 
 - (void) saveSel:(id) sender {
     [self removeFromSuperview];
+    NSLog(@"Selected friends:");
+    for (int i=0; i < customSelection.friends.count; i++)
+        NSLog(@"id=%@", [customSelection.friends objectAtIndex:i]);
+    NSLog(@"Selected circles:");
+    for (int i=0; i < customSelection.circles.count; i++)
+        NSLog(@"id=%@", [customSelection.circles objectAtIndex:i]);
+
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(selectFriendsDone:)]) {
+        [self.delegate selectFriendsDone:customSelection];
+    }
 }
 
 - (void) imageTapped:(id)sender {
@@ -314,9 +335,13 @@
     if (currState == 0) {
         [imgView setBorderColor:[UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:28.0/255.0 alpha:1.0]];
         [selectedFriends replaceObjectAtIndex:imageNum withObject:[NSNumber numberWithInt:1]];
+        UserInfo *aFriend = (UserInfo*) [filteredFriends objectAtIndex:imageNum];
+        [customSelection.friends addObject:aFriend.userId];
     } else {
         [imgView setBorderColor:[UIColor clearColor]];
         [selectedFriends replaceObjectAtIndex:imageNum withObject:[NSNumber numberWithInt:0]];
+        UserInfo *aFriend = (UserInfo*) [filteredFriends objectAtIndex:imageNum];
+        [customSelection.friends removeObject:aFriend.userId];
     }
 
 }
@@ -333,6 +358,18 @@
     [UIView setAnimationDuration: movementDuration];
     self.frame = CGRectOffset(self.frame, 0, movement);
     [UIView commitAnimations];
+}
+
+// Custom Checkbox delegate methods
+- (void) checkboxClicked:(int)indx withState:(int)clicked sender:(id)sender {
+    CustomCheckbox *chkBox = (CustomCheckbox*) sender;
+    int circleIndx = chkBox.tag - 13000;
+    NSString * circleName = [circleList objectAtIndex:circleIndx];
+    NSLog(@"SelectFriend:CustomCheckbox indx:%d state:%d tag:%d name:%@", indx, clicked, chkBox.tag, circleName);
+    if (clicked == 1)
+        [customSelection.circles addObject:circleName];
+    else
+        [customSelection.circles removeObject:circleName];
 }
 
 //search bar delegate method starts
