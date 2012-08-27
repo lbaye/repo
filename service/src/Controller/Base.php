@@ -33,6 +33,9 @@ abstract class Base
      */
     protected $user;
 
+
+    protected $serializer;
+
     /**
      * Inject the Request object for further use.
      *
@@ -79,6 +82,10 @@ abstract class Base
      */
     public function init()
     {
+        $this->response = new Response();
+        $this->response->headers->set('Content-Type', 'application/json');
+
+        $this->serializer = \Service\Serializer\Factory::getSerializer('json');
     }
 
     /**
@@ -115,5 +122,52 @@ abstract class Base
         }
 
         return $gatheringItems;
+    }
+
+    protected function _generateResponse($hash, $code = 200, $options = array())
+    {
+        if (!empty($hash)) {
+            $this->response->setContent(
+                $this->serializer->serialize($hash, $options)
+            );
+            $this->response->setStatusCode($code);
+        } else {
+            $this->response->setContent('[]'); // No content
+            $this->response->setStatusCode($code);
+        }
+
+        return $this->response;
+    }
+
+    protected function _generateErrorResponse($message, $code = 406)
+    {
+        return $this->_generateResponse(array(
+            'message' => $message
+        ), $code);
+    }
+
+    protected function _generate404()
+    {
+        return $this->_generateErrorResponse('Object not found', 404);
+    }
+
+    protected function _generate500($message = 'Failed to update object')
+    {
+        return $this->_generateErrorResponse($message, 500);
+    }
+
+    protected function _generateUnauthorized($message = 'Unauthorized!')
+    {
+        return $this->_generateErrorResponse($message, 401);
+    }
+
+    protected function _generateForbidden($message = 'Forbidden!')
+    {
+        return $this->_generateErrorResponse($message, 403);
+    }
+
+    protected function _generateException(\Exception $e)
+    {
+        return $this->_generateErrorResponse($e->getMessage(), $e->getCode());
     }
 }

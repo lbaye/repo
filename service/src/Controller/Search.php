@@ -35,8 +35,7 @@ class Search extends Base
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -57,10 +56,7 @@ class Search extends Base
         $results['people'] = $this->people($data);
         $results['places'] = $this->places($data);
 
-        $this->response->setContent(json_encode($results));
-        $this->response->setStatusCode(200);
-
-        return $this->response;
+        return $this->_generateResponse($results);
     }
 
     protected function people($data)

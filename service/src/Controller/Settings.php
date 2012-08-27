@@ -18,8 +18,7 @@ class Settings extends Base
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -39,7 +38,7 @@ class Settings extends Base
         $settings = $this->user->getLocationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));;
         }
 
         $settings = array_merge($settings, $data);
@@ -65,7 +64,7 @@ class Settings extends Base
         $settings = $this->user->getGeoFence();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         if (isset($data['lat'])) {
@@ -93,7 +92,7 @@ class Settings extends Base
         $settings = $this->user->getNotificationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -109,11 +108,8 @@ class Settings extends Base
                 if (isset($data[$opt . '_mail'])) {
                     $settings[$opt]['mail'] = (boolean) $data[$opt . '_mail'];
                 }
-
             } else {
-
                 $settings[$opt] = $data[$opt];
-
             }
 
         }
@@ -133,7 +129,7 @@ class Settings extends Base
         $settings = $this->user->getPlatformSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -157,7 +153,7 @@ class Settings extends Base
         $settings = $this->user->getLayersSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -180,7 +176,7 @@ class Settings extends Base
         $data = $this->request->request->all();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($this->user->toArrayDetailed());
+            return $this->_generateResponse(array('result' => $this->user->toArrayDetailed()));
         }
 
         try {
@@ -191,26 +187,20 @@ class Settings extends Base
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
-
         } catch (\Exception\ResourceNotFoundException $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generate404();
 
         } catch (\Exception\UnauthorizedException $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateUnauthorized($e->getMessage());
 
-        } catch (\Exception\ResourceAlreadyExistsException $e) {
+        } catch (\Exception $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse($user->toArrayDetailed());
     }
 
     /**
@@ -230,7 +220,7 @@ class Settings extends Base
         $settings = array_merge($settings, $data);
         $this->user->setSharingPreferenceSettings($settings);
 
-        return $this->persistAndReturn($settings);
+        return $this->_generateResponse(array('result' => $settings));
     }
 
     /**
@@ -256,7 +246,7 @@ class Settings extends Base
             $this->user->setCurrentLocation($location);
             $this->_updateVisibility($this->user);
 
-            return $this->persistAndReturn($location);
+            return $this->_generateResponse(array('result' => $location));
 
         } else {
 
@@ -291,15 +281,12 @@ class Settings extends Base
         $this->dm->persist($this->user);
         $this->dm->flush();
 
-        return $this->returnResponse($result);
+        return $this->_generateResponse(array('result' => $result));
     }
 
     private function returnResponse($result)
     {
-        $this->response->setContent(json_encode(array('result' => $result)));
-        $this->response->setStatusCode(200);
-
-        return $this->response;
+        return $this->_generateResponse(array('result' => $result));
     }
 
     /**

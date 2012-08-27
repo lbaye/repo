@@ -88,10 +88,11 @@ class Gathering extends DocumentRepository
             }
         }
 
-        if(isset($data['guests'])){
+        if(isset($data['guests']) && is_array($data['guests'])){
             $users = $this->trimInvalidUsers($data['guests']);
             $gathering->setGuests($users);
         }
+
         if(isset($data['permission'])){
             $gathering->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }

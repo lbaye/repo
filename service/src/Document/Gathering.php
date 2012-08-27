@@ -115,7 +115,7 @@ abstract class Gathering extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title', 'time', 'createDate');
+        $fieldsToExpose = array('id', 'title','description', 'time', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {

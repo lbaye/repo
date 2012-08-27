@@ -27,8 +27,7 @@ class Deal extends Base
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->dealRepository = $this->dm->getRepository('Document\Deal');
@@ -51,22 +50,16 @@ class Deal extends Base
         $location = $this->user->getCurrentLocation();
 
         if(!isset($location['lat']) || !isset($location['lng'])){
-            $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
-            $this->response->setStatusCode(406);
-
+            return $this->_generateErrorResponse('Users Current location is not updated!');
         } else {
             $deals = $this->dealRepository->getNearBy($location['lat'], $location['lng']);
 
             if (!empty($deals)) {
-                $this->response->setContent(json_encode($deals));
-                $this->response->setStatusCode(200);
+                return $this->_generateResponse($deals);
             } else {
-                $this->response->setContent(json_encode(array('message' => 'No deals found')));
-                $this->response->setStatusCode(204);
+                return $this->_generateResponse(null, 204);
             }
         }
-
-        return $this->response;
     }
 
     /**
@@ -77,10 +70,7 @@ class Deal extends Base
      */
     public function getById($id)
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', 501);
     }
 
      /**
@@ -90,10 +80,7 @@ class Deal extends Base
      */
     public function getByCurrentUser()
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', 501);
     }
 
     /**
@@ -103,10 +90,7 @@ class Deal extends Base
      */
     public function getByUser()
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', 501);;
     }
 
      /**
@@ -122,15 +106,11 @@ class Deal extends Base
             $deal = $this->dealRepository->map($postData);
             $this->dealRepository->insert($deal);
 
-            $this->response->setContent(json_encode($deal->toArray()));
-            $this->response->setStatusCode(201);
-
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse($deal->toArray(), 201);
     }
 
      /**
@@ -140,10 +120,7 @@ class Deal extends Base
      */
     public function update()
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', 501);
     }
 
      /**
@@ -153,10 +130,7 @@ class Deal extends Base
      */
     public function delete()
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', 501);
     }
 
 }
