@@ -12,6 +12,7 @@
 #import "IconDownloader.h"
 #import "AppDelegate.h"
 #import "MapAnnotationPeople.h"
+#import "MapAnnotationPlace.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -39,7 +40,7 @@ typedef enum _SHARING_TYPES {
     AppDelegate         *smAppDelegate;
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
-    MapAnnotationPeople *mapAnnoPlace;
+    MapAnnotationPlace *mapAnnoPlace;
     bool needToCenterMap;
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;

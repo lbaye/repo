@@ -353,10 +353,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -447,7 +447,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
     
-    [self displayNotificationCount];
+    //[self displayNotificationCount];
 
 }
 /*
@@ -554,7 +554,8 @@ ButtonClickCallbackData callBackData;
 //    for (id<MKAnnotation> annotation in _mapView.annotations) {
 //        [_mapView removeAnnotation:annotation];
 //    }
-    [self loadAnnotations:animated];
+    if (smAppDelegate.gotListing == TRUE)
+        [self loadAnnotations:animated];
     
     [super viewWillAppear:animated];
 }
@@ -1257,7 +1258,6 @@ ButtonClickCallbackData callBackData;
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
-            float dist;
             
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
@@ -1379,7 +1379,7 @@ ButtonClickCallbackData callBackData;
             }
         }
     }
-
+    smAppDelegate.gotListing = TRUE;
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
