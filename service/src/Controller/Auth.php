@@ -45,6 +45,11 @@ class Auth extends Base
                 $user = $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
+
+
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(201);
 
@@ -115,6 +120,10 @@ class Auth extends Base
 
                 if (!empty($data['avatar'])) {
                     $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
+                }
+
+                if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
                 }
 
                 $this->userRepository->updateLoginCount($user->getId());

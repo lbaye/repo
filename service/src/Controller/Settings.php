@@ -187,6 +187,10 @@ class Settings extends Base
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
+
         } catch (\Exception\ResourceNotFoundException $e) {
 
             return $this->_generate404();
