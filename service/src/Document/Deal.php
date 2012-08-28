@@ -9,7 +9,7 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
- * @ODM\Document(collection="deals",repositoryClass="Repository\Deal")
+ * @ODM\Document(collection="deals",repositoryClass="Repository\DealRepo")
  * @ODM\Index(keys={"location"="2d"})
  */
 class Deal

@@ -8,7 +8,7 @@ use Respect\Validation\Validator;
 use Document\Circle;
 
 /**
- * @ODM\Document(collection="users",repositoryClass="Repository\User")
+ * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  */
 class User

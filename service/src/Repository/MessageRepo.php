@@ -4,11 +4,11 @@ namespace Repository;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Document\User as UserDocument;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Document\Message as MessageDocument;
 use Helper\Security as SecurityHelper;
 
-class Message extends DocumentRepository
+class MessageRepo extends DocumentRepository
 {
 
     private $userRepository;

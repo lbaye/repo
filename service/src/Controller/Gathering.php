@@ -5,8 +5,8 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Document\User;
-use Repository\User as userRepository;
-use Repository\Gathering as gatheringRepository;
+use Repository\UserRepo as userRepository;
+use Repository\GatheringRepo as gatheringRepository;
 
 class Gathering extends Base
 {

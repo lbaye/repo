@@ -2,7 +2,7 @@
 
 namespace Event;
 
-use Repository\ExternalLocation as ExternalLocationRepository;
+use Repository\ExternalLocationRepo as ExternalLocationRepository;
 
 class FetchFacebookLocation extends Base
 {

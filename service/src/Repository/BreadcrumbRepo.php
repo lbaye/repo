@@ -5,10 +5,10 @@ namespace Repository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Document\Breadcrumb as BreadcrumbDocument;
 use Document\User as UserDocument;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Helper\Image as ImageHelper;
 
-class Breadcrumb extends DocumentRepository
+class BreadcrumbRepo extends DocumentRepository
 {
     public function getByUser(UserDocument $user)
     {
@@ -18,10 +18,8 @@ class Breadcrumb extends DocumentRepository
 
     public function getAll($limit = 20, $offset = 0)
     {
-
         $results = $this->findBy(array(), null, $limit, $offset);
         return $this->_toArrayAll($results);
-
     }
 
     public function insert(BreadcrumbDocument $breadcrumb)

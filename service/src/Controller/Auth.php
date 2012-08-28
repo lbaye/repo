@@ -3,7 +3,7 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Document\FriendRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Helper\Email as EmailHelper;

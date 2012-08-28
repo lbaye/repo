@@ -5,7 +5,7 @@ namespace Repository;
 use Repository\Base as BaseRepository;
 use Document\ExternalLocation as ExternalLocationDocument;
 
-class ExternalLocation extends BaseRepository
+class ExternalLocationRepo extends BaseRepository
 {
     public function exists($refId)
     {

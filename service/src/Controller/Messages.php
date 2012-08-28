@@ -11,8 +11,7 @@ class Messages extends Base
 
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->messageRepository = $this->dm->getRepository('Document\Message');
 

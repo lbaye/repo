@@ -7,7 +7,7 @@ use Document\Deal as DealDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
-class Deal extends DocumentRepository
+class DealRepo extends DocumentRepository
 {
 
     public function getAll($limit = 20, $offset = 0)

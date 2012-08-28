@@ -3,7 +3,7 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Helper\Location;
 
 class Settings extends Base

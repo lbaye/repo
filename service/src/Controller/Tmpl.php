@@ -4,7 +4,7 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
+use Repository\UserRepo as userRepository;
 //use Repository\resource as resourceRepository;
 
 /**

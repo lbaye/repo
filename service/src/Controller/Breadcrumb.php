@@ -4,8 +4,8 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Breadcrumb as breadcrumbRepository;
+use Repository\UserRepo as userRepository;
+use Repository\BreadcrumbRepo as breadcrumbRepository;
 
 class Breadcrumb extends Base
 {

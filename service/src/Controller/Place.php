@@ -4,8 +4,8 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Place as placeRepository;
+use Repository\UserRepo as userRepository;
+use Repository\PlaceRepo as placeRepository;
 
 class Place extends Base
 {

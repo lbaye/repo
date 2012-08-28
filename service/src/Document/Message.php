@@ -6,7 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
- * @ODM\Document(collection="messages",repositoryClass="Repository\Message")
+ * @ODM\Document(collection="messages",repositoryClass="Repository\MessageRepo")
  */
 class Message
 {

@@ -9,7 +9,7 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
- * @ODM\Document(collection="plans",repositoryClass="Repository\Gathering")
+ * @ODM\Document(collection="plans",repositoryClass="Repository\GatheringRepo")
  */
 class Plan extends Gathering
 {

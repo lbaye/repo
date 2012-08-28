@@ -2,7 +2,7 @@
 
 namespace Event;
 
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 
 class FetchExternalLocation extends Base
 {

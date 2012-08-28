@@ -3,9 +3,9 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Place as placeRepository;
-use Repository\Deal as DealRepository;
+use Repository\UserRepo as userRepository;
+use Repository\PlaceRepo as placeRepository;
+use Repository\DealRepo as DealRepository;
 
 class AllList extends Base
 {

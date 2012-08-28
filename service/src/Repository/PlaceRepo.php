@@ -8,7 +8,7 @@ use Document\Geotag as GeotagDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
-class Place extends DocumentRepository
+class PlaceRepo extends DocumentRepository
 {
 
     public function getByUser(UserDocument $user)

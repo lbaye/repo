@@ -8,7 +8,7 @@ use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class User extends BaseRepository
+class UserRepo extends BaseRepository
 {
     public function validateLogin($data)
     {

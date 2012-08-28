@@ -10,7 +10,7 @@ use Document\Place as Place;
 use Document\Location as Location;
 
 /**
- * @ODM\Document(collection="places", repositoryClass="Repository\Place")
+ * @ODM\Document(collection="places", repositoryClass="Repository\PlaceRepo")
  */
 class Geotag extends Landmark
 {

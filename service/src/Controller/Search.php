@@ -4,8 +4,8 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as UserRepository;
-use Repository\ExternalLocation as ExternalLocationRepository;
+use Repository\UserRepo as UserRepository;
+use Repository\ExternalLocationRepo as ExternalLocationRepository;
 use Helper\Location;
 
 class Search extends Base

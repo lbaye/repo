@@ -7,10 +7,10 @@ use Document\Meetup as MeetupDocument;
 use Document\Event as EventDocument;
 use Document\Plan as PlanDocument;
 use Document\User as UserDocument;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Helper\Security as SecurityHelper;
 
-class Gathering extends DocumentRepository
+class GatheringRepo extends DocumentRepository
 {
 
     public function getByUser(UserDocument $user)

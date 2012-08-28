@@ -4,8 +4,8 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Deal as DealRepository;
+use Repository\UserRepo as userRepository;
+use Repository\DealRepo as DealRepository;
 
 /**
  * Template class for all content serving controllers
