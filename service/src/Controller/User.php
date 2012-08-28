@@ -9,7 +9,6 @@ use Document\FriendRequest;
 
 class User extends Base
 {
-
     /**
      * @var UserRepository
      */
@@ -22,8 +21,10 @@ class User extends Base
     {
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
+
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
     }
 
     /**
@@ -40,20 +41,16 @@ class User extends Base
 
         $location = $this->user->getCurrentLocation();
 
-        if (!isset($location['lat']) || !isset($location['lng']))
-        {
+        if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
             $this->response->setStatusCode(406);
-        } else
-        {
+        } else {
             $users = $this->userRepository->getNearBy($location['lat'], $location['lng'], $limit);
 
-            if (!empty($users))
-            {
+            if (!empty($users)) {
                 $this->response->setContent(json_encode($users));
                 $this->response->setStatusCode(200);
-            } else
-            {
+            } else {
                 $this->response->setContent(json_encode(array('message' => 'No deals found')));
                 $this->response->setStatusCode(204);
             }
@@ -75,16 +72,13 @@ class User extends Base
 
         $result = array();
 
-        foreach ($notifications as $notification)
-        {
+        foreach ($notifications as $notification) {
             $result[] = $notification->toArray();
         }
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode($result));
         }
 
@@ -94,23 +88,34 @@ class User extends Base
     /**
      * GET /request/friend
      *
+     * @param string $status all | accepted | unaccepted
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFriendRequest()
+    public function getFriendRequest($status = 'all')
     {
         $friendRequests = $this->user->getFriendRequest();
-        $result = array();
+        $result         = array();
 
-        foreach ($friendRequests as $friendRequest)
-        {
-            $result[] = $friendRequest->toArray();
+        foreach ($friendRequests as $friendRequest) {
+            if ($status != 'all') {
+                if ($status == 'accepted') {
+                    if ($friendRequest->getAccepted() === true) {
+                        $result[] = $friendRequest->toArray();
+                    }
+                } else {
+                    if ($friendRequest->getAccepted() === null) {
+                        $result[] = $friendRequest->toArray();
+                    }
+                }
+            } else {
+                $result[] = $friendRequest->toArray();
+            }
         }
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             $this->response->setContent(json_encode(array('message' => 'There is no friend request for you.')));
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode($result));
         }
 
@@ -130,16 +135,16 @@ class User extends Base
     {
         $data = $this->request->request->all();
 
-        $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
-
-        if ($frequest instanceof \Document\FriendRequest)
-        {
+        try {
+            $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
             $this->response->setContent(json_encode($frequest->toArray()));
             $this->response->setStatusCode(200);
-        } else
-        {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
+        } catch (\InvalidArgumentException $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode(404);
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode(400);
         }
 
         return $this->response;
@@ -152,12 +157,10 @@ class User extends Base
      */
     public function getCurrentUser()
     {
-        if ($this->user instanceof \Document\User)
-        {
+        if ($this->user instanceof \Document\User) {
             $this->response->setContent(json_encode($this->user->toArrayDetailed()));
             $this->response->setStatusCode(200);
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode(array('message' => 'Unauthorized acecss. Auth-Token not found or invalid')));
             $this->response->setStatusCode(401);
         }
@@ -177,12 +180,10 @@ class User extends Base
         $this->_ensureLoggedIn();
         $user = $this->userRepository->find($id);
 
-        if (null !== $user)
-        {
+        if (null !== $user) {
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);
         }
@@ -202,12 +203,10 @@ class User extends Base
         $this->_ensureLoggedIn();
         $user = $this->userRepository->getByEmail($email);
 
-        if (false !== $user)
-        {
+        if (false !== $user) {
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);
         }
@@ -224,18 +223,14 @@ class User extends Base
     {
         $data = $this->request->request->all();
 
-        try
-        {
-
+        try {
             $user = $this->userRepository->insert($data);
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(201);
-        } catch (\Exception\ResourceAlreadyExistsException $e)
-        {
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
-        } catch (\InvalidArgumentException $e)
-        {
+        } catch (\InvalidArgumentException $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
         }
@@ -255,27 +250,22 @@ class User extends Base
         $this->_ensureLoggedIn();
         $data = $this->request->request->all();
 
-        try
-        {
+        try {
             $user = $this->userRepository->update($data, $id);
-            if (!empty($data['avatar']))
-            {
-                $this->userRepository->saveAvatarImage($user->getId(),$data['avatar']);
+            if (!empty($data['avatar'])) {
+                $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
-            $this->response->setContent(json_encode($user->toArray()));
+            $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
-        } catch (\Exception\ResourceNotFoundException $e)
-        {
+        } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
-        } catch (\Exception\UnauthorizedException $e)
-        {
+        } catch (\Exception\UnauthorizedException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
-        } catch (\Exception\ResourceAlreadyExistsException $e)
-        {
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
@@ -293,21 +283,17 @@ class User extends Base
      */
     public function delete($id)
     {
-        if ($id == $this->user->getId())
-        {
-            try
-            {
+        if ($id == $this->user->getId()) {
+            try {
                 $this->userRepository->delete($id);
                 $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
                 $this->response->setStatusCode(200);
-            } catch (\InvalidArgumentException $e)
-            {
+            } catch (\InvalidArgumentException $e) {
 
                 $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
                 $this->response->setStatusCode(404);
             }
-        } else
-        {
+        } else {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(401);
         }
@@ -343,8 +329,7 @@ class User extends Base
         $circles = $this->user->getCircles();
 
         $result = array();
-        foreach ($circles as $circle)
-        {
+        foreach ($circles as $circle) {
             $result[] = $circle->toArray();
         }
 
@@ -355,26 +340,35 @@ class User extends Base
     }
 
     /**
-     * PUT /request/friend/:friendId/accept
+     * PUT /request/friend/:friendId/:response
      *
      * @param $friendId
      * @param $response
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function acceptFriendRequest($friendId, $response)
     {
         $this->_ensureLoggedIn();
-        $this->userRepository->acceptFriendRequest($friendId);
-        $circles = $this->user->getCircles();
 
-        $result = array();
-        foreach ($circles as $circle)
-        {
-            $result[] = $circle->toArray();
+        try {
+
+            $this->userRepository->acceptFriendRequest($friendId, $response);
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                $result[] = $circle->toArray();
+            }
+
+            $this->response->setContent(json_encode($result));
+            $this->response->setStatusCode(200);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
         }
 
-        $this->response->setContent(json_encode($result));
-        $this->response->setStatusCode(200);
 
         return $this->response;
     }
@@ -390,24 +384,23 @@ class User extends Base
     {
         $data = $this->request->request->all();
 
-        try
-        {
+        try {
 
             $user = $this->userRepository->updateNotification($notificationId);
             $this->response->setContent(json_encode($user->toArray()));
             $this->response->setStatusCode(200);
-        } catch (\Exception\ResourceNotFoundException $e)
-        {
+
+        } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
-        } catch (\Exception\UnauthorizedException $e)
-        {
+
+        } catch (\Exception\UnauthorizedException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
-        } catch (\Exception\ResourceAlreadyExistsException $e)
-        {
+
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
@@ -421,35 +414,35 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
-
     public function getUserNotifications()
     {
         $this->_ensureLoggedIn();
+
         $friendRequests = $this->user->getFriendRequest();
         $notifications  = $this->user->getNotification();
-        $friendResult = array();
+
+        $friendResult   = array();
         $notificationResult = array();
 
-        foreach($friendRequests as $friendRequest) {
+        foreach ($friendRequests as $friendRequest) {
             $friendResult[] = $friendRequest->toArray();
         }
 
-        foreach($notifications as $notification) {
+        foreach ($notifications as $notification) {
             $notificationResult[] = $notification->toArray();
         }
 
-
-        if (empty($friendResult) or (empty($notificationResult))){
+        if (empty($friendResult) or (empty($notificationResult))) {
             $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
         } else {
-            $this->response->setContent(json_encode(array('friend request' => $friendResult ,'notifications' => $notificationResult)));
+            $this->response->setContent(json_encode(array(
+                'friend request' => $friendResult,
+                'notifications'  => $notificationResult
+            )));
         }
 
         $this->response->setStatusCode(200);
-
         return $this->response;
-
     }
 
     /**
@@ -464,12 +457,14 @@ class User extends Base
         $this->_ensureLoggedIn();
         $blockingUser = $this->userRepository->find($id);
 
-        if ($blockingUser instanceof \Document\User)
-        {
+        if ($blockingUser instanceof \Document\User) {
+
             $blockedUsers = $this->user->getBlockedUsers();
-            if ($this->user != $blockingUser):
-                if (!in_array($blockingUser->getId(), $blockedUsers))
-                {
+
+            if ($this->user != $blockingUser) {
+
+                if (!in_array($blockingUser->getId(), $blockedUsers)) {
+
                     $this->user->addBlockedUser($blockingUser);
                     $this->dm->persist($this->user);
 
@@ -481,18 +476,21 @@ class User extends Base
 
                 $this->response->setContent(json_encode(array('result' => 'User blocked')));
                 $this->response->setStatusCode(200);
-            else:
+
+            } else {
+
                 $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
                 $this->response->setStatusCode(400);
-            endif;
-        } else
-        {
+
+            }
+
+        } else {
+
             $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
             $this->response->setStatusCode(400);
-        }
 
+        }
 
         return $this->response;
     }
-
 }

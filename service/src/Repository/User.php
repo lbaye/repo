@@ -2,25 +2,14 @@
 
 namespace Repository;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Repository\Base as BaseRepository;
 use Document\User as UserDocument;
-
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class User extends DocumentRepository
+class User extends BaseRepository
 {
-    /**
-     * @var UserDocument
-     */
-    private $currentUser;
-
-    public function setCurrentUser($user)
-    {
-        $this->currentUser = $user;
-    }
-
     public function validateLogin($data)
     {
         if (empty($data)) {
@@ -29,11 +18,16 @@ class User extends DocumentRepository
 
         $user = $this->map($data);
 
-        $user->setLastLogin(new \DateTime());
+        $user = $this->findOneBy(array(
+            'email'    => $data['email'],
+            'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
+        ));
 
-        $user = $this->findOneBy(array('email' => $data['email'], 'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())));
+        if (!is_null($user)) {
+            return $user;
+        }
 
-        return is_null($user) ? false : $user;
+        return false;
     }
 
     public function validateFbLogin($data)
@@ -42,19 +36,13 @@ class User extends DocumentRepository
             return false;
         }
 
-        $user = $this->map($data);
-
-        $user->setLastLogin(new \DateTime());
-
         $user = $this->findOneBy(array('facebookId' => $data['facebookId']));
 
-        if (is_null($user)) {
-            return $this->insert($data);
-        } else {
+        if (!is_null($user)) {
             return $user;
         }
 
-
+        return false;
     }
 
     public function getByEmail($email)
@@ -71,11 +59,7 @@ class User extends DocumentRepository
 
     public function getAll($start, $limit)
     {
-        $results = $this->createQueryBuilder('Document\User')
-            ->limit($limit)
-            ->skip($start)
-            ->getQuery()
-            ->execute();
+        $results = $this->createQueryBuilder('Document\User')->limit($limit)->skip($start)->getQuery()->execute();
 
         if (count($results) == 0) {
             return false;
@@ -97,34 +81,26 @@ class User extends DocumentRepository
             ->field('id')->notIn($this->currentUser->getblockedBy())
             ->field('visible')->equals(true)
             ->limit($limit)
-            ->getQuery()->execute();
+            ->getQuery()
+            ->execute();
 
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
     public function getAllByIds(array $ids)
     {
-        $users = $this->createQueryBuilder('Document\User')
-            ->field('id')
-            ->in(array($ids))
-            ->getQuery()
-            ->execute();
-
+        $users = $this->createQueryBuilder('Document\User')->field('id')->in(array($ids))->getQuery()->execute();
         return $users;
     }
 
     public function insert($data)
     {
-
         $user = $this->map($data);
 
-        if ($this->exists($data)) {
-            throw new \Exception\ResourceAlreadyExistsException($data['email']);
-        }
+        $isFacebookRegistration = !empty($data['facebookAuthToken']) AND (!empty($data['facebookId']));
 
-        if (!empty($data['facebookAuthToken']) AND (!empty($data['facebookId']))) {
+        if ($isFacebookRegistration) {
             $valid = $user->isValidForFb();
-
         } else {
             $valid = $user->isValid();
         }
@@ -133,14 +109,18 @@ class User extends DocumentRepository
             throw new \InvalidArgumentException('Invalid request', 406);
         }
 
-        if ((!empty($data['facebookAuthToken'])) AND (!empty($data['facebookId']))) {
+        if ($this->exists($data)) {
+            throw new \Exception\ResourceAlreadyExistsException(($isFacebookRegistration) ? $data['facebookId'] : $data['email']);
+        }
+
+        if ($isFacebookRegistration) {
             $user->setRegMedia("fb");
         } else {
             $user->setRegMedia("sm");
         }
 
         if (is_null($user->getSettings())) {
-            $user->setDefaultSettings();
+            $user->setSettings($user->defaultSettings);
         } else {
             $user->setSettings(array_merge($user->defaultSettings, $user->getSettings()));
         }
@@ -149,9 +129,16 @@ class User extends DocumentRepository
             $user->setEnabled(true);
         }
 
+        // For FB users, their ID is set as default password
+        if ($isFacebookRegistration) {
+            $user->setPassword(SecurityHelper::hash($data['facebookId'], $user->getSalt()));
+            $user->setAuthToken(SecurityHelper::hash($data['facebookId'], $user->getSalt()));
+        } else {
+            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setAuthToken(SecurityHelper::hash($user->getEmail(), $user->getSalt()));
+        }
+
         $user->setConfirmationToken(SecurityHelper::hash(time(), $user->getSalt()));
-        $user->setAuthToken(SecurityHelper::hash($user->getEmail(), $user->getSalt()));
-        $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
         $user->setCreateDate(new \DateTime());
 
         $this->dm->persist($user);
@@ -160,18 +147,19 @@ class User extends DocumentRepository
         $this->addDefaultCircles($user->getId());
 
         return $user;
-
     }
 
     public function exists($data)
     {
         $qb = $this->createQueryBuilder('Document\User');
 
-        $results = $qb->addOr($qb->expr()->field('email')->equals($data['email']))
-            ->getQuery()
-            ->execute();
+        if (isset($data['facebookId'])) {
+            $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
+        } else {
+            $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
+        }
 
-        if ($results->count() > 0) {
+        if ($result instanceof \Document\User) {
             return true;
         }
 
@@ -180,6 +168,12 @@ class User extends DocumentRepository
 
     public function update($data, $id)
     {
+        if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
+            if ($this->exists($data)) {
+                throw new \Exception\ResourceAlreadyExistsException($data['email']);
+            }
+        }
+
         $userDetail = $this->find($id);
 
         if (false === $userDetail) {
@@ -188,13 +182,12 @@ class User extends DocumentRepository
 
         $user = $this->map($data, $userDetail);
 
-
         if ($user->getAuthToken() !== $this->currentUser->getAuthToken()) {
             throw new \Exception\UnauthorizedException();
         }
 
-        if ($data['email'] != $user->getEmail()) {
-            if (!empty($data['email']) && $this->exists($data)) {
+        if (!empty($data['email']) && $data['email'] != $user->getEmail()) {
+            if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
             }
         }
@@ -231,10 +224,8 @@ class User extends DocumentRepository
     {
         $circle = new \Document\Circle($data);
 
-
         foreach ($data['friends'] as $friendId) {
             $friend = $this->find($friendId);
-
             if (!empty($friend)) {
                 $circle->addFriend($friend);
             }
@@ -254,13 +245,19 @@ class User extends DocumentRepository
     {
         $user = $this->find($friendId);
 
-        if (false === $user) {
-            throw new \InvalidArgumentException();
+        if (is_null($user)) {
+            throw new \Exception\ResourceNotFoundException($friendId);
         }
 
+        $existingFriendRequests = $user->getFriendRequest();
+        foreach ($existingFriendRequests as $existingFriendRequest) {
+            if ($existingFriendRequest->getRecipientId() == $friendId) {
+                throw new \Exception('Friend request previously sent to this user.');
+            }
+        }
 
-        $data['userId'] = $this->currentUser->getId();
-        $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        $data['userId']      = $this->currentUser->getId();
+        $data['friendName']  = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
         $data['recipientId'] = $friendId;
 
         $friendRequest = new FriendRequest($data);
@@ -273,19 +270,16 @@ class User extends DocumentRepository
 
         $this->dm->flush();
 
-        $notification = array();
-        $notification['objectId'] = $user->getId();
-        $notification['objectType'] = "FriendRequest";
+        $data = array(
+            'userId'     => $friendId,
+            'objectId'   => $user->getId(),
+            'objectType' => 'FriendRequest',
+            'message'    => (!empty($data['message']) ? $data['message'] : $user->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+        );
 
-        if (empty($notification['message'])) {
-            $notification['message'] = $user->getLastName() . "is inviting you to use socialmaps, download
-                                        the app  and login ";
-        }
-
-        $this->addNotification($friendId, $notification);
+        $this->addTask('new_friend_request', json_encode($data));
 
         return $friendRequest;
-
     }
 
     public function map(array $data, UserDocument $user = null)
@@ -294,10 +288,43 @@ class User extends DocumentRepository
             $user = new UserDocument();
         }
 
-        $setIfExistFields = array('id', 'firstName', 'lastName', 'gender', 'username', 'email', 'authToken', 'enabled', 'salt',
-            'password', 'oldPassword', 'settings', 'confirmationToken', 'forgetPasswordToken', 'facebookId', 'facebookAuthToken',
-            'avatar', 'source', 'dateOfBirth', 'bio', 'age', 'address', 'interests', 'workStatus', 'circles',
-            'relationshipStatus', 'enabled', 'regMedia', 'lastLogin', 'loginCount', 'createDate', 'updateDate');
+        $setIfExistFields = array(
+            'id',
+            'firstName',
+            'lastName',
+            'gender',
+            'username',
+            'email',
+            'authToken',
+            'enabled',
+            'salt',
+            'password',
+            'oldPassword',
+            'settings',
+            'confirmationToken',
+            'forgetPasswordToken',
+            'facebookId',
+            'facebookAuthToken',
+            'avatar',
+            'source',
+            'dateOfBirth',
+            'bio',
+            'age',
+            'address',
+            'interests',
+            'workStatus',
+            'circles',
+            'relationshipStatus',
+            'enabled',
+            'regMedia',
+            'lastLogin',
+            'coverPhoto',
+            'status',
+            'company',
+            'loginCount',
+            'createDate',
+            'updateDate'
+        );
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -309,14 +336,31 @@ class User extends DocumentRepository
         $user->getAddress();
 
         return $user;
-
     }
 
     public function settingsMap(array $data, UserDocument $user = null)
     {
-        $setIfExistFields = array('id', 'firstName', 'lastName', 'email', 'avatar', 'gender', 'dateOfBirth',
-            'username', 'address', 'workStatus', 'relationshipStatus',
-            'password', 'settings', 'bio', 'interests', 'updateDate');
+        $setIfExistFields = array(
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'avatar',
+            'gender',
+            'dateOfBirth',
+            'username',
+            'address',
+            'workStatus',
+            'coverPhoto',
+            'status',
+            'company',
+            'relationshipStatus',
+            'password',
+            'settings',
+            'bio',
+            'interests',
+            'updateDate'
+        );
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -328,14 +372,13 @@ class User extends DocumentRepository
         $user->getAddress();
 
         return $user;
-
     }
 
     public function addNotification($userId, array $data)
     {
         $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \InvalidArgumentException();
         }
 
@@ -350,38 +393,48 @@ class User extends DocumentRepository
         return $notification;
     }
 
-
-    public function acceptFriendRequest($userId)
+    public function acceptFriendRequest($userId, $response)
     {
-        $userDetail = $this->find($userId);
+        $user = $this->find($userId);
 
-        if (false === $userDetail) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $this->updateFriendsCircleList($userId);
+        if ($response == 'accept') {
 
-        $circles = $this->currentUser->getCircles();
+            $this->updateFriendsCircleList($userId);
+            $circles = $this->currentUser->getCircles();
 
-        foreach ($circles as &$circle) {
-            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
-                $circle->addFriend($userDetail);
+            foreach ($circles as &$circle) {
+                if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
+                    $circle->addFriend($user);
+                }
+            }
+
+            $this->currentUser->setCircles($circles);
+
+        }
+
+        $friendRequests = $this->currentUser->getFriendRequest();
+
+        foreach ($friendRequests as &$friendRequest) {
+            if ($friendRequest->getUserId() == $userId) {
+                $friendRequest->setAccepted(($response == 'accept'));
             }
         }
 
-        $this->currentUser->setCircles($circles);
+        $this->currentUser->setFriendRequest($friendRequests);
 
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
-
-        return $circle;
     }
 
     public function addDefaultCircles($id)
     {
         $user = $this->find($id);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \InvalidArgumentException();
         }
 
@@ -415,16 +468,16 @@ class User extends DocumentRepository
             }
         }
 
+        $this->currentUser->setNotification($notifications);
+
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
         return true;
-
     }
 
     public function updateAccountSettings($data)
     {
-
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
             if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
@@ -437,16 +490,11 @@ class User extends DocumentRepository
             throw new \Exception\UnauthorizedException();
         }
 
-
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($user->getPassword(), \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());
-
-        if ($user->isValid() === false) {
-            return false;
-        }
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -456,18 +504,15 @@ class User extends DocumentRepository
 
     public function getPasswordToken($userId)
     {
-
         $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $data = array();
 
         $user->setForgetPasswordToken(SecurityHelper::hash(time(), $user->getSalt()));
-
-
         $user = $this->map($data, $user);
 
         return $user->getForgetPasswordToken();
@@ -475,11 +520,8 @@ class User extends DocumentRepository
 
     public function generatePassword($length = 8)
     {
-
         $password = "";
-
         $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
         $maxlength = strlen($possible);
 
         if ($length > $maxlength) {
@@ -489,27 +531,21 @@ class User extends DocumentRepository
         $i = 0;
 
         while ($i < $length) {
-
             $char = substr($possible, mt_rand(0, $maxlength - 1), 1);
-
             if (!strstr($password, $char)) {
-
                 $password .= $char;
-
                 $i++;
             }
-
         }
 
         return $password;
-
     }
 
     public function updateFriendsCircleList($friendId)
     {
         $user = $this->find($friendId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -527,14 +563,13 @@ class User extends DocumentRepository
         $this->dm->flush();
 
         return $circle;
-
     }
 
-    private function _toArrayAll($results)
+    private function _toArrayAll($results, $filterFields = false)
     {
         $users = array();
-        foreach ($results as $deal) {
-            $users[] = $deal->toArray();
+        foreach ($results as $user) {
+            $users[] = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
         }
 
         return $users;
@@ -548,15 +583,14 @@ class User extends DocumentRepository
 
     public function resetPassword($data, $userId)
     {
-        $userDetail = $this->find($userId);
-        $user = $this->map($data, $userDetail);
+        $user = $this->find($userId);
 
-        if (false === $user) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($data['password'], \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -569,16 +603,14 @@ class User extends DocumentRepository
 
     public function changePassword($data)
     {
-        $user = $this->map($data, $this->currentUser);
+        $user = $this->findOneBy(array('password' => SecurityHelper::hash($data['oldPassword'], \Document\User::SALT)));
 
-        $passWord = $this->findOneBy(array('password' => SecurityHelper::hash($user->getOldPassword(), $user->getSalt())));
-
-        if (is_null($passWord)) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         if (!empty($data['password'])) {
-            $user->setPassword(SecurityHelper::hash($user->getPassword(), $user->getSalt()));
+            $user->setPassword(SecurityHelper::hash($data['password'], \Document\User::SALT));
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -587,44 +619,34 @@ class User extends DocumentRepository
         $this->dm->flush();
 
         return true;
-
     }
 
     public function checkOldPassword($password)
     {
-
         if (empty($password)) {
             return false;
         }
 
         $user = $this->currentUser;
 
-
         if (SecurityHelper::hash($user->getPassword(), $user->getSalt()) != $user->getPassword()) {
             return false;
         }
 
         return true;
-
     }
 
     public function updateLoginCount($id)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail) {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $data = array();
-
-        $user = $this->map($data, $userDetail);
-
         $loginCount = $user->getLoginCount();
         $user->setLoginCount($loginCount + 1);
-
         $user->setLastLogin(new \DateTime());
-        $user->setUpdateDate(new \DateTime());
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -634,15 +656,11 @@ class User extends DocumentRepository
 
     public function updateFacebookAuthToken($id, $facebookAuthToken)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail) {
+        if (is_null($user)) {
             throw new \Exception\ResourceNotFoundException();
         }
-
-        $data = array();
-
-        $user = $this->map($data, $userDetail);
 
         $user->setFacebookAuthToken($facebookAuthToken);
         $user->setUpdateDate(new \DateTime());
@@ -655,22 +673,46 @@ class User extends DocumentRepository
 
     public function saveAvatarImage($id, $avatar)
     {
-        $userDetail = $this->find($id);
+        $user = $this->find($id);
 
-        if (false === $userDetail) {
+        if (false === $user) {
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $data = array();
+        $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
+        $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
-        $user = $this->map($data, $userDetail);
-        $filePath = "/avatar/" . $user->getId() . ".jpeg";
-
-        if (base64_decode($avatar, true)) {
-            ImageHelper::saveImageFromBase64($avatar, $filePath);
-            $user->setAvatar($filePath);
+        if ($avatarUrl !== false) {
+            $user->setAvatar($avatarUrl);
         } else {
-            $user->setAvatar($avatar);
+            ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
+            $user->setAvatar($this->config['web']['root'] . $filePath);
+        }
+
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
+    public function saveCoverPhoto($id , $coverPhoto)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
+        $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
+
+        if ($coverPhotoUrl !== false) {
+            $user->setCoverPhoto($coverPhotoUrl);
+        } else {
+            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
+            $user->setCoverPhoto($this->config['web']['root'] . $filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -684,8 +726,8 @@ class User extends DocumentRepository
     public function updateForgetPasswordToken($userId, $passwordToken)
     {
         $userDetail = $this->find($userId);
-        $data = array();
-        $user = $this->map($data, $userDetail);
+        $data       = array();
+        $user       = $this->map($data, $userDetail);
 
         $user->setForgetPasswordToken($passwordToken);
         $user->setUpdateDate(new \DateTime());
@@ -702,18 +744,57 @@ class User extends DocumentRepository
 
     public function search($keyword = null, $location = array(), $limit = 20)
     {
-        $users = $this->createQueryBuilder()
-        //->field('firstName')->equals(new \MongoRegex('/^' . $keyword . '/'))
-        //->field('lastName')->equals(new \MongoRegex('/^' . $keyword . '/'))
-            ->field('currentLocation.lat')->near($location['lat'])
-            ->field('currentLocation.lng')->near($location['lng'])
-            ->field('id')->notIn($this->currentUser->getBlockedBy())
-            ->field('visible')->equals(true)
-            ->limit($limit)
-            ->getQuery()
-            ->execute();
+        $exclude = array();
+        $exclude[] = $this->currentUser->getId();
 
-        return (count($users)) ? $this->_toArrayAll($users) : array();
+        if ($this->currentUser->getBlockedBy()) {
+            $exclude = array_merge($exclude, $this->currentUser->getBlockedBy());
+        }
+
+        $query = $this->createQueryBuilder()
+            ->field('id')->notIn($exclude)
+            ->field('visible')->equals(true)
+            ->limit($limit);
+
+        if (!is_null($keyword)) {
+            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+        } else {
+            $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+        }
+
+        $result = $query->getQuery()->execute();
+
+        if (count($result)) {
+
+            $friends = $this->currentUser->getFriends();
+            $users = $this->_toArrayAll($result, true);
+
+            foreach ($users as &$user) {
+                $user['isFriend'] = in_array($user['id'], $friends);
+                $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+            }
+
+            return $users;
+        }
+
+        return array();
+    }
+
+    public function getFacebookUsers($start = null, $limit = null)
+    {
+        $query = $this->createQueryBuilder()->field('facebookAuthToken')->exists(true);
+
+        if ($start != null) {
+            $query->skip($start);
+        }
+
+        if ($limit != null) {
+            $query->limit($limit);
+        }
+
+        $users = $query->getQuery()->execute();
+        return (count($users)) ? $users : array();
     }
 
 }

@@ -2,7 +2,7 @@
 
 use \Doctrine\ODM\MongoDB\DocumentManager;
 
-define('API_BASEURL', 'http://api.social_maps.local/index_test.php');
+define('API_BASEURL', 'http://api.socialmaps.local/index_test.php');
 
 function prepareBackupDatabase()
 {

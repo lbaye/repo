@@ -69,6 +69,12 @@ class Circle
      */
     public function addFriend(\Document\User $user)
     {
+        foreach ($this->friends as $friend) {
+            if ($friend == $user->getId()) {
+                return false;
+            }
+        }
+
         $this->friends[] = $user->getId();
     }
 

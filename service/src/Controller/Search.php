@@ -4,15 +4,31 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
+use Repository\User as UserRepository;
+use Repository\ExternalLocation as ExternalLocationRepository;
 use Helper\Location;
 
 class Search extends Base
 {
     /**
-     * @var userRepository
+     * Total number of users to return
+     */
+    const PEOPLE_THRESHOLD = 100;
+
+    /**
+     * Km to radius (km / 111.2)
+     */
+    const DEFAULT_RADIUS = .017985612;
+
+    /**
+     * @var UserRepository
      */
     private $userRepository;
+
+    /**
+     * @var ExternalLocationRepository
+     */
+    private $externalLocationRepository;
 
     /**
      * Initialize the controller.
@@ -24,6 +40,11 @@ class Search extends Base
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
+
+        $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
+        $this->externalLocationRepository->setCurrentUser($this->user);
+        $this->externalLocationRepository->setConfig($this->config);
 
         $this->_ensureLoggedIn();
     }
@@ -35,7 +56,6 @@ class Search extends Base
 
         $results['people'] = $this->people($data);
         $results['places'] = $this->places($data);
-        $results['deals']  = $this->deals($data);
 
         $this->response->setContent(json_encode($results));
         $this->response->setStatusCode(200);
@@ -43,13 +63,32 @@ class Search extends Base
         return $this->response;
     }
 
-    /** TODO: Finalize people search */
     protected function people($data)
     {
-        $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
-        $keywords = $data['keyword'];
+        $location = array('lat' => (float) $data['lat'], 'lng' => (float) $data['lng']);
+        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $people = $this->userRepository->search($keywords, $location);
+        $people = $this->userRepository->search($keywords, $location, self::PEOPLE_THRESHOLD);
+        $friends = $this->user->getFriends();
+
+        array_walk($people, function(&$person) use ($friends, $data) {
+            $person['external'] = false;
+        });
+
+        if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {
+
+            $difference = self::PEOPLE_THRESHOLD - count($people);
+            $externalPeople = $this->externalLocationRepository->getNearBy($location, $difference);
+
+            array_walk($externalPeople, function(&$person) use ($friends) {
+                $person['external'] = true;
+            });
+
+            if ($externalPeople) {
+                $people = array_merge($people, $externalPeople);
+            }
+
+        }
 
         return $people;
     }
@@ -57,12 +96,16 @@ class Search extends Base
     protected function places($data)
     {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
-        $keywords = $data['keyword'];
+        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $googlePlaces = new \Service\Venue\GooglePlaces('AIzaSyAblaI77qQF6DDi5wbhWKePxK00zdFzg-w');
-        $places = $googlePlaces->search($keywords, $location);
+        $googlePlaces = new \Service\Venue\GooglePlaces($this->config['googlePlace']['apiKey']);
 
-        return $places;
+        try {
+            $places = $googlePlaces->search($keywords, $location);
+            return $places;
+        } catch (\Exception $e) {
+            return array();
+        }
     }
 
     /** TODO: Finalize deals search */

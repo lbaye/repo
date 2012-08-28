@@ -20,13 +20,13 @@ class Auth extends Base
      */
     public function init()
     {
-
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
+
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
     }
-
 
     /**
      * POST /users
@@ -40,34 +40,45 @@ class Auth extends Base
         try {
 
             $user = $this->userRepository->insert($data);
+
             if (!empty($data['avatar'])) {
-                $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
+                $user = $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
+
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
+
+
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(201);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
+
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
         } catch (\InvalidArgumentException $e) {
+
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
+
         }
 
         return $this->response;
 
     }
 
+
+
     /**
-     * GET /auth/login
+     * POST /auth/login
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function login()
     {
         $data = $this->request->request->all();
-
         $user = $this->userRepository->validateLogin($data);
 
         $this->userRepository->setCurrentUser($user);
@@ -93,33 +104,50 @@ class Auth extends Base
     {
         $data = $this->request->request->all();
 
-        if (empty($data['facebookAuthToken']) OR (empty($data['facebookId'])) OR (empty($data['email']))) {
-
-            $this->response->setContent(json_encode(array('message' => "Required field not found")));
+        if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
+            $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
             $this->response->setStatusCode(406);
-
             return $this->response;
         }
 
-        $user = $this->userRepository->validateFbLogin($data);
-        $this->userRepository->setCurrentUser($user);
+        try {
 
-        if ($user instanceof \Document\User) {
-            $this->userRepository->updateLoginCount($user->getId());
-            $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
+            $user = $this->userRepository->validateFbLogin($data);
 
-            if (!empty($data['avatar'])) {
-                $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
+            if ($user instanceof \Document\User) {
+
+                $this->userRepository->setCurrentUser($user);
+
+                if (!empty($data['avatar'])) {
+                    $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
+                }
+
+                $this->userRepository->updateLoginCount($user->getId());
+                $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
+
+            } else {
+
+                $user = $this->userRepository->insert($data);
+
             }
 
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
-        } else {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
         }
 
         return $this->response;
+
     }
 
     /**
@@ -139,9 +167,9 @@ class Auth extends Base
             $this->response->setContent(json_encode(array('message' => "No user found with this email.")));
             $this->response->setStatusCode(400);
         } else {
-            $userId = $user->getId();
+            $userId        = $user->getId();
             $passwordToken = $this->userRepository->getPasswordToken($userId);
-            $url = "http://api.socialmaps.local/auth/pass/token/" . $passwordToken;
+            $url           = "http://203.76.126.69/social_maps/web/auth/pass/token/" . $passwordToken;
             $this->userRepository->updateForgetPasswordToken($userId, $passwordToken);
             $message = "Please click the link to reset your password {$url} ";
 
@@ -174,7 +202,7 @@ class Auth extends Base
             throw new \Exception\ResourceNotFoundException();
         } else {
 
-            return new RedirectResponse("http://password.socialmaps.local");
+            return new RedirectResponse("http://203.76.126.69/social_maps/web/pass_socialmaps/index.php");
 
         }
     }
@@ -203,7 +231,7 @@ class Auth extends Base
             $this->response->setStatusCode(200);
         }
 
-        $userId = $user->getId();
+        $userId   = $user->getId();
         $password = $this->userRepository->resetPassword($data, $userId);
         $this->response->setContent(json_encode(array('password' => $password)));
         $this->response->setStatusCode(200);

@@ -115,7 +115,7 @@ abstract class Gathering extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title', 'time', 'guests', 'createDate');
+        $fieldsToExpose = array('id', 'title','description', 'time', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {
@@ -124,6 +124,14 @@ abstract class Gathering extends Content
 
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
+        return $result;
+    }
+
+    public function toArrayDetailed()
+    {
+        $result = $this->toArray();
+        $result['guests'] = $this->getGuests();
+
         return $result;
     }
 

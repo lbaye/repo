@@ -4,10 +4,11 @@ namespace Helper;
 
 class Remote
 {
-
     public static function sendGetRequest($url, $data = array(), $headers = array())
     {
-        if(!empty($data)) $url = $url .'?'. http_build_query($data);
+        if (!empty($data)) {
+            $url = $url .'?'. http_build_query($data);
+        }
 
         $http = new \HttpRequest($url);
         $http->setMethod($http::METH_GET);

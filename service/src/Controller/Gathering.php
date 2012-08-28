@@ -29,14 +29,16 @@ class Gathering extends Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository  = $this->dm->getRepository('Document\User');
-
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
+
         $this->_ensureLoggedIn();
     }
 
     /**
      * GET /meetups
      * GET /events
+     * GET /plans
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -50,7 +52,9 @@ class Gathering extends Base
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
 
         if (!empty($gatheringObjs)) {
-            $this->response->setContent(json_encode($gatheringObjs));
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+
+            $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
             $this->response->setStatusCode(200);
         } else {
             $this->response->setContent(json_encode(array('message' => 'No meetups found')));
@@ -63,19 +67,25 @@ class Gathering extends Base
     /**
      * GET /meetups/{id}
      * GET /events/{id}
+     * GET /plans/{id}
      *
-     * @param $id  meetup id
+     * @param $id
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getById($id, $type)
     {
         $this->_initRepository($type);
-        $meetup = $this->gatheringRepository->find($id);
+        $gathering = $this->gatheringRepository->find($id);
 
-        if (null !== $meetup) {
-            $this->response->setContent(json_encode($meetup->toArray()));
-            $this->response->setStatusCode(200);
+        if (null !== $gathering) {
+            if($gathering->isPermittedFor($this->user)){
+                $this->response->setContent(json_encode($gathering->toArrayDetailed()));
+                $this->response->setStatusCode(200);
+            } else {
+                $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));
+                $this->response->setStatusCode(403);
+            }
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
             $this->response->setStatusCode(404);
@@ -145,7 +155,7 @@ class Gathering extends Base
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
 
-            $this->response->setContent(json_encode($meetup->toArray()));
+            $this->response->setContent(json_encode($meetup->toArrayDetailed()));
             $this->response->setStatusCode(201);
 
         } catch (\Exception $e) {

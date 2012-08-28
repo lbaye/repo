@@ -11,6 +11,17 @@ use Helper\Security as SecurityHelper;
 class Message extends DocumentRepository
 {
 
+    private $userRepository;
+
+    private function getUserRepository()
+    {
+        if ($this->userRepository === null) {
+            $this->userRepository = $this->dm->getRepository('Document\User');
+        }
+
+        return $this->userRepository;
+    }
+
     public function getByUser(UserDocument $user)
     {
         $messages = $this->dm->createQueryBuilder()
@@ -36,18 +47,51 @@ class Message extends DocumentRepository
         return $this->_toArrayAll($messages);
     }
 
+    public function getRepliesSince($thread, $since)
+    {
+        $replies = $this->dm->createQueryBuilder()
+                ->find('Document\Message')
+
+                ->field('createDate')
+                ->gte($since)
+
+                ->field('thread')
+                ->equals($thread->getId())
+
+                ->sort('createDate', 'asc')
+                ->getQuery()
+                ->execute();
+        return $this->_toArrayAll($replies);
+    }
+
     public function insert(MessageDocument $message)
     {
         if (!$message->isValid()) {
             throw new \InvalidArgumentException('Invalid Message data', 406);
         }
 
+        # Store message
         $this->dm->persist($message);
         $this->dm->flush();
+
+        # Add to parent message
+        try {
+            $thread = $message->getThread();
+            if (!empty($thread))
+                $this->addToThread($message);
+        } catch (\Exception $e) {
+            die($e);
+        }
 
         return $message;
     }
 
+    private function addToThread(MessageDocument $message)
+    {
+        $message->getThread()->getReplies()->add($message);
+        $this->dm->persist($message->getThread());
+        $this->dm->flush();
+    }
 
     public function delete($id)
     {
@@ -61,20 +105,43 @@ class Message extends DocumentRepository
         $this->dm->flush();
     }
 
+    public function updateStatus(MessageDocument $message, $status)
+    {
+        $message->setStatus($status);
+
+        $this->dm->persist($message);
+        $this->dm->flush();
+
+        return true;
+    }
+
+    public function updateRecipients(MessageDocument $message, array $recipients)
+    {
+        $this->setRecipients(array('recipients' => $recipients), $message);
+        $this->dm->persist($message);
+        $this->dm->flush();
+
+        return true;
+    }
+
     public function map(array $data, UserDocument $sender, MessageDocument $message = null)
     {
+        $now = new \DateTime();
+
         if (is_null($message)) {
             $message = new MessageDocument();
-            $now = new \DateTime();
             $message->setCreateDate($now);
             $message->setUpdateDate($now);
         } else {
-            $message->setUpdateDate(new \DateTime());
+            $message->setUpdateDate($now);
         }
 
-        $formFields = array('subject', 'content', 'recipients');
+        $formFields = array('subject', 'content');
 
-        // Set thread object
+        # Set recipients object's reference
+        $this->setRecipients($data, $message);
+
+        # Set thread object
         $this->setThreadDependentProperties($formFields, $data, $message);
 
         foreach ($formFields as $field) {
@@ -91,8 +158,8 @@ class Message extends DocumentRepository
     protected function _toArrayAll($results)
     {
         $messages = array();
-        foreach ($results as $place) {
-            $messages[] = $place->toArray();
+        foreach ($results as $message) {
+            $messages[] = $message->toArray();
         }
 
         return $messages;
@@ -113,6 +180,18 @@ class Message extends DocumentRepository
             }
 
             $message->setUpdateDate(new \DateTime());
+        }
+    }
+
+    private function setRecipients(array $data, MessageDocument &$message)
+    {
+        if (!empty($data['recipients'])) {
+            $recipients = $data['recipients'];
+            $recipientsObjects = array();
+
+            foreach ($recipients as $recipient)
+                $recipientsObjects[] = $this->getUserRepository()->find($recipient);
+            $message->setRecipients($recipientsObjects);
         }
     }
 }

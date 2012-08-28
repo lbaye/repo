@@ -19,8 +19,7 @@ class Place extends DocumentRepository
 
     public function getAll($limit = 20, $offset = 0)
     {
-        $results = $this->findBy(array(), null, $limit, $offset);
-        return $this->_toArrayAll($results);
+        return $this->findBy(array(), null, $limit, $offset);
     }
 
     public function insert($place)
@@ -94,6 +93,10 @@ class Place extends DocumentRepository
         $placeTypeDoc->setOwner($owner);
         if(isset($data['lat'])) {
             $placeTypeDoc->setLocation(new \Document\Location($data));
+        }
+
+        if(isset($data['permission'])){
+            $placeTypeDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
         return $placeTypeDoc;

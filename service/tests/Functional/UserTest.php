@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 class UserTest extends \PHPUnit_Framework_TestCase
 {
     protected $endpoint;
-    protected $headers = array('Auth-Token' => '6d16c898c3e9184cf35e65854376685a7f7092a5');
+    protected $user1Headers = array('Auth-Token' => '6d16c898c3e9184cf35e65854376685a7f7USER1');
+    protected $user2Headers = array('Auth-Token' => '2cb110a54ba63027ddd041e01341e22c145USER2');
+    protected $user3Headers = array('Auth-Token' => '2cb110a54ba63027ddd041e01342e22c145USER3');
 
     public function setUp()
     {
@@ -26,7 +28,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCurrentUser()
     {
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->user1Headers);
 
         $content = json_decode($responseBody);
 
@@ -40,14 +42,14 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $location = array('lat' => '90.87', 'lng' => '86.67');
 
         // With insufficient params
-        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/current-location', array('lat' => 0), $this->headers);
+        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/current-location', array('lat' => 0), $this->user1Headers);
         $this->assertEquals(417, $responseCode);
 
         // With acceptable params
-        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/current-location', $location, $this->headers);
+        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/current-location', $location, $this->user1Headers);
         $this->assertEquals(200, $responseCode);
 
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->user1Headers);
         $content = json_decode($responseBody);
 
         $this->assertEquals(200, $responseCode);
@@ -57,7 +59,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNearbyUsersAreSortedByDistance()
     {
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->user1Headers);
         $content = json_decode($responseBody);
 
         $this->assertEquals(200, $responseCode);
@@ -66,12 +68,12 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testNearbyUsersShowsOnlyVisibleUsers()
     {
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->user1Headers);
         $before = json_decode($responseBody);
 
         // Set location at fence
-        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '96', 'lng' => '88'), $this->headers);
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->headers);
+        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '96', 'lng' => '88'), $this->user1Headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users', array(), $this->user1Headers);
         $after = json_decode($responseBody);
 
         $this->assertEquals(3, count($before));
@@ -80,21 +82,21 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdatingLocationChangesVisibilityByGeoFence()
     {
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->user1Headers);
         $before = json_decode($responseBody);
 
         // Set geo-fence
         //sendPutRequest(API_BASEURL . '/settings/geo_fence', array('lat' => '90.87', 'lng' => '86.67', 'radius' => 5), $this->headers);
-        sendPutRequest(API_BASEURL . '/settings/geo_fence', array('lat' => '90.87', 'lng' => '86.67', 'radius' => 2), $this->headers);
+        sendPutRequest(API_BASEURL . '/settings/geo_fence', array('lat' => '90.87', 'lng' => '86.67', 'radius' => 2), $this->user1Headers);
 
         // Distance 1.112025 km
-        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '90.88', 'lng' => '86.68'), $this->headers);
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->headers);
+        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '90.88', 'lng' => '86.68'), $this->user1Headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->user1Headers);
         $after = json_decode($responseBody);
 
         // Distance 11.26095 km
-        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '90.97', 'lng' => '85.67'), $this->headers);
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->headers);
+        sendPutRequest(API_BASEURL . '/current-location', array('lat' => '90.97', 'lng' => '85.67'), $this->user1Headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/users/5003dffe757df2010d000000', array(), $this->user1Headers);
         $atLast = json_decode($responseBody);
 
         $this->assertTrue($before->visible);
@@ -104,12 +106,12 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testUserCanBlockAnotherUser()
     {
-        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/users/block/5003e8bc757df2020d000006', array(), $this->headers);
+        list($responseCode, $responseBody) = sendPutRequest(API_BASEURL . '/users/block/5003e8bc757df2020d000006', array(), $this->user1Headers);
         $result = json_decode($responseBody);
 
         $this->assertEquals(200, $responseCode);
 
-        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->headers);
+        list($responseCode, $responseBody) = sendGetRequest(API_BASEURL . '/me', array(), $this->user1Headers);
         $userData = json_decode($responseBody);
 
         $blockedUsers = $userData->blockedUsers;

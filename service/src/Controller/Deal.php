@@ -27,7 +27,6 @@ class Deal extends Base
      */
     public function init()
     {
-
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
 
@@ -35,6 +34,7 @@ class Deal extends Base
         $this->dealRepository = $this->dm->getRepository('Document\Deal');
 
         $this->userRepository->setCurrentUser($this->user);
+        $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
     }
 
