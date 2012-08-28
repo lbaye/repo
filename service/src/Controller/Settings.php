@@ -224,7 +224,7 @@ class Settings extends Base
         $settings = array_merge($settings, $data);
         $this->user->setSharingPreferenceSettings($settings);
 
-        return $this->_generateResponse(array('result' => $settings));
+        return $this->persistAndReturn( $settings);
     }
 
     /**
@@ -250,7 +250,7 @@ class Settings extends Base
             $this->user->setCurrentLocation($location);
             $this->_updateVisibility($this->user);
 
-            return $this->_generateResponse(array('result' => $location));
+            return $this->persistAndReturn($location);
 
         } else {
 

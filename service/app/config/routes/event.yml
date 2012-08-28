@@ -8,7 +8,6 @@ a_event:
   defaults: { _controller: Controller\Gathering::getById, type: event }
   requirements: { _method: GET }
 
-
 events_of_user:
   pattern:  /users/{user}/events
   defaults: { _controller: Controller\Gathering::getByUser, type: event }

@@ -49,7 +49,6 @@ class Auth extends Base
                 $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
             }
 
-
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(201);
 

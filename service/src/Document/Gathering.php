@@ -7,6 +7,7 @@ use Respect\Validation\Validator;
 
 use Document\User as User;
 use Document\Location as Location;
+use Helper\Location as LocationHelper;
 
 /**
  * @abstract
@@ -34,6 +35,15 @@ abstract class Gathering extends Content
 
     /** @ODM\Date */
     protected $time;
+
+    /** @ODM\String */
+    protected $eventShortSummary;
+
+    /** @ODM\Float */
+    protected $eventDistance;
+
+    /** @ODM\String */
+    protected $eventImage;
 
     //<editor-fold desc="Setters">
     public function setTitle($title)
@@ -115,15 +125,20 @@ abstract class Gathering extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title','description', 'time', 'createDate');
+        $fieldsToExpose = array('id', 'title','description','eventShortSummary','eventImage', 'time', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {
             $result[$field] = $this->{"get{$field}"}();
         }
 
+        $userLocation = $this->getOwner()->getCurrentLocation();
+
+        $distance =  LocationHelper::distance($userLocation['lat'],$userLocation['lng'],$this->getLocation()->getLat(),$this->getLocation()->getLng());
+
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
+        $result['distance'] = $distance;
         return $result;
     }
 
@@ -147,5 +162,35 @@ abstract class Gathering extends Content
         }
 
         return true;
+    }
+
+    public function setEventDistance($eventDistance)
+    {
+        $this->eventDistance = $eventDistance;
+    }
+
+    public function getEventDistance()
+    {
+        return $this->eventDistance;
+    }
+
+    public function setEventImage($eventImage)
+    {
+        $this->eventImage = $eventImage;
+    }
+
+    public function getEventImage()
+    {
+        return $this->eventImage;
+    }
+
+    public function setEventShortSummary($eventShortSummary)
+    {
+        $this->eventShortSummary = $eventShortSummary;
+    }
+
+    public function getEventShortSummary()
+    {
+        return $this->eventShortSummary;
     }
 }

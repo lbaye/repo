@@ -9,8 +9,9 @@ use Document\Plan as PlanDocument;
 use Document\User as UserDocument;
 use Repository\User as UserRepository;
 use Helper\Security as SecurityHelper;
+use Helper\Image as ImageHelper;
 
-class Gathering extends DocumentRepository
+class Gathering extends Base
 {
 
     public function getByUser(UserDocument $user)
@@ -80,7 +81,7 @@ class Gathering extends DocumentRepository
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time');
+        $setIfExistFields = array('title', 'description','eventShortSummary','eventImage', 'duration', 'time');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -98,6 +99,7 @@ class Gathering extends DocumentRepository
         }
 
         $gathering->setLocation(new \Document\Location($data));
+
         $gathering->setOwner($owner);
 
         return $gathering;
@@ -149,5 +151,29 @@ class Gathering extends DocumentRepository
         }
 
         return $gatheringItems;
+    }
+
+    public function saveEventPhoto($id, $eventImage)
+    {
+        $event = $this->find($id);
+
+        if (false === $event) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/event-photo/" . $event->getId() . ".jpeg";
+        $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
+
+        if ($eventImageUrl !== false) {
+            $event->setEventImage($eventImageUrl);
+        } else {
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
+            $event->setEventImage($filePath);
+        }
+
+        $this->dm->persist($event);
+        $this->dm->flush();
+
+        return $event;
     }
 }
