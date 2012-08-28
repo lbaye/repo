@@ -318,6 +318,9 @@ class UserRepo extends BaseRepository
             'enabled',
             'regMedia',
             'lastLogin',
+            'coverPhoto',
+            'status',
+            'company',
             'loginCount',
             'createDate',
             'updateDate'
@@ -348,6 +351,9 @@ class UserRepo extends BaseRepository
             'username',
             'address',
             'workStatus',
+            'coverPhoto',
+            'status',
+            'company',
             'relationshipStatus',
             'password',
             'settings',
@@ -680,7 +686,33 @@ class UserRepo extends BaseRepository
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            $user->setAvatar($this->config['web']['root'] . $filePath);
+            $user->setAvatar($filePath);
+        }
+
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
+    public function saveCoverPhoto($id , $coverPhoto)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
+        $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
+
+        if ($coverPhotoUrl !== false) {
+            $user->setCoverPhoto($coverPhotoUrl);
+        } else {
+            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
+            $user->setCoverPhoto($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());

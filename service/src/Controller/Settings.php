@@ -187,6 +187,10 @@ class Settings extends Base
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
+
         } catch (\Exception\ResourceNotFoundException $e) {
 
             return $this->_generate404();
@@ -220,7 +224,7 @@ class Settings extends Base
         $settings = array_merge($settings, $data);
         $this->user->setSharingPreferenceSettings($settings);
 
-        return $this->_generateResponse(array('result' => $settings));
+        return $this->persistAndReturn( $settings);
     }
 
     /**
@@ -246,7 +250,7 @@ class Settings extends Base
             $this->user->setCurrentLocation($location);
             $this->_updateVisibility($this->user);
 
-            return $this->_generateResponse(array('result' => $location));
+            return $this->persistAndReturn($location);
 
         } else {
 

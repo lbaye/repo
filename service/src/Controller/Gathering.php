@@ -140,6 +140,10 @@ class Gathering extends Base
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
 
+            if (!empty($postData['eventImage'])) {
+                $this->gatheringRepository->saveEventPhoto($meetup->getId(), $postData['eventImage']);
+            }
+
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
@@ -222,4 +226,6 @@ class Gathering extends Base
             $this->gatheringRepository = $this->dm->getRepository('Document\Plan');
         }
     }
+
+
 }

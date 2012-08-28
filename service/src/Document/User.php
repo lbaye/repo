@@ -199,6 +199,15 @@ class User
     /** @ODM\String */
     protected $username;
 
+    /** @ODM\String */
+    protected $coverPhoto;
+
+    /** @ODM\String */
+    protected $status;
+
+    /** @ODM\String */
+    protected $company;
+
     /** @var array */
     public $defaultSettings = array(
         'unit' => 'Metrics',
@@ -325,7 +334,10 @@ class User
             'blockedUsers'       => $this->getBlockedUsers(),
             'blockedBy'          => $this->getBlockedBy(),
             'distance'           => $this->getDistance(),
-            'age'                => $this->getAge()
+            'age'                => $this->getAge(),
+            'coverPhoto'         => $this->getCoverPhoto(),
+            'status'             => $this->getStatus(),
+            'company'            => $this->getCompany()
         );
 
         if ($this->getCircles()) {
@@ -895,6 +907,36 @@ class User
         }
 
         return $friends;
+    }
+
+    public function setCompany($company)
+    {
+        $this->company = $company;
+    }
+
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    public function setCoverPhoto($coverPhoto)
+    {
+        $this->coverPhoto = $coverPhoto;
+    }
+
+    public function getCoverPhoto()
+    {
+        return $this->coverPhoto;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 
 

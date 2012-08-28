@@ -253,9 +253,15 @@ class User extends Base
 
         try {
             $user = $this->userRepository->update($data, $id);
+
             if (!empty($data['avatar'])) {
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
+
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
+
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(200);
         } catch (\Exception\ResourceNotFoundException $e) {

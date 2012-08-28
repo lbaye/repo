@@ -9,8 +9,9 @@ use Document\Plan as PlanDocument;
 use Document\User as UserDocument;
 use Repository\UserRepo as UserRepository;
 use Helper\Security as SecurityHelper;
+use Helper\Image as ImageHelper;
 
-class GatheringRepo extends DocumentRepository
+class Gathering extends Base
 {
 
     public function getByUser(UserDocument $user)
