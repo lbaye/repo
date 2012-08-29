@@ -7,6 +7,9 @@ use Helper\Status;
 
 class Messages extends Base
 {
+    /**
+     * @var \Repository\MessageRepo
+     */
     private $messageRepository;
     private $userRepository;
 

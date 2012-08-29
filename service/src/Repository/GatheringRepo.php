@@ -11,7 +11,7 @@ use Repository\UserRepo as UserRepository;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class Gathering extends Base
+class GatheringRepo extends Base
 {
 
     public function getByUser(UserDocument $user)

@@ -139,7 +139,7 @@ class MessageRepo extends DocumentRepository
         $formFields = array('subject', 'content');
 
         # Set recipients object's reference
-        $this->setRecipients($data, $message);
+        $this->setRecipients($data, $message, $sender);
 
         # Set thread object
         $this->setThreadDependentProperties($formFields, $data, $message);
@@ -183,7 +183,7 @@ class MessageRepo extends DocumentRepository
         }
     }
 
-    private function setRecipients(array $data, MessageDocument &$message)
+    private function setRecipients(array $data, MessageDocument &$message, $sender = null)
     {
         if (!empty($data['recipients'])) {
             $recipients = $data['recipients'];
@@ -191,6 +191,9 @@ class MessageRepo extends DocumentRepository
 
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
+
+            $recipientsObjects[] =  $sender;
+
             $message->setRecipients($recipientsObjects);
         }
     }
