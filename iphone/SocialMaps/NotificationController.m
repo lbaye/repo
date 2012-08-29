@@ -412,5 +412,4 @@
     
     [notificationItems reloadData];
 }
-
 @end
