@@ -48,7 +48,6 @@ class Message
     {
         try {
             if (empty($this->thread)) {
-                Validator::create()->notEmpty()->assert($this->getSubject());
                 Validator::create()->notEmpty()->assert($this->getRecipients());
             }
 
@@ -161,7 +160,7 @@ class Message
         return $this->replies;
     }
 
-    public function toArray($detail = true)
+    public function toArray($detail = false)
     {
         $items = $this->buildSerializableFields();
 
@@ -178,10 +177,14 @@ class Message
             $items['thread'] = null;
         }
 
-        if ($this->replies->count() > 0) {
-            $items['replies'] = $this->toArrayOfMessages($this->getReplies());
+        if($detail) {
+            if ($this->replies->count() > 0) {
+                $items['replies'] = $this->toArrayOfMessages($this->getReplies());
+            } else {
+                $items['replies'] = array();
+            }
         } else {
-            $items['replies'] = array();
+            $items['reply_count'] = $this->replies->count();
         }
 
         return $items;

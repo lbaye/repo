@@ -32,7 +32,7 @@ class Messages extends Base
         if (empty($message)) {
             $this->_generate404();
         } else {
-            $this->_generateResponse($message->toArray());
+            $this->_generateResponse($message->toArray(true));
         }
 
         return $this->response;
@@ -46,7 +46,7 @@ class Messages extends Base
             $message = $this->messageRepository->map($postData, $this->user);
             $this->messageRepository->insert($message);
 
-            $this->response->setContent(json_encode($message->toArray()));
+            $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
         } catch (\Exception $e) {
