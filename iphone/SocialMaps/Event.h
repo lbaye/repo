@@ -34,3 +34,4 @@
 @property(nonatomic,retain) NSString *willAttend;
 
 @end
+
