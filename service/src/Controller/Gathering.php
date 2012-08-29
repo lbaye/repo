@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Document\User;
 use Repository\UserRepo as userRepository;
 use Repository\GatheringRepo as gatheringRepository;
+use Helper\Status;
 
 class Gathering extends Base
 {

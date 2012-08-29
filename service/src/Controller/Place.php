@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Repository\UserRepo as userRepository;
 use Repository\PlaceRepo as placeRepository;
+use Helper\Status;
 
 class Place extends Base
 {

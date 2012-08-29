@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Helper\Status;
 
 class Hello extends Base
 {

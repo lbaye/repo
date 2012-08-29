@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Repository\UserRepo as userRepository;
 //use Repository\resource as resourceRepository;
+use Helper\Status;
 
 /**
  * Template class for all content serving controllers

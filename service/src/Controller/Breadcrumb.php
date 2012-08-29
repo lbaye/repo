@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Repository\UserRepo as userRepository;
 use Repository\BreadcrumbRepo as breadcrumbRepository;
+use Helper\Status;
 
 class Breadcrumb extends Base
 {

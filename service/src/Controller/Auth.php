@@ -7,6 +7,7 @@ use Repository\UserRepo as UserRepository;
 use Document\FriendRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Helper\Email as EmailHelper;
+use Helper\Status;
 
 class Auth extends Base
 {

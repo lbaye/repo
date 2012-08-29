@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Repository\UserRepo as UserRepository;
 use Repository\ExternalLocationRepo as ExternalLocationRepository;
 use Helper\Location;
+use Helper\Status;
 
 class Search extends Base
 {

@@ -3,10 +3,11 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Helper\Status;
 use Repository\UserRepo as UserRepository;
 
 use Document\FriendRequest;
+use Helper\Status;
+
 
 class User extends Base
 {

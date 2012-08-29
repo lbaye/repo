@@ -5,6 +5,7 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Repository\UserRepo as UserRepository;
 use Helper\Location;
+use Helper\Status;
 
 class Settings extends Base
 {
