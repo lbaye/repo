@@ -54,7 +54,7 @@ class Place extends Base
 
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
-            return $this->_generateResponse(array('message' => 'No places found'), 204);
+            return $this->_generateResponse(array('message' => 'No places found'), Status::NO_CONTENT);
         }
     }
 
@@ -96,7 +96,7 @@ class Place extends Base
         if ($places) {
             return $this->_generateResponse($places);
         } else {
-            return $this->_generateResponse(null, 204);
+            return $this->_generateResponse(null, Status::NO_CONTENT);
         }
     }
 
@@ -108,7 +108,7 @@ class Place extends Base
      */
     public function getByUser($type = 'place')
     {
-        return $this->_generateErrorResponse('Not implemented', 501);
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
     /**
@@ -130,7 +130,7 @@ class Place extends Base
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($place->toArray(), 201);
+        return $this->_generateResponse($place->toArray(), Status::CREATED);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Helper\Status;
 
 abstract class Base
 {
@@ -95,7 +96,7 @@ abstract class Base
     {
         if (!$this->user instanceof \Document\User) {
             $this->response->setContent(json_encode(array('message' => 'Unauthorized (Wrong or no Auth-Token provided!)')));
-            $this->response->setStatusCode(401);
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
             $this->response->send();
             exit;
         }
@@ -124,7 +125,7 @@ abstract class Base
         return $gatheringItems;
     }
 
-    protected function _generateResponse($hash, $code = 200, $options = array())
+    protected function _generateResponse($hash, $code = Status::OK, $options = array())
     {
         if (!empty($hash)) {
             $this->response->setContent(
@@ -139,7 +140,7 @@ abstract class Base
         return $this->response;
     }
 
-    protected function _generateErrorResponse($message, $code = 406)
+    protected function _generateErrorResponse($message, $code = Status::NOT_ACCEPTABLE)
     {
         return $this->_generateResponse(array(
             'message' => $message
@@ -148,22 +149,22 @@ abstract class Base
 
     protected function _generate404()
     {
-        return $this->_generateErrorResponse('Object not found', 404);
+        return $this->_generateErrorResponse('Object not found', Status::NOT_FOUND);
     }
 
     protected function _generate500($message = 'Failed to update object')
     {
-        return $this->_generateErrorResponse($message, 500);
+        return $this->_generateErrorResponse($message, Status::INTERNAL_SERVER_ERR);
     }
 
     protected function _generateUnauthorized($message = 'Unauthorized!')
     {
-        return $this->_generateErrorResponse($message, 401);
+        return $this->_generateErrorResponse($message, Status::UNAUTHORIZED);
     }
 
     protected function _generateForbidden($message = 'Forbidden!')
     {
-        return $this->_generateErrorResponse($message, 403);
+        return $this->_generateErrorResponse($message, Status::FORBIDDEN);
     }
 
     protected function _generateException(\Exception $e)

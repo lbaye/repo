@@ -85,10 +85,10 @@ class Auth extends Base
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -105,7 +105,7 @@ class Auth extends Base
 
         if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
             $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
             return $this->response;
         }
 
@@ -135,7 +135,7 @@ class Auth extends Base
             }
 
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
 
@@ -179,7 +179,7 @@ class Auth extends Base
             EmailHelper::sendMail($email, $message);
 
             $this->response->setContent(json_encode(array('message' => "Please check your email for instruction.")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
             return $this->response;
 
@@ -225,19 +225,19 @@ class Auth extends Base
 
         if (false === $user) {
             $this->response->setContent(json_encode(array('message' => "No user found with this email.")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         }
 
         if ($data['password'] != $data['retypePassword']) {
 
             $this->response->setContent(json_encode(array('message' => "password and retype password didn't match")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         }
 
         $userId   = $user->getId();
         $password = $this->userRepository->resetPassword($data, $userId);
         $this->response->setContent(json_encode(array('password' => $password)));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
 
@@ -258,7 +258,7 @@ class Auth extends Base
         try {
             $this->userRepository->changePassword($data);
             $this->response->setContent(json_encode(array('password' => true)));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {
 

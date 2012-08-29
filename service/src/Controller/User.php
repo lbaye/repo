@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Helper\Status;
 use Repository\UserRepo as UserRepository;
 
 use Document\FriendRequest;
@@ -43,16 +44,16 @@ class User extends Base
 
         if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
         } else {
             $users = $this->userRepository->getNearBy($location['lat'], $location['lng'], $limit);
 
             if (!empty($users)) {
                 $this->response->setContent(json_encode($users));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
             } else {
                 $this->response->setContent(json_encode(array('message' => 'No deals found')));
-                $this->response->setStatusCode(204);
+                $this->response->setStatusCode(Status::NO_CONTENT);
             }
         }
 
@@ -61,7 +62,7 @@ class User extends Base
 
     /**
      * GET /me/notifications
-     *
+     *`
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getNotifications()
@@ -119,7 +120,7 @@ class User extends Base
             $this->response->setContent(json_encode($result));
         }
 
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
     }
@@ -138,13 +139,13 @@ class User extends Base
         try {
             $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
             $this->response->setContent(json_encode($frequest->toArray()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode(400);
+            $this->response->setStatusCode(Status::BAD_REQUEST);
         }
 
         return $this->response;
@@ -159,10 +160,10 @@ class User extends Base
     {
         if ($this->user instanceof \Document\User) {
             $this->response->setContent(json_encode($this->user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('message' => 'Unauthorized acecss. Auth-Token not found or invalid')));
-            $this->response->setStatusCode(401);
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
         }
 
         return $this->response;
@@ -182,10 +183,10 @@ class User extends Base
 
         if (null !== $user) {
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -205,10 +206,10 @@ class User extends Base
 
         if (false !== $user) {
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -227,7 +228,7 @@ class User extends Base
 
             $user = $this->userRepository->insert($data);
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(201);
+            $this->response->setStatusCode(Status::CREATED);
         } catch (\Exception\ResourceAlreadyExistsException $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
@@ -263,7 +264,7 @@ class User extends Base
             }
 
             $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
@@ -294,15 +295,15 @@ class User extends Base
             try {
                 $this->userRepository->delete($id);
                 $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
             } catch (\InvalidArgumentException $e) {
 
                 $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
-                $this->response->setStatusCode(404);
+                $this->response->setStatusCode(Status::NOT_FOUND);
             }
         } else {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(401);
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
         }
 
         return $this->response;
@@ -320,7 +321,7 @@ class User extends Base
         $circle = $this->userRepository->addCircle($circleData);
 
         $this->response->setContent(json_encode($circle->toArray()));
-        $this->response->setStatusCode(201);
+        $this->response->setStatusCode(Status::CREATED);
 
         return $this->response;
     }
@@ -341,7 +342,7 @@ class User extends Base
         }
 
         $this->response->setContent(json_encode($result));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
     }
@@ -369,7 +370,7 @@ class User extends Base
             }
 
             $this->response->setContent(json_encode($result));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
@@ -395,7 +396,7 @@ class User extends Base
 
             $user = $this->userRepository->updateNotification($notificationId);
             $this->response->setContent(json_encode($user->toArray()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {
 
@@ -448,7 +449,7 @@ class User extends Base
             )));
         }
 
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
         return $this->response;
     }
 
@@ -482,19 +483,19 @@ class User extends Base
                 }
 
                 $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
 
             } else {
 
                 $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
-                $this->response->setStatusCode(400);
+                $this->response->setStatusCode(Status::BAD_REQUEST);
 
             }
 
         } else {
 
             $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
-            $this->response->setStatusCode(400);
+            $this->response->setStatusCode(Status::BAD_REQUEST);
 
         }
 

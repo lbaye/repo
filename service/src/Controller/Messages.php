@@ -43,7 +43,7 @@ class Messages extends Base
             $this->messageRepository->insert($message);
 
             $this->response->setContent(json_encode($message->toArray()));
-            $this->response->setStatusCode(201);
+            $this->response->setStatusCode(Status::CREATED);
 
         } catch (\Exception $e) {
             $this->_generate500($e->getMessage());
@@ -76,7 +76,7 @@ class Messages extends Base
                 return $this->_generate404();
 
             if ($this->messageRepository->updateStatus($message, $status)) {
-                $this->_generateResponse($message->toArray(), 200);
+                $this->_generateResponse($message->toArray(), Status::OK);
             } else {
                 $this->_generate500();
             }
@@ -105,7 +105,7 @@ class Messages extends Base
         try {
             # Update recipients list
             if ($this->messageRepository->updateRecipients($message, $recipients)) {
-                $this->_generateResponse($message->toArray(), 200);
+                $this->_generateResponse($message->toArray(), Status::OK);
             } else {
                 $this->_generate500();
             }
@@ -139,7 +139,7 @@ class Messages extends Base
             $this->_generateResponse(
                 $this->messageRepository->
                         getRepliesSince($message, $since),
-                200,
+                Status::OK,
                 array(
                     'except' => array('replies', 'thread', 'recipients')
                 ));
@@ -156,7 +156,7 @@ class Messages extends Base
         try {
             $this->messageRepository->delete($id);
             $this->_generateResponse(
-                array('message' => 'Removed successfully'), 200
+                array('message' => 'Removed successfully'), Status::OK
             );
 
         } catch (\Exception $e) {

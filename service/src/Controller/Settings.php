@@ -319,7 +319,7 @@ class Settings extends Base
                                                     'sharingPreference' => $sharingPreference,
                                                     'currentLocation'   => $currentLocation
                                                 )));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
 

@@ -55,7 +55,7 @@ class Gathering extends Base
 
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
-            return $this->_generateResponse(array('message' => 'No meetups found'), 204);
+            return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
         }
     }
 
@@ -117,7 +117,7 @@ class Gathering extends Base
             if ($gatherings) {
                 return $this->_generateResponse($gatherings);
             } else {
-                return $this->_generateResponse(null, 204);
+                return $this->_generateResponse(null, Status::NO_CONTENT);
             }
         }
 
@@ -148,7 +148,7 @@ class Gathering extends Base
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($meetup->toArrayDetailed(), 201);
+        return $this->_generateResponse($meetup->toArrayDetailed(), Status::CREATED);
     }
 
     /**

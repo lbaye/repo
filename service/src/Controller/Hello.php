@@ -12,7 +12,7 @@ class Hello extends Base
 
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode(array('Hello' => 'World')));
-        $response->setStatusCode(200);
+        $response->setStatusCode(Status::OK);
 
         return $response;
     }
@@ -29,7 +29,7 @@ class Hello extends Base
 
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode(array('test'=>'working')));
-        $response->setStatusCode(200);
+        $response->setStatusCode(Status::OK);
 
         return $response;
     }

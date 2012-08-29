@@ -57,7 +57,7 @@ class Deal extends Base
             if (!empty($deals)) {
                 return $this->_generateResponse($deals);
             } else {
-                return $this->_generateResponse(null, 204);
+                return $this->_generateResponse(null, Status::NO_CONTENT);
             }
         }
     }
@@ -70,7 +70,7 @@ class Deal extends Base
      */
     public function getById($id)
     {
-        return $this->_generateErrorResponse('Not implemented', 501);
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
      /**
@@ -80,7 +80,7 @@ class Deal extends Base
      */
     public function getByCurrentUser()
     {
-        return $this->_generateErrorResponse('Not implemented', 501);
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
     /**
@@ -90,7 +90,7 @@ class Deal extends Base
      */
     public function getByUser()
     {
-        return $this->_generateErrorResponse('Not implemented', 501);;
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);;
     }
 
      /**
@@ -110,7 +110,7 @@ class Deal extends Base
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($deal->toArray(), 201);
+        return $this->_generateResponse($deal->toArray(), Status::CREATED);
     }
 
      /**
@@ -120,7 +120,7 @@ class Deal extends Base
      */
     public function update()
     {
-        return $this->_generateErrorResponse('Not implemented', 501);
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
      /**
@@ -130,7 +130,7 @@ class Deal extends Base
      */
     public function delete()
     {
-        return $this->_generateErrorResponse('Not implemented', 501);
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
 }

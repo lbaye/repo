@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Helper\Status;
 
 use Repository\UserRepo as userRepository;
 use Helper\Location;
@@ -44,7 +45,7 @@ class Venue extends Base
 
         if(empty($location['lat'])){
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
 
         } else {
             $venues = \Helper\Location::getNearbyVenues($location['lat'], $location['lng']);
@@ -52,10 +53,10 @@ class Venue extends Base
             if (!empty($venues)) {
                 $venues = $this->_formatGoogleVenues($venues);
                 $this->response->setContent(json_encode($venues));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
             } else {
                 $this->response->setContent(json_encode(array('message' => 'No deals found')));
-                $this->response->setStatusCode(204);
+                $this->response->setStatusCode(Status::NO_CONTENT);
             }
         }
 
@@ -71,7 +72,7 @@ class Venue extends Base
     public function getById($id)
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
