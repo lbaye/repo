@@ -760,7 +760,10 @@ class UserRepo extends BaseRepository
             $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
             $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
         } else {
-            $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+            // @TODO : Changing to near temporarily for testing with more users
+            //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+
+            $query->field('currentLocation.lat')->near($location['lat'])->field('currentLocation.lng')->near($location['lng']);
         }
 
         $result = $query->getQuery()->execute();

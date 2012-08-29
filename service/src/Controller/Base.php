@@ -35,6 +35,9 @@ abstract class Base
     protected $user;
 
 
+    /**
+     * @var \Service\Serializer\Serializable
+     */
     protected $serializer;
 
     /**
