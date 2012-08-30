@@ -15,6 +15,14 @@
 		20B0E7E915D7BA89009A500A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7E815D7BA89009A500A /* Platform.m */; };
 		20B0E7EC15D7BC55009A500A /* Layer.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EB15D7BC54009A500A /* Layer.m */; };
 		20B0E7EF15D7BEAC009A500A /* InformationPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */; };
+		20B656C915EF580800A441E9 /* EventListTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656C615EF580600A441E9 /* EventListTableCell.m */; };
+		20B656CA15EF580800A441E9 /* EventListRsvpTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */; };
+		20B656D015EF58B800A441E9 /* EventImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656CF15EF58B300A441E9 /* EventImageDownloader.m */; };
+		20B656D315EF599A00A441E9 /* ViewEventListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D215EF599400A441E9 /* ViewEventListViewController.m */; };
+		20B656D815EF59E100A441E9 /* ViewEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */; };
+		20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D715EF59E000A441E9 /* CreateEventViewController.m */; };
+		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
+		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
 		20E4A12115D8EB80009A1F6B /* NewsFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4A12015D8EB80009A1F6B /* NewsFeed.m */; };
 		20E75BE115EA0345000B6B8A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E75BE015EA0343000B6B8A /* Event.m */; };
 		4F1B8DDD15E40FB0004AC402 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */; };
@@ -347,6 +355,22 @@
 		20B0E7EB15D7BC54009A500A /* Layer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Layer.m; sourceTree = "<group>"; };
 		20B0E7ED15D7BEAB009A500A /* InformationPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationPrefs.h; sourceTree = "<group>"; };
 		20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationPrefs.m; sourceTree = "<group>"; };
+		20B656C515EF580600A441E9 /* EventListTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventListTableCell.h; sourceTree = "<group>"; };
+		20B656C615EF580600A441E9 /* EventListTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventListTableCell.m; sourceTree = "<group>"; };
+		20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventListRsvpTableCell.h; sourceTree = "<group>"; };
+		20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventListRsvpTableCell.m; sourceTree = "<group>"; };
+		20B656CE15EF58B200A441E9 /* EventImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventImageDownloader.h; sourceTree = "<group>"; };
+		20B656CF15EF58B300A441E9 /* EventImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventImageDownloader.m; sourceTree = "<group>"; };
+		20B656D115EF599200A441E9 /* ViewEventListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventListViewController.h; sourceTree = "<group>"; };
+		20B656D215EF599400A441E9 /* ViewEventListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewEventListViewController.m; sourceTree = "<group>"; };
+		20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventDetailViewController.h; sourceTree = "<group>"; };
+		20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewEventDetailViewController.m; sourceTree = "<group>"; };
+		20B656D615EF59DF00A441E9 /* CreateEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEventViewController.h; sourceTree = "<group>"; };
+		20B656D715EF59E000A441E9 /* CreateEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEventViewController.m; sourceTree = "<group>"; };
+		20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionSheetPicker.h; sourceTree = "<group>"; };
+		20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetPicker.m; sourceTree = "<group>"; };
+		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
+		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
 		20E4A11F15D8EB80009A1F6B /* NewsFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeed.h; sourceTree = "<group>"; };
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -860,6 +884,8 @@
 				20B0E7D515D7A9CF009A500A /* Globals.m */,
 				20B0E7D615D7A9CF009A500A /* IconDownloader.h */,
 				20B0E7D715D7A9CF009A500A /* IconDownloader.m */,
+				20B656CE15EF58B200A441E9 /* EventImageDownloader.h */,
+				20B656CF15EF58B300A441E9 /* EventImageDownloader.m */,
 				20B0E7ED15D7BEAB009A500A /* InformationPrefs.h */,
 				20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */,
 				4FB7A02815D0E776001EB905 /* InfoSharing.h */,
@@ -918,8 +944,6 @@
 				4FC6E53F15D4D04600C82B39 /* RadioButtonItem.m */,
 				4F3A4EEB15D227230033AC9E /* ResetPassword.h */,
 				4F3A4EEC15D227230033AC9E /* ResetPassword.m */,
-				4F8257B415BD964E00760CE1 /* RestClient.h */,
-				4F8257B515BD964E00760CE1 /* RestClient.m */,
 				4F6036DC15DD4DAD00C1BD4E /* SearchLocation.h */,
 				4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */,
 				4F3B3C8515D8F9600025F8DD /* SelectFriends.h */,
@@ -946,8 +970,12 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
+				4F8257B415BD964E00760CE1 /* RestClient.h */,
+				4F8257B515BD964E00760CE1 /* RestClient.m */,
 				20E75BDF15EA0341000B6B8A /* Event.h */,
 				20E75BE015EA0343000B6B8A /* Event.m */,
+				20B656DD15EF827A00A441E9 /* EventList.h */,
+				20B656DE15EF827B00A441E9 /* EventList.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1073,8 +1101,20 @@
 				4FAC302515C5C5DC0014030C /* NotificationController.m */,
 				4FF09BF415CFE6E500F8AD19 /* SettingsController.h */,
 				4FF09BF515CFE6E600F8AD19 /* SettingsController.m */,
+				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
+				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
+				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
+				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
+				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
+				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
+				20B656C515EF580600A441E9 /* EventListTableCell.h */,
+				20B656C615EF580600A441E9 /* EventListTableCell.m */,
+				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
+				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
 				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
 				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
+				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
+				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
@@ -1788,6 +1828,14 @@
 				4F6C4BF215DFF2A300525665 /* UserCircle.m in Sources */,
 				4F59C33F15E7EB060060C8D9 /* MapAnnotationPlace.m in Sources */,
 				20E75BE115EA0345000B6B8A /* Event.m in Sources */,
+				20B656C915EF580800A441E9 /* EventListTableCell.m in Sources */,
+				20B656CA15EF580800A441E9 /* EventListRsvpTableCell.m in Sources */,
+				20B656D015EF58B800A441E9 /* EventImageDownloader.m in Sources */,
+				20B656D315EF599A00A441E9 /* ViewEventListViewController.m in Sources */,
+				20B656D815EF59E100A441E9 /* ViewEventDetailViewController.m in Sources */,
+				20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */,
+				20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */,
+				20B656DF15EF827C00A441E9 /* EventList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
