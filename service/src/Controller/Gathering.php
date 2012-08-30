@@ -28,7 +28,7 @@ class Gathering extends Base
     {
         parent::init();
 
-        $this->userRepository  = $this->dm->getRepository('Document\User');
+        $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
@@ -45,8 +45,8 @@ class Gathering extends Base
      */
     public function index($type)
     {
-        $start = (int) $this->request->get('start', 0);
-        $limit = (int) $this->request->get('limit', 20);
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
 
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
@@ -75,7 +75,7 @@ class Gathering extends Base
         $gathering = $this->gatheringRepository->find($id);
 
         if (null !== $gathering) {
-            if($gathering->isPermittedFor($this->user)){
+            if ($gathering->isPermittedFor($this->user)) {
                 return $this->_generateResponse($gathering->toArrayDetailed());
             } else {
                 return $this->_generateForbidden('Not permitted for you');
@@ -108,11 +108,11 @@ class Gathering extends Base
     {
         $this->_initRepository($type);
 
-        if(is_string($user)) {
+        if (is_string($user)) {
             $user = $this->userRepository->find($user);
         }
 
-        if($user instanceof \Document\User) {
+        if ($user instanceof \Document\User) {
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
@@ -167,12 +167,12 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        if($gathering === false) {
+        if ($gathering === false) {
             return $this->_generate404();
         }
 
-        if($gathering->getOwner() != $this->user) {
-            return $this->_generateUnauthorized('You do not have permission to edit this '. $type);
+        if ($gathering->getOwner() != $this->user) {
+            return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
         }
 
         try {
@@ -199,12 +199,12 @@ class Gathering extends Base
 
         $gathering = $this->gatheringRepository->find($id);
 
-        if($gathering === false) {
+        if ($gathering === false) {
             return $this->_generate404();
         }
 
-        if($gathering->getOwner() != $this->user) {
-            return $this->_generateUnauthorized('You do not have permission to edit this '. $type);
+        if ($gathering->getOwner() != $this->user) {
+            return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
         }
 
         try {
@@ -219,13 +219,63 @@ class Gathering extends Base
 
     private function _initRepository($type)
     {
-        if($type == 'event') {
+        if ($type == 'event') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Event');
-        } else if($type == 'meetup') {
+        } else if ($type == 'meetup') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Meetup');
-        } else if($type == 'plan') {
+        } else if ($type == 'plan') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Plan');
         }
+    }
+
+    /**
+     * PUT /events/{id}/user/{user}/attend/
+     *
+     * @param $id
+     * @param $user
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function setRsvp($id, $type)
+    {
+        $this->_initRepository($type);
+
+        $gathering = $this->gatheringRepository->find($id);
+        $rsvpTypes = array('yes', 'no', 'maybe');
+
+        foreach ($rsvpTypes as $rsvpType) {
+            $rsvpUsers = $this->request->get($rsvpType);
+            if (!empty($rsvpUsers)) {
+                $this->_setRsvpUsers($gathering, $rsvpType, $rsvpUsers);
+            }
+        }
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $this->_generateResponse($gathering->toArray());
+    }
+
+    private function _setRsvpUsers($gathering, $rsvpType, $rsvpUsers)
+    {
+        $rsvp = $gathering->getRsvp();
+
+        if (!empty($rsvp)) {
+            $existingUsers = $rsvp[$rsvpType];
+
+            if (empty($existingUsers)) {
+                $rsvp[$rsvpType] = $rsvpUsers;
+            } else {
+                $rsvp[$rsvpType] = array_merge($existingUsers, $rsvpUsers);
+            }
+        } else {
+            $rsvp = array(
+                $rsvpType => $rsvpUsers
+            );
+        }
+
+        $gathering->setRsvp($rsvp);
     }
 
 

@@ -45,6 +45,14 @@ abstract class Gathering extends Content
     /** @ODM\String */
     protected $eventImage;
 
+    /** @ODM\Hash */
+    protected $rsvp = array(
+
+        'yes' => array(),
+        'no' => array(),
+        'maybe' => array(),
+    );
+
     //<editor-fold desc="Setters">
     public function setTitle($title)
     {
@@ -125,7 +133,10 @@ abstract class Gathering extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title','description','eventShortSummary','eventImage', 'time', 'createDate');
+        $fieldsToExpose = array(
+            'id', 'title','description','eventShortSummary','eventImage',
+            'time','rsvp', 'createDate'
+        );
         $result = array();
 
         foreach($fieldsToExpose as $field) {
@@ -134,7 +145,11 @@ abstract class Gathering extends Content
 
         $userLocation = $this->getOwner()->getCurrentLocation();
 
-        $distance =  LocationHelper::distance($userLocation['lat'],$userLocation['lng'],$this->getLocation()->getLat(),$this->getLocation()->getLng());
+        $distance =  LocationHelper::distance(
+            $userLocation['lat'],
+            $userLocation['lng'],
+            $this->getLocation()->getLat(),
+            $this->getLocation()->getLng());
 
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
@@ -192,5 +207,15 @@ abstract class Gathering extends Content
     public function getEventShortSummary()
     {
         return $this->eventShortSummary;
+    }
+
+    public function setRsvp($whoWillAttend)
+    {
+        $this->rsvp = $whoWillAttend;
+    }
+
+    public function getRsvp()
+    {
+        return $this->rsvp;
     }
 }

@@ -81,7 +81,7 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time');
+        $setIfExistFields = array('title', 'description', 'duration', 'time','whoWillAttend');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -150,5 +150,25 @@ class GatheringRepo extends Base
         }
 
         return $gatheringItems;
+    }
+
+     public function updateWhoWillAttend($data, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $gathering = $this->map($data, $gathering->getOwner(), $gathering);
+
+        if ($gathering->isValid() === false) {
+            return false;
+        }
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
     }
 }

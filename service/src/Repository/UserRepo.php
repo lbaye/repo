@@ -159,7 +159,7 @@ class UserRepo extends BaseRepository
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if ($result instanceof \Document\User) {
+        if ($result->count() > 0) {
             return true;
         }
 

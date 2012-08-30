@@ -32,3 +32,8 @@ delete_event:
   pattern:  /events/{id}
   defaults: { _controller: Controller\Gathering::delete, type: event }
   requirements: { _method: DELETE }
+
+who_will_attend:
+  pattern:  /events/{id}/rsvp
+  defaults: { _controller: Controller\Gathering::setRsvp, type: event }
+  requirements: { _method: PUT }
