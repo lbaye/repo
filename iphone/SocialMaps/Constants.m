@@ -47,6 +47,7 @@ float const kNumbersFontSize		= 26;
 float const kNumbersLargeFontSize		= 48;
 float const kSmallNumbersFontSize	= 17;
 float const kLargeLabelFontSize		= 16;
+float const kMediumLabelFontSize	= 14;
 float const kSmallLabelFontSize		= 12;
 float const kNumberRGBRed			= 0.44;
 float const kNumberRGBGreen			= 0.67;

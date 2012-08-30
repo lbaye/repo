@@ -14,6 +14,7 @@
 @synthesize numRadio;
 @synthesize selIndex;
 @synthesize labels;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame numButtons:(int)numButtons labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag
 {
@@ -101,6 +102,9 @@
                             forState:UIControlStateNormal];
         [lastSel setBackgroundImage:[UIImage imageNamed:@"location_bar_radio.png"]
                             forState:UIControlStateNormal];
+        if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(radioButtonClicked:sender:)]) {
+            [self.delegate radioButtonClicked:selIndex sender:[sender superview]];
+        }
     }
 }
 @end

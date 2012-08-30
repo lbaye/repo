@@ -35,6 +35,7 @@ extern float const kNumbersFontSize;
 extern float const kNumbersLargeFontSize;
 extern float const kSmallNumbersFontSize;
 extern float const kLargeLabelFontSize;
+extern float const kMediumLabelFontSize;
 extern float const kSmallLabelFontSize;
 extern float const kNumberRGBRed;
 extern float const kNumberRGBGreen;
