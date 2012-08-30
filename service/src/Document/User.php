@@ -439,10 +439,8 @@ class User
 
     public function getAvatar()
     {
-         $protocol = 'http://';
-         $domainName = $_SERVER['HTTP_HOST'];
 
-        return $protocol.$domainName. $this->avatar;
+        return $this->avatar;
 
     }
 
