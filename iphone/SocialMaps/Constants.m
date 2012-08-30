@@ -29,6 +29,7 @@ NSString * const NOTIF_GET_FRIEND_REQ_DONE= @"com.genweb2.socialmaps.getfriendre
 NSString * const NOTIF_GET_INBOX_DONE= @"com.genweb2.socialmaps.getinboxdone";
 NSString * const NOTIF_GET_NOTIFICATIONS_DONE= @"com.genweb2.socialmaps.getnotificationsdone";
 NSString * const NOTIF_FBFRIENDLIST_DONE= @"com.genweb2.socialmaps.fbfriendlistdone";
+NSString * const NOTIF_GET_ALL_EVENTS_DONE= @"com.genweb2.socialmaps.getalleventsdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

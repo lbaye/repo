@@ -24,6 +24,8 @@ extern NSString * const NOTIF_GET_FRIEND_REQ_DONE;
 extern NSString * const NOTIF_GET_INBOX_DONE;
 extern NSString * const NOTIF_GET_NOTIFICATIONS_DONE;
 extern NSString * const NOTIF_FBFRIENDLIST_DONE;
+extern NSString * const NOTIF_GET_ALL_EVENTS_DONE;
+
 
 // Font related stuff
 extern NSString * const kFontName;

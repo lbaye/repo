@@ -24,6 +24,7 @@
 #import "UserCircle.h"
 #import "UserFriends.h"
 #import "Event.h"
+#import "EventList.h"
 
 @implementation RestClient
 
@@ -1479,7 +1480,8 @@
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
-        
+        EventList *eventList=[[EventList alloc] init];
+        eventList.eventListArr=[[NSMutableArray alloc] init];
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
         {
             if ([jsonObjects isKindOfClass:[NSDictionary class]])
@@ -1492,34 +1494,42 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            [aEvent setEventID:[[jsonObjects objectAtIndex:0] objectForKey:@"id"]];
-            [aEvent setEventName:[[jsonObjects objectAtIndex:0] objectForKey:@"title"]];
-            
-            Date *date=[[Date alloc] init];
-            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"date"];
-            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone"];            
-            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone_type"];                        
-            [aEvent setEventCreateDate:date];
-
-            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"date"];
-            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone"];            
-            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone_type"];                        
-            [aEvent setEventDate:date];            
-            
-            Geolocation *loc=[[Geolocation alloc] init];
-            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lat"];
-            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lng"];
-            [aEvent setEventLocation:loc];
-            [aEvent setEventAddress:[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"address"]];
-            NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventID,aEvent.eventLocation.latitude);  
-            NSLog(@"Is Kind of NSString: %@",jsonObjects);
-            
-            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:shareLocation];
+            for (int i=0; i<[jsonObjects count]; i++)
+            {
+                [aEvent setEventID:[[jsonObjects objectAtIndex:i] objectForKey:@"id"]];
+                [aEvent setEventName:[[jsonObjects objectAtIndex:i] objectForKey:@"title"]];
+                
+                Date *date=[[Date alloc] init];
+                date.date=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"date"];
+                date.timezone=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone"];            
+                date.timezoneType=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone_type"];                        
+                [aEvent setEventCreateDate:date];
+                
+                date.date=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"date"];
+                date.timezone=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"timezone"];            
+                date.timezoneType=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"timezone_type"];                        
+                [aEvent setEventDate:date];            
+                
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"lat"];
+                loc.latitude=[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"lng"];
+                [aEvent setEventLocation:loc];
+                [aEvent setEventAddress:[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"address"]];
+                [aEvent setEventDistance:[[jsonObjects objectAtIndex:i] objectForKey:@"distance"]];
+                [aEvent setEventImageUrl:[[jsonObjects objectAtIndex:i] objectForKey:@"distance"]];
+                
+                NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventID,aEvent.eventLocation.latitude);
+//                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+                
+                [aEvent.eventList addObject:aEvent];
+                [eventList.eventListArr addObject:aEvent];
+            }
+            NSLog(@"client eventList.eventListArr :%@",eventList.eventListArr);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_DONE object:eventList.eventListArr];
         } 
         else 
         {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -1527,7 +1537,7 @@
     
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
-//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_DONE object:nil];
     }];
     
     //[request setDelegate:self];

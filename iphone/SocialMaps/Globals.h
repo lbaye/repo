@@ -10,6 +10,7 @@
 
 extern NSMutableArray *userFriendslistArray;
 extern NSMutableDictionary *userFriendslistIndex;
+extern NSMutableArray *eventListGlobalArray;
 
 @interface Globals : NSObject 
 

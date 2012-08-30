@@ -9,5 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface EventList : NSObject
+{
+    NSMutableArray *eventListArr;
+}
 
+@property(readwrite, assign) NSMutableArray *eventListArr;
 @end

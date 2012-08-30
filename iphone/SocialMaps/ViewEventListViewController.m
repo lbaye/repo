@@ -11,6 +11,8 @@
 #import "EventListRsvpTableCell.h"
 #import "Event.h"
 #import "EventImageDownloader.h"
+#import "EventList.h"
+#import "Globals.h"
 
 @interface ViewEventListViewController ()
 
@@ -27,12 +29,13 @@ __strong NSMutableDictionary *eventListIndex;
 NSString *searchText=@"";
 
 //rsvpFlag=
-bool searchFlag=true;
+bool searchFlags=true;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self) 
+    {
         // Custom initialization
     }
     return self;
@@ -52,6 +55,9 @@ bool searchFlag=true;
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     
     [super viewDidLoad];
+    Event *aEvent=[[Event alloc] init];
+    EventList *eventList=[[EventList alloc] init];
+    NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
 	// Do any additional setup after loading the view.
 }
 
@@ -411,7 +417,7 @@ bool searchFlag=true;
                 [self startIconDownload:event forIndexPath:indexPath];
                 NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
             }            
-            else if(searchFlag==true)
+            else if(searchFlags==true)
             {
                 NSLog(@"search flag true start download");
                 [self startIconDownload:event forIndexPath:indexPath];
@@ -571,7 +577,7 @@ bool searchFlag=true;
     if ([searchText length]>0) 
     {
         [self performSelector:@selector(searchResult) withObject:nil afterDelay:0.1];
-        searchFlag=true;
+        searchFlags=true;
         [self.eventListTableView reloadData];
         NSLog(@"searchText  %@",searchText);
     }
@@ -633,7 +639,7 @@ bool searchFlag=true;
     
     NSLog(@"Search button clicked");
     searchText=eventSearchBar.text;
-    searchFlag=false;
+    searchFlags=false;
     [self searchResult];
     [eventSearchBar resignFirstResponder];    
 }
@@ -663,7 +669,7 @@ bool searchFlag=true;
             {
             }
         }
-    searchFlag=false;    
+    searchFlags=false;
     
     NSLog(@"filteredList %@ %d  %d  imageDownloadsInProgress: %@",filteredList,[filteredList count],[eventListArray count], imageDownloadsInProgress);
     [self.eventListTableView reloadData];

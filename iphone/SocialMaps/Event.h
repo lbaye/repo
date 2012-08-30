@@ -21,6 +21,9 @@
     NSString *eventDistance;
     Geolocation *eventLocation;
     NSString *willAttend;
+    NSString *eventImageUrl;
+    UIImage *eventImage;
+    NSMutableArray *eventList;
 }
 
 @property(nonatomic,retain) NSString *eventID;
@@ -32,5 +35,9 @@
 @property(nonatomic,retain) NSString *eventDistance;
 @property(nonatomic,retain) Geolocation *eventLocation;
 @property(nonatomic,retain) NSString *willAttend;
+@property(nonatomic,retain) NSMutableArray *eventList;
+
+@property(nonatomic,retain) NSString *eventImageUrl;
+@property(nonatomic,retain) UIImage *eventImage;
 
 @end

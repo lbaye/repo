@@ -9,5 +9,12 @@
 #import "EventList.h"
 
 @implementation EventList
+@synthesize eventListArr;
+-(id)init
+{
+    eventListArr=[[NSMutableArray alloc] init];
+    return self;
+}
+
 
 @end

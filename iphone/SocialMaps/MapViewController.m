@@ -103,13 +103,13 @@ ButtonClickCallbackData callBackData;
     
     MKAnnotationView *pin = nil;
     
-    if ([locItem isKindOfClass:[LocationItemPeople class]])
-        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if ([locItem isKindOfClass:[LocationItemPlace class]])
-        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if (smAppDelegate.userAccountPrefs.icon != nil) {
-        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    }
+//    if ([locItem isKindOfClass:[LocationItemPeople class]])
+//        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    else if ([locItem isKindOfClass:[LocationItemPlace class]])
+//        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    else if (smAppDelegate.userAccountPrefs.icon != nil) {
+//        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+//    }
     return pin;
 }
 
@@ -335,7 +335,8 @@ ButtonClickCallbackData callBackData;
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -446,7 +447,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my friends"]; 
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
-    
+
     [self displayNotificationCount];
 
 }
@@ -644,7 +645,8 @@ ButtonClickCallbackData callBackData;
     [super dealloc];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
 
     NSLog(@"In prepareForSegue:MapViewController");
 }
@@ -1070,33 +1072,61 @@ ButtonClickCallbackData callBackData;
 //    [rc setPlatForm:aPlatform:@"":@""];
 //    [rc getPlatForm];
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
-    [rc getShareLocation:@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
+
+    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
+    [smAppDelegate showActivityViewer:self.view];
 }
 
-- (IBAction)gotoBreadcrumbs:(id)sender {
+-(void)getAllEvents
+{
+    RestClient *rc=[[RestClient alloc] init];
+    [rc getAllEvents:@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];    
 }
 
-- (IBAction)gotoCheckins:(id)sender {
+- (void)getAllEventsDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    eventListGlobalArray=[notif object];
+    
+    [self performSegueWithIdentifier:@"eventList" sender: self];
+    NSLog(@"GOT SERVICE DATA.. :D");
 }
 
-- (IBAction)gotoMeetupReq:(id)sender {
+- (IBAction)gotoBreadcrumbs:(id)sender
+{
 }
 
-- (IBAction)gotoMapix:(id)sender {
+- (IBAction)gotoCheckins:(id)sender
+{
 }
 
-- (IBAction)gotoEditFilters:(id)sender {
+- (IBAction)gotoMeetupReq:(id)sender
+{
 }
 
-- (IBAction)applyFilter:(id)sender {
+- (IBAction)gotoMapix:(id)sender
+{
+}
+
+- (IBAction)gotoEditFilters:(id)sender
+{
+}
+
+- (IBAction)applyFilter:(id)sender
+{
     pickSavedFilter.hidden = FALSE;
 }
 
-- (IBAction)peopleClicked:(id)sender {
-    if (smAppDelegate.showPeople == true) {
+- (IBAction)peopleClicked:(id)sender
+{
+    if (smAppDelegate.showPeople == true)
+    {
         smAppDelegate.showPeople = false;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
-    } else {
+    }
+    else
+    {
         smAppDelegate.showPeople = true;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
@@ -1105,11 +1135,15 @@ ButtonClickCallbackData callBackData;
     [self.view setNeedsDisplay];
 }
 
-- (IBAction)placesClicked:(id)sender {
-    if (smAppDelegate.showPlaces == true) {
+- (IBAction)placesClicked:(id)sender
+{
+    if (smAppDelegate.showPlaces == true)
+    {
         smAppDelegate.showPlaces = false;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
-    } else {
+    }
+    else
+    {
         smAppDelegate.showPlaces = true;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }

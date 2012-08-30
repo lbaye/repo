@@ -18,5 +18,8 @@
 @synthesize willAttend;
 @synthesize eventDate;
 @synthesize eventCreateDate;
+@synthesize eventList;
+@synthesize eventImageUrl;
+@synthesize eventImage;
 
 @end
