@@ -24,6 +24,15 @@ typedef enum _MAP_ANNOTATION_STATE {
     MapAnnotationStateDetailed
 } MAP_ANNOTATION_STATE;
 
+typedef enum _LOCATION_ACTION_TYPE {
+    LocationActionTypePlaceReview=0,
+    LocationActionTypeGotoMap
+}LOCATION_ACTION_TYPE;
+
+@protocol LocationItemDelegate<NSObject>
+- (void) buttonClicked:(LOCATION_ACTION_TYPE)action row:(int)row;
+@end
+
 @interface LocationItem : NSObject <MKAnnotation> {
     NSString *itemName;
     NSString *itemAddress;
@@ -35,6 +44,7 @@ typedef enum _MAP_ANNOTATION_STATE {
     UIImage     *itemBg;
     NSString    *cellIdent;
     MAP_ANNOTATION_STATE currDisplayState;
+    id<LocationItemDelegate> delegate;
 }
 
 @property (copy) NSString *itemName;
@@ -47,11 +57,13 @@ typedef enum _MAP_ANNOTATION_STATE {
 @property (nonatomic, retain) UIImage *itemBg;
 @property (nonatomic, retain) NSString *cellIdent;
 @property (nonatomic) MAP_ANNOTATION_STATE currDisplayState;
+@property (assign) id<LocationItemDelegate> delegate;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
           category:(NSString*)category coordinate:(CLLocationCoordinate2D)coordinate dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg;
 - (NSComparisonResult) compareDistance:(LocationItem*) other;
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(ListViewController*)controller;
 - (CGFloat) getRowHeight:(UITableView*)tv;
+- (void) showInMapview:(id)sender;
 
 @end

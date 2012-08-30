@@ -30,6 +30,7 @@ typedef enum _MAP_USER_ACTION {
 
 @protocol MapAnnotationDelegate <NSObject>
 - (void) performUserAction:(MKAnnotationView*)annoView type:(MAP_USER_ACTION) actionType;
+- (void) mapAnnotationChanged:(id <MKAnnotation>) anno;
 @end
 
 @interface MapAnnotation : NSObject {

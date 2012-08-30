@@ -5,7 +5,7 @@
 //  Created by Arif Shakoor on 7/23/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
-#include "TargetConditionals.h"
+#import "TargetConditionals.h"
 #import "MapViewController.h"
 #import "Location.h"
 #import "NotifMessage.h"
@@ -353,10 +353,10 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    RestClient *restClient = [[RestClient alloc] init];
+    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
+    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
+    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -487,6 +487,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewDidUnload
 {
+    [locationManager stopUpdatingLocation];
     _mapView = nil;
     [self setMapPulldown:nil];
     [self setShareAllButton:nil];
@@ -1220,8 +1221,8 @@ ButtonClickCallbackData callBackData;
     [locationManager stopUpdatingLocation];
     [locationManager startUpdatingLocation];
     needToCenterMap = TRUE;
-    //_mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
-    //[_mapView setNeedsDisplay];
+    _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+    [_mapView setNeedsDisplay];
 
     // Send new location to server
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
@@ -1286,12 +1287,13 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+                        NSLog(@"Name=%@ %@ Location=%f,%f dist=%@",item.firstName, item.lastName, loc.latitude,loc.longitude, item.distance);
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         
                         LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
+                        NSLog(@"Distance:Calculated=%@",item.distance);
                         aPerson.userInfo = item;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
@@ -1395,8 +1397,8 @@ ButtonClickCallbackData callBackData;
 }
 - (void)gotFriendRequests:(NSNotification *)notif {
     NSMutableArray *notifs = [notif object];
-    [smAppDelegate.notifications removeAllObjects];
-    [smAppDelegate.notifications addObjectsFromArray:notifs];
+    [smAppDelegate.friendRequests removeAllObjects];
+    [smAppDelegate.friendRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
     [self displayNotificationCount];
 }
