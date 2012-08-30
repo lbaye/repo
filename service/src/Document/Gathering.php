@@ -26,6 +26,14 @@ abstract class Gathering extends Content
     /** @ODM\Hash */
     protected $guests = array();
 
+    /** @ODM\Hash */
+    protected $whoWillAttend = array(
+
+        'yes' => array(),
+        'no' => array(),
+        'mayBe' => array(),
+    );
+
     /**
      * @ODM\EmbedOne(targetDocument="Location")
      * @var Location
@@ -147,5 +155,15 @@ abstract class Gathering extends Content
         }
 
         return true;
+    }
+
+    public function setWhoWillAttend($whoWillAttend)
+    {
+        $this->whoWillAttend = $whoWillAttend;
+    }
+
+    public function getWhoWillAttend()
+    {
+        return $this->whoWillAttend;
     }
 }

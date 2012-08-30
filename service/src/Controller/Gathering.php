@@ -28,7 +28,7 @@ class Gathering extends Base
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
 
-        $this->userRepository  = $this->dm->getRepository('Document\User');
+        $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
@@ -79,7 +79,7 @@ class Gathering extends Base
         $gathering = $this->gatheringRepository->find($id);
 
         if (null !== $gathering) {
-            if($gathering->isPermittedFor($this->user)){
+            if ($gathering->isPermittedFor($this->user)) {
                 $this->response->setContent(json_encode($gathering->toArrayDetailed()));
                 $this->response->setStatusCode(200);
             } else {
@@ -117,11 +117,11 @@ class Gathering extends Base
     {
         $this->_initRepository($type);
 
-        if(is_string($user)) {
+        if (is_string($user)) {
             $user = $this->userRepository->find($user);
         }
 
-        if($user instanceof \Document\User) {
+        if ($user instanceof \Document\User) {
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
@@ -181,15 +181,15 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        if($gathering === false) {
-            $this->response->setContent(json_encode(array('message' => ucfirst($type). ' not found')));
+        if ($gathering === false) {
+            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
             $this->response->setStatusCode(404);
 
             return $this->response;
         }
 
-        if($gathering->getOwner() != $this->user) {
-            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this '. $type)));
+        if ($gathering->getOwner() != $this->user) {
+            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this ' . $type)));
             $this->response->setStatusCode(401);
 
             return $this->response;
@@ -223,15 +223,15 @@ class Gathering extends Base
 
         $gathering = $this->gatheringRepository->find($id);
 
-        if($gathering === false) {
-            $this->response->setContent(json_encode(array('message' => ucfirst($type). ' not found')));
+        if ($gathering === false) {
+            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
             $this->response->setStatusCode(404);
 
             return $this->response;
         }
 
-        if($gathering->getOwner() != $this->user) {
-            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this '. $type)));
+        if ($gathering->getOwner() != $this->user) {
+            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this ' . $type)));
             $this->response->setStatusCode(401);
 
             return $this->response;
@@ -253,12 +253,75 @@ class Gathering extends Base
 
     private function _initRepository($type)
     {
-        if($type == 'event') {
+        if ($type == 'event') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Event');
-        } else if($type == 'meetup') {
+        } else if ($type == 'meetup') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Meetup');
-        } else if($type == 'plan') {
+        } else if ($type == 'plan') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Plan');
         }
+    }
+
+    /**
+     * PUT /events/{id}/user/{user}/attend/
+     *
+     * @param $id
+     * @param $user
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function willAttend($id, $user, $type)
+    {
+        $this->_initRepository($type);
+
+        $gathering = $this->gatheringRepository->find($id);
+        $postData = $this->request->request->all();
+
+        if ($gathering === false) {
+            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
+            $this->response->setStatusCode(404);
+
+            return $this->response;
+        }
+
+        try {
+
+            var_dump($gathering);die;
+
+            $attend = $gathering->getWhoWillAttend();
+
+            if ($this->request->getMethod() == 'GET') {
+                return $this->returnResponse($attend);
+            }
+
+            $attendUser = array_merge($attend, $postData);
+            $gathering->setWhoWillAttend($attendUser);
+
+            return $this->persistAndReturn($attendUser);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
+        return $this->response;
+
+    }
+
+    private function persistAndReturn($result)
+    {
+        $this->dm->persist($this->user);
+        $this->dm->flush();
+
+        return $this->returnResponse($result);
+    }
+
+    private function returnResponse($result)
+    {
+        $this->response->setContent(json_encode(array('result' => $result)));
+        $this->response->setStatusCode(200);
+
+        return $this->response;
     }
 }

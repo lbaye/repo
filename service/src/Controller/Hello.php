@@ -17,6 +17,7 @@ class Hello extends Base
         return $response;
     }
 
+
     public function test()
     {
         $circleData = $this->request->request->all();

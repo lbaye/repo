@@ -33,3 +33,9 @@ delete_event:
   pattern:  /events/{id}
   defaults: { _controller: Controller\Gathering::delete, type: event }
   requirements: { _method: DELETE }
+
+who_will_attend:
+  pattern:  /events/{id}/user/{user}/attend/
+  defaults: { _controller: Controller\Gathering::willAttend, type: event }
+  requirements: { _method: PUT }
+

@@ -16,3 +16,4 @@ $bootstrap = new Bootstrap(APPLICATION_ENV);
 
 $kernel = new AppKernel($request, $bootstrap->dm, $bootstrap->routes, $bootstrap->conf);
 $kernel->handle();
+
