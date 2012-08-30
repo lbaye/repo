@@ -34,6 +34,7 @@
 -(void) getGeofence:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getNotifications:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setLayer:(Layer *)layer:(NSString *)authToken:(NSString *)authTokenValue;

@@ -23,6 +23,7 @@
 #import "NotifRequest.h"
 #import "UserCircle.h"
 #import "UserFriends.h"
+#import "Event.h"
 
 @implementation RestClient
 
@@ -475,7 +476,7 @@
             {
                 [informationPrefs setEmailCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]objectForKey:@"circle"]];
             }
-
+            
             else
             {
                 [informationPrefs setEmailFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"custom"]objectForKey:@"friends"]];
@@ -784,7 +785,7 @@
             {
                 NSLog(@"infoPref.firstNameStr %@  %@",informationPrefs.firstNameFrnd,informationPrefs.firstNameCircle);
             }
-
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARING_PREFS_DONE object:informationPrefs];
         } 
         else 
@@ -1456,6 +1457,83 @@
     [request startAsynchronous];
 }
 
+-(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    Event *aEvent = [[Event alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            [aEvent setEventID:[[jsonObjects objectAtIndex:0] objectForKey:@"id"]];
+            [aEvent setEventName:[[jsonObjects objectAtIndex:0] objectForKey:@"title"]];
+            
+            Date *date=[[Date alloc] init];
+            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"date"];
+            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone"];            
+            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"createDate"] objectForKey:@"timezone_type"];                        
+            [aEvent setEventCreateDate:date];
+
+            date.date=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"date"];
+            date.timezone=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone"];            
+            date.timezoneType=[[[jsonObjects objectAtIndex:0] objectForKey:@"time"] objectForKey:@"timezone_type"];                        
+            [aEvent setEventDate:date];            
+            
+            Geolocation *loc=[[Geolocation alloc] init];
+            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lat"];
+            loc.latitude=[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"lng"];
+            [aEvent setEventLocation:loc];
+            [aEvent setEventAddress:[[[jsonObjects objectAtIndex:0] objectForKey:@"location"] objectForKey:@"address"]];
+            NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventID,aEvent.eventLocation.latitude);  
+            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:shareLocation];
+        } 
+        else 
+        {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getShareLocation");
+    [request startAsynchronous];
+}
 
 -(void)setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue
 {
@@ -2198,184 +2276,371 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
+            //firstname
+            NSLog(@"0");
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setFirstNameStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setFirstNameFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setFirstNameCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setFirstNameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setFirstNameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setFirstNameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"firstName"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
+            NSLog(@"1");
             
+            //lastName
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setLastNameStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setLastNameFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setLastNameCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setLastNameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setLastNameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setLastNameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"lastName"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"2");            
+            //email
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setEmailStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setEmailFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setEmailCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"]objectForKey:@"circle"]];
+            }
+            
             else
             {
                 [informationPrefs setEmailFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setEmailCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setEmailCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"email"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"3");
+            //dateOfBirth
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setDateOfBirthStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setDateOfBirthFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setDateOfBirthCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setDateOfBirthFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setDateOfBirthCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setDateOfBirthCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"dateOfBirth"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"4");
+            //bio
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setBioStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setBioFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setBioCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setBioFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setBioCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setBioCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"bio"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"5");
+            //interest
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setInterestsStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setInterestsFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setInterestsCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setInterestsFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setInterestsCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setInterestsCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"interests"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"6");
+            //worksts
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setWorkStatusStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setWorkStatusFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setWorkStatusCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setWorkStatusFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setWorkStatusCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setWorkStatusCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"workStatus"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"7");
+            //relation sts
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setRelationshipStatusStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setRelationshipStatusFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setRelationshipStatusCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setRelationshipStatusFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setRelationshipStatusCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setRelationshipStatusCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"relationshipStatus"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"8");
+            //address
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setAddressStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setAddressFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setAddressCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setAddressFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setAddressCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setAddressCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"address"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"9");
+            //frnd req
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setFriendRequestStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setFriendRequestFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setFriendRequestCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setFriendRequestFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setFriendRequestCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setFriendRequestCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"friendRequest"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"10");
+            //circles
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setCirclesStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setCirclesFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setCirclesCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setCirclesFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setCirclesCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setCirclesCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"circles"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"11");
+            //newsfeed
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setNewsfeedStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setNewsfeedFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setNewsfeedCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setNewsfeedFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setNewsfeedCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setNewsfeedCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"newsfeed"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"12");
+            //avatar
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setAvatarStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setAvatarFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setAvatarCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setAvatarFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setAvatarCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setAvatarCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"avatar"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"13");
+            //username
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setUsernameStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setUsernameFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setUsernameCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setUsernameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setUsernameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setUsernameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"username"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"14");
+            //name
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setNameStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setNameFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setNameCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setNameFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setNameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setNameCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"name"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
+            NSLog(@"15");
+            //gender
             if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"]isKindOfClass:[NSString class]])
             {
                 [informationPrefs setGenderStr:[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"]];
             }
+            else if([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"friends"]!=NULL)
+            {
+                [informationPrefs setGenderFrnd:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"friends"]];
+            }
+            else if ([[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"circle"]!=NULL) 
+            {
+                [informationPrefs setGenderCircle:[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"]objectForKey:@"circle"]];
+            }
             else
             {
                 [informationPrefs setGenderFrnd:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"custom"]objectForKey:@"friends"]];
-                [informationPrefs setGenderCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"custom"]objectForKey:@"circles"]];
+                [informationPrefs setGenderCircle:[[[[jsonObjects   objectForKey:@"result"]  objectForKey:@"gender"] objectForKey:@"custom"]objectForKey:@"circle"]];
                 
             }
             
             NSLog(@"aUserInfo.lastNameStr: %@  informationPrefs.firstNameStr: %@",informationPrefs.lastNameStr,informationPrefs.firstNameStr);
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            if (informationPrefs.emailStr)
+            {
+                NSLog(@"infoPref.emailFrnd %@",informationPrefs.emailStr);
+            }
+            else if (informationPrefs)             
+            {
+                NSLog(@"infoPref.emailFrnd %@  %@",informationPrefs.emailFrnd,informationPrefs.emailCircle);
+            }
+            
+            if (informationPrefs.friendRequestStr)
+            {
+                NSLog(@"infoPref.friendRequest %@",informationPrefs.friendRequestStr);
+            }
+            else if (informationPrefs)             
+            {
+                NSLog(@"infoPref.friendRequest %@  %@",informationPrefs.friendRequestFrnd,informationPrefs.friendRequestCircle);
+            }
+            
+            if (informationPrefs.firstNameStr)
+            {
+                NSLog(@"infoPref.firstNameStr %@",informationPrefs.firstNameStr);
+            }
+            else if (informationPrefs)     
+            {
+                NSLog(@"infoPref.firstNameStr %@  %@",informationPrefs.firstNameFrnd,informationPrefs.firstNameCircle);
+            }
             
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:aUser];
         } 
@@ -2396,6 +2661,7 @@
     //[request setDelegate:self];
     [request startAsynchronous];
 }
+
 
 -(void)setAccountSettings:(UserInfo *)userInfo:(NSString *)authToken:(NSString *)authTokenValue;
 {

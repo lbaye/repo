@@ -26,3 +26,4 @@
 @property(nonatomic,retain) NSString *country;
 
 @end
+
