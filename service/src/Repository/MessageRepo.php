@@ -187,14 +187,10 @@ class MessageRepo extends DocumentRepository
     {
         if (!empty($data['recipients'])) {
             $recipients = $data['recipients'];
-            $recipientsObjects = array();
+            $recipientsObjects = array($sender);
 
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
-
-            // Add sender if have multiple recipients
-            if(count($recipientsObjects) > 1)
-                $recipientsObjects[] =  $sender;
 
             $message->setRecipients($recipientsObjects);
         }
