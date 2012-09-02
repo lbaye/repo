@@ -183,7 +183,10 @@ class User extends Base
         $user = $this->userRepository->find($id);
 
         if (null !== $user) {
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+            $data = $user->toArrayDetailed();
+
+            $data['friends'] = $this->_getFriendList($user);
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
@@ -501,5 +504,14 @@ class User extends Base
         }
 
         return $this->response;
+    }
+
+    private function _getFriendList($user) {
+        $friends = $this->userRepository->getAllByIds($user->getFriends());
+        array_walk($friends, function(&$friend) {
+           $friend = array_intersect_key($friend, array('id'=>1, 'firstName'=>1, 'lastName'=>1, 'avatar'=>1));
+        });
+
+        return $friends;
     }
 }
