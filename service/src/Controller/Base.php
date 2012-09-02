@@ -122,7 +122,10 @@ abstract class Base
     {
         $gatheringItems = array();
         foreach ($results as $place) {
-            $gatheringItems[] = $place->toArray();
+            $gatheringItem = $place->toArray();
+            $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+
+            $gatheringItems[] = $gatheringItem;
         }
 
         return $gatheringItems;

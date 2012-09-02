@@ -47,7 +47,6 @@ abstract class Gathering extends Content
 
     /** @ODM\Hash */
     protected $rsvp = array(
-
         'yes' => array(),
         'no' => array(),
         'maybe' => array(),
@@ -81,13 +80,14 @@ abstract class Gathering extends Content
 
     public function setType($type)
     {
-        $this->type =  $type;
+        $this->type = $type;
     }
 
     public function setGuests(array $guests)
     {
         $this->guests = $guests;
     }
+
     //</editor-fold>
 
     //<editor-fold desc="Getters">
@@ -129,23 +129,24 @@ abstract class Gathering extends Content
     {
         return $this->guests;
     }
+
     //</editor-fold>
 
     public function toArray()
     {
         $fieldsToExpose = array(
-            'id', 'title','description','eventShortSummary','eventImage',
-            'time','rsvp', 'createDate'
+            'id', 'title', 'description', 'eventShortSummary', 'eventImage',
+            'time', 'rsvp', 'createDate'
         );
         $result = array();
 
-        foreach($fieldsToExpose as $field) {
+        foreach ($fieldsToExpose as $field) {
             $result[$field] = $this->{"get{$field}"}();
         }
 
         $userLocation = $this->getOwner()->getCurrentLocation();
 
-        $distance =  LocationHelper::distance(
+        $distance = LocationHelper::distance(
             $userLocation['lat'],
             $userLocation['lng'],
             $this->getLocation()->getLat(),
@@ -217,5 +218,14 @@ abstract class Gathering extends Content
     public function getRsvp()
     {
         return $this->rsvp;
+    }
+
+    public function getUserResponse($userId)
+    {
+        $rsvp = $this->getRsvp();
+
+        if(in_array($userId, $rsvp['yes'])) return 'yes';
+        if(in_array($userId, $rsvp['no'])) return 'no';
+        if(in_array($userId, $rsvp['maybe'])) return 'maybe';
     }
 }

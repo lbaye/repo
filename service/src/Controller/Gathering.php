@@ -76,7 +76,9 @@ class Gathering extends Base
 
         if (null !== $gathering) {
             if ($gathering->isPermittedFor($this->user)) {
-                return $this->_generateResponse($gathering->toArrayDetailed());
+                $data = $gathering->toArrayDetailed();
+                $data['my_response'] = $gathering->getUserResponse($this->user->getId());
+                return $this->_generateResponse($data);
             } else {
                 return $this->_generateForbidden('Not permitted for you');
             }
@@ -229,53 +231,35 @@ class Gathering extends Base
     }
 
     /**
-     * PUT /events/{id}/user/{user}/attend/
+     * PUT /events/{id}/rsvp
      *
      * @param $id
-     * @param $user
-     *
+     * @param $response
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function setRsvp($id, $type)
+    public function setRsvp($id,$type)
     {
         $this->_initRepository($type);
 
         $gathering = $this->gatheringRepository->find($id);
-        $rsvpTypes = array('yes', 'no', 'maybe');
 
-        foreach ($rsvpTypes as $rsvpType) {
-            $rsvpUsers = $this->request->get($rsvpType);
-            if (!empty($rsvpUsers)) {
-                $this->_setRsvpUsers($gathering, $rsvpType, $rsvpUsers);
-            }
+        $userRsvp = $gathering->getUserResponse($this->user->getId());
+        $rsvp = $gathering->getRsvp();
+
+        if (!empty($userRsvp)){
+            $key = array_search($this->user->getId(), $rsvp[$userRsvp]);
+            unset($rsvp[$userRsvp][$key]);
         }
+        $response = $this->request->get('response');
+        array_push($rsvp[$response],$this->user->getId());
+
+        $gathering->setRsvp($rsvp);
         $this->dm->persist($gathering);
         $this->dm->flush();
 
         return $this->_generateResponse($gathering->toArray());
-    }
-
-    private function _setRsvpUsers($gathering, $rsvpType, $rsvpUsers)
-    {
-        $rsvp = $gathering->getRsvp();
-
-        if (!empty($rsvp)) {
-            $existingUsers = $rsvp[$rsvpType];
-
-            if (empty($existingUsers)) {
-                $rsvp[$rsvpType] = $rsvpUsers;
-            } else {
-                $rsvp[$rsvpType] = array_merge($existingUsers, $rsvpUsers);
-            }
-        } else {
-            $rsvp = array(
-                $rsvpType => $rsvpUsers
-            );
-        }
-
-        $gathering->setRsvp($rsvp);
     }
 
 
