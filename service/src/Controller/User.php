@@ -12,11 +12,6 @@ use Helper\Status;
 class User extends Base
 {
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
      * Initialize the controller.
      */
     public function init()

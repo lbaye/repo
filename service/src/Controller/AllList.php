@@ -3,7 +3,6 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\UserRepo as userRepository;
 use Repository\PlaceRepo as placeRepository;
 use Repository\DealRepo as DealRepository;
 use Helper\Status;
@@ -15,11 +14,6 @@ class AllList extends Base
      * @var placeRepository
      */
     private $LocationMarkRepository;
-
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * @var  dealRepository

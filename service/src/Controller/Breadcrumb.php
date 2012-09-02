@@ -15,10 +15,6 @@ class Breadcrumb extends Base
      */
     private $breadcrumbRepository;
 
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.

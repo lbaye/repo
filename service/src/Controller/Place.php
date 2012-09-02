@@ -4,7 +4,6 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\UserRepo as userRepository;
 use Repository\PlaceRepo as placeRepository;
 use Helper\Status;
 
@@ -15,11 +14,6 @@ class Place extends Base
      * @var placeRepository
      */
     private $LocationMarkRepository;
-
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.

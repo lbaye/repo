@@ -155,7 +155,9 @@ class UserRepo extends BaseRepository
 
         if (isset($data['facebookId'])) {
             $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
-        } else {
+        }
+
+        if(isset($data['email'])) {
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 

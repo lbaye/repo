@@ -19,11 +19,6 @@ class Deal extends Base
     private $dealRepository;
 
     /**
-     * @var userRepository
-     */
-    private $userRepository;
-
-    /**
      * Initialize the controller.
      */
     public function init()
