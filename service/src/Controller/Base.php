@@ -5,6 +5,8 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Repository\UserRepo as userRepository;
+
 use Helper\Status;
 
 abstract class Base
@@ -33,6 +35,11 @@ abstract class Base
      * @var \Document\User
      */
     protected $user;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
 
 
     /**
@@ -176,11 +183,18 @@ abstract class Base
     }
 
     protected function _getFriendList($user) {
-        $friends = $this->userRepository->getAllByIds($user->getFriends());
-        array_walk($friends, function(&$friend) {
-           $friend = array_intersect_key($friend, array('id'=>1, 'firstName'=>1, 'lastName'=>1, 'avatar'=>1));
-        });
+        $friends = $user->getFriends();
+        return $this->_getUserSummaryList($friends);
+    }
 
-        return $friends;
+    protected function _getUserSummaryList(array $userIds, array $fields = array('id', 'firstName', 'lastName', 'avatar'))
+    {
+        $userData = $this->userRepository->getAllByIds($userIds);
+
+        array_walk($userData, function(&$friend, $k, $fields) {
+           $friend = array_intersect_key($friend, array_flip($fields));
+        }, $fields);
+
+        return $userData;
     }
 }

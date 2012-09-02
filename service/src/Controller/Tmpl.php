@@ -19,11 +19,6 @@ class Tmpl extends Base
     private $resourceRepository;
 
     /**
-     * @var userRepository
-     */
-    private $userRepository;
-
-    /**
      * Initialize the controller.
      */
     public function init()

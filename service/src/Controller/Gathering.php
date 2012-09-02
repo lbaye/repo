@@ -5,7 +5,6 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Document\User;
-use Repository\UserRepo as userRepository;
 use Repository\GatheringRepo as gatheringRepository;
 use Helper\Status;
 
@@ -15,11 +14,6 @@ class Gathering extends Base
      * @var gatheringRepository
      */
     private $gatheringRepository;
-
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.
@@ -76,7 +70,9 @@ class Gathering extends Base
 
         if (null !== $gathering) {
             if ($gathering->isPermittedFor($this->user)) {
-                return $this->_generateResponse($gathering->toArrayDetailed());
+                $eventData = $gathering->toArrayDetailed();
+                $eventData['guests'] = $this->_getUserSummaryList($eventData['guests']);
+                return $this->_generateResponse($eventData);
             } else {
                 return $this->_generateForbidden('Not permitted for you');
             }
@@ -172,6 +168,7 @@ class Gathering extends Base
         }
 
         if ($gathering->getOwner() != $this->user) {
+
             return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
         }
 
