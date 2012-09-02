@@ -89,8 +89,8 @@ class UserRepo extends BaseRepository
 
     public function getAllByIds(array $ids)
     {
-        $users = $this->createQueryBuilder('Document\User')->field('id')->in(array($ids))->getQuery()->execute();
-        return $users;
+        $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
+        return $this->_toArrayAll($users);
     }
 
     public function insert($data)
