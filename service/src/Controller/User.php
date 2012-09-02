@@ -506,12 +506,4 @@ class User extends Base
         return $this->response;
     }
 
-    private function _getFriendList($user) {
-        $friends = $this->userRepository->getAllByIds($user->getFriends());
-        array_walk($friends, function(&$friend) {
-           $friend = array_intersect_key($friend, array('id'=>1, 'firstName'=>1, 'lastName'=>1, 'avatar'=>1));
-        });
-
-        return $friends;
-    }
 }

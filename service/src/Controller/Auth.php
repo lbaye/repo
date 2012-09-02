@@ -14,7 +14,7 @@ class Auth extends Base
     /**
      * @var UserRepository
      */
-    private $userRepository;
+    protected $userRepository;
 
     /**
      * Initialize the controller.
@@ -85,7 +85,11 @@ class Auth extends Base
 
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+
+            $userData = $user->toArrayDetailed();
+            $userData['friends'] = $this->_getFriendList($user);
+
+            $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
@@ -135,7 +139,10 @@ class Auth extends Base
 
             }
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+            $userData = $user->toArrayDetailed();
+            $$userData['friends'] = $this->_getFriendList($user);
+
+            $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
