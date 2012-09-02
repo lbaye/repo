@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
+		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
+		2063A1D615F330E300529CB2 /* PinDown2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D015F330E300529CB2 /* PinDown2.png */; };
+		2063A1D715F330E300529CB2 /* PinDown3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D115F330E300529CB2 /* PinDown3.png */; };
+		2063A1D815F330E300529CB2 /* PinFloating.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D215F330E300529CB2 /* PinFloating.png */; };
+		2063A1D915F330E300529CB2 /* PinShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D315F330E300529CB2 /* PinShadow.png */; };
+		2063A1DF15F3317000529CB2 /* DDAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DC15F3317000529CB2 /* DDAnnotation.m */; };
+		2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DE15F3317000529CB2 /* DDAnnotationView.m */; };
+		2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2063A1E115F3332100529CB2 /* QuartzCore.framework */; };
 		20B0E7DE15D7A9CF009A500A /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D515D7A9CF009A500A /* Globals.m */; };
 		20B0E7DF15D7A9CF009A500A /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D715D7A9CF009A500A /* IconDownloader.m */; };
 		20B0E7E015D7A9CF009A500A /* UserDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D915D7A9CF009A500A /* UserDefault.m */; };
@@ -339,6 +348,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
+		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
+		2063A1D015F330E300529CB2 /* PinDown2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown2.png; sourceTree = "<group>"; };
+		2063A1D115F330E300529CB2 /* PinDown3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown3.png; sourceTree = "<group>"; };
+		2063A1D215F330E300529CB2 /* PinFloating.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinFloating.png; sourceTree = "<group>"; };
+		2063A1D315F330E300529CB2 /* PinShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinShadow.png; sourceTree = "<group>"; };
+		2063A1DB15F3316F00529CB2 /* DDAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAnnotation.h; sourceTree = "<group>"; };
+		2063A1DC15F3317000529CB2 /* DDAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAnnotation.m; sourceTree = "<group>"; };
+		2063A1DD15F3317000529CB2 /* DDAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAnnotationView.h; sourceTree = "<group>"; };
+		2063A1DE15F3317000529CB2 /* DDAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAnnotationView.m; sourceTree = "<group>"; };
+		2063A1E115F3332100529CB2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		20B0E7D415D7A9CF009A500A /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
 		20B0E7D515D7A9CF009A500A /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
 		20B0E7D615D7A9CF009A500A /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
@@ -834,6 +854,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */,
 				4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */,
 				4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */,
 				4F8257B315BD82E000760CE1 /* libz.dylib in Frameworks */,
@@ -976,6 +997,10 @@
 				20E75BE015EA0343000B6B8A /* Event.m */,
 				20B656DD15EF827A00A441E9 /* EventList.h */,
 				20B656DE15EF827B00A441E9 /* EventList.m */,
+				2063A1DB15F3316F00529CB2 /* DDAnnotation.h */,
+				2063A1DC15F3317000529CB2 /* DDAnnotation.m */,
+				2063A1DD15F3317000529CB2 /* DDAnnotationView.h */,
+				2063A1DE15F3317000529CB2 /* DDAnnotationView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1044,6 +1069,7 @@
 		4F98A2BC15BB387D000B3124 = {
 			isa = PBXGroup;
 			children = (
+				2063A1E115F3332100529CB2 /* QuartzCore.framework */,
 				4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */,
 				4FE4253B15C0699F00A6B6A3 /* FB */,
 				4F24A3D515BF643300DC66B7 /* sm_icon.png */,
@@ -1315,6 +1341,12 @@
 				4FE4262515C06FAD00A6B6A3 /* thum.png */,
 				4FE4262615C06FAD00A6B6A3 /* tx_forget_pass.png */,
 				4FE4262715C06FAD00A6B6A3 /* tx_remember.png */,
+				2063A1CE15F330E300529CB2 /* Pin.png */,
+				2063A1CF15F330E300529CB2 /* PinDown1.png */,
+				2063A1D015F330E300529CB2 /* PinDown2.png */,
+				2063A1D115F330E300529CB2 /* PinDown3.png */,
+				2063A1D215F330E300529CB2 /* PinFloating.png */,
+				2063A1D315F330E300529CB2 /* PinShadow.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1693,6 +1725,12 @@
 				4F42971515E6CF35001AB56F /* category_bar_dark.png in Resources */,
 				4F42971615E6CF35001AB56F /* review_btn.png in Resources */,
 				4F42971715E6CF35001AB56F /* banner_bar.png in Resources */,
+				2063A1D415F330E300529CB2 /* Pin.png in Resources */,
+				2063A1D515F330E300529CB2 /* PinDown1.png in Resources */,
+				2063A1D615F330E300529CB2 /* PinDown2.png in Resources */,
+				2063A1D715F330E300529CB2 /* PinDown3.png in Resources */,
+				2063A1D815F330E300529CB2 /* PinFloating.png in Resources */,
+				2063A1D915F330E300529CB2 /* PinShadow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1836,6 +1874,8 @@
 				20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */,
 				20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */,
 				20B656DF15EF827C00A441E9 /* EventList.m in Sources */,
+				2063A1DF15F3317000529CB2 /* DDAnnotation.m in Sources */,
+				2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
