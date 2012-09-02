@@ -1036,7 +1036,9 @@ ButtonClickCallbackData callBackData;
     [fbHelper inviteFriends:userFriendsInviteIdArr];
 }
 
-- (IBAction)gotoMyPlaces:(id)sender {
+- (IBAction)gotoMyPlaces:(id)sender
+{
+    [self performSegueWithIdentifier:@"createEvent" sender: self];   
 }
 
 - (IBAction)gotoDirections:(id)sender 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Mapkit/Mapkit.h>
 
 @interface ViewEventListViewController : UIViewController
 {
@@ -14,10 +15,14 @@
     IBOutlet UISearchBar *eventSearchBar;
     bool rsvpFlag;
     IBOutlet NSDictionary *downloadedImageDict;
+    IBOutlet UIView *mapContainer;
+    IBOutlet MKMapView *mapView;
 }
 @property(nonatomic,retain) IBOutlet UITableView *eventListTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *eventSearchBar;
 @property(nonatomic,retain) IBOutlet NSDictionary *downloadedImageDict;
+@property(nonatomic,retain) IBOutlet UIView *mapContainer;
+@property(nonatomic,retain) IBOutlet MKMapView *mapView;
 
 -(IBAction)dateAction:(id)sender;
 -(IBAction)distanceAction:(id)sender;
@@ -30,6 +35,8 @@
 -(IBAction)noButton:(id)sender;
 -(IBAction)maybeButton:(id)sender;
 -(IBAction)viewLocationButton:(id)sender;
+
+-(IBAction)closeMapView:(id)sender;
 
 -(NSMutableArray *)loadDummyData;
 

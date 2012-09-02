@@ -9,9 +9,12 @@
 #import "CreateEventViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ActionSheetPicker.h"
+#import "DDAnnotationView.h"
+#import "DDAnnotation.h"
+#import "UtilityClass.h"
 
 @interface CreateEventViewController ()
-
+- (void)coordinateChanged_:(NSNotification *)notification;
 @end
 
 @implementation CreateEventViewController
@@ -28,7 +31,7 @@
 @synthesize photoButton;
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
-@synthesize createView,photoPicker,eventImage,picSel,entryTextField;
+@synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
@@ -107,6 +110,34 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+    [self.mapContainerView  removeFromSuperview];
+    //load map data
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = 37.810000;
+    theCoordinate.longitude = -122.477989;
+	
+	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+	annotation.title = @"Drag to Move Pin";
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+	
+	[self.mapView addAnnotation:annotation];
+//    [self.mapView setCenter:annotation.region];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	
+	[super viewWillAppear:animated];
+	
+	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	
+	[super viewWillDisappear:animated];
+	
+	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];	
 }
 
 
@@ -221,7 +252,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
-
+    [self.view addSubview:mapContainerView];
 }
 ////location with radio button ends
 
@@ -295,12 +326,94 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 }
 
 
+//touch on map handling
+
+-(IBAction)saveMapLoc:(id)sender
+{
+    [mapContainerView removeFromSuperview];
+}
+
+-(IBAction)cancelMapLoc:(id)sender
+{
+    [mapContainerView removeFromSuperview];    
+}
+
+#pragma mark -
+#pragma mark DDAnnotationCoordinateDidChangeNotification
+
+// NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
+- (void)coordinateChanged_:(NSNotification *)notification
+{	
+	DDAnnotation *annotation = notification.object;
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+    annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+#pragma mark -
+#pragma mark MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
+{
+	
+	if (oldState == MKAnnotationViewDragStateDragging) 
+    {
+		DDAnnotation *annotation = (DDAnnotation *)annotationView.annotation;
+		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+        annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+	}
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;		
+	}
+	
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) 
+    {
+		draggablePinView.annotation = annotation;
+	}
+    else 
+    {
+		// Use class method to create DDAnnotationView (on iOS 3) or built-in draggble MKPinAnnotationView (on iOS 4).
+		draggablePinView = [DDAnnotationView annotationViewWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier mapView:self.mapView];
+        
+		if ([draggablePinView isKindOfClass:[DDAnnotationView class]]) 
+        {
+			// draggablePinView is DDAnnotationView on iOS 3.
+		} else
+        {
+			// draggablePinView instance will be built-in draggable MKPinAnnotationView when running on iOS 4.
+		}
+	}		
+	
+	return draggablePinView;
+}
+
+//reload map
+-(void) reloadMap:(DDAnnotation *)annotation
+{
+//    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
+    [self.mapView setRegion:mapView.region animated:TRUE];
+}
+
+-(void)getLoc:(DDAnnotation *)annotation
+{
+    [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+//draggable annotations changed
+
 //lazy scroller
 
 -(void) reloadScrolview
 {
     int x=0; //declared for imageview x-axis point    
-    int y=0;   
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     UIImageView *imgView;
     for (UIView* view in subviews) 

@@ -51,7 +51,8 @@
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
-        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) {
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204)
+        {
             User *aUser = [[User alloc] init];
             
             [aUser setFirstName:[jsonObjects objectForKey:@"firstName"]];
@@ -952,7 +953,8 @@
     
     return aUserInfo;
 }
- */
+*/
+
 -(void)getAccountSettings:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/settings/account_settings",WS_URL];
@@ -1496,29 +1498,31 @@
             }
             for (int i=0; i<[jsonObjects count]; i++)
             {
+                Event *aEvent=[[Event alloc] init];
                 [aEvent setEventID:[[jsonObjects objectAtIndex:i] objectForKey:@"id"]];
                 [aEvent setEventName:[[jsonObjects objectAtIndex:i] objectForKey:@"title"]];
                 
                 Date *date=[[Date alloc] init];
-                date.date=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"date"];
-                date.timezone=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone"];            
-                date.timezoneType=[[[jsonObjects objectAtIndex:i] objectForKey:@"createDate"] objectForKey:@"timezone_type"];                        
+                date.date=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"createDate" key2:@"date" key3:nil];
+                
+                date.timezone=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"createDate" key2:@"timezone" key3:nil];
+                date.timezoneType=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"createDate" key2:@"timezone_type" key3:nil];
+                
                 [aEvent setEventCreateDate:date];
                 
-                date.date=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"date"];
-                date.timezone=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"timezone"];            
-                date.timezoneType=[[[jsonObjects objectAtIndex:i] objectForKey:@"time"] objectForKey:@"timezone_type"];                        
-                [aEvent setEventDate:date];            
+                date.date=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"date" key3:nil];
+                date.timezone=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone" key3:nil];            
+                date.timezoneType=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone_type" key3:nil];           
                 
                 Geolocation *loc=[[Geolocation alloc] init];
-                loc.latitude=[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"lat"];
-                loc.latitude=[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"lng"];
+                loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lat" key3:nil];
+                loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lng" key3:nil];
                 [aEvent setEventLocation:loc];
-                [aEvent setEventAddress:[[[jsonObjects objectAtIndex:i] objectForKey:@"location"] objectForKey:@"address"]];
-                [aEvent setEventDistance:[[jsonObjects objectAtIndex:i] objectForKey:@"distance"]];
-                [aEvent setEventImageUrl:[[jsonObjects objectAtIndex:i] objectForKey:@"distance"]];
-                
-                NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventID,aEvent.eventLocation.latitude);
+                [aEvent setEventAddress:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"address" key3:nil]];
+                [aEvent setEventDistance:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"distance" key2:nil key3:nil]];
+                [aEvent setEventImageUrl:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"eventImage" key2:nil key3:nil]];
+                [aEvent setEventShortSummary:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"description" key2:nil key3:nil]];
+                NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
 //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
                 [aEvent.eventList addObject:aEvent];

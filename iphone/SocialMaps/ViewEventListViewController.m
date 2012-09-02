@@ -13,6 +13,9 @@
 #import "EventImageDownloader.h"
 #import "EventList.h"
 #import "Globals.h"
+#import "DDAnnotationView.h"
+#import "DDAnnotation.h"
+
 
 @interface ViewEventListViewController ()
 
@@ -21,7 +24,7 @@
 @end
 
 @implementation ViewEventListViewController
-@synthesize eventListTableView,eventSearchBar,downloadedImageDict;
+@synthesize eventListTableView,eventSearchBar,downloadedImageDict,mapView,mapContainer;
  
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -49,8 +52,8 @@ bool searchFlags=true;
     [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
     
-    filteredList=[self loadDummyData]; 
-    eventListArray=[self loadDummyData];
+    filteredList=[[self loadDummyData] mutableCopy]; 
+    eventListArray=[[self loadDummyData] mutableCopy];
     
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     
@@ -59,6 +62,11 @@ bool searchFlags=true;
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
 	// Do any additional setup after loading the view.
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self.mapContainer removeFromSuperview];
 }
 
 -(NSMutableArray *)loadDummyData
@@ -285,9 +293,93 @@ bool searchFlags=true;
     aEvent.willAttend=@"yes";
     aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
     [eventList addObject:aEvent];
+    
+    // event11    
+    aEvent=[[Event alloc] init];
+    aEvent.eventID=@"50360335f69c29bc050000010";
+    aEvent.eventName=@"Eid Fair";
+    
+    aEvent.eventDate.timezone=@"Europe/London";
+    aEvent.eventDate.timezoneType=@"3";
+    aEvent.eventDate.date=@"26.08.2012";
+    
+    aEvent.eventCreateDate.timezone=@"Europe/London";
+    aEvent.eventCreateDate.timezoneType=@"3";
+    aEvent.eventCreateDate.date=@"28.08.2012";
+    
+    aEvent.eventShortSummary=@"Eid Get together";
+    aEvent.eventAddress=@"Gulshan circle 2";
+    aEvent.eventDistance=@"100m";
+    aEvent.eventLocation.latitude=@"10";
+    aEvent.eventLocation.longitude=@"20";
+    aEvent.willAttend=@"yes";
+    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
+    [eventList addObject:aEvent];
 
     
-    return eventList;
+    // event12    
+    aEvent=[[Event alloc] init];
+    aEvent.eventID=@"50360335f69c29bc050000010";
+    aEvent.eventName=@"Eid Fair";
+    
+    aEvent.eventDate.timezone=@"Europe/London";
+    aEvent.eventDate.timezoneType=@"3";
+    aEvent.eventDate.date=@"26.08.2012";
+    
+    aEvent.eventCreateDate.timezone=@"Europe/London";
+    aEvent.eventCreateDate.timezoneType=@"3";
+    aEvent.eventCreateDate.date=@"28.08.2012";
+    
+    aEvent.eventShortSummary=@"Eid Get together";
+    aEvent.eventAddress=@"Gulshan circle 2";
+    aEvent.eventDistance=@"100m";
+    aEvent.eventLocation.latitude=@"10";
+    aEvent.eventLocation.longitude=@"20";
+    aEvent.willAttend=@"yes";
+    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
+    [eventList addObject:aEvent];
+
+    
+    // event13    
+    aEvent=[[Event alloc] init];
+    aEvent.eventID=@"50360335f69c29bc050000010";
+    aEvent.eventName=@"Eid Fair";
+    
+    aEvent.eventDate.timezone=@"Europe/London";
+    aEvent.eventDate.timezoneType=@"3";
+    aEvent.eventDate.date=@"26.08.2012";
+    
+    aEvent.eventCreateDate.timezone=@"Europe/London";
+    aEvent.eventCreateDate.timezoneType=@"3";
+    aEvent.eventCreateDate.date=@"28.08.2012";
+    
+    aEvent.eventShortSummary=@"Eid Get together";
+    aEvent.eventAddress=@"Gulshan circle 2";
+    aEvent.eventDistance=@"100m";
+    aEvent.eventLocation.latitude=@"10";
+    aEvent.eventLocation.longitude=@"20";
+    aEvent.willAttend=@"yes";
+    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
+    [eventList addObject:aEvent];
+
+
+    for (int i=0; i<[eventListGlobalArray count]; i++)
+    {
+        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+        Event *aEvent=[[Event alloc] init];
+        Event *aEvent2=[[Event alloc] init];
+        aEvent=[eventListGlobalArray objectAtIndex:i];
+        aEvent2=[eventList objectAtIndex:i];
+        NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
+        if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
+        {
+            aEvent.eventImageUrl=aEvent2.eventImageUrl;
+            NSLog(@"aEvent.eventImageUrl %@ aEvent2.eventImageUrl %@",aEvent.eventImageUrl,aEvent2.eventImageUrl);
+        }
+        [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
+        [pool drain];
+    }
+    return eventListGlobalArray;
 }
 
 - (void)viewDidUnload
@@ -397,18 +489,21 @@ bool searchFlags=true;
         
 		NSString *cellValue;		
         cellValue=event.eventName;
-        cell.eventName.textAlignment = UITextAlignmentLeft; 
-        cell.eventName.textColor = [UIColor lightGrayColor];
         cell.eventName.text = cellValue;
-        cell.eventName.font = [UIFont fontWithName:@"Helvetica" size:(12.0)]; 
-        cell.eventName.textColor = [UIColor blackColor];
-        cell.eventName.opaque = NO;
-        cell.eventName.backgroundColor = [UIColor whiteColor];	
-		cell.eventName.text=cellValue;
-		cell1.eventName.text=cellValue;        
+        cell.eventDetail.text=event.eventShortSummary;
+        cell.eventDate.text=event.eventDate.date;
+        cell.eventAddress.text=event.eventAddress;
+        cell.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
+        
+        cell1.eventName.text = cellValue;
+        cell1.eventDetail.text=event.eventShortSummary;
+        cell1.eventDate.text=event.eventDate.date;
+        cell1.eventAddress.text=event.eventAddress;
+        cell1.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
+
         
         // Only load cached images; defer new downloads until scrolling ends
-        NSLog(@"nodeCount > 0");
+        NSLog(@"nodeCount > 0 %@",event.eventImageUrl);
         if (!event.eventImage)
         {
             NSLog(@"!userFriends.userProfileImage");
@@ -719,7 +814,46 @@ bool searchFlags=true;
     NSLog(@"maybeButton tag: %d",[sender tag]);
     EventListRsvpTableCell *clickedCell = (EventListRsvpTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.eventListTableView indexPathForCell:clickedCell];
+    [self.view addSubview:self.mapContainer];
     NSLog(@"clickedButtonPath %@",clickedButtonPath);        
+}
+
+-(IBAction)closeMapView:(id)sender
+{
+    NSLog(@"close map");
+    [self.mapContainer removeFromSuperview];
+}
+
+//handling map view
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;		
+	}
+	
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) 
+    {
+		draggablePinView.annotation = annotation;
+	}
+    else 
+    {
+		// Use class method to create DDAnnotationView (on iOS 3) or built-in draggble MKPinAnnotationView (on iOS 4).
+		draggablePinView = [DDAnnotationView annotationViewWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier mapView:self.mapView];
+        
+		if ([draggablePinView isKindOfClass:[DDAnnotationView class]]) 
+        {
+			// draggablePinView is DDAnnotationView on iOS 3.
+		} else
+        {
+			// draggablePinView instance will be built-in draggable MKPinAnnotationView when running on iOS 4.
+		}
+	}		
+	
+	return draggablePinView;
 }
 
 @end

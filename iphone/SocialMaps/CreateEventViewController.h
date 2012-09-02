@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "UserFriends.h"
 #import "PhotoPicker.h"
+#import <Mapkit/Mapkit.h>
 
 @interface CreateEventViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate>
+UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate>
 {
     IBOutlet UIButton *curLoc;
     IBOutlet UIButton *myPlace;    
@@ -49,6 +50,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     UIImage *eventImage;
     UIImagePickerController *picSel;
     IBOutlet UITextField *entryTextField;
+    IBOutlet MKMapView *mapView;
+    IBOutlet UIView *mapContainerView;
 }
 
 @property(nonatomic,retain) IBOutlet UIButton *curLoc;
@@ -79,6 +82,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property (nonatomic, retain) UIImagePickerController *picSel;
 
 @property(nonatomic,retain) IBOutlet UITextField *entryTextField;
+@property(nonatomic,retain) IBOutlet MKMapView *mapView;
+@property(nonatomic,retain) IBOutlet UIView *mapContainerView;
 
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    
@@ -107,6 +112,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(IBAction)saveEntity:(id)sender;
 -(IBAction)cancelEntity:(id)sender;
+
+-(IBAction)saveMapLoc:(id)sender;
+-(IBAction)cancelMapLoc:(id)sender;
 
 -(void)beganEditing;
 -(void)endEditing;
