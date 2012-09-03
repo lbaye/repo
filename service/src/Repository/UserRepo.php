@@ -370,7 +370,8 @@ class UserRepo extends BaseRepository
             }
         }
 
-        $user->setAddress(new \Document\Address($data));
+        $user->setAddress(new \Document\Address(array_merge($user->getAddress()->toArray(), $data)));
+
         $user->getAddress();
 
         return $user;

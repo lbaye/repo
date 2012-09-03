@@ -136,6 +136,7 @@ class Address
             if (isset($data[$field]) && !is_null($data[$field])) {
                 $this->{"set{$field}"}($data[$field]);
             }
+
         }
 
         return $this;
