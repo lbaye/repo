@@ -279,6 +279,7 @@ class User
             'lastName',
             'avatar',
             'enabled',
+            'status',
             'lastLogin',
             'settings',
             'currentLocation',
