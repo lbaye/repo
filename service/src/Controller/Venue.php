@@ -16,10 +16,6 @@ use Helper\Status;
  */
 class Venue extends Base
 {
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.

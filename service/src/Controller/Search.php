@@ -22,11 +22,6 @@ class Search extends Base
     const DEFAULT_RADIUS = .017985612;
 
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
      * @var ExternalLocationRepository
      */
     private $externalLocationRepository;
