@@ -73,6 +73,7 @@ class Gathering extends Base
 
                 $data = $gathering->toArrayDetailed();
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
+                $data['is_invited'] = in_array($this->user->getId(),$data['guests']);
                 $data['guests'] = $this->_getUserSummaryList($data['guests']);
                 return $this->_generateResponse($data);
 
@@ -172,7 +173,14 @@ class Gathering extends Base
 
         if ($gathering->getOwner() != $this->user) {
 
-            return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
+            if($gathering->getGuestsCanInvite() && in_array($this->user->getId(), $gathering->getGuests())){
+                if(! empty($postData['guests']))
+                    $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+
+                return $this->_generateResponse(array('message' => 'New guests has been added'));
+            } else {
+                return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
+            }
         }
 
         try {
@@ -258,6 +266,20 @@ class Gathering extends Base
         $this->dm->flush();
 
         return $this->_generateResponse($gathering->toArray());
+    }
+
+    protected function _toArrayAll(array $results)
+    {
+        $gatheringItems = array();
+        foreach ($results as $place) {
+            $gatheringItem = $place->toArray();
+            $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+            $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
+
+            $gatheringItems[] = $gatheringItem;
+        }
+
+        return $gatheringItems;
     }
 
 

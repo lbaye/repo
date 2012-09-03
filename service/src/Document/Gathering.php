@@ -45,6 +45,9 @@ abstract class Gathering extends Content
     /** @ODM\String */
     protected $eventImage;
 
+    /** @ODM\Boolean */
+    protected $guestsCanInvite;
+
     /** @ODM\Hash */
     protected $rsvp = array(
         'yes' => array(),
@@ -220,12 +223,23 @@ abstract class Gathering extends Content
         return $this->rsvp;
     }
 
+    public function setGuestsCanInvite($guestsCanInvite)
+    {
+        $this->guestsCanInvite = (boolean) $guestsCanInvite;
+    }
+
+    public function getGuestsCanInvite()
+    {
+        return $this->guestsCanInvite;
+    }
+
     public function getUserResponse($userId)
     {
         $rsvp = $this->getRsvp();
 
-        if(in_array($userId, $rsvp['yes'])) return 'yes';
-        if(in_array($userId, $rsvp['no'])) return 'no';
+        if(in_array($userId, $rsvp['yes']))   return 'yes';
+        if(in_array($userId, $rsvp['no']))    return 'no';
         if(in_array($userId, $rsvp['maybe'])) return 'maybe';
     }
+
 }
