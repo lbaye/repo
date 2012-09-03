@@ -144,6 +144,10 @@ class Gathering extends Base
                 $this->gatheringRepository->saveEventPhoto($meetup->getId(), $postData['eventImage']);
             }
 
+            if (empty($postData['guestsCanInvite'])) {
+               $meetup->setGuestsCanInvite(0);
+            }
+
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
