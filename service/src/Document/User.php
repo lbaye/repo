@@ -292,6 +292,7 @@ class User
             'coverPhoto',
             'relationshipStatus',
             'workStatus',
+            'regMedia',
             'dateOfBirth'
         );
 
