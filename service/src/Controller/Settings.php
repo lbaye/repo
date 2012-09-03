@@ -9,10 +9,6 @@ use Helper\Status;
 
 class Settings extends Base
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.

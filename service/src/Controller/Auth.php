@@ -11,10 +11,6 @@ use Helper\Status;
 
 class Auth extends Base
 {
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
 
     /**
      * Initialize the controller.
