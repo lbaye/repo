@@ -288,6 +288,7 @@ class User
             'age',
             'gender',
             'address',
+            'coverPhoto',
             'relationshipStatus',
             'workStatus',
             'dateOfBirth'
