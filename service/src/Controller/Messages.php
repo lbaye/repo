@@ -11,7 +11,6 @@ class Messages extends Base
      * @var \Repository\MessageRepo
      */
     private $messageRepository;
-    private $userRepository;
 
     public function init()
     {
