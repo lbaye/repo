@@ -279,6 +279,7 @@ class User
             'lastName',
             'avatar',
             'enabled',
+            'status',
             'lastLogin',
             'settings',
             'currentLocation',
@@ -288,6 +289,7 @@ class User
             'age',
             'gender',
             'address',
+            'coverPhoto',
             'relationshipStatus',
             'workStatus',
             'dateOfBirth'
