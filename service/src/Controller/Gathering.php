@@ -170,7 +170,7 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        if ($gathering === false) {
+        if ($gathering === null) {
             return $this->_generate404();
         }
 
@@ -210,7 +210,7 @@ class Gathering extends Base
 
         $gathering = $this->gatheringRepository->find($id);
 
-        if ($gathering === false) {
+        if ($gathering === null) {
             return $this->_generate404();
         }
 
