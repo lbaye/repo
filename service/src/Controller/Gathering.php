@@ -54,31 +54,6 @@ class Gathering extends Base
     }
 
     /**
-     * GET /meetups/public
-     * GET /events/public
-     * GET /plans/public
-     *
-     * @param $type
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function publicEvents($type)
-    {
-        $start = (int)$this->request->get('start', 0);
-        $limit = (int)$this->request->get('limit', 20);
-
-        $this->_initRepository($type);
-        $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
-
-        if (!empty($gatheringObjs)) {
-            $permittedDocs = $this->_filterByPermission($gatheringObjs);
-
-            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
-        } else {
-            return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
-        }
-    }
-
-    /**
      * GET /meetups/{id}
      * GET /events/{id}
      * GET /plans/{id}
@@ -297,13 +272,28 @@ class Gathering extends Base
         $gatheringItems = array();
         foreach ($results as $place) {
             $gatheringItem = $place->toArray();
+            $gatheringItem['event_type']  = $this->_checkGatheringType($place->getOwner());
             $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
-            $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
+            $gatheringItem['is_invited']  = in_array($this->user->getId(), $place->getGuests());
 
             $gatheringItems[] = $gatheringItem;
         }
 
         return $gatheringItems;
+    }
+
+    protected function _checkGatheringType($owner)
+    {
+        $friends = $this->_getFriendList($this->user);
+
+        if($owner == $this->user){
+            return "my_event";
+        }elseif(!empty($friends)){
+            return "friends_event";
+        }else{
+            return "public_event";
+        }
+
     }
 
 
