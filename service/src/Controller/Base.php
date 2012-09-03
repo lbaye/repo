@@ -127,15 +127,12 @@ abstract class Base
 
     protected function _toArrayAll(array $results)
     {
-        $gatheringItems = array();
-        foreach ($results as $place) {
-            $gatheringItem = $place->toArray();
-            $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
-
-            $gatheringItems[] = $gatheringItem;
+        $arrayItems = array();
+        foreach ($results as $doc) {
+            $arrayItems[] = $doc->toArray();
         }
 
-        return $gatheringItems;
+        return $arrayItems;
     }
 
     protected function _generateResponse($hash, $code = Status::OK, $options = array())

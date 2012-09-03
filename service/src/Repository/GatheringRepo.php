@@ -59,6 +59,25 @@ class GatheringRepo extends Base
         return $gathering;
     }
 
+    public function addGuests($newGuests, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $guests = $gathering->getGuests();
+        foreach($newGuests as $guest) array_push($guests, $guest);
+
+        $gathering->setGuests($guests);
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
+    }
+
     public function delete($id)
     {
         $gatheringObj = $this->find($id);
@@ -81,7 +100,7 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time','whoWillAttend');
+        $setIfExistFields = array('title', 'description', 'duration', 'time', 'guestsCanInvite');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
