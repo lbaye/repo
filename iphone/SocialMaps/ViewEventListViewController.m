@@ -815,7 +815,21 @@ bool searchFlags=true;
     EventListRsvpTableCell *clickedCell = (EventListRsvpTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.eventListTableView indexPathForCell:clickedCell];
     [self.view addSubview:self.mapContainer];
-    NSLog(@"clickedButtonPath %@",clickedButtonPath);        
+    NSLog(@"clickedButtonPath %@",clickedButtonPath); 
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:[sender tag]];
+    [self.mapView removeAnnotations:[self.mapView annotations]];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
+    theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
+	
+	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+	annotation.title = aEvent.eventAddress;
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+	annotation.subtitle=[NSString stringWithFormat:@"%.2lfm",[aEvent.eventDistance doubleValue]];
+	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    [self.mapView addAnnotation:annotation];
 }
 
 -(IBAction)closeMapView:(id)sender
@@ -825,7 +839,8 @@ bool searchFlags=true;
 }
 
 //handling map view
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation 
+{
 	
     if ([annotation isKindOfClass:[MKUserLocation class]])
     {
