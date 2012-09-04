@@ -80,6 +80,9 @@ class Auth extends Base
     public function login()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
         $user = $this->userRepository->validateLogin($data);
 
         $this->userRepository->setCurrentUser($user);
