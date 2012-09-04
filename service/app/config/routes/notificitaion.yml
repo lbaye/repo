@@ -3,7 +3,6 @@ user_all_notofications:
   defaults: { _controller: Controller\User::getUserNotifications}
   requirements: { _method: GET}
 
-
 update_user_notofications:
   pattern: /me/notification/{notificationId}
   defaults: { _controller: Controller\User::getNotifications}

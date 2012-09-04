@@ -20,7 +20,7 @@ class GatheringRepo extends Base
         return $this->_toArrayAll($gatherings);
     }
 
-    public function getAll($limit = 20, $offset = 0)
+    public function getAll($limit = 50, $offset = 0)
     {
         return $this->findBy(array(), null, $limit, $offset);
     }
@@ -189,6 +189,34 @@ class GatheringRepo extends Base
         $this->dm->flush();
 
         return $gathering;
+    }
+
+    public function saveEventImage($id , $eventImage)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
+        $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
+
+        if ($eventImageUrl !== false) {
+            $user->setEventImage($eventImageUrl);
+        } else {
+            $serverUrl = 'http://'. $_SERVER["SERVER_NAME"] .'/social_maps/web';
+
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
+            $user->setEventImage($serverUrl . $filePath);
+        }
+
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
     }
 
 }
