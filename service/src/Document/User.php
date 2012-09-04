@@ -113,7 +113,7 @@ class User
      * @ODM\String
      * The string address of users current position
      */
-    protected $lastSeenAt = 'No location update yet!';
+    protected $lastSeenAt = null;
 
     /** @ODM\Boolean */
     protected $visible = true;
