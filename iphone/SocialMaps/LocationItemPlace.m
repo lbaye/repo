@@ -12,7 +12,7 @@
 @implementation LocationItemPlace
 @synthesize catIcon;
 @synthesize showReview;
-@synthesize delegate;
+//@synthesize delegate;
 @synthesize placeInfo;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
@@ -86,9 +86,9 @@
 }
 
 - (void) showReview:(id)sender {
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(showLocationReview:)]) {
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(buttonClicked:row:)]) {
         int row = [self getCellRow:sender];
-        [delegate showLocationReview:row];
+        [delegate buttonClicked:LocationActionTypePlaceReview row:row];
     }
 }
 @end

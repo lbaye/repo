@@ -18,5 +18,11 @@
 @synthesize willAttend;
 @synthesize eventDate;
 @synthesize eventCreateDate;
+@synthesize eventList;
+@synthesize eventImageUrl;
+@synthesize eventImage;
+@synthesize myResponse; 
+@synthesize eventDescription;
+@synthesize isInvited,guestCanInvite,guestList,owner;
 
 @end

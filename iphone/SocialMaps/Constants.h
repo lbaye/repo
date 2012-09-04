@@ -24,6 +24,10 @@ extern NSString * const NOTIF_GET_FRIEND_REQ_DONE;
 extern NSString * const NOTIF_GET_INBOX_DONE;
 extern NSString * const NOTIF_GET_NOTIFICATIONS_DONE;
 extern NSString * const NOTIF_FBFRIENDLIST_DONE;
+extern NSString * const NOTIF_GET_ALL_EVENTS_DONE;
+extern NSString * const NOTIF_GET_EVENT_DETAIL_DONE;
+extern NSString * const NOTIF_DELETE_EVENT_DONE;
+extern NSString * const NOTIF_CREATE_EVENT_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;
@@ -35,6 +39,7 @@ extern float const kNumbersFontSize;
 extern float const kNumbersLargeFontSize;
 extern float const kSmallNumbersFontSize;
 extern float const kLargeLabelFontSize;
+extern float const kMediumLabelFontSize;
 extern float const kSmallLabelFontSize;
 extern float const kNumberRGBRed;
 extern float const kNumberRGBGreen;

@@ -16,11 +16,13 @@ typedef enum _CIRCLE_TYPE {
 
 @interface UserCircle : NSObject {
     NSString       *circleName;
+    NSString       *circleID;
     CIRCLE_TYPE     type;
     NSMutableArray  *friends;
 }
 
 @property (nonatomic, retain) NSString * circleName;
+@property(nonatomic,retain) NSString       *circleID;
 @property (atomic) CIRCLE_TYPE type;
 @property (nonatomic, retain) NSMutableArray * friends;
 

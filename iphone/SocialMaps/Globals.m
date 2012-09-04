@@ -13,5 +13,9 @@
 
 NSMutableArray *userFriendslistArray;
 NSMutableDictionary *userFriendslistIndex;
+NSMutableArray *eventListGlobalArray;
+NSMutableArray *friendListGlobalArray;
+NSMutableArray *circleListGlobalArray;
+Event *globalEvent;
 
 @end

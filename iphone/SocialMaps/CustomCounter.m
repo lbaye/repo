@@ -12,6 +12,7 @@
 @synthesize allowNegative;
 @synthesize currVal;
 @synthesize countDisp;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame allowNeg:(bool)neg default:(int)def sender:(id)sender tag:(int)tag
 {
@@ -67,9 +68,16 @@
     
 }
 
+- (void) notifyDelegate:(id)sender {
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(counterValueChanged:sender:)]) {
+        [self.delegate counterValueChanged:currVal sender:[sender superview]];
+    }
+}
+
 - (void) increaseCount:(id)sender {
     currVal++;
     countDisp.text = [NSString stringWithFormat:@"%d",currVal];
+    [self notifyDelegate:sender];
     [self setNeedsDisplay];
 }
 
@@ -77,6 +85,7 @@
     if (currVal > 0) {
         currVal--;
         countDisp.text = [NSString stringWithFormat:@"%d",currVal];
+        [self notifyDelegate:sender];
         [self setNeedsDisplay];
     }
 }
