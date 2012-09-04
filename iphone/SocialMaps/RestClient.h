@@ -18,6 +18,7 @@
 #import "Geofence.h"
 #import "ShareLocation.h"
 #import "Geolocation.h"
+#import "Event.h"
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
@@ -37,6 +38,8 @@
 -(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getEventDetailById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
+
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setLayer:(Layer *)layer:(NSString *)authToken:(NSString *)authTokenValue;

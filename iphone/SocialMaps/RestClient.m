@@ -1707,7 +1707,7 @@
     [request addPostValue:event.eventName forKey:@"title"];
     [request addPostValue:event.eventDescription forKey:@"description"];
     [request addPostValue:event.eventShortSummary forKey:@"eventShortSummary"];
-    [request addPostValue:event.eventImage forKey:@"eventImage"];
+    [request addPostValue:event.eventImageUrl forKey:@"eventImage"];
     [request addPostValue:event.eventAddress forKey:@"address"];
     [request addPostValue:event.eventLocation.latitude forKey:@"lat"];
     [request addPostValue:event.eventLocation.longitude forKey:@"lng"];

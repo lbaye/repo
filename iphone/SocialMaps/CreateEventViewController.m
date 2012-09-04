@@ -53,6 +53,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 AppDelegate *smAppDelegate;
 Event *event;
 int entityFlag=0;
+DDAnnotation *annotation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -106,6 +107,7 @@ int entityFlag=0;
         [friendListArr addObject:frnds];
     }
     filteredList=[friendListArr mutableCopy];
+    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
 }
 
 - (void)viewDidLoad
@@ -133,14 +135,18 @@ int entityFlag=0;
     [self.mapContainerView  removeFromSuperview];
     //load map data
     CLLocationCoordinate2D theCoordinate;
-	theCoordinate.latitude = 37.810000;
-    theCoordinate.longitude = -122.477989;
+	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
 	
-	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
 	annotation.title = @"Drag to Move Pin";
-	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	
+	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
+	[self.mapView setCenterCoordinate:annotation.coordinate];
+    
 	[self.mapView addAnnotation:annotation];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];    
 //    [self.mapView setCenter:annotation.region];
 }
@@ -161,6 +167,10 @@ int entityFlag=0;
     addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
 }
 
+-(void)getAddressFromMap
+{
+    addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
 	
@@ -190,18 +200,24 @@ int entityFlag=0;
 {
     [createView setHidden:NO];
     entityFlag=0;
+    entryTextField.text=@"";
+    entryTextField.placeholder=@"Name...";
 }
 
 -(IBAction)summaryButtonAction
 {
     [createView setHidden:NO];    
     entityFlag=1;
+    entryTextField.text=@"";
+    entryTextField.placeholder=@"Summary...";
 }    
 
 -(IBAction)descriptionButtonAction
 {
     [createView setHidden:NO];    
     entityFlag=2;
+    entryTextField.text=@"";
+    entryTextField.placeholder=@"Description...";
 }
 
 -(IBAction)dateButtonAction:(id)sender
@@ -263,6 +279,8 @@ int entityFlag=0;
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+
 }
 
 -(IBAction)myPlaceButtonAction
@@ -270,7 +288,8 @@ int entityFlag=0;
     [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal]; 
+    [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
 }
 
 -(IBAction)neamePlaceButtonAction
@@ -332,6 +351,14 @@ int entityFlag=0;
 {
     [smAppDelegate showActivityViewer:self.view];
     RestClient *rc=[[RestClient alloc] init];
+    
+    for (int i=0; i<[selectedFriendsIndex count]; i++)
+    {
+        
+    }
+    
+    [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
+    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.eventImageUrl,event.eventDate.date);
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -381,6 +408,7 @@ int entityFlag=0;
     dateButton.titleLabel.text=dateString;
     selectedDate=dateString;
     NSLog(@"Selected Date: %@",selectedDate);
+    event.eventDate.date=dateString;
     
 }
 
@@ -390,6 +418,7 @@ int entityFlag=0;
 -(IBAction)saveMapLoc:(id)sender
 {
     [mapContainerView removeFromSuperview];
+    [self performSelector:@selector(getAddressFromMap) withObject:nil afterDelay:0.1];
 }
 
 -(IBAction)cancelMapLoc:(id)sender
@@ -403,7 +432,7 @@ int entityFlag=0;
 // NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
 - (void)coordinateChanged_:(NSNotification *)notification
 {	
-	DDAnnotation *annotation = notification.object;
+	annotation = notification.object;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
     annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
@@ -416,7 +445,7 @@ int entityFlag=0;
 	
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
-		DDAnnotation *annotation = (DDAnnotation *)annotationView.annotation;
+		annotation = (DDAnnotation *)annotationView.annotation;
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 	}
