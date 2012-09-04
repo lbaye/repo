@@ -3256,6 +3256,53 @@
 
 }
 
+- (void) sendReply:(NSString*)msgId content:(NSString*)content authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
+    NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/messages"]];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request setPostValue:msgId forKey:@"thread"];
+    [request setPostValue:content forKey:@"content"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            NSLog(@"sendMessage successful:status=%d", responseStatus);
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+        } else {
+            NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"sendMessage failed: unknown error");
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+}
+
 // Send friend request
 - (void) sendFriendRequest:(NSString*)friendId message:(NSString*)message authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/request/friend/%@",WS_URL, friendId]];
@@ -3520,6 +3567,8 @@
                     NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
                     messageReply.senderAvater = senderAvater;
                     NSLog(@"sender avater is: %@",senderAvater);
+                    
+                    //messageReply.senderImage = nil;
                     
                     [messageReplies addObject:messageReply];
                 }

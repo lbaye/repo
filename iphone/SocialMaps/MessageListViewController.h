@@ -22,6 +22,7 @@
     IBOutlet    UIView          *messageRepiesView;
     IBOutlet    UITextView      *textViewReplyMsg;
     IBOutlet    UITableView     *messageReplyTableView;
+    IBOutlet UIView *msgReplyCreationView;
     
     AppDelegate                 *smAppDelegate;
     NSMutableArray              *profileImageList;
@@ -33,6 +34,20 @@
     IBOutlet UITextField *textFieldUserID1;
     IBOutlet UITextField *textFieldUserID2;
     IBOutlet UITextField *textFieldUserID3;
+    
+    
+    
+    
+    //zubair vai code
+    IBOutlet UIScrollView *frndListScrollView;
+    IBOutlet UISearchBar  *friendSearchbar;
+    
+    NSMutableArray *selectedFriendsIndex;
+    BOOL isDragging_msg;
+    BOOL isDecliring_msg;
+    CGFloat animatedDistance;
+    NSMutableDictionary *dicImages_msg;
+    NSMutableArray *ImgesName;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
