@@ -448,9 +448,7 @@ class User
 
     public function getAvatar()
     {
-
         return $this->avatar;
-
     }
 
 
@@ -973,5 +971,9 @@ class User
         return $this->lastSeenAt;
     }
 
+    public function getName()
+    {
+        return $this->lastName.' '.$this->lastName;
+    }
 
 }
