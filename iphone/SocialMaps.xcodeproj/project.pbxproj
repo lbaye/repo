@@ -345,17 +345,16 @@
 		4FF09BF315CFBC8000F8AD19 /* icon_arrow_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF09BED15CFBC8000F8AD19 /* icon_arrow_dark.png */; };
 		4FF09BF615CFE6E600F8AD19 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF09BF515CFE6E600F8AD19 /* SettingsController.m */; };
 		4FF81C6C15D6C7260097759A /* cal-48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF81C6B15D6C7250097759A /* cal-48x48.png */; };
-		5BEE1FB215F203BC00651D3D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BEE1FB115F203BC00651D3D /* QuartzCore.framework */; };
-		B05D6EB415F3A02A00D2AB7A /* btn_new_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B05D6EB215F3A02A00D2AB7A /* btn_new_message.png */; };
-		B05D6EB515F3A02A00D2AB7A /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = B05D6EB315F3A02A00D2AB7A /* line.png */; };
-		B07D24E015F3327600FA9C6D /* tab_icon_meetup_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24DC15F3327600FA9C6D /* tab_icon_meetup_selected.png */; };
-		B07D24E115F3327600FA9C6D /* tab_icon_meetup.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24DD15F3327600FA9C6D /* tab_icon_meetup.png */; };
-		B07D24E215F3327600FA9C6D /* tab_icon_message_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24DE15F3327600FA9C6D /* tab_icon_message_selected.png */; };
-		B07D24E315F3327600FA9C6D /* tab_icon_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24DF15F3327600FA9C6D /* tab_icon_message.png */; };
-		B07D24E715F33EC100FA9C6D /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24E515F33EC100FA9C6D /* top_curve_bg.png */; };
-		B07D24E815F33EC100FA9C6D /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B07D24E615F33EC100FA9C6D /* whitle_blend.png */; };
-		B07D24EB15F373E800FA9C6D /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B07D24EA15F373E800FA9C6D /* MessageReply.m */; };
-		B0B99F8815EDF416004BF53B /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B99F8715EDF416004BF53B /* MessageListViewController.m */; };
+		B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4515F5E61000020D49 /* MessageReply.m */; };
+		B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4915F5E61F00020D49 /* MessageListViewController.m */; };
+		B01DFC5315F5E74300020D49 /* btn_new_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4B15F5E74300020D49 /* btn_new_message.png */; };
+		B01DFC5415F5E74300020D49 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4C15F5E74300020D49 /* line.png */; };
+		B01DFC5515F5E74300020D49 /* tab_icon_meetup_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4D15F5E74300020D49 /* tab_icon_meetup_selected.png */; };
+		B01DFC5615F5E74300020D49 /* tab_icon_meetup.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4E15F5E74300020D49 /* tab_icon_meetup.png */; };
+		B01DFC5715F5E74300020D49 /* tab_icon_message_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC4F15F5E74300020D49 /* tab_icon_message_selected.png */; };
+		B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5015F5E74300020D49 /* tab_icon_message.png */; };
+		B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5115F5E74300020D49 /* top_curve_bg.png */; };
+		B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5215F5E74300020D49 /* whitle_blend.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -858,19 +857,18 @@
 		4FF09BF415CFE6E500F8AD19 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsController.h; sourceTree = "<group>"; };
 		4FF09BF515CFE6E600F8AD19 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsController.m; sourceTree = "<group>"; };
 		4FF81C6B15D6C7250097759A /* cal-48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cal-48x48.png"; path = "Images/cal-48x48.png"; sourceTree = SOURCE_ROOT; };
-		5BEE1FB115F203BC00651D3D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		B05D6EB215F3A02A00D2AB7A /* btn_new_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_new_message.png; path = Images/btn_new_message.png; sourceTree = SOURCE_ROOT; };
-		B05D6EB315F3A02A00D2AB7A /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = Images/line.png; sourceTree = SOURCE_ROOT; };
-		B07D24DC15F3327600FA9C6D /* tab_icon_meetup_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_meetup_selected.png; path = Images/tab_icon_meetup_selected.png; sourceTree = SOURCE_ROOT; };
-		B07D24DD15F3327600FA9C6D /* tab_icon_meetup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_meetup.png; path = Images/tab_icon_meetup.png; sourceTree = SOURCE_ROOT; };
-		B07D24DE15F3327600FA9C6D /* tab_icon_message_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message_selected.png; path = Images/tab_icon_message_selected.png; sourceTree = SOURCE_ROOT; };
-		B07D24DF15F3327600FA9C6D /* tab_icon_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message.png; path = Images/tab_icon_message.png; sourceTree = SOURCE_ROOT; };
-		B07D24E515F33EC100FA9C6D /* top_curve_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_curve_bg.png; path = Images/top_curve_bg.png; sourceTree = SOURCE_ROOT; };
-		B07D24E615F33EC100FA9C6D /* whitle_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whitle_blend.png; path = Images/whitle_blend.png; sourceTree = SOURCE_ROOT; };
-		B07D24E915F373E700FA9C6D /* MessageReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReply.h; sourceTree = "<group>"; };
-		B07D24EA15F373E800FA9C6D /* MessageReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReply.m; sourceTree = "<group>"; };
-		B0B99F8615EDF416004BF53B /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
-		B0B99F8715EDF416004BF53B /* MessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListViewController.m; sourceTree = "<group>"; };
+		B01DFC4415F5E61000020D49 /* MessageReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageReply.h; sourceTree = "<group>"; };
+		B01DFC4515F5E61000020D49 /* MessageReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageReply.m; sourceTree = "<group>"; };
+		B01DFC4815F5E61F00020D49 /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
+		B01DFC4915F5E61F00020D49 /* MessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListViewController.m; sourceTree = "<group>"; };
+		B01DFC4B15F5E74300020D49 /* btn_new_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_new_message.png; path = Images/btn_new_message.png; sourceTree = SOURCE_ROOT; };
+		B01DFC4C15F5E74300020D49 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = Images/line.png; sourceTree = SOURCE_ROOT; };
+		B01DFC4D15F5E74300020D49 /* tab_icon_meetup_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_meetup_selected.png; path = Images/tab_icon_meetup_selected.png; sourceTree = SOURCE_ROOT; };
+		B01DFC4E15F5E74300020D49 /* tab_icon_meetup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_meetup.png; path = Images/tab_icon_meetup.png; sourceTree = SOURCE_ROOT; };
+		B01DFC4F15F5E74300020D49 /* tab_icon_message_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message_selected.png; path = Images/tab_icon_message_selected.png; sourceTree = SOURCE_ROOT; };
+		B01DFC5015F5E74300020D49 /* tab_icon_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message.png; path = Images/tab_icon_message.png; sourceTree = SOURCE_ROOT; };
+		B01DFC5115F5E74300020D49 /* top_curve_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_curve_bg.png; path = Images/top_curve_bg.png; sourceTree = SOURCE_ROOT; };
+		B01DFC5215F5E74300020D49 /* whitle_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whitle_blend.png; path = Images/whitle_blend.png; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -878,11 +876,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< Updated upstream
 				2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */,
-=======
-				5BEE1FB215F203BC00651D3D /* QuartzCore.framework in Frameworks */,
->>>>>>> Stashed changes
 				4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */,
 				4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */,
 				4F8257B315BD82E000760CE1 /* libz.dylib in Frameworks */,
@@ -969,8 +963,8 @@
 				4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */,
 				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
 				20E4A12015D8EB80009A1F6B /* NewsFeed.m */,
-				B07D24E915F373E700FA9C6D /* MessageReply.h */,
-				B07D24EA15F373E800FA9C6D /* MessageReply.m */,
+				B01DFC4415F5E61000020D49 /* MessageReply.h */,
+				B01DFC4515F5E61000020D49 /* MessageReply.m */,
 				4F50CBFE15C82A3600A3AFA8 /* Notification.h */,
 				4F50CBFF15C82A3600A3AFA8 /* Notification.m */,
 				4F1D96AE15DCC93B00511624 /* NotificationPref.h */,
@@ -1122,7 +1116,6 @@
 		4F98A2CA15BB387D000B3124 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5BEE1FB115F203BC00651D3D /* QuartzCore.framework */,
 				4F9B281315BF53BC00CBA657 /* CoreLocation.framework */,
 				4F1FE46615BF327C00D2484F /* libsqlite3.dylib */,
 				4F8257B215BD82E000760CE1 /* libz.dylib */,
@@ -1174,8 +1167,8 @@
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
-				B0B99F8615EDF416004BF53B /* MessageListViewController.h */,
-				B0B99F8715EDF416004BF53B /* MessageListViewController.m */,
+				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
+				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
 				4F98A2E815BB38B1000B3124 /* Images */,
@@ -1197,14 +1190,14 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				B05D6EB215F3A02A00D2AB7A /* btn_new_message.png */,
-				B05D6EB315F3A02A00D2AB7A /* line.png */,
-				B07D24E515F33EC100FA9C6D /* top_curve_bg.png */,
-				B07D24E615F33EC100FA9C6D /* whitle_blend.png */,
-				B07D24DC15F3327600FA9C6D /* tab_icon_meetup_selected.png */,
-				B07D24DD15F3327600FA9C6D /* tab_icon_meetup.png */,
-				B07D24DE15F3327600FA9C6D /* tab_icon_message_selected.png */,
-				B07D24DF15F3327600FA9C6D /* tab_icon_message.png */,
+				B01DFC4B15F5E74300020D49 /* btn_new_message.png */,
+				B01DFC4C15F5E74300020D49 /* line.png */,
+				B01DFC4D15F5E74300020D49 /* tab_icon_meetup_selected.png */,
+				B01DFC4E15F5E74300020D49 /* tab_icon_meetup.png */,
+				B01DFC4F15F5E74300020D49 /* tab_icon_message_selected.png */,
+				B01DFC5015F5E74300020D49 /* tab_icon_message.png */,
+				B01DFC5115F5E74300020D49 /* top_curve_bg.png */,
+				B01DFC5215F5E74300020D49 /* whitle_blend.png */,
 				4F4296FC15E6CF35001AB56F /* category_bar.png */,
 				4F4296FD15E6CF35001AB56F /* place_save.png */,
 				4F4296FE15E6CF35001AB56F /* place_recommend.png */,
@@ -1766,23 +1759,20 @@
 				4F42971515E6CF35001AB56F /* category_bar_dark.png in Resources */,
 				4F42971615E6CF35001AB56F /* review_btn.png in Resources */,
 				4F42971715E6CF35001AB56F /* banner_bar.png in Resources */,
-<<<<<<< Updated upstream
 				2063A1D415F330E300529CB2 /* Pin.png in Resources */,
 				2063A1D515F330E300529CB2 /* PinDown1.png in Resources */,
 				2063A1D615F330E300529CB2 /* PinDown2.png in Resources */,
 				2063A1D715F330E300529CB2 /* PinDown3.png in Resources */,
 				2063A1D815F330E300529CB2 /* PinFloating.png in Resources */,
 				2063A1D915F330E300529CB2 /* PinShadow.png in Resources */,
-=======
-				B07D24E015F3327600FA9C6D /* tab_icon_meetup_selected.png in Resources */,
-				B07D24E115F3327600FA9C6D /* tab_icon_meetup.png in Resources */,
-				B07D24E215F3327600FA9C6D /* tab_icon_message_selected.png in Resources */,
-				B07D24E315F3327600FA9C6D /* tab_icon_message.png in Resources */,
-				B07D24E715F33EC100FA9C6D /* top_curve_bg.png in Resources */,
-				B07D24E815F33EC100FA9C6D /* whitle_blend.png in Resources */,
-				B05D6EB415F3A02A00D2AB7A /* btn_new_message.png in Resources */,
-				B05D6EB515F3A02A00D2AB7A /* line.png in Resources */,
->>>>>>> Stashed changes
+				B01DFC5315F5E74300020D49 /* btn_new_message.png in Resources */,
+				B01DFC5415F5E74300020D49 /* line.png in Resources */,
+				B01DFC5515F5E74300020D49 /* tab_icon_meetup_selected.png in Resources */,
+				B01DFC5615F5E74300020D49 /* tab_icon_meetup.png in Resources */,
+				B01DFC5715F5E74300020D49 /* tab_icon_message_selected.png in Resources */,
+				B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */,
+				B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */,
+				B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1918,7 +1908,6 @@
 				4F6C4BF215DFF2A300525665 /* UserCircle.m in Sources */,
 				4F59C33F15E7EB060060C8D9 /* MapAnnotationPlace.m in Sources */,
 				20E75BE115EA0345000B6B8A /* Event.m in Sources */,
-<<<<<<< Updated upstream
 				20B656C915EF580800A441E9 /* EventListTableCell.m in Sources */,
 				20B656CA15EF580800A441E9 /* EventListRsvpTableCell.m in Sources */,
 				20B656D015EF58B800A441E9 /* EventImageDownloader.m in Sources */,
@@ -1929,10 +1918,8 @@
 				20B656DF15EF827C00A441E9 /* EventList.m in Sources */,
 				2063A1DF15F3317000529CB2 /* DDAnnotation.m in Sources */,
 				2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */,
-=======
-				B0B99F8815EDF416004BF53B /* MessageListViewController.m in Sources */,
-				B07D24EB15F373E800FA9C6D /* MessageReply.m in Sources */,
->>>>>>> Stashed changes
+				B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */,
+				B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
