@@ -244,12 +244,13 @@ class Gathering extends Base
      * PUT /events/{id}/rsvp
      *
      * @param $id
-     * @param $response
      * @param $type
+     *
+     * @internal param $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function setRsvp($id,$type)
+    public function setRsvp($id, $type)
     {
         $this->_initRepository($type);
 
@@ -270,6 +271,43 @@ class Gathering extends Base
         $this->dm->flush();
 
         return $this->_generateResponse($gathering->toArray());
+    }
+
+    /**
+     * PUT /events/{id}/rsvp
+     *
+     * @param $id
+     * @param $type
+     *
+     * @internal param $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function share($id, $type)
+    {
+        $this->_initRepository($type);
+
+        $postData = $this->request->request->all();
+        $gathering = $this->gatheringRepository->find($id);
+
+        $notification  = new \Document\Notification();
+        $notification->setTitle($this->user->getName() .' shared an Event.');
+        $notification->setMessage("{$this->user->getName()} has created an event {$gathering->getTitle()}. He wants you to check it out!");
+        $notification->setObjectId($id);
+        $notification->setObjectType('event');
+        $notification->setPhotoUrl($this->user->getAvatar());
+
+        foreach($postData['users'] as $user) {
+            $receiver = $this->userRepository->find($user);
+            if($receiver) {
+                $receiver->addNotification(clone $notification);
+                $this->dm->persist($receiver);
+            }
+        }
+
+        $this->dm->flush();
+
+        return $this->_generateResponse(array('message' => 'Shared successfully!'));
     }
 
     protected function _toArrayAll(array $results)

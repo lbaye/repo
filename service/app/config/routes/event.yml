@@ -37,3 +37,9 @@ who_will_attend:
   pattern:  /events/{id}/rsvp
   defaults: { _controller: Controller\Gathering::setRsvp, type: event }
   requirements: { _method: PUT }
+
+
+share:
+  pattern: /events/{id}/share
+  defaults: { _controller: Controller\Gathering::share, type: event }
+  requirements: { _method: POST}

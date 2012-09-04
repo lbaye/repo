@@ -9,8 +9,6 @@ class Email
 {
     public static function sendMail($email, $data)
     {
-
-
         $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
             ->setUsername('sirajussalayhin@gmail.com')
             ->setPassword('www456789');
