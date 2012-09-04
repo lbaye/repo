@@ -249,6 +249,7 @@ class Settings extends Base
 
             $this->user->setCurrentLocation($location);
             $this->_updateVisibility($this->user);
+            $this->_updateLastSeenAt($this->user);
 
             return $this->persistAndReturn($location);
 
@@ -278,6 +279,20 @@ class Settings extends Base
             $user->setVisible(($distance > $fnc['radius']));
         }
 
+    }
+
+    /**
+     * Update the address user currently at
+     *
+     * @param \Document\User $user
+     *
+     */
+    private function _updateLastSeenAt(\Document\User $user)
+    {
+        $reverseGeo = new \Service\Geolocation\Reverse($this->config['googlePlace']['apiKey']);
+
+        $address = $reverseGeo->getAddress($user->getCurrentLocation());
+        $user->setLastSeenAt($address);
     }
 
     private function persistAndReturn($result)
