@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<<<<<<< Updated upstream
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+=======
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+>>>>>>> Stashed changes
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -1700,6 +1704,298 @@
             </objects>
             <point key="canvasLocation" x="1728" y="386"/>
         </scene>
+<<<<<<< Updated upstream
+=======
+        <!--Message List View Controller-->
+        <scene sceneID="i87-vh-R0P">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qky-pd-n5V" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="messageList" id="eXS-xq-EhM" customClass="MessageListViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Weg-aQ-fWv">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="LIr-jJ-WNN" userLabel="notifHeader">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="cHJ-RZ-fIc" userLabel="consentLogo">
+                                        <rect key="frame" x="100" y="9" width="121" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                    <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="nNx-oY-sn6" userLabel="consentBackButton">
+                                        <rect key="frame" x="10" y="9" width="56" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                                        <state key="normal" image="back_b_small.png" backgroundImage="back_b_small.png">
+                                            <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionBackBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="xpO-tc-Dtj"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="nCi-FA-GTR" userLabel="notifBubble">
+                                        <rect key="frame" x="282" y="9" width="28" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="bubble_count_icon.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="wQx-jW-FmX" userLabel="notifCount">
+                                        <rect key="frame" x="280" y="8" width="28" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="14"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="j3c-wZ-CLi">
+                                <rect key="frame" x="0.0" y="101" width="320" height="294"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <inset key="contentInset" minX="0.0" minY="13" maxX="0.0" maxY="15"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="eXS-xq-EhM" id="88c-b9-ZQz"/>
+                                    <outlet property="delegate" destination="eXS-xq-EhM" id="gGG-yU-uMm"/>
+                                </connections>
+                            </tableView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="whitle_blend.png" id="pHA-vg-B6U">
+                                <rect key="frame" x="0.0" y="372" width="320" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line.png" id="X7b-1V-x8J">
+                                <rect key="frame" x="10" y="402" width="300" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xli-gk-IOn">
+                                <rect key="frame" x="92" y="415" width="137" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="New Message" image="btn_new_message.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionNewMessageBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="E9h-Fa-PNs"/>
+                                </connections>
+                            </button>
+                            <view hidden="YES" contentMode="scaleToFill" id="dkR-Bf-oNx">
+                                <rect key="frame" x="0.0" y="101" width="320" height="359"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="New message to:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="pxV-vJ-Dgr">
+                                        <rect key="frame" x="20" y="20" width="145" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5041a081f69c29e00f000000" borderStyle="roundedRect" minimumFontSize="17" id="VrK-Zs-lHL">
+                                        <rect key="frame" x="20" y="55" width="280" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5041a170f69c297811000001" borderStyle="roundedRect" minimumFontSize="17" id="cah-ca-jLt">
+                                        <rect key="frame" x="20" y="94" width="280" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5041a211f69c29a208000001" borderStyle="roundedRect" minimumFontSize="17" id="8E0-BZ-zy6">
+                                        <rect key="frame" x="20" y="133" width="280" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <view contentMode="scaleToFill" id="vud-HA-x6R">
+                                        <rect key="frame" x="0.0" y="199" width="320" height="160"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Your message..." id="oP2-6v-WHB">
+                                                <rect key="frame" x="21" y="26" width="280" height="81"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="eXS-xq-EhM" id="TQC-bs-pwW"/>
+                                                </connections>
+                                            </textView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Y9M-P2-xJQ">
+                                                <rect key="frame" x="20" y="118" width="115" height="37"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <state key="highlighted">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="actionCancelBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="fWO-Df-S79"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="HcQ-Ot-lCf">
+                                                <rect key="frame" x="186" y="118" width="115" height="37"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Send">
+                                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <state key="highlighted">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="actionSendBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="MKr-nY-uy4"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.90816066576086962" green="0.90816066576086962" blue="0.90816066576086962" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" id="UML-m0-Dal">
+                                <rect key="frame" x="0.0" y="101" width="320" height="359"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="n0o-wF-CXV">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="286"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <inset key="contentInset" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
+                                    </tableView>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Your message..." id="UMM-eg-6UA">
+                                        <rect key="frame" x="20" y="301" width="209" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="whitle_blend.png" id="rmK-cf-NpH">
+                                        <rect key="frame" x="0.0" y="259" width="320" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line.png" id="l8u-Gj-UD7">
+                                        <rect key="frame" x="10" y="285" width="300" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="RqE-U7-Cs1">
+                                        <rect key="frame" x="234" y="297.5" width="1" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ktR-qP-bfW">
+                                        <rect key="frame" x="243" y="300.5" width="72" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <size key="titleShadowOffset" width="0.0" height="3"/>
+                                        <state key="normal" title="Send">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionSendReplyBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="Pq2-Fm-4HG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="Dvz-d1-Qvh">
+                                <rect key="frame" x="0.0" y="45" width="320" height="77"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top_curve_bg.png" id="PMl-x1-bhR">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TRa-vE-hXs">
+                                        <rect key="frame" x="29" y="21" width="102" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Messages" image="tab_icon_message.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" image="tab_icon_message_selected.png"/>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionMessageBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="cbw-JK-wGQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4cM-kN-6b3">
+                                        <rect key="frame" x="174" y="20" width="135" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Meet-up Request" image="tab_icon_meetup.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" image="tab_icon_meetup_selected.png"/>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionMeetUpBtn:" destination="eXS-xq-EhM" eventType="touchUpInside" id="s6N-jB-kJL"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="I6p-ER-ZrD">
+                                        <rect key="frame" x="160" y="9" width="1" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="buttonMeetUp" destination="4cM-kN-6b3" id="bES-jG-1pq"/>
+                        <outlet property="buttonMessage" destination="TRa-vE-hXs" id="YOY-eq-hCz"/>
+                        <outlet property="messageCreationView" destination="dkR-Bf-oNx" id="rBL-4m-7jo"/>
+                        <outlet property="messageRepiesView" destination="UML-m0-Dal" id="wtP-Re-Jed"/>
+                        <outlet property="messageReplyTableView" destination="n0o-wF-CXV" id="RXQ-5W-ej5"/>
+                        <outlet property="msgListTableView" destination="j3c-wZ-CLi" id="UyL-Xv-Hvk"/>
+                        <outlet property="msgWritingView" destination="vud-HA-x6R" id="VLl-Xu-py3"/>
+                        <outlet property="textFieldUserID1" destination="VrK-Zs-lHL" id="dlA-qO-ncj"/>
+                        <outlet property="textFieldUserID2" destination="cah-ca-jLt" id="86L-Ik-6wP"/>
+                        <outlet property="textFieldUserID3" destination="8E0-BZ-zy6" id="tUM-Yi-5Zd"/>
+                        <outlet property="textViewNewMsg" destination="oP2-6v-WHB" id="yYq-JQ-Khz"/>
+                        <outlet property="textViewReplyMsg" destination="UMM-eg-6UA" id="UjP-Ox-rjJ"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2204" y="20"/>
+        </scene>
+>>>>>>> Stashed changes
         <!--Registration Controller-->
         <scene sceneID="VTl-EO-6Pd">
             <objects>
@@ -2235,6 +2531,7 @@
             </objects>
             <point key="canvasLocation" x="1655" y="-320"/>
         </scene>
+<<<<<<< Updated upstream
         <!--View Event Detail View Controller-->
         <scene sceneID="wUp-ba-aCh">
             <objects>
@@ -3636,19 +3933,28 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             </objects>
             <point key="canvasLocation" x="1588" y="1090"/>
         </scene>
+=======
+>>>>>>> Stashed changes
     </scenes>
     <resources>
         <image name="b_accept_n_login.png" width="280" height="72"/>
         <image name="b_creat_acc.png" width="280" height="70"/>
         <image name="b_login.png" width="160" height="70"/>
         <image name="back_b_small.png" width="70" height="35"/>
+<<<<<<< Updated upstream
         <image name="banner_bar.png" width="640" height="333"/>
+=======
+>>>>>>> Stashed changes
         <image name="bar_more_info.png" width="641" height="70"/>
         <image name="bar_top_ar_bg.png" width="640" height="78"/>
         <image name="bg.png" width="640" height="920"/>
         <image name="breadcrumbs_icon.png" width="24" height="34"/>
         <image name="btn_footer_slider_close.png" width="320" height="26"/>
         <image name="btn_footer_slider_open.png" width="320" height="26"/>
+<<<<<<< Updated upstream
+=======
+        <image name="btn_new_message.png" width="274" height="64"/>
+>>>>>>> Stashed changes
         <image name="btn_slider_close.png" width="640" height="50"/>
         <image name="bubble_count_icon.png" width="55" height="57"/>
         <image name="checkbox_unchecked.png" width="50" height="50"/>
@@ -3658,7 +3964,11 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="down_arrow_white.png" width="11" height="11"/>
         <image name="email_acc_creat.png" width="640" height="78"/>
         <image name="friends_rqst_icon.png" width="80" height="66"/>
+<<<<<<< Updated upstream
         <image name="girl.png" width="114" height="114"/>
+=======
+        <image name="girl.png" width="48" height="48"/>
+>>>>>>> Stashed changes
         <image name="icon_arrow_down.png" width="17" height="12"/>
         <image name="icon_arrow_right.png" width="12" height="17"/>
         <image name="icon_filter.png" width="52" height="53"/>
@@ -3666,10 +3976,15 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="icon_settings.png" width="43" height="45"/>
         <image name="img_settings_header_bg.png" width="640" height="110"/>
         <image name="img_settings_list_bg.png" width="600" height="100"/>
+<<<<<<< Updated upstream
         <image name="line_arrow_down_left.png" width="600" height="14"/>
         <image name="line_arrow_up_left.png" width="600" height="14"/>
         <image name="list_filter_icon.png" width="34" height="35"/>
         <image name="list_uncheck.png" width="60" height="60"/>
+=======
+        <image name="line.png" width="601" height="1"/>
+        <image name="list_filter_icon.png" width="34" height="35"/>
+>>>>>>> Stashed changes
         <image name="list_view_icon.png" width="41" height="30"/>
         <image name="location_bar_radio_cheked.png" width="42" height="42"/>
         <image name="location_bar_radio_none.png" width="42" height="42"/>
@@ -3685,6 +4000,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="message_notify_icon.png" width="97" height="65"/>
         <image name="monocle_icon.png" width="37" height="30"/>
         <image name="notify_icon.png" width="108" height="64"/>
+<<<<<<< Updated upstream
         <image name="on_off_on.png" width="36" height="36"/>
         <image name="other_circle_icon.png" width="62" height="65"/>
         <image name="people_checked.png" width="46" height="46"/>
@@ -3699,10 +4015,29 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="thum.png" width="139" height="139"/>
         <image name="tx_forget_pass.png" width="189" height="27"/>
         <image name="tx_remember.png" width="142" height="23"/>
+=======
+        <image name="other_circle_icon.png" width="62" height="65"/>
+        <image name="people_checked.png" width="46" height="46"/>
+        <image name="register.png" width="160" height="70"/>
+        <image name="slide_close_bar.png" width="640" height="46"/>
+        <image name="sp.png" width="1" height="60"/>
+        <image name="splash.png" width="640" height="920"/>
+        <image name="tab_arrow.png" width="600" height="93"/>
+        <image name="tab_icon_meetup.png" width="271" height="43"/>
+        <image name="tab_icon_meetup_selected.png" width="306" height="43"/>
+        <image name="tab_icon_message.png" width="183" height="39"/>
+        <image name="tab_icon_message_selected.png" width="204" height="40"/>
+        <image name="thum.png" width="139" height="139"/>
+        <image name="top_curve_bg.png" width="640" height="138"/>
+        <image name="tx_forget_pass.png" width="189" height="27"/>
+        <image name="tx_remember.png" width="142" height="23"/>
+        <image name="whitle_blend.png" width="640" height="99"/>
+>>>>>>> Stashed changes
         <image name="xlose_icon.png" width="15" height="15"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
     <classes>
+<<<<<<< Updated upstream
         <class className="CreateEventViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEventViewController.h"/>
             <relationships>
@@ -3782,6 +4117,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
             </relationships>
         </class>
+=======
+>>>>>>> Stashed changes
         <class className="ListViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ListViewController.h"/>
             <relationships>
@@ -3863,6 +4200,33 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="showPlacesButton" candidateClass="UIButton"/>
             </relationships>
         </class>
+<<<<<<< Updated upstream
+=======
+        <class className="MessageListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageListViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionBackBtn:"/>
+                <relationship kind="action" name="actionCancelBtn:"/>
+                <relationship kind="action" name="actionMeetUpBtn:"/>
+                <relationship kind="action" name="actionMessageBtn:"/>
+                <relationship kind="action" name="actionNewMessageBtn:"/>
+                <relationship kind="action" name="actionSendBtn:"/>
+                <relationship kind="action" name="actionSendReplyBtn:"/>
+                <relationship kind="outlet" name="buttonMeetUp" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="buttonMessage" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="messageCreationView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="messageRepiesView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="messageReplyTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="msgListTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="msgWritingView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="textFieldUserID1" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="textFieldUserID2" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="textFieldUserID3" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+>>>>>>> Stashed changes
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
             <relationships>
@@ -3916,6 +4280,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
+<<<<<<< Updated upstream
             </relationships>
         </class>
         <class className="ViewEventDetailViewController" superclassName="UIViewController">
@@ -3966,6 +4331,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="eventSearchBar" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+=======
+>>>>>>> Stashed changes
             </relationships>
         </class>
     </classes>

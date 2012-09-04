@@ -24,8 +24,12 @@
 #import "UserCircle.h"
 #import "UserFriends.h"
 #import "Event.h"
+<<<<<<< Updated upstream
 #import "EventList.h"
 #import "Globals.h"
+=======
+#import "MessageReply.h"
+>>>>>>> Stashed changes
 
 @implementation RestClient
 
@@ -3216,7 +3220,7 @@
     [request setPostValue:subject forKey:@"subject"];
     [request setPostValue:content forKey:@"content"];
     for (NSString *id in recipients) {
-        [request setPostValue:id forKey:@"recipients[]"];
+        [request addPostValue:id forKey:@"recipients[]"];
     }
     
     // Handle successful REST call
@@ -3383,6 +3387,13 @@
 }
 
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    
+    //authTokenValue = @"44f89c2b1dc7b1b84dd57561556cb86486b5b38a";  //for test
+    
+    NSLog(@"in RestClient getInbox");
+    NSLog(@"authTokenValue = %@", authTokenValue);
+    NSLog(@"authToken = %@", authToken);
+    
     NSString *route = [NSString stringWithFormat:@"%@/messages/inbox",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageInbox = [[NSMutableArray alloc] init];
@@ -3421,7 +3432,7 @@
                 
                 msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
                 NSString * firstName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
-                NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];
+                NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];              
                 msg.notifSender   = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
@@ -3429,6 +3440,9 @@
                 NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
                 msg.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                msg.notifAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
+                msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSLog(@"msg.notifAvater %@", msg.notifAvater);
                 [messageInbox addObject:msg];
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
@@ -3454,6 +3468,88 @@
     [request startAsynchronous];
 
 }
+
+- (void) getReplies:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId {
+    
+    NSLog(@"in RestClient getReplies");
+    NSLog(@"authTokenValue = %@", authTokenValue);
+    NSLog(@"authToken = %@", authToken);
+    
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *messageReplies = [[NSMutableArray alloc] init];
+    
+    NSLog(@"route = %@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            NSArray *items = [jsonObjects objectForKey:@"replies"];
+            
+                for (NSDictionary *item in items)
+                {
+                    MessageReply *messageReply = [[MessageReply alloc] init]; 
+                    
+                    NSString *content = [item objectForKey:@"content"];
+                    messageReply.content = content;
+                    NSLog(@"content is: %@",content);
+                    
+                    NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                    NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                    NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                    messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                    
+                    NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
+                    messageReply.senderName = senderName;
+                    NSLog(@"sender name is: %@",senderName);
+                    
+                    NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
+                    messageReply.senderID = senderID;
+                    NSLog(@"sender id is: %@",senderID);
+                    
+                    NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
+                    messageReply.senderAvater = senderAvater;
+                    NSLog(@"sender avater is: %@",senderAvater);
+                    
+                    [messageReplies addObject:messageReply];
+                }
+            
+            NSLog(@"messageReplies = %@", messageReplies);
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:messageReplies];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getReplies");
+    [request startAsynchronous];
+    
+}
+
 - (void) getNotificationMessages:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
     NSString *route = [NSString stringWithFormat:@"%@/request/Notification",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
