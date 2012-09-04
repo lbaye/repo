@@ -109,6 +109,11 @@ class User
     protected $currentLocation = array(
         'lng' => 0, 'lat' => 0
     );
+    /**
+     * @ODM\String
+     * The string address of users current position
+     */
+    protected $lastSeenAt = 'No location update yet!';
 
     /** @ODM\Boolean */
     protected $visible = true;
@@ -293,7 +298,8 @@ class User
             'relationshipStatus',
             'workStatus',
             'regMedia',
-            'dateOfBirth'
+            'dateOfBirth',
+            'lastSeenAt'
         );
 
         $items = array();
@@ -955,6 +961,16 @@ class User
         $pageURL = 'http://';
 
         return $pageURL . $_SERVER["SERVER_NAME"];
+    }
+
+    public function setLastSeenAt($nowAt)
+    {
+        $this->lastSeenAt = $nowAt;
+    }
+
+    public function getLastSeenAt()
+    {
+        return $this->lastSeenAt;
     }
 
 
