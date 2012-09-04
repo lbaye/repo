@@ -205,8 +205,10 @@ class GatheringRepo extends Base
         if ($eventImageUrl !== false) {
             $user->setEventImage($eventImageUrl);
         } else {
+            $pageURL = 'http://';
+
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
-            $user->setEventImage($this->config['web']['root'] .$filePath);
+            $user->setEventImage($pageURL . $_SERVER["SERVER_NAME"] . $filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
