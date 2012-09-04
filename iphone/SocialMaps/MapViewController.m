@@ -5,7 +5,7 @@
 //  Created by Arif Shakoor on 7/23/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
-#include "TargetConditionals.h"
+#import "TargetConditionals.h"
 #import "MapViewController.h"
 #import "Location.h"
 #import "NotifMessage.h"
@@ -103,13 +103,13 @@ ButtonClickCallbackData callBackData;
     
     MKAnnotationView *pin = nil;
     
-//    if ([locItem isKindOfClass:[LocationItemPeople class]])
-//        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-//    else if ([locItem isKindOfClass:[LocationItemPlace class]])
-//        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-//    else if (smAppDelegate.userAccountPrefs.icon != nil) {
-//        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-//    }
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    else if ([locItem isKindOfClass:[LocationItemPlace class]])
+        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    else if (smAppDelegate.userAccountPrefs.icon != nil) {
+        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    }
     return pin;
 }
 
@@ -447,8 +447,8 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my friends"]; 
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
-
-    [self displayNotificationCount];
+    
+    //[self displayNotificationCount];
 
 }
 /*
@@ -488,6 +488,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewDidUnload
 {
+    [locationManager stopUpdatingLocation];
     _mapView = nil;
     [self setMapPulldown:nil];
     [self setShareAllButton:nil];
@@ -555,7 +556,8 @@ ButtonClickCallbackData callBackData;
 //    for (id<MKAnnotation> annotation in _mapView.annotations) {
 //        [_mapView removeAnnotation:annotation];
 //    }
-    [self loadAnnotations:animated];
+    if (smAppDelegate.gotListing == TRUE)
+        [self loadAnnotations:animated];
     
     [super viewWillAppear:animated];
 }
@@ -645,8 +647,7 @@ ButtonClickCallbackData callBackData;
     [super dealloc];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     NSLog(@"In prepareForSegue:MapViewController");
 }

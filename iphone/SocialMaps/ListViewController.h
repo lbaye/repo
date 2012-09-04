@@ -14,7 +14,7 @@
 
 #define SECTION_HEADER_HEIGHT   44
 
-@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemPlaceDelegate> {
+@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate> {
     OBJECT_TYPES   selectedType;
 //    bool            showPeople;
 //    bool            showPlaces;
@@ -44,5 +44,6 @@
 
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender;
 - (void) getSortedDisplayList;
+- (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row;
 
 @end

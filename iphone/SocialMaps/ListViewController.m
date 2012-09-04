@@ -155,6 +155,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
+    anItem.delegate = self;
     UITableViewCell * cell = [anItem getTableViewCell:tv sender:self];
     
     return cell;
@@ -221,8 +222,9 @@
     [itemList reloadData];
 }
 
-// LocationItemPlaceDelegate
-- (void) showLocationReview:(int)row {
-    NSLog(@"ListviewController: showLocationReview, row=%d", row);
+// LocationItem delegate
+- (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
+    LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
+    NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
 }
 @end
