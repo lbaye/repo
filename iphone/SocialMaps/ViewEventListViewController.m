@@ -15,7 +15,9 @@
 #import "Globals.h"
 #import "DDAnnotationView.h"
 #import "DDAnnotation.h"
-
+#import "RestClient.h"
+#import "AppDelegate.h"
+#import "ViewEventDetailViewController.h"
 
 @interface ViewEventListViewController ()
 
@@ -30,6 +32,7 @@ __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
 NSString *searchText=@"";
+AppDelegate         *smAppDelegate;
 
 //rsvpFlag=
 bool searchFlags=true;
@@ -48,6 +51,7 @@ bool searchFlags=true;
 {
     filteredList=[[NSMutableArray alloc] init]; 
     eventListArray=[[NSMutableArray alloc] init];
+    smAppDelegate=[[AppDelegate alloc] init];
     imageDownloadsInProgress=[[NSMutableDictionary alloc] init];
     [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
@@ -61,6 +65,7 @@ bool searchFlags=true;
     Event *aEvent=[[Event alloc] init];
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
 	// Do any additional setup after loading the view.
 }
 
@@ -561,18 +566,33 @@ bool searchFlags=true;
     return cell;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (rsvpFlag)
-//        {
-//            return 122;
-//    }
-//    else if(indexPath.row==1)
-//    {
-//        return 172;
-//    }
-//    return 122;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:indexPath.row];
+    if (!aEvent.myResponse)
+    {
+            return 122;
+    }
+    else
+    {
+        return 172;
+    }
+    return 122;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+    
+    [smAppDelegate showActivityViewer:self.view];    
+    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:indexPath.row];
+    NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
+    [rc getEventDetailById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
+}
 
 //Lazy loading method starts
 
@@ -823,11 +843,23 @@ bool searchFlags=true;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-	
+    MKCoordinateRegion newRegion;
+    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
+    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
+    newRegion.span.latitudeDelta = 1.112872;
+    newRegion.span.longitudeDelta = 1.109863;
+    
+    [self.mapView setRegion:newRegion animated:YES];
+    NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-	annotation.title = aEvent.eventAddress;
+
+    if (!aEvent.eventAddress)
+    {
+        aEvent.eventAddress=@"Dummy";
+    }
+	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"%.2lfm",[aEvent.eventDistance doubleValue]];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
 }
@@ -869,6 +901,23 @@ bool searchFlags=true;
 	}		
 	
 	return draggablePinView;
+}
+
+- (void)getEventDetailDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    globalEvent=[notif object];
+    NSLog(@"globalEvent %@",globalEvent.eventID);
+////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+//    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:modalViewControllerTwo animated:YES];
+//    NSLog(@"GOT SERVICE DATA.. :D");
+    
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    [self presentModalViewController:controller animated:YES];
 }
 
 @end

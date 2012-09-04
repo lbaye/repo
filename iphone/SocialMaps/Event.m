@@ -21,5 +21,8 @@
 @synthesize eventList;
 @synthesize eventImageUrl;
 @synthesize eventImage;
+@synthesize myResponse; 
+@synthesize eventDescription;
+@synthesize isInvited,guestCanInvite,guestList,owner;
 
 @end

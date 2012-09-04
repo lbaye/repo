@@ -7,13 +7,22 @@
 //
 
 #import "ViewEventDetailViewController.h"
+#import "Globals.h"
+#import "RestClient.h"
+#import "AppDelegate.h"
+#import "UtilityClass.h"
+#import "DDAnnotationView.h"
+#import "DDAnnotation.h"
+
 
 @implementation ViewEventDetailViewController
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
 @synthesize yesButton,noButton,maybeButton,descriptionView,guestScrollView,rsvpView,detailView;
+@synthesize mapContainer,mapView;
 
 NSMutableArray *imageArr;
 bool menuOpen=NO;
+AppDelegate *smAppDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,6 +36,25 @@ bool menuOpen=NO;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"globalEvent det %@",globalEvent.eventID);
+
+    smAppDelegate=[[AppDelegate alloc] init];
+    eventName.text=globalEvent.eventName;
+    eventDate.text=globalEvent.eventDate.date;
+    eventShortDetail.text=globalEvent.eventShortSummary;
+    eventAddress.text=globalEvent.eventAddress;
+    eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[globalEvent.eventDistance doubleValue]];
+    descriptionView.text=globalEvent.eventDescription;
+    NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
+    
+    if (globalEvent.isInvited==FALSE)
+    {
+        rsvpView.hidden=YES;
+    }
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    [prefs stringForKey:@"userId"];
+    
     imageArr=[[NSMutableArray alloc] initWithObjects:@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png", nil];
     
     //    [self loadScrollView];
@@ -50,7 +78,36 @@ bool menuOpen=NO;
                  @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
     //set scroll view content size.
     guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
     
+    [self.mapContainer removeFromSuperview];
+    [self.mapView removeAnnotations:[self.mapView annotations]];
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=globalEvent;
+    [self.mapView removeAnnotations:[self.mapView annotations]];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
+    theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
+    MKCoordinateRegion newRegion;
+    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
+    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
+    newRegion.span.latitudeDelta = 1.112872;
+    newRegion.span.longitudeDelta = 1.109863;
+    
+    [self.mapView setRegion:newRegion animated:YES];
+    NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
+	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
+    if (!aEvent.eventAddress)
+    {
+        aEvent.eventAddress=@"Dummy";
+    }
+	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    [self.mapView addAnnotation:annotation];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
 }
@@ -69,6 +126,7 @@ bool menuOpen=NO;
 -(IBAction)viewMapButton:(id)sender
 {
     NSLog(@"view map button....");
+    [self.view addSubview:mapContainer];
 }
 
 -(IBAction)yesAttendAction:(id)sender
@@ -84,6 +142,11 @@ bool menuOpen=NO;
 -(IBAction)maybeAttendAction:(id)sender
 {
     [self resetButton:2];    
+}
+
+-(IBAction)closeMap:(id)sender
+{
+    [self.mapContainer removeFromSuperview];
 }
 
 -(void)resetButton:(int)index
@@ -124,11 +187,38 @@ bool menuOpen=NO;
 -(IBAction)deleteEvent:(id)sender
 {
     NSLog(@"delete event");
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+    
+    [smAppDelegate showActivityViewer:self.view];    
+    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[[Event alloc] init];
+    aEvent=globalEvent;
+    NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
+    [rc deleteEventById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 }
 
 -(IBAction)editEvent:(id)sender
 {
     NSLog(@"edit event");
+}
+
+- (void)deleteEventDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    NSLog(@"dele %@",[notif object]);
+    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    //    NSLog(@"GOT SERVICE DATA.. :D");
+    
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+//    [self presentModalViewController:controller animated:YES];
+    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)loadScrollView
@@ -143,6 +233,7 @@ bool menuOpen=NO;
         [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [name setNumberOfLines:0];
         [name setText:@"Bonolota Sen"];
+        [name setBackgroundColor:[UIColor clearColor]];
         [aView addSubview:imgView];
         [aView addSubview:name];
         [guestScrollView addSubview:aView];
@@ -268,6 +359,39 @@ bool menuOpen=NO;
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
 {
     isDecliring_msg = TRUE;
+}
+
+//handling map view
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation 
+{
+	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;		
+	}
+	
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) 
+    {
+		draggablePinView.annotation = annotation;
+	}
+    else 
+    {
+		// Use class method to create DDAnnotationView (on iOS 3) or built-in draggble MKPinAnnotationView (on iOS 4).
+		draggablePinView = [DDAnnotationView annotationViewWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier mapView:self.mapView];
+        
+		if ([draggablePinView isKindOfClass:[DDAnnotationView class]]) 
+        {
+			// draggablePinView is DDAnnotationView on iOS 3.
+		} else
+        {
+			// draggablePinView instance will be built-in draggable MKPinAnnotationView when running on iOS 4.
+		}
+	}		
+	
+	return draggablePinView;
 }
 
 @end

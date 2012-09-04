@@ -52,6 +52,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UITextField *entryTextField;
     IBOutlet MKMapView *mapView;
     IBOutlet UIView *mapContainerView;
+    IBOutlet UILabel *addressLabel;
 }
 
 @property(nonatomic,retain) IBOutlet UIButton *curLoc;
@@ -84,6 +85,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UITextField *entryTextField;
 @property(nonatomic,retain) IBOutlet MKMapView *mapView;
 @property(nonatomic,retain) IBOutlet UIView *mapContainerView;
+
+@property(nonatomic,retain) IBOutlet UILabel *addressLabel;
 
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    

@@ -25,6 +25,7 @@
 #import "UserFriends.h"
 #import "Event.h"
 #import "EventList.h"
+#import "Globals.h"
 
 @implementation RestClient
 
@@ -60,9 +61,40 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-
+            
+            [jsonObjects objectForKey:@"friends"];
+            NSMutableArray *frndList=[[NSMutableArray alloc] init];
+            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
+            {
+                UserFriends *frnd=[[UserFriends alloc] init];
+                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
+                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+                [frndList addObject:frnd];
+                NSLog(@"frnd.userId: %@",frnd.userId);
+            }
+            
+            [aUser setFriendsList:frndList];
+            friendListGlobalArray=frndList;
+            
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (int i=0; i<[[jsonObjects objectForKey:@"circles"] count];i++)
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
+                circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
+//                circle.type=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                [circleList addObject:circle];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+            }
+            [aUser setCircleList:circleList];
+            circleListGlobalArray=circleList;
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:aUser];
-        } else {
+        } 
+        else
+        {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
@@ -1521,7 +1553,15 @@
                 [aEvent setEventAddress:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"address" key3:nil]];
                 [aEvent setEventDistance:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"distance" key2:nil key3:nil]];
                 [aEvent setEventImageUrl:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"eventImage" key2:nil key3:nil]];
-                [aEvent setEventShortSummary:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"description" key2:nil key3:nil]];
+                [aEvent setEventShortSummary:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"eventShortSummary" key2:nil key3:nil]];
+                [aEvent setEventDescription:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"description" key2:nil key3:nil]];
+                
+                [aEvent setMyResponse:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"my_response" key2:nil key3:nil]];
+
+                [aEvent setIsInvited:[[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"is_invited" key2:nil key3:nil] boolValue]];
+                [aEvent setGuestCanInvite:[[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
+                [aEvent setOwner:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"owner" key2:nil key3:nil]];           
+                
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
 //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
@@ -1546,6 +1586,237 @@
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getShareLocation");
+    [request startAsynchronous];
+}
+
+-(void)getEventDetailById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events/%@",WS_URL,eventID];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+                Event *aEvent=[[Event alloc] init];
+                [aEvent setEventID:[jsonObjects objectForKey:@"id"]];
+                [aEvent setEventName:[jsonObjects objectForKey:@"title"]];
+                
+                Date *date=[[Date alloc] init];
+                date.date=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"date" key3:nil];
+                
+                date.timezone=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone" key3:nil];
+                date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];
+                
+                [aEvent setEventCreateDate:date];
+                
+                date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
+                date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
+                date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
+                
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
+                loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+                [aEvent setEventLocation:loc];
+                [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
+                [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];
+                [aEvent setEventImageUrl:[self getNestedKeyVal:jsonObjects key1:@"eventImage" key2:nil key3:nil]];
+                [aEvent setEventShortSummary:[self getNestedKeyVal:jsonObjects key1:@"eventShortSummary" key2:nil key3:nil]];
+                [aEvent setEventDescription:[self getNestedKeyVal:jsonObjects key1:@"description" key2:nil key3:nil]];
+                
+                [aEvent setMyResponse:[self getNestedKeyVal:jsonObjects key1:@"my_response" key2:nil key3:nil]];
+            
+            [aEvent setIsInvited:[[self getNestedKeyVal:jsonObjects key1:@"is_invited" key2:nil key3:nil] boolValue]];
+            [aEvent setGuestCanInvite:[[self getNestedKeyVal:jsonObjects key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
+            [aEvent setOwner:[self getNestedKeyVal:jsonObjects key1:@"owner" key2:nil key3:nil]]; 
+            
+            NSMutableArray *guestList=[[NSMutableArray alloc] init];
+            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
+            {
+                UserFriends *guest=[[UserFriends alloc] init];
+                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
+                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
+                [guestList addObject:guest];
+            }
+            [aEvent setGuestList:guestList];
+                NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
+                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+                
+                [aEvent.eventList addObject:aEvent];
+                        
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:aEvent];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt get event detail.");
+    [request startAsynchronous];
+}
+
+-(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    SearchLocation *searchLocation=[[SearchLocation alloc] init];
+    searchLocation.peopleArr = [[NSMutableArray alloc] init];
+    searchLocation.placeArr  = [[NSMutableArray alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:event.eventName forKey:@"title"];
+    [request addPostValue:event.eventDescription forKey:@"description"];
+    [request addPostValue:event.eventShortSummary forKey:@"eventShortSummary"];
+    [request addPostValue:event.eventImage forKey:@"eventImage"];
+    [request addPostValue:event.eventAddress forKey:@"address"];
+    [request addPostValue:event.eventLocation.latitude forKey:@"lat"];
+    [request addPostValue:event.eventLocation.longitude forKey:@"lng"];
+    [request addPostValue:event.eventDate.date forKey:@"time"];
+    [request addPostValue:[NSNumber numberWithBool: event.guestCanInvite] forKey:@"guestsCanInvite"];
+    for (int i=0; i<[event.guestList count]; i++)
+    {
+        [request addPostValue:[event.guestList objectAtIndex:i] forKey:@"guests[]"];
+    }
+
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            [jsonObjects objectForKey:@"message"];            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_EVENT_DONE object:[jsonObjects objectForKey:@"message"]];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_EVENT_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_EVENT_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events/%@",WS_URL,eventID];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_DONE object:[jsonObjects valueForKey:@"message"]];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt get event detail.");
     [request startAsynchronous];
 }
 

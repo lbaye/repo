@@ -12,6 +12,11 @@
 #import "DDAnnotationView.h"
 #import "DDAnnotation.h"
 #import "UtilityClass.h"
+#import "RestClient.h"
+#import "AppDelegate.h"
+#import "Event.h"
+#import "Globals.h"
+#import "UserCircle.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -31,7 +36,7 @@
 @synthesize photoButton;
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
-@synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView;
+@synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
@@ -45,6 +50,10 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
+AppDelegate *smAppDelegate;
+Event *event;
+int entityFlag=0;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -57,6 +66,14 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)loadDummydata
 {
     circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
+    [circleList removeAllObjects];
+    UserCircle *circle=[[UserCircle alloc]init];
+    
+    for (int i=0; i<[circleListGlobalArray count]; i++)
+    {
+        circle=[circleListGlobalArray objectAtIndex:i];
+        [circleList addObject:circle.circleName];
+    }
     UserFriends *frnds=[[UserFriends alloc] init];
     ImgesName = [[NSMutableArray alloc] initWithObjects:   
                  @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
@@ -79,12 +96,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
 
-    for (int i=0; i<[ImgesName count]; i++)
+    for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
-        frnds.userName=[friendsNameArr objectAtIndex:i];
-        frnds.userId=[friendsIDArr objectAtIndex:i];
-        frnds.imageUrl=[ImgesName objectAtIndex:i];
+//        frnds.userName=[friendsNameArr objectAtIndex:i];
+//        frnds.userId=[friendsIDArr objectAtIndex:i];
+//        frnds.imageUrl=[ImgesName objectAtIndex:i];
+        frnds=[friendListGlobalArray objectAtIndex:i];
         [friendListArr addObject:frnds];
     }
     filteredList=[friendListArr mutableCopy];
@@ -104,6 +122,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
+    smAppDelegate=[[AppDelegate alloc] init];
+    event=[[Event alloc] init];
     //set scroll view content size.
     [self loadDummydata];
     
@@ -121,16 +141,26 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	
 	[self.mapView addAnnotation:annotation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];    
 //    [self.mapView setCenter:annotation.region];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated 
+{
 	
 	[super viewWillAppear:animated];
 	
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    
+    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
 }
+
+-(void)getCurrentAddress
+{
+    addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+}
+
 
 - (void)viewWillDisappear:(BOOL)animated {
 	
@@ -149,6 +179,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         eventImage = img;
         NSData *imgdata = UIImagePNGRepresentation(eventImage);
         NSString *imgBase64Data = [imgdata base64EncodedString];
+        event.eventImageUrl=imgBase64Data;
     } 
     [photoPicker.view removeFromSuperview];
 }
@@ -157,17 +188,20 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(IBAction)nameButtonAction
 {
-    [createView setHidden:NO];    
+    [createView setHidden:NO];
+    entityFlag=0;
 }
 
 -(IBAction)summaryButtonAction
 {
     [createView setHidden:NO];    
+    entityFlag=1;
 }    
 
 -(IBAction)descriptionButtonAction
 {
     [createView setHidden:NO];    
+    entityFlag=2;
 }
 
 -(IBAction)dateButtonAction:(id)sender
@@ -180,7 +214,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.photoPicker getPhoto:self];
 }
 
--(IBAction)deleteButtonAction{
+-(IBAction)deleteButtonAction
+{
+    self.eventImagview.image=[UIImage imageNamed:@"banner_bar.png"];
 }
 
 //event info entry ends
@@ -268,23 +304,34 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     if (checkCount%2!=0)
     {
         [guestCanInviteButton setImage:[UIImage imageNamed:@"list_checked.png"] forState:UIControlStateNormal];
+        event.guestCanInvite=true;
     }
     else
     {
         [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
+        event.guestCanInvite=false;
     }
 }
 
 -(IBAction)unSelectAll:(id)sender
 {
+    [selectedFriendsIndex removeAllObjects];
+    [self reloadScrolview];
 }
 
 -(IBAction)addAll:(id)sender
 {
+    for (int i=0; i<[filteredList count]; i++)
+    {
+        [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+    }
+    [self reloadScrolview];
 }
 
 -(IBAction)createEvent:(id)sender
 {
+    [smAppDelegate showActivityViewer:self.view];
+    RestClient *rc=[[RestClient alloc] init];
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -295,6 +342,18 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 {
     [createView setHidden:YES];
     [entryTextField resignFirstResponder];
+    if (entityFlag==0)
+    {
+        event.eventName=entryTextField.text;
+    }
+    else if (entityFlag==1)
+    {
+        event.eventShortSummary=entryTextField.text;
+    }
+    else if (entityFlag==2)
+    {
+        event.eventDescription=entryTextField.text;
+    }
 }
 
 -(IBAction)cancelEntity:(id)sender
@@ -406,6 +465,14 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
+
+//- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation 
+//{
+//    
+//    self.currentLocation = newLocation;
+//    self.currentLat =  newLocation.coordinate.latitude; 
+//    self.currentLong =  newLocation.coordinate.longitude; 
+//}
 
 //draggable annotations changed
 
@@ -771,6 +838,24 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+}
+
+- (void)createEventDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    NSLog(@"dele %@",[notif object]);
+    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    //    NSLog(@"GOT SERVICE DATA.. :D");
+    
+    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    //    [self presentModalViewController:controller animated:YES];
+    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload

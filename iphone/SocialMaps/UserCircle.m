@@ -13,5 +13,6 @@
 @synthesize circleName;
 @synthesize type;
 @synthesize friends;
+@synthesize circleID;
 
 @end

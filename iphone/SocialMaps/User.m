@@ -36,4 +36,7 @@
 @synthesize address;
 @synthesize friendRequest;
 @synthesize circles;
+@synthesize friendsList;
+@synthesize circleList;
+
 @end

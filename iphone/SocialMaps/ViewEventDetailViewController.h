@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Mapkit/Mapkit.h>
 
 @interface ViewEventDetailViewController : UIViewController
 {
@@ -28,6 +29,9 @@
     BOOL isDragging_msg,isDecliring_msg;
     NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName; 
+    
+    IBOutlet UIView *mapContainer;
+    IBOutlet MKMapView *mapView;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;
@@ -47,6 +51,10 @@
 
 @property(nonatomic,retain) NSDictionary *results;
 @property(nonatomic,retain) NSMutableArray *ImgesName;
+
+@property(nonatomic,retain) IBOutlet UIView *mapContainer;
+@property(nonatomic,retain) IBOutlet MKMapView *mapView;
+
 -(void)DownLoad:(NSNumber *)path;
 -(void) reloadScrolview;
 
@@ -60,6 +68,7 @@
 -(IBAction)deleteEvent:(id)sender;
 -(IBAction)editEvent:(id)sender;
 - (IBAction)menuTapped;
+-(IBAction)closeMap:(id)sender;
 
 -(void)resetButton:(int)index;
 -(void)loadScrollView;
