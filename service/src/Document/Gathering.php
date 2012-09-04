@@ -242,4 +242,5 @@ abstract class Gathering extends Content
         if(in_array($userId, $rsvp['maybe'])) return 'maybe';
     }
 
+
 }
