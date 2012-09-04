@@ -24,12 +24,9 @@
 #import "UserCircle.h"
 #import "UserFriends.h"
 #import "Event.h"
-<<<<<<< Updated upstream
 #import "EventList.h"
 #import "Globals.h"
-=======
 #import "MessageReply.h"
->>>>>>> Stashed changes
 
 @implementation RestClient
 
