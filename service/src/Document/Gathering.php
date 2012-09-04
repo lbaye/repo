@@ -242,4 +242,12 @@ abstract class Gathering extends Content
         if(in_array($userId, $rsvp['maybe'])) return 'maybe';
     }
 
+    public function isPermittedFor(\Document\User $user)
+    {
+        if(in_array($user->getId(), $this->getGuests())){
+            return true;
+        } else {
+            return parent::isPermittedFor($user);
+        }
+    }
 }
