@@ -191,4 +191,30 @@ class GatheringRepo extends Base
         return $gathering;
     }
 
+    public function saveEventImage($id , $eventImage)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
+        $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
+
+        if ($eventImageUrl !== false) {
+            $user->setEventImage($eventImageUrl);
+        } else {
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
+            $user->setEventImage($this->config['web']['root'] .$filePath);
+        }
+
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
 }
