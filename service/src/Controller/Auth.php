@@ -136,7 +136,7 @@ class Auth extends Base
             }
 
             $userData = $user->toArrayDetailed();
-            $$userData['friends'] = $this->_getFriendList($user);
+            $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
