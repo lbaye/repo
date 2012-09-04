@@ -158,10 +158,11 @@ class UserRepo extends BaseRepository
         }
 
         if(isset($data['email'])) {
+
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if ($result->count() > 0) {
+        if($result->count() >0) {
             return true;
         }
 

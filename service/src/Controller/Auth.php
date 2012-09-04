@@ -34,6 +34,11 @@ class Auth extends Base
     {
         $data = $this->request->request->all();
 
+
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
+
         try {
 
             $user = $this->userRepository->insert($data);
@@ -103,6 +108,9 @@ class Auth extends Base
     public function fbLogin()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
 
         if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
             $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));

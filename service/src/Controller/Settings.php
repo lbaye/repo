@@ -171,6 +171,9 @@ class Settings extends Base
     public function accountSettings()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
 
         if ($this->request->getMethod() == 'GET') {
             return $this->_generateResponse(array('result' => $this->user->toArrayDetailed()));

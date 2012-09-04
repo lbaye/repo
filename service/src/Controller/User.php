@@ -250,6 +250,9 @@ class User extends Base
     {
         $this->_ensureLoggedIn();
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
 
         try {
             $user = $this->userRepository->update($data, $id);
