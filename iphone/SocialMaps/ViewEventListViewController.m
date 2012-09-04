@@ -396,6 +396,12 @@ bool searchFlags=true;
 -(IBAction)dateAction:(id)sender
 {
     NSLog(@"date");
+    //Event *even=[[Event alloc] init];
+    //even.eventDate.date
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"Event.@eventDate.date" ascending:YES];
+    
+    filteredList = [[filteredList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]] mutableCopy];
 }
 
 -(IBAction)distanceAction:(id)sender

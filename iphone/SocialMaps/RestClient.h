@@ -40,6 +40,7 @@
 -(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
 
+-(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setLayer:(Layer *)layer:(NSString *)authToken:(NSString *)authTokenValue;

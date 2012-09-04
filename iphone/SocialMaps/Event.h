@@ -29,6 +29,7 @@
     BOOL isInvited;
     BOOL guestCanInvite;
     NSMutableArray *guestList;
+    NSMutableArray *circleList;
     NSString *owner;
 }
 
@@ -47,9 +48,10 @@
 @property(nonatomic,retain) NSString *eventImageUrl;
 @property(nonatomic,retain) UIImage *eventImage;
 @property(nonatomic,retain) NSString *myResponse;
-@property(nonatomic,assign)BOOL isInvited;
-@property(nonatomic,assign)BOOL guestCanInvite;
-@property(nonatomic,retain)NSMutableArray *guestList;
-@property(nonatomic,retain)NSString *owner;
+@property(nonatomic,assign) BOOL isInvited;
+@property(nonatomic,assign) BOOL guestCanInvite;
+@property(nonatomic,retain) NSMutableArray *guestList;
+@property(nonatomic,retain) NSMutableArray *circleList;
+@property(nonatomic,retain) NSString *owner;
 
 @end

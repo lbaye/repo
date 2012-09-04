@@ -118,4 +118,12 @@
     
 }
 
++(NSString *)convertNSDateToUnix:(NSDate *)date
+{
+    NSTimeInterval interval=[date timeIntervalSince1970];
+    [NSNumber numberWithDouble:interval];
+    NSLog(@"interval %lf",interval);
+    return [NSString stringWithFormat:@"%lf",interval];
+}
+
 @end

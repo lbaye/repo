@@ -141,13 +141,21 @@ DDAnnotation *annotation;
 	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
+    MKCoordinateRegion newRegion;
+    newRegion.center.latitude = annotation.coordinate.latitude;
+    newRegion.center.longitude = annotation.coordinate.longitude;
+    newRegion.span.latitudeDelta = 1.112872;
+    newRegion.span.longitudeDelta = 1.109863;
+    
+    [self.mapView setRegion:newRegion animated:YES];
+
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
 	[self.mapView addAnnotation:annotation];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
 //    [self.mapView setCenter:annotation.region];
 }
 
@@ -351,14 +359,21 @@ DDAnnotation *annotation;
 {
     [smAppDelegate showActivityViewer:self.view];
     RestClient *rc=[[RestClient alloc] init];
-    
+    UserFriends *frnd;
+    NSMutableArray *userIDs=[[NSMutableArray alloc] init];
     for (int i=0; i<[selectedFriendsIndex count]; i++)
     {
-        
+        frnd=[[UserFriends alloc] init];
+        frnd=[selectedFriendsIndex objectAtIndex:i];
+        [userIDs addObject:frnd.userId];
     }
+    event.guestList=userIDs;
+    event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+    event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
+    event.eventAddress=annotation.subtitle;
     
     [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
-    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.eventImageUrl,event.eventDate.date);
+    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -399,17 +414,16 @@ DDAnnotation *annotation;
 {
     NSDate *date =selectedDate;
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    
+    event.eventDate.date=[UtilityClass convertNSDateToUnix:date];
     dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];    
+    [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
     dateString = [dateFormatter stringFromDate:date];
+    event.eventDate.date=[[NSString alloc] initWithString:dateString];
     dateButton.titleLabel.text=dateString;
-    selectedDate=dateString;
-    NSLog(@"Selected Date: %@",selectedDate);
-    event.eventDate.date=dateString;
-    
+    //selectedDate=dateString 2012-09-12 08.50;
+    NSLog(@"Selected Date: %@  %@ %@",dateString, event.eventDate.date,[UtilityClass convertNSDateToUnix:selectedDate]);
 }
 
 
@@ -575,10 +589,10 @@ DDAnnotation *annotation;
             imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
             for (int c=0; c<[selectedFriendsIndex count]; c++)
             {
-                if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
+                if ([[filteredList objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
                 {
                     imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                    NSLog(@"found selected: %d",[[selectedFriendsIndex objectAtIndex:c] intValue]);
+                    NSLog(@"found selected: %@",[selectedFriendsIndex objectAtIndex:c]);
                 }
                 else
                 {
@@ -623,14 +637,13 @@ DDAnnotation *annotation;
 {
     int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
-    if ([selectedFriendsIndex containsObject:[NSString stringWithFormat:@"%d",[sender.view tag]]])
+    if ([selectedFriendsIndex containsObject:[filteredList objectAtIndex:[sender.view tag]]])
     {
-        [selectedFriendsIndex removeObject:[NSString stringWithFormat:@"%d",[sender.view tag]]];
+        [selectedFriendsIndex removeObject:[friendListArr objectAtIndex:[sender.view tag]]];
     } 
     else 
     {
-        [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",[sender.view tag]]];
-
+        [selectedFriendsIndex addObject:[friendListArr objectAtIndex:[sender.view tag]]];
     }
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)

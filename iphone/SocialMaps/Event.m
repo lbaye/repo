@@ -23,6 +23,13 @@
 @synthesize eventImage;
 @synthesize myResponse; 
 @synthesize eventDescription;
-@synthesize isInvited,guestCanInvite,guestList,owner;
+@synthesize isInvited,guestCanInvite,guestList,owner,circleList;
 
+- (id)init
+{
+    eventDate=[[Date alloc] init];
+    eventCreateDate=[[Date alloc] init];
+    eventLocation=[[Geolocation alloc] init];
+    return self;
+}
 @end
