@@ -40,7 +40,7 @@ class Gathering extends Base
     public function index($type)
     {
         $start = (int)$this->request->get('start', 0);
-        $limit = (int)$this->request->get('limit', 20);
+        $limit = (int)$this->request->get('limit', 80);
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
 
