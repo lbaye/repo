@@ -37,6 +37,7 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function index($type)
     {
         $start = (int)$this->request->get('start', 0);
