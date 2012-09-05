@@ -28,17 +28,14 @@
     NSMutableArray              *profileImageList;
     NSMutableArray              *messageReplyList;
     
-    NSDate                      *timeSinceLastUpdate;
+    NSString                    *timeSinceLastUpdate; //needed for automatic reply update
     
     //for test
     IBOutlet UITextField *textFieldUserID1;
     IBOutlet UITextField *textFieldUserID2;
     IBOutlet UITextField *textFieldUserID3;
     
-    
-    
-    
-    //zubair vai code
+    //friends list code
     IBOutlet UIScrollView *frndListScrollView;
     IBOutlet UISearchBar  *friendSearchbar;
     
@@ -59,7 +56,8 @@
 - (IBAction)actionCancelBtn:(id)sender;
 - (IBAction)actionSendBtn:(id)sender;
 - (IBAction)actionSendReplyBtn:(id)sender;
-
+- (IBAction)actionRefreshBtn:(id)sender;
+- (void)gotInboxMessages:(NSNotification *)notif;
 
 
 @end

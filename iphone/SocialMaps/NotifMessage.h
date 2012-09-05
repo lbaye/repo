@@ -12,10 +12,12 @@
     bool        showDetail;
     NSString    *notifSubject;
     NSString    *notifID;
+    NSDictionary *recipients;
 }
 
 @property (atomic) bool showDetail;
 @property (nonatomic, retain) NSString *notifSubject;
 @property (nonatomic, retain) NSString *notifID;
+@property (nonatomic, retain) NSDictionary *recipients;
 
 @end

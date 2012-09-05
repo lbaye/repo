@@ -56,7 +56,7 @@
 - (void) sendFriendRequest:(NSString*)friendId message:(NSString*)message authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getFriendRequests:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
-- (void) getReplies:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId;
+- (void) getReplies:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId since:(NSString*)ti;
 - (void) getNotificationMessages:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
 - (void) declineFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;

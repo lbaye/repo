@@ -28,6 +28,7 @@
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
 #import "Places.h"
+#import "MessageListViewController.h"
 
 
 @interface MapViewController ()
@@ -1100,6 +1101,15 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoBreadcrumbs:(id)sender
 {
+    NSLog(@"actionTestMessageBtn");
+    
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    
 }
 
 - (IBAction)gotoCheckins:(id)sender

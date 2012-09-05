@@ -13,7 +13,6 @@
 #import "CustomAlert.h"
 #import "MapViewController.h"
 #import "RestClient.h"
-#import "MessageListViewController.h"       //for test delete later
 
 @implementation NotificationController
 
@@ -108,14 +107,6 @@
     
     // NotifRequest delegate
     
-    //test implementation for message calling
-    UIButton *buttonTestMessage = [UIButton buttonWithType:UIButtonTypeCustom];
-    [buttonTestMessage addTarget:self action:@selector(actionTestMessageBtn) forControlEvents:UIControlEventTouchUpInside];
-    buttonTestMessage.frame = CGRectMake(50, 50, 20, 20);
-    buttonTestMessage.backgroundColor = [UIColor redColor];
-    
-    [self.view addSubview:buttonTestMessage];
-    
 }
 
 - (void)viewDidUnload
@@ -138,7 +129,7 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
+/*
 //for test remove later
 - (void)actionTestMessageBtn
 {
@@ -151,7 +142,7 @@
     [self presentModalViewController:nav animated:YES];
      nav.navigationBarHidden = YES;
 }
-
+*/
 - (IBAction)showMessages:(id)sender {
     CGRect currFrame = notifTabArrow.frame;
     CGRect newFrame = CGRectMake(-438, currFrame.origin.y, 
