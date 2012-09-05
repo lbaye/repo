@@ -504,12 +504,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     lblTime.text = [self timeAsString:msg.notifTime];
     txtMsg.text = msg.notifMessage;
     
-    if ([[profileImageList objectAtIndex:indexPath.row] isEqual:@""])
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
+    
+    if (!iconDownloader)
     {
+    
+    //if ([[profileImageList objectAtIndex:indexPath.row] isEqual:@""])
+    //{
         cell.imageView.image = [UIImage imageNamed:@"girl.png"];
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
-            recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
+            //recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
+            recipientWrappedInMessage.notifID = msg.notifID;
             recipientWrappedInMessage.notifMessage = msg.notifMessage;
             recipientWrappedInMessage.notifSender = msg.notifSender;
             recipientWrappedInMessage.notifSenderId = [titleAndAvatar valueForKey:@"id"];
@@ -520,7 +526,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
         }            
     }  else {
-        cell.imageView.image = (UIImage*)[profileImageList objectAtIndex:indexPath.row];
+        //cell.imageView.image = (UIImage*)[profileImageList objectAtIndex:indexPath.row];
+        cell.imageView.image = iconDownloader.userFriends.userProfileImage;
     }
 
     return cell;
@@ -599,16 +606,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.senderName = [components objectAtIndex:0];
     messageReply.senderID = msg.notifSenderId;
     messageReply.senderAvater = msg.notifAvater;
-    //messageReply.senderImage = (UIImage*)[profileImageList objectAtIndex:indexPath.row];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     messageReply.senderImage = cell.imageView.image;
     [messageReplyList removeAllObjects];
     [messageReplyList addObject:messageReply];
     [messageReply release];
     
-    //for test
-    UILabel *txtMsg     = (UILabel*) [cell viewWithTag:2005];
-    NSLog(@"msg id = %@", txtMsg.text);
+    [messageReplyTableView reloadData];
     
     msgParentID = msg.notifID;
     timeSinceLastUpdate = @"";
@@ -774,7 +778,24 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (!profileImage || [[profileImageList objectAtIndex:indexPath.row] isEqual:@""]) // avoid the app icon download if the app already has an icon
             {
                 NotifMessage *msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
-                [self startIconDownload:msg forIndexPath:indexPath];
+                
+                NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
+                NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
+                recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
+                recipientWrappedInMessage.notifMessage = msg.notifMessage;
+                recipientWrappedInMessage.notifSender = msg.notifSender;
+                recipientWrappedInMessage.notifSenderId = [titleAndAvatar valueForKey:@"id"];
+                recipientWrappedInMessage.notifSubject = msg.notifSubject;
+                recipientWrappedInMessage.notifTime = msg.notifTime;
+                recipientWrappedInMessage.notifAvater = [titleAndAvatar valueForKey:@"avatar"];
+                
+                [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
+                
+                
+                
+                
+                
+                //[self startIconDownload:msg forIndexPath:indexPath];
             }
         }
     }
