@@ -548,10 +548,6 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}",
-          oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
-          newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-    
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
@@ -559,12 +555,18 @@ ButtonClickCallbackData callBackData;
     int elapsedTime = [now timeIntervalSinceDate:smAppDelegate.currPosition.positionTime];
 
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
+    NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}, distance moved=%f, elapsed time=%d",
+          oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
+          newLocation.coordinate.latitude, newLocation.coordinate.longitude,
+          distanceMoved, elapsedTime);
+    
+
     // Update location if new position detected and one of the following is true
     // 1. Moved 100 meters and 1 minute has elapsed.
-    // 2. 3 mintes have elapsed. This is to get new people around and I am mostly stationary
+    // 2. 5 mintes have elapsed. This is to get new people around and I am mostly stationary
     // 3. First time - smAppDelegate.gotListing == FALSE
     //
-    if ((distanceMoved >= 100 && elapsedTime > 60) || elapsedTime > 180 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
+    if ((distanceMoved >= 100 && elapsedTime > 60) || elapsedTime > 300 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
         // Update the position
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
