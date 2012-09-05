@@ -218,5 +218,14 @@
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
     LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
+    switch (action) {
+        case LocationActionTypeGotoMap:
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+            
+        default:
+            break;
+    }
 }
+
 @end

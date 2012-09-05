@@ -432,7 +432,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show 2nd degree"];
     
     //[self displayNotificationCount];
-
+    _mapPullupMenu.hidden = TRUE;
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
