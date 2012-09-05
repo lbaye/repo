@@ -273,7 +273,9 @@ class Gathering extends Base
     }
 
     /**
-     * PUT /events/{id}/rsvp
+     * POST /events/{id}/share
+     * POST /meetups/{id}/share
+     * POST /plans/{id}/share
      *
      * @param $id
      * @param $type

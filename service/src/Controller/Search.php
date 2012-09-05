@@ -65,6 +65,7 @@ class Search extends Base
 
         array_walk($people, function(&$person) use ($friends, $data) {
             $person['external'] = false;
+
         });
 
         if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {

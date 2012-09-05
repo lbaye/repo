@@ -977,6 +977,42 @@ class User
         return $this->lastSeenAt;
     }
 
+
+    /*********************************************
+     * Additional wrapper/helper function
+     ********************************************/
+
+    public function getFriendship(User $user)
+    {
+        if(in_array($user->getId(), $this->getFriends())) {
+            return 'friend';
+        } else if($requestedByMe = $this->_getFriendRequest($this, $user)) {
+            return ($requestedByMe->getAccepted() === false)? 'rejected_by_me' : 'requested';
+        } else if($requestedByHim = $this->_getFriendRequest($user, $this)) {
+            return ($requestedByHim->getAccepted() === false)? 'rejected_by_him' : 'pending';
+        } else {
+            return 'none';
+        }
+    }
+
+    /**
+     * @param User $from
+     * @param User $to
+     * @return bool|FriendRequest
+     */
+    private function _getFriendRequest(User $from, User $to)
+    {
+        $friendRequests = $to->getFriendRequest();
+
+        foreach ($friendRequests as $friendRequest) {
+            if ($friendRequest->getUserId() == $from->getId()) {
+                return $friendRequest;
+            }
+        }
+
+        return false;
+    }
+
     public function getName()
     {
         return $this->lastName.' '.$this->lastName;
