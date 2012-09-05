@@ -251,7 +251,8 @@
 }
 
 
-- (IBAction)selPicOption:(id)sender {
+- (IBAction)selPicOption:(id)sender
+{
     [self.photoPicker getPhoto:self];
 }
 

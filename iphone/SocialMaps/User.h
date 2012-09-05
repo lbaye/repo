@@ -37,6 +37,9 @@
     NSString    *address;
     NSString    *friendRequest;
     NSString    *circles;
+    
+    NSMutableArray *friendsList;
+    NSMutableArray *circleList;
 }
 
 @property (atomic, retain) NSString *id;
@@ -66,5 +69,8 @@
 @property (atomic, retain) NSString *address;
 @property (atomic, retain) NSString *friendRequest;
 @property (atomic, retain) NSString *circles;
+
+@property(nonatomic,retain) NSMutableArray *friendsList;
+@property(nonatomic,retain) NSMutableArray *circleList;
 
 @end

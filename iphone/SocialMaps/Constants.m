@@ -27,8 +27,15 @@ NSString * const NOTIF_GET_NOTIFS_DONE= @"com.genweb2.socialmaps.getnotifsdone";
 NSString * const NOTIF_GET_LISTINGS_DONE= @"com.genweb2.socialmaps.getlistingsdone";
 NSString * const NOTIF_GET_FRIEND_REQ_DONE= @"com.genweb2.socialmaps.getfriendrequestdone";
 NSString * const NOTIF_GET_INBOX_DONE= @"com.genweb2.socialmaps.getinboxdone";
+NSString * const NOTIF_GET_REPLIES_DONE= @"com.genweb2.socialmaps.getrepliesdone";
 NSString * const NOTIF_GET_NOTIFICATIONS_DONE= @"com.genweb2.socialmaps.getnotificationsdone";
 NSString * const NOTIF_FBFRIENDLIST_DONE= @"com.genweb2.socialmaps.fbfriendlistdone";
+NSString * const NOTIF_GET_ALL_EVENTS_DONE= @"com.genweb2.socialmaps.getalleventsdone";
+NSString * const NOTIF_GET_EVENT_DETAIL_DONE= @"com.genweb2.socialmaps.geteventdetaildone";
+NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdone";
+NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";
+NSString * const NOTIF_SET_RSVP_EVENT_DONE= @"com.genweb2.socialmaps.setrsvpeventdone";
+NSString * const NOTIF_UPDATE_EVENT_DONE= @"com.genweb2.socialmaps.updateeventdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

@@ -13,5 +13,12 @@
 
 NSMutableArray *userFriendslistArray;
 NSMutableDictionary *userFriendslistIndex;
+NSMutableArray *eventListGlobalArray;
+NSMutableArray *friendListGlobalArray;
+NSMutableArray *circleListGlobalArray;
+Event *globalEvent;
+Event *globalEditEvent;
+BOOL editFlag;
+
 
 @end

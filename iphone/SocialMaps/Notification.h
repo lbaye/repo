@@ -16,12 +16,14 @@
     NSString    *notifSender;
     NSDate      *notifTime;
     NSString    *notifMessage;
+    NSString    *notifAvater;
 }
 
 @property (nonatomic,retain) NSString *notifSenderId;
 @property (nonatomic,retain) NSString *notifSender;
 @property (nonatomic,retain) NSDate *notifTime;
 @property (nonatomic,retain) NSString *notifMessage;
+@property (nonatomic,retain) NSString *notifAvater;
 
 - (NSString*) timeAsString;
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller;

@@ -28,6 +28,7 @@
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
 #import "Places.h"
+#import "MessageListViewController.h"
 
 
 @interface MapViewController ()
@@ -333,7 +334,8 @@ ButtonClickCallbackData callBackData;
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1032,7 +1034,11 @@ ButtonClickCallbackData callBackData;
     [fbHelper inviteFriends:userFriendsInviteIdArr];
 }
 
-- (IBAction)gotoMyPlaces:(id)sender {
+- (IBAction)gotoMyPlaces:(id)sender
+{
+    [self performSegueWithIdentifier:@"createEvent" sender: self];   
+//    RestClient *rc=[[RestClient alloc] init];    
+//    [rc getEventDetailById:@"503b590ff69c29a105000000":@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
 }
 
 - (IBAction)gotoDirections:(id)sender 
@@ -1068,33 +1074,70 @@ ButtonClickCallbackData callBackData;
 //    [rc setPlatForm:aPlatform:@"":@""];
 //    [rc getPlatForm];
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
-    [rc getShareLocation:@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
+
+    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
+    [smAppDelegate showActivityViewer:self.view];
 }
 
-- (IBAction)gotoBreadcrumbs:(id)sender {
+-(void)getAllEvents
+{
+    RestClient *rc=[[RestClient alloc] init];
+    [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];    
 }
 
-- (IBAction)gotoCheckins:(id)sender {
+- (void)getAllEventsDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    eventListGlobalArray=[notif object];
+    
+    [self performSegueWithIdentifier:@"eventList" sender: self];
+    NSLog(@"GOT SERVICE DATA.. :D");
 }
 
-- (IBAction)gotoMeetupReq:(id)sender {
+- (IBAction)gotoBreadcrumbs:(id)sender
+{
+    NSLog(@"actionTestMessageBtn");
+    
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    
 }
 
-- (IBAction)gotoMapix:(id)sender {
+- (IBAction)gotoCheckins:(id)sender
+{
 }
 
-- (IBAction)gotoEditFilters:(id)sender {
+- (IBAction)gotoMeetupReq:(id)sender
+{
 }
 
-- (IBAction)applyFilter:(id)sender {
+- (IBAction)gotoMapix:(id)sender
+{
+}
+
+- (IBAction)gotoEditFilters:(id)sender
+{
+}
+
+- (IBAction)applyFilter:(id)sender
+{
     pickSavedFilter.hidden = FALSE;
 }
 
-- (IBAction)peopleClicked:(id)sender {
-    if (smAppDelegate.showPeople == true) {
+- (IBAction)peopleClicked:(id)sender
+{
+    if (smAppDelegate.showPeople == true)
+    {
         smAppDelegate.showPeople = false;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
-    } else {
+    }
+    else
+    {
         smAppDelegate.showPeople = true;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
@@ -1103,11 +1146,15 @@ ButtonClickCallbackData callBackData;
     [self.view setNeedsDisplay];
 }
 
-- (IBAction)placesClicked:(id)sender {
-    if (smAppDelegate.showPlaces == true) {
+- (IBAction)placesClicked:(id)sender
+{
+    if (smAppDelegate.showPlaces == true)
+    {
         smAppDelegate.showPlaces = false;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
-    } else {
+    }
+    else
+    {
         smAppDelegate.showPlaces = true;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
@@ -1221,8 +1268,8 @@ ButtonClickCallbackData callBackData;
     [locationManager stopUpdatingLocation];
     [locationManager startUpdatingLocation];
     needToCenterMap = TRUE;
-    _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
-    [_mapView setNeedsDisplay];
+    //_mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+    //[_mapView setNeedsDisplay];
 
     // Send new location to server
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
@@ -1259,6 +1306,7 @@ ButtonClickCallbackData callBackData;
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
+            float dist;
             
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
@@ -1287,13 +1335,12 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-                        NSLog(@"Name=%@ %@ Location=%f,%f dist=%@",item.firstName, item.lastName, loc.latitude,loc.longitude, item.distance);
+                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         
                         LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:@"Address"] type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
-                        NSLog(@"Distance:Calculated=%@",item.distance);
                         aPerson.userInfo = item;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
@@ -1381,7 +1428,7 @@ ButtonClickCallbackData callBackData;
             }
         }
     }
-    smAppDelegate.gotListing = TRUE;
+
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
@@ -1397,8 +1444,8 @@ ButtonClickCallbackData callBackData;
 }
 - (void)gotFriendRequests:(NSNotification *)notif {
     NSMutableArray *notifs = [notif object];
-    [smAppDelegate.friendRequests removeAllObjects];
-    [smAppDelegate.friendRequests addObjectsFromArray:notifs];
+    [smAppDelegate.notifications removeAllObjects];
+    [smAppDelegate.notifications addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
     [self displayNotificationCount];
 }

@@ -43,6 +43,7 @@
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:
                              [NSURLRequest requestWithURL:
                               [NSURL URLWithString:userFriends.imageUrl]] delegate:self];
+    NSLog(@"userFriends.imageUrl %@", userFriends.imageUrl);
     self.imageConnection = conn;
     [conn release];
 }

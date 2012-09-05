@@ -18,6 +18,7 @@
 #import "Geofence.h"
 #import "ShareLocation.h"
 #import "Geolocation.h"
+#import "Event.h"
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
@@ -35,6 +36,14 @@
 -(void) getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getNotifications:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getEventDetailById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)updateEven:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
+
+-(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)updateEven:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
+
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setLayer:(Layer *)layer:(NSString *)authToken:(NSString *)authTokenValue;
@@ -46,9 +55,11 @@
 -(void) getSharingPreference:(NSString *)authToken:(NSString *)authTokenValue;
 - (void) updatePosition:(Geolocation*)currLocation authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) sendMessage:(NSString*)subject content:(NSString*)content recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) sendReply:(NSString*)msgId content:(NSString*)content authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) sendFriendRequest:(NSString*)friendId message:(NSString*)message authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getFriendRequests:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getReplies:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId since:(NSString*)ti;
 - (void) getNotificationMessages:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
 - (void) declineFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;

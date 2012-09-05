@@ -18,5 +18,19 @@
 @synthesize willAttend;
 @synthesize eventDate;
 @synthesize eventCreateDate;
+@synthesize eventList;
+@synthesize eventImageUrl;
+@synthesize eventImage;
+@synthesize myResponse; 
+@synthesize eventDescription;
+@synthesize isInvited,guestCanInvite,guestList,owner,circleList;
+@synthesize eventType;
 
+- (id)init
+{
+    eventDate=[[Date alloc] init];
+    eventCreateDate=[[Date alloc] init];
+    eventLocation=[[Geolocation alloc] init];
+    return self;
+}
 @end

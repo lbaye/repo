@@ -7,9 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Event.h"
 
 extern NSMutableArray *userFriendslistArray;
 extern NSMutableDictionary *userFriendslistIndex;
+extern NSMutableArray *eventListGlobalArray;
+extern NSMutableArray *friendListGlobalArray;
+extern NSMutableArray *circleListGlobalArray;
+extern Event *globalEvent;
+extern Event *globalEditEvent;
+extern BOOL editFlag;
 
 @interface Globals : NSObject 
 

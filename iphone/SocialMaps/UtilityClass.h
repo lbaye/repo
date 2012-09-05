@@ -19,6 +19,7 @@
 + (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz;
 + (NSDate*) convertDateFromDisplay:(NSString*) date;
 + (NSString*) convertDateToDisplayFormat:(NSDate*)adate ;
-
++(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
++(NSString *)convertNSDateToUnix:(NSDate *)date;
 
 @end

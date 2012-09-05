@@ -103,4 +103,27 @@
     NSLog(@"%@:%@:%@ ---> %@", date, tz_type, tz, [convDate description]);
     return convDate;
 }
+
++(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude
+
+{
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv",pdblLatitude, pdblLongitude];
+    
+    NSError* error;
+    NSString *locationString = [NSString stringWithContentsOfURL:[NSURL URLWithString:urlString] encoding:NSASCIIStringEncoding error:&error];
+    
+    locationString = [locationString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+    
+    return [locationString substringFromIndex:6];
+    
+}
+
++(NSString *)convertNSDateToUnix:(NSDate *)date
+{
+    NSTimeInterval interval=[date timeIntervalSince1970];
+    [NSNumber numberWithDouble:interval];
+    NSLog(@"interval %lf",interval);
+    return [NSString stringWithFormat:@"%lf",interval];
+}
+
 @end
