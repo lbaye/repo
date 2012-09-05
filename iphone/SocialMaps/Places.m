@@ -18,4 +18,5 @@
 @synthesize reference;
 @synthesize typeArr;
 @synthesize vicinity;
+@synthesize distance;
 @end

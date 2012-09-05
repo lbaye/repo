@@ -1494,7 +1494,7 @@
                 place.southwest = [[Geolocation alloc] init];
                 place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
                 place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
-                
+                place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
                 [place setIcon:[item objectForKey:@"icon"] ];
                 [place setID:[item objectForKey:@"id"] ];
                 [place setName:[item objectForKey:@"name"] ];

@@ -20,6 +20,7 @@
     NSString *reference;
     NSMutableArray *typeArr;
     NSString *vicinity;
+    NSString *distance;
 }
 
 @property(nonatomic,retain) Geolocation *location;
@@ -31,4 +32,5 @@
 @property(nonatomic,retain) NSString *reference;
 @property(nonatomic,retain) NSMutableArray *typeArr;
 @property(nonatomic,retain) NSString *vicinity;
+@property(nonatomic,retain) NSString *distance;
 @end

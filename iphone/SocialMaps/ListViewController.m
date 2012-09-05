@@ -18,6 +18,7 @@
 @synthesize listView;
 @synthesize listPulldown;
 @synthesize itemList;
+@synthesize listNotifCount;
 @synthesize selectedType;
 @synthesize selectedItemIndex;
 @synthesize smAppDelegate;
@@ -102,6 +103,7 @@
     [self setListView:nil];
     [self setListPulldown:nil];
     [self setItemList:nil];
+    [self setListNotifCount:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -132,6 +134,9 @@
 - (IBAction)showPulldownMenu:(id)sender {
     listPulldownMenu.hidden = FALSE;
 }
+
+- (IBAction)goToNotifications:(id)sender {
+}
 - (void)dealloc {
     [listPullupMenu release];
     [listPulldownMenu release];
@@ -140,6 +145,7 @@
     [listView release];
     [listPulldown release];
     [itemList release];
+    [listNotifCount release];
     [super dealloc];
 }
 

@@ -29,12 +29,14 @@
 @property (retain, nonatomic) IBOutlet UIView *listView;
 @property (retain, nonatomic) IBOutlet UIButton *listPulldown;
 @property (retain, nonatomic) IBOutlet UITableView *itemList;
+@property (retain, nonatomic) IBOutlet UILabel *listNotifCount;
 
 - (IBAction)backToMapview:(id)sender;
 - (IBAction)closePullup:(id)sender;
 - (IBAction)closePulldown:(id)sender;
 - (IBAction)showPullUpMenu:(id)sender;
 - (IBAction)showPulldownMenu:(id)sender;
+- (IBAction)goToNotifications:(id)sender;
 
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender;
 - (void) getSortedDisplayList;

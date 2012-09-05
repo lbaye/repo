@@ -1303,10 +1303,41 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"In gotListings");
     //[smAppDelegate.peopleList removeAllObjects];
+
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
-            float dist;
+            NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
+            for (People *item in listings.peopleArr) {
+                [newItems setValue:item.userId forKey:item.userId];
+            }
+            // Build items to discard
+            NSMutableArray *discardedItems = [[NSMutableArray alloc] init];
+            for (NSString *itemID in smAppDelegate.peopleIndex) {
+                if ([newItems objectForKey:itemID] == nil) {
+                    // Item does not exist so remove it
+                    int indx = [[smAppDelegate.peopleIndex objectForKey:itemID] intValue];
+                    [discardedItems addObject:[NSNumber numberWithInt: indx]];
+                }
+            }
+            if (discardedItems.count > 0) {
+                // Sort the discarded items in descending order
+                NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
+                NSArray *sortedIndices = [discardedItems sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
+                
+                // Remove the discarded items
+                for (int i=0; i < sortedIndices.count; i++) {
+                    int indx = [[sortedIndices objectAtIndex:i] intValue];
+                    [smAppDelegate.peopleList removeObjectAtIndex:indx];
+                }
+                // Now rebuild the index
+                [smAppDelegate.peopleIndex removeAllObjects];
+                for (LocationItemPeople *aPerson in smAppDelegate.peopleList) {
+                    [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleIndex.count] forKey:aPerson.userInfo.userId];
+                }
+            }
+            [newItems release];
+            [discardedItems release];
             
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
@@ -1383,7 +1414,38 @@ ButtonClickCallbackData callBackData;
             }
         }  
         if (listings.placeArr != nil) {
-           
+            NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
+            for (Places *item in listings.placeArr) {
+                [newItems setValue:item.ID forKey:item.ID];
+            }
+            // Build items to discard
+            NSMutableArray *discardedItems = [[NSMutableArray alloc] init];
+            for (NSString *itemID in smAppDelegate.placeIndex) {
+                if ([newItems objectForKey:itemID] == nil) {
+                    // Item does not exist so remove it
+                    int indx = [[smAppDelegate.placeIndex objectForKey:itemID] intValue];
+                    [discardedItems addObject:[NSNumber numberWithInt: indx]];
+                }
+            }
+            if (discardedItems.count > 0) {
+                // Sort the discarded items in descending order
+                NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
+                NSArray *sortedIndices = [discardedItems sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
+
+                // Remove the discarded items
+                for (int i=0; i < sortedIndices.count; i++) {
+                    int indx = [[sortedIndices objectAtIndex:i] intValue];
+                    [smAppDelegate.placeList removeObjectAtIndex:indx];
+                }
+                // Now rebuild the index
+                [smAppDelegate.placeIndex removeAllObjects];
+                for (LocationItemPlace *aPlace in smAppDelegate.placeList) {
+                    [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeIndex.count] forKey:aPlace.placeInfo.ID];
+                }
+            }
+            [newItems release];
+            [discardedItems release];
+
             for (Places *item in listings.placeArr) {
                 __block NSNumber *indx;
                 if ((indx=[smAppDelegate.placeIndex objectForKey:item.ID]) == nil) {
@@ -1421,6 +1483,17 @@ ButtonClickCallbackData callBackData;
                                     [self mapAnnotationChanged:place];
                             });
                         });
+                    } else {
+                        // Item exists, recalculate distance only
+                        LocationItemPlace *aPlace = [smAppDelegate.placeList objectAtIndex:[indx intValue]];
+                        
+                        CLLocationCoordinate2D loc;
+                        loc.latitude = [item.location.latitude doubleValue];
+                        loc.longitude = [item.location.longitude doubleValue];
+                        aPlace.coordinate = loc;
+                        
+                        CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                        aPlace.itemDistance = distanceFromMe;
                     }
                     [aPlace release];
                     

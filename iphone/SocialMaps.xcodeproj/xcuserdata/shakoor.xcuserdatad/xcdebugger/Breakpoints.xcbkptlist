@@ -130,7 +130,7 @@
          endingLineNumber = "387">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
@@ -224,8 +224,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "958"
          endingLineNumber = "958"
-         landmarkName = "-searchBarSearchButtonClicked:"
-         landmarkType = "5">
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
