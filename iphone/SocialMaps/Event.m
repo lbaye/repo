@@ -24,6 +24,7 @@
 @synthesize myResponse; 
 @synthesize eventDescription;
 @synthesize isInvited,guestCanInvite,guestList,owner,circleList;
+@synthesize eventType;
 
 - (id)init
 {

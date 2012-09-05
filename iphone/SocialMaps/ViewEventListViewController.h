@@ -37,7 +37,7 @@
 -(IBAction)viewLocationButton:(id)sender;
 
 -(IBAction)closeMapView:(id)sender;
-
+-(IBAction)backButton:(id)sender;
 -(NSMutableArray *)loadDummyData;
 
 @end

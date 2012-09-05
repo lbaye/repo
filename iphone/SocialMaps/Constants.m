@@ -34,6 +34,8 @@ NSString * const NOTIF_GET_ALL_EVENTS_DONE= @"com.genweb2.socialmaps.getallevent
 NSString * const NOTIF_GET_EVENT_DETAIL_DONE= @"com.genweb2.socialmaps.geteventdetaildone";
 NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdone";
 NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";
+NSString * const NOTIF_SET_RSVP_EVENT_DONE= @"com.genweb2.socialmaps.setrsvpeventdone";
+NSString * const NOTIF_UPDATE_EVENT_DONE= @"com.genweb2.socialmaps.updateeventdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

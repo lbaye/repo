@@ -167,7 +167,7 @@
     [[appDelegate window] bringSubviewToFront:self.view];
     
     [self viewWillAppear:YES];
-    [self takePhoto:sender imgSize:CGSizeMake(160, 107)];
+    [self takePhoto:sender imgSize:CGSizeMake(320, 214)];
 }
 
 - (void) choosePhoto:(id)sender {
@@ -176,7 +176,7 @@
     [[appDelegate window] bringSubviewToFront:self.view];
 
     [self viewWillAppear:YES];
-    [self selectPhoto:sender imgSize:CGSizeMake(160, 107)];
+    [self selectPhoto:sender imgSize:CGSizeMake(320, 214)];
 }
 
 - (void) getPhoto:(id)sender {

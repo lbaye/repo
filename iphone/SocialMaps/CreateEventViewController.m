@@ -107,7 +107,7 @@ DDAnnotation *annotation;
         [friendListArr addObject:frnds];
     }
     filteredList=[friendListArr mutableCopy];
-    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
+//    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
 }
 
 - (void)viewDidLoad
@@ -125,6 +125,7 @@ DDAnnotation *annotation;
     friendListArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
     //set scroll view content size.
     [self loadDummydata];
@@ -139,8 +140,10 @@ DDAnnotation *annotation;
     theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
 	
 	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
+//    NSLog(@"annotation.coordinate %@",annotation.coordinate);
     MKCoordinateRegion newRegion;
     newRegion.center.latitude = annotation.coordinate.latitude;
     newRegion.center.longitude = annotation.coordinate.longitude;
@@ -156,6 +159,8 @@ DDAnnotation *annotation;
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
 //    [self.mapView setCenter:annotation.region];
 }
 
@@ -173,6 +178,7 @@ DDAnnotation *annotation;
 -(void)getCurrentAddress
 {
     addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+    annotation.subtitle=addressLabel.text;
 }
 
 -(void)getAddressFromMap
@@ -208,7 +214,7 @@ DDAnnotation *annotation;
 {
     [createView setHidden:NO];
     entityFlag=0;
-    entryTextField.text=@"";
+    entryTextField.text=event.eventName;
     entryTextField.placeholder=@"Name...";
 }
 
@@ -216,7 +222,7 @@ DDAnnotation *annotation;
 {
     [createView setHidden:NO];    
     entityFlag=1;
-    entryTextField.text=@"";
+    entryTextField.text=event.eventShortSummary;
     entryTextField.placeholder=@"Summary...";
 }    
 
@@ -224,7 +230,7 @@ DDAnnotation *annotation;
 {
     [createView setHidden:NO];    
     entityFlag=2;
-    entryTextField.text=@"";
+    entryTextField.text=event.eventDescription;
     entryTextField.placeholder=@"Description...";
 }
 
@@ -240,7 +246,7 @@ DDAnnotation *annotation;
 
 -(IBAction)deleteButtonAction
 {
-    self.eventImagview.image=[UIImage imageNamed:@"banner_bar.png"];
+    self.eventImagview.image=[UIImage imageNamed:@"event_item_bg.png"];
 }
 
 //event info entry ends
@@ -350,7 +356,7 @@ DDAnnotation *annotation;
 {
     for (int i=0; i<[filteredList count]; i++)
     {
-        [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+        [selectedFriendsIndex addObject:[filteredList objectAtIndex:i]];
     }
     [self reloadScrolview];
 }
@@ -378,6 +384,7 @@ DDAnnotation *annotation;
 
 -(IBAction)cancelEvent:(id)sender
 {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)saveEntity:(id)sender
@@ -402,6 +409,11 @@ DDAnnotation *annotation;
 {
     [createView setHidden:YES];    
     [entryTextField resignFirstResponder];    
+}
+
+-(IBAction)backButton:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
@@ -460,6 +472,9 @@ DDAnnotation *annotation;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
+//        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
+//        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
+        
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 	}
@@ -896,7 +911,28 @@ DDAnnotation *annotation;
     //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
+    RestClient *rc=[[RestClient alloc] init];
+    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
+    [self dismissModalViewControllerAnimated:YES];
+
+}
+
+- (void)updateEventDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    NSLog(@"dele %@",[notif object]);
+    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    //    NSLog(@"GOT SERVICE DATA.. :D");
+    
+    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    //    [self presentModalViewController:controller animated:YES];
+    [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
     [self dismissModalViewControllerAnimated:YES];
 }
 

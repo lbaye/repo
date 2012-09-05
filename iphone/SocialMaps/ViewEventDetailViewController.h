@@ -15,7 +15,8 @@
     IBOutlet UILabel *eventDate;
     IBOutlet UILabel *eventShortDetail;
     IBOutlet UILabel *eventAddress;
-    IBOutlet UILabel *eventDistance;    
+    IBOutlet UILabel *eventDistance;
+    IBOutlet UIImageView *eventImgView;
     
     IBOutlet UIButton *yesButton;
     IBOutlet UIButton *noButton;
@@ -39,6 +40,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *eventShortDetail;
 @property(nonatomic,retain) IBOutlet UILabel *eventAddress;
 @property(nonatomic,retain) IBOutlet UILabel *eventDistance;    
+@property(nonatomic,retain) IBOutlet UIImageView *eventImgView;
 
 @property(nonatomic,retain) IBOutlet UIButton *yesButton;
 @property(nonatomic,retain) IBOutlet UIButton *noButton;
@@ -69,6 +71,8 @@
 -(IBAction)editEvent:(id)sender;
 - (IBAction)menuTapped;
 -(IBAction)closeMap:(id)sender;
+
+-(IBAction)backButton:(id)sender;
 
 -(void)resetButton:(int)index;
 -(void)loadScrollView;

@@ -121,5 +121,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(void)beganEditing;
 -(void)endEditing;
+-(IBAction)backButton:(id)sender;
 
 @end

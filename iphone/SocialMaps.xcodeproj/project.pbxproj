@@ -16,6 +16,7 @@
 		2063A1DF15F3317000529CB2 /* DDAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DC15F3317000529CB2 /* DDAnnotation.m */; };
 		2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DE15F3317000529CB2 /* DDAnnotationView.m */; };
 		2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2063A1E115F3332100529CB2 /* QuartzCore.framework */; };
+		2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2070A6B915F71FEB008AB0A1 /* event_item_bg.png */; };
 		20B0E7DE15D7A9CF009A500A /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D515D7A9CF009A500A /* Globals.m */; };
 		20B0E7DF15D7A9CF009A500A /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D715D7A9CF009A500A /* IconDownloader.m */; };
 		20B0E7E015D7A9CF009A500A /* UserDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D915D7A9CF009A500A /* UserDefault.m */; };
@@ -369,6 +370,7 @@
 		2063A1DD15F3317000529CB2 /* DDAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAnnotationView.h; sourceTree = "<group>"; };
 		2063A1DE15F3317000529CB2 /* DDAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAnnotationView.m; sourceTree = "<group>"; };
 		2063A1E115F3332100529CB2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2070A6B915F71FEB008AB0A1 /* event_item_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = event_item_bg.png; sourceTree = "<group>"; };
 		20B0E7D415D7A9CF009A500A /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
 		20B0E7D515D7A9CF009A500A /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
 		20B0E7D615D7A9CF009A500A /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
@@ -1200,6 +1202,7 @@
 				B01DFC5215F5E74300020D49 /* whitle_blend.png */,
 				4F4296FC15E6CF35001AB56F /* category_bar.png */,
 				4F4296FD15E6CF35001AB56F /* place_save.png */,
+				2070A6B915F71FEB008AB0A1 /* event_item_bg.png */,
 				4F4296FE15E6CF35001AB56F /* place_recommend.png */,
 				4F4296FF15E6CF35001AB56F /* place_direction.png */,
 				4F42970015E6CF35001AB56F /* place_plan.png */,
@@ -1773,6 +1776,7 @@
 				B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */,
 				B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */,
 				B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */,
+				2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

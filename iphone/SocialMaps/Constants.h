@@ -29,6 +29,8 @@ extern NSString * const NOTIF_GET_ALL_EVENTS_DONE;
 extern NSString * const NOTIF_GET_EVENT_DETAIL_DONE;
 extern NSString * const NOTIF_DELETE_EVENT_DONE;
 extern NSString * const NOTIF_CREATE_EVENT_DONE;
+extern NSString * const NOTIF_SET_RSVP_EVENT_DONE;
+extern NSString * const NOTIF_UPDATE_EVENT_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

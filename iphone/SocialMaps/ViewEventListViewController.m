@@ -18,6 +18,7 @@
 #import "RestClient.h"
 #import "AppDelegate.h"
 #import "ViewEventDetailViewController.h"
+#import "UtilityClass.h"
 
 @interface ViewEventListViewController ()
 
@@ -52,6 +53,7 @@ bool searchFlags=true;
     filteredList=[[NSMutableArray alloc] init]; 
     eventListArray=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     imageDownloadsInProgress=[[NSMutableDictionary alloc] init];
     [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
@@ -66,12 +68,24 @@ bool searchFlags=true;
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
 	// Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.mapContainer removeFromSuperview];
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self.mapContainer removeFromSuperview];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    filteredList=[[self loadDummyData] mutableCopy]; 
+    eventListArray=[[self loadDummyData] mutableCopy];
+    [self.eventListTableView reloadData];
+
 }
 
 -(NSMutableArray *)loadDummyData
@@ -372,14 +386,12 @@ bool searchFlags=true;
     {
         NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
         Event *aEvent=[[Event alloc] init];
-        Event *aEvent2=[[Event alloc] init];
         aEvent=[eventListGlobalArray objectAtIndex:i];
-        aEvent2=[eventList objectAtIndex:i];
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
         if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
         {
-            aEvent.eventImageUrl=aEvent2.eventImageUrl;
-            NSLog(@"aEvent.eventImageUrl %@ aEvent2.eventImageUrl %@",aEvent.eventImageUrl,aEvent2.eventImageUrl);
+            aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
+            NSLog(@"aEvent.eventImageUrl %@ aEvent2.eventImageUrl %@",aEvent.eventImageUrl);
         }
         [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
         [pool drain];
@@ -399,29 +411,87 @@ bool searchFlags=true;
     //Event *even=[[Event alloc] init];
     //even.eventDate.date
     
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"Event.@eventDate.date" ascending:YES];
-    
-    filteredList = [[filteredList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]] mutableCopy];
+    filteredList=[[self loadDummyData] mutableCopy]; 
+    eventListArray=[[self loadDummyData] mutableCopy];
+    [self.eventListTableView reloadData];
 }
 
 -(IBAction)distanceAction:(id)sender
 {
     NSLog(@"distance");
+    filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *first = [(Event*)a eventDistance];
+        NSString *second = [(Event*)b eventDistance];
+        return [first compare:second];
+    }] mutableCopy];
+    
+    [self.eventListTableView reloadData];
 }
 
 -(IBAction)friendsEventAction:(id)sender
 {
     NSLog(@"friends event");
+    Event *event;
+    [filteredList removeAllObjects];
+    for (int i=0; i<[eventListArray count]; i++)
+    {
+        event=[[Event alloc] init];
+        event=[eventListArray objectAtIndex:i];
+        if ([event.eventType isEqualToString:@"friends_event"])
+        {
+            [filteredList addObject:event];
+        }
+    }
+    
+    [self.eventListTableView reloadData];
+    if ([filteredList count]==0)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"No friends event found"];
+    }
 }
 
 -(IBAction)myEventAction:(id)sender
 {
     NSLog(@"my event");
+    Event *event;
+    [filteredList removeAllObjects];
+    for (int i=0; i<[eventListArray count]; i++)
+    {
+        event=[[Event alloc] init];
+        event=[eventListArray objectAtIndex:i];
+        if ([event.eventType isEqualToString:@"my_event"])
+        {
+            [filteredList addObject:event];
+        }
+    }
+
+    [self.eventListTableView reloadData];
+    if ([filteredList count]==0)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"No my event found"];
+    }
+
 }
 
 -(IBAction)publicEventAction:(id)sender
 {
     NSLog(@"public event");
+    Event *event;
+    [filteredList removeAllObjects];
+    for (int i=0; i<[eventListArray count]; i++)
+    {
+        event=[[Event alloc] init];
+        event=[eventListArray objectAtIndex:i];
+        if ([event.eventType isEqualToString:@"public_event"])
+        {
+            [filteredList addObject:event];
+        }
+    }
+    [self.eventListTableView reloadData];
+    if ([filteredList count]==0)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"No public event found"];
+    }
 }
 
 -(IBAction)newEventAction:(id)sender
@@ -452,23 +522,26 @@ bool searchFlags=true;
     static NSString *CellIdentifier1 = @"eventListCellRsvp";
     int nodeCount = [filteredList count];
     
+    Event *event=[[Event alloc] init];
+    event = [filteredList objectAtIndex:indexPath.row];
+    
     EventListTableCell *cell = [tableView
                               dequeueReusableCellWithIdentifier:CellIdentifier];
     EventListRsvpTableCell *cell1= [tableView
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell == nil)
     {
-        if (indexPath.row==1)
-        {
-            cell1 = [[EventListRsvpTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault 
-                     reuseIdentifier:CellIdentifier1];
-        }
-        else
+        if (event.isInvited==false)
         {
             cell = [[EventListTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
                     reuseIdentifier:CellIdentifier];
+        }
+        else
+        {
+            cell1 = [[EventListRsvpTableCell alloc]
+                     initWithStyle:UITableViewCellStyleDefault 
+                     reuseIdentifier:CellIdentifier1];
         }
     }
     
@@ -485,7 +558,26 @@ bool searchFlags=true;
     cell1.noButton.tag=indexPath.row;
     cell1.maybesButton.tag=indexPath.row;
     cell1.viewEventOnMap.tag=indexPath.row;
-    
+    if ([event.myResponse isEqualToString:@"yes"])
+    {
+        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else if([event.myResponse isEqualToString:@"no"]) 
+    {
+        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+
+    }
+    else
+    {
+        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+
+    }
     [cell1.yesButton addTarget:self action:@selector(yesButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.noButton addTarget:self action:@selector(noButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.maybesButton addTarget:self action:@selector(maybeButton:) forControlEvents:UIControlEventTouchUpInside];    
@@ -496,7 +588,7 @@ bool searchFlags=true;
     if (nodeCount > 0)
 	{
         // Set up the cell...
-        Event *event = [filteredList objectAtIndex:indexPath.row];
+        
         
 		NSString *cellValue;		
         cellValue=event.eventName;
@@ -531,8 +623,8 @@ bool searchFlags=true;
            
             NSLog(@"userFriends %@   %@",event.eventImage,event.eventImageUrl);
             // if a download is deferred or in progress, return a placeholder image
-            cell.eventImage.image=[UIImage imageNamed:@"girl.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"girl.png"];                
+            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
         }
         
         if ([downloadedImageDict objectForKey:event.eventID])
@@ -542,8 +634,8 @@ bool searchFlags=true;
         }
         else
         {
-            cell.eventImage.image=[UIImage imageNamed:@"girl.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"girl.png"];      
+            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];      
         }
         
 //        else if ([[imageDownloadsInProgress objectForKey:event.eventID]isEqual:event.eventID]&&([imageDownloadsInProgress objectForKey:event.eventImage]!=NULL) ) 
@@ -561,13 +653,13 @@ bool searchFlags=true;
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
 //    cell.eventImage.image = eventPhoto;
-    if (indexPath.row%2==1)
+    if (event.isInvited==false)
     {
-        return cell1;        
+        return cell;        
     }
     else
     {
-        return cell;
+        return cell1;
     }
     return cell;
 }
@@ -576,7 +668,7 @@ bool searchFlags=true;
 {
     Event *aEvent=[[Event alloc] init];
     aEvent=[filteredList objectAtIndex:indexPath.row];
-    if (!aEvent.myResponse)
+    if (aEvent.isInvited==false)
     {
             return 122;
     }
@@ -811,6 +903,17 @@ bool searchFlags=true;
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
+    
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
+//    -(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue
 }
 
 -(IBAction)noButton:(id)sender
@@ -821,7 +924,16 @@ bool searchFlags=true;
     [clickedCell.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    NSLog(@"clickedButtonPath %@",clickedButtonPath);    
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:aEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
+    NSLog(@"clickedButtonPath %@",clickedButtonPath); 
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
 }
 
 -(IBAction)maybeButton:(id)sender
@@ -832,7 +944,21 @@ bool searchFlags=true;
     [clickedCell.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
-    NSLog(@"clickedButtonPath %@",clickedButtonPath);    
+    NSLog(@"clickedButtonPath %@",clickedButtonPath);
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:aEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
+}
+
+-(IBAction)backButton:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)viewLocationButton:(id)sender
@@ -861,7 +987,7 @@ bool searchFlags=true;
 
     if (!aEvent.eventAddress)
     {
-        aEvent.eventAddress=@"Dummy";
+        aEvent.eventAddress=@"Not found";
     }
 	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
@@ -925,5 +1051,13 @@ bool searchFlags=true;
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     [self presentModalViewController:controller animated:YES];
 }
+
+- (void)setRsvpDone:(NSNotification *)notif
+{
+    NSLog(@"rsvp updated.");
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];    
+}
+
 
 @end

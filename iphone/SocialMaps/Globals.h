@@ -15,6 +15,8 @@ extern NSMutableArray *eventListGlobalArray;
 extern NSMutableArray *friendListGlobalArray;
 extern NSMutableArray *circleListGlobalArray;
 extern Event *globalEvent;
+extern Event *globalEditEvent;
+extern BOOL editFlag;
 
 @interface Globals : NSObject 
 

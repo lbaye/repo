@@ -13,14 +13,15 @@
 #import "UtilityClass.h"
 #import "DDAnnotationView.h"
 #import "DDAnnotation.h"
-
+#import "UserFriends.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation ViewEventDetailViewController
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
 @synthesize yesButton,noButton,maybeButton,descriptionView,guestScrollView,rsvpView,detailView;
-@synthesize mapContainer,mapView;
+@synthesize mapContainer,mapView,eventImgView;
 
-NSMutableArray *imageArr;
+NSMutableArray *imageArr, *nameArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
 
@@ -33,12 +34,27 @@ AppDelegate *smAppDelegate;
     return self;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ((globalEvent.eventImageUrl)&&(!globalEvent.eventImage))
+    {
+        [self performSelector:@selector(loadImageView) withObject:nil afterDelay:0.1];
+        NSLog(@"globalEvent.eventImageUrl %@ globalEvent.eventImage %@",globalEvent.eventImageUrl,globalEvent.eventImage);
+    }
+    else if(globalEvent.eventImage)
+    {
+        eventImgView.image=globalEvent.eventImage;
+         NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSLog(@"globalEvent det %@",globalEvent.eventID);
 
     smAppDelegate=[[AppDelegate alloc] init];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventName.text=globalEvent.eventName;
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
@@ -62,20 +78,18 @@ AppDelegate *smAppDelegate;
     
     guestScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
-    ImgesName = [[NSMutableArray alloc] initWithObjects:   
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005479.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005484.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
+    ImgesName = [[NSMutableArray alloc] init];   
+    nameArr=[[NSMutableArray alloc] init];
+    
+    UserFriends *frnd;
+    for (int i=0; i<[globalEvent.guestList count]; i++)
+    {
+        frnd=[[UserFriends alloc] init];
+        frnd=[globalEvent.guestList objectAtIndex:i];
+        NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+        [ImgesName addObject:frnd.imageUrl];
+        [nameArr addObject:frnd.userName];
+    }
     //set scroll view content size.
     guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
@@ -101,7 +115,7 @@ AppDelegate *smAppDelegate;
     
     if (!aEvent.eventAddress)
     {
-        aEvent.eventAddress=@"Dummy";
+        aEvent.eventAddress=@"Not found";
     }
 	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
@@ -110,6 +124,12 @@ AppDelegate *smAppDelegate;
     [self.mapView addAnnotation:annotation];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+}
+
+-(void)loadImageView
+{
+    UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:globalEvent.eventImageUrl]]];
+    eventImgView.image=img;
 }
 
 - (void)viewDidUnload
@@ -132,21 +152,44 @@ AppDelegate *smAppDelegate;
 -(IBAction)yesAttendAction:(id)sender
 {
     [self resetButton:0];
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:globalEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
 }
 
 -(IBAction)noAttendAction:(id)sender
 {
     [self resetButton:1];    
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:globalEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
 }
 
 -(IBAction)maybeAttendAction:(id)sender
 {
     [self resetButton:2];    
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [rc setEventRsvp:globalEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
 }
 
 -(IBAction)closeMap:(id)sender
 {
     [self.mapContainer removeFromSuperview];
+}
+
+-(IBAction)backButton:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)resetButton:(int)index
@@ -217,13 +260,15 @@ AppDelegate *smAppDelegate;
 //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
 //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
 //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    RestClient *rc= [[RestClient alloc] init];
+    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
+    [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
     [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)loadScrollView
 {
-    guestScrollView.contentSize=CGSizeMake(600, 60);
+//    guestScrollView.contentSize=CGSizeMake(600, 60);
     for (int i=0; i<[imageArr count]; i++)
     {
         UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(i*60, 0, 60, 65)];
@@ -281,8 +326,21 @@ AppDelegate *smAppDelegate;
 -(void) reloadScrolview
 {
     int x=0; //declared for imageview x-axis point    
-    int y=0;   
+    int y=0;  
     
+    NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
+    UIImageView *imgView;
+    for (UIView* view in subviews) 
+    {
+        if([view isKindOfClass :[UIView class]])
+        {
+            [view removeFromSuperview];
+        }
+        else if([view isKindOfClass :[UIImageView class]])
+        {
+            // [view removeFromSuperview];
+        }
+    }
     for(int i=0; i<[ImgesName count];i++)       
         
     {
@@ -313,12 +371,23 @@ AppDelegate *smAppDelegate;
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
             [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
             [name setNumberOfLines:0];
-            [name setText:@"Bonolota Sen"];
+                        
+            [name setText:[nameArr objectAtIndex:i]];
+            
+            [name setBackgroundColor:[UIColor clearColor]];
             imgView.userInteractionEnabled = YES;           
             imgView.tag = i;           
             imgView.exclusiveTouch = YES;           
             imgView.clipsToBounds = NO;           
-            imgView.opaque = YES;           
+            imgView.opaque = YES;   
+            imgView.exclusiveTouch = YES;
+            imgView.clipsToBounds = NO;
+            imgView.opaque = YES;
+            imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+            imgView.userInteractionEnabled=YES;
+            imgView.layer.borderWidth=2.0;
+            imgView.layer.masksToBounds = YES;
+            [imgView.layer setCornerRadius:7.0];
             [aView addSubview:imgView];
             [aView addSubview:name];
             [guestScrollView addSubview:aView];           

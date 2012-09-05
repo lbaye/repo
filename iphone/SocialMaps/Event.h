@@ -31,6 +31,7 @@
     NSMutableArray *guestList;
     NSMutableArray *circleList;
     NSString *owner;
+    NSString *eventType;
 }
 
 @property(nonatomic,retain) NSString *eventID;
@@ -53,5 +54,6 @@
 @property(nonatomic,retain) NSMutableArray *guestList;
 @property(nonatomic,retain) NSMutableArray *circleList;
 @property(nonatomic,retain) NSString *owner;
+@property(nonatomic,retain) NSString *eventType;
 
 @end
