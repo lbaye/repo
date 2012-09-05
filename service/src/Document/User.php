@@ -113,7 +113,7 @@ class User
      * @ODM\String
      * The string address of users current position
      */
-    protected $lastSeenAt = 'No location update yet!';
+    protected $lastSeenAt = null;
 
     /** @ODM\Boolean */
     protected $visible = true;
@@ -313,6 +313,12 @@ class User
 
         foreach ($targetFields as $field) {
             $items[$field] = $this->{"get{$field}"}();
+        }
+
+        if ($this->getAddress()) {
+            $items['address'] = $this->getAddress()->toArray();
+        } else {
+            $items['address'] = null;
         }
 
         return $items;

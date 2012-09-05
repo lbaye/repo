@@ -20,7 +20,7 @@ class GatheringRepo extends Base
         return $this->_toArrayAll($gatherings);
     }
 
-    public function getAll($limit = 50, $offset = 0)
+    public function getAll($limit = 80, $offset = 0)
     {
         return $this->findBy(array(), null, $limit, $offset);
     }
@@ -100,7 +100,7 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time', 'guestsCanInvite');
+        $setIfExistFields = array('title', 'description', 'duration','eventShortSummary', 'time', 'guestsCanInvite');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -110,7 +110,11 @@ class GatheringRepo extends Base
 
         if(isset($data['guests']) && is_array($data['guests'])){
             $users = $this->trimInvalidUsers($data['guests']);
+            $users[] = $owner->getId();
             $gathering->setGuests($users);
+        }else{
+            $guests['guests'] = $owner->getId();
+            $gathering->setGuests( $guests);
         }
 
         if(isset($data['permission'])){
