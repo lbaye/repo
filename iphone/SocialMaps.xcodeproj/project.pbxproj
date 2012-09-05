@@ -1144,14 +1144,12 @@
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
 				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
-				4F82577815BD4C7E00760CE1 /* Classes */,
 				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
 				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
 				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
 				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
 				20B656C515EF580600A441E9 /* EventListTableCell.h */,
 				20B656C615EF580600A441E9 /* EventListTableCell.m */,
-				4F98A2E815BB38B1000B3124 /* Images */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
@@ -1169,7 +1167,6 @@
 				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
 				4FF09BF415CFE6E500F8AD19 /* SettingsController.h */,
 				4FF09BF515CFE6E600F8AD19 /* SettingsController.m */,
-				4F98A2D215BB387D000B3124 /* Supporting Files */,
 				4FAC301715C583540014030C /* UserAnnotationView.h */,
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
 				4F98A2E015BB387D000B3124 /* ViewController.h */,
@@ -1178,6 +1175,9 @@
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
+				4F82577815BD4C7E00760CE1 /* Classes */,
+				4F98A2E815BB38B1000B3124 /* Images */,
+				4F98A2D215BB387D000B3124 /* Supporting Files */,
 			);
 			path = SocialMaps;
 			sourceTree = "<group>";

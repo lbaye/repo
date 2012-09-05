@@ -564,8 +564,8 @@
                                         <rect key="frame" x="220" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="messages.png" id="5y7-kx-KgI">
-                                                <rect key="frame" x="20" y="0.0" width="55" height="34"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bubble_count_icon.png" id="5y7-kx-KgI">
+                                                <rect key="frame" x="20" y="0.0" width="36" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Messages" lineBreakMode="tailTruncation" minimumFontSize="10" id="f6m-HY-Ga0">
@@ -1328,8 +1328,11 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="goToNotifications:" destination="fgr-fq-SqM" eventType="touchUpInside" id="dGH-v5-jE3"/>
+                                        </connections>
                                     </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="UR8-b2-4pm" userLabel="mapNotifCount">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="UR8-b2-4pm" userLabel="mapNotifCount">
                                         <rect key="frame" x="280" y="8" width="28" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="14"/>
@@ -1517,6 +1520,7 @@
                     </view>
                     <connections>
                         <outlet property="itemList" destination="Rqr-AF-JMb" id="77D-ax-col"/>
+                        <outlet property="listNotifCount" destination="UR8-b2-4pm" id="9rV-Ep-1Bt"/>
                         <outlet property="listPulldown" destination="0Sh-3V-Ss1" id="Ga3-v0-w1G"/>
                         <outlet property="listPulldownMenu" destination="x7v-lD-dO0" id="AVV-du-2Jx"/>
                         <outlet property="listPullupMenu" destination="h2a-Tk-HJ8" id="Z5W-xy-Vs2"/>
@@ -4169,7 +4173,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="mapix_mode_icon.png" width="34" height="34"/>
         <image name="meet_up_icon.png" width="30" height="35"/>
         <image name="message_notify_icon.png" width="97" height="65"/>
-        <image name="messages.png" width="101" height="66"/>
         <image name="monocle_icon.png" width="37" height="30"/>
         <image name="notify_icon.png" width="108" height="64"/>
         <image name="on_off_on.png" width="36" height="36"/>
@@ -4282,9 +4285,11 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="backToMapview:"/>
                 <relationship kind="action" name="closePulldown:"/>
                 <relationship kind="action" name="closePullup:"/>
+                <relationship kind="action" name="goToNotifications:"/>
                 <relationship kind="action" name="showPullUpMenu:"/>
                 <relationship kind="action" name="showPulldownMenu:"/>
                 <relationship kind="outlet" name="itemList" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="listNotifCount" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
                 <relationship kind="outlet" name="listPullupMenu" candidateClass="UIView"/>
@@ -4504,7 +4509,5 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qvJ-bu-e6k"/>
-        <segue reference="muZ-DO-Isb"/>
-        <segue reference="BET-LK-FoH"/>
     </inferredMetricsTieBreakers>
 </document>
