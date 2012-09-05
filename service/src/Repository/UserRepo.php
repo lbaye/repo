@@ -573,7 +573,10 @@ class UserRepo extends BaseRepository
     {
         $users = array();
         foreach ($results as $user) {
-            $users[] = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr['friendship'] = $this->currentUser->getFriendship($user);
+
+            $users[] = $userArr;
         }
 
         return $users;
@@ -778,7 +781,6 @@ class UserRepo extends BaseRepository
             $users = $this->_toArrayAll($result, true);
 
             foreach ($users as &$user) {
-                $user['isFriend'] = in_array($user['id'], $friends);
                 $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
             }
 
