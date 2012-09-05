@@ -223,6 +223,35 @@
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
             
+            [jsonObjects objectForKey:@"friends"];
+            NSMutableArray *frndList=[[NSMutableArray alloc] init];
+            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
+            {
+                UserFriends *frnd=[[UserFriends alloc] init];
+                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
+                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+                [frndList addObject:frnd];
+                NSLog(@"frnd.userId: %@",frnd.userId);
+            }
+            
+            [aUser setFriendsList:frndList];
+            friendListGlobalArray=frndList;
+            
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (int i=0; i<[[jsonObjects objectForKey:@"circles"] count];i++)
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
+                circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
+                //                circle.type=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                [circleList addObject:circle];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+            }
+            [aUser setCircleList:circleList];
+            circleListGlobalArray=circleList;
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
@@ -1551,7 +1580,7 @@
                 
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lat" key3:nil];
-                loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lng" key3:nil];
+                loc.longitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lng" key3:nil];
                 [aEvent setEventLocation:loc];
                 [aEvent setEventAddress:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"address" key3:nil]];
                 [aEvent setEventDistance:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"distance" key2:nil key3:nil]];
@@ -1644,7 +1673,7 @@
                 
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
-                loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+                loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
                 [aEvent setEventLocation:loc];
                 [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
                 [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];

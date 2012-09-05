@@ -391,7 +391,7 @@ bool searchFlags=true;
         if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
         {
             aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-            NSLog(@"aEvent.eventImageUrl %@ aEvent2.eventImageUrl %@",aEvent.eventImageUrl);
+            NSLog(@"aEvent.eventImageUrl %@",aEvent.eventImageUrl);
         }
         [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
         [pool drain];

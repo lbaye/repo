@@ -195,6 +195,8 @@
 		4F8257E815BDD29A00760CE1 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F8257DC15BDD29A00760CE1 /* SBJsonWriter.m */; };
 		4F8257F215BDDD8200760CE1 /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F8257F115BDDD8100760CE1 /* CustomAlert.m */; };
 		4F8257F515BDDFFC00760CE1 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F8257F415BDDFFC00760CE1 /* Location.m */; };
+		4F88406A15F79C4B00E4DFC8 /* Calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F88406815F79C4B00E4DFC8 /* Calendar.png */; };
+		4F88406B15F79C4B00E4DFC8 /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F88406915F79C4B00E4DFC8 /* messages.png */; };
 		4F96D4B315D2C01E006104D6 /* PhotoPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F96D4B215D2C01E006104D6 /* PhotoPicker.m */; };
 		4F98A2CC15BB387D000B3124 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F98A2CB15BB387D000B3124 /* UIKit.framework */; };
 		4F98A2CE15BB387D000B3124 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F98A2CD15BB387D000B3124 /* Foundation.framework */; };
@@ -630,6 +632,8 @@
 		4F8257F115BDDD8100760CE1 /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
 		4F8257F315BDDFFC00760CE1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		4F8257F415BDDFFC00760CE1 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		4F88406815F79C4B00E4DFC8 /* Calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Calendar.png; path = Images/Calendar.png; sourceTree = SOURCE_ROOT; };
+		4F88406915F79C4B00E4DFC8 /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messages.png; path = Images/messages.png; sourceTree = SOURCE_ROOT; };
 		4F96D4B115D2C01E006104D6 /* PhotoPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPicker.h; sourceTree = "<group>"; };
 		4F96D4B215D2C01E006104D6 /* PhotoPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPicker.m; sourceTree = "<group>"; };
 		4F98A2C715BB387D000B3124 /* SocialMaps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialMaps.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -919,6 +923,16 @@
 				4FF09BE615CFAFE200F8AD19 /* CustomRadioButton.m */,
 				4F1D96AB15DCC93B00511624 /* Date.h */,
 				4F1D96AA15DCC93B00511624 /* Date.m */,
+				2063A1DB15F3316F00529CB2 /* DDAnnotation.h */,
+				2063A1DC15F3317000529CB2 /* DDAnnotation.m */,
+				2063A1DD15F3317000529CB2 /* DDAnnotationView.h */,
+				2063A1DE15F3317000529CB2 /* DDAnnotationView.m */,
+				20E75BDF15EA0341000B6B8A /* Event.h */,
+				20E75BE015EA0343000B6B8A /* Event.m */,
+				20B656CE15EF58B200A441E9 /* EventImageDownloader.h */,
+				20B656CF15EF58B300A441E9 /* EventImageDownloader.m */,
+				20B656DD15EF827A00A441E9 /* EventList.h */,
+				20B656DE15EF827B00A441E9 /* EventList.m */,
 				4FD00B8B15C2F6EA00F0AB08 /* FacebookHelper.h */,
 				4FD00B8C15C2F6EA00F0AB08 /* FacebookHelper.m */,
 				4F1D96A715DCC93B00511624 /* Geofence.h */,
@@ -929,8 +943,6 @@
 				20B0E7D515D7A9CF009A500A /* Globals.m */,
 				20B0E7D615D7A9CF009A500A /* IconDownloader.h */,
 				20B0E7D715D7A9CF009A500A /* IconDownloader.m */,
-				20B656CE15EF58B200A441E9 /* EventImageDownloader.h */,
-				20B656CF15EF58B300A441E9 /* EventImageDownloader.m */,
 				20B0E7ED15D7BEAB009A500A /* InformationPrefs.h */,
 				20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */,
 				4FB7A02815D0E776001EB905 /* InfoSharing.h */,
@@ -963,10 +975,10 @@
 				4FC0820315DBD54A00203C21 /* MapAnnotationPeople.m */,
 				4F59C33D15E7EB060060C8D9 /* MapAnnotationPlace.h */,
 				4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */,
-				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
-				20E4A12015D8EB80009A1F6B /* NewsFeed.m */,
 				B01DFC4415F5E61000020D49 /* MessageReply.h */,
 				B01DFC4515F5E61000020D49 /* MessageReply.m */,
+				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
+				20E4A12015D8EB80009A1F6B /* NewsFeed.m */,
 				4F50CBFE15C82A3600A3AFA8 /* Notification.h */,
 				4F50CBFF15C82A3600A3AFA8 /* Notification.m */,
 				4F1D96AE15DCC93B00511624 /* NotificationPref.h */,
@@ -991,6 +1003,8 @@
 				4FC6E53F15D4D04600C82B39 /* RadioButtonItem.m */,
 				4F3A4EEB15D227230033AC9E /* ResetPassword.h */,
 				4F3A4EEC15D227230033AC9E /* ResetPassword.m */,
+				4F8257B415BD964E00760CE1 /* RestClient.h */,
+				4F8257B515BD964E00760CE1 /* RestClient.m */,
 				4F6036DC15DD4DAD00C1BD4E /* SearchLocation.h */,
 				4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */,
 				4F3B3C8515D8F9600025F8DD /* SelectFriends.h */,
@@ -1017,16 +1031,6 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
-				4F8257B415BD964E00760CE1 /* RestClient.h */,
-				4F8257B515BD964E00760CE1 /* RestClient.m */,
-				20E75BDF15EA0341000B6B8A /* Event.h */,
-				20E75BE015EA0343000B6B8A /* Event.m */,
-				20B656DD15EF827A00A441E9 /* EventList.h */,
-				20B656DE15EF827B00A441E9 /* EventList.m */,
-				2063A1DB15F3316F00529CB2 /* DDAnnotation.h */,
-				2063A1DC15F3317000529CB2 /* DDAnnotation.m */,
-				2063A1DD15F3317000529CB2 /* DDAnnotationView.h */,
-				2063A1DE15F3317000529CB2 /* DDAnnotationView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1136,44 +1140,44 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
-				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
-				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
-				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
-				4F98A2E015BB387D000B3124 /* ViewController.h */,
-				4F98A2E115BB387D000B3124 /* ViewController.m */,
-				4F39151315BBCC9400BF6B25 /* LoginController.h */,
-				4F39151415BBCC9400BF6B25 /* LoginController.m */,
-				4FE9606D15BC8FE60007327A /* MapViewController.h */,
-				4FE9606E15BC8FE60007327A /* MapViewController.m */,
-				4F82576B15BD32EE00760CE1 /* RegistrationController.h */,
-				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
-				4FAC301715C583540014030C /* UserAnnotationView.h */,
-				4FAC301815C583540014030C /* UserAnnotationView.m */,
-				4FAC302415C5C5DC0014030C /* NotificationController.h */,
-				4FAC302515C5C5DC0014030C /* NotificationController.m */,
-				4FF09BF415CFE6E500F8AD19 /* SettingsController.h */,
-				4FF09BF515CFE6E600F8AD19 /* SettingsController.m */,
-				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
-				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
-				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
-				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
-				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
-				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
-				20B656C515EF580600A441E9 /* EventListTableCell.h */,
-				20B656C615EF580600A441E9 /* EventListTableCell.m */,
-				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
-				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
-				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
-				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
+				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
+				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
+				4F82577815BD4C7E00760CE1 /* Classes */,
+				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
+				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
+				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
+				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
+				20B656C515EF580600A441E9 /* EventListTableCell.h */,
+				20B656C615EF580600A441E9 /* EventListTableCell.m */,
+				4F98A2E815BB38B1000B3124 /* Images */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
+				4F39151315BBCC9400BF6B25 /* LoginController.h */,
+				4F39151415BBCC9400BF6B25 /* LoginController.m */,
+				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
+				4FE9606D15BC8FE60007327A /* MapViewController.h */,
+				4FE9606E15BC8FE60007327A /* MapViewController.m */,
 				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
 				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
-				4F82577815BD4C7E00760CE1 /* Classes */,
+				4FAC302415C5C5DC0014030C /* NotificationController.h */,
+				4FAC302515C5C5DC0014030C /* NotificationController.m */,
+				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
+				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
+				4F82576B15BD32EE00760CE1 /* RegistrationController.h */,
+				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
+				4FF09BF415CFE6E500F8AD19 /* SettingsController.h */,
+				4FF09BF515CFE6E600F8AD19 /* SettingsController.m */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
-				4F98A2E815BB38B1000B3124 /* Images */,
+				4FAC301715C583540014030C /* UserAnnotationView.h */,
+				4FAC301815C583540014030C /* UserAnnotationView.m */,
+				4F98A2E015BB387D000B3124 /* ViewController.h */,
+				4F98A2E115BB387D000B3124 /* ViewController.m */,
+				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
+				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
+				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
+				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
 			);
 			path = SocialMaps;
 			sourceTree = "<group>";
@@ -1192,6 +1196,8 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4F88406815F79C4B00E4DFC8 /* Calendar.png */,
+				4F88406915F79C4B00E4DFC8 /* messages.png */,
 				B01DFC4B15F5E74300020D49 /* btn_new_message.png */,
 				B01DFC4C15F5E74300020D49 /* line.png */,
 				B01DFC4D15F5E74300020D49 /* tab_icon_meetup_selected.png */,
@@ -1777,6 +1783,8 @@
 				B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */,
 				B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */,
 				2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */,
+				4F88406A15F79C4B00E4DFC8 /* Calendar.png in Resources */,
+				4F88406B15F79C4B00E4DFC8 /* messages.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

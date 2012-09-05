@@ -135,12 +135,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367447468.534838"
+         timestampString = "368544684.146987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2161"
-         endingLineNumber = "2161"
-         landmarkName = "-setSharingPreferenceSettings:::"
+         startingLineNumber = "2190"
+         endingLineNumber = "2190"
+         landmarkName = "-setPlatForm:::"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -233,25 +233,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367434736.113754"
+         timestampString = "368544684.146987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "963"
-         endingLineNumber = "963"
-         landmarkName = "-getAccountSettings::"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "SocialMaps/RestClient.m"
-         timestampString = "367434736.113754"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "940"
-         endingLineNumber = "940"
+         startingLineNumber = "992"
+         endingLineNumber = "992"
          landmarkName = "@implementation RestClient"
          landmarkType = "3">
       </FileBreakpoint>
@@ -261,11 +247,25 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "367434736.113754"
+         timestampString = "368544684.146987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "728"
-         endingLineNumber = "728"
+         startingLineNumber = "969"
+         endingLineNumber = "969"
+         landmarkName = "@implementation RestClient"
+         landmarkType = "3">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/RestClient.m"
+         timestampString = "368544684.146987"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "757"
+         endingLineNumber = "757"
          landmarkName = "-getSharingPreference::"
          landmarkType = "5">
       </FileBreakpoint>

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IconDownloader.h"
+#import "MessageReply.h"
 
 @class AppDelegate;
 
@@ -58,6 +59,9 @@
 - (IBAction)actionSendReplyBtn:(id)sender;
 - (IBAction)actionRefreshBtn:(id)sender;
 - (void)gotInboxMessages:(NSNotification *)notif;
-
+- (CGFloat) getRowHeight:(UITableView*)tv:(MessageReply*)msgReply;
+- (void)startReqForReplyMessages;
+-(void)doTopViewAnimation:(UIView*)incomingView;
+-(void)loadDummydata;
 
 @end
