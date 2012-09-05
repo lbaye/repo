@@ -80,8 +80,6 @@ class Search extends Base
                 $people = array_merge($people, $externalPeople);
             }
 
-            var_dump($people);die;
-
         }
 
         return $people;
