@@ -564,11 +564,11 @@ ButtonClickCallbackData callBackData;
     
 
     // Update location if new position detected and one of the following is true
-    // 1. Moved 100 meters and 1 minute has elapsed.
+    // 1. Moved 10 meters and 1 minute has elapsed.
     // 2. 5 mintes have elapsed. This is to get new people around and I am mostly stationary
     // 3. First time - smAppDelegate.gotListing == FALSE
     //
-    if ((distanceMoved >= 100 && elapsedTime > 60) || elapsedTime > 300 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
+    if ((distanceMoved >= 10 && elapsedTime > 60) || elapsedTime > 300 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
         // Update the position
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
@@ -1268,8 +1268,8 @@ ButtonClickCallbackData callBackData;
     [locationManager stopUpdatingLocation];
     [locationManager startUpdatingLocation];
     needToCenterMap = TRUE;
-    //_mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
-    //[_mapView setNeedsDisplay];
+    _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+    [_mapView setNeedsDisplay];
 
     // Send new location to server
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
@@ -1369,7 +1369,9 @@ ButtonClickCallbackData callBackData;
                         NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
-                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
+//                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
+                        NSString *address = @"Address";
+                        
                         LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:address] type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;

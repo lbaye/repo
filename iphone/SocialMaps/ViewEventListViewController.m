@@ -962,6 +962,7 @@ bool searchFlags=true;
 }
 
 -(IBAction)viewLocationButton:(id)sender
+
 {
     NSLog(@"maybeButton tag: %d",[sender tag]);
     EventListRsvpTableCell *clickedCell = (EventListRsvpTableCell *)[[sender superview] superview];
@@ -975,13 +976,17 @@ bool searchFlags=true;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-    MKCoordinateRegion newRegion;
-    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
-    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
-    newRegion.span.latitudeDelta = 1.112872;
-    newRegion.span.longitudeDelta = 1.109863;
+//    MKCoordinateRegion newRegion;
+//    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
+//    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
+//    newRegion.span.latitudeDelta = 1.112872;
+//    newRegion.span.longitudeDelta = 1.109863;
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES]; 
+
     
-    [self.mapView setRegion:newRegion animated:YES];
+    //[self.mapView setRegion:newRegion animated:YES];
     NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
 
