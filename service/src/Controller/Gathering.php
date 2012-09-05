@@ -336,8 +336,5 @@ class Gathering extends Base
         }else{
             return "public_event";
         }
-
     }
-
-
 }

@@ -100,7 +100,7 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time', 'guestsCanInvite');
+        $setIfExistFields = array('title', 'description', 'duration','eventShortSummary', 'time', 'guestsCanInvite');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {

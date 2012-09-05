@@ -178,7 +178,7 @@ class User extends Base
         $user = $this->userRepository->find($id);
 
         if (null !== $user) {
-            $data = $user->toArrayDetailed();
+            $data = $user->toArray();
 
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));

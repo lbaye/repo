@@ -315,6 +315,12 @@ class User
             $items[$field] = $this->{"get{$field}"}();
         }
 
+        if ($this->getAddress()) {
+            $items['address'] = $this->getAddress()->toArray();
+        } else {
+            $items['address'] = null;
+        }
+
         return $items;
     }
 
