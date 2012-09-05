@@ -107,8 +107,9 @@ ButtonClickCallbackData callBackData;
         pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
     else if ([locItem isKindOfClass:[LocationItemPlace class]])
         pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if (smAppDelegate.userAccountPrefs.icon != nil) {
-        pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
+        //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin = nil;
     }
     return pin;
 }
@@ -349,14 +350,14 @@ ButtonClickCallbackData callBackData;
     [locationManager startUpdatingLocation];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
-    smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
+//    smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
 //    
 #if TARGET_IPHONE_SIMULATOR
-    RestClient *restClient = [[RestClient alloc] init];
-    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.804417"];
-    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//    RestClient *restClient = [[RestClient alloc] init];
+//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.792211"];
+//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414888"]; 
+//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 //#else
 //    RestClient *restClient = [[RestClient alloc] init];
 //    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
@@ -487,6 +488,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewDidUnload
 {
+    [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
+    [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
     [locationManager stopUpdatingLocation];
     _mapView = nil;
     [self setMapPulldown:nil];
@@ -600,8 +603,8 @@ ButtonClickCallbackData callBackData;
 {
     for (MKAnnotationView *view in views) 
     {
-        if ([view annotation] == selectedAnno)
-        //if ([[view annotation] isKindOfClass:[MKUserLocation class]])
+        if ([view annotation] == selectedAnno ||
+            [[view annotation] isKindOfClass:[MKUserLocation class]])
         {
             [[view superview] bringSubviewToFront:view];
             break;
@@ -1135,6 +1138,10 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)closeInviteFrnds:(id)sender
 {
+    // terminate all pending download connections
+    NSArray *allDownloads = [imageDownloadsInProgress allValues];
+    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
+    
     [inviteFriendView removeFromSuperview];
     [userFriendslistArray removeAllObjects];
 }

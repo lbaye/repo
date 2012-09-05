@@ -19,15 +19,7 @@
 @synthesize listPulldown;
 @synthesize itemList;
 @synthesize selectedType;
-//@synthesize showPeople;
-//@synthesize showPlaces;
-//@synthesize showDeals;
 @synthesize selectedItemIndex;
-//@synthesize objectLists;
-//@synthesize peopleList;
-//@synthesize placeList;
-//@synthesize dealList;
-//@synthesize displayList;
 @synthesize smAppDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

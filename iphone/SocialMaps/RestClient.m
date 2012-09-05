@@ -24,6 +24,7 @@
 #import "UserCircle.h"
 #import "UserFriends.h"
 #import "Event.h"
+#import "UserDefault.h"
 
 @implementation RestClient
 

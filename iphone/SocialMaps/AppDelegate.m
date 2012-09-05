@@ -18,6 +18,7 @@
 #import "RestClient.h"
 #import "UserCircle.h"
 #import "Globals.h"
+#import "UserDefault.h"
 
 @implementation AppDelegate
 
@@ -99,6 +100,7 @@
     layerPrefs    = [[[Layer alloc] init] autorelease];
     informationPrefs = [[[InformationPrefs alloc] init] autorelease];
     userAccountPrefs = [[[UserInfo alloc] init] autorelease];
+    userAccountPrefs.icon = nil;
     geofencePrefs = [[[Geofence alloc] init] autorelease];
     locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
     notifPrefs = [[[NotificationPref alloc] init] autorelease];
@@ -113,6 +115,11 @@
     currPosition = [[Geolocation alloc] init];
     lastPosition = [[Geolocation alloc] init];
                     
+    UserDefault *userDefaults = [[UserDefault alloc] init];
+    currPosition.latitude = [userDefaults readFromUserDefaults:@"lastLatitude"];
+    currPosition.longitude = [userDefaults readFromUserDefaults:@"lastLongitude"];
+    [userDefaults release];
+    
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;

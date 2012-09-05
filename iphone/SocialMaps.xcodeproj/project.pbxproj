@@ -850,6 +850,8 @@
 				4FF09BE615CFAFE200F8AD19 /* CustomRadioButton.m */,
 				4F1D96AB15DCC93B00511624 /* Date.h */,
 				4F1D96AA15DCC93B00511624 /* Date.m */,
+				20E75BDF15EA0341000B6B8A /* Event.h */,
+				20E75BE015EA0343000B6B8A /* Event.m */,
 				4FD00B8B15C2F6EA00F0AB08 /* FacebookHelper.h */,
 				4FD00B8C15C2F6EA00F0AB08 /* FacebookHelper.m */,
 				4F1D96A715DCC93B00511624 /* Geofence.h */,
@@ -946,8 +948,6 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
-				20E75BDF15EA0341000B6B8A /* Event.h */,
-				20E75BE015EA0343000B6B8A /* Event.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
