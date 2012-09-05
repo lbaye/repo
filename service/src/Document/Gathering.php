@@ -143,6 +143,7 @@ abstract class Gathering extends Content
         );
         $result = array();
 
+
         foreach ($fieldsToExpose as $field) {
             $result[$field] = $this->{"get{$field}"}();
         }

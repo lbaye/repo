@@ -110,7 +110,11 @@ class GatheringRepo extends Base
 
         if(isset($data['guests']) && is_array($data['guests'])){
             $users = $this->trimInvalidUsers($data['guests']);
+            $users[] = $owner->getId();
             $gathering->setGuests($users);
+        }else{
+            $guests['guests'] = $owner->getId();
+            $gathering->setGuests( $guests);
         }
 
         if(isset($data['permission'])){

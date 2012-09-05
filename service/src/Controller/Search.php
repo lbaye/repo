@@ -89,7 +89,7 @@ class Search extends Base
     {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
-       
+
         $googlePlaces = new \Service\Venue\GooglePlaces($this->config['googlePlace']['apiKey']);
 
         try {

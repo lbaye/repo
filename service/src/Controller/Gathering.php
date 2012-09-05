@@ -136,7 +136,6 @@ class Gathering extends Base
     {
         $postData = $this->request->request->all();
         $this->_initRepository($type);
-
         try {
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
@@ -316,7 +315,14 @@ class Gathering extends Base
         foreach ($results as $place) {
             $gatheringItem = $place->toArray();
             $gatheringItem['event_type']  = $this->_checkGatheringType($place->getOwner());
-            $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+
+            if ($this->user == $place->getOwner())
+            {
+                $gatheringItem['my_response'] = 'yes';
+            }else {
+                $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+            }
+
             $gatheringItem['is_invited']  = in_array($this->user->getId(), $place->getGuests());
 
             $gatheringItems[] = $gatheringItem;
