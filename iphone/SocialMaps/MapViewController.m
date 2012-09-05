@@ -54,9 +54,6 @@
 @synthesize selectedFilter = _selectedFilter;
 @synthesize mapPullupMenu = _mapPullupMenu;
 @synthesize selSharingType;
-//@synthesize showDeals;
-//@synthesize showPeople;
-//@synthesize showPlaces;
 @synthesize savedFilters;
 @synthesize pickSavedFilter;
 @synthesize inviteFriendView;
@@ -350,20 +347,6 @@ ButtonClickCallbackData callBackData;
     [locationManager startUpdatingLocation];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.latitude];
-//    smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", _mapView.userLocation.location.coordinate.longitude];
-//    
-#if TARGET_IPHONE_SIMULATOR
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"23.792211"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414888"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-//#else
-//    RestClient *restClient = [[RestClient alloc] init];
-//    smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"45.804417"];
-//    smAppDelegate.currPosition.longitude =[NSString stringWithFormat:@"90.414369"]; 
-//    [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-#endif
     
     needToCenterMap = TRUE;
     // Get Information
@@ -570,10 +553,18 @@ ButtonClickCallbackData callBackData;
           newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     
     // Calculate move from last position
-    CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.lastPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
+    CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
+    NSDate *now = [NSDate date];
+    int elapsedTime = [now timeIntervalSinceDate:smAppDelegate.currPosition.positionTime];
+
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
-    if (distanceMoved >= 10) { // TODO : use distance
+    // Update location if new position detected and one of the following is true
+    // 1. Moved 100 meters and 1 minute has elapsed.
+    // 2. 3 mintes have elapsed. This is to get new people around and I am mostly stationary
+    // 3. First time - smAppDelegate.gotListing == FALSE
+    //
+    if ((distanceMoved >= 100 && elapsedTime > 60) || elapsedTime > 180 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
         // Update the position
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
