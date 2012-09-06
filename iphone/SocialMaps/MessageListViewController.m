@@ -28,6 +28,7 @@
 @implementation MessageListViewController
 
 @synthesize msgParentID;
+@synthesize timeSinceLastUpdate;
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
@@ -114,6 +115,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)viewDidUnload
 {
     NSLog(@"called View did unload");
+    [replyTimer invalidate];
+    replyTimer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     msgListTableView = nil;
@@ -157,7 +160,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (!messageCreationView.hidden) {
         if ([textViewNewMsg isFirstResponder]) {
             [textViewNewMsg resignFirstResponder];
-            [self doTopViewAnimation:msgWritingView];
+            [self setViewMovedDown:msgWritingView];
         }else {
             [self doTopViewAnimation:messageCreationView];
         }
@@ -167,7 +170,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }else if (!messageRepiesView.hidden) {
         [self doLeftViewAnimation:messageRepiesView];
     }
-    msgListTableView.tag = TAG_TABLEVIEW_INBOX;
+    [friendSearchbar resignFirstResponder];
+    //msgListTableView.tag = TAG_TABLEVIEW_INBOX;
 }
 
 - (IBAction)actionMeetUpBtn:(id)sender {
@@ -178,6 +182,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (IBAction)actionNewMessageBtn:(id)sender {
     NSLog(@"actionNewMessageBtn");
+    [selectedFriendsIndex removeAllObjects];
+    [self reloadScrolview];
     [self doBottomViewAnimation:messageCreationView];
 }
 
@@ -202,7 +208,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     if ([selectedFriendsIndex count] == 0) {
         [UtilityClass showAlert:@"" :@"Please select recipient"];
-    } else if ([textViewNewMsg.text isEqualToString:@""] || [textViewReplyMsg.text isEqualToString:@"Your Message..."]) {
+    } else if ([textViewNewMsg.text isEqualToString:@""] || [textViewNewMsg.text isEqualToString:@"Your Message..."]) {
         [UtilityClass showAlert:@"" :@"Please enter your message"];
     } else {
         [self sendMessage:sender];
@@ -222,7 +228,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     } else {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        [self doTopViewAnimation:messageRepiesView];
+        //[self doTopViewAnimation:messageRepiesView];
         [self clearTextView:textViewReplyMsg];
     }
 }
@@ -271,7 +277,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void) getReplyMessages:(NSNotification *)notif {
     NSLog(@"gotReplyMessages");
     
+    NSDate *currentTime = [NSDate date];
+    NSTimeInterval ti = [currentTime timeIntervalSince1970];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    
+    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
+    
     NSMutableArray *msgReplies = [notif object];
+    
+    if ([msgReplies count] == 0) {
+        return;
+    }
+    
     [messageReplyList addObjectsFromArray:msgReplies];
     
     for (MessageReply *eachMsgReply in messageReplyList) {
@@ -282,14 +299,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     
     [messageReplyTableView reloadData];
-    
-    //NSLog(@"start timer for reply update with since command");
-    //http://203.76.126.69/social_maps/web/messages/504233b9f69c29b12c000001/replies?since=424343
-    
-    NSDate *currentTime = [NSDate date];
-    
-    NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
 
 }
 
@@ -613,21 +624,26 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [messageReply release];
     
     [messageReplyTableView reloadData];
+    [self doRightViewAnimation:messageRepiesView];
     
     msgParentID = msg.notifID;
-    timeSinceLastUpdate = @"";
+    self.timeSinceLastUpdate = @"420";
     [self startReqForReplyMessages];
+    if (!replyTimer) {
+        replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+    }
+    
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self doRightViewAnimation:messageRepiesView];
+   
     
 }
      
 - (void)startReqForReplyMessages
 {
-    if (!messageReplyTableView.hidden) {
+    if (!messageRepiesView.hidden) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:timeSinceLastUpdate];
+        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
     }
 }
 
@@ -656,7 +672,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize msgStringSize = [msgReply.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
 
+    int newLine = [[msgReply.content componentsSeparatedByString:@"\n"] count];
+    
     CGFloat msgRows = ceil(msgStringSize.width / (tv.frame.size.width - SENDER_NAME_START_POSX - 45));
+    
+    msgRows = msgRows + newLine - 1;
     
     cellRowHeight = senderStringSize.height + msgRows*15 + 15;
     
@@ -1057,6 +1077,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     else
     {
         searchText=@"";
+        [selectedFriendsIndex removeAllObjects];
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
@@ -1097,6 +1118,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     [filteredList removeAllObjects];
     filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
+    [selectedFriendsIndex removeAllObjects];
     [self reloadScrolview];
     [friendSearchbar resignFirstResponder];
 }
@@ -1117,7 +1139,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)searchResult
 {
-    [self loadDummydata];
+    //[self loadDummydata];
     searchTexts = friendSearchbar.text;
 
     //NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);

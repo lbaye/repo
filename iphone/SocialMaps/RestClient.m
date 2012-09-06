@@ -3536,7 +3536,7 @@
         
         if (responseStatus == 200 || responseStatus == 201) {
             NSLog(@"sendMessage successful:status=%d", responseStatus);
-            [UtilityClass showAlert:@"" :@"Reply sent"];
+            //[UtilityClass showAlert:@"" :@"Reply sent"];
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
@@ -3775,11 +3775,12 @@
     NSLog(@"in RestClient getReplies");
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
+    NSLog(@"ti = %@", ti);
     
-    //NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
     
     //if (!ti) {
-       NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
+       //NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
     //}
     
     NSURL *url = [NSURL URLWithString:route];
@@ -3803,43 +3804,35 @@
         
         if (responseStatus == 200 || responseStatus == 204) 
         {
-            NSDictionary *items;
-            
-            //if (ti) {
-              //  items = jsonObjects;
-            //} else {
-                items = [jsonObjects objectForKey:@"replies"];
-            //}
-            
-                for (NSDictionary *item in items)
-                {
-                    MessageReply *messageReply = [[MessageReply alloc] init]; 
-                    
-                    NSString *content = [item objectForKey:@"content"];
-                    messageReply.content = content;
-                    NSLog(@"content is: %@",content);
-                    
-                    NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                    NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                    NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
-                    messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-                    
-                    NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
-                    messageReply.senderName = senderName;
-                    NSLog(@"sender name is: %@",senderName);
-                    
-                    NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
-                    messageReply.senderID = senderID;
-                    NSLog(@"sender id is: %@",senderID);
-                    
-                    NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
-                    messageReply.senderAvater = senderAvater;
-                    NSLog(@"sender avater is: %@",senderAvater);
-                    
-                    //messageReply.senderImage = nil;
-                    
-                    [messageReplies addObject:messageReply];
-                }
+            for (NSDictionary *item in jsonObjects) {
+                MessageReply *messageReply = [[MessageReply alloc] init];
+                
+                NSString *content = [item objectForKey:@"content"];
+                messageReply.content = content;
+                NSLog(@"content is: %@",content);
+                
+                NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                NSLog(@"TIME is: %@",messageReply.time);
+                
+                
+                NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
+                messageReply.senderName = senderName;
+                NSLog(@"sender name is: %@",senderName);
+                
+                NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
+                messageReply.senderID = senderID;
+                NSLog(@"sender id is: %@",senderID);
+                
+                NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
+                messageReply.senderAvater = senderAvater;
+                NSLog(@"sender avater is: %@",senderAvater);
+                
+                [messageReplies addObject:messageReply];
+                
+            }
             
             NSLog(@"messageReplies = %@", messageReplies);
 

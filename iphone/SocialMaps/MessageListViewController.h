@@ -29,12 +29,12 @@
     NSMutableArray              *profileImageList;
     NSMutableArray              *messageReplyList;
     
-    NSString                    *timeSinceLastUpdate; //needed for automatic reply update
+    NSTimer                     *replyTimer;
     
     //for test
-    IBOutlet UITextField *textFieldUserID1;
-    IBOutlet UITextField *textFieldUserID2;
-    IBOutlet UITextField *textFieldUserID3;
+    IBOutlet    UITextField     *textFieldUserID1;
+    IBOutlet    UITextField     *textFieldUserID2;
+    IBOutlet    UITextField     *textFieldUserID3;
     
     //friends list code
     IBOutlet UIScrollView *frndListScrollView;
@@ -49,6 +49,7 @@
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
+@property (nonatomic, retain) NSString *timeSinceLastUpdate; //needed for automatic reply update
 
 - (IBAction)actionMessageBtn:(id)sender;
 - (IBAction)actionMeetUpBtn:(id)sender;
