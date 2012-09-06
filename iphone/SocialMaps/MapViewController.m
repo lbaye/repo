@@ -1485,22 +1485,23 @@ ButtonClickCallbackData callBackData;
                                     [self mapAnnotationChanged:place];
                             });
                         });
-                    } else {
-                        // Item exists, recalculate distance only
-                        LocationItemPlace *aPlace = [smAppDelegate.placeList objectAtIndex:[indx intValue]];
-                        
-                        CLLocationCoordinate2D loc;
-                        loc.latitude = [item.location.latitude doubleValue];
-                        loc.longitude = [item.location.longitude doubleValue];
-                        aPlace.coordinate = loc;
-                        
-                        CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
-                        aPlace.itemDistance = distanceFromMe;
-                    }
+                    } 
                     [aPlace release];
+                } else {
+                    // Item exists, recalculate distance only
+                    LocationItemPlace *aPlace = [smAppDelegate.placeList objectAtIndex:[indx intValue]];
                     
+                    CLLocationCoordinate2D loc;
+                    loc.latitude = [item.location.latitude doubleValue];
+                    loc.longitude = [item.location.longitude doubleValue];
+                    aPlace.coordinate = loc;
+                    
+                    CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
+                    aPlace.itemDistance = distanceFromMe;
+                    NSLog(@"Distance: service=%@, calculated=%f", item.distance, distanceFromMe);
                 }
             }
+
         }
     }
 
