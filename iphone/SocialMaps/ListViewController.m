@@ -10,6 +10,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
+#import "ShowOnMapController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -169,6 +170,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSLog(@"displayList count %d", [smAppDelegate.displayList count]);
     return [smAppDelegate.displayList count];
 }
 
@@ -224,9 +226,14 @@
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
     LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
+    ShowOnMapController *controller;
     switch (action) {
         case LocationActionTypeGotoMap:
-            [self dismissViewControllerAnimated:YES completion:nil];
+            //[self dismissViewControllerAnimated:YES completion:nil];
+            controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem];
+            controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
             break;
             
         default:
