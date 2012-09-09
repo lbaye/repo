@@ -13,6 +13,10 @@
 #import "UserFriends.h"
 #import "UserCircle.h"
 #import "Globals.h"
+#import "AppDelegate.h"
+#import "DDAnnotationView.h"
+#import "DDAnnotation.h"
+#import "UtilityClass.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_TABLEVIEW_REPLY     1001
@@ -32,6 +36,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 
 @implementation MeetUpRequestController
+
+DDAnnotation *annotation;
 
 - (void)viewDidLoad
 {
@@ -63,10 +69,37 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+    
+    
+    
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //load map data
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+	
+	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
+	annotation.title = @"Drag to Move Pin";
+	//annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
+    //    NSLog(@"annotation.coordinate %@",annotation.coordinate);
+    MKCoordinateRegion newRegion;
+    newRegion.center.latitude = annotation.coordinate.latitude;
+    newRegion.center.longitude = annotation.coordinate.longitude;
+    newRegion.span.latitudeDelta = 1.112872;
+    newRegion.span.longitudeDelta = 1.109863;
+    
+    [pointOnMapView setRegion:newRegion animated:YES];
+    
+	[pointOnMapView setCenterCoordinate:annotation.coordinate];
+    
+	[pointOnMapView addAnnotation:annotation];
 }
 
 - (void)viewDidUnload
 {
+    [pointOnMapView release];
+    pointOnMapView = nil;
     [labelAddress release];
     labelAddress = nil;
     [super viewDidUnload];
@@ -510,8 +543,69 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     filteredList=[friendListArr mutableCopy];
 }
 
+#pragma mark -
+#pragma mark DDAnnotationCoordinateDidChangeNotification
+
+// NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
+- (void)coordinateChanged_:(NSNotification *)notification
+{	
+	annotation = notification.object;
+	//annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+    //annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    
+    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+#pragma mark -
+#pragma mark MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
+{
+	
+	if (oldState == MKAnnotationViewDragStateDragging) 
+    {
+		annotation = (DDAnnotation *)annotationView.annotation;
+                //annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
+                //annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
+        
+		//annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+        //annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+	}
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;		
+	}
+	
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [pointOnMapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) 
+    {
+		draggablePinView.annotation = annotation;
+	}
+    else 
+    {
+		// Use class method to create DDAnnotationView (on iOS 3) or built-in draggble MKPinAnnotationView (on iOS 4).
+		draggablePinView = [DDAnnotationView annotationViewWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier mapView:pointOnMapView];
+        
+		if ([draggablePinView isKindOfClass:[DDAnnotationView class]]) 
+        {
+			// draggablePinView is DDAnnotationView on iOS 3.
+		} else
+        {
+			// draggablePinView instance will be built-in draggable MKPinAnnotationView when running on iOS 4.
+		}
+	}		
+	
+	return draggablePinView;
+}
+
 - (void)dealloc {
-    [labelAddress release];
     [super dealloc];
 }
 @end
