@@ -264,7 +264,7 @@
     [dateOfBirth addTarget:self 
                  action:@selector(selectDate:)
        forControlEvents:UIControlEventTouchUpInside];
-    [dateOfBirth setImage:[UIImage imageNamed:@"cal-48x48.png"] forState:UIControlStateNormal];
+    [dateOfBirth setImage:[UIImage imageNamed:@"Calendar.png"] forState:UIControlStateNormal];
     [self addSubview:dateOfBirth];
     heightOffset += TEXT_HEIGHT + 5;
     
