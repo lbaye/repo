@@ -1472,7 +1472,10 @@
                 people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
                 people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
                 
-                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];              
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                
+                people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                
                 [searchLocation.peopleArr addObject:people];
                 
                 NSLog(@"User: first %@  last:%@  id:%@",people.firstName, people.lastName, people.userId);

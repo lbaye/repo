@@ -1370,9 +1370,9 @@ ButtonClickCallbackData callBackData;
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
 //                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
-                        NSString *address = @"Address";
+                        //NSString *address = @"Address";
                         
-                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:[NSString stringWithFormat:address] type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
