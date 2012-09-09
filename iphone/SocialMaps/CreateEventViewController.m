@@ -145,9 +145,9 @@ DDAnnotation *annotation;
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
 //    NSLog(@"annotation.coordinate %@",annotation.coordinate);
-    MKCoordinateRegion newRegion;
-    newRegion.center.latitude = annotation.coordinate.latitude;
-    newRegion.center.longitude = annotation.coordinate.longitude;
+//    MKCoordinateRegion newRegion;
+//    newRegion.center.latitude = annotation.coordinate.latitude;
+//    newRegion.center.longitude = annotation.coordinate.longitude;
 //    newRegion.span.latitudeDelta = 1.112872;
 //    newRegion.span.longitudeDelta = 1.109863;
     
@@ -155,7 +155,7 @@ DDAnnotation *annotation;
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
     
-    [self.mapView setRegion:newRegion animated:YES];
+//    [self.mapView setRegion:newRegion animated:YES];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
@@ -221,7 +221,11 @@ DDAnnotation *annotation;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
     editFlag=false;
+    dicImages_msg=nil;
+    ImgesName=nil;
+    frndListScrollView=nil;
 
+//    [self viewDidUnload];
 }
 
 

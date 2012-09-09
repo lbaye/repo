@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
 
-@interface ViewEventDetailViewController : UIViewController
+@interface ViewEventDetailViewController : UIViewController<UIScrollViewDelegate>
 {
     IBOutlet UILabel *eventName;
     IBOutlet UILabel *eventDate;

@@ -189,6 +189,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (IBAction)actionBackBtn:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
 }
 
 - (IBAction)actionCancelBtn:(id)sender {
@@ -279,7 +283,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSDate *currentTime = [NSDate date];
     NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 1.5];
     
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
     
@@ -644,6 +648,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (!messageRepiesView.hidden) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
+    } else {
+        [replyTimer invalidate];
+        replyTimer = nil;
     }
 }
 

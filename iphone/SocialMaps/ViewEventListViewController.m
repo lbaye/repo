@@ -474,7 +474,9 @@ bool searchFlags=true;
     RestClient *rc=[[RestClient alloc] init];
     Event *aEvent=[[Event alloc] init];
     aEvent=[filteredList objectAtIndex:indexPath.row];
+    globalEvent=[[Event alloc] init];
     globalEvent=aEvent;
+    NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     [self presentModalViewController:controller animated:YES];
@@ -529,7 +531,7 @@ bool searchFlags=true;
     if (iconDownloader != nil)
     {
         NSNumber *indx = [eventListIndex objectForKey:eventID];
-        Event *event = [eventListArray objectAtIndex:[indx intValue]];
+        Event *event = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
         event.eventImage = iconDownloader.event.eventImage;
         
         EventListTableCell *cell = [self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];

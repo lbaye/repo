@@ -77,10 +77,8 @@ AppDelegate *smAppDelegate;
         rsvpView.hidden=YES;
     }
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
-    [prefs stringForKey:@"userId"];
     
-    imageArr=[[NSMutableArray alloc] initWithObjects:@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png", nil];
+//    imageArr=[[NSMutableArray alloc] initWithObjects:@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png", nil];
     
     //    [self loadScrollView];
 	// Do any additional setup after loading the view.
@@ -90,6 +88,7 @@ AppDelegate *smAppDelegate;
     ImgesName = [[NSMutableArray alloc] init];   
     nameArr=[[NSMutableArray alloc] init];
     
+    NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
     UserFriends *frnd;
     for (int i=0; i<[globalEvent.guestList count]; i++)
     {
@@ -100,28 +99,26 @@ AppDelegate *smAppDelegate;
         [nameArr addObject:frnd.userName];
     }
     //set scroll view content size.
+    NSLog(@"setting scroll size.");
     guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
     
     [self.mapContainer removeFromSuperview];
-    [self.mapView removeAnnotations:[self.mapView annotations]];
+    if ([self.mapView.annotations count]>0)
+    {
+        [self.mapView removeAnnotations:[self.mapView annotations]];
+    }
     
+    [mapView removeAnnotations:[self.mapView annotations]];
     Event *aEvent=[[Event alloc] init];
     aEvent=globalEvent;
-    [self.mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    MKCoordinateRegion newRegion;
-//    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
-//    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    newRegion.span.latitudeDelta = 1.112872;
-//    newRegion.span.longitudeDelta = 1.109863;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES]; 
     
-//    [self.mapView setRegion:newRegion animated:YES];
     NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
     
@@ -135,6 +132,7 @@ AppDelegate *smAppDelegate;
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     //reloading scrollview to start asynchronous download.
+    NSLog(@"before reload.");
     [self reloadScrolview]; 
     
     //my response & image
@@ -209,6 +207,7 @@ AppDelegate *smAppDelegate;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
     // Release any retained subviews of the main view.
 }
 
@@ -402,11 +401,10 @@ AppDelegate *smAppDelegate;
 
 -(void) reloadScrolview
 {
+    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
-    int y=0;  
     
     NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
-    UIImageView *imgView;
     for (UIView* view in subviews) 
     {
         if([view isKindOfClass :[UIView class]])
@@ -436,7 +434,7 @@ AppDelegate *smAppDelegate;
                 {
                     //If scroll view moves set a placeholder image and start download image. 
                     [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:[ImgesName objectAtIndex:i]]; 
-                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                 }
                 else 
                 { 
@@ -471,6 +469,8 @@ AppDelegate *smAppDelegate;
         }       
             x+=65;   
     }
+    [pl drain];
+    [pl release];
 }
 
 -(void)DownLoad:(NSNumber *)path
@@ -484,6 +484,10 @@ AppDelegate *smAppDelegate;
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+    }
+    else
+    {
+        [dicImages_msg setObject:[NSNull null] forKey:[ImgesName objectAtIndex:index]];
     }
     // Now, we need to reload scroll view to load downloaded image
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
@@ -560,6 +564,16 @@ AppDelegate *smAppDelegate;
 //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
 //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
 //    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+   [self viewDidUnload];
+    dicImages_msg=nil;
+    ImgesName=nil;
+    nameArr=nil;
+    guestScrollView=nil;
     
 }
 
