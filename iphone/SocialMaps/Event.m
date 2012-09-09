@@ -25,6 +25,7 @@
 @synthesize eventDescription;
 @synthesize isInvited,guestCanInvite,guestList,owner,circleList;
 @synthesize eventType;
+@synthesize yesArr,noArr,maybeArr;
 
 - (id)init
 {

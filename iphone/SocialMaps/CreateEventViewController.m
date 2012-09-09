@@ -147,8 +147,12 @@ DDAnnotation *annotation;
     MKCoordinateRegion newRegion;
     newRegion.center.latitude = annotation.coordinate.latitude;
     newRegion.center.longitude = annotation.coordinate.longitude;
-    newRegion.span.latitudeDelta = 1.112872;
-    newRegion.span.longitudeDelta = 1.109863;
+//    newRegion.span.latitudeDelta = 1.112872;
+//    newRegion.span.longitudeDelta = 1.109863;
+    
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES];
     
     [self.mapView setRegion:newRegion animated:YES];
 
@@ -169,6 +173,15 @@ DDAnnotation *annotation;
 	
 	[super viewWillAppear:animated];
 	
+    if (editFlag==true)
+    {
+        event=globalEditEvent;
+    }
+    else
+    {
+        event=[[Event alloc] init];
+    }
+    
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     
@@ -186,16 +199,21 @@ DDAnnotation *annotation;
     addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
 	
 	[super viewWillDisappear:animated];
 	
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    globalEditEvent=NULL;
+    editFlag=false;
+
 }
 
 
-- (void) photoPickerDone:(bool)status image:(UIImage*)img {
+- (void) photoPickerDone:(bool)status image:(UIImage*)img
+{
     NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
     if (status == TRUE) 
     {
@@ -363,23 +381,71 @@ DDAnnotation *annotation;
 
 -(IBAction)createEvent:(id)sender
 {
-    [smAppDelegate showActivityViewer:self.view];
-    RestClient *rc=[[RestClient alloc] init];
-    UserFriends *frnd;
-    NSMutableArray *userIDs=[[NSMutableArray alloc] init];
-    for (int i=0; i<[selectedFriendsIndex count]; i++)
-    {
-        frnd=[[UserFriends alloc] init];
-        frnd=[selectedFriendsIndex objectAtIndex:i];
-        [userIDs addObject:frnd.userId];
-    }
-    event.guestList=userIDs;
-    event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
-    event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
-    event.eventAddress=annotation.subtitle;
-    
-    [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
+    //title*, description*,eventShortSummary,eventImage, guests[], address, lat, lng*, time* , 
+    NSMutableString *msg=[[NSMutableString alloc] init];
+    [msg appendString:@"Please enter "];
+    bool validationFlag=false;
     NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
+    
+    if (event.eventName==NULL)
+    {
+        [msg appendString:@"name, "];
+        validationFlag=true;
+    }
+    
+    if (event.eventDescription==NULL)
+    {
+        [msg appendString:@"description, "];
+            validationFlag=true;
+    }
+    if (event.eventShortSummary==NULL)
+    {
+        [msg appendString:@"short summary, "];
+                validationFlag=true;
+    }
+//    if (event.eventLocation.longitude==NULL)
+//    {
+//        [msg appendString:@"event location, "];
+//                validationFlag=true;
+//    }
+    if (event.eventDate.date==NULL)
+    {
+        [msg appendString:@"date"];
+        validationFlag=true;
+    }
+
+    if (validationFlag==true) 
+    {
+        [UtilityClass showAlert:@"Social Maps" :msg];
+    }
+    else
+    {
+        [smAppDelegate showActivityViewer:self.view];
+        RestClient *rc=[[RestClient alloc] init];
+        UserFriends *frnd;
+        NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+        for (int i=0; i<[selectedFriendsIndex count]; i++)
+        {
+            frnd=[[UserFriends alloc] init];
+            frnd=[selectedFriendsIndex objectAtIndex:i];
+            [userIDs addObject:frnd.userId];
+        }
+        event.guestList=userIDs;
+        event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+        event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
+        event.eventAddress=annotation.subtitle;
+        if (editFlag==true)
+        {
+            [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
+        }
+        else
+        {
+            [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
+        }
+        NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
+
+    }
+    
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -654,20 +720,23 @@ DDAnnotation *annotation;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList objectAtIndex:[sender.view tag]]])
     {
-        [selectedFriendsIndex removeObject:[friendListArr objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex removeObject:[filteredList objectAtIndex:[sender.view tag]]];
     } 
     else 
     {
-        [selectedFriendsIndex addObject:[friendListArr objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex addObject:[filteredList objectAtIndex:[sender.view tag]]];
     }
+    UserFriends *frnds=[[UserFriends alloc] init];
+    frnds=[filteredList objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
-        if (l==imageIndex)
+        UIView *im=[subviews objectAtIndex:l];
+        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
+        UIImageView *im1=[subviews1 objectAtIndex:0];
+
+        if ([im1.image isEqual:frnds.userProfileImage])
         {
-            UIView *im=[subviews objectAtIndex:l];
-            NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
-            UIImageView *im1=[subviews1 objectAtIndex:0];
             [im1 setAlpha:1.0];
             im1.layer.borderWidth=2.0;
             im1.layer.masksToBounds = YES;
@@ -904,7 +973,7 @@ DDAnnotation *annotation;
     NSLog(@"dele %@",[notif object]);
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     //    [self presentModalViewController:modalViewControllerTwo animated:YES];
     //    NSLog(@"GOT SERVICE DATA.. :D");
     
@@ -932,7 +1001,7 @@ DDAnnotation *annotation;
     //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
+    [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
     [self dismissModalViewControllerAnimated:YES];
 }
 

@@ -39,10 +39,9 @@
 -(void)getEventDetailById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
--(void)updateEven:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)updateEvent:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
 
 -(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue;
--(void)updateEven:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
 
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue;

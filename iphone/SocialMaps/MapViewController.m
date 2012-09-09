@@ -335,8 +335,8 @@ ButtonClickCallbackData callBackData;
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
-
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+//
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1076,7 +1076,8 @@ ButtonClickCallbackData callBackData;
 //    [rc getPlatForm];
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
 
-    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
+//    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
+     [self performSegueWithIdentifier:@"eventList" sender: self];
     [smAppDelegate showActivityViewer:self.view];
 }
 
@@ -1086,15 +1087,15 @@ ButtonClickCallbackData callBackData;
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];    
 }
 
-- (void)getAllEventsDone:(NSNotification *)notif
-{
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    eventListGlobalArray=[notif object];
-    
-    [self performSegueWithIdentifier:@"eventList" sender: self];
-    NSLog(@"GOT SERVICE DATA.. :D");
-}
+//- (void)getAllEventsDone:(NSNotification *)notif
+//{
+//    [smAppDelegate hideActivityViewer];
+//    [smAppDelegate.window setUserInteractionEnabled:YES];
+//    eventListGlobalArray=[notif object];
+//    
+//   
+//    NSLog(@"GOT SERVICE DATA.. :D");
+//}
 
 - (IBAction)gotoBreadcrumbs:(id)sender
 {

@@ -28,7 +28,8 @@ AppDelegate *smAppDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self)
+    {
         // Custom initialization
     }
     return self;
@@ -36,22 +37,26 @@ AppDelegate *smAppDelegate;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ((globalEvent.eventImageUrl)&&(!globalEvent.eventImage))
-    {
-        [self performSelector:@selector(loadImageView) withObject:nil afterDelay:0.1];
-        NSLog(@"globalEvent.eventImageUrl %@ globalEvent.eventImage %@",globalEvent.eventImageUrl,globalEvent.eventImage);
-    }
-    else if(globalEvent.eventImage)
-    {
-        eventImgView.image=globalEvent.eventImage;
-         NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
-    }
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[[Event alloc] init];
+    aEvent=globalEvent;
+    NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
+    [rc getEventDetailById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
+
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSLog(@"globalEvent det %@",globalEvent.eventID);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
 
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -118,7 +123,7 @@ AppDelegate *smAppDelegate;
     
     if (!aEvent.eventAddress)
     {
-        aEvent.eventAddress=@"Not found";
+        aEvent.eventAddress=@"Address not found";
     }
 	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
@@ -127,12 +132,52 @@ AppDelegate *smAppDelegate;
     [self.mapView addAnnotation:annotation];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+    
+    //my response & image
+    NSLog(@"aEvent.myResponse %@",aEvent.myResponse);
+    if ([aEvent.myResponse isEqualToString:@"yes"])
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else if([aEvent.myResponse isEqualToString:@"no"]) 
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+    }
+    
+    if ((globalEvent.eventImageUrl)&&(!globalEvent.eventImage))
+    {
+        [self performSelector:@selector(loadImageView) withObject:nil afterDelay:0.1];
+        NSLog(@"globalEvent.eventImageUrl %@ globalEvent.eventImage %@",globalEvent.eventImageUrl,globalEvent.eventImage);
+    }
+    else if(globalEvent.eventImage)
+    {
+        eventImgView.image=globalEvent.eventImage;
+        NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
+    }
 }
 
 -(void)loadImageView
 {
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:globalEvent.eventImageUrl]]];
-    eventImgView.image=img;
+    if (img)
+    {
+        eventImgView.image=img;
+    }
+    else
+    {
+        eventImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
+    }
+    NSLog(@"image setted after download. %@",img);
 }
 
 - (void)viewDidUnload
@@ -228,6 +273,12 @@ AppDelegate *smAppDelegate;
 -(IBAction)invitePeople:(id)sender
 {
     NSLog(@"invite people");    
+    globalEditEvent=globalEvent;
+    editFlag=true;
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 -(IBAction)deleteEvent:(id)sender
@@ -237,6 +288,8 @@ AppDelegate *smAppDelegate;
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     
     [smAppDelegate showActivityViewer:self.view];    
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
     RestClient *rc=[[RestClient alloc] init];
     Event *aEvent=[[Event alloc] init];
     aEvent=globalEvent;
@@ -247,6 +300,12 @@ AppDelegate *smAppDelegate;
 -(IBAction)editEvent:(id)sender
 {
     NSLog(@"edit event");
+    globalEditEvent=globalEvent;
+    editFlag=true;
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 - (void)deleteEventDone:(NSNotification *)notif
@@ -254,17 +313,6 @@ AppDelegate *smAppDelegate;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-//    [self presentModalViewController:controller animated:YES];
-    RestClient *rc= [[RestClient alloc] init];
-    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
     [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
     [self dismissModalViewControllerAnimated:YES];
 }
@@ -464,6 +512,29 @@ AppDelegate *smAppDelegate;
 	}		
 	
 	return draggablePinView;
+}
+
+- (void)getEventDetailDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    globalEvent=[notif object];
+    
+    NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
+    [self.view setNeedsDisplay];
+    [self reloadScrolview];
+    [self.guestScrollView setNeedsDisplay];
+    [self viewDidLoad];
+    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    //    NSLog(@"GOT SERVICE DATA.. :D");
+    
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+//    [self presentModalViewController:controller animated:YES];
+    
 }
 
 @end

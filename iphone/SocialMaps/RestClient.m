@@ -1577,9 +1577,11 @@
                 
                 [aEvent setEventCreateDate:date];
                 
+                date=[[Date alloc] init];
                 date.date=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"date" key3:nil];
                 date.timezone=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone" key3:nil];            
                 date.timezoneType=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone_type" key3:nil];           
+                [aEvent setEventDate:date];
                 
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lat" key3:nil];
@@ -1673,7 +1675,8 @@
                 date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
                 date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
                 date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
-                
+                [aEvent setEventDate:date];
+            
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
@@ -1690,6 +1693,10 @@
             [aEvent setGuestCanInvite:[[self getNestedKeyVal:jsonObjects key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
             [aEvent setOwner:[self getNestedKeyVal:jsonObjects key1:@"owner" key2:nil key3:nil]]; 
             
+            [aEvent setYesArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"yes" key3:nil]];
+            [aEvent setNoArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"no" key3:nil]];
+            [aEvent setMaybeArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil]];
+            
             NSMutableArray *guestList=[[NSMutableArray alloc] init];
             for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
             {
@@ -1702,10 +1709,9 @@
             }
             [aEvent setGuestList:guestList];
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
-                
-                [aEvent.eventList addObject:aEvent];
-                        
+//                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+
+            [aEvent.eventList addObject:aEvent];                        
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:aEvent];
         } 
         else 
@@ -1910,10 +1916,11 @@
             date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
             date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
+            [aEvent setEventDate:date];
             
             Geolocation *loc=[[Geolocation alloc] init];
             loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
-            loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+            loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
             [aEvent setEventLocation:loc];
             [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
             [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];
@@ -1957,7 +1964,7 @@
     [request startAsynchronous];
 }
 
--(void)updateEven:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue
+-(void)updateEvent:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/events/%@",WS_URL,eventID];
     NSURL *url = [NSURL URLWithString:route];
@@ -1967,7 +1974,7 @@
     searchLocation.placeArr  = [[NSMutableArray alloc] init];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"PUT"];
     [request addRequestHeader:authToken value:authTokenValue];
     [request addPostValue:event.eventName forKey:@"title"];
     [request addPostValue:event.eventDescription forKey:@"description"];
@@ -2021,17 +2028,17 @@
             date.date=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"date" key3:nil];
             
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone" key3:nil];
-            date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];
-            
+            date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];            
             [aEvent setEventCreateDate:date];
             
             date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
             date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
+            [aEvent setEventDate:date];
             
             Geolocation *loc=[[Geolocation alloc] init];
             loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
-            loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+            loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
             [aEvent setEventLocation:loc];
             [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
             [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];
@@ -2055,7 +2062,7 @@
                 guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:[jsonObjects valueForKey:@"message"]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:aEvent];
         } 
         else 
         {

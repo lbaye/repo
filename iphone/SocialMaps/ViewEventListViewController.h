@@ -17,12 +17,14 @@
     IBOutlet NSDictionary *downloadedImageDict;
     IBOutlet UIView *mapContainer;
     IBOutlet MKMapView *mapView;
+    IBOutlet UIButton *newEventButton;
 }
 @property(nonatomic,retain) IBOutlet UITableView *eventListTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *eventSearchBar;
 @property(nonatomic,retain) IBOutlet NSDictionary *downloadedImageDict;
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet MKMapView *mapView;
+@property(nonatomic,retain) IBOutlet UIButton *newEventButton;
 
 -(IBAction)dateAction:(id)sender;
 -(IBAction)distanceAction:(id)sender;

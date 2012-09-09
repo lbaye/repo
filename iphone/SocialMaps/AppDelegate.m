@@ -220,6 +220,7 @@
 
 -(void)hideActivityViewer
 {
+    [activityView stopAnimating];
 	[activityView removeFromSuperview];
 	activityView = nil;
 }
@@ -229,6 +230,7 @@
 	CGRect frame = CGRectMake(sender.frame.size.width / 2 - 12, sender.frame.size.height / 2 - 12, 24, 24);
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
 	[activityView startAnimating];
+    [activityView hidesWhenStopped];
 	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
 	[activityView sizeToFit];
 	activityView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
