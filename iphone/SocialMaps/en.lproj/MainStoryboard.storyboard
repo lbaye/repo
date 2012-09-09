@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -2381,7 +2381,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hmS-vl-M0B">
-                                        <rect key="frame" x="20" y="211" width="128" height="29"/>
+                                        <rect key="frame" x="20" y="214" width="128" height="29"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                         <state key="normal" title="Delete this Event">
@@ -2396,7 +2396,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kKj-sJ-TjF">
-                                        <rect key="frame" x="157" y="211" width="137" height="29"/>
+                                        <rect key="frame" x="157" y="214" width="137" height="29"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <state key="normal" title="Edit this Event">
@@ -2614,8 +2614,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="zK9-2t-0Hu"/>
                     <connections>
+                        <outlet property="deleteEventButton" destination="hmS-vl-M0B" id="fqr-cW-Wuf"/>
                         <outlet property="descriptionView" destination="E4A-wV-sft" id="39G-3i-TEP"/>
                         <outlet property="detailView" destination="ixc-V1-rJ0" id="hmy-tS-A8F"/>
+                        <outlet property="editEventButton" destination="kKj-sJ-TjF" id="xc0-Mu-oYX"/>
                         <outlet property="eventAddress" destination="ubL-dV-Ses" id="hjT-yF-V8D"/>
                         <outlet property="eventDate" destination="rFQ-U3-u3S" id="x1x-Ec-WUQ"/>
                         <outlet property="eventDistance" destination="bO1-Tm-0fs" id="hN9-KM-xww"/>
@@ -2623,6 +2625,7 @@
                         <outlet property="eventName" destination="cLa-U0-BSY" id="Med-L5-N1C"/>
                         <outlet property="eventShortDetail" destination="JUx-Uf-BDi" id="LzG-tk-nsr"/>
                         <outlet property="guestScrollView" destination="3qv-P1-laO" id="fJq-L6-EoX"/>
+                        <outlet property="inviteEventButton" destination="CIc-Bs-eUT" id="Sy9-7t-5fT"/>
                         <outlet property="mapContainer" destination="NYM-dH-GFe" id="sfB-Dx-H8a"/>
                         <outlet property="mapView" destination="hv2-vn-oPN" id="glA-g9-GJf"/>
                         <outlet property="maybeButton" destination="Xrf-RH-NEx" id="cAb-qN-yTR"/>
@@ -2648,7 +2651,7 @@
                                 <rect key="frame" x="0.0" y="-30" width="320" height="105"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Create/Edit Event" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="luZ-vv-dQw">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Create Event" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="luZ-vv-dQw">
                                 <rect key="frame" x="40" y="48" width="145" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="14"/>
@@ -3304,6 +3307,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                     </view>
                     <connections>
                         <outlet property="addressLabel" destination="pNU-v5-pfu" id="N8v-TS-UJo"/>
+                        <outlet property="createButton" destination="0bh-yg-Ont" id="iFj-L1-iIo"/>
+                        <outlet property="createLabel" destination="luZ-vv-dQw" id="qbt-a7-Py1"/>
                         <outlet property="createView" destination="dv5-gH-peM" id="8dh-eZ-YNN"/>
                         <outlet property="curLoc" destination="1wz-Ug-oEv" id="lV9-mL-B6R"/>
                         <outlet property="custom" destination="fmD-dh-23t" id="jDw-Ad-pMb"/>
@@ -3586,7 +3591,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                     <outlet property="delegate" destination="x4f-Rr-4Qj" id="L81-K7-of4"/>
                                 </connections>
                             </tableView>
-                            <searchBar contentMode="redraw" barStyle="blackTranslucent" id="vik-Wv-JnG">
+                            <searchBar contentMode="redraw" barStyle="blackTranslucent" placeholder="Search with event name" id="vik-Wv-JnG">
                                 <rect key="frame" x="0.0" y="45" width="235" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -4262,6 +4267,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="summaryButtonAction"/>
                 <relationship kind="action" name="unSelectAll:"/>
                 <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="createButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="createLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="createView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="curLoc" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="custom" candidateClass="UIButton"/>
@@ -4493,8 +4500,10 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="noAttendAction:"/>
                 <relationship kind="action" name="viewMapButton:"/>
                 <relationship kind="action" name="yesAttendAction:"/>
+                <relationship kind="outlet" name="deleteEventButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="descriptionView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="editEventButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
@@ -4502,6 +4511,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventShortDetail" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="guestScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="inviteEventButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
                 <relationship kind="outlet" name="maybeButton" candidateClass="UIButton"/>

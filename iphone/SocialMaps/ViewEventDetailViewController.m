@@ -20,6 +20,10 @@
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
 @synthesize yesButton,noButton,maybeButton,descriptionView,guestScrollView,rsvpView,detailView;
 @synthesize mapContainer,mapView,eventImgView;
+@synthesize editEventButton;
+@synthesize deleteEventButton;    
+@synthesize inviteEventButton;        
+
 
 NSMutableArray *imageArr, *nameArr;
 bool menuOpen=NO;
@@ -39,7 +43,7 @@ AppDelegate *smAppDelegate;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    
+    NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     RestClient *rc=[[RestClient alloc] init];
@@ -163,6 +167,28 @@ AppDelegate *smAppDelegate;
     {
         eventImgView.image=globalEvent.eventImage;
         NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
+    }
+    
+    if([smAppDelegate.userId isEqualToString:aEvent.owner])
+    {
+        
+        [deleteEventButton setUserInteractionEnabled:YES];
+        [editEventButton setUserInteractionEnabled:YES];
+        [inviteEventButton setUserInteractionEnabled:YES];
+
+        [yesButton setUserInteractionEnabled:NO];
+        [noButton setUserInteractionEnabled:NO];
+        [maybeButton setUserInteractionEnabled:NO];
+        
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [deleteEventButton setUserInteractionEnabled:NO];
+        [editEventButton setUserInteractionEnabled:NO];
+        [inviteEventButton setUserInteractionEnabled:NO];
     }
 }
 

@@ -335,17 +335,34 @@ bool searchFlags=true;
         {
             [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
             [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            
+            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];            
         }
         else
         {
             [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
             [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-            
+            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];            
         }
     }
+    
+    if([smAppDelegate.userId isEqualToString:event.owner])
+    {
+        
+        [cell1.yesButton setUserInteractionEnabled:NO];
+        [cell1.noButton setUserInteractionEnabled:NO];
+        [cell1.maybesButton setUserInteractionEnabled:NO];
+        
+        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [cell1.yesButton setUserInteractionEnabled:YES];
+        [cell1.noButton setUserInteractionEnabled:YES];
+        [cell1.maybesButton setUserInteractionEnabled:YES];
+    }
+
     
     [cell1.yesButton addTarget:self action:@selector(yesButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.noButton addTarget:self action:@selector(noButton:) forControlEvents:UIControlEventTouchUpInside];

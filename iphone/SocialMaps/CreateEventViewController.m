@@ -37,6 +37,7 @@
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
 @synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
+@synthesize createButton,createLabel;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
@@ -180,6 +181,18 @@ DDAnnotation *annotation;
     else
     {
         event=[[Event alloc] init];
+    }
+    
+    if (editFlag==true)
+    {
+        [createButton setTitle:@"Update" forState:UIControlStateNormal];
+        [createLabel setText:@"Update Event"];
+
+    }
+    else
+    {
+        [createButton setTitle:@"Create" forState:UIControlStateNormal];
+        [createLabel setText:@"Create Event"];
     }
     
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
