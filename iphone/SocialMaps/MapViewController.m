@@ -29,6 +29,7 @@
 #import "MapAnnotationPlace.h"
 #import "Places.h"
 #import "MessageListViewController.h"
+#import "MeetUpRequestController.h"
 
 
 @interface MapViewController ()
@@ -1114,6 +1115,10 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMeetupReq:(id)sender
 {
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 - (IBAction)gotoMapix:(id)sender
