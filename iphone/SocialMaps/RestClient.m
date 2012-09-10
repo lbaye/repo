@@ -1489,7 +1489,7 @@
                 place.location = [[Geolocation alloc] init];
                 place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
                 place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                
+                NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
                 place.northeast = [[Geolocation alloc] init];
                 place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
                 place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
