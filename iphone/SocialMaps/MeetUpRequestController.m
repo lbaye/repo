@@ -70,9 +70,7 @@ DDAnnotation *annotation;
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
     
-    
-    
-    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     //load map data
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
@@ -94,6 +92,10 @@ DDAnnotation *annotation;
 	[pointOnMapView setCenterCoordinate:annotation.coordinate];
     
 	[pointOnMapView addAnnotation:annotation];
+    
+    //tableView setup
+    tableViewPlaces.dataSource = self;
+    tableViewPlaces.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -102,6 +104,8 @@ DDAnnotation *annotation;
     pointOnMapView = nil;
     [labelAddress release];
     labelAddress = nil;
+    [tableViewPlaces release];
+    tableViewPlaces = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -118,6 +122,43 @@ DDAnnotation *annotation;
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
+}
+
+// Tableview stuff
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"placeList Class %@", [[smAppDelegate.placeList objectAtIndex:indexPath.row] class]);
+    //LocationItem *anItem = (LocationItem*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+    
+    //CGSize senderStringSize = [msg.notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"placeList"];
+    
+    if (cell == nil) {
+        
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"placeList"] autorelease];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        
+        
+    } 
+    
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
+    
+    NSLog(@"tableView cell selected %d", indexPath.row);    
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [smAppDelegate.placeList count];
 }
 
 
@@ -606,6 +647,7 @@ DDAnnotation *annotation;
 }
 
 - (void)dealloc {
+    [tableViewPlaces release];
     [super dealloc];
 }
 @end
