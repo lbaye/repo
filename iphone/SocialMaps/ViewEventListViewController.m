@@ -83,6 +83,7 @@ bool searchFlags=true;
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start.  %@",smAppDelegate);
+    [self.eventSearchBar setText:@""];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -771,11 +772,6 @@ bool searchFlags=true;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    MKCoordinateRegion newRegion;
-//    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
-//    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    newRegion.span.latitudeDelta = 1.112872;
-//    newRegion.span.longitudeDelta = 1.109863;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES]; 

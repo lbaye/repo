@@ -28,6 +28,7 @@
 NSMutableArray *imageArr, *nameArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
+int notfCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,6 +42,7 @@ AppDelegate *smAppDelegate;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    notfCounter=0;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
@@ -52,16 +54,9 @@ AppDelegate *smAppDelegate;
     NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
     [rc getEventDetailById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 
+    isBackgroundTaskRunning=TRUE;
     
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    NSLog(@"globalEvent det %@",globalEvent.eventID);
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
-
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventName.text=globalEvent.eventName;
@@ -76,41 +71,15 @@ AppDelegate *smAppDelegate;
     {
         rsvpView.hidden=YES;
     }
-    
-    
-//    imageArr=[[NSMutableArray alloc] initWithObjects:@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png", nil];
-    
-    //    [self loadScrollView];
-	// Do any additional setup after loading the view.
-    
-    guestScrollView.delegate = self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
-    ImgesName = [[NSMutableArray alloc] init];   
-    nameArr=[[NSMutableArray alloc] init];
-    
-    NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
-    UserFriends *frnd;
-    for (int i=0; i<[globalEvent.guestList count]; i++)
-    {
-        frnd=[[UserFriends alloc] init];
-        frnd=[globalEvent.guestList objectAtIndex:i];
-        NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
-        [ImgesName addObject:frnd.imageUrl];
-        [nameArr addObject:frnd.userName];
-    }
-    //set scroll view content size.
-    NSLog(@"setting scroll size.");
-    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
-    
-    [self.mapContainer removeFromSuperview];
+
+    //mapview data
     if ([self.mapView.annotations count]>0)
     {
         [self.mapView removeAnnotations:[self.mapView annotations]];
     }
     
     [mapView removeAnnotations:[self.mapView annotations]];
-    Event *aEvent=[[Event alloc] init];
+    aEvent=[[Event alloc] init];
     aEvent=globalEvent;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
@@ -126,14 +95,17 @@ AppDelegate *smAppDelegate;
     {
         aEvent.eventAddress=@"Address not found";
     }
-	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
+	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
-    //reloading scrollview to start asynchronous download.
-    NSLog(@"before reload.");
+
+    //scroll view data
+    //set scroll view content size.
+    NSLog(@"setting scroll size.");
     [self reloadScrolview]; 
+
     
     //my response & image
     NSLog(@"aEvent.myResponse %@",aEvent.myResponse);
@@ -170,10 +142,10 @@ AppDelegate *smAppDelegate;
     if([smAppDelegate.userId isEqualToString:aEvent.owner])
     {
         
-        [deleteEventButton setUserInteractionEnabled:YES];
-        [editEventButton setUserInteractionEnabled:YES];
-        [inviteEventButton setUserInteractionEnabled:YES];
-
+        [deleteEventButton setEnabled:YES];
+        [editEventButton setEnabled:YES];
+        [inviteEventButton setEnabled:YES];
+        
         [yesButton setUserInteractionEnabled:NO];
         [noButton setUserInteractionEnabled:NO];
         [maybeButton setUserInteractionEnabled:NO];
@@ -184,10 +156,39 @@ AppDelegate *smAppDelegate;
     }
     else
     {
-        [deleteEventButton setUserInteractionEnabled:NO];
-        [editEventButton setUserInteractionEnabled:NO];
-        [inviteEventButton setUserInteractionEnabled:NO];
+        [deleteEventButton setEnabled:NO];
+        [editEventButton setEnabled:NO];
+        [inviteEventButton setEnabled:NO];
+        
+        [yesButton setUserInteractionEnabled:YES];
+        [noButton setUserInteractionEnabled:YES];
+        [maybeButton setUserInteractionEnabled:YES];
+
     }
+
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.mapContainer removeFromSuperview];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    NSLog(@"globalEvent det %@",globalEvent.eventID);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    
+    guestScrollView.delegate = self;
+    dicImages_msg = [[NSMutableDictionary alloc] init];
+    nameArr=[[NSMutableArray alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
+    
+    //reloading scrollview to start asynchronous download.
+    NSLog(@"before reload.");
+    
 }
 
 -(void)loadImageView
@@ -335,11 +336,15 @@ AppDelegate *smAppDelegate;
 
 - (void)deleteEventDone:(NSNotification *)notif
 {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    NSLog(@"dele %@",[notif object]);
-    [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
-    [self dismissModalViewControllerAnimated:YES];
+    notfCounter++;
+    if (notfCounter==1)
+    {
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        NSLog(@"dele %@",[notif object]);
+        [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 -(void)loadScrollView
@@ -401,6 +406,10 @@ AppDelegate *smAppDelegate;
 
 -(void) reloadScrolview
 {
+    NSLog(@"in scroll init %d",[ImgesName count]);
+    NSLog(@"isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+    if (isBackgroundTaskRunning==TRUE) 
+    {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
     
@@ -416,6 +425,7 @@ AppDelegate *smAppDelegate;
             // [view removeFromSuperview];
         }
     }
+    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
     for(int i=0; i<[ImgesName count];i++)       
         
     {
@@ -434,7 +444,7 @@ AppDelegate *smAppDelegate;
                 {
                     //If scroll view moves set a placeholder image and start download image. 
                     [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:[ImgesName objectAtIndex:i]]; 
-                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                 }
                 else 
                 { 
@@ -470,11 +480,12 @@ AppDelegate *smAppDelegate;
             x+=65;   
     }
     [pl drain];
-    [pl release];
+    }
 }
 
 -(void)DownLoad:(NSNumber *)path
 {
+    if (isBackgroundTaskRunning==TRUE) {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     NSString *Link = [ImgesName objectAtIndex:index];
@@ -492,6 +503,7 @@ AppDelegate *smAppDelegate;
     // Now, we need to reload scroll view to load downloaded image
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -551,10 +563,20 @@ AppDelegate *smAppDelegate;
     globalEvent=[notif object];
     
     NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
-    [self.view setNeedsDisplay];
+    ImgesName = [[NSMutableArray alloc] init];   
+    
+    NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
+    UserFriends *frnd;
+    for (int i=0; i<[globalEvent.guestList count]; i++)
+    {
+        frnd=[[UserFriends alloc] init];
+        frnd=[globalEvent.guestList objectAtIndex:i];
+        NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+        [ImgesName addObject:frnd.imageUrl];
+        [nameArr addObject:frnd.userName];
+    }
+
     [self reloadScrolview];
-    [self.guestScrollView setNeedsDisplay];
-    [self viewDidLoad];
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
     ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -569,7 +591,8 @@ AppDelegate *smAppDelegate;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-   [self viewDidUnload];
+    isBackgroundTaskRunning=FALSE;
+    [self viewDidUnload];
     dicImages_msg=nil;
     ImgesName=nil;
     nameArr=nil;

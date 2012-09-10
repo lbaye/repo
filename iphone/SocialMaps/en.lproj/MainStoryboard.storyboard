@@ -2961,7 +2961,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                     <action selector="showCircle:" destination="iEq-R0-8Ox" eventType="touchUpInside" id="uzk-HM-um9"/>
                                 </connections>
                             </button>
-                            <searchBar contentMode="redraw" barStyle="blackTranslucent" id="R0T-Rh-8Pc">
+                            <searchBar contentMode="redraw" barStyle="blackTranslucent" placeholder="Search by name" id="R0T-Rh-8Pc">
                                 <rect key="frame" x="109" y="290" width="138" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>

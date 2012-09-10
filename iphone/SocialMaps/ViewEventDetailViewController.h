@@ -36,7 +36,8 @@
     
     IBOutlet UIButton *editEventButton;
     IBOutlet UIButton *deleteEventButton;    
-    IBOutlet UIButton *inviteEventButton;        
+    IBOutlet UIButton *inviteEventButton;
+    BOOL isBackgroundTaskRunning;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;

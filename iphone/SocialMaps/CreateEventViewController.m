@@ -55,6 +55,9 @@ AppDelegate *smAppDelegate;
 Event *event;
 int entityFlag=0;
 DDAnnotation *annotation;
+bool isBackgroundTaskRunning;
+int createNotf=0;
+int updateNotf=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -114,6 +117,7 @@ DDAnnotation *annotation;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
@@ -171,7 +175,10 @@ DDAnnotation *annotation;
 
 - (void)viewWillAppear:(BOOL)animated 
 {
-	
+     createNotf=0;
+     updateNotf=0;
+
+	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
 	
     if (editFlag==true)
@@ -216,7 +223,7 @@ DDAnnotation *annotation;
 {
 	
 	[super viewWillDisappear:animated];
-	
+	isBackgroundTaskRunning=false;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
@@ -621,6 +628,8 @@ DDAnnotation *annotation;
 
 -(void) reloadScrolview
 {
+    if (isBackgroundTaskRunning==true)
+    {
     int x=0; //declared for imageview x-axis point    
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     UIImageView *imgView;
@@ -708,10 +717,13 @@ DDAnnotation *annotation;
         }
         x+=65;
     }
+    }
 }
 
 -(void)DownLoad:(NSNumber *)path
 {
+    if (isBackgroundTaskRunning==true)
+    {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
@@ -728,6 +740,7 @@ DDAnnotation *annotation;
     // Now, we need to reload scroll view to load downloaded image
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
+    }
 }
 
 //handling selection from scroll view of friends selection
@@ -985,6 +998,9 @@ DDAnnotation *annotation;
 
 - (void)createEventDone:(NSNotification *)notif
 {
+    createNotf++;
+    if (createNotf==1)
+    {
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
@@ -1001,11 +1017,13 @@ DDAnnotation *annotation;
     RestClient *rc=[[RestClient alloc] init];
     [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
     [self dismissModalViewControllerAnimated:YES];
-
+    }
 }
 
 - (void)updateEventDone:(NSNotification *)notif
 {
+    updateNotf++;
+    if (updateNotf==1) {
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
@@ -1020,6 +1038,7 @@ DDAnnotation *annotation;
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
     [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 - (void)viewDidUnload
