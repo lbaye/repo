@@ -17,6 +17,7 @@
 #import "DDAnnotationView.h"
 #import "DDAnnotation.h"
 #import "UtilityClass.h"
+#import "LocationItemPlace.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_TABLEVIEW_REPLY     1001
@@ -44,7 +45,7 @@ DDAnnotation *annotation;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places mear to me",@"Point on map",nil]  default:0 sender:self tag:2000];
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
     radio.delegate = self;
     [self.view addSubview:radio];
     
@@ -122,13 +123,27 @@ DDAnnotation *annotation;
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
+    switch (indx) {
+        case 3:
+            tableViewPlaces.hidden = YES;
+            break;
+        case 2:
+            tableViewPlaces.hidden = NO;
+            break;
+        case 1:
+            tableViewPlaces.hidden = NO;
+            break;
+        default:
+            break;
+    }
 }
 
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"placeList Class %@", [[smAppDelegate.placeList objectAtIndex:indexPath.row] class]);
-    //LocationItem *anItem = (LocationItem*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+    //NSLog(@"placeList Class %@", [[smAppDelegate.placeList objectAtIndex:indexPath.row] class]);
+    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+    
     
     //CGSize senderStringSize = [msg.notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
     
@@ -140,8 +155,40 @@ DDAnnotation *annotation;
         
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         
+        UIButton *buttonSelectPlace = [UIButton buttonWithType:UIButtonTypeCustom];
+        buttonSelectPlace.frame = CGRectMake(320-21-20, 18-10, 21, 21);
+        [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateSelected];
+        [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
+        [buttonSelectPlace addTarget:self action:@selector(actionSelectPlaceButton:) forControlEvents:UIControlEventTouchUpInside];
         
+        [cell.contentView addSubview:buttonSelectPlace];
+        
+        UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(10, 18 - 10, 265, 21)];
+        labelPlaceName.tag = 1001;
+        [cell.contentView addSubview:labelPlaceName];
     } 
+
+    //cell.textLabel.text = aPlaceItem.placeInfo.name;
+  
+    UILabel *labelPlacename = (UILabel*)[cell.contentView viewWithTag:1001];
+    labelPlacename.text = aPlaceItem.placeInfo.name;
+    
+    UIButton *selectBtn;
+
+    for (UIView *eachView in [cell.contentView subviews]) {
+        if ([eachView isKindOfClass:[UIButton class]]) {
+            selectBtn = (UIButton*)eachView;
+        }
+    }
+
+    NSLog(@"selectedPlaceIndes %d", selectedPlaceIndex);
+    selectBtn.tag = indexPath.row + 1;
+        
+    if (selectBtn.tag == selectedPlaceIndex) {
+        selectBtn.selected = YES;
+    } else {
+        selectBtn.selected = NO;
+    }
     
     return cell;
 }
@@ -151,6 +198,38 @@ DDAnnotation *annotation;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    selectedPlaceIndex = indexPath.row + 1;
+    [tableViewPlaces reloadData];
+    
+    //if (annotation == nil) {
+    //    annotation = [[MyAnnotation alloc] init];
+    //    annotation.title = @"Tap arrow to use address";
+    //}
+    
+    //[annotation moveAnnotation:placemark.coordinate];
+    //annotation.subtitle = placemark.formattedAddress;
+    
+    
+    
+    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+    labelAddress.text = aPlaceItem.placeInfo.name;
+    //NSLog(@"aplaceItem.coordinate = %f %f", aPlaceItem.coordinate.latitude, aPlaceItem.coordinate.longitude);
+    ////[pointOnMapView removeAnnotation:annotation];
+    ////annotation=[[DDAnnotation alloc] initWithCoordinate:aPlaceItem.coordinate addressDictionary:nil];
+    annotation.coordinate = aPlaceItem.coordinate;
+    ////[pointOnMapView addAnnotation:annotation];
+    //NSLog(@"annotation.coordinate = %f %f", annotation.coordinate.latitude, aPlaceItem.coordinate.longitude);
+
+    
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = annotation.coordinate.latitude;
+    theCoordinate.longitude =annotation.coordinate.longitude;
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
+    [pointOnMapView setRegion:adjustedRegion animated:YES]; 
+
+    //[pointOnMapView addAnnotation:annotation];
+	[pointOnMapView setCenterCoordinate:annotation.coordinate];
     
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -161,6 +240,14 @@ DDAnnotation *annotation;
     return [smAppDelegate.placeList count];
 }
 
+
+- (void) actionSelectPlaceButton:(id)sender
+{
+    NSLog(@"place selected %d", [sender tag]);
+  
+    selectedPlaceIndex = [sender tag];
+    [tableViewPlaces reloadData];
+}
 
 ////friends List code
 //handling selection from scroll view of friends selection

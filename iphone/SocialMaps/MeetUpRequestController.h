@@ -29,6 +29,7 @@
     NSMutableArray *ImgesName;
     
     AppDelegate *smAppDelegate;
+    int selectedPlaceIndex;
 }
 
 
