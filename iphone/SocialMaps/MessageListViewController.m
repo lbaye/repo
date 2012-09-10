@@ -283,13 +283,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSDate *currentTime = [NSDate date];
     NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 1.5];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 50];
     
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
     
     NSMutableArray *msgReplies = [notif object];
     
-    if ([msgReplies count] == 0) {
+    if ([msgReplies count] == 0  || [((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] -1]).time isEqual:((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time]) {
         return;
     }
     
