@@ -281,18 +281,26 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void) getReplyMessages:(NSNotification *)notif {
     NSLog(@"gotReplyMessages");
     
-    NSDate *currentTime = [NSDate date];
-    NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 1.5];
-    
-    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
+    //NSDate *currentTime = [NSDate date];
+    //NSTimeInterval ti = [currentTime timeIntervalSince1970];
+    //self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 50];
     
     NSMutableArray *msgReplies = [notif object];
+
+    /*
+    if ([msgReplies count] == 0  || [((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] -1]).time isEqual:((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time]) {
+        return;
+    }
+    */
     
     if ([msgReplies count] == 0) {
         return;
     }
-    
+    /*
+    NSTimeInterval ti =[((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time timeIntervalSince1970];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
+    */
     [messageReplyList addObjectsFromArray:msgReplies];
     
     for (MessageReply *eachMsgReply in messageReplyList) {
@@ -306,6 +314,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
     [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
 
+    
+    NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti + 1];
+    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
 }
 
 //Duplicate in Notification Class

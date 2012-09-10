@@ -8,13 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
+#import <Mapkit/Mapkit.h>
 
-@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate> {
+@class AppDelegate;
+
+@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate> {
     
     IBOutlet UILabel *labelAddress;
     //friends list code
     IBOutlet UIScrollView *frndListScrollView;
     IBOutlet UISearchBar  *friendSearchbar;
+    IBOutlet MKMapView *pointOnMapView;
+    IBOutlet UITableView *tableViewPlaces;
     
     NSMutableArray *selectedFriendsIndex;
     BOOL isDragging_msg;
@@ -22,6 +27,8 @@
     CGFloat animatedDistance;
     NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName;
+    
+    AppDelegate *smAppDelegate;
 }
 
 
