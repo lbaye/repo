@@ -87,10 +87,10 @@ class UserRepo extends BaseRepository
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
-    public function getAllByIds(array $ids)
+    public function getAllByIds(array $ids, $asArray = true)
     {
         $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
-        return $this->_toArrayAll($users);
+        return $asArray? $this->_toArrayAll($users) : $users;
     }
 
     public function insert($data)

@@ -55,4 +55,5 @@ class Location
             throw new \Exception("Service Unavailable (Google said '{$content->status}')", 503);
         }
     }
+
 }
