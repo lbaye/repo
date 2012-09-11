@@ -153,13 +153,16 @@ class Gathering extends Base
         }
 
         if (!empty($postData['users'])){
-            $users = $this->userRepository->getAllByIds($postData['users']);
+            $users = $this->userRepository->getAllByIds($postData['users'], false);
             $notification  = new \Document\Notification();
-            $notification->setTitle($this->user->getName() ." shared an {$type} Request");
-            $notification->setMessage("{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!");
-            $notification->setObjectId($meetup->getId());
-            $notification->setObjectType($type);
-             \Helper\Notification::send($notification, $users);
+            $notificationData = array(
+                'title' => $this->user->getName() ." shared an {$type} Request",
+                'message' => "{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!",
+                'objectId' => $meetup->getId(),
+                'objectType' => $type,
+            );
+
+             \Helper\Notification::send($notificationData, $users);
         }
 
         return $this->_generateResponse($meetup->toArrayDetailed(), Status::CREATED);

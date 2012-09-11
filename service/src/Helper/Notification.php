@@ -8,7 +8,7 @@ class Notification
     {
         foreach($users as $receiver) {
             if($receiver) {
-                $receiver->addNotification(new Notification($data));
+                $receiver->addNotification(new \Document\Notification($data));
                 Dependencies::$dm->persist($receiver);
             }
         }
