@@ -152,6 +152,16 @@ class Gathering extends Base
             return $this->_generateException($e);
         }
 
+        if (!empty($postData['users'])){
+            $users = $this->userRepository->getAllByIds($postData['users']);
+            $notification  = new \Document\Notification();
+            $notification->setTitle($this->user->getName() ." shared an {$type} Request");
+            $notification->setMessage("{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!");
+            $notification->setObjectId($meetup->getId());
+            $notification->setObjectType($type);
+             \Helper\Notification::send($notification, $users);
+        }
+
         return $this->_generateResponse($meetup->toArrayDetailed(), Status::CREATED);
     }
 
@@ -241,6 +251,7 @@ class Gathering extends Base
 
     /**
      * PUT /events/{id}/rsvp
+     * PUT /meetups/{id}/rsvp
      *
      * @param $id
      * @param $type
@@ -291,6 +302,8 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
+        $users = $this->userRepository->getAllByIds($postData['users']);
+
         $notification  = new \Document\Notification();
         $notification->setTitle($this->user->getName() .' shared an Event.');
         $notification->setMessage("{$this->user->getName()} has created an event {$gathering->getTitle()}. He wants you to check it out!");
@@ -298,15 +311,7 @@ class Gathering extends Base
         $notification->setObjectType('event');
         $notification->setPhotoUrl($this->user->getAvatar());
 
-        foreach($postData['users'] as $user) {
-            $receiver = $this->userRepository->find($user);
-            if($receiver) {
-                $receiver->addNotification(clone $notification);
-                $this->dm->persist($receiver);
-            }
-        }
-
-        $this->dm->flush();
+        \Helper\Notification::send($notification, $users);
 
         return $this->_generateResponse(array('message' => 'Shared successfully!'));
     }

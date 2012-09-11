@@ -34,3 +34,13 @@ delete_meetup:
   pattern:  /meetups/{id}
   defaults: { _controller: Controller\Gathering::delete, type: meetup  }
   requirements: { _method: DELETE }
+
+who_will_attend_meetup:
+  pattern:  /meetups/{id}/rsvp
+  defaults: { _controller: Controller\Gathering::setRsvp, type: meetup }
+  requirements: { _method: PUT }
+
+share_meetups:
+  pattern: /meetups/{id}/share
+  defaults: { _controller: Controller\Gathering::share, type: meetup }
+  requirements: { _method: POST}

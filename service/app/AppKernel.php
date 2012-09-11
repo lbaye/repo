@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Routing\RequestContext,
     Symfony\Component\Routing\Matcher\UrlMatcher,
     Symfony\Component\Routing\Exception\ResourceNotFoundException,
-    Symfony\Component\Routing\Exception\MethodNotAllowedException;
+    Symfony\Component\Routing\Exception\MethodNotAllowedException,
+    Helper\Dependencies;
 
 class AppKernel
 {
@@ -39,6 +40,9 @@ class AppKernel
         $this->request = $request;
         $this->routes = $routes;
         $this->conf = $conf;
+
+        // @TODO : Replace with a DIC
+        Dependencies::$dm = $this->dm;
     }
 
     public function handle()

@@ -48,7 +48,6 @@ class Search extends Base
     {
         $data = $this->request->request->all();
         $results = array();
-
         $results['people'] = $this->people($data);
         $results['places'] = $this->places($data);
 

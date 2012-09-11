@@ -141,8 +141,8 @@ abstract class Gathering extends Content
             'id', 'title', 'description', 'eventShortSummary', 'eventImage',
             'time', 'rsvp','guestsCanInvite', 'createDate'
         );
-        $result = array();
 
+        $result = array();
 
         foreach ($fieldsToExpose as $field) {
             $result[$field] = $this->{"get{$field}"}();
