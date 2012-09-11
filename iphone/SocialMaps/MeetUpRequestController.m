@@ -18,10 +18,12 @@
 #import "DDAnnotation.h"
 #import "UtilityClass.h"
 #import "LocationItemPlace.h"
+#import "RestClient.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
-#define     TAG_TABLEVIEW_REPLY     1001
-#define     TAG_TABLEVIEW_INBOX     1002
+#define     TAG_MY_PLACES           1002
+#define     TAG_PLACES_NEAR         1003
+#define     TAG_CURRENT_LOCATION    1004
 
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -72,6 +74,7 @@ DDAnnotation *annotation;
     [self reloadScrolview]; 
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   
     //load map data
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
@@ -80,33 +83,42 @@ DDAnnotation *annotation;
 	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
     
 	annotation.title = @"Drag to Move Pin";
-	//annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
-    //    NSLog(@"annotation.coordinate %@",annotation.coordinate);
-    MKCoordinateRegion newRegion;
-    newRegion.center.latitude = annotation.coordinate.latitude;
-    newRegion.center.longitude = annotation.coordinate.longitude;
-    newRegion.span.latitudeDelta = 1.112872;
-    newRegion.span.longitudeDelta = 1.109863;
     
-    [pointOnMapView setRegion:newRegion animated:YES];
-    
-	[pointOnMapView setCenterCoordinate:annotation.coordinate];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
+    [pointOnMapView setRegion:adjustedRegion animated:NO];
     
 	[pointOnMapView addAnnotation:annotation];
     
     //tableView setup
     tableViewPlaces.dataSource = self;
     tableViewPlaces.delegate = self;
+    tableViewPlaces.tag = TAG_CURRENT_LOCATION;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+
+    [textViewPersonalMsg.layer setCornerRadius:8.0f];
+    [textViewPersonalMsg.layer setBorderWidth:0.5];
+    [textViewPersonalMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [textViewPersonalMsg.layer setMasksToBounds:YES];
+    
+    labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
 }
 
 - (void)viewDidUnload
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    
     [pointOnMapView release];
     pointOnMapView = nil;
     [labelAddress release];
     labelAddress = nil;
     [tableViewPlaces release];
     tableViewPlaces = nil;
+    [textViewPersonalMsg release];
+    textViewPersonalMsg = nil;
+    [viewComposePersonalMsg release];
+    viewComposePersonalMsg = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -121,28 +133,112 @@ DDAnnotation *annotation;
     [self dismissModalViewControllerAnimated:YES];
 }
 
+- (IBAction)actionMeetUpReqButton:(id)sender {
+    
+    if ([selectedFriendsIndex count] == 0) {
+        [UtilityClass showAlert:@"" :@"Select at least one friend"];
+        return;
+    }
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    
+    NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < [selectedFriendsIndex count]; i++) {
+        NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;
+        [userIDs addObject:userId];
+    }
+    
+    NSLog(@"user id %@", userIDs);
+    
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
+    dateString = [dateFormatter stringFromDate:[UtilityClass convertDate:dateString tz_type:@"3" tz:@"UTC"]];
+    
+    [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
+- (IBAction)actionSelectAll:(id)sender {
+    ((UIButton*)sender).selected = !((UIButton*)sender).selected;
+    if (((UIButton*)sender).selected) {
+        [self selectAll:sender];
+    } else {
+        [self unSelectAll:sender];
+    }
+}
+
+- (IBAction)actionCancelButton:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)actionAddPersonalMsgBtn:(id)sender {
+    viewComposePersonalMsg.hidden = !viewComposePersonalMsg.hidden;
+    if (!viewComposePersonalMsg.hidden) {
+        [textViewPersonalMsg becomeFirstResponder];
+    }
+}
+
+- (IBAction)actionSavePersonalMsgBtn:(id)sender {
+    [textViewPersonalMsg resignFirstResponder];
+    viewComposePersonalMsg.hidden = YES;
+}
+
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
     switch (indx) {
         case 3:
             tableViewPlaces.hidden = YES;
+            CLLocationCoordinate2D theCoordinate;
+            theCoordinate.latitude = annotation.coordinate.latitude;
+            theCoordinate.longitude =annotation.coordinate.longitude;
+//            MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+//            MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
+//            [pointOnMapView setRegion:adjustedRegion animated:YES]; 
+            [pointOnMapView setCenterCoordinate:annotation.coordinate];
+            [self performSelector:@selector(setAddressLabelFromLatLon) withObject:nil afterDelay:.3];
             break;
         case 2:
             tableViewPlaces.hidden = NO;
+            tableViewPlaces.tag = TAG_PLACES_NEAR;
+            selectedPlaceIndex = 0;
+            [tableViewPlaces reloadData];
             break;
         case 1:
             tableViewPlaces.hidden = NO;
+            tableViewPlaces.tag = TAG_MY_PLACES;
+            selectedPlaceIndex = 0;
+            [tableViewPlaces reloadData];
+            RestClient *restClient = [[[RestClient alloc] init] autorelease];
+            [restClient getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
+            break;
+        case 0:
+            tableViewPlaces.hidden = NO;
+            tableViewPlaces.tag = TAG_CURRENT_LOCATION;
+            selectedPlaceIndex = 0;
+            [tableViewPlaces reloadData];
             break;
         default:
             break;
     }
 }
 
+- (void)setAddressLabelFromLatLon
+{
+    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+- (void)getMyPlaces:(NSNotification *)notif {
+    
+    NSLog(@"gotMyPlaces");
+    
+    myPlacesArray = [notif object];
+    NSLog(@"Places Array %@", myPlacesArray);
+    [tableViewPlaces reloadData];
+}
+
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
-    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"placeList"];
     
     if (cell == nil) {
@@ -165,15 +261,28 @@ DDAnnotation *annotation;
         [cell.contentView addSubview:labelPlaceName];
     } 
 
-  
-    UILabel *labelPlacename = (UILabel*)[cell.contentView viewWithTag:1001];
-    labelPlacename.text = aPlaceItem.placeInfo.name;
+    UILabel *labelPlaceName = (UILabel*)[cell.contentView viewWithTag:1001];
+    
+    if (tableViewPlaces.tag == TAG_MY_PLACES) {
+        Places *aPlaceItem = (Places*)[myPlacesArray objectAtIndex:indexPath.row];
+        labelPlaceName.text = aPlaceItem.name;
+    } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
+        if (!currentAddress) {
+            currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+        }
+        labelPlaceName.text = currentAddress;
+    } else {
+         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+        labelPlaceName.text = aPlaceItem.placeInfo.name;
+    }
+    
     
     UIButton *selectBtn;
 
     for (UIView *eachView in [cell.contentView subviews]) {
         if ([eachView isKindOfClass:[UIButton class]]) {
             selectBtn = (UIButton*)eachView;
+            break;
         }
     }
 
@@ -198,10 +307,27 @@ DDAnnotation *annotation;
     selectedPlaceIndex = indexPath.row + 1;
     [tableViewPlaces reloadData];
     
-    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
-    labelAddress.text = aPlaceItem.placeInfo.name;
-    annotation.coordinate = aPlaceItem.coordinate;
-    
+    if (tableViewPlaces.tag == TAG_MY_PLACES) {
+        Places *aPlaceItem = (Places*)[myPlacesArray objectAtIndex:indexPath.row];
+        labelAddress.text = aPlaceItem.name;
+        CLLocationCoordinate2D theCoordinate;
+        theCoordinate.latitude = [aPlaceItem.location.latitude doubleValue];
+        theCoordinate.longitude = [aPlaceItem.location.longitude doubleValue];
+        annotation.coordinate = theCoordinate;
+        
+    } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
+        CLLocationCoordinate2D theCoordinate;
+        theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+        theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+        annotation.coordinate = theCoordinate;
+        
+        
+    } else {
+        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
+        labelAddress.text = aPlaceItem.placeInfo.name;
+        annotation.coordinate = aPlaceItem.coordinate;
+    }
+    /*
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = annotation.coordinate.latitude;
     theCoordinate.longitude =annotation.coordinate.longitude;
@@ -210,25 +336,22 @@ DDAnnotation *annotation;
     [pointOnMapView setRegion:adjustedRegion animated:NO]; 
 
 	[pointOnMapView setCenterCoordinate:annotation.coordinate];
-    
+    */
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (tableViewPlaces.tag == TAG_MY_PLACES) {
+        return [myPlacesArray count];
+    } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
+        return 1;
+    }  
+    
     return [smAppDelegate.placeList count];
 }
-
-/*
-- (void) actionSelectPlaceButton:(id)sender
-{
-    NSLog(@"place selected %d", [sender tag]);
-  
-    selectedPlaceIndex = [sender tag];
-    [tableViewPlaces reloadData];
-}
-*/
 
 ////friends List code
 //handling selection from scroll view of friends selection
@@ -259,29 +382,10 @@ DDAnnotation *annotation;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrolview];
 }
 
-/*
- - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
- {
- isDragging_msg = FALSE;
- }
- - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
- {
- isDecliring_msg = FALSE;
- }
- */
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     isDragging_msg = TRUE;
@@ -571,13 +675,13 @@ DDAnnotation *annotation;
     }
 }
 
--(IBAction)unSelectAll:(id)sender
+-(void)unSelectAll:(id)sender
 {
     [selectedFriendsIndex removeAllObjects];
     [self reloadScrolview];
 }
 
--(IBAction)addAll:(id)sender
+-(void)selectAll:(id)sender
 {
     for (int i=0; i<[filteredList count]; i++)
     {
@@ -608,44 +712,11 @@ DDAnnotation *annotation;
 
 -(void)loadDummydata
 {
-//    circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
-//    [circleList removeAllObjects];
-//    UserCircle *circle=[[UserCircle alloc]init];
-//    
-//    for (int i=0; i<[circleListGlobalArray count]; i++)
-//    {
-//        circle=[circleListGlobalArray objectAtIndex:i];
-//        [circleList addObject:circle.circleName];
-//    }
     UserFriends *frnds=[[UserFriends alloc] init];
-    /*
-    ImgesName = [[NSMutableArray alloc] initWithObjects:   
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005479.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005484.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
     
-    searchTexts=[[NSString alloc] initWithString:@""];
-    friendsNameArr=[[NSMutableArray alloc] initWithObjects:@"karin",@"foyzul",@"dulal",@"abbas",@"gafur",@"fuad",@"robi",@"karim",@"tinki",@"suma",@"tilok",@"babu",@"imran", nil];
-    friendsIDArr=[[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13", nil];
-    filteredList=[[NSMutableArray alloc] init];
-    friendListArr=[[NSMutableArray alloc] init];
-    */
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
-        //        frnds.userName=[friendsNameArr objectAtIndex:i];
-        //        frnds.userId=[friendsIDArr objectAtIndex:i];
-        //        frnds.imageUrl=[ImgesName objectAtIndex:i];
         frnds=[friendListGlobalArray objectAtIndex:i];
         [friendListArr addObject:frnds];
     }
@@ -659,10 +730,7 @@ DDAnnotation *annotation;
 - (void)coordinateChanged_:(NSNotification *)notification
 {	
 	annotation = notification.object;
-	//annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-    //annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-    
-    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [self performSelector:@selector(setAddressLabelFromLatLon) withObject:nil afterDelay:.3];
 }
 
 #pragma mark -
@@ -674,12 +742,7 @@ DDAnnotation *annotation;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
-                //annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
-                //annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
-        
-		//annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
-        //annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-        labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        [self performSelector:@selector(setAddressLabelFromLatLon) withObject:nil afterDelay:.3];
 	}
 }
 
@@ -716,6 +779,8 @@ DDAnnotation *annotation;
 
 - (void)dealloc {
     [tableViewPlaces release];
+    [textViewPersonalMsg release];
+    [viewComposePersonalMsg release];
     [super dealloc];
 }
 @end
