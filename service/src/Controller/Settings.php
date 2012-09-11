@@ -248,8 +248,17 @@ class Settings extends Base
             $location['lng'] = floatval($data['lng']);
 
             $this->user->setCurrentLocation($location);
+
             $this->_updateVisibility($this->user);
-            $this->_updateLastSeenAt($this->user);
+
+            // Update additional information
+            try {
+                $this->_updateLastSeenAt($this->user);
+                $this->_sendProximityAlerts($this->user);
+            } catch (\Exception $e) {
+                // Do the location update even if
+                return $this->persistAndReturn($location);
+            }
 
             return $this->persistAndReturn($location);
 
@@ -297,10 +306,25 @@ class Settings extends Base
 
     private function persistAndReturn($result)
     {
+        $this->user->setUpdateDate(new \DateTime());
         $this->dm->persist($this->user);
         $this->dm->flush();
 
         return $this->_generateResponse(array('result' => $result));
+    }
+
+    private function _sendProximityAlerts(\Document\User $user)
+    {
+        $distances = array();
+        $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
+
+        $from = $user->getCurrentLocation();
+        foreach($friends as $friend) {
+            $to = $friend->getCurrentLocation();
+            $distances[$friend->getId()] = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
+        }
+
+        //die(print_r($distances, true));
     }
 
     private function returnResponse($result)
