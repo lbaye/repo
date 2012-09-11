@@ -151,7 +151,8 @@
 }
 
 // Tableview stuff
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
     anItem.delegate = self;
@@ -194,7 +195,8 @@
     return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)] autorelease];
 }
 
-- (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender {
+- (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
+{
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
     switch (btnNum) {
         case 0:
