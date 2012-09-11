@@ -42,5 +42,6 @@
 @synthesize circles;
 @synthesize address;
 @synthesize age;
+@synthesize coverPhoto;
 
 @end

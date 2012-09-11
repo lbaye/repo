@@ -496,10 +496,10 @@ int notfCounter=0;
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
     }
-    else
-    {
-        [dicImages_msg setObject:[NSNull null] forKey:[ImgesName objectAtIndex:index]];
-    }
+//    else
+//    {
+//        [dicImages_msg setObject:[NSNull null] forKey:[ImgesName objectAtIndex:index]];
+//    }
     // Now, we need to reload scroll view to load downloaded image
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];

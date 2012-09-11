@@ -35,6 +35,8 @@
 -(void) getGeofence:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) getNotifications:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getUserProfile:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)updateUserProfile:(UserInfo *)userInfo:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getAllEvents:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getEventDetailById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;

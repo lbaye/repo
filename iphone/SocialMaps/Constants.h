@@ -31,6 +31,8 @@ extern NSString * const NOTIF_DELETE_EVENT_DONE;
 extern NSString * const NOTIF_CREATE_EVENT_DONE;
 extern NSString * const NOTIF_SET_RSVP_EVENT_DONE;
 extern NSString * const NOTIF_UPDATE_EVENT_DONE;
+extern NSString * const NOTIF_GET_BASIC_PROFILE_DONE;
+extern NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;
