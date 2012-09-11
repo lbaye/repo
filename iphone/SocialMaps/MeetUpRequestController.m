@@ -141,11 +141,7 @@ DDAnnotation *annotation;
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //NSLog(@"placeList Class %@", [[smAppDelegate.placeList objectAtIndex:indexPath.row] class]);
     LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
-    
-    
-    //CGSize senderStringSize = [msg.notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"placeList"];
     
@@ -160,6 +156,7 @@ DDAnnotation *annotation;
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateSelected];
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
         [buttonSelectPlace addTarget:self action:@selector(actionSelectPlaceButton:) forControlEvents:UIControlEventTouchUpInside];
+        buttonSelectPlace.userInteractionEnabled = NO;
         
         [cell.contentView addSubview:buttonSelectPlace];
         
@@ -168,7 +165,6 @@ DDAnnotation *annotation;
         [cell.contentView addSubview:labelPlaceName];
     } 
 
-    //cell.textLabel.text = aPlaceItem.placeInfo.name;
   
     UILabel *labelPlacename = (UILabel*)[cell.contentView viewWithTag:1001];
     labelPlacename.text = aPlaceItem.placeInfo.name;
@@ -192,6 +188,7 @@ DDAnnotation *annotation;
     
     return cell;
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
     
     NSLog(@"tableView cell selected %d", indexPath.row);    
@@ -201,34 +198,17 @@ DDAnnotation *annotation;
     selectedPlaceIndex = indexPath.row + 1;
     [tableViewPlaces reloadData];
     
-    //if (annotation == nil) {
-    //    annotation = [[MyAnnotation alloc] init];
-    //    annotation.title = @"Tap arrow to use address";
-    //}
-    
-    //[annotation moveAnnotation:placemark.coordinate];
-    //annotation.subtitle = placemark.formattedAddress;
-    
-    
-    
     LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
     labelAddress.text = aPlaceItem.placeInfo.name;
-    //NSLog(@"aplaceItem.coordinate = %f %f", aPlaceItem.coordinate.latitude, aPlaceItem.coordinate.longitude);
-    ////[pointOnMapView removeAnnotation:annotation];
-    ////annotation=[[DDAnnotation alloc] initWithCoordinate:aPlaceItem.coordinate addressDictionary:nil];
     annotation.coordinate = aPlaceItem.coordinate;
-    ////[pointOnMapView addAnnotation:annotation];
-    //NSLog(@"annotation.coordinate = %f %f", annotation.coordinate.latitude, aPlaceItem.coordinate.longitude);
-
     
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = annotation.coordinate.latitude;
     theCoordinate.longitude =annotation.coordinate.longitude;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
-    [pointOnMapView setRegion:adjustedRegion animated:YES]; 
+    [pointOnMapView setRegion:adjustedRegion animated:NO]; 
 
-    //[pointOnMapView addAnnotation:annotation];
 	[pointOnMapView setCenterCoordinate:annotation.coordinate];
     
 }
@@ -240,7 +220,7 @@ DDAnnotation *annotation;
     return [smAppDelegate.placeList count];
 }
 
-
+/*
 - (void) actionSelectPlaceButton:(id)sender
 {
     NSLog(@"place selected %d", [sender tag]);
@@ -248,6 +228,7 @@ DDAnnotation *annotation;
     selectedPlaceIndex = [sender tag];
     [tableViewPlaces reloadData];
 }
+*/
 
 ////friends List code
 //handling selection from scroll view of friends selection

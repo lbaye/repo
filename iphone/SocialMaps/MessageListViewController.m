@@ -1390,6 +1390,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)loadDummydata
 {
+    /*
     circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
     [circleList removeAllObjects];
     UserCircle *circle=[[UserCircle alloc]init];
@@ -1399,7 +1400,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         circle=[circleListGlobalArray objectAtIndex:i];
         [circleList addObject:circle.circleName];
     }
+    */
     UserFriends *frnds=[[UserFriends alloc] init];
+    /*
     ImgesName = [[NSMutableArray alloc] initWithObjects:   
                  @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
                  @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
@@ -1420,7 +1423,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     friendsIDArr=[[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13", nil];
     filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    
+    */
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
