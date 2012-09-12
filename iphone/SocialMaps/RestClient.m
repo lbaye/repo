@@ -3581,7 +3581,7 @@
 }
 
 // Send meet up request to one or more SM users
-- (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+- (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude address:(NSString*)address time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
 {
     NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/meetups"]];
     
@@ -3594,6 +3594,7 @@
     [request setPostValue:description forKey:@"description"];
     [request setPostValue:latitude forKey:@"lat"];
     [request setPostValue:longitude forKey:@"lng"];
+    [request setPostValue:address forKey:@"address"];
     [request setPostValue:time forKey:@"time"];
     
     for (NSString *id in recipients) {
@@ -3857,10 +3858,11 @@
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+    
                 meetUpReq.meetUpLocation = loc;
                 
                 meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
-                meetUpReq.meetUpLocation = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 
                 [meetUpRequests addObject:meetUpReq];
             }

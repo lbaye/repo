@@ -7,6 +7,7 @@
 //
 
 #import "MeetUpRequest.h"
+#import "Geolocation.h"
 
 @implementation MeetUpRequest 
 
@@ -18,6 +19,5 @@
 @synthesize meetUpTitle;
 @synthesize meetUpLocation;
 @synthesize meetUpAddress;
-
 
 @end

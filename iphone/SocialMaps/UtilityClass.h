@@ -21,5 +21,5 @@
 + (NSString*) convertDateToDisplayFormat:(NSDate*)adate ;
 +(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
 +(NSString *)convertNSDateToUnix:(NSDate *)date;
-
++ (NSString*) timeAsString:(NSDate*)notifTime;
 @end

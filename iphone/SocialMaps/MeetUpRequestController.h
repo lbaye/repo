@@ -36,6 +36,7 @@
     NSString *currentAddress;
 }
 
+@property (nonatomic, retain) NSString *currentAddress;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)actionMeetUpReqButton:(id)sender;

@@ -40,6 +40,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 @implementation MeetUpRequestController
 
+@synthesize currentAddress;
+
 DDAnnotation *annotation;
 
 - (void)viewDidLoad
@@ -103,8 +105,17 @@ DDAnnotation *annotation;
     [textViewPersonalMsg.layer setMasksToBounds:YES];
     
     labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
+    
+    self.currentAddress = @"";
 }
-
+/*
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self setAddressLabelFromLatLon];
+}
+*/
 - (void)viewDidUnload
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
@@ -140,6 +151,11 @@ DDAnnotation *annotation;
         return;
     }
     
+    if ([labelAddress.text isEqualToString:@" "]) {
+        [UtilityClass showAlert:@"" :@"Select an address"];
+        return;
+    }
+    
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     
     NSMutableArray *userIDs=[[NSMutableArray alloc] init];
@@ -155,7 +171,7 @@ DDAnnotation *annotation;
     NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
     dateString = [dateFormatter stringFromDate:[UtilityClass convertDate:dateString tz_type:@"3" tz:@"UTC"]];
     
-    [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] address:labelAddress.text time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
 - (IBAction)actionSelectAll:(id)sender {
@@ -267,10 +283,11 @@ DDAnnotation *annotation;
         Places *aPlaceItem = (Places*)[myPlacesArray objectAtIndex:indexPath.row];
         labelPlaceName.text = aPlaceItem.name;
     } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
-        if (!currentAddress) {
-            currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+        if ([self.currentAddress isEqual:@""]) {
+            self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         }
-        labelPlaceName.text = currentAddress;
+        NSLog(@"current address = %@", self.currentAddress);
+        labelPlaceName.text = self.currentAddress;
     } else {
          LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];
         labelPlaceName.text = aPlaceItem.placeInfo.name;
@@ -320,7 +337,7 @@ DDAnnotation *annotation;
         theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
         theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
         annotation.coordinate = theCoordinate;
-        
+        [self setAddressLabelFromLatLon];
         
     } else {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:indexPath.row];

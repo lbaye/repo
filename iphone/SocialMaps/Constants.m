@@ -10,7 +10,9 @@
 
 //NSString * const WS_URL = @"http://174.143.240.157:81";
 //NSString * const WS_URL = @"http://203.76.126.69";
-NSString * const WS_URL = @"http://203.76.126.69/social_maps/web";
+////NSString * const WS_URL = @"http://203.76.126.69/social_maps/web"; //
+NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
+//NSString * const WS_URL = @"http://203.76.126.69/social-maps-service/web"; 
 //NSString * const WS_URL = @"http://192.168.1.71/social_maps_git/social-maps-service/web";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";

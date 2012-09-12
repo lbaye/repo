@@ -65,6 +65,7 @@
 @synthesize peopleIndex;
 @synthesize gotListing;
 @synthesize placeIndex;
+@synthesize meetUpRequests;
 
 - (void)dealloc
 {
@@ -137,6 +138,9 @@
     
     // Notifications
     notifications  = [[NSMutableArray alloc] init];
+    
+    // Meet up request
+    meetUpRequests = [[NSMutableArray alloc] init];
     
     // Setup default platforms
     defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 
@@ -250,6 +254,7 @@
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:token];
     [restClient getInbox:@"Auth-Token" authTokenVal:token];
+    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:token];
 }
 
 // Get preferences settings

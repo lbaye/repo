@@ -211,17 +211,10 @@
 
         [loginAlert show];
         [loginAlert autorelease];
-        
-        
-        
-        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
-        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentModalViewController:controller animated:YES];
-        [controller release];
     }
     
 }
-#import "MeetUpRequestController.h"
+
 - (void)forgotPWDone:(NSNotification *)notif
 {
     NSLog(@"In LoginController:forgotPWDone");

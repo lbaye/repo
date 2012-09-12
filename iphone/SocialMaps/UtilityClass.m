@@ -126,4 +126,40 @@
     return [NSString stringWithFormat:@"%lf",interval];
 }
 
++ (NSString*) timeAsString:(NSDate*)notifTime {
+    NSString *timeStr = nil;
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];
+    
+    NSDateComponents *today = [[NSDateComponents alloc] init];
+    NSDateComponents *todayComponents =
+    [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit) fromDate:[NSDate date]];
+    today.day = [todayComponents day];
+    today.month = [todayComponents month];
+    today.year = [todayComponents year];
+    today.hour = 0;
+    today.minute = 0;
+    today.second = 0;
+    NSDate *todayDate = [gregorian dateFromComponents:today];
+    NSDate *yesterdayDate = [[NSDate alloc] initWithTimeInterval:-24*60*60 sinceDate:todayDate];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    if ([notifTime timeIntervalSinceDate:todayDate] >= 0) {
+        // Today
+        [dateFormatter setDateFormat:@"HH:mm"];
+        timeStr = [dateFormatter stringFromDate:notifTime];
+    }else if ([notifTime timeIntervalSinceDate:yesterdayDate] >= 0){
+        // Yesterday
+        timeStr = @"Yesterday";
+        
+    } else {
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+        
+        timeStr = [dateFormatter stringFromDate:notifTime];
+    }
+    return timeStr;
+}
+
 @end

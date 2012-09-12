@@ -10,18 +10,18 @@
 #import "DDAnnotationView.h"
 #import "DDAnnotation.h"
 #import "LocationItem.h"
-
+#import "UtilityClass.h"
 
 @implementation ShowOnMapController
 @synthesize mapViewLoacation;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLocation:(LocationItem*)locItem
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLocation:(CLLocationCoordinate2D)coordinate
 
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [self.mapViewLoacation removeAnnotations:[self.mapViewLoacation annotations]];
-        locationItem = locItem;
+        theCoordinate = coordinate;
         }
     return self;
 }
@@ -30,8 +30,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    CLLocationCoordinate2D theCoordinate = locationItem.coordinate;
     
     DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
     
@@ -45,8 +43,21 @@
     
     [self.mapViewLoacation setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapViewLoacation addAnnotation:annotation];
+    
+    annotation.title = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
+/*- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+}
+
+- (void)setAddressLabelFromLatLon 
+{
+    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+*/
 - (void)viewDidUnload
 {
     [self setMapViewLoacation:nil];
