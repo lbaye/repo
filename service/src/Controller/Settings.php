@@ -321,6 +321,9 @@ class Settings extends Base
         $from = $user->getCurrentLocation();
         $friendsToNotify = array();
 
+        // @todo : Add an API for setting proximity radius
+        $HARDCODED_PROXIMITY_RADIUS = 5;
+
         foreach($friends as $friend) {
 
             $friendsNotificationSettings = $friend->getNotificationSettings();
@@ -328,7 +331,8 @@ class Settings extends Base
             $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
 
             if(   $notificationSettings['proximity_alerts']['sm']
-            && $notificationSettings['proximity_radius'] >= $distance){
+            //&& $notificationSettings['proximity_radius'] >= $distance){
+            && $HARDCODED_PROXIMITY_RADIUS >= $distance){
                 $data = array(
                     'title' => 'Your friend is here!',
                     'photoUrl' => $friend->getAvatar(),
@@ -341,7 +345,8 @@ class Settings extends Base
 
             if(    $this->user->getVisible()
                 && $friendsNotificationSettings['proximity_alerts']['sm']
-                && $friendsNotificationSettings['proximity_radius'] >= $distance){
+                //&& $friendsNotificationSettings['proximity_radius'] >= $distance){
+                && $HARDCODED_PROXIMITY_RADIUS >= $distance){
                $friendsToNotify[] = $friend;
             }
         }
