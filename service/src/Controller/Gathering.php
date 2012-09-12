@@ -73,7 +73,7 @@ class Gathering extends Base
 
                 $data = $gathering->toArrayDetailed();
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
-                $data['is_invited'] = in_array($this->user->getId(),$data['guests']);
+                $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
                 $data['guests'] = $this->_getUserSummaryList($data['guests']);
                 return $this->_generateResponse($data);
 
@@ -145,24 +145,24 @@ class Gathering extends Base
             }
 
             if (empty($postData['guestsCanInvite'])) {
-               $meetup->setGuestsCanInvite(0);
+                $meetup->setGuestsCanInvite(0);
             }
 
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
 
-        if (!empty($postData['users'])){
+        if (!empty($postData['users'])) {
             $users = $this->userRepository->getAllByIds($postData['users'], false);
-            $notification  = new \Document\Notification();
+            $notification = new \Document\Notification();
             $notificationData = array(
-                'title' => $this->user->getName() ." shared an {$type} Request",
+                'title' => $this->user->getName() . " shared an {$type} Request",
                 'message' => "{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!",
                 'objectId' => $meetup->getId(),
                 'objectType' => $type,
             );
 
-             \Helper\Notification::send($notificationData, $users);
+            \Helper\Notification::send($notificationData, $users);
         }
 
         return $this->_generateResponse($meetup->toArrayDetailed(), Status::CREATED);
@@ -189,8 +189,8 @@ class Gathering extends Base
 
         if ($gathering->getOwner() != $this->user) {
 
-            if($gathering->getGuestsCanInvite() && in_array($this->user->getId(), $gathering->getGuests())){
-                if(! empty($postData['guests']))
+            if ($gathering->getGuestsCanInvite() && in_array($this->user->getId(), $gathering->getGuests())) {
+                if (!empty($postData['guests']))
                     $this->gatheringRepository->addGuests($postData['guests'], $gathering);
 
                 return $this->_generateResponse(array('message' => 'New guests has been added'));
@@ -272,12 +272,12 @@ class Gathering extends Base
         $userRsvp = $gathering->getUserResponse($this->user->getId());
         $rsvp = $gathering->getRsvp();
 
-        if (!empty($userRsvp)){
+        if (!empty($userRsvp)) {
             $key = array_search($this->user->getId(), $rsvp[$userRsvp]);
             unset($rsvp[$userRsvp][$key]);
         }
         $response = $this->request->get('response');
-        array_push($rsvp[$response],$this->user->getId());
+        array_push($rsvp[$response], $this->user->getId());
 
         $gathering->setRsvp($rsvp);
         $this->dm->persist($gathering);
@@ -305,16 +305,17 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        $users = $this->userRepository->getAllByIds($postData['users']);
+        $users = $this->userRepository->getAllByIds($postData['users'],false);
 
-        $notification  = new \Document\Notification();
-        $notification->setTitle($this->user->getName() .' shared an Event.');
-        $notification->setMessage("{$this->user->getName()} has created an event {$gathering->getTitle()}. He wants you to check it out!");
-        $notification->setObjectId($id);
-        $notification->setObjectType('event');
-        $notification->setPhotoUrl($this->user->getAvatar());
+        $notification = new \Document\Notification();
+        $notificationData = array(
+            'title' => $this->user->getName() . " shared an {$type} Request",
+            'message' => "{$this->user->getName()} has created {$gathering->getTitle()}. He wants you to check it out!",
+            'objectId' => $gathering->getId(),
+            'objectType' => $type,
+        );
 
-        \Helper\Notification::send($notification, $users);
+        \Helper\Notification::send($notificationData, $users);
 
         return $this->_generateResponse(array('message' => 'Shared successfully!'));
     }
@@ -324,16 +325,15 @@ class Gathering extends Base
         $gatheringItems = array();
         foreach ($results as $place) {
             $gatheringItem = $place->toArray();
-            $gatheringItem['event_type']  = $this->_checkGatheringType($place->getOwner());
+            $gatheringItem['event_type'] = $this->_checkGatheringType($place->getOwner());
 
-            if ($this->user == $place->getOwner())
-            {
+            if ($this->user == $place->getOwner()) {
                 $gatheringItem['my_response'] = 'yes';
-            }else {
+            } else {
                 $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
             }
 
-            $gatheringItem['is_invited']  = in_array($this->user->getId(), $place->getGuests());
+            $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
 
             $gatheringItems[] = $gatheringItem;
         }
@@ -345,11 +345,11 @@ class Gathering extends Base
     {
         $friends = $this->_getFriendList($this->user);
 
-        if($owner == $this->user){
+        if ($owner == $this->user) {
             return "my_event";
-        }elseif(!empty($friends)){
+        } elseif (!empty($friends)) {
             return "friends_event";
-        }else{
+        } else {
             return "public_event";
         }
     }
