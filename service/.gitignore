@@ -1,9 +1,12 @@
 app/cache
 tests/log
+web/images/*
 vendor
 composer.phar
 .idea
 .nbproject
 .svn
 .DS_Store
+
+!.gitignore
 

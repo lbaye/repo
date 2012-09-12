@@ -319,6 +319,8 @@ class Settings extends Base
 
         $notificationSettings = $this->user->getNotificationSettings();
         $from = $user->getCurrentLocation();
+        $friendsToNotify = array();
+
         foreach($friends as $friend) {
 
             $friendsNotificationSettings = $friend->getNotificationSettings();
@@ -326,25 +328,25 @@ class Settings extends Base
             $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
 
             if(   $notificationSettings['proximity_alerts']['sm']
-               && $notificationSettings['proximity_radius'] >= $distance){
+            && $notificationSettings['proximity_radius'] >= $distance){
                 $data = array(
                     'title' => 'Your friend is here!',
                     'photoUrl' => $friend->getAvatar(),
                     'objectId' => $friend->getName(),
                     'objectType' => 'user',
                     'message' => 'Your friend'. $friend->getName() .' is near your location!',
-                );
+            );
                 \Helper\Notification::send($this->_createNotificationData($friend), array($this->user));
             }
 
-            $friendsToNotify = array();
-            if(    $friendsNotificationSettings['proximity_alerts']['sm']
+            if(    $this->user->getVisible()
+                && $friendsNotificationSettings['proximity_alerts']['sm']
                 && $friendsNotificationSettings['proximity_radius'] >= $distance){
                $friendsToNotify[] = $friend;
             }
-
-            \Helper\Notification::send($this->_createNotificationData($this->user), $friendsToNotify);
         }
+
+        \Helper\Notification::send($this->_createNotificationData($this->user), $friendsToNotify);
     }
 
     private function returnResponse($result)
@@ -391,7 +393,7 @@ class Settings extends Base
             'photoUrl' => $friend->getAvatar(),
             'objectId' => $friend->getId(),
             'objectType' => 'proximity_alert',
-            'message' => 'Your friend'. $friend->getName() .' is near your location!',
+            'message' => 'Your friend '. $friend->getName() .' is near your location!',
         );
     }
 }
