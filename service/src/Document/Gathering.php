@@ -15,6 +15,8 @@ use Helper\Location as LocationHelper;
  */
 abstract class Gathering extends Content
 {
+
+
     /** @ODM\String */
     protected $title;
 
@@ -138,7 +140,7 @@ abstract class Gathering extends Content
     public function toArray()
     {
         $fieldsToExpose = array(
-            'id', 'title', 'description', 'eventShortSummary', 'eventImage',
+            'id', 'title', 'description', 'eventShortSummary','eventImage',
             'time', 'rsvp','guestsCanInvite', 'createDate'
         );
 
@@ -159,6 +161,7 @@ abstract class Gathering extends Content
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
         $result['distance'] = $distance;
+
         return $result;
     }
 

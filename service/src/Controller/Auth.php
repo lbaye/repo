@@ -187,7 +187,8 @@ class Auth extends Base
         } else {
             $userId        = $user->getId();
             $passwordToken = $this->userRepository->getPasswordToken($userId);
-            $url           = "http://203.76.126.69/social-maps-service/web/auth/pass/token/" . $passwordToken;
+
+            $url           = $this->config['web']['root'] ."/auth/pass/token/" . $passwordToken;
             $this->userRepository->updateForgetPasswordToken($userId, $passwordToken);
             $message = "Please click the link to reset your password {$url} ";
 
@@ -220,7 +221,7 @@ class Auth extends Base
             throw new \Exception\ResourceNotFoundException();
         } else {
 
-            return new RedirectResponse("http://203.76.126.69/social-maps-service/web/pass_socialmaps/index.php");
+            return new RedirectResponse($this->config['web']['root']."/pass_socialmaps/index.php");
 
         }
     }
@@ -255,8 +256,6 @@ class Auth extends Base
         $this->response->setStatusCode(Status::OK);
 
         return $this->response;
-
-
     }
 
     /**

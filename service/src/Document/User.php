@@ -15,10 +15,6 @@ class User
 {
     const SALT = 'socialmaps';
 
-    /**
-     * @var array
-     */
-    protected $config;
 
     /** @ODM\Id */
     protected $id;
@@ -331,7 +327,8 @@ class User
             'email' => $this->getEmail(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
-            'avatar' => $this->getAvatar(),
+            'avatar'   => $this->getAvatar(),
+            'coverPhoto'   => $this->getCoverPhoto(),
             'deactivated' => $this->getDeactivated(),
             'authToken' => $this->getAuthToken(),
             'settings' => $this->getSettings(),
@@ -355,7 +352,6 @@ class User
             'blockedBy' => $this->getBlockedBy(),
             'distance' => $this->getDistance(),
             'age' => $this->getAge(),
-            'coverPhoto' => $this->getCoverPhoto(),
             'status' => $this->getStatus(),
             'company' => $this->getCompany()
         );
@@ -366,6 +362,7 @@ class User
                 $data['circles'][] = $circle->toArray();
             }
         }
+
 
         if ($this->getAddress()) {
             $data['address'] = $this->getAddress()->toArray();
@@ -962,9 +959,7 @@ class User
 
     public function getDomainName()
     {
-        $pageURL = 'http://';
-
-        return $pageURL . $_SERVER["SERVER_NAME"];
+        return $this->config['web']['root'];
     }
 
     public function setLastSeenAt($nowAt)

@@ -48,7 +48,7 @@
 
     <div class="container">
 	
-   <form class="form-horizontal" action="http://203.76.126.69/social-maps-service/web/auth/reset_pass" method="POST">
+   <form class="form-horizontal" action="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/auth/reset_pass" method="POST">
   <fieldset>
     <legend>Change Password</legend>
     <div class="control-group">
