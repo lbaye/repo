@@ -885,6 +885,7 @@
     if (user != nil)
         aUserInfo = *user;
     else
+    {
         aUserInfo = [[UserInfo alloc] init];
     aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
     aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:nil key3:nil];
@@ -918,7 +919,9 @@
     aUserInfo.blockedBy = [self getNestedKeyVal:jsonObjects key1:@"blockedBy" key2:nil key3:nil];
     aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil] integerValue];
     aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"age" key2:nil key3:nil] integerValue];
-    
+    aUserInfo.coverPhoto = [self getNestedKeyVal:jsonObjects key1:@"coverPhoto" key2:nil key3:nil];
+    aUserInfo.status = [self getNestedKeyVal:jsonObjects key1:@"status" key2:nil key3:nil];
+        
     aUserInfo.circles = [[NSMutableArray alloc] init];
     for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
         UserCircle *aCircle = [[UserCircle alloc] init];
@@ -946,7 +949,7 @@
     aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
     aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
     aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
-    
+    }
     return aUserInfo;
 }
 /*
@@ -1076,6 +1079,68 @@
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getAccountSettings");
+    [request startAsynchronous];
+
+}
+
+-(void)getUserProfile:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/settings/account_settings",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    __block UserInfo *aUserInfo = nil;
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            
+            NSLog(@"getAccountSettings: %@",jsonObjects);
+            NSLog(@"aUserInfo.avatar %@",aUserInfo.avatar);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:aUserInfo];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getBasicProfile");
     [request startAsynchronous];
 
 }
@@ -3273,6 +3338,126 @@
     [request startAsynchronous];
     
 
+}
+
+-(void)updateUserProfile:(UserInfo *)userInfo:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/account_settings",WS_URL]];    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];  
+    if (userInfo.firstName)
+    {
+        [request addPostValue:userInfo.firstName forKey:@"firstName"];
+    }
+    if(userInfo.lastName)
+    {
+        [request addPostValue:userInfo.lastName forKey:@"lastName"];
+    }
+    if(userInfo.email)
+    {
+        [request addPostValue:userInfo.email forKey:@"email"];
+    }
+    //    [request addPostValue:userInfo.p forKey:@"password"];
+    if(userInfo.avatar)
+    {
+        [request addPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.gender)
+    {
+        [request addPostValue:userInfo.gender forKey:@"gender"];
+    }
+    if(userInfo.username)
+    {
+        [request addPostValue:userInfo.username forKey:@"username"];
+    }
+    if(userInfo.address.city)
+    {
+        [request addPostValue:userInfo.address.city forKey:@"city"];
+    }
+    if(userInfo.address.postCode)
+    {
+        [request addPostValue:userInfo.address.postCode forKey:@"postCode"];
+    }
+    if(userInfo.address.country)
+    {
+        [request addPostValue:userInfo.address.country forKey:@"country"];
+    }
+    if(userInfo.workStatus)
+    {
+        [request addPostValue:userInfo.workStatus forKey:@"workStatus"];
+    }
+    if(userInfo.relationshipStatus)
+    {
+        [request addPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
+    }
+    if(userInfo.unit)
+    {
+        [request addPostValue:userInfo.settings forKey:@"settings[units]"];
+    }
+    if(userInfo.bio)
+    {
+        [request addPostValue:userInfo.bio forKey:@"bio"];
+    }
+    if(userInfo.interests)
+    {
+        [request addPostValue:userInfo.interests forKey:@"interests"];
+    }
+    if(userInfo.dateOfBirth)
+    {
+        [request setPostValue:[UtilityClass convertNSDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    }
+    if(userInfo.avatar)
+    {
+        [request setPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.coverPhoto)
+    {
+        [request setPostValue:userInfo.coverPhoto forKey:@"coverPhoto"];
+    }
+    if (userInfo.status)
+    {
+        [request setPostValue:userInfo.status forKey:@"status"];
+    }
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) 
+        {
+            UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
+            
+            NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:aUserInfo];
+        } 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+     }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+    
 }
 
 -(void)setGeofence:(Geofence *)geofence:(NSString *)authToken:(NSString *)authTokenValue

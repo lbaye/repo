@@ -17,6 +17,10 @@
 		2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DE15F3317000529CB2 /* DDAnnotationView.m */; };
 		2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2063A1E115F3332100529CB2 /* QuartzCore.framework */; };
 		2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2070A6B915F71FEB008AB0A1 /* event_item_bg.png */; };
+		208726D915FF04D500444CC2 /* UserBasicProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */; };
+		208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */; };
+		208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E015FF149D00444CC2 /* profile_brush_icon.png */; };
+		208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E115FF149D00444CC2 /* profile_pen_icon.png */; };
 		20B0E7DE15D7A9CF009A500A /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D515D7A9CF009A500A /* Globals.m */; };
 		20B0E7DF15D7A9CF009A500A /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D715D7A9CF009A500A /* IconDownloader.m */; };
 		20B0E7E015D7A9CF009A500A /* UserDefault.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D915D7A9CF009A500A /* UserDefault.m */; };
@@ -380,6 +384,11 @@
 		2063A1DE15F3317000529CB2 /* DDAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAnnotationView.m; sourceTree = "<group>"; };
 		2063A1E115F3332100529CB2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2070A6B915F71FEB008AB0A1 /* event_item_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = event_item_bg.png; sourceTree = "<group>"; };
+		208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserBasicProfileViewController.h; sourceTree = "<group>"; };
+		208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserBasicProfileViewController.m; sourceTree = "<group>"; };
+		208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserBasicProfileViewController.xib; sourceTree = "<group>"; };
+		208726E015FF149D00444CC2 /* profile_brush_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_brush_icon.png; sourceTree = "<group>"; };
+		208726E115FF149D00444CC2 /* profile_pen_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_pen_icon.png; sourceTree = "<group>"; };
 		20B0E7D415D7A9CF009A500A /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
 		20B0E7D515D7A9CF009A500A /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
 		20B0E7D615D7A9CF009A500A /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
@@ -1199,6 +1208,9 @@
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
+				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
+				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
+				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -1373,6 +1385,8 @@
 				4F42970215E6CF35001AB56F /* place_review.png */,
 				4F4296FD15E6CF35001AB56F /* place_save.png */,
 				4F72290015C7F4BB008B60A8 /* print_on_map_button.png */,
+				208726E015FF149D00444CC2 /* profile_brush_icon.png */,
+				208726E115FF149D00444CC2 /* profile_pen_icon.png */,
 				4FB7A03215D124E2001EB905 /* radio_checked_small.png */,
 				4FB7A03115D124E2001EB905 /* radio_unchecked_small.png */,
 				4F72290515C7F4BB008B60A8 /* radius_field.png */,
@@ -1815,6 +1829,9 @@
 				4F469CCD15FD15FE008341C2 /* header.png in Resources */,
 				4F469CD015FD1CB5008341C2 /* Default.png in Resources */,
 				4F469CD215FD1CC4008341C2 /* Default@2x.png in Resources */,
+				208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */,
+				208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */,
+				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1964,6 +1981,7 @@
 				B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */,
 				B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */,
 				B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */,
+				208726D915FF04D500444CC2 /* UserBasicProfileViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1994,8 +2012,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2010,8 +2028,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "40BF56DE-29E5-4AFE-8F51-FA74B344E17B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "40BF56DE-29E5-4AFE-8F51-FA74B344E17B";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2021,8 +2039,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2031,8 +2049,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "40BF56DE-29E5-4AFE-8F51-FA74B344E17B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "40BF56DE-29E5-4AFE-8F51-FA74B344E17B";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2041,8 +2059,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2053,8 +2071,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F681A094-E976-45D7-A13C-14B4AB13DE5F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F681A094-E976-45D7-A13C-14B4AB13DE5F";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2063,8 +2081,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2075,8 +2093,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F681A094-E976-45D7-A13C-14B4AB13DE5F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F681A094-E976-45D7-A13C-14B4AB13DE5F";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

@@ -30,6 +30,7 @@
 #import "Places.h"
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
+#import "UserBasicProfileViewController.h"
 
 
 @interface MapViewController ()
@@ -1112,6 +1113,9 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoCheckins:(id)sender
 {
+    UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
+    prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:prof animated:YES];
 }
 
 - (IBAction)gotoMeetupReq:(id)sender

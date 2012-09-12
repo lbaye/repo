@@ -570,7 +570,8 @@ int updateNotf=0;
 	}
 }
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
 	
     if ([annotation isKindOfClass:[MKUserLocation class]])
     {
@@ -664,14 +665,14 @@ int updateNotf=0;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }               
             }
 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
