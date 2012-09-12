@@ -209,7 +209,7 @@ class GatheringRepo extends Base
         if ($eventImageUrl !== false) {
             $user->setEventImage($eventImageUrl);
         } else {
-            $serverUrl = 'http://'. $_SERVER["SERVER_NAME"] .'/social_maps/web';
+            $serverUrl = 'http://'. $_SERVER["SERVER_NAME"] .'/social-maps-service/web';
 
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
             $user->setEventImage($serverUrl . $filePath);
