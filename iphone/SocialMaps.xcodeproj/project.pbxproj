@@ -17,7 +17,6 @@
 		2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DE15F3317000529CB2 /* DDAnnotationView.m */; };
 		2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2063A1E115F3332100529CB2 /* QuartzCore.framework */; };
 		2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2070A6B915F71FEB008AB0A1 /* event_item_bg.png */; };
-		208726D915FF04D500444CC2 /* UserBasicProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */; };
 		208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */; };
 		208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E015FF149D00444CC2 /* profile_brush_icon.png */; };
 		208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E115FF149D00444CC2 /* profile_pen_icon.png */; };
@@ -130,6 +129,9 @@
 		4F4CA57715C45351004234E5 /* bubble_count_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F4CA54615C45351004234E5 /* bubble_count_icon.png */; };
 		4F4CA57815C45351004234E5 /* zoom_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F4CA54715C45351004234E5 /* zoom_icon.png */; };
 		4F4CA57A15C466EC004234E5 /* down_arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F4CA57915C466EC004234E5 /* down_arrow_white.png */; };
+		4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */; };
+		4F4FB0A51601014C00E142A7 /* MeetUpRequestListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */; };
+		4F4FB0A7160101CE00E142A7 /* UserBasicProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */; };
 		4F50CC0015C82A3600A3AFA8 /* Notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CBFF15C82A3600A3AFA8 /* Notification.m */; };
 		4F50CC0415C82B4F00A3AFA8 /* NotifRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0315C82B4F00A3AFA8 /* NotifRequest.m */; };
 		4F50CC0715C82BAA00A3AFA8 /* NotifMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0615C82BAA00A3AFA8 /* NotifMessage.m */; };
@@ -532,6 +534,9 @@
 		4F4CA54615C45351004234E5 /* bubble_count_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubble_count_icon.png; path = Images/bubble_count_icon.png; sourceTree = SOURCE_ROOT; };
 		4F4CA54715C45351004234E5 /* zoom_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = zoom_icon.png; path = Images/zoom_icon.png; sourceTree = SOURCE_ROOT; };
 		4F4CA57915C466EC004234E5 /* down_arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = down_arrow_white.png; path = Images/down_arrow_white.png; sourceTree = SOURCE_ROOT; };
+		4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestListView.xib; sourceTree = "<group>"; };
+		4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestListView.m; sourceTree = "<group>"; };
+		4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequestListView.h; sourceTree = "<group>"; };
 		4F50CBFE15C82A3600A3AFA8 /* Notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
 		4F50CBFF15C82A3600A3AFA8 /* Notification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notification.m; sourceTree = "<group>"; };
 		4F50CC0215C82B4F00A3AFA8 /* NotifRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifRequest.h; sourceTree = "<group>"; };
@@ -1172,6 +1177,9 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
+				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
+				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
+				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
@@ -1837,6 +1845,7 @@
 				208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */,
 				208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */,
 				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
+				4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1847,6 +1856,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F4FB0A7160101CE00E142A7 /* UserBasicProfileViewController.m in Sources */,
 				4F98A2D815BB387D000B3124 /* main.m in Sources */,
 				4F98A2DC15BB387D000B3124 /* AppDelegate.m in Sources */,
 				4F98A2E215BB387D000B3124 /* ViewController.m in Sources */,
@@ -1987,6 +1997,7 @@
 				B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */,
 				B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */,
 				B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */,
+				4F4FB0A51601014C00E142A7 /* MeetUpRequestListView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
