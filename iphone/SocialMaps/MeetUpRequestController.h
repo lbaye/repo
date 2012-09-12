@@ -20,6 +20,8 @@
     IBOutlet UISearchBar  *friendSearchbar;
     IBOutlet MKMapView *pointOnMapView;
     IBOutlet UITableView *tableViewPlaces;
+    IBOutlet UITextView *textViewPersonalMsg;
+    IBOutlet UIView *viewComposePersonalMsg;
     
     NSMutableArray *selectedFriendsIndex;
     BOOL isDragging_msg;
@@ -30,9 +32,17 @@
     
     AppDelegate *smAppDelegate;
     int selectedPlaceIndex;
+    NSMutableArray *myPlacesArray;
+    NSString *currentAddress;
 }
 
+@property (nonatomic, retain) NSString *currentAddress;
 
 - (IBAction)actionBackMe:(id)sender;
+- (IBAction)actionMeetUpReqButton:(id)sender;
+- (IBAction)actionSelectAll:(id)sender;
+- (IBAction)actionCancelButton:(id)sender;
+- (IBAction)actionAddPersonalMsgBtn:(id)sender;
+- (IBAction)actionSavePersonalMsgBtn:(id)sender;
 
 @end

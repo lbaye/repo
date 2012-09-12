@@ -8,17 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
+#import "Geolocation.h"
 
-@class LocationItem;
+//@class LocationItem;
 
 @interface ShowOnMapController : UIViewController {
-    LocationItem  *locationItem;
+
+    CLLocationCoordinate2D theCoordinate;
 }
 
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapViewLoacation;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLocation:(LocationItem*)locItem;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLocation:(CLLocationCoordinate2D)coordinate;
 - (IBAction)actionBackButton:(id)sender;
 
 @end

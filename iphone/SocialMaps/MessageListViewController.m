@@ -17,6 +17,7 @@
 #import "UserCircle.h"
 #import "Globals.h"
 #import "UtilityClass.h"
+#import "MeetUpRequestListView.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -24,6 +25,7 @@
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_TABLEVIEW_REPLY     1001
 #define     TAG_TABLEVIEW_INBOX     1002
+#define     TAG_MEETUP_VIEW         1003
 
 @implementation MessageListViewController
 
@@ -90,15 +92,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+    
+    MeetUpRequestListView *meetUpRequestListView = [[MeetUpRequestListView alloc] initWithFrame:CGRectMake(0, 0, messageRepiesView.frame.size.width, messageRepiesView.frame.size.height) andParentControllder:self];
+    meetUpRequestListView.tag = TAG_MEETUP_VIEW;
+    meetUpRequestListView.hidden = YES;
+    [messageRepiesView addSubview:meetUpRequestListView];
+    [meetUpRequestListView release];
+    
 }
-
-//- (void) actionTestBtn 
-//{
-//    for (MessageReply *msgReply in messageReplyList) {
-//        NSLog(@"msgReply.senderImage = %@", msgReply.senderImage);
-//    } 
-//}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -172,12 +173,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     [friendSearchbar resignFirstResponder];
     //msgListTableView.tag = TAG_TABLEVIEW_INBOX;
+    
+    [messageRepiesView viewWithTag:TAG_MEETUP_VIEW].hidden = YES;
 }
 
 - (IBAction)actionMeetUpBtn:(id)sender {
     buttonMeetUp.selected = YES;
     buttonMessage.selected = NO;
     NSLog(@"actionMeetUpBtn");
+    
+    messageRepiesView.hidden = NO;
+    [messageRepiesView viewWithTag:TAG_MEETUP_VIEW].hidden = NO;
+    
 }
 
 - (IBAction)actionNewMessageBtn:(id)sender {
@@ -320,42 +327,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
 }
 
-//Duplicate in Notification Class
-- (NSString*) timeAsString:(NSDate*)notifTime {
-    NSString *timeStr = nil;
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];
-    
-    NSDateComponents *today = [[NSDateComponents alloc] init];
-    NSDateComponents *todayComponents =
-    [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit) fromDate:[NSDate date]];
-    today.day = [todayComponents day];
-    today.month = [todayComponents month];
-    today.year = [todayComponents year];
-    today.hour = 0;
-    today.minute = 0;
-    today.second = 0;
-    NSDate *todayDate = [gregorian dateFromComponents:today];
-    NSDate *yesterdayDate = [[NSDate alloc] initWithTimeInterval:-24*60*60 sinceDate:todayDate];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
-    if ([notifTime timeIntervalSinceDate:todayDate] >= 0) {
-        // Today
-        [dateFormatter setDateFormat:@"HH:mm"];
-        timeStr = [dateFormatter stringFromDate:notifTime];
-    }else if ([notifTime timeIntervalSinceDate:yesterdayDate] >= 0){
-        // Yesterday
-        timeStr = @"Yesterday";
-        
-    } else {
-        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-        
-        timeStr = [dateFormatter stringFromDate:notifTime];
-    }
-    return timeStr;
-}
 
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -458,7 +429,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
         
         lblSender.text = msgReply.senderName;
-        lblTime.text = [self timeAsString:msgReply.time];
+        lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
         
         return cell;
@@ -528,7 +499,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
-    lblTime.text = [self timeAsString:msg.notifTime];
+    lblTime.text = [UtilityClass timeAsString:msg.notifTime];
     txtMsg.text = msg.notifMessage;
     
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
@@ -1435,6 +1406,5 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     filteredList=[friendListArr mutableCopy];
 }
-
 
 @end

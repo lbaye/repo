@@ -68,4 +68,7 @@
 - (id) getNestedKeyVal:(NSDictionary*)dict key1:(NSString*)key1 key2:(NSString*)key2 key3:(NSString*)key3;
 - (bool) changePassword:(NSString*)passwd oldpasswd:(NSString*)oldpasswd authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue;
 -(void)getUserInfo:(UserInfo**)user tokenStr:(NSString *)authToken tokenValue:(NSString *)authTokenValue;
+-(void)getMyPlaces:(NSString *)authToken:(NSString *)authTokenValue;
+- (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude address:(NSString*)address time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getMeetUpRequest:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 @end

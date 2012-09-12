@@ -51,6 +51,7 @@
     NSMutableArray *dealList;
     NSMutableArray *displayList;
     NSMutableArray *friendList;
+    NSMutableArray *meetUpRequests;
     // Preferences
     Platform        *platformPrefs;
     Layer           *layerPrefs;
@@ -104,6 +105,7 @@
 @property (nonatomic, retain)NotificationPref    *notifPrefs;
 @property (nonatomic, retain) Geolocation        *currPosition;
 @property (nonatomic, retain) Geolocation        *lastPosition;
+@property (nonatomic, retain) NSMutableArray    *meetUpRequests;
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;

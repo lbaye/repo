@@ -235,7 +235,7 @@
             
             NSLog(@"cordinate %f %f", anItem.coordinate.longitude, anItem.coordinate.latitude);
             
-            controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem];
+            controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem.coordinate];
             controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
             [self presentModalViewController:controller animated:YES];
             [controller release];

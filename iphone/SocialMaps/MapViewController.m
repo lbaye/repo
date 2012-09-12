@@ -336,6 +336,7 @@ ButtonClickCallbackData callBackData;
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequests:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
@@ -457,7 +458,7 @@ ButtonClickCallbackData callBackData;
         ignoreCount += [smAppDelegate.notifications count];
     
     int totalNotif = smAppDelegate.friendRequests.count+
-    smAppDelegate.messages.count+smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
+    smAppDelegate.messages.count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
     
     if (totalNotif == 0)
         _mapNotifCount.text = @"";
@@ -471,6 +472,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
 }
 
 - (void)viewDidUnload
@@ -1533,6 +1535,13 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.notifications removeAllObjects];
     [smAppDelegate.notifications addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
+    [self displayNotificationCount];
+}
+- (void)gotMeetUpRequests:(NSNotification *)notif {
+    NSMutableArray *notifs = [notif object];
+    [smAppDelegate.meetUpRequests removeAllObjects];
+    [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
+    NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     [self displayNotificationCount];
 }
 @end

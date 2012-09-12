@@ -29,6 +29,7 @@
 #import "Globals.h"
 #import "MessageReply.h"
 #import "UtilityClass.h"
+#import "MeetUpRequest.h"
 
 @implementation RestClient
 
@@ -1348,6 +1349,66 @@
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getShareLocation");
+    [request startAsynchronous];
+}
+
+-(void)getMyPlaces:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/places",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *myPlaces = [[NSMutableArray alloc] init];
+    
+    NSLog(@"route = %@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            for (NSDictionary *item in jsonObjects) {
+                Places *aPlace = [[Places alloc] init];
+                
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+                aPlace.location = loc;
+                aPlace.address = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
+                aPlace.name = [self getNestedKeyVal:item key1:@"location" key2:@"title" key3:nil];
+                
+                [myPlaces addObject:aPlace];
+                
+            }
+            
+            NSLog(@"messageReplies = %@", myPlaces);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:myPlaces];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getReplies");
     [request startAsynchronous];
 }
 
@@ -3704,6 +3765,65 @@
 
 }
 
+// Send meet up request to one or more SM users
+- (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude address:(NSString*)address time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/meetups"]];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request setPostValue:title forKey:@"title"];
+    [request setPostValue:description forKey:@"description"];
+    [request setPostValue:latitude forKey:@"lat"];
+    [request setPostValue:longitude forKey:@"lng"];
+    [request setPostValue:address forKey:@"address"];
+    [request setPostValue:time forKey:@"time"];
+    
+    for (NSString *id in recipients) {
+        [request addPostValue:id forKey:@"guests[]"];
+    }
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            [UtilityClass showAlert:@"" :@"Meet-up request sent"];
+            NSLog(@"sendMessage successful:status=%d", responseStatus);
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+        } else {
+            NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"sendMeetup failed: unknown error");
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+}
+
 - (void) sendReply:(NSString*)msgId content:(NSString*)content authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/messages"]];
     
@@ -3878,6 +3998,81 @@
     //[request setDelegate:self];
     NSLog(@"asyn srt getFriendRequests");
     [request startAsynchronous];
+}
+
+- (void) getMeetUpRequest:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    
+    NSLog(@"in RestClient getMeetUpRequest");
+    NSLog(@"authTokenValue = %@", authTokenValue);
+    NSLog(@"authToken = %@", authToken);
+    
+    NSString *route = [NSString stringWithFormat:@"%@/meetups",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *meetUpRequests = [[NSMutableArray alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            for (NSDictionary *item in jsonObjects) {
+                MeetUpRequest *meetUpReq = [[MeetUpRequest alloc] init];
+                
+                meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                meetUpReq.meetUpTitle  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
+                meetUpReq.meetUpDescription  = [self getNestedKeyVal:item key1:@"description" key2:nil key3:nil];
+                NSString *date = [self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
+                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];
+                NSString *timeZone = [self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
+                meetUpReq.meetUpTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                meetUpReq.meetUpSenderId = [self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil];
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+    
+                meetUpReq.meetUpLocation = loc;
+                
+                meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
+                meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                
+                [meetUpRequests addObject:meetUpReq];
+            }
+            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:meetUpRequests];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getMeetUpReq");
+    [request startAsynchronous];
+    
 }
 
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {

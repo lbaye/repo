@@ -365,6 +365,7 @@
 		B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5015F5E74300020D49 /* tab_icon_message.png */; };
 		B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5115F5E74300020D49 /* top_curve_bg.png */; };
 		B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5215F5E74300020D49 /* whitle_blend.png */; };
+		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
@@ -894,6 +895,8 @@
 		B01DFC5015F5E74300020D49 /* tab_icon_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message.png; path = Images/tab_icon_message.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5115F5E74300020D49 /* top_curve_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_curve_bg.png; path = Images/top_curve_bg.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5215F5E74300020D49 /* whitle_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whitle_blend.png; path = Images/whitle_blend.png; sourceTree = SOURCE_ROOT; };
+		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
+		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
 		B0C206AD15FB26C900177132 /* ShowOnMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowOnMapController.h; sourceTree = "<group>"; };
 		B0C206AE15FB26C900177132 /* ShowOnMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowOnMapController.m; sourceTree = "<group>"; };
 		B0C206AF15FB26C900177132 /* ShowOnMapController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowOnMapController.xib; sourceTree = "<group>"; };
@@ -1004,6 +1007,8 @@
 				B01DFC4515F5E61000020D49 /* MessageReply.m */,
 				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
 				20E4A12015D8EB80009A1F6B /* NewsFeed.m */,
+				B087BF4015FF921000091DA7 /* MeetUpRequest.h */,
+				B087BF4115FF921100091DA7 /* MeetUpRequest.m */,
 				4F50CBFE15C82A3600A3AFA8 /* Notification.h */,
 				4F50CBFF15C82A3600A3AFA8 /* Notification.m */,
 				4F1D96AE15DCC93B00511624 /* NotificationPref.h */,
@@ -1981,7 +1986,7 @@
 				B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */,
 				B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */,
 				B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */,
-				208726D915FF04D500444CC2 /* UserBasicProfileViewController.m in Sources */,
+				B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

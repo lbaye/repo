@@ -21,6 +21,7 @@
     NSMutableArray *typeArr;
     NSString *vicinity;
     NSString *distance;
+    NSString *address;
 }
 
 @property(nonatomic,retain) Geolocation *location;
@@ -33,4 +34,6 @@
 @property(nonatomic,retain) NSMutableArray *typeArr;
 @property(nonatomic,retain) NSString *vicinity;
 @property(nonatomic,retain) NSString *distance;
+@property(nonatomic,retain) NSString *address;
+
 @end
