@@ -920,7 +920,8 @@
     aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil] integerValue];
     aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"age" key2:nil key3:nil] integerValue];
     aUserInfo.coverPhoto = [self getNestedKeyVal:jsonObjects key1:@"coverPhoto" key2:nil key3:nil];
-    
+    aUserInfo.status = [self getNestedKeyVal:jsonObjects key1:@"status" key2:nil key3:nil];
+        
     aUserInfo.circles = [[NSMutableArray alloc] init];
     for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
         UserCircle *aCircle = [[UserCircle alloc] init];
@@ -3345,26 +3346,80 @@
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
     
-    [request addRequestHeader:authToken value:authTokenValue];    
-    [request addPostValue:userInfo.firstName forKey:@"firstName"];
-    [request addPostValue:userInfo.lastName forKey:@"lastName"];
-    [request addPostValue:userInfo.email forKey:@"email"];
+    [request addRequestHeader:authToken value:authTokenValue];  
+    if (userInfo.firstName)
+    {
+        [request addPostValue:userInfo.firstName forKey:@"firstName"];
+    }
+    if(userInfo.lastName)
+    {
+        [request addPostValue:userInfo.lastName forKey:@"lastName"];
+    }
+    if(userInfo.email)
+    {
+        [request addPostValue:userInfo.email forKey:@"email"];
+    }
     //    [request addPostValue:userInfo.p forKey:@"password"];
-    [request addPostValue:userInfo.avatar forKey:@"avatar"];
-    [request addPostValue:userInfo.gender forKey:@"gender"];
-    [request addPostValue:userInfo.username forKey:@"username"];
-    [request addPostValue:userInfo.address.city forKey:@"city"];
-    [request addPostValue:userInfo.address.postCode forKey:@"postCode"];
-    [request addPostValue:userInfo.address.country forKey:@"country"];
-    [request addPostValue:userInfo.workStatus forKey:@"workStatus"];
-    [request addPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
-    [request addPostValue:userInfo.settings forKey:@"settings[units]"];
-    [request addPostValue:userInfo.bio forKey:@"bio"];
-    [request addPostValue:userInfo.interests forKey:@"interests"];
-    [request setPostValue:[UtilityClass convertNSDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
-    [request setPostValue:userInfo.avatar forKey:@"avatar"];
-    [request setPostValue:userInfo.coverPhoto forKey:@"coverPhoto"];
-    
+    if(userInfo.avatar)
+    {
+        [request addPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.gender)
+    {
+        [request addPostValue:userInfo.gender forKey:@"gender"];
+    }
+    if(userInfo.username)
+    {
+        [request addPostValue:userInfo.username forKey:@"username"];
+    }
+    if(userInfo.address.city)
+    {
+        [request addPostValue:userInfo.address.city forKey:@"city"];
+    }
+    if(userInfo.address.postCode)
+    {
+        [request addPostValue:userInfo.address.postCode forKey:@"postCode"];
+    }
+    if(userInfo.address.country)
+    {
+        [request addPostValue:userInfo.address.country forKey:@"country"];
+    }
+    if(userInfo.workStatus)
+    {
+        [request addPostValue:userInfo.workStatus forKey:@"workStatus"];
+    }
+    if(userInfo.relationshipStatus)
+    {
+        [request addPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
+    }
+    if(userInfo.unit)
+    {
+        [request addPostValue:userInfo.settings forKey:@"settings[units]"];
+    }
+    if(userInfo.bio)
+    {
+        [request addPostValue:userInfo.bio forKey:@"bio"];
+    }
+    if(userInfo.interests)
+    {
+        [request addPostValue:userInfo.interests forKey:@"interests"];
+    }
+    if(userInfo.dateOfBirth)
+    {
+        [request setPostValue:[UtilityClass convertNSDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    }
+    if(userInfo.avatar)
+    {
+        [request setPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.coverPhoto)
+    {
+        [request setPostValue:userInfo.coverPhoto forKey:@"coverPhoto"];
+    }
+    if (userInfo.status)
+    {
+        [request setPostValue:userInfo.status forKey:@"status"];
+    }
     // Handle successful REST call
     [request setCompletionBlock:^{
         

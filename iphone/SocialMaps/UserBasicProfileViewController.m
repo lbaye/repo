@@ -69,15 +69,19 @@ BOOL coverImgFlag;
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];    
+    
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
-    for (int i=0; i<10; i++)
+    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
+    for (int i=0; i<[nameArr count]; i++)
     {
         [ImgesName addObject:@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg"];
-        [nameArr addObject:@"Bonolota sen"];
     }
+//            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     [self reloadScrolview];
@@ -85,10 +89,18 @@ BOOL coverImgFlag;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [smAppDelegate showActivityViewer:self.view];
     
+    profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    profileImageView.userInteractionEnabled=YES;
+    profileImageView.layer.borderWidth=1.0;
+    profileImageView.layer.masksToBounds = YES;
+    [profileImageView.layer setCornerRadius:5.0];
+
 }
 
 -(IBAction)editCoverButton:(id)sender
@@ -131,6 +143,8 @@ BOOL coverImgFlag;
 -(IBAction)saveEntity:(id)sender
 {
     NSLog(@"save");
+    statusMsgLabel.text=entityTextField.text;
+    userInfo.status=entityTextField.text;
     [statusContainer removeFromSuperview];
     [entityTextField resignFirstResponder];
 }
@@ -170,25 +184,39 @@ BOOL coverImgFlag;
 -(IBAction)backButton:(id)sender
 {
     [self.entityTextField resignFirstResponder];
-    [self dismissModalViewControllerAnimated:YES];
+    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
 {
     NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
-//    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
 //     coverImageView.image;
 //     profileImageView.image;
     userInfo=[notif object];
-     nameLabl.text=userInfo.username;
+     nameLabl.text=[NSString stringWithFormat:@"Firstname %@",userInfo.firstName];
      statusMsgLabel.text=@"It's a beautiful day";
      addressOrvenueLabel.text=userInfo.address.street;
-     distanceLabel.text=[NSString stringWithFormat:@"%d",userInfo.distance];
+     distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
      ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
      relStsLabel.text=userInfo.relationshipStatus;
-     livingPlace.text=userInfo.address.street;
+     livingPlace.text=userInfo.address.city;
      worksLabel.text=userInfo.workStatus;
+    if (userInfo.status) 
+    {
+        statusMsgLabel.text=userInfo.status;
+    }
+    
+    if ([userInfo.regMedia isEqualToString:@"fb"]) 
+    {
+        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+    }
+    
     [self performSelectorInBackground:@selector(loadImage) withObject:nil];
     [self performSelectorInBackground:@selector(loadImage2) withObject:nil];    
     //add annotation to map
@@ -205,9 +233,12 @@ BOOL coverImgFlag;
     
     if (!userInfo.address.city)
     {
-        userInfo.address.city=@"Address not found";
+        annotation.title =[NSString stringWithFormat:@"Address not found"];
     }
-	annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+    else 
+    {
+        annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+    }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
@@ -216,11 +247,41 @@ BOOL coverImgFlag;
 
 }
 
+- (void)updateBasicProfileDone:(NSNotification *)notif
+{
+    NSLog(@"profile update complete.");
+    NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
+    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    userInfo=[notif object];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(IBAction)hideKeyboard:(id)sender
+{
+    [entityTextField resignFirstResponder];
+}
+
+-(void)hideActivity
+{
+    NSArray* subviews = [NSArray arrayWithArray: self.view.subviews];
+    for (UIView* view in subviews) 
+    {
+        if([view isKindOfClass :[UIActivityIndicatorView class]])
+        {
+            [view removeFromSuperview];
+        }
+    }
+    
+    [smAppDelegate hideActivityViewer];
+    NSLog(@"activity removed %@",smAppDelegate);
+}
+
 -(void)loadImage
 {
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    userInfo.avatar=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
-    userInfo.coverPhoto=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
+    //temp use
+//    userInfo.coverPhoto=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
     if (img)
     {
@@ -238,7 +299,8 @@ BOOL coverImgFlag;
 -(void)loadImage2
 {
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    userInfo.avatar=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
+    //temp use
+//    userInfo.avatar=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
     UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
     if (img2)
     {
@@ -308,13 +370,13 @@ BOOL coverImgFlag;
                 // [view removeFromSuperview];
             }
         }
-        userItemScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
+        userItemScrollView.contentSize=CGSizeMake([ImgesName count]*65, 75);
         for(int i=0; i<[ImgesName count];i++)       
             
         {
             if(i< [ImgesName count]) 
             { 
-                UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+                UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
                 if([dicImages_msg valueForKey:[ImgesName objectAtIndex:i]]) 
                 { 
                     //If image available in dictionary, set it to imageview 
@@ -326,17 +388,18 @@ BOOL coverImgFlag;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image                    
-                        imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
                     }               
                 }
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 75)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 60, 60, 20)];
+                name.textAlignment=UITextAlignmentCenter;
                 [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
                 [name setNumberOfLines:0];
                 
@@ -351,11 +414,11 @@ BOOL coverImgFlag;
                 imgView.exclusiveTouch = YES;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
-                imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
                 imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=2.0;
+                imgView.layer.borderWidth=1.0;
                 imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
+                [imgView.layer setCornerRadius:5.0];
                 [aView addSubview:imgView];
                 [aView addSubview:name];
                 [userItemScrollView addSubview:aView];           
@@ -379,10 +442,6 @@ BOOL coverImgFlag;
             //If download complete, set that image to dictionary
             [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
         }
-//        else
-//        {
-//            [dicImages_msg setObject:[NSNull null] forKey:[ImgesName objectAtIndex:index]];
-//        }
         // Now, we need to reload scroll view to load downloaded image
         [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
         [pl release];

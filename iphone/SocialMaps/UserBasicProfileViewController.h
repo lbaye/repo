@@ -72,5 +72,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)saveEntity:(id)sender;
 -(IBAction)cancelEntity:(id)sender;
 -(IBAction)backButton:(id)sender;
+-(IBAction)hideKeyboard:(id)sender;
 
 @end

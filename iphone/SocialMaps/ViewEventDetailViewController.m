@@ -354,7 +354,7 @@ int notfCounter=0;
     {
         UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(i*60, 0, 60, 65)];
         UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-        [imgView setImage:[UIImage imageNamed:@"girl.png"]];
+        [imgView setImage:[UIImage imageNamed:@"thum.png"]];
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
         [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [name setNumberOfLines:0];
@@ -443,13 +443,13 @@ int notfCounter=0;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image                    
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }               
             }
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];

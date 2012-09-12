@@ -43,5 +43,6 @@
 @synthesize address;
 @synthesize age;
 @synthesize coverPhoto;
+@synthesize status;
 
 @end

@@ -46,6 +46,7 @@
     NSMutableArray *circles;
     Address *address;
     NSString *coverPhoto;
+    NSString *status;
 }
 @property(nonatomic,retain) NSString *userId;
 @property(nonatomic,retain) NSString *email;
@@ -81,5 +82,6 @@
 @property(nonatomic,retain) NSMutableArray *circles;
 @property(nonatomic,retain) Address *address;
 @property(nonatomic,retain) NSString *coverPhoto;
+@property(nonatomic,retain) NSString *status;
 
 @end
