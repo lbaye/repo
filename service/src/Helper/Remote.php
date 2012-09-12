@@ -10,13 +10,13 @@ class Remote
             $url = $url .'?'. http_build_query($data);
         }
 
-        $http = new \HttpRequest($url);
-        $http->setMethod($http::METH_GET);
-        $http->addHeaders($headers);
-        $http->send();
+//        $http = new \HttpRequest($url);
+//        $http->setMethod($http::METH_GET);
+//        $http->addHeaders($headers);
+//        $http->send();
 
-        $responseBody = $http->getResponseBody();
-        $responseCode = $http->getResponseCode();
+        $responseBody = file_get_contents($url); //$http->getResponseBody();
+        $responseCode = 200; //$http->getResponseCode();
 
         return array($responseCode, $responseBody);
     }

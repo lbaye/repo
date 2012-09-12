@@ -315,16 +315,36 @@ class Settings extends Base
 
     private function _sendProximityAlerts(\Document\User $user)
     {
-        $distances = array();
         $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
 
+        $notificationSettings = $this->user->getNotificationSettings();
         $from = $user->getCurrentLocation();
         foreach($friends as $friend) {
-            $to = $friend->getCurrentLocation();
-            $distances[$friend->getId()] = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
-        }
 
-        //die(print_r($distances, true));
+            $friendsNotificationSettings = $friend->getNotificationSettings();
+            $to = $friend->getCurrentLocation();
+            $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
+
+            if(   $notificationSettings['proximity_alerts']['sm']
+               && $notificationSettings['proximity_radius'] >= $distance){
+                $data = array(
+                    'title' => 'Your friend is here!',
+                    'photoUrl' => $friend->getAvatar(),
+                    'objectId' => $friend->getName(),
+                    'objectType' => 'user',
+                    'message' => 'Your friend'. $friend->getName() .' is near your location!',
+                );
+                \Helper\Notification::send($this->_createNotificationData($friend), array($this->user));
+            }
+
+            $friendsToNotify = array();
+            if(    $friendsNotificationSettings['proximity_alerts']['sm']
+                && $friendsNotificationSettings['proximity_radius'] >= $distance){
+               $friendsToNotify[] = $friend;
+            }
+
+            \Helper\Notification::send($this->_createNotificationData($this->user), $friendsToNotify);
+        }
     }
 
     private function returnResponse($result)
@@ -362,5 +382,16 @@ class Settings extends Base
 
         return $this->response;
 
+    }
+
+    private function _createNotificationData($friend)
+    {
+        return array(
+            'title' => 'Your friend is here!',
+            'photoUrl' => $friend->getAvatar(),
+            'objectId' => $friend->getId(),
+            'objectType' => 'proximity_alert',
+            'message' => 'Your friend'. $friend->getName() .' is near your location!',
+        );
     }
 }
