@@ -12,7 +12,7 @@
     
     NSMutableArray *meetUpRequestList;
     UIViewController *parentViewController;
-    //NSMutableDictionary *imageDownloadsInProgress;
+    //int selectedRow;
     IBOutlet UITableView *tableViewMeetUps;
 }
 

@@ -71,4 +71,6 @@
 -(void)getMyPlaces:(NSString *)authToken:(NSString *)authTokenValue;
 - (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude address:(NSString*)address time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getMeetUpRequest:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) updateMeetUpRequest:(NSString*)meetUpId response:(NSString*)response authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+
 @end

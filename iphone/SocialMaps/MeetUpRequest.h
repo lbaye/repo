@@ -19,6 +19,9 @@
     NSString    *meetUpTitle;
     Geolocation *meetUpLocation;
     NSString    *meetUpAddress;
+    NSMutableArray *meetUpRsvpYes;
+    NSMutableArray *meetUpRsvpNo;
+    NSMutableArray *meetUpRsvpMeetbe;
 }
 
 @property (nonatomic,retain) NSString *meetUpId;
@@ -29,5 +32,8 @@
 @property (nonatomic,retain) NSString *meetUpTitle;
 @property (nonatomic,retain) Geolocation *meetUpLocation;
 @property (nonatomic,retain) NSString *meetUpAddress;
+@property (nonatomic,retain) NSMutableArray *meetUpRsvpYes;
+@property (nonatomic,retain) NSMutableArray *meetUpRsvpNo;
+@property (nonatomic,retain) NSMutableArray *meetUpRsvpMeetbe;
 
 @end

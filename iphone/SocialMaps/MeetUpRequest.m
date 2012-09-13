@@ -19,5 +19,8 @@
 @synthesize meetUpTitle;
 @synthesize meetUpLocation;
 @synthesize meetUpAddress;
+@synthesize meetUpRsvpYes;
+@synthesize meetUpRsvpNo;
+@synthesize meetUpRsvpMeetbe;
 
 @end

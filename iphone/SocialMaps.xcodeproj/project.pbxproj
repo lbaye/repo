@@ -372,6 +372,7 @@
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
 		B0D648E915FC4F460006DF0E /* MeetUpRequestController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */; };
+		B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -908,6 +909,8 @@
 		B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequestController.h; sourceTree = "<group>"; };
 		B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequestController.m; sourceTree = "<group>"; };
 		B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetUpRequestController.xib; sourceTree = "<group>"; };
+		B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpListButtonsView.h; sourceTree = "<group>"; };
+		B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpListButtonsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1180,6 +1183,8 @@
 				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
 				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
+				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
+				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
@@ -1998,6 +2003,7 @@
 				B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */,
 				B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */,
 				4F4FB0A51601014C00E142A7 /* MeetUpRequestListView.m in Sources */,
+				B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
