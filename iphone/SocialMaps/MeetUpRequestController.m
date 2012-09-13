@@ -99,6 +99,8 @@ DDAnnotation *annotation;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentMeetUpRequest:) name:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
+    
     [textViewPersonalMsg.layer setCornerRadius:8.0f];
     [textViewPersonalMsg.layer setBorderWidth:0.5];
     [textViewPersonalMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
@@ -119,6 +121,7 @@ DDAnnotation *annotation;
 - (void)viewDidUnload
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
     
     [pointOnMapView release];
     pointOnMapView = nil;
@@ -251,6 +254,11 @@ DDAnnotation *annotation;
     NSLog(@"Places Array %@", myPlacesArray);
     [tableViewPlaces reloadData];
 }
+
+- (void)sentMeetUpRequest:(NSNotification *)notif {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

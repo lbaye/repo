@@ -3804,6 +3804,8 @@
             [UtilityClass showAlert:@"" :@"Meet-up request sent"];
             NSLog(@"sendMessage successful:status=%d", responseStatus);
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+            //getmeetuprequestdone
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];

@@ -349,9 +349,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     
 }
-
-     - (void)dealloc {
+    
+- (void)dealloc {
          [tableViewMeetUps release];
          [super dealloc];
-     }
+}
+
 @end
