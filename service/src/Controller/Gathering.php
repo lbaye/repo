@@ -80,6 +80,9 @@ class Gathering extends Base
                     $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
                 }
 
+                $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
+                $data['ownerDetail'] = $ownerDetail[0];
+
                 return $this->_generateResponse($data);
 
             } else {
@@ -355,7 +358,8 @@ class Gathering extends Base
             if (!empty($gatheringItem['eventImage'])){
               $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
             }
-
+            $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
+            $gatheringItem['ownerDetail'] = $ownerDetail[0];
             $gatheringItems[] = $gatheringItem;
         }
 

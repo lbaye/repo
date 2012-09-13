@@ -155,7 +155,6 @@ class Auth extends Base
             $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
             $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
             $userData['friends'] = $this->_getFriendList($user);
-            $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
