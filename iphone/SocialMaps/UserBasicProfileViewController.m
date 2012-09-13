@@ -79,9 +79,9 @@ BOOL coverImgFlag;
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
     for (int i=0; i<[nameArr count]; i++)
     {
-        [ImgesName addObject:@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg"];
+        [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     }
-//            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"]];
+//            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     [self reloadScrolview];
@@ -195,7 +195,7 @@ BOOL coverImgFlag;
 //     coverImageView.image;
 //     profileImageView.image;
     userInfo=[notif object];
-     nameLabl.text=[NSString stringWithFormat:@"Firstname %@",userInfo.firstName];
+     nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
      statusMsgLabel.text=@"It's a beautiful day";
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
@@ -388,13 +388,13 @@ BOOL coverImgFlag;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"sm_icon@2x.png"] forKey:[ImgesName objectAtIndex:i]]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image                    
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"sm_icon@2x.png"];                   
                     }               
                 }
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 75)];
