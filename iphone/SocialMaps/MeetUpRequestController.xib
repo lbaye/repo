@@ -46,6 +46,20 @@
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">1316</int>
 						<array class="NSMutableArray" key="NSSubviews">
+							<object class="IBUIImageView" id="615291220">
+								<reference key="NSNextResponder" ref="1019192863"/>
+								<int key="NSvFlags">1316</int>
+								<object class="NSPSMatrix" key="NSFrameMatrix"/>
+								<string key="NSFrameSize">{320, 45}</string>
+								<reference key="NSSuperview" ref="1019192863"/>
+								<reference key="NSWindow"/>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">header.png</string>
+								</object>
+							</object>
 							<object class="IBUIImageView" id="385318627">
 								<reference key="NSNextResponder" ref="1019192863"/>
 								<int key="NSvFlags">1298</int>
@@ -558,7 +572,6 @@
 										<string key="NSFrame">{{164, 4}, {136, 21}}</string>
 										<reference key="NSSuperview" ref="332198240"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 										<int key="IBUIContentHorizontalAlignment">0</int>
@@ -810,6 +823,7 @@
 							<reference ref="1021669333"/>
 							<reference ref="925481109"/>
 							<reference ref="385318627"/>
+							<reference ref="615291220"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 						<string key="objectName">notifHeader</string>
@@ -959,6 +973,11 @@
 						<reference key="object" ref="699125963"/>
 						<reference key="parent" ref="685499863"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">64</int>
+						<reference key="object" ref="615291220"/>
+						<reference key="parent" ref="1019192863"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1018,6 +1037,9 @@
 				<string key="60.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="60.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="60.showNotes"/>
+				<string key="64.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<reference key="64.IBUserGuides" ref="0"/>
+				<boolean value="NO" key="64.showNotes"/>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="7.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="7.showNotes"/>
@@ -1030,7 +1052,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">63</int>
+			<int key="maxID">64</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1128,6 +1150,7 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="back_b_small.png">{70, 35}</string>
 			<string key="bubble_count_icon.png">{55, 57}</string>
+			<string key="header.png">{640, 91}</string>
 			<string key="img_settings_header_bg.png">{640, 110}</string>
 			<string key="logo_3.png">{221, 41}</string>
 			<string key="meet_up_icon.png">{30, 35}</string>
