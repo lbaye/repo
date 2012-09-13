@@ -36,6 +36,7 @@ extern NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE;
 extern NSString * const NOTIF_GET_MY_PLACES_DONE;
 extern NSString * const NOTIF_GET_MEET_UP_REQUEST_DONE;
 extern NSString * const NOTIF_SEND_MEET_UP_REQUEST_DONE;
+extern NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

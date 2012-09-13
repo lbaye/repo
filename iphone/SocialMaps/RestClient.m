@@ -3826,6 +3826,56 @@
     
 }
 
+- (void) updateMeetUpRequest:(NSString*)meetUpId response:(NSString*)response authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/meetups/%@/rsvp", WS_URL, meetUpId];
+    
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request setPostValue:response forKey:@"response"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            NSLog(@"updateMeetUp successful:status=%d", responseStatus);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+        } else {
+            NSLog(@"updateMeetUp unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Failed to save meet-up response"];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"sendMeetup failed: unknown error");
+        [UtilityClass showAlert:@"" :@"Failed to save meet-up response"];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+}
+
 - (void) sendReply:(NSString*)msgId content:(NSString*)content authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/messages"]];
     
@@ -4050,6 +4100,10 @@
                 
                 meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
                 meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                
+                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"yes" key3:nil];
+                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"no" key3:nil];
+                meetUpReq.meetUpRsvpMeetbe = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil];
                 
                 [meetUpRequests addObject:meetUpReq];
             }

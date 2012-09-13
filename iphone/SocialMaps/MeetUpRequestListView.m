@@ -17,6 +17,7 @@
 #import "Globals.h"
 #import "UserFriends.h"
 #import "RestClient.h"
+#import "MeetUpListButtonsView.h"
 
 #define     CELL_HEIGHT             60
 
@@ -42,6 +43,8 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequest:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMeetUpRequest:) name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+        
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
@@ -53,26 +56,18 @@
     return self;
 }
 
+-(void) updateMeetUpReq:(int)selectedRow :(NSString*)response
+{
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient updateMeetUpRequest:((MeetUpRequest*)[meetUpRequestList objectAtIndex:selectedRow]).meetUpId response:response authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MeetUpRequest *meetUpReq = [meetUpRequestList objectAtIndex:indexPath.row];
     
-    /*
-    CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"replyList"];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    
-    CGRect senderFrame = CGRectMake(SENDER_NAME_START_POSX + GAP, GAP, senderStringSize.width, senderStringSize.height);
-    
-    CGRect timeFrame = CGRectMake(senderStringSize.width + GAP, 
-                                  GAP, tableView.frame.size.width - 22 - senderStringSize.width, senderStringSize.height);
-    
-    CGFloat rowHeight = [self getRowHeight:tableView :msgReply];
-    
-    CGRect msgFrame = CGRectMake(SENDER_NAME_START_POSX, senderFrame.size.height + senderFrame.origin.y + 1, tableView.frame.size.width - SENDER_NAME_START_POSX - GAP * 4, rowHeight - 22);
-    */
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"meetUpList"];
     
     
@@ -129,7 +124,6 @@
         [imageViewReply.layer setMasksToBounds:YES];
         [cell addSubview:imageViewReply];
         
-        
         UIButton *buttonAddress = [UIButton buttonWithType:UIButtonTypeCustom];
         buttonAddress.frame = CGRectMake(55, 35, 250, 20);
         buttonAddress.titleLabel.textAlignment = UITextAlignmentLeft;
@@ -138,7 +132,15 @@
         [buttonAddress addTarget:self action:@selector(actionAddressButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:buttonAddress];
         
+        
+        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 40, 300, 50)];
+        meetUpListButtonView.backgroundColor = [UIColor redColor];
+        meetUpListButtonView.tag = 3007;
+        [cell.contentView addSubview:meetUpListButtonView];
+        [meetUpListButtonView release];
     }
+    
+     MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3002];
     
     //CGSize meetUpTitleSize = [meetUpReq.meetUpTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     
@@ -155,18 +157,10 @@
     }
     
     buttonAddress.tag=indexPath.row;
-    //[buttonAddress removeTarget:self action:@selector(actionAddressButton:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //float btnAddressStartPosX = labelMeetUpTitle.frame.origin.x + labelMeetUpTitle.frame.size.width;
-    //buttonAddress.frame = CGRectMake(btnAddressStartPosX, labelMeetUpTitle.frame.origin.y, tableView.frame.size.width - btnAddressStartPosX, labelMeetUpTitle.frame.size.height);
     
     UILabel *labelTime = (UILabel*)[cell.contentView viewWithTag:3004];
     UILabel *labelMsg = (UILabel*)[cell.contentView viewWithTag:3005];
 
-    //buttonAddress.frame = CGRectMake(btnAddressStartPosX, labelMeetUpTitle.frame.origin.y + labelMeetUpTitle.frame.size.height + 10, tableView.frame.size.width - btnAddressStartPosX, labelMeetUpTitle.frame.size.height);
-    
-    //UILabel     *lblTime    = (UILabel*) [cell viewWithTag:3004];
-    //UITextView  *txtMsg     = (UITextView*) [cell viewWithTag:3005];
     UIImageView *imageViewSender = (UIImageView*) [cell viewWithTag:3006];
     //imageViewSender.frame = CGRectMake(10, (CELL_HEIGHT - 48) / 2, 48, 48);
     imageViewSender.image = [UIImage imageNamed:@"thum.png"];
@@ -285,6 +279,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  
 {   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     /*
     if (tableView.tag == TAG_TABLEVIEW_REPLY) {
         if ([textViewReplyMsg isFirstResponder]) {
@@ -346,6 +341,13 @@
     NSLog(@": gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     [tableViewMeetUps reloadData];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+}
+
+- (void)updateMeetUpRequest:(NSNotification *)notif {
+    NSMutableArray *notifs = [notif object];
+    [tableViewMeetUps reloadData];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
     
 }
     
