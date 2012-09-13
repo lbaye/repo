@@ -51,7 +51,11 @@ class Auth extends Base
                 $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
             }
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+            $data = $user->toArrayDetailed();
+            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
@@ -91,6 +95,8 @@ class Auth extends Base
             $this->userRepository->updateLoginCount($user->getId());
 
             $userData = $user->toArrayDetailed();
+            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
+            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
             $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));
@@ -145,8 +151,10 @@ class Auth extends Base
                 $user = $this->userRepository->insert($data);
 
             }
-
             $userData = $user->toArrayDetailed();
+            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
+            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
+            $userData['friends'] = $this->_getFriendList($user);
             $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));

@@ -693,7 +693,8 @@ class UserRepo extends BaseRepository
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            $user->setAvatar($this->config['web']['root'] .$filePath);
+            //$user->setAvatar($this->config['web']['root'] .$filePath);
+            $user->setAvatar($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -719,7 +720,7 @@ class UserRepo extends BaseRepository
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($this->config['web']['root'] .$filePath);
+            $user->setCoverPhoto($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
