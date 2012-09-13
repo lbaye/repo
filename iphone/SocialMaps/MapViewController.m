@@ -1532,8 +1532,8 @@ ButtonClickCallbackData callBackData;
 }
 - (void)gotFriendRequests:(NSNotification *)notif {
     NSMutableArray *notifs = [notif object];
-    [smAppDelegate.notifications removeAllObjects];
-    [smAppDelegate.notifications addObjectsFromArray:notifs];
+    [smAppDelegate.friendRequests removeAllObjects];
+    [smAppDelegate.friendRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
     [self displayNotificationCount];
 }
