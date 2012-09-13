@@ -90,7 +90,7 @@
         NSLog(@"cell created. %d",indexPath.row);
         
         // Time
-        UILabel *lblTime = [[[UILabel alloc] initWithFrame:CGRectMake(250, 2, 40, 20)] autorelease];
+        UILabel *lblTime = [[[UILabel alloc] initWithFrame:CGRectMake(220, 2, 70, 20)] autorelease];
         lblTime.tag = 3004;
         lblTime.textAlignment = UITextAlignmentRight;
         lblTime.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kSmallLabelFontSize];
@@ -192,7 +192,6 @@
     [buttonAddress setTitle:meetUpReq.meetUpAddress forState:UIControlStateNormal];
     labelTime.text =  [UtilityClass timeAsString:meetUpReq.meetUpTime];
     labelMsg.text=meetUpReq.meetUpDescription;
-    NSLog(@"meetUpReq.meetUpDescription: %@",meetUpReq.meetUpDescription);
     
     //UserFriends *userFriend = [self getUserFriend:meetUpReq];
     /*
