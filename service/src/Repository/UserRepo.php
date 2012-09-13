@@ -770,8 +770,7 @@ class UserRepo extends BaseRepository
         } else {
             // @TODO : Changing to near temporarily for testing with more users
             //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
-
-            $query->field('currentLocation.lat')->near($location['lat'])->field('currentLocation.lng')->near($location['lng']);
+            $query->field('currentLocation')->near($location['lat'], $location['lng']);
         }
 
         $result = $query->getQuery()->execute();
