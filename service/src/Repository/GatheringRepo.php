@@ -16,13 +16,13 @@ class GatheringRepo extends Base
 
     public function getByUser(UserDocument $user)
     {
-        $gatherings = $this->findBy(array('owner' => $user->getId()));
+        $gatherings = $this->findBy(array('owner' => $user->getId(),array('createDate' => 'DESC')));
         return $this->_toArrayAll($gatherings);
     }
 
     public function getAll($limit = 80, $offset = 0)
     {
-        return $this->findBy(array(), null, $limit, $offset);
+        return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
 
     public function insert($gatheringObj)
@@ -169,6 +169,7 @@ class GatheringRepo extends Base
     {
         $gatheringItems = array();
         foreach ($results as $place) {
+
             $gatheringItems[] = $place->toArray();
         }
 
