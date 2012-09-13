@@ -19,7 +19,7 @@
 #import "RestClient.h"
 #import "MeetUpListButtonsView.h"
 
-#define     CELL_HEIGHT             60
+#define     CELL_HEIGHT             90
 
 //NSMutableDictionary *imageDownloadsInProgress;
 
