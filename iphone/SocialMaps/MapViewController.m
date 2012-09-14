@@ -66,7 +66,6 @@
 @synthesize mapAnno;
 @synthesize mapAnnoPeople;
 @synthesize mapAnnoPlace;
-@synthesize needToCenterMap;
 @synthesize filteredList;
 @synthesize selectedAnno;
 
@@ -84,7 +83,6 @@ typedef struct {
     UITextView         *txtView;
 } ButtonClickCallbackData;
 ButtonClickCallbackData callBackData;
-
 
 // UITextView delegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -333,6 +331,13 @@ ButtonClickCallbackData callBackData;
 - (void)viewDidLoad {
     [super viewDidLoad];  
     
+    NSLog(@"MapViewController:viewDidLoad" );
+
+    // Map drag handler
+    UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    [panRec setDelegate:self];
+    [_mapView addGestureRecognizer:panRec];
+
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
@@ -353,7 +358,6 @@ ButtonClickCallbackData callBackData;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
-    needToCenterMap = TRUE;
     // Get Information
     [smAppDelegate getUserInformation:smAppDelegate.authToken];
 
@@ -449,6 +453,19 @@ ButtonClickCallbackData callBackData;
     return self;
 }
 */
+
+// Gesture recognizer for map drag event
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        NSLog(@"Map drag ended");
+        smAppDelegate.needToCenterMap = FALSE;
+    }
+}
+
 -(void) displayNotificationCount {
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
@@ -477,6 +494,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewDidUnload
 {
+    NSLog(@"MapViewController:viewDidUnload" );
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
     [locationManager stopUpdatingLocation];
@@ -523,9 +541,11 @@ ButtonClickCallbackData callBackData;
     }
     
     // 4
-    [_mapView setRegion:adjustedRegion animated:YES];  
-    [_mapView setCenterCoordinate:zoomLocation animated:YES];
-
+    if (smAppDelegate.needToCenterMap == TRUE) {
+        NSLog(@"MapViewController:loadAnnotations centering map");
+        [_mapView setRegion:adjustedRegion animated:YES];
+        [_mapView setCenterCoordinate:zoomLocation animated:YES];
+    }
 }
 
 
@@ -544,9 +564,6 @@ ButtonClickCallbackData callBackData;
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
     [_mapView setRegion:adjustedRegion animated:YES]; 
     
-//    for (id<MKAnnotation> annotation in _mapView.annotations) {
-//        [_mapView removeAnnotation:annotation];
-//    }
     if (smAppDelegate.gotListing == TRUE)
         [self loadAnnotations:animated];
     
@@ -579,6 +596,9 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
         smAppDelegate.currPosition.positionTime = [NSDate date];
         
+        [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
+        [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
+        
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
@@ -591,8 +611,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-    if (needToCenterMap == TRUE) {
-        needToCenterMap = FALSE;
+    if (smAppDelegate.needToCenterMap == TRUE) {
+        //smAppDelegate.needToCenterMap = FALSE;
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     }
 }
@@ -1047,7 +1067,7 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoDirections:(id)sender 
 {
-    RestClient *rc=[[RestClient alloc] init];
+    //RestClient *rc=[[RestClient alloc] init];
     Platform *aPlatform=[[Platform alloc] init];
     aPlatform.facebook=@"1";
     aPlatform.fourSquare=@"1";
@@ -1277,15 +1297,21 @@ ButtonClickCallbackData callBackData;
 
 - (void) updateLocation:(id) sender {
     NSLog(@"MapViewController: updateLocation");
-    [locationManager stopUpdatingLocation];
-    [locationManager startUpdatingLocation];
-    needToCenterMap = TRUE;
-    _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+    if ([CLLocationManager locationServicesEnabled]) {
+        [locationManager stopUpdatingLocation];
+        [locationManager startUpdatingLocation];
+        _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+        // Send new location to server
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    } else {
+        CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.lastPosition.longitude doubleValue]);
+        _mapView.centerCoordinate = lastPos;
+    }
+    _mapView.showsUserLocation=YES;
+    smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
 
-    // Send new location to server
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
 - (void) getSortedDisplayList {

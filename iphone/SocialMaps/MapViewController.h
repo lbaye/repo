@@ -27,7 +27,8 @@ typedef enum _SHARING_TYPES {
 @interface MapViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate,
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
-                                MapAnnotationDelegate, IconDownloaderDelegate> {
+                                MapAnnotationDelegate, IconDownloaderDelegate,
+                                UIGestureRecognizerDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -41,7 +42,6 @@ typedef enum _SHARING_TYPES {
     MapAnnotation *mapAnno;
     MapAnnotationPeople *mapAnnoPeople;
     MapAnnotationPlace *mapAnnoPlace;
-    bool needToCenterMap;
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
 }
@@ -55,7 +55,6 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPlace;
-@property (atomic) bool needToCenterMap;
 @property (nonatomic, retain) NSMutableArray *filteredList;
 @property (nonatomic, retain) MapAnnotation *selectedAnno;
 

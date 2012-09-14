@@ -66,6 +66,7 @@
     bool            showPlaces;
     bool            showDeals;
     bool            gotListing;
+    bool needToCenterMap;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -110,6 +111,7 @@
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;
 @property (atomic) bool gotListing;
+@property (atomic) bool needToCenterMap;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

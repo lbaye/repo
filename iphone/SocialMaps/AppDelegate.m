@@ -66,6 +66,7 @@
 @synthesize gotListing;
 @synthesize placeIndex;
 @synthesize meetUpRequests;
+@synthesize needToCenterMap;
 
 - (void)dealloc
 {
@@ -78,6 +79,7 @@
     // Override point for customization after application launch.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     gotListing = FALSE;
+    needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
     email = [prefs stringForKey:@"email"];
     password = [prefs stringForKey:@"password"];
