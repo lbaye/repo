@@ -32,5 +32,6 @@
 @synthesize dateOfBirth;
 @synthesize age;
 @synthesize lastSeenAt;
+@synthesize isFriend;
 
 @end

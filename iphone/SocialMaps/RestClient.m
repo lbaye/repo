@@ -1587,6 +1587,8 @@
                 people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
                 people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
                 people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
                 people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                 people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
                 people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
@@ -1604,7 +1606,7 @@
                 
                 [searchLocation.peopleArr addObject:people];
                 
-                NSLog(@"User: first %@  last:%@  id:%@",people.firstName, people.lastName, people.userId);
+                NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
             }
             
             //get all places

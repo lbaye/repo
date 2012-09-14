@@ -33,6 +33,7 @@
     NSDate *dateOfBirth;
     NSString *age;
     NSString *lastSeenAt;
+    BOOL isFriend;
 }
 
 @property(nonatomic,retain) NSString *userId;
@@ -57,5 +58,5 @@
 @property(nonatomic,retain) NSDate *dateOfBirth;
 @property(nonatomic,retain) NSString *age;
 @property(nonatomic,retain) NSString *lastSeenAt;
-
+@property(nonatomic) BOOL isFriend;
 @end

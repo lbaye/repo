@@ -120,6 +120,10 @@
     addFriendBtn.backgroundColor = [UIColor clearColor];
     addFriendBtn.tag = 11003;
     [infoView addSubview:addFriendBtn];
+    if (!locItemPeople.userInfo.isFriend)
+        addFriendBtn.hidden = TRUE;
+    else
+        addFriendBtn.hidden = FALSE;
     
     // Meet-up request
     UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
