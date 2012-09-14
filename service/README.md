@@ -11,7 +11,17 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
 
     php composer.phar install
 
-3. Setup a VirtualHost with the following configuration (modify as needed):
+3. Setup <APP-ROOT>/web/.htaccess, Set application environment. ie - "prod" for production mode:
+
+    SetEnv APPLICATION_ENV prod
+
+    <IfModule mod_rewrite.c>
+      RewriteEngine On
+      RewriteCond %{REQUEST_FILENAME} !-f
+      RewriteRule ^(.*)$ index.php [QSA,L]
+    </IfModule>
+
+4. Setup a VirtualHost with the following configuration (modify as needed):
 
     <VirtualHost *:80>
 
@@ -26,13 +36,13 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
 
     </VirtualHost>
 
-4. Test the default controller using cURL:
+5. Test the default controller using cURL:
 
     curl http://api.socialmaps.local/hello
 
-5. Enjoy!
+6. Enjoy!
 
-6. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
+7. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
 
     db.getCollection("deals").ensureIndex({"location":"2d"});
     db.getCollection("users").ensureIndex({"currentLocation":"2d"});
