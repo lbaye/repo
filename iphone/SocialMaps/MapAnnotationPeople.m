@@ -120,7 +120,7 @@
     addFriendBtn.backgroundColor = [UIColor clearColor];
     addFriendBtn.tag = 11003;
     [infoView addSubview:addFriendBtn];
-    if (!locItemPeople.userInfo.isFriend)
+    if (locItemPeople.userInfo.isFriend == TRUE)
         addFriendBtn.hidden = TRUE;
     else
         addFriendBtn.hidden = FALSE;
