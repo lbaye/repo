@@ -133,8 +133,9 @@
         [cell.contentView addSubview:buttonAddress];
         
         
-        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 40, 300, 50)];
-        meetUpListButtonView.backgroundColor = [UIColor redColor];
+//        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, cell.contentView.frame.size.height-52, 300, 50)];
+        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 82, 300, 50)];
+        meetUpListButtonView.backgroundColor = [UIColor clearColor];
         meetUpListButtonView.tag = 3007;
         [cell.contentView addSubview:meetUpListButtonView];
         [meetUpListButtonView release];

@@ -1065,7 +1065,7 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMyPlaces:(id)sender
 {
-    [self performSegueWithIdentifier:@"createEvent" sender: self];   
+//    [self performSegueWithIdentifier:@"createEvent" sender: self];   
 //    RestClient *rc=[[RestClient alloc] init];    
 //    [rc getEventDetailById:@"503b590ff69c29a105000000":@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
 }
