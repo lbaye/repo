@@ -13,6 +13,7 @@
 #import "CustomAlert.h"
 #import "AppDelegate.h"
 #import "NSData+Base64.h"
+#import "UtilityClass.h"
 
 @implementation RegistrationController
 @synthesize regEmail;
@@ -181,7 +182,19 @@
     regGender.text = [arrayGender objectAtIndex:row];
 }
 - (IBAction)createAccount:(id)sender {
-    if ([userInfo.email isEqualToString:@""] || userInfo.email == nil ||
+    if (![UtilityClass hasConnectivity]) {
+        [CustomAlert setBackgroundColor:[UIColor redColor] 
+                        withStrokeColor:[UIColor redColor]];
+        CustomAlert *loginAlert = [[CustomAlert alloc]
+                                   initWithTitle:@"No network connectivity"
+                                   message:@"Please enable network and retry!"
+                                   delegate:nil
+                                   cancelButtonTitle:@"Done"
+                                   otherButtonTitles:nil];
+        
+        [loginAlert show];
+        [loginAlert autorelease];
+    } else if ([userInfo.email isEqualToString:@""] || userInfo.email == nil ||
         [userInfo.password isEqualToString:@""] || userInfo.password == nil ||
         [userInfo.lastName isEqualToString:@""] || userInfo.lastName == nil ||
         [userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil) {

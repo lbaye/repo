@@ -317,11 +317,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/LoginController.m"
-         timestampString = "369257900.831511"
+         timestampString = "369306500.400136"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "359"
-         endingLineNumber = "359"
+         startingLineNumber = "318"
+         endingLineNumber = "318"
          landmarkName = "-fbFriendListDone:"
          landmarkType = "5">
       </FileBreakpoint>

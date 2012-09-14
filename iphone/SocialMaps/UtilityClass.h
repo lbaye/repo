@@ -22,4 +22,5 @@
 +(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
 +(NSString *)convertNSDateToUnix:(NSDate *)date;
 + (NSString*) timeAsString:(NSDate*)notifTime;
++(BOOL)hasConnectivity;
 @end
