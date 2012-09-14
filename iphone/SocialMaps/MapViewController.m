@@ -202,6 +202,12 @@ ButtonClickCallbackData callBackData;
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
     NSLog(@"MapViewController:mapAnnotationChanged");
+    if (selectedAnno != nil && selectedAnno != anno) {
+        LocationItem *selLocation = (LocationItem*) selectedAnno;
+        selLocation.currDisplayState = MapAnnotationStateNormal;
+        [_mapView removeAnnotation:(id <MKAnnotation>)selectedAnno];
+        [_mapView addAnnotation:(id <MKAnnotation>)selectedAnno];
+    }
     [_mapView removeAnnotation:anno];
     [_mapView addAnnotation:anno];
     selectedAnno = anno;
@@ -272,7 +278,7 @@ ButtonClickCallbackData callBackData;
 - (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
     LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
 
-    selectedAnno = [annoView annotation];
+    //selectedAnno = [annoView annotation];
     [self mapAnnotationChanged:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
     
@@ -626,7 +632,6 @@ ButtonClickCallbackData callBackData;
             [[view annotation] isKindOfClass:[MKUserLocation class]])
         {
             [[view superview] bringSubviewToFront:view];
-            break;
         } 
         else 
         {
