@@ -70,16 +70,17 @@
 
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
-            
+
             [aUser setFriendsList:frndList];
             friendListGlobalArray=frndList;
             
@@ -230,12 +231,13 @@
 
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -890,7 +892,6 @@
     if (user != nil)
         aUserInfo = *user;
     else
-    {
         aUserInfo = [[UserInfo alloc] init];
     aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
     aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:nil key3:nil];
@@ -954,7 +955,7 @@
     aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
     aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
     aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
-    }
+
     return aUserInfo;
 }
 /*

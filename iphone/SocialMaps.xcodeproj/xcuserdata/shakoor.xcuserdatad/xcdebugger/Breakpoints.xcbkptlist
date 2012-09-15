@@ -219,11 +219,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "368544684.146987"
+         timestampString = "369422818.49525"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "992"
-         endingLineNumber = "992"
+         startingLineNumber = "993"
+         endingLineNumber = "993"
          landmarkName = "@implementation RestClient"
          landmarkType = "3">
       </FileBreakpoint>
@@ -233,11 +233,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "368544684.146987"
+         timestampString = "369422818.49525"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "969"
-         endingLineNumber = "969"
+         startingLineNumber = "970"
+         endingLineNumber = "970"
          landmarkName = "@implementation RestClient"
          landmarkType = "3">
       </FileBreakpoint>
@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/RestClient.m"
-         timestampString = "368544684.146987"
+         timestampString = "369422818.49525"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "757"
-         endingLineNumber = "757"
+         startingLineNumber = "759"
+         endingLineNumber = "759"
          landmarkName = "-getSharingPreference::"
          landmarkType = "5">
       </FileBreakpoint>
@@ -317,11 +317,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/LoginController.m"
-         timestampString = "369396344.451031"
+         timestampString = "369418924.136368"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "324"
-         endingLineNumber = "324"
+         startingLineNumber = "320"
+         endingLineNumber = "320"
          landmarkName = "-fbFriendListDone:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -354,20 +354,6 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "SocialMaps/RestClient.m"
-         timestampString = "369389589.588113"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "231"
-         endingLineNumber = "231"
-         landmarkName = "-loginFacebook:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
@@ -379,6 +365,20 @@
          startingLineNumber = "581"
          endingLineNumber = "581"
          landmarkName = "-viewWillAppear:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/MessageListViewController.m"
+         timestampString = "369421838.774388"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1265"
+         endingLineNumber = "1265"
+         landmarkName = "-reloadScrolview"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -376,13 +376,7 @@ ButtonClickCallbackData callBackData;
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
-    
-    // Load location data here only one time. We will get the list on location update later
-    if (smAppDelegate.placeList.count == 0) {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-    }
-    
+        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     // Get Information

@@ -709,8 +709,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         iconDownloader.delegate = self;
         [imageDownloadsInProgress setObject:iconDownloader forKey:msg.notifSenderId];
         [iconDownloader startDownload];
-        [iconDownloader release];  
-        [userFriends release];
+        //[iconDownloader release];  
+        //[userFriends release];
    } 
 }
 
@@ -1259,7 +1259,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             UserFriends *userFrnd=[[UserFriends alloc] init];
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            if (userFrnd.imageUrl == nil) {
+                imgView.image = [UIImage imageNamed:@"girl.png"];
+            }            
+            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
