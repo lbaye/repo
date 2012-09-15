@@ -9,7 +9,9 @@
 @class Event;
 @class ViewEventListViewController;
 
-@protocol EventImageDownloaderDelegate;
+@protocol EventImageDownloaderDelegate<NSObject>
+- (void)appImageDidLoad:(NSString *)eventId;
+@end
 
 @interface EventImageDownloader : NSObject
 {
@@ -33,9 +35,9 @@
 
 @end
 
-@protocol EventImageDownloaderDelegate 
+//@protocol EventImageDownloaderDelegate 
 
 //- (void)appImageDidLoad:(NSIndexPath *)indexPath;
-- (void)appImageDidLoad:(NSString *)eventId;
+//- (void)appImageDidLoad:(NSString *)eventId;
 
-@end
+//@end

@@ -179,7 +179,10 @@ int notfCounter=0;
     NSLog(@"globalEvent det %@",globalEvent.eventID);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
-    
+    if (globalEvent.isInvited==FALSE)
+    {
+        rsvpView.hidden=YES;
+    }
     guestScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     nameArr=[[NSMutableArray alloc] init];

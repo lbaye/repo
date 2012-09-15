@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
+#import "EventImageDownloader.h"
 
-@interface ViewEventListViewController : UIViewController
+@interface ViewEventListViewController : UIViewController<EventImageDownloaderDelegate>
 {
     IBOutlet UITableView *eventListTableView;
     IBOutlet UISearchBar *eventSearchBar;
@@ -41,5 +42,6 @@
 -(IBAction)closeMapView:(id)sender;
 -(IBAction)backButton:(id)sender;
 -(NSMutableArray *)loadDummyData;
+- (void)appImageDidLoad:(NSString *)eventID;
 
 @end
