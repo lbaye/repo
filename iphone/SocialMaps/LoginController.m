@@ -54,10 +54,6 @@
 {
 }
 */
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    exit(EXIT_FAILURE);
-}
-
 - (void) checkNetwork {
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
