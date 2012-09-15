@@ -27,12 +27,18 @@ abstract class Gathering extends Content
     protected $guests = array();
 
     /** @ODM\Hash */
+    protected $circles = array();
+
+    /** @ODM\Hash */
     protected $whoWillAttend = array(
 
         'yes' => array(),
         'no' => array(),
         'mayBe' => array(),
     );
+
+    /** @ODM\String */
+    protected $message;
 
     /**
      * @ODM\EmbedOne(targetDocument="Location")
@@ -119,11 +125,22 @@ abstract class Gathering extends Content
     {
         return $this->guests;
     }
+
+    public function setCircles($circles)
+    {
+        $this->circles = $circles;
+    }
+
+    public function getCircles()
+    {
+        return $this->circles;
+    }
+
     //</editor-fold>
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title','description', 'time', 'createDate');
+        $fieldsToExpose = array('id', 'title','description','message', 'time', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {
@@ -139,6 +156,7 @@ abstract class Gathering extends Content
     {
         $result = $this->toArray();
         $result['guests'] = $this->getGuests();
+        $result['circles'] = $this->getGuests();
 
         return $result;
     }
@@ -147,7 +165,6 @@ abstract class Gathering extends Content
     {
         try {
 
-            Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->equals($this->getLocation()->isValid())->assert(true);
 
         } catch (\InvalidArgumentException $e) {
@@ -166,4 +183,15 @@ abstract class Gathering extends Content
     {
         return $this->whoWillAttend;
     }
+
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
 }

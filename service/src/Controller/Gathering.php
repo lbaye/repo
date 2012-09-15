@@ -57,7 +57,7 @@ class Gathering extends Base
             $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
             $this->response->setStatusCode(200);
         } else {
-            $this->response->setContent(json_encode(array('message' => 'No meetups found')));
+            $this->response->setContent(json_encode(array()));
             $this->response->setStatusCode(204);
         }
 
