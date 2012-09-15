@@ -80,12 +80,16 @@ class Gathering extends DocumentRepository
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration', 'time');
+        $setIfExistFields = array('title', 'description', 'duration','message', 'time');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
                 $gathering->{"set{$field}"}($data[$field]);
             }
+        }
+
+        if(empty($data['time'])){
+            $gathering->setTime(new \DateTime());
         }
 
         if(isset($data['guests'])){

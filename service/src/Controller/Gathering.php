@@ -73,12 +73,14 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function getById($id, $type)
     {
         $this->_initRepository($type);
         $gathering = $this->gatheringRepository->find($id);
 
         if (null !== $gathering) {
+
             if ($gathering->isPermittedFor($this->user)) {
                 $this->response->setContent(json_encode($gathering->toArrayDetailed()));
                 $this->response->setStatusCode(200);
@@ -146,6 +148,7 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function create($type)
     {
         $postData = $this->request->request->all();

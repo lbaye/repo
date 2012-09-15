@@ -149,6 +149,9 @@ abstract class Gathering extends Content
 
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
+        $result['guests'] = $this->getGuests();
+        $result['circles'] = $this->getCircles();
+
         return $result;
     }
 
@@ -156,7 +159,7 @@ abstract class Gathering extends Content
     {
         $result = $this->toArray();
         $result['guests'] = $this->getGuests();
-        $result['circles'] = $this->getGuests();
+        $result['circles'] = $this->getCircles();
 
         return $result;
     }
