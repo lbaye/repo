@@ -41,6 +41,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 @implementation MeetUpRequestController
 
 @synthesize currentAddress;
+@synthesize selectedfriendId;
 
 DDAnnotation *annotation;
 
@@ -110,14 +111,25 @@ DDAnnotation *annotation;
     
     self.currentAddress = @"";
 }
-/*
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self setAddressLabelFromLatLon];
+    for (int i = 0; i < [filteredList count]; i++) {
+        if ([((UserFriends*)[filteredList objectAtIndex:i]).userId isEqualToString:self.selectedfriendId]) {
+            [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+        }
+    }
+    /*
+    for (int i = 0; i < [selectedFriendsIndex count]; i++) {
+        NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;
+        [userIDs addObject:userId];
+    }
+     */
+    [self reloadScrolview];
 }
-*/
+
 - (void)viewDidUnload
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];

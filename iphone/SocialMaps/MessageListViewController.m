@@ -967,7 +967,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)dealloc 
 {
     [messageReplyList release];
-    [imageDownloadsInProgress release];
+    //[imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];

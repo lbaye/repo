@@ -31,6 +31,7 @@
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
 #import "UserBasicProfileViewController.h"
+#import "Globals.h"
 
 
 @interface MapViewController ()
@@ -217,7 +218,27 @@ ButtonClickCallbackData callBackData;
 
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    
+    int i = 0;
+    for (; i < [friendListGlobalArray count]; i++) {
+        UserInfo *userInfo = [friendListGlobalArray objectAtIndex:i];
+        if ([userInfo.userId isEqualToString:locItem.userInfo.userId]) {
+            break;
+        }
+    }
+    if (i == [friendListGlobalArray count]) {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",locItem.userInfo.firstName]];
+        return;
+    }
+    
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.selectedfriendId = locItem.userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
+
 - (void) directionSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:directionSelected");
 }

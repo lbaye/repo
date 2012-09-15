@@ -34,9 +34,12 @@
     int selectedPlaceIndex;
     NSMutableArray *myPlacesArray;
     NSString *currentAddress;
+    
+    NSString    *selectedfriendId;
 }
 
 @property (nonatomic, retain) NSString *currentAddress;
+@property (nonatomic, retain) NSString *selectedfriendId;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)actionMeetUpReqButton:(id)sender;

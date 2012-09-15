@@ -4094,6 +4094,7 @@
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
                 meetUpReq.meetUpTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
                 meetUpReq.meetUpSenderId = [self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil];
+                meetUpReq.meetUpSender = [self getNestedKeyVal:item key1:@"ownerDetail" key2:@"firstName" key3:nil];
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
@@ -4103,9 +4104,9 @@
                 meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
                 meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 
-                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"yes" key3:nil];
-                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"no" key3:nil];
-                meetUpReq.meetUpRsvpMeetbe = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil];
+                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:item key1:@"rsvp" key2:@"yes" key3:nil];
+                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:item key1:@"rsvp" key2:@"no" key3:nil];
+                meetUpReq.meetUpRsvpIgnore = [self getNestedKeyVal:item key1:@"rsvp" key2:@"maybe" key3:nil];
                 
                 [meetUpRequests addObject:meetUpReq];
             }

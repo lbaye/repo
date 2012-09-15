@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MeetUpListButtonsView.h"
 
-@interface MeetUpRequestListView : UIView <UITableViewDelegate, UITableViewDataSource>{
+@interface MeetUpRequestListView : UIView <UITableViewDelegate, UITableViewDataSource, MeetUpListButtonsDelegate>{
     
     NSMutableArray *meetUpRequestList;
     UIViewController *parentViewController;

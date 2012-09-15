@@ -17,7 +17,7 @@
 #import "Globals.h"
 #import "UserFriends.h"
 #import "RestClient.h"
-#import "MeetUpListButtonsView.h"
+#import "CustomAlert.h"
 
 #define     CELL_HEIGHT             90
 
@@ -136,12 +136,14 @@
 //        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, cell.contentView.frame.size.height-52, 300, 50)];
         MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 82, 300, 50)];
         meetUpListButtonView.backgroundColor = [UIColor clearColor];
+        meetUpListButtonView.delegate = self;
         meetUpListButtonView.tag = 3007;
         [cell.contentView addSubview:meetUpListButtonView];
         [meetUpListButtonView release];
     }
     
-     MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3002];
+     MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3007];
+    [meetUpListButtonView adjustButtons:meetUpReq];
     
     //CGSize meetUpTitleSize = [meetUpReq.meetUpTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     
@@ -341,19 +343,53 @@
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@": gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     [tableViewMeetUps reloadData];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
 }
 
 - (void)updateMeetUpRequest:(NSNotification *)notif {
-    NSMutableArray *notifs = [notif object];
-    [tableViewMeetUps reloadData];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    //NSMutableArray *notifs = [notif object];
     
+    //[tableViewMeetUps reloadData];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    //AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    //[restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
     
+- (int) getCellRow:(id)sender {
+    UIButton *button = (UIButton *)sender;
+    // Get the UITableViewCell which is the superview of the UITableViewCellContentView which is the superview of the UIButton
+    UITableViewCell *cell = (UITableViewCell *) [[[button superview] superview] superview];
+    int row = [tableViewMeetUps indexPathForCell:cell].row;
+    return row;
+}
+
+- (void) buttonClicked:(NSString*)actionName cellButton:(id)sender {
+    NSLog(@"actionName = %@ cellButton row = %d", actionName, [self getCellRow:sender]); 
+    //if ([actionName isEqualToString:@"Accept"]){
+        
+        
+        int row = [self getCellRow:sender];
+        [self updateMeetUpReq:[self getCellRow:sender] :actionName];
+        //[((MeetUpRequest*)[meetUpRequestList objectAtIndex:row]).meetUpRsvpNo removeObject:<#(id)#>;
+        //RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        //[restClient acceptFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        
+        //if (req.ignored == TRUE)
+          //  smAppDelegate.ignoreCount--;
+        //[smAppDelegate.friendRequests removeObjectAtIndex:row];
+        
+        //NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
+        //[notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
+    //}
+}
+
 - (void)dealloc {
          [tableViewMeetUps release];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
          [super dealloc];
 }
 

@@ -21,6 +21,6 @@
 @synthesize meetUpAddress;
 @synthesize meetUpRsvpYes;
 @synthesize meetUpRsvpNo;
-@synthesize meetUpRsvpMeetbe;
+@synthesize meetUpRsvpIgnore;
 
 @end
