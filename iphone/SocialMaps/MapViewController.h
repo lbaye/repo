@@ -110,4 +110,5 @@ typedef enum _SHARING_TYPES {
 -(void) mapAnnotationChanged:(id <MKAnnotation>) anno;
 -(void) displayNotificationCount;
 - (void) getSortedDisplayList;
+- (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno;
 @end

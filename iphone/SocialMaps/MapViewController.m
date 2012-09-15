@@ -198,6 +198,15 @@ ButtonClickCallbackData callBackData;
     
 }
 
+- (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno {
+    NSLog(@"MapViewController:mapAnnotationInfoUpdated");
+    [_mapView removeAnnotation:anno];
+    [_mapView addAnnotation:anno];
+    selectedAnno = anno;
+    
+    [self.view setNeedsDisplay];
+}
+
 
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
@@ -208,11 +217,13 @@ ButtonClickCallbackData callBackData;
         [_mapView removeAnnotation:(id <MKAnnotation>)selectedAnno];
         [_mapView addAnnotation:(id <MKAnnotation>)selectedAnno];
     }
-    [_mapView removeAnnotation:anno];
-    [_mapView addAnnotation:anno];
-    selectedAnno = anno;
     
-    [self.view setNeedsDisplay];
+    [self mapAnnotationInfoUpdated:anno];
+//    [_mapView removeAnnotation:anno];
+//    [_mapView addAnnotation:anno];
+//    selectedAnno = anno;
+//    
+//    [self.view setNeedsDisplay];
 }
 
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
@@ -279,7 +290,7 @@ ButtonClickCallbackData callBackData;
     LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
 
     //selectedAnno = [annoView annotation];
-    [self mapAnnotationChanged:[annoView annotation]];
+    [self mapAnnotationInfoUpdated:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
     
     NSLog(@"MapViewController: performUserAction %@ type=%d", locItem.itemName, actionType);
@@ -1460,7 +1471,7 @@ ButtonClickCallbackData callBackData;
                                     //
                                     //[image release];
                                     if (smAppDelegate.showPeople == TRUE)
-                                        [self mapAnnotationChanged:person];
+                                        [self mapAnnotationInfoUpdated:person];
                                 });
                             });
                         }
@@ -1478,7 +1489,7 @@ ButtonClickCallbackData callBackData;
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemDistance = distanceFromMe;
                         if (smAppDelegate.showPeople == TRUE)
-                            [self mapAnnotationChanged:aPerson];
+                            [self mapAnnotationInfoUpdated:aPerson];
                     }
                 }
             }
@@ -1550,7 +1561,7 @@ ButtonClickCallbackData callBackData;
                                 LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
                                 place.itemIcon = image;
                                 if (smAppDelegate.showPlaces == TRUE)
-                                    [self mapAnnotationChanged:place];
+                                    [self mapAnnotationInfoUpdated:place];
                             });
                         });
                     } 
