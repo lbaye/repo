@@ -420,7 +420,7 @@ bool searchFlag2=true;
     // If you wanted to display results as the user types 
     // you would do that here.
     //[self loadFriendListsData]; TODO: commented this
-    searchText2=eventSearchBar.text;
+    searchText2=circleSearchBar.text;
     
     if ([searchText2 length]>0) 
     {
@@ -434,8 +434,8 @@ bool searchFlag2=true;
         searchText2=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
-        NSLog(@"eventListGlobalArray: %@",eventListGlobalArray);
+        filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
+        NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);
         [self.circleListTableView reloadData];
     }
     
@@ -447,7 +447,7 @@ bool searchFlag2=true;
     // focus is given to the UISearchBar
     // call our activate method so that we can do some 
     // additional things when the UISearchBar shows.
-    searchText2=eventSearchBar.text;
+    searchText2=circleSearchBar.text;
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
@@ -461,20 +461,20 @@ bool searchFlag2=true;
     // UISearchBar loses focus
     // We don't need to do anything here.
     [self.circleListTableView reloadData];
-    [eventSearchBar resignFirstResponder];
+    [circleSearchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     // Clear the search text
     // Deactivate the UISearchBar
-    eventSearchBar.text=@"";
+    circleSearchBar.text=@"";
     searchText2=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: eventListArray];
+    filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
     [self.circleListTableView reloadData];
-    [eventSearchBar resignFirstResponder];
+    [circleSearchBar resignFirstResponder];
     NSLog(@"3");
 }
 
@@ -487,32 +487,32 @@ bool searchFlag2=true;
     // api that you are using to do the search
     
     NSLog(@"Search button clicked");
-    searchText2=eventSearchBar.text;
+    searchText2=circleSearchBar.text;
     searchFlag2=false;
     [self searchResult];
-    [eventSearchBar resignFirstResponder];
+    [circleSearchBar resignFirstResponder];
 }
 
 -(void)searchResult
 {
-    searchText2 = eventSearchBar.text;
+    searchText2 = circleSearchBar.text;
     NSLog(@"in search method..");
     [filteredList removeAllObjects];
     
     if ([searchText2 isEqualToString:@""])
     {
         NSLog(@"null string");
-        eventSearchBar.text=@"";
-        filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
+        circleSearchBar.text=@"";
+        filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
     }
     else
-        for (Event *sTemp in eventListGlobalArray)
+        for (UserFriends *sTemp in friendListGlobalArray)
         {
-            NSRange titleResultsRange = [sTemp.eventName rangeOfString:searchText2 options:NSCaseInsensitiveSearch];		
+            NSRange titleResultsRange = [sTemp.userName rangeOfString:searchText2 options:NSCaseInsensitiveSearch];		
             if (titleResultsRange.length > 0)
             {
                 [filteredList addObject:sTemp];
-                NSLog(@"filtered friend: %@", sTemp.eventName);            
+                NSLog(@"filtered friend: %@", sTemp.userName);            
             }
             else
             {

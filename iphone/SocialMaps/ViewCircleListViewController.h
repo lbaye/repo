@@ -12,7 +12,7 @@
 @interface ViewCircleListViewController : UIViewController
 {
     IBOutlet UITableView *circleListTableView;
-    IBOutlet UISearchBar *eventSearchBar;
+    IBOutlet UISearchBar *circleSearchBar;
     NSDictionary *downloadedImageDict;
 }
 
