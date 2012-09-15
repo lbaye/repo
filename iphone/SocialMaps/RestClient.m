@@ -65,7 +65,9 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
             for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
@@ -223,7 +225,9 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
             for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)

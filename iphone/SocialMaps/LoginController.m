@@ -209,7 +209,13 @@
         [prefs setObject:userInfo.authToken forKey:@"authToken"];
         [prefs setObject:userInfo.id forKey:@"userId"];
         [prefs synchronize];
-
+        if (userInfo.currentLocationLat != nil && userInfo.currentLocationLng != nil &&
+            [userInfo.currentLocationLat floatValue] != 0.0 &&
+            [userInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = userInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = userInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = userInfo.authToken;
         smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
@@ -338,7 +344,13 @@
         [prefs setObject:regInfo.authToken forKey:@"authToken"];
         [prefs setObject:regInfo.id forKey:@"userId"];
         [prefs synchronize];
-        
+        if (regInfo.currentLocationLat != nil && regInfo.currentLocationLng != nil &&
+            [regInfo.currentLocationLat floatValue] != 0.0 &&
+            [regInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = regInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = regInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = regInfo.authToken;
         smAppDelegate.userId = regInfo.id;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];

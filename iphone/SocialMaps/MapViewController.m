@@ -355,12 +355,22 @@ ButtonClickCallbackData callBackData;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     _mapView.delegate=self;
-    _mapView.showsUserLocation=YES;
+    if ([CLLocationManager locationServicesEnabled])
+        _mapView.showsUserLocation=YES;
+    else
+        _mapView.showsUserLocation=NO;
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
     [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
+    _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
+    
+    // Load location data here only one time. We will get the list on location update later
+    if (smAppDelegate.placeList.count == 0) {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
@@ -557,7 +567,10 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    _mapView.showsUserLocation = YES;
+    if ([CLLocationManager locationServicesEnabled])
+        _mapView.showsUserLocation=YES;
+    else
+        _mapView.showsUserLocation=NO;
     // 1
     CLLocationCoordinate2D zoomLocation;
     
@@ -576,13 +589,23 @@ ButtonClickCallbackData callBackData;
     [super viewWillAppear:animated];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
+    NSLog(@"MapViewController:didFailWithError error code=%d msg=%@", [inError code], [inError localizedFailureReason]);
+    _mapView.showsUserLocation = NO;
+    [manager stopUpdatingLocation];
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
+        return;
+    
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
     NSDate *now = [NSDate date];
     int elapsedTime = [now timeIntervalSinceDate:smAppDelegate.currPosition.positionTime];
-
+    _mapView.showsUserLocation = YES;
+    
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
     NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}, distance moved=%f, elapsed time=%d",
           oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
@@ -613,6 +636,10 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.gotListing = TRUE;
     }
 
+}
+
+- (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
+    mapView.showsUserLocation = NO;
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
@@ -1301,19 +1328,17 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) updateLocation:(id) sender {
-    NSLog(@"MapViewController: updateLocation");
+    CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
+    _mapView.centerCoordinate = lastPos;
+    NSLog(@"MapViewController: updateLocation lat:%f lng:%f", lastPos.latitude, lastPos.longitude);
     if ([CLLocationManager locationServicesEnabled]) {
-        [locationManager stopUpdatingLocation];
-        [locationManager startUpdatingLocation];
-        _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+        _mapView.showsUserLocation=YES;
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     } else {
-        CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.lastPosition.longitude doubleValue]);
-        _mapView.centerCoordinate = lastPos;
+        _mapView.showsUserLocation=NO;
     }
-    _mapView.showsUserLocation=YES;
     smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
 
@@ -1547,7 +1572,7 @@ ButtonClickCallbackData callBackData;
 
         }
     }
-
+    smAppDelegate.gotListing = TRUE;
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
