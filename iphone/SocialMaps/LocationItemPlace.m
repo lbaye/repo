@@ -58,6 +58,8 @@
 		
 		[cell.contentView addSubview:review];
     }
+    // TODO: Hiding review for appstore submission. revert once feature is implemented
+    review.hidden = TRUE;
     
 	// Name
     CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
