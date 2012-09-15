@@ -32,7 +32,7 @@
 #import "MeetUpRequestController.h"
 #import "UserBasicProfileViewController.h"
 #import "Globals.h"
-
+#import "ViewCircleListViewController.h"
 
 @interface MapViewController ()
 
@@ -1176,6 +1176,18 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMapix:(id)sender
 {
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+//    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+    
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+
+
 }
 
 - (IBAction)gotoEditFilters:(id)sender

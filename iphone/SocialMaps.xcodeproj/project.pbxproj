@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */; };
+		2018C29C160466F800457BB6 /* CircleListTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29B160466F800457BB6 /* CircleListTableCell.m */; };
+		2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */; };
+		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
+		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
 		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
 		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
 		2063A1D615F330E300529CB2 /* PinDown2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D015F330E300529CB2 /* PinDown2.png */; };
@@ -376,6 +381,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CirclesStoryboard.storyboard; sourceTree = "<group>"; };
+		2018C29A160466F800457BB6 /* CircleListTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleListTableCell.h; sourceTree = "<group>"; };
+		2018C29B160466F800457BB6 /* CircleListTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleListTableCell.m; sourceTree = "<group>"; };
+		2018C29D1604672700457BB6 /* CircleListCheckBoxTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleListCheckBoxTableCell.h; sourceTree = "<group>"; };
+		2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleListCheckBoxTableCell.m; sourceTree = "<group>"; };
+		2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewCircleListViewController.h; sourceTree = "<group>"; };
+		2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCircleListViewController.m; sourceTree = "<group>"; };
+		2018C2A316048AEF00457BB6 /* CircleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleImageDownloader.h; sourceTree = "<group>"; };
+		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
 		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
 		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
 		2063A1D015F330E300529CB2 /* PinDown2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown2.png; sourceTree = "<group>"; };
@@ -943,6 +957,8 @@
 				4FB7A06515D1256E001EB905 /* AccountSettings.m */,
 				4F1D96AD15DCC93B00511624 /* Address.h */,
 				4F1D96AC15DCC93B00511624 /* Address.m */,
+				2018C2A316048AEF00457BB6 /* CircleImageDownloader.h */,
+				2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */,
 				4FB7A06D15D1BC41001EB905 /* ConfirmView.h */,
 				4FB7A06E15D1BC41001EB905 /* ConfirmView.m */,
 				4F8257BD15BDB60000760CE1 /* Constants.h */,
@@ -1189,6 +1205,10 @@
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
 				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
+				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
+				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				2018C29D1604672700457BB6 /* CircleListCheckBoxTableCell.h */,
+				2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */,
 				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
 				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
 				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
@@ -1200,6 +1220,7 @@
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
 				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
+				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				4FE9606D15BC8FE60007327A /* MapViewController.h */,
 				4FE9606E15BC8FE60007327A /* MapViewController.m */,
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
@@ -1222,6 +1243,8 @@
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
 				4F98A2E015BB387D000B3124 /* ViewController.h */,
 				4F98A2E115BB387D000B3124 /* ViewController.m */,
+				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
+				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
@@ -1851,6 +1874,7 @@
 				208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */,
 				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
 				4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */,
+				2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2004,6 +2028,10 @@
 				B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */,
 				4F4FB0A51601014C00E142A7 /* MeetUpRequestListView.m in Sources */,
 				B0F5D4C81602223E00F613FE /* MeetUpListButtonsView.m in Sources */,
+				2018C29C160466F800457BB6 /* CircleListTableCell.m in Sources */,
+				2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */,
+				2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */,
+				2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
