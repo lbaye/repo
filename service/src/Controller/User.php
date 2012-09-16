@@ -516,4 +516,31 @@ class User extends Base
         return $this->response;
     }
 
+    /**
+     * GET /me/circles/:id
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getCircleDetail($id)
+    {
+        $this->userRepository->setCurrentUser($this->user);
+        $circles = $this->user->getCircles();
+
+        $result = array();
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id){
+                $result= $circle->toArray();
+            }
+        }
+
+        $result['friends'] = $this->_getUserSummaryList($result['friends']);
+        $this->response->setContent(json_encode($result));
+        $this->response->setStatusCode(Status::OK);
+
+        return $this->response;
+    }
+
+
 }
