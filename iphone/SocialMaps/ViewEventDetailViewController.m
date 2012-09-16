@@ -560,38 +560,86 @@ int notfCounter=0;
 }
 
 - (void)getEventDetailDone:(NSNotification *)notif
+
 {
+    
     [smAppDelegate hideActivityViewer];
+    
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    
     globalEvent=[notif object];
     
+    
+    
     NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
+    
     ImgesName = [[NSMutableArray alloc] init];   
     
+    
+    
     NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
+    
     UserFriends *frnd;
+    
     for (int i=0; i<[globalEvent.guestList count]; i++)
+        
     {
+        
         frnd=[[UserFriends alloc] init];
+        
         frnd=[globalEvent.guestList objectAtIndex:i];
+        
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+        
+        if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
+            
+        {
+            
+            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            
+            NSLog(@"img url null %d",i);
+            
+        }
+        
+        else
+            
+        {
+            
+            NSLog(@"img url not null %d",i);            
+            
+        }
+        
         [ImgesName addObject:frnd.imageUrl];
+        
         [nameArr addObject:frnd.userName];
+        
     }
-
+    
+    
+    
     [self reloadScrolview];
+    
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    
     ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    
     //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    
     //    NSLog(@"GOT SERVICE DATA.. :D");
     
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-//    [self presentModalViewController:controller animated:YES];
+    
+    
+    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    
+    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    
+    //    [self presentModalViewController:controller animated:YES];
+    
+    
     
 }
-
 -(void)viewWillDisappear:(BOOL)animated
 {
     isBackgroundTaskRunning=FALSE;

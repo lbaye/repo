@@ -739,12 +739,30 @@ DDAnnotation *annotation;
 {
     UserFriends *frnds=[[UserFriends alloc] init];
     
+    
+    
     for (int i=0; i<[friendListGlobalArray count]; i++)
+        
     {
+        
         frnds=[[UserFriends alloc] init];
+        
         frnds=[friendListGlobalArray objectAtIndex:i];
+        
+        if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
+            
+        {
+            
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            
+            NSLog(@"img url null %d",i);
+            
+        }
+        
         [friendListArr addObject:frnds];
+        
     }
+    
     filteredList=[friendListArr mutableCopy];
 }
 
