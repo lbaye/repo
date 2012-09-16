@@ -3960,6 +3960,7 @@
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
         if (responseStatus == 200 || responseStatus == 201) {
+            [UtilityClass showAlert:@"" :@"Friend request sent"];
             NSLog(@"sendFriendRequest successful:status=%d", responseStatus);
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
