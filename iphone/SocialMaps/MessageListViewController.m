@@ -308,22 +308,31 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
     */
-    [messageReplyList addObjectsFromArray:msgReplies];
     
+    /*
     for (MessageReply *eachMsgReply in messageReplyList) {
             MessageReply *parentMsg = (MessageReply*)[messageReplyList objectAtIndex:0];
             if ([eachMsgReply.senderID isEqualToString:parentMsg.senderID]) {
                 eachMsgReply.senderImage = parentMsg.senderImage;
             }
     }
+    */
+    for (int i = 0; i < [msgReplies count]; i++) {
+        for (int j = 0; j < [messageReplyList count]; j++) {
+            if ([((MessageReply*)[msgReplies objectAtIndex:i]).msgId isEqualToString:((MessageReply*)[messageReplyList objectAtIndex:j]).msgId]) {
+                [msgReplies removeObjectAtIndex:i];
+            }
+        }
+    }
     
+    [messageReplyList addObjectsFromArray:msgReplies];
     [messageReplyTableView reloadData];
     NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
     [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
 
     
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
-    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti + 1];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
 }
 
@@ -550,6 +559,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             // Add first name to title string buffer
             [recipientNames addObject:[recipient valueForKey:@"firstName"]];
             
+            NSLog(@"******* ToDo: appStore_V1 has latest code for null url avater checking******");
+            
             // Add avatar to avatar array
             [avatarImages addObject:[recipient valueForKey:@"avatar"]];
         }
@@ -620,10 +631,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
     }
     
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-   
-    
 }
      
 - (void)startReqForReplyMessages
