@@ -17,6 +17,7 @@
 #import "Event.h"
 #import "Globals.h"
 #import "UserCircle.h"
+#import "ViewEventDetailViewController.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -107,7 +108,7 @@ int updateNotf=0;
         NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
     }
     filteredList=[friendListArr mutableCopy];
-//    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
+    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
 }
 
 - (void)viewDidLoad
@@ -344,13 +345,13 @@ int updateNotf=0;
     [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
 }
 
--(IBAction)neamePlaceButtonAction
+-(IBAction)neamePlaceButtonAction:(id)sender
 {
     [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-
+    [ActionSheetPicker displayActionPickerWithView:sender data:circleListss selectedIndex:2 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
 }
 
 -(IBAction)pointOnMapButtonAction
@@ -499,13 +500,24 @@ int updateNotf=0;
 
 -(IBAction)backButton:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+//    [self dismissModalViewControllerAnimated:YES];
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
 }
 
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
 	//Selection was made
 	int selectedCircleIndex = [selectedIndex intValue];
+}
+
+-(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
+{
+    int selectedLocation=[selectedIndex intValue];
+    NSLog(@"selectedLocation %@",selectedLocation);
 }
 
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 

@@ -108,7 +108,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(IBAction)curLocButtonAction;
 -(IBAction)myPlaceButtonAction;    
--(IBAction)neamePlaceButtonAction;
+-(IBAction)neamePlaceButtonAction:(id)sender;
 -(IBAction)pointOnMapButtonAction;    
 
 -(IBAction)showCircle:(id)sender;
