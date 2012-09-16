@@ -231,7 +231,12 @@ abstract class Gathering extends Content
 
     public function getRsvp()
     {
-        return $this->rsvp;
+        return array(
+            'yes' => array_values($this->rsvp['yes']),
+            'no' => array_values($this->rsvp['no']),
+            'maybe' => array_values($this->rsvp['maybe']),
+        );
+
     }
 
     public function setGuestsCanInvite($guestsCanInvite)
