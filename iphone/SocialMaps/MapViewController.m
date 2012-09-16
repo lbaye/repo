@@ -1126,7 +1126,11 @@ ButtonClickCallbackData callBackData;
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
 
 //    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
-     [self performSegueWithIdentifier:@"eventList" sender: self];
+   // viewEventList
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
     [smAppDelegate showActivityViewer:self.view];
 }
 
