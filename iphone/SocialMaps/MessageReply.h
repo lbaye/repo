@@ -16,6 +16,7 @@
     NSString    *senderID;
     NSString    *senderAvater;
     UIImage     *senderImage;
+    NSString    *msgId;
 }
 
 @property (nonatomic, retain) NSString  *content;
@@ -24,5 +25,6 @@
 @property (nonatomic, retain) NSString  *senderID;
 @property (nonatomic, retain) NSString  *senderAvater;
 @property (nonatomic, retain) UIImage   *senderImage;
+@property (nonatomic, retain) NSString  *msgId;
 
 @end

@@ -25,10 +25,12 @@
 @synthesize inviteEventButton;        
 
 
-NSMutableArray *imageArr, *nameArr;
+NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
 int notfCounter=0;
+int detNotfCounter=0;
+BOOL isBackgroundTaskRunning=FALSE;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,7 +44,9 @@ int notfCounter=0;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     notfCounter=0;
+    detNotfCounter=0;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
@@ -171,6 +175,7 @@ int notfCounter=0;
 -(void)viewWillAppear:(BOOL)animated
 {
     [self.mapContainer removeFromSuperview];
+    detNotfCounter=0;
 }
 
 - (void)viewDidLoad
@@ -179,13 +184,11 @@ int notfCounter=0;
     NSLog(@"globalEvent det %@",globalEvent.eventID);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
-    if (globalEvent.isInvited==FALSE)
-    {
-        rsvpView.hidden=YES;
-    }
+    
     guestScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     nameArr=[[NSMutableArray alloc] init];
+    idArr=[[NSMutableArray alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
     
@@ -266,7 +269,12 @@ int notfCounter=0;
 
 -(IBAction)backButton:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+//    [self dismissModalViewControllerAnimated:YES];
+    [self viewDidUnload];
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 -(void)resetButton:(int)index
@@ -301,6 +309,7 @@ int notfCounter=0;
 
 -(IBAction)invitePeople:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"invite people");    
     globalEditEvent=globalEvent;
     editFlag=true;
@@ -328,6 +337,7 @@ int notfCounter=0;
 
 -(IBAction)editEvent:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"edit event");
     globalEditEvent=globalEvent;
     editFlag=true;
@@ -410,9 +420,9 @@ int notfCounter=0;
 -(void) reloadScrolview
 {
     NSLog(@"in scroll init %d",[ImgesName count]);
-    NSLog(@"isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-    if (isBackgroundTaskRunning==TRUE) 
+    if (isBackgroundTaskRunning==TRUE)  
     {
+    NSLog(@"isBackgroundTaskRunning %i",isBackgroundTaskRunning);
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
     
@@ -471,9 +481,22 @@ int notfCounter=0;
             imgView.exclusiveTouch = YES;
             imgView.clipsToBounds = NO;
             imgView.opaque = YES;
+
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            if ([globalEvent.yesArr containsObject:[idArr objectAtIndex:i]] ||[[idArr objectAtIndex:i] isEqualToString:globalEvent.owner])
+            {
             imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+            }
+            else if([globalEvent.noArr containsObject:[idArr objectAtIndex:i]]) 
+            {
+            imgView.layer.borderColor=[[UIColor redColor] CGColor];
+            }
+            else
+            {
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            }
             imgView.userInteractionEnabled=YES;
-            imgView.layer.borderWidth=2.0;
+            imgView.layer.borderWidth=1.5;
             imgView.layer.masksToBounds = YES;
             [imgView.layer setCornerRadius:7.0];
             [aView addSubview:imgView];
@@ -488,7 +511,8 @@ int notfCounter=0;
 
 -(void)DownLoad:(NSNumber *)path
 {
-    if (isBackgroundTaskRunning==TRUE) {
+    if (isBackgroundTaskRunning==TRUE) 
+    {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     NSString *Link = [ImgesName objectAtIndex:index];
@@ -560,86 +584,52 @@ int notfCounter=0;
 }
 
 - (void)getEventDetailDone:(NSNotification *)notif
-
 {
-    
     [smAppDelegate hideActivityViewer];
-    
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    
     globalEvent=[notif object];
-    
-    
-    
+    detNotfCounter++;
     NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
-    
     ImgesName = [[NSMutableArray alloc] init];   
     
-    
-    
     NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
-    
     UserFriends *frnd;
-    
     for (int i=0; i<[globalEvent.guestList count]; i++)
-        
     {
-        
         frnd=[[UserFriends alloc] init];
-        
         frnd=[globalEvent.guestList objectAtIndex:i];
-        
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
-        
         if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
-            
         {
-            
             frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
-            
             NSLog(@"img url null %d",i);
-            
         }
-        
         else
-            
         {
-            
             NSLog(@"img url not null %d",i);            
-            
         }
-        
         [ImgesName addObject:frnd.imageUrl];
-        
         [nameArr addObject:frnd.userName];
-        
+        [idArr addObject:frnd.userId];
     }
     
-    
-    
-    [self reloadScrolview];
-    
+    if (detNotfCounter>=1)
+    {
+        [self reloadScrolview];
+    }
+    NSLog(@"detNotfCounter %d",detNotfCounter);
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    
     ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    
     //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    
     //    NSLog(@"GOT SERVICE DATA.. :D");
     
-    
-    
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    
-    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    
-    //    [self presentModalViewController:controller animated:YES];
-    
-    
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+//    [self presentModalViewController:controller animated:YES];
     
 }
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     isBackgroundTaskRunning=FALSE;
@@ -648,7 +638,7 @@ int notfCounter=0;
     ImgesName=nil;
     nameArr=nil;
     guestScrollView=nil;
-    
+    detNotfCounter=0;
 }
 
 @end

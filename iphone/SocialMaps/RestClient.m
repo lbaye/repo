@@ -80,7 +80,7 @@
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
-
+            
             [aUser setFriendsList:frndList];
             friendListGlobalArray=frndList;
             
@@ -1831,13 +1831,13 @@
             [aEvent setMaybeArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil]];
             
             NSMutableArray *guestList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
+            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] count]; i++)
             {
                 UserFriends *guest=[[UserFriends alloc] init];
-                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
-                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
+                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
+                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
             [aEvent setGuestList:guestList];
@@ -2186,13 +2186,13 @@
             [aEvent setOwner:[self getNestedKeyVal:jsonObjects key1:@"owner" key2:nil key3:nil]]; 
             
             NSMutableArray *guestList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
+            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] count]; i++)
             {
                 UserFriends *guest=[[UserFriends alloc] init];
-                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
-                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
+                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
+                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:aEvent];
@@ -4099,6 +4099,7 @@
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
                 meetUpReq.meetUpTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
                 meetUpReq.meetUpSenderId = [self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil];
+                meetUpReq.meetUpSender = [self getNestedKeyVal:item key1:@"ownerDetail" key2:@"firstName" key3:nil];
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
@@ -4108,9 +4109,9 @@
                 meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
                 meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 
-                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"yes" key3:nil];
-                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"no" key3:nil];
-                meetUpReq.meetUpRsvpMeetbe = [self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil];
+                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:item key1:@"rsvp" key2:@"yes" key3:nil];
+                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:item key1:@"rsvp" key2:@"no" key3:nil];
+                meetUpReq.meetUpRsvpIgnore = [self getNestedKeyVal:item key1:@"rsvp" key2:@"maybe" key3:nil];
                 
                 [meetUpRequests addObject:meetUpReq];
             }
@@ -4185,7 +4186,7 @@
                 msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
                 NSString * firstName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
                 NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];              
-                msg.notifSender   = [[[NSArray alloc] initWithObjects:firstName, lastName, nil] componentsJoinedByString:@" "];
+                msg.notifSender   = [NSString stringWithFormat:@"%@ %@", firstName,  lastName];
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
@@ -4270,7 +4271,6 @@
                 messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
                 NSLog(@"TIME is: %@",messageReply.time);
                 
-                
                 NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
                 messageReply.senderName = senderName;
                 NSLog(@"sender name is: %@",senderName);
@@ -4282,6 +4282,10 @@
                 NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
                 messageReply.senderAvater = senderAvater;
                 NSLog(@"sender avater is: %@",senderAvater);
+                
+                NSString *msgId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                messageReply.msgId = msgId;
+                NSLog(@"sender msgId is: %@",msgId);
                 
                 [messageReplies addObject:messageReply];
                 

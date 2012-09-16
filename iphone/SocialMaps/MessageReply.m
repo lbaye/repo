@@ -16,5 +16,6 @@
 @synthesize    senderID;
 @synthesize    senderAvater;
 @synthesize    senderImage;
+@synthesize    msgId;
 
 @end
