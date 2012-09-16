@@ -325,7 +325,6 @@ class Settings extends Base
         $HARDCODED_PROXIMITY_RADIUS = 5;
 
         foreach($friends as $friend) {
-
             $friendsNotificationSettings = $friend->getNotificationSettings();
             $to = $friend->getCurrentLocation();
             $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
@@ -333,13 +332,6 @@ class Settings extends Base
             if(   $notificationSettings['proximity_alerts']['sm']
             //&& $notificationSettings['proximity_radius'] >= $distance){
             && $HARDCODED_PROXIMITY_RADIUS >= $distance){
-                $data = array(
-                    'title' => 'Your friend is here!',
-                    'photoUrl' => $friend->getAvatar(),
-                    'objectId' => $friend->getName(),
-                    'objectType' => 'user',
-                    'message' => 'Your friend'. $friend->getName() .' is near your location!',
-            );
                 \Helper\Notification::send($this->_createNotificationData($friend), array($this->user));
             }
 

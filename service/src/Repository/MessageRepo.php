@@ -8,7 +8,7 @@ use Repository\UserRepo as UserRepository;
 use Document\Message as MessageDocument;
 use Helper\Security as SecurityHelper;
 
-class MessageRepo extends DocumentRepository
+class MessageRepo extends Base
 {
 
     private $userRepository;
@@ -93,18 +93,6 @@ class MessageRepo extends DocumentRepository
         $this->dm->flush();
     }
 
-    public function delete($id)
-    {
-        $message = $this->find($id);
-
-        if (is_null($message)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($message);
-        $this->dm->flush();
-    }
-
     public function updateStatus(MessageDocument $message, $status)
     {
         $message->setStatus($status);
@@ -153,16 +141,6 @@ class MessageRepo extends DocumentRepository
         $message->setSender($sender);
 
         return $message;
-    }
-
-    protected function _toArrayAll($results)
-    {
-        $messages = array();
-        foreach ($results as $message) {
-            $messages[] = $message->toArray();
-        }
-
-        return $messages;
     }
 
     private function setThreadDependentProperties(

@@ -22,21 +22,7 @@ class GatheringRepo extends Base
 
     public function getAll($limit = 80, $offset = 0)
     {
-        return $this->findBy(array(), null, $limit, $offset);
-    }
-
-    public function insert($gatheringObj)
-    {
-        $valid  = $gatheringObj->isValid();
-
-        if ($valid !== true) {
-            throw new \InvalidArgumentException('Invalid data', 406);
-        }
-
-        $this->dm->persist($gatheringObj);
-        $this->dm->flush($gatheringObj);
-
-        return $gatheringObj;
+        return parent::getAll(80);
     }
 
     public function update($data, $gathering)
@@ -78,17 +64,6 @@ class GatheringRepo extends Base
         return $gathering;
     }
 
-    public function delete($id)
-    {
-        $gatheringObj = $this->find($id);
-
-        if (is_null($gatheringObj)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($gatheringObj);
-        $this->dm->flush();
-    }
 
     public function map(array $data, UserDocument $owner, \Document\Gathering $gathering = null)
     {
@@ -165,17 +140,7 @@ class GatheringRepo extends Base
         return strtolower(substr($this->documentName, 9));
     }
 
-    protected function _toArrayAll($results)
-    {
-        $gatheringItems = array();
-        foreach ($results as $place) {
-            $gatheringItems[] = $place->toArray();
-        }
-
-        return $gatheringItems;
-    }
-
-     public function updateWhoWillAttend($data, $gathering)
+    public function updateWhoWillAttend($data, $gathering)
     {
         if (   !$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup

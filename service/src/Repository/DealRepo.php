@@ -7,17 +7,8 @@ use Document\Deal as DealDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
-class DealRepo extends DocumentRepository
+class DealRepo extends Base
 {
-
-    public function getAll($limit = 20, $offset = 0)
-    {
-
-        $results = $this->findBy(array(), null, $limit, $offset);
-        return $this->_toArrayAll($results);
-
-    }
-
     public function getNearBy($lat, $lng, $limit = 20)
     {
         $deals = $this->createQueryBuilder()
@@ -27,20 +18,6 @@ class DealRepo extends DocumentRepository
             ->getQuery()->execute();
 
         return (count($deals))? $this->_toArrayAll($deals) : array();
-    }
-
-    public function insert(DealDocument $deal)
-    {
-        $valid  = $deal->isValid();
-
-        if ($valid !== true) {
-            throw new \InvalidArgumentException('Invalid Location data', 406);
-        }
-
-        $this->dm->persist($deal);
-        $this->dm->flush($deal);
-
-        return $deal;
     }
 
     public function update($data, $id)
@@ -61,18 +38,6 @@ class DealRepo extends DocumentRepository
         $this->dm->flush();
 
         return $deal;
-    }
-
-    public function delete($id)
-    {
-        $place = $this->find($id);
-
-        if (is_null($place)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($place);
-        $this->dm->flush();
     }
 
     public function map(array $data, DealDocument $deal = null)
@@ -96,15 +61,5 @@ class DealRepo extends DocumentRepository
             $deal->setLocation(array('lng' => floatval($data['lng']), 'lat' => floatval($data['lat'])));
         }
         return $deal;
-    }
-
-    private function _toArrayAll($results)
-    {
-        $deals = array();
-        foreach ($results as $deal) {
-            $deals[] = $deal->toArray();
-        }
-
-        return $deals;
     }
 }

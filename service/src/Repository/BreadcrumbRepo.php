@@ -8,35 +8,8 @@ use Document\User as UserDocument;
 use Repository\UserRepo as UserRepository;
 use Helper\Image as ImageHelper;
 
-class BreadcrumbRepo extends DocumentRepository
+class BreadcrumbRepo extends Base
 {
-    public function getByUser(UserDocument $user)
-    {
-        $breadcrumb = $this->findBy(array('owner' => $user->getId()));
-        return $this->_toArrayAll($breadcrumb);
-    }
-
-    public function getAll($limit = 20, $offset = 0)
-    {
-        $results = $this->findBy(array(), null, $limit, $offset);
-        return $this->_toArrayAll($results);
-    }
-
-    public function insert(BreadcrumbDocument $breadcrumb)
-    {
-        $valid = $breadcrumb->isValid();
-
-        if ($valid !== true) {
-            throw new \InvalidArgumentException('Invalid breadcrumb data', 406);
-        }
-
-
-        $this->dm->persist($breadcrumb);
-        $this->dm->flush($breadcrumb);
-
-        return $breadcrumb;
-    }
-
     public function update($data, $id)
     {
         $breadcrumb = $this->find($id);
@@ -72,18 +45,6 @@ class BreadcrumbRepo extends DocumentRepository
         $this->dm->flush();
 
         return $breadcrumb;
-    }
-
-    public function delete($id)
-    {
-        $breadcrumb = $this->find($id);
-
-        if (is_null($breadcrumb)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($breadcrumb);
-        $this->dm->flush();
     }
 
     public function map(array $data, UserDocument $owner, BreadcrumbDocument $breadcrumb = null)
@@ -134,16 +95,6 @@ class BreadcrumbRepo extends DocumentRepository
         $breadcrumb->addPosition(new \Document\Position($data));
 
         $breadcrumb->setOwner($owner);
-
-        return $breadcrumb;
-    }
-
-    protected function _toArrayAll($results)
-    {
-        $breadcrumb = array();
-        foreach ($results as $data) {
-            $breadcrumb[] = $data->toArray();
-        }
 
         return $breadcrumb;
     }
