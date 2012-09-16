@@ -18,6 +18,7 @@
 #import "Globals.h"
 #import "UserCircle.h"
 #import "ViewEventDetailViewController.h"
+#import "LocationItemPlace.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -40,11 +41,11 @@
 @synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
 @synthesize createButton,createLabel;
 
-__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
+__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList, *neearMeAddressArr;
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
-
+int locationFlag=0;
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -129,6 +130,13 @@ int updateNotf=0;
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
+    neearMeAddressArr=[[NSMutableArray alloc] init];
+    for (int i=0; i<[smAppDelegate.placeList count]; i++)
+    {
+        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
+        [neearMeAddressArr addObject:aPlaceItem.placeInfo.name];
+        NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
+    }
     //set scroll view content size.
     [self loadDummydata];
     
@@ -297,6 +305,7 @@ int updateNotf=0;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    event.permission=@"friends";
 }
 
 -(IBAction)degreeFriendsButtonAction
@@ -304,7 +313,8 @@ int updateNotf=0;
     [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+    [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    event.permission=@"circles";
 }
 
 -(IBAction)peopleButtonAction
@@ -313,7 +323,7 @@ int updateNotf=0;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-
+    event.permission=@"public";
 }
 
 -(IBAction)customButtonAction
@@ -322,6 +332,7 @@ int updateNotf=0;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+    event.permission=@"custom";
 }
 //share with radio button ends up
 
@@ -351,7 +362,8 @@ int updateNotf=0;
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    [ActionSheetPicker displayActionPickerWithView:sender data:circleListss selectedIndex:2 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
 }
 
 -(IBAction)pointOnMapButtonAction
@@ -452,9 +464,12 @@ int updateNotf=0;
             [userIDs addObject:frnd.userId];
         }
         event.guestList=userIDs;
-        event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
-        event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
-        event.eventAddress=annotation.subtitle;
+        if (locationFlag!=1) 
+        {
+            event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+            event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
+            event.eventAddress=annotation.subtitle;
+        }
         if (editFlag==true)
         {
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
@@ -516,8 +531,14 @@ int updateNotf=0;
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
+    locationFlag=1;
     int selectedLocation=[selectedIndex intValue];
-    NSLog(@"selectedLocation %@",selectedLocation);
+    NSLog(@"selectedLocation %d",selectedLocation);
+    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
+    NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
+    event.eventLocation.latitude=aPlaceItem.placeInfo.location.latitude;
+    event.eventLocation.longitude=aPlaceItem.placeInfo.location.longitude;
+    event.eventAddress=aPlaceItem.placeInfo.name;;    
 }
 
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 

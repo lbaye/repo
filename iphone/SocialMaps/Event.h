@@ -34,7 +34,10 @@
     NSString *eventType;
     NSMutableArray *yesArr;
     NSMutableArray *noArr;
-    NSMutableArray *maybeArr;    
+    NSMutableArray *maybeArr;
+    NSString *permission;
+    NSMutableArray *permittedUsers;
+    NSMutableArray *permittedCircles;
 }
 
 @property(nonatomic,retain) NSString *eventID;
@@ -62,6 +65,9 @@
 @property(nonatomic,retain) NSMutableArray *yesArr;
 @property(nonatomic,retain) NSMutableArray *noArr;
 @property(nonatomic,retain) NSMutableArray *maybeArr;    
+@property(nonatomic,retain) NSString *permission;
 
+@property(nonatomic,retain) NSMutableArray *permittedUsers;
+@property(nonatomic,retain) NSMutableArray *permittedCircles;
 
 @end

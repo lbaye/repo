@@ -26,6 +26,10 @@
 @synthesize isInvited,guestCanInvite,guestList,owner,circleList;
 @synthesize eventType;
 @synthesize yesArr,noArr,maybeArr;
+@synthesize permission;
+@synthesize permittedUsers;
+@synthesize permittedCircles;
+
 
 - (id)init
 {

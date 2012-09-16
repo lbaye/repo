@@ -1888,10 +1888,20 @@
 
     for (int i=0; i<[event.circleList count]; i++)
     {
-        [request addPostValue:[event.circleList objectAtIndex:i] forKey:@"circles[]"];
+        [request addPostValue:[event.circleList objectAtIndex:i] forKey:@"invitedCircles[]"];
     }
 
+    [request addPostValue:event.permission forKey:@"permission"];
+    for (int i=0; i<[event.permittedUsers count]; i++)
+    {
+        [request addPostValue:[event.permittedUsers objectAtIndex:i] forKey:@"permittedUsers[]"];
+    }
     
+    for (int i=0; i<[event.permittedCircles count]; i++)
+    {
+        [request addPostValue:[event.permittedCircles objectAtIndex:i] forKey:@"permittedCircles[]"];
+    }
+
     // Handle successful REST call
     [request setCompletionBlock:^{
         
