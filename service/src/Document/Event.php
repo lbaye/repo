@@ -24,6 +24,7 @@ class Event extends Gathering
         }
 
         try {
+            Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->notEmpty()->assert($this->getDescription());
             Validator::create()->date()->assert($this->getTime());
 
@@ -37,6 +38,9 @@ class Event extends Gathering
     public function toArray()
     {
         $result = parent::toArray();
+        $result['permission'] = $this->getPermission();
+        $result['permittedUsers'] = $this->getPermittedUsers();
+        $result['permittedCircles'] = $this->getPermittedCircles();
 
         return $result;
     }

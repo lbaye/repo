@@ -146,6 +146,11 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $this->_initRepository($type);
         try {
+
+            if ($type === 'meetup'){
+                $postData['time'] = date('Y-m-d h:i:s a', time());
+            }
+
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
 
@@ -212,6 +217,10 @@ class Gathering extends Base
             } else {
                 return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
             }
+        }
+
+        if(!empty($postData['invitedCircles'])){
+            $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
         }
 
         try {

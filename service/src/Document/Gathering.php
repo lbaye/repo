@@ -29,6 +29,9 @@ abstract class Gathering extends Content
     /** @ODM\Hash */
     protected $guests = array();
 
+    /** @ODM\Hash */
+    protected $invitedCircles = array();
+
     /**
      * @ODM\EmbedOne(targetDocument="Location")
      * @var Location
@@ -49,6 +52,9 @@ abstract class Gathering extends Content
 
     /** @ODM\Boolean */
     protected $guestsCanInvite;
+
+     /** @ODM\String */
+    protected $message;
 
     /** @ODM\Hash */
     protected $rsvp = array(
@@ -168,7 +174,9 @@ abstract class Gathering extends Content
     public function toArrayDetailed()
     {
         $result = $this->toArray();
-        $result['guests'] = $this->getGuests();
+        $guests['users']   = $this->getGuests();
+        $guests['circles'] = $this->getInvitedCircles();
+        $result['guests']  = $guests;
 
         return $result;
     }
@@ -177,7 +185,6 @@ abstract class Gathering extends Content
     {
         try {
 
-            Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->equals($this->getLocation()->isValid())->assert(true);
 
         } catch (\InvalidArgumentException $e) {
@@ -237,6 +244,28 @@ abstract class Gathering extends Content
         return $this->guestsCanInvite;
     }
 
+
+    public function setInvitedCircles($invitedCircles)
+    {
+        $this->invitedCircles = $invitedCircles;
+    }
+
+    public function getInvitedCircles()
+    {
+        return $this->invitedCircles;
+    }
+
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+
     public function getUserResponse($userId)
     {
         $rsvp = $this->getRsvp();
@@ -254,4 +283,6 @@ abstract class Gathering extends Content
             return parent::isPermittedFor($user);
         }
     }
+
+
 }
