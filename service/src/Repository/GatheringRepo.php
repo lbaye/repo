@@ -78,6 +78,25 @@ class GatheringRepo extends Base
         return $gathering;
     }
 
+    public function addCircles($newCircles, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $circles = $gathering->getInvitedCircles();
+        foreach($newCircles as $circle) array_push($circles, $circle);
+
+        $gathering->setInvitedCircles($circles);
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
+    }
+
     public function delete($id)
     {
         $gatheringObj = $this->find($id);
@@ -100,7 +119,7 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration','eventShortSummary', 'time', 'guestsCanInvite');
+        $setIfExistFields = array('title', 'description', 'duration','message','eventShortSummary', 'time', 'guestsCanInvite');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -113,8 +132,12 @@ class GatheringRepo extends Base
             $users[] = $owner->getId();
             $gathering->setGuests($users);
         }else{
-            $guests['guests'] = $owner->getId();
-            $gathering->setGuests( $guests);
+            $guests[] = $owner->getId();
+            $gathering->setGuests($guests);
+        }
+
+        if(isset($data['invitedCircles']) && is_array($data['invitedCircles'])){
+            $gathering->setInvitedCircles($data['invitedCircles']);
         }
 
         if(isset($data['permission'])){
