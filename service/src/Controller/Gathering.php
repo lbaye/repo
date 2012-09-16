@@ -74,8 +74,11 @@ class Gathering extends Base
                 $data = $gathering->toArrayDetailed();
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
                 $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
-                $data['guests'] = $this->_getUserSummaryList($data['guests']);
 
+                $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+                $guests['circles']  = $data['guests']['circles'];
+
+                $data['guests'] = $guests;
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
                 }
