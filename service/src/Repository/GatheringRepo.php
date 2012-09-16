@@ -192,7 +192,6 @@ class GatheringRepo extends Base
     {
         $gatheringItems = array();
         foreach ($results as $place) {
-
             $gatheringItems[] = $place->toArray();
         }
 
@@ -233,9 +232,10 @@ class GatheringRepo extends Base
         if ($eventImageUrl !== false) {
             $user->setEventImage($eventImageUrl);
         } else {
+            $serverUrl = $this->config['web']['root'];
 
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
-            $user->setEventImage($filePath);
+            $user->setEventImage($serverUrl . $filePath);
         }
 
         $user->setUpdateDate(new \DateTime());

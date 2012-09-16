@@ -9,13 +9,22 @@ class Hello extends Base
 {
     public function world()
     {
-        $response = new Response();
 
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode(array('Hello' => 'World')));
-        $response->setStatusCode(Status::OK);
+        $this->response->setContent(json_encode(array('Hello' => 'World')));
+        $this->response->setStatusCode(Status::OK);
 
-        return $response;
+        return $this->response;
+    }
+
+    public function gearman()
+    {
+        $dateStr = date('Y-m-d H:i:s');
+        $this->addTask('test_event', 'Gearman working : '. $dateStr);
+
+        $this->response->setContent(json_encode(array('message' => 'Check /tmp/workload.txt shows wokring message at '. $dateStr)));
+        $this->response->setStatusCode(Status::OK);
+
+        return $this->response;
     }
 
     public function test()
