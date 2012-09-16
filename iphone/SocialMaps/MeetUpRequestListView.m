@@ -370,7 +370,7 @@
     //if ([actionName isEqualToString:@"Accept"]){
         
         
-        int row = [self getCellRow:sender];
+        //int row = [self getCellRow:sender];
         [self updateMeetUpReq:[self getCellRow:sender] :actionName];
         //[((MeetUpRequest*)[meetUpRequestList objectAtIndex:row]).meetUpRsvpNo removeObject:<#(id)#>;
         //RestClient *restClient = [[[RestClient alloc] init] autorelease];

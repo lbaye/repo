@@ -216,8 +216,37 @@ ButtonClickCallbackData callBackData;
     [self.view setNeedsDisplay];
 }
 
+- (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
+    LocationItemPlace *locItem = (LocationItemPlace*) anno;
+    /*
+    int i = 0;
+    for (; i < [smAppDelegate.placeList count]; i++) {
+        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
+        if ([locItem.placeInfo.location isEqual:aPlaceItem.placeInfo.location]) {
+            
+        }
+    }
+    */
+    
+    NSLog(@"meetupRequestPlaceSelected");
+    /*
+    for (LocationItemPlace *eachLocationItem in smAppDelegate.placeList) {
+        if ([eachLocationItem.placeInfo.location isEqual:locItem.placeInfo.location]) {
+            MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+            controller.selectedLocatonItem = locItem;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
+        }
+    }
+    */
+    //smAppDelegate.placeList
+    //locItem.placeInfo.location = 
+}
+
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
+    NSLog(@"class = %@", [anno class]);
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
     
     int i = 0;
@@ -317,6 +346,9 @@ ButtonClickCallbackData callBackData;
             break;
         case MapAnnoUserActionDirection:
             [self directionSelected:locItem];
+            break;
+        case MapAnnoUserActionMeetupPlace:
+            [self meetupRequestPlaceSelected:locItem];
             break;
         default:
             break;

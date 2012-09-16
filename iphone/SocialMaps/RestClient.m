@@ -4266,7 +4266,6 @@
                 messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
                 NSLog(@"TIME is: %@",messageReply.time);
                 
-                
                 NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
                 messageReply.senderName = senderName;
                 NSLog(@"sender name is: %@",senderName);
@@ -4278,6 +4277,10 @@
                 NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
                 messageReply.senderAvater = senderAvater;
                 NSLog(@"sender avater is: %@",senderAvater);
+                
+                NSString *msgId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                messageReply.msgId = msgId;
+                NSLog(@"sender msgId is: %@",msgId);
                 
                 [messageReplies addObject:messageReply];
                 
