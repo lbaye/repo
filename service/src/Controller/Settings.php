@@ -253,6 +253,7 @@ class Settings extends Base
 
             // Update additional information
             try {
+                // TODO: Use background job for _updateLastSeenAt
                 $this->_updateLastSeenAt($this->user);
                 $this->_sendProximityAlerts($this->user);
             } catch (\Exception $e) {
