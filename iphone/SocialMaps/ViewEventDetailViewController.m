@@ -29,6 +29,7 @@ NSMutableArray *imageArr, *nameArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
 int notfCounter=0;
+int detNotfCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,6 +44,7 @@ int notfCounter=0;
 -(void)viewDidAppear:(BOOL)animated
 {
     notfCounter=0;
+    detNotfCounter=0;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
@@ -171,6 +173,7 @@ int notfCounter=0;
 -(void)viewWillAppear:(BOOL)animated
 {
     [self.mapContainer removeFromSuperview];
+    detNotfCounter=0;
 }
 
 - (void)viewDidLoad
@@ -298,6 +301,7 @@ int notfCounter=0;
 
 -(IBAction)invitePeople:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"invite people");    
     globalEditEvent=globalEvent;
     editFlag=true;
@@ -325,6 +329,7 @@ int notfCounter=0;
 
 -(IBAction)editEvent:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"edit event");
     globalEditEvent=globalEvent;
     editFlag=true;
@@ -561,7 +566,7 @@ int notfCounter=0;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     globalEvent=[notif object];
-    
+    detNotfCounter++;
     NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
     ImgesName = [[NSMutableArray alloc] init];   
     
@@ -584,8 +589,11 @@ int notfCounter=0;
         [ImgesName addObject:frnd.imageUrl];
         [nameArr addObject:frnd.userName];
     }
-
-    [self reloadScrolview];
+    
+    if (detNotfCounter==1)
+    {
+        [self reloadScrolview];
+    }
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
     ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -606,6 +614,7 @@ int notfCounter=0;
     ImgesName=nil;
     nameArr=nil;
     guestScrollView=nil;
+    detNotfCounter=0;
 }
 
 @end

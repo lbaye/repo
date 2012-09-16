@@ -1020,8 +1020,8 @@ int updateNotf=0;
     [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
     RestClient *rc=[[RestClient alloc] init];
     [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
-    [self dismissModalViewControllerAnimated:YES];
     }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateEventDone:(NSNotification *)notif
@@ -1041,8 +1041,8 @@ int updateNotf=0;
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
-    [self dismissModalViewControllerAnimated:YES];
     }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload
