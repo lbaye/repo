@@ -127,7 +127,6 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
-
                 return $this->_generateResponse($gatherings);
             } else {
                 return $this->_generateResponse(null, Status::NO_CONTENT);

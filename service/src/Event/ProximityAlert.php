@@ -87,4 +87,5 @@ class ProximityAlert extends Base
             'message' => 'Your friend '. $friend->getName() .' is near your location!',
         );
     }
+
 }
