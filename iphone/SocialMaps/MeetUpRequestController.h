@@ -11,6 +11,7 @@
 #import <Mapkit/Mapkit.h>
 
 @class AppDelegate;
+@class LocationItemPlace;
 
 @interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate> {
     
@@ -36,10 +37,12 @@
     NSString *currentAddress;
     
     NSString    *selectedfriendId;
+    LocationItemPlace    *selectedLocatonItem;
 }
 
 @property (nonatomic, retain) NSString *currentAddress;
 @property (nonatomic, retain) NSString *selectedfriendId;
+@property (nonatomic, retain) LocationItemPlace *selectedLocatonItem;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)actionMeetUpReqButton:(id)sender;

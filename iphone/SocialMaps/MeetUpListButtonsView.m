@@ -127,6 +127,8 @@
     meetUpReq = _meetUpReq;
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    [self resetButtons:nil];
+    
     for (int i = 0; i < [meetUpReq.meetUpRsvpYes count]; i++) {
         if ([[meetUpReq.meetUpRsvpYes objectAtIndex:i] isEqualToString:smAppDelegate.userId]) {
             [self resetButtons:buttonAccept];

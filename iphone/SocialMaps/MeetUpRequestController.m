@@ -19,6 +19,7 @@
 #import "UtilityClass.h"
 #import "LocationItemPlace.h"
 #import "RestClient.h"
+#import "LocationItemPlace.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_MY_PLACES           1002
@@ -42,6 +43,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 @synthesize currentAddress;
 @synthesize selectedfriendId;
+@synthesize selectedLocatonItem;
 
 DDAnnotation *annotation;
 
@@ -116,11 +118,26 @@ DDAnnotation *annotation;
 {
     [super viewDidAppear:animated];
     
-    for (int i = 0; i < [filteredList count]; i++) {
-        if ([((UserFriends*)[filteredList objectAtIndex:i]).userId isEqualToString:self.selectedfriendId]) {
-            [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+    if (self.selectedfriendId) {
+        for (int i = 0; i < [filteredList count]; i++) {
+            if ([((UserFriends*)[filteredList objectAtIndex:i]).userId isEqualToString:self.selectedfriendId]) {
+                [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+            }
+        }
+    } else if (self.selectedLocatonItem) {
+        [self radioButtonClicked:2 sender:nil];
+        for (int i = 0; i < [smAppDelegate.placeList count]; i++) {
+            LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
+            if ([self.selectedLocatonItem isEqual:aPlaceItem]) {
+                NSLog(@"select table row %d", i);
+                selectedPlaceIndex = i + 1;
+                labelAddress.text = self.selectedLocatonItem.placeInfo.name;
+                annotation.coordinate = self.selectedLocatonItem.coordinate;
+                [tableViewPlaces reloadData];
+            }
         }
     }
+    
     /*
     for (int i = 0; i < [selectedFriendsIndex count]; i++) {
         NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;

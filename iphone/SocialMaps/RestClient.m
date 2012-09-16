@@ -3777,8 +3777,8 @@
     
     [request addRequestHeader:authToken value:authTokenValue];
     
-    [request setPostValue:title forKey:@"title"];
-    [request setPostValue:description forKey:@"description"];
+    //[request setPostValue:title forKey:@"title"];
+    [request setPostValue:description forKey:@"message"];
     [request setPostValue:latitude forKey:@"lat"];
     [request setPostValue:longitude forKey:@"lng"];
     [request setPostValue:address forKey:@"address"];
@@ -4060,7 +4060,7 @@
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    NSString *route = [NSString stringWithFormat:@"%@/meetups",WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/me/meetups",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *meetUpRequests = [[NSMutableArray alloc] init];
     
@@ -4087,8 +4087,8 @@
                 MeetUpRequest *meetUpReq = [[MeetUpRequest alloc] init];
                 
                 meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                meetUpReq.meetUpTitle  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
-                meetUpReq.meetUpDescription  = [self getNestedKeyVal:item key1:@"description" key2:nil key3:nil];
+                //meetUpReq.meetUpTitle  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
+                meetUpReq.meetUpDescription  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
                 NSString *timeZoneType = [self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
