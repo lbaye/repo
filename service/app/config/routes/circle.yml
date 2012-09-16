@@ -1,0 +1,16 @@
+
+create_circle:
+  pattern: /me/circles
+  defaults: { _controller: Controller\User::addCircle}
+  requirements: { _method: POST}
+
+get_circles:
+  pattern: /me/circles
+  defaults: { _controller: Controller\User::getCircles}
+  requirements: { _method: GET}
+
+get_circle_detail:
+  pattern: /me/circles/{id}
+  defaults: { _controller: Controller\User::getCircleDetail}
+  requirements: { _method: GET}
+

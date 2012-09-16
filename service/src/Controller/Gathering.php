@@ -77,8 +77,8 @@ class Gathering extends Base
 
                 $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
                 $guests['circles']  = $data['guests']['circles'];
-
                 $data['guests'] = $guests;
+
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
                 }
@@ -231,7 +231,11 @@ class Gathering extends Base
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
-        $data = $place->toArray();
+        $data = $place->toArrayDetailed();
+
+        $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+        $guests['circles']  = $data['guests']['circles'];
+        $data['guests'] = $guests;
 
         if(!empty($data['eventImage'])) {
             $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
