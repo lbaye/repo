@@ -70,7 +70,7 @@ int updateNotf=0;
 
 -(void)loadDummydata
 {
-    circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
+    circleList=[[NSMutableArray alloc] init];
     [circleList removeAllObjects];
     UserCircle *circle=[[UserCircle alloc]init];
     
@@ -80,35 +80,31 @@ int updateNotf=0;
         [circleList addObject:circle.circleName];
     }
     UserFriends *frnds=[[UserFriends alloc] init];
-    ImgesName = [[NSMutableArray alloc] initWithObjects:   
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005479.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005484.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
+    ImgesName = [[NSMutableArray alloc] init];    
     
     searchTexts=[[NSString alloc] initWithString:@""];
-    friendsNameArr=[[NSMutableArray alloc] initWithObjects:@"karin",@"foyzul",@"dulal",@"abbas",@"gafur",@"fuad",@"robi",@"karim",@"tinki",@"suma",@"tilok",@"babu",@"imran", nil];
-    friendsIDArr=[[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13", nil];
+    friendsNameArr=[[NSMutableArray alloc] init];
+    friendsIDArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
 
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
-//        frnds.userName=[friendsNameArr objectAtIndex:i];
-//        frnds.userId=[friendsIDArr objectAtIndex:i];
-//        frnds.imageUrl=[ImgesName objectAtIndex:i];
         frnds=[friendListGlobalArray objectAtIndex:i];
+        if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
+        {
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            NSLog(@"img url null %d",i);
+        }
+        else
+        {
+            NSLog(@"img url not null %d",i);            
+        }
+        
         [friendListArr addObject:frnds];
+        [friendListArr replaceObjectAtIndex:i withObject:frnds];
+        NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
     }
     filteredList=[friendListArr mutableCopy];
 //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
@@ -680,7 +676,14 @@ int updateNotf=0;
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
             [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
             [name setNumberOfLines:0];
-            [name setText:userFrnd.userName];
+            if (![userFrnd.userName isEqual:[NSNull null]])
+            {
+                [name setText:userFrnd.userName];
+            }
+            else
+            {
+                [name setText:@"Not Found"];
+            }
             [name setBackgroundColor:[UIColor clearColor]];
             imgView.userInteractionEnabled = YES;
             imgView.tag = i;

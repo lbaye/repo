@@ -572,6 +572,15 @@ int notfCounter=0;
         frnd=[[UserFriends alloc] init];
         frnd=[globalEvent.guestList objectAtIndex:i];
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+        if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
+        {
+            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            NSLog(@"img url null %d",i);
+        }
+        else
+        {
+            NSLog(@"img url not null %d",i);            
+        }
         [ImgesName addObject:frnd.imageUrl];
         [nameArr addObject:frnd.userName];
     }
@@ -597,7 +606,6 @@ int notfCounter=0;
     ImgesName=nil;
     nameArr=nil;
     guestScrollView=nil;
-    
 }
 
 @end
