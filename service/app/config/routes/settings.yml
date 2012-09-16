@@ -38,6 +38,11 @@ geo_fence_settings:
   defaults: { _controller: Controller\Settings::geoFence }
   requirements: { _method: PUT|GET}
 
+push_settings:
+  pattern: /settings/push
+  defaults: { _controller: Controller\Settings::push }
+  requirements: { _method: PUT|GET}
+
 all_settings:
   pattern: /settings/all
   defaults: { _controller: Controller\Settings::getAll }

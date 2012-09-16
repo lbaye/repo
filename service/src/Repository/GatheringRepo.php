@@ -16,7 +16,7 @@ class GatheringRepo extends Base
 
     public function getByUser(UserDocument $user)
     {
-        $gatherings = $this->findBy(array('owner' => $user->getId(),array('createDate' => 'DESC')));
+        $gatherings = $this->findBy(array('owner' => $user->getId()), array('createDate' => 'DESC'));
         return $this->_toArrayAll($gatherings);
     }
 

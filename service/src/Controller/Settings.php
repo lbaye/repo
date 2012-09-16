@@ -26,6 +26,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/share/location
+     * GET /settings/share/location
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -51,6 +52,7 @@ class Settings extends Base
     }
 
     /**
+     * PUT /settings/geo_fence
      * PUT /settings/geo_fence
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -80,6 +82,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/notifications
+     * GET /settings/notifications
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -117,6 +120,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/platforms
+     * GET /settings/platforms
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -141,6 +145,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/layers
+     * GET /settings/layers
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -164,7 +169,33 @@ class Settings extends Base
     }
 
     /**
+     * GET /settings/push
+     * PUT /settings/push
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function push()
+    {
+        $data     = $this->request->request->all();
+        $settings = $this->user->getPushSettings();
+
+        if ($this->request->getMethod() == 'GET') {
+            return $this->_generateResponse(array('result' => $settings));
+        }
+
+        $options = array_keys($settings);
+        foreach ($options as $opt) {
+            if (isset($data[$opt]))
+                $settings[$opt] = $data[$opt];
+        }
+
+        $this->user->setPushSettings($settings);
+        return $this->persistAndReturn($settings);
+    }
+
+    /**
      * PUT /settings/account_settings
+     * GET /settings/account_settings
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

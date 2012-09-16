@@ -177,6 +177,12 @@ class User
     );
 
     /** @ODM\Hash */
+    protected $pushSettings = array(
+        'device_type' => null,
+        'device_id' => null
+    );
+
+    /** @ODM\Hash */
     protected $notificationSettings = array(
         'friend_requests' => array('sm' => true, 'mail' => true),
         'posts_by_friends' => array('sm' => true, 'mail' => true),
@@ -970,6 +976,16 @@ class User
     public function getLastSeenAt()
     {
         return $this->lastSeenAt;
+    }
+
+    public function setPushSettings($pushSettings)
+    {
+        $this->pushSettings = $pushSettings;
+    }
+
+    public function getPushSettings()
+    {
+        return $this->pushSettings;
     }
 
 
