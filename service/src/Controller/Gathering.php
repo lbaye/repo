@@ -232,7 +232,7 @@ class Gathering extends Base
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
-        $data = $place->toArray();
+        $data = $place->toArrayDetailed();
 
         if(!empty($data['eventImage'])) {
             $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
