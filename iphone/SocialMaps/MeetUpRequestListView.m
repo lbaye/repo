@@ -184,8 +184,17 @@
         lblTime.textAlignment = UITextAlignmentLeft;
     }
     */
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    labelMeetUpTitle.text = meetUpReq.meetUpTitle;
+    
+    if ([meetUpReq.meetUpSenderId isEqualToString:smAppDelegate.userId]) {
+        labelMeetUpTitle.text = @"You have sent a request to meet-up at ";
+        meetUpListButtonView.hidden = YES;
+    } else {
+        labelMeetUpTitle.text = [NSString stringWithFormat:@"%@ has invited you to meet-up at", meetUpReq.meetUpSender];
+    }
+    
+    //labelMeetUpTitle.text = () ? 
     [buttonAddress setTitle:meetUpReq.meetUpAddress forState:UIControlStateNormal];
     labelTime.text =  [UtilityClass timeAsString:meetUpReq.meetUpTime];
     labelMsg.text=meetUpReq.meetUpDescription;
@@ -370,8 +379,8 @@
     //if ([actionName isEqualToString:@"Accept"]){
         
         
-        //int row = [self getCellRow:sender];
-        [self updateMeetUpReq:[self getCellRow:sender] :actionName];
+        int row = [self getCellRow:sender];
+        [self updateMeetUpReq:row :actionName];
         //[((MeetUpRequest*)[meetUpRequestList objectAtIndex:row]).meetUpRsvpNo removeObject:<#(id)#>;
         //RestClient *restClient = [[[RestClient alloc] init] autorelease];
         //[restClient acceptFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];

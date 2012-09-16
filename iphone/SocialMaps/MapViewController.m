@@ -229,7 +229,7 @@ ButtonClickCallbackData callBackData;
     */
     
     NSLog(@"meetupRequestPlaceSelected");
-    /*
+    
     for (LocationItemPlace *eachLocationItem in smAppDelegate.placeList) {
         if ([eachLocationItem.placeInfo.location isEqual:locItem.placeInfo.location]) {
             MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
@@ -239,7 +239,7 @@ ButtonClickCallbackData callBackData;
             [controller release];
         }
     }
-    */
+    
     //smAppDelegate.placeList
     //locItem.placeInfo.location = 
 }
