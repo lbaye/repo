@@ -8,33 +8,8 @@ use Document\Geotag as GeotagDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
-class PlaceRepo extends DocumentRepository
+class PlaceRepo extends Base
 {
-
-    public function getByUser(UserDocument $user)
-    {
-        $places = $this->findBy(array('owner' => $user->getId()));
-        return $this->_toArrayAll($places);
-    }
-
-    public function getAll($limit = 20, $offset = 0)
-    {
-        return $this->findBy(array(), null, $limit, $offset);
-    }
-
-    public function insert($place)
-    {
-        $valid  = $place->isValid();
-
-        if ($valid !== true) {
-            throw new \InvalidArgumentException('Invalid Location data', 406);
-        }
-
-        $this->dm->persist($place);
-        $this->dm->flush($place);
-
-        return $place;
-    }
 
     public function update($data, $id)
     {
@@ -54,18 +29,6 @@ class PlaceRepo extends DocumentRepository
         $this->dm->flush();
 
         return $place;
-    }
-
-    public function delete($id)
-    {
-        $place = $this->find($id);
-
-        if (is_null($place)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($place);
-        $this->dm->flush();
     }
 
     public function map(array $data, UserDocument $owner, \Document\Landmark $placeTypeDoc = null)
@@ -100,15 +63,5 @@ class PlaceRepo extends DocumentRepository
         }
 
         return $placeTypeDoc;
-    }
-
-    private function _toArrayAll($results)
-    {
-        $places = array();
-        foreach ($results as $place) {
-            $places[] = $place->toArray();
-        }
-
-        return $places;
     }
 }

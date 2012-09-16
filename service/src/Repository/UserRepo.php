@@ -2,13 +2,12 @@
 
 namespace Repository;
 
-use Repository\Base as BaseRepository;
 use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class UserRepo extends BaseRepository
+class UserRepo extends Base
 {
     public function validateLogin($data)
     {
@@ -209,18 +208,6 @@ class UserRepo extends BaseRepository
         $this->dm->flush();
 
         return $user;
-    }
-
-    public function delete($id)
-    {
-        $user = $this->find($id);
-
-        if (false === $user) {
-            throw new \InvalidArgumentException();
-        }
-
-        $this->dm->remove($user);
-        $this->dm->flush();
     }
 
     public function addCircle(array $data)
@@ -569,7 +556,7 @@ class UserRepo extends BaseRepository
         return $circle;
     }
 
-    private function _toArrayAll($results, $filterFields = false)
+    protected function _toArrayAll($results, $filterFields = false)
     {
         $users = array();
         foreach ($results as $user) {

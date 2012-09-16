@@ -2,10 +2,9 @@
 
 namespace Repository;
 
-use Repository\Base as BaseRepository;
 use Document\ExternalLocation as ExternalLocationDocument;
 
-class ExternalLocationRepo extends BaseRepository
+class ExternalLocationRepo extends Base
 {
     public function exists($refId)
     {
@@ -86,7 +85,7 @@ class ExternalLocationRepo extends BaseRepository
         return $externalLocation;
     }
 
-    private function _toArrayAll($results)
+    protected function _toArrayAll($results)
     {
         $users = array();
         foreach ($results as $user) {
