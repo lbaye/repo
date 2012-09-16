@@ -1575,72 +1575,76 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            
-            //get all people
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
-            {
-                People *people=[[People alloc] init];
 
-                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
-                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
-                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
-                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
-                people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
-                people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
-                people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
-                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
-                people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
-                people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
-                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
-                people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
-                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
-                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
-                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
-                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+            // Do the parsing in the background as this seems to make the user interaction sluggish
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                //get all people
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
+                {
+                    People *people=[[People alloc] init];
+
+                    people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                    people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                    people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                    people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                    people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                    people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+                    people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+                    people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+                    people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+                    NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                    people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                    people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+                    people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                    
+                    people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+                    [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+                    
+                    people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                    people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+                    
+                    people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                    
+                    people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                    
+                    [searchLocation.peopleArr addObject:people];
+                    
+                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
+                }
                 
-                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
-                [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
-                
-                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
-                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
-                
-                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
-                
-                people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
-                
-                [searchLocation.peopleArr addObject:people];
-                
-                NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
-            }
-            
-            //get all places
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
-            {
-                Places *place=[[Places alloc] init];
-                
-                place.location = [[Geolocation alloc] init];
-                place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
-                place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
-                place.northeast = [[Geolocation alloc] init];
-                place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
-                place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
-                
-                place.southwest = [[Geolocation alloc] init];
-                place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
-                place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
-                place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
-                [place setIcon:[item objectForKey:@"icon"] ];
-                [place setID:[item objectForKey:@"id"] ];
-                [place setName:[item objectForKey:@"name"] ];
-                [place setReference:[item objectForKey:@"reference"]];
-                [place setTypeArr:[item objectForKey:@"types"]];
-                [place setVicinity:[item objectForKey:@"vicinity"] ];
-                [searchLocation.placeArr addObject:place];
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                //get all places
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                {
+                    Places *place=[[Places alloc] init];
+                    
+                    place.location = [[Geolocation alloc] init];
+                    place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                    place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
+                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
+                    place.northeast = [[Geolocation alloc] init];
+                    place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                    place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
+                    
+                    place.southwest = [[Geolocation alloc] init];
+                    place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                    place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
+                    place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                    [place setIcon:[item objectForKey:@"icon"] ];
+                    [place setID:[item objectForKey:@"id"] ];
+                    [place setName:[item objectForKey:@"name"] ];
+                    [place setReference:[item objectForKey:@"reference"]];
+                    [place setTypeArr:[item objectForKey:@"types"]];
+                    [place setVicinity:[item objectForKey:@"vicinity"] ];
+                    [searchLocation.placeArr addObject:place];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                });
+            });
         } 
         else 
         {
