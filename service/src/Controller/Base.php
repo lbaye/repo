@@ -48,6 +48,11 @@ abstract class Base
     protected $serializer;
 
     /**
+     * @var \GearmanClient
+     */
+    protected $gearmanClient;
+
+    /**
      * Inject the Request object for further use.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -97,6 +102,17 @@ abstract class Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->serializer = \Service\Serializer\Factory::getSerializer('json');
+    }
+
+    protected function addTask($eventName, $data)
+    {
+        if (!$this->gearmanClient) {
+            $this->setupGearman();
+        }
+
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient->doBackground($eventName, $data);
+        }
     }
 
     /**
@@ -196,5 +212,13 @@ abstract class Base
         }, $fields);
 
         return $userData;
+    }
+
+    private function setupGearman()
+    {
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient = new \GearmanClient();
+            $this->gearmanClient->addServer($this->config['gearman']['host'], $this->config['gearman']['port']);
+        }
     }
 }

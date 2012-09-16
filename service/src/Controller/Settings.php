@@ -315,35 +315,7 @@ class Settings extends Base
 
     private function _sendProximityAlerts(\Document\User $user)
     {
-        $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
-
-        $notificationSettings = $this->user->getNotificationSettings();
-        $from = $user->getCurrentLocation();
-        $friendsToNotify = array();
-
-        // @todo : Add an API for setting proximity radius
-        $HARDCODED_PROXIMITY_RADIUS = 5;
-
-        foreach($friends as $friend) {
-            $friendsNotificationSettings = $friend->getNotificationSettings();
-            $to = $friend->getCurrentLocation();
-            $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
-
-            if(   $notificationSettings['proximity_alerts']['sm']
-            //&& $notificationSettings['proximity_radius'] >= $distance){
-            && $HARDCODED_PROXIMITY_RADIUS >= $distance){
-                \Helper\Notification::send($this->_createNotificationData($friend), array($this->user));
-            }
-
-            if(    $this->user->getVisible()
-                && $friendsNotificationSettings['proximity_alerts']['sm']
-                //&& $friendsNotificationSettings['proximity_radius'] >= $distance){
-                && $HARDCODED_PROXIMITY_RADIUS >= $distance){
-               $friendsToNotify[] = $friend;
-            }
-        }
-
-        \Helper\Notification::send($this->_createNotificationData($this->user), $friendsToNotify);
+        $this->addTask('proximity_alert', json_encode(array('user_id' => $user->getId())));
     }
 
     private function returnResponse($result)
@@ -381,16 +353,5 @@ class Settings extends Base
 
         return $this->response;
 
-    }
-
-    private function _createNotificationData($friend)
-    {
-        return array(
-            'title' => 'Your friend is here!',
-            'photoUrl' => $friend->getAvatar(),
-            'objectId' => $friend->getId(),
-            'objectType' => 'proximity_alert',
-            'message' => 'Your friend '. $friend->getName() .' is near your location!',
-        );
     }
 }

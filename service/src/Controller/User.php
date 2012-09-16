@@ -178,7 +178,10 @@ class User extends Base
         $user = $this->userRepository->find($id);
 
         if (null !== $user) {
+
             $data = $user->toArrayDetailed();
+            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
 
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));
@@ -204,7 +207,12 @@ class User extends Base
         $user = $this->userRepository->getByEmail($email);
 
         if (false !== $user) {
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+
+            $data = $user->toArrayDetailed();
+            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
@@ -265,7 +273,11 @@ class User extends Base
                 $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
             }
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+            $data = $user->toArrayDetailed();
+            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
         } catch (\Exception\ResourceNotFoundException $e) {
 

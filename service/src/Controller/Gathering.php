@@ -75,6 +75,14 @@ class Gathering extends Base
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
                 $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
                 $data['guests'] = $this->_getUserSummaryList($data['guests']);
+
+                if (!empty($data['eventImage'])) {
+                    $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+                }
+
+                $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
+                $data['ownerDetail'] = $ownerDetail[0];
+
                 return $this->_generateResponse($data);
 
             } else {
@@ -116,6 +124,7 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
+
                 return $this->_generateResponse($gatherings);
             } else {
                 return $this->_generateResponse(null, Status::NO_CONTENT);
@@ -165,7 +174,13 @@ class Gathering extends Base
             \Helper\Notification::send($notificationData, $users);
         }
 
-        return $this->_generateResponse($meetup->toArrayDetailed(), Status::CREATED);
+        $data = $meetup->toArrayDetailed();
+
+        if(!empty($data['eventImage'])) {
+            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+        }
+
+        return $this->_generateResponse($data, Status::CREATED);
     }
 
     /**
@@ -205,8 +220,13 @@ class Gathering extends Base
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
+        $data = $place->toArray();
 
-        return $this->_generateResponse($place->toArray());
+        if(!empty($data['eventImage'])) {
+            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+        }
+
+        return $this->_generateResponse($data);
     }
 
     /**
@@ -335,6 +355,11 @@ class Gathering extends Base
 
             $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
 
+            if (!empty($gatheringItem['eventImage'])){
+              $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
+            }
+            $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
+            $gatheringItem['ownerDetail'] = $ownerDetail[0];
             $gatheringItems[] = $gatheringItem;
         }
 

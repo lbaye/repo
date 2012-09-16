@@ -680,7 +680,8 @@ class UserRepo extends Base
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            $user->setAvatar($this->config['web']['root'] .$filePath);
+            //$user->setAvatar($this->config['web']['root'] .$filePath);
+            $user->setAvatar($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -706,7 +707,7 @@ class UserRepo extends Base
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($this->config['web']['root'] .$filePath);
+            $user->setCoverPhoto($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -756,8 +757,7 @@ class UserRepo extends Base
         } else {
             // @TODO : Changing to near temporarily for testing with more users
             //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
-
-            $query->field('currentLocation.lat')->near($location['lat'])->field('currentLocation.lng')->near($location['lng']);
+            $query->field('currentLocation')->near($location['lat'], $location['lng']);
         }
 
         $result = $query->getQuery()->execute();
