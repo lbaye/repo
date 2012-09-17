@@ -269,12 +269,12 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(IBAction)backButton:(id)sender
 {
-//    [self dismissModalViewControllerAnimated:YES];
-    [self viewDidUnload];
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
+    [self dismissModalViewControllerAnimated:YES];
+//    [self viewDidUnload];
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
 }
 
 -(void)resetButton:(int)index
@@ -419,10 +419,10 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(void) reloadScrolview
 {
-    NSLog(@"in scroll init %d",[ImgesName count]);
+    NSLog(@"event detail in scroll init %d",[ImgesName count]);
     if (isBackgroundTaskRunning==TRUE)  
     {
-    NSLog(@"isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+    NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
     
@@ -456,8 +456,10 @@ BOOL isBackgroundTaskRunning=FALSE;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+//                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
+                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                    imgView.image = [UIImage imageNamed:@"thum.png"];
                 }
                 else 
                 { 
@@ -522,13 +524,16 @@ BOOL isBackgroundTaskRunning=FALSE;
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+//        [self reloadScrolview];
+        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        
     }
-//    else
-//    {
-//        [dicImages_msg setObject:[NSNull null] forKey:[ImgesName objectAtIndex:index]];
-//    }
+    else
+    {
+        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:index]];
+    }
     // Now, we need to reload scroll view to load downloaded image
-    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
     }
 }

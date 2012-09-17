@@ -494,7 +494,7 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.92156869173049927" green="0.92156869173049927" blue="0.92156869173049927" alpha="0.0" colorSpace="deviceRGB"/>
                             </view>
-                            <view opaque="NO" autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" id="uG7-vJ-l6r" userLabel="mapPullDownMenu">
+                            <view autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" id="uG7-vJ-l6r" userLabel="mapPullDownMenu">
                                 <rect key="frame" x="0.0" y="43" width="320" height="150"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -3335,7 +3335,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <scene sceneID="RZs-mC-Xnf">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1i7-i9-pXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="x4f-Rr-4Qj" customClass="ViewEventListViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="viewEventList" id="x4f-Rr-4Qj" customClass="ViewEventListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kfg-wW-S7l">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

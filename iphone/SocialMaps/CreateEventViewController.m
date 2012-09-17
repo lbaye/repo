@@ -259,6 +259,7 @@ int updateNotf=0;
 {
 	
 	[super viewWillDisappear:animated];
+    [self viewDidUnload];
 	isBackgroundTaskRunning=false;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
@@ -665,6 +666,7 @@ int updateNotf=0;
 
 -(void) reloadScrolview
 {
+    NSLog(@"event create scroll init");
     if (isBackgroundTaskRunning==true)
     {
     int x=0; //declared for imageview x-axis point    
@@ -682,7 +684,8 @@ int updateNotf=0;
         }
     }
     frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
-
+    
+    NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
     for(int i=0; i<[filteredList count];i++)               
     {
         if(i< [filteredList count]) 
@@ -777,9 +780,10 @@ int updateNotf=0;
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+        [self reloadScrolview];
     }
     // Now, we need to reload scroll view to load downloaded image
-    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
     }
 }
@@ -1042,9 +1046,6 @@ int updateNotf=0;
     createNotf++;
     if (createNotf==1)
     {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    NSLog(@"dele %@",[notif object]);
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
     //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -1055,18 +1056,19 @@ int updateNotf=0;
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
-    RestClient *rc=[[RestClient alloc] init];
-    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
-    [self dismissModalViewControllerAnimated:YES];
     }
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    NSLog(@"dele %@",[notif object]);
+
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateEventDone:(NSNotification *)notif
 {
     updateNotf++;
-    if (updateNotf==1) {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
+    if (updateNotf==1) 
+    {
     NSLog(@"dele %@",[notif object]);
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
@@ -1078,8 +1080,10 @@ int updateNotf=0;
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
-    [self dismissModalViewControllerAnimated:YES];
     }
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)viewDidUnload
