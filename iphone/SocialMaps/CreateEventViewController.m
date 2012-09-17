@@ -18,6 +18,7 @@
 #import "Globals.h"
 #import "UserCircle.h"
 #import "LocationItemPlace.h"
+#import "SelectCircleTableCell.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -38,7 +39,7 @@
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
 @synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
-@synthesize createButton,createLabel;
+@synthesize createButton,createLabel,circleView,circleTableView;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
@@ -59,7 +60,7 @@ DDAnnotation *annotation;
 bool isBackgroundTaskRunning;
 int createNotf=0;
 int updateNotf=0;
-NSMutableArray*   neearMeAddressArr;
+NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -167,6 +168,7 @@ NSMutableArray*   neearMeAddressArr;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
+    selectedCircleCheckArr=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
@@ -226,7 +228,7 @@ NSMutableArray*   neearMeAddressArr;
 
 	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
-	
+	[circleView removeFromSuperview];
     if (editFlag==true)
     {
         event=globalEditEvent;
@@ -418,7 +420,18 @@ NSMutableArray*   neearMeAddressArr;
 //show circle
 -(IBAction)showCircle:(id)sender
 {
-    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
+//    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
+    [self.view addSubview:circleView];
+}
+
+-(IBAction)saveCircle:(id)sender
+{
+    [circleView removeFromSuperview];
+}
+
+-(IBAction)cancelCircle:(id)sender
+{
+    [circleView removeFromSuperview];
 }
 
 -(IBAction)guestCanInvite:(id)sender
@@ -616,6 +629,66 @@ NSMutableArray*   neearMeAddressArr;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
     annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
+
+//table view delegate methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    return [circleList count];
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"circleTableCell";
+    int nodeCount = [filteredList count];
+        
+    SelectCircleTableCell *cell = [circleTableView
+                                dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+            cell = [[SelectCircleTableCell alloc]
+                    initWithStyle:UITableViewCellStyleDefault 
+                    reuseIdentifier:CellIdentifier];
+    }
+    
+    // Configure the cell...
+    cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+    [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    
+    
+}
+
+-(void)handleTableViewCheckbox:(id)sender
+{
+    SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
+//    [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    if ([selectedCircleCheckArr containsObject:clickedButtonPath])
+    {
+        [selectedCircleCheckArr removeObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [selectedCircleCheckArr addObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+    }
+    NSLog(@"selectedCircleCheckArr: %@",selectedCircleCheckArr);    
+}
+
 
 #pragma mark -
 #pragma mark MKMapViewDelegate

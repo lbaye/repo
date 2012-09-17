@@ -12,6 +12,7 @@
 		2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */; };
 		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
 		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
+		2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2024BF7816075FE3008013DC /* SelectCircleTableCell.m */; };
 		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
 		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
 		2063A1D615F330E300529CB2 /* PinDown2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D015F330E300529CB2 /* PinDown2.png */; };
@@ -390,6 +391,8 @@
 		2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCircleListViewController.m; sourceTree = "<group>"; };
 		2018C2A316048AEF00457BB6 /* CircleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleImageDownloader.h; sourceTree = "<group>"; };
 		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
+		2024BF7716075FE3008013DC /* SelectCircleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCircleTableCell.h; sourceTree = "<group>"; };
+		2024BF7816075FE3008013DC /* SelectCircleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCircleTableCell.m; sourceTree = "<group>"; };
 		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
 		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
 		2063A1D015F330E300529CB2 /* PinDown2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown2.png; sourceTree = "<group>"; };
@@ -955,7 +958,6 @@
 			children = (
 				4FB7A06415D1256E001EB905 /* AccountSettings.h */,
 				4FB7A06515D1256E001EB905 /* AccountSettings.m */,
-				4F1D96AD15DCC93B00511624 /* Address.h */,
 				4F1D96AC15DCC93B00511624 /* Address.m */,
 				2018C2A316048AEF00457BB6 /* CircleImageDownloader.h */,
 				2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */,
@@ -1234,6 +1236,8 @@
 				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
 				4F82576B15BD32EE00760CE1 /* RegistrationController.h */,
 				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
+				2024BF7716075FE3008013DC /* SelectCircleTableCell.h */,
+				2024BF7816075FE3008013DC /* SelectCircleTableCell.m */,
 				4FF09BF415CFE6E500F8AD19 /* SettingsController.h */,
 				4FF09BF515CFE6E600F8AD19 /* SettingsController.m */,
 				B0C206AD15FB26C900177132 /* ShowOnMapController.h */,
@@ -1245,6 +1249,7 @@
 				4F98A2E115BB387D000B3124 /* ViewController.m */,
 				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
+				4F1D96AD15DCC93B00511624 /* Address.h */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
@@ -2032,6 +2037,7 @@
 				2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */,
 				2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */,
 				2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */,
+				2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

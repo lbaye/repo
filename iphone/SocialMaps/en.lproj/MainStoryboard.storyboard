@@ -3309,11 +3309,103 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <view contentMode="scaleToFill" id="nRX-ZQ-XyS">
+                                <rect key="frame" x="30" y="120" width="261" height="261"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uSt-S5-Ruu">
+                                        <rect key="frame" x="0.0" y="0.0" width="261" height="223"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="circleTableCell" id="RR4-mf-837" customClass="SelectCircleTableCell">
+                                                <rect key="frame" x="0.0" y="22" width="261" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="261" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="t7E-tz-fCY">
+                                                            <rect key="frame" x="15" y="11" width="182" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="HZg-dT-IuV">
+                                                            <rect key="frame" x="216" y="7" width="33" height="30"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                            <state key="normal" image="checkbox_unchecked.png">
+                                                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <state key="highlighted">
+                                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <connections>
+                                                    <outlet property="circrcleCheckbox" destination="HZg-dT-IuV" id="YNK-JW-IlE"/>
+                                                    <outlet property="circrcleName" destination="t7E-tz-fCY" id="FpM-nk-qw1"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="iEq-R0-8Ox" id="dvp-vd-j1B"/>
+                                            <outlet property="delegate" destination="iEq-R0-8Ox" id="A8f-EB-Kb3"/>
+                                        </connections>
+                                    </tableView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bt8-8H-lYZ">
+                                        <rect key="frame" x="0.0" y="224" width="129" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="12"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3ve-d6-1Rw">
+                                        <rect key="frame" x="137" y="224" width="124" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="12"/>
+                                        <state key="normal" title="Save">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hEL-qH-Dro">
+                                        <rect key="frame" x="131" y="224" width="7" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="sp2.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
                     <connections>
                         <outlet property="addressLabel" destination="pNU-v5-pfu" id="N8v-TS-UJo"/>
+                        <outlet property="circleTableView" destination="uSt-S5-Ruu" id="JLq-Hs-Zw4"/>
+                        <outlet property="circleView" destination="nRX-ZQ-XyS" id="efH-iv-Ra2"/>
                         <outlet property="createButton" destination="0bh-yg-Ont" id="iFj-L1-iIo"/>
                         <outlet property="createLabel" destination="luZ-vv-dQw" id="qbt-a7-Py1"/>
                         <outlet property="createView" destination="dv5-gH-peM" id="8dh-eZ-YNN"/>
@@ -4265,6 +4357,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             <relationships>
                 <relationship kind="action" name="addAll:"/>
                 <relationship kind="action" name="backButton:"/>
+                <relationship kind="action" name="cancelCircle:"/>
                 <relationship kind="action" name="cancelEntity:"/>
                 <relationship kind="action" name="cancelEvent:"/>
                 <relationship kind="action" name="cancelMapLoc:"/>
@@ -4283,12 +4376,15 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="peopleButtonAction"/>
                 <relationship kind="action" name="photoButtonAction"/>
                 <relationship kind="action" name="pointOnMapButtonAction"/>
+                <relationship kind="action" name="saveCircle:"/>
                 <relationship kind="action" name="saveEntity:"/>
                 <relationship kind="action" name="saveMapLoc:"/>
                 <relationship kind="action" name="showCircle:"/>
                 <relationship kind="action" name="summaryButtonAction"/>
                 <relationship kind="action" name="unSelectAll:"/>
                 <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="createButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="createLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="createView" candidateClass="UIView"/>
@@ -4481,6 +4577,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="regName" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="regPassword" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="selMaleFemale" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="SettingsController" superclassName="UIViewController">
