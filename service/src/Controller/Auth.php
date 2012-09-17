@@ -52,8 +52,8 @@ class Auth extends Base
             }
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
-            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+            $data['avatar'] = $this->_buildAvatarUrl($data);
+            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
@@ -95,8 +95,8 @@ class Auth extends Base
             $this->userRepository->updateLoginCount($user->getId());
 
             $userData = $user->toArrayDetailed();
-            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
-            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
+            $userData['avatar'] = $this->_buildAvatarUrl($userData);
+            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));
@@ -152,8 +152,8 @@ class Auth extends Base
 
             }
             $userData = $user->toArrayDetailed();
-            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
-            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
+            $userData['avatar'] = $this->_buildAvatarUrl($userData);
+            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));

@@ -563,8 +563,8 @@ class UserRepo extends Base
             $userArr = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
             $userArr['friendship'] = $this->currentUser->getFriendship($user);
 
-            $userArr['avatar'] = $this->_buildAbsoluteUrl($this->config['web']['root'], $userArr['avatar']);
-            $userArr['coverPhoto'] = $this->_buildAbsoluteUrl($this->config['web']['root'], $userArr['coverPhoto']);
+            $userArr['avatar'] = $this->_buildAvatarUrl($userArr);
+            $userArr['coverPhoto'] = $this->_buildCoverPhotoUrl($userArr);
             $users[] = $userArr;
 
         }

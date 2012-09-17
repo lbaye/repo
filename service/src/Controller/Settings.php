@@ -236,8 +236,8 @@ class Settings extends Base
         }
 
         $data = $user->toArrayDetailed();
-        $data['avatar'] = $this->config['web']['root']. $data['avatar'];
-        $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+        $data['avatar'] = $this->_buildAvatarUrl($data);
+        $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
 
         return $this->_generateResponse($data);
     }

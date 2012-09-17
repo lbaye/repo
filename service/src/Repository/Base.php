@@ -5,8 +5,7 @@ namespace Repository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Document\User as UserDocument;
 
-class Base extends DocumentRepository
-{
+class Base extends DocumentRepository {
     /**
      * @var array
      */
@@ -22,26 +21,22 @@ class Base extends DocumentRepository
      */
     protected $gearmanClient;
 
-    public function setConfig($config)
-    {
+    public function setConfig($config) {
         $this->config = $config;
     }
 
-    public function setCurrentUser($user)
-    {
+    public function setCurrentUser($user) {
         $this->currentUser = $user;
     }
 
-    private function setupGearman()
-    {
+    private function setupGearman() {
         if (class_exists('\\GearmanClient')) {
             $this->gearmanClient = new \GearmanClient();
             $this->gearmanClient->addServer($this->config['gearman']['host'], $this->config['gearman']['port']);
         }
     }
 
-    public function addTask($eventName, $data)
-    {
+    public function addTask($eventName, $data) {
         if (!$this->gearmanClient) {
             $this->setupGearman();
         }
@@ -51,20 +46,17 @@ class Base extends DocumentRepository
         }
     }
 
-    public function getAll($limit = 20, $offset = 0)
-    {
+    public function getAll($limit = 20, $offset = 0) {
         return $this->findBy(array(), null, $limit, $offset);
     }
 
-    public function getByUser(UserDocument $user)
-    {
+    public function getByUser(UserDocument $user) {
         $docs = $this->findBy(array('owner' => $user->getId()));
         return $this->_toArrayAll($docs);
     }
 
-    public function insert($doc)
-    {
-        $valid  = $doc->isValid();
+    public function insert($doc) {
+        $valid = $doc->isValid();
 
         if ($valid !== true) {
             throw new \InvalidArgumentException('Invalid Location data', 406);
@@ -76,8 +68,7 @@ class Base extends DocumentRepository
         return $doc;
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
         $doc = $this->find($id);
 
         if (is_null($doc)) {
@@ -88,8 +79,7 @@ class Base extends DocumentRepository
         $this->dm->flush();
     }
 
-    protected function _toArrayAll($results)
-    {
+    protected function _toArrayAll($results) {
         $docsAsArr = array();
         foreach ($results as $place) {
             $docsAsArr[] = $place->toArray();
@@ -100,14 +90,22 @@ class Base extends DocumentRepository
 
     protected function _buildAbsoluteUrl($prefix, $suffix) {
         $http_prefixed = preg_match("/http:\/\//i", $suffix) ||
-                preg_match("/https:\/\//i", $suffix);
+                         preg_match("/https:\/\//i", $suffix);
 
         if (empty($suffix)) {
-            return $prefix;
+            return null;
         } else if ($http_prefixed) {
             return $suffix;
         } else {
             return $prefix . $suffix;
         }
+    }
+
+    protected function _buildCoverPhotoUrl($data) {
+        return $this->config['web']['root'] . $data['coverPhoto'];
+    }
+
+    protected function _buildAvatarUrl($data) {
+        return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
     }
 }

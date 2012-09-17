@@ -226,4 +226,25 @@ abstract class Base
             $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
             return (bool)preg_match($v, $URL);
     }
+
+    protected function _buildAbsoluteUrl($prefix, $suffix) {
+        $http_prefixed = preg_match("/http:\/\//i", $suffix) ||
+                preg_match("/https:\/\//i", $suffix);
+
+        if (empty($suffix)) {
+            return null;
+        } else if ($http_prefixed) {
+            return $suffix;
+        } else {
+            return $prefix . $suffix;
+        }
+    }
+
+    protected function _buildCoverPhotoUrl($data) {
+        return $this->config['web']['root'] . $data['coverPhoto'];
+    }
+
+    protected function _buildAvatarUrl($data) {
+        return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
+    }
 }
