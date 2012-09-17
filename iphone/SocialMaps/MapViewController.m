@@ -349,7 +349,8 @@ ButtonClickCallbackData callBackData;
     [super viewDidLoad];  
     
     NSLog(@"MapViewController:viewDidLoad" );
-
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     // Map drag handler
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
@@ -362,8 +363,6 @@ ButtonClickCallbackData callBackData;
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
-    
-    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     _mapView.delegate=self;
     if ([CLLocationManager locationServicesEnabled])
@@ -463,6 +462,14 @@ ButtonClickCallbackData callBackData;
     
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
+    if (smAppDelegate.gotListing == FALSE) {
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
+
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
+
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -638,7 +645,7 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        smAppDelegate.gotListing = TRUE;
+        //smAppDelegate.gotListing = TRUE;
     }
 
 }
@@ -1577,7 +1584,11 @@ ButtonClickCallbackData callBackData;
 
         }
     }
-    smAppDelegate.gotListing = TRUE;
+    if (smAppDelegate.gotListing == FALSE) {
+        smAppDelegate.gotListing = TRUE;
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        [smAppDelegate hideActivityViewer];
+    }
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
