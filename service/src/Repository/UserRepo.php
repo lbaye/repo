@@ -683,7 +683,7 @@ class UserRepo extends Base
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            //$user->setAvatar($this->config['web']['root'] .$filePath);
+
             $user->setAvatar($filePath);
         }
 
