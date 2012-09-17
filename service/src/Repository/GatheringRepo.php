@@ -16,7 +16,7 @@ class GatheringRepo extends Base
 
     public function getByUser(UserDocument $user)
     {
-        $gatherings = $this->findBy(array('owner' => $user->getId(),'guests' => $user->getId()), array('createDate' => 'DESC'));
+        $gatherings = $this->findBy(array('owner' => $user->getId()), array('createDate' => 'DESC'));
         return $this->_toArrayAll($gatherings);
     }
 
@@ -244,6 +244,11 @@ class GatheringRepo extends Base
         $this->dm->flush();
 
         return $user;
+    }
+
+    public function getInvitedMeetups($userId)
+    {
+        return $this->findBy(array('guests' => $userId), array('createDate' => 'DESC'));
     }
 
 }

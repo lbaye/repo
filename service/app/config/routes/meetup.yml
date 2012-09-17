@@ -4,6 +4,11 @@ all_meetups:
   defaults: { _controller: Controller\Gathering::index, type: meetup }
   requirements: { _method: GET }
 
+invited_meetups:
+  pattern: /meetups/invited
+  defaults: { _controller: Controller\Gathering::getInvitedMeetups, type: meetup }
+  requirements: { _method: GET}
+
 a_meetup:
   pattern:  /meetups/{id}
   defaults: { _controller: Controller\Gathering::getById, type: meetup  }

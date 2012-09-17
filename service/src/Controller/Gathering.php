@@ -143,6 +143,7 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function create($type)
     {
         $postData = $this->request->request->all();
@@ -375,6 +376,7 @@ class Gathering extends Base
             }
             $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
+
             $gatheringItems[] = $gatheringItem;
         }
 
@@ -392,5 +394,28 @@ class Gathering extends Base
         } else {
             return "public_event";
         }
+    }
+
+     /**
+     * GET /meetups/invited
+     *
+     * @param $type
+     * @internal param $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getInvitedMeetups($type)
+    {
+
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getInvitedMeetups($this->user->getId());
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
+        }
+
     }
 }
