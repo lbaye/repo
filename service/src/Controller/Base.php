@@ -5,6 +5,9 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Repository\UserRepo as userRepository;
+
+use Helper\Status;
 
 abstract class Base
 {
@@ -32,6 +35,22 @@ abstract class Base
      * @var \Document\User
      */
     protected $user;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+
+    /**
+     * @var \Service\Serializer\Serializable
+     */
+    protected $serializer;
+
+    /**
+     * @var \GearmanClient
+     */
+    protected $gearmanClient;
 
     /**
      * Inject the Request object for further use.
@@ -79,6 +98,21 @@ abstract class Base
      */
     public function init()
     {
+        $this->response = new Response();
+        $this->response->headers->set('Content-Type', 'application/json');
+
+        $this->serializer = \Service\Serializer\Factory::getSerializer('json');
+    }
+
+    protected function addTask($eventName, $data)
+    {
+        if (!$this->gearmanClient) {
+            $this->setupGearman();
+        }
+
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient->doBackground($eventName, $data);
+        }
     }
 
     /**
@@ -88,7 +122,7 @@ abstract class Base
     {
         if (!$this->user instanceof \Document\User) {
             $this->response->setContent(json_encode(array('message' => 'Unauthorized (Wrong or no Auth-Token provided!)')));
-            $this->response->setStatusCode(401);
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
             $this->response->send();
             exit;
         }
@@ -109,11 +143,82 @@ abstract class Base
 
     protected function _toArrayAll(array $results)
     {
-        $gatheringItems = array();
-        foreach ($results as $place) {
-            $gatheringItems[] = $place->toArray();
+        $arrayItems = array();
+        foreach ($results as $doc) {
+            $arrayItems[] = $doc->toArray();
         }
 
-        return $gatheringItems;
+        return $arrayItems;
+    }
+
+    protected function _generateResponse($hash, $code = Status::OK, $options = array())
+    {
+        if (!empty($hash)) {
+            $this->response->setContent(
+                $this->serializer->serialize($hash, $options)
+            );
+            $this->response->setStatusCode($code);
+        } else {
+            $this->response->setContent('[]'); // No content
+            $this->response->setStatusCode($code);
+        }
+
+        return $this->response;
+    }
+
+    protected function _generateErrorResponse($message, $code = Status::NOT_ACCEPTABLE)
+    {
+        return $this->_generateResponse(array(
+            'message' => $message
+        ), $code);
+    }
+
+    protected function _generate404()
+    {
+        return $this->_generateErrorResponse('Object not found', Status::NOT_FOUND);
+    }
+
+    protected function _generate500($message = 'Failed to update object')
+    {
+        return $this->_generateErrorResponse($message, Status::INTERNAL_SERVER_ERR);
+    }
+
+    protected function _generateUnauthorized($message = 'Unauthorized!')
+    {
+        return $this->_generateErrorResponse($message, Status::UNAUTHORIZED);
+    }
+
+    protected function _generateForbidden($message = 'Forbidden!')
+    {
+        return $this->_generateErrorResponse($message, Status::FORBIDDEN);
+    }
+
+    protected function _generateException(\Exception $e)
+    {
+        return $this->_generateErrorResponse($e->getMessage(), $e->getCode());
+    }
+
+    protected function _getFriendList($user) {
+        $friends = $user->getFriends();
+        return $this->_getUserSummaryList($friends);
+    }
+
+    protected function _getUserSummaryList(array $userIds, array $fields = array('id', 'firstName', 'lastName', 'avatar'))
+    {
+        $userData = $this->userRepository->getAllByIds($userIds);
+
+        array_walk($userData, function(&$friend, $k, $fields) {
+           $friend = array_intersect_key($friend, array_flip($fields));
+        }, $fields);
+
+        return $userData;
+    }
+
+    private function setupGearman()
+    {
+        if (class_exists('\\GearmanClient')) {
+            $this->gearmanClient = new \GearmanClient();
+            $this->gearmanClient->addServer($this->config['gearman']['host'], $this->config['gearman']['port']);
+        }
     }
 }

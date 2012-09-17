@@ -33,16 +33,6 @@ delete_user:
   defaults: { _controller: Controller\User::delete }
   requirements: { _method: DELETE }
 
-create_circle:
-  pattern: /me/circles
-  defaults: { _controller: Controller\User::addCircle}
-  requirements: { _method: POST}
-
-get_circles:
-  pattern: /me/circles
-  defaults: { _controller: Controller\User::getCircles}
-  requirements: { _method: GET}
-
 block_user:
   pattern: /users/block/{id}
   defaults: { _controller: Controller\User::blockUser}

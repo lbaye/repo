@@ -1,6 +1,7 @@
 <?php
 
-use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\DocumentManager,
+    Helper\Dependencies;
 
 class GearmanKernel
 {
@@ -25,6 +26,9 @@ class GearmanKernel
         $this->services['dm'] = $dm;
 
         $this->prepare();
+
+        // @TODO : Replace with a DIC
+        Dependencies::$dm = $this->services['dm'];
     }
 
     public function prepare()
@@ -32,7 +36,7 @@ class GearmanKernel
         $this->setupGearman();
         $this->registerWorkers();
         $this->initializeTemplating();
-        $this->initializeMailer();
+        //$this->initializeMailer();
     }
 
     public function handle()

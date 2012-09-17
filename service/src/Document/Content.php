@@ -113,6 +113,7 @@ abstract class Content
     {
         return $this->updateDate;
     }
+
     //</editor-fold>
 
     public function isPermittedFor(\Document\User $user)

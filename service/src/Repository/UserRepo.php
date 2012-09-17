@@ -2,13 +2,12 @@
 
 namespace Repository;
 
-use Repository\Base as BaseRepository;
 use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class User extends BaseRepository
+class UserRepo extends Base
 {
     public function validateLogin($data)
     {
@@ -87,10 +86,10 @@ class User extends BaseRepository
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
-    public function getAllByIds(array $ids)
+    public function getAllByIds(array $ids, $asArray = true)
     {
-        $users = $this->createQueryBuilder('Document\User')->field('id')->in(array($ids))->getQuery()->execute();
-        return $users;
+        $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
+        return $asArray? $this->_toArrayAll($users) : $users;
     }
 
     public function insert($data)
@@ -155,11 +154,14 @@ class User extends BaseRepository
 
         if (isset($data['facebookId'])) {
             $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
-        } else {
+        }
+
+        if(isset($data['email'])) {
+
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if ($result instanceof \Document\User) {
+        if($result->count() >0) {
             return true;
         }
 
@@ -206,18 +208,6 @@ class User extends BaseRepository
         $this->dm->flush();
 
         return $user;
-    }
-
-    public function delete($id)
-    {
-        $user = $this->find($id);
-
-        if (false === $user) {
-            throw new \InvalidArgumentException();
-        }
-
-        $this->dm->remove($user);
-        $this->dm->flush();
     }
 
     public function addCircle(array $data)
@@ -368,7 +358,8 @@ class User extends BaseRepository
             }
         }
 
-        $user->setAddress(new \Document\Address($data));
+        $user->setAddress(new \Document\Address(array_merge($user->getAddress()->toArray(), $data)));
+
         $user->getAddress();
 
         return $user;
@@ -565,11 +556,14 @@ class User extends BaseRepository
         return $circle;
     }
 
-    private function _toArrayAll($results, $filterFields = false)
+    protected function _toArrayAll($results, $filterFields = false)
     {
         $users = array();
         foreach ($results as $user) {
-            $users[] = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr['friendship'] = $this->currentUser->getFriendship($user);
+
+            $users[] = $userArr;
         }
 
         return $users;
@@ -686,7 +680,8 @@ class User extends BaseRepository
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-            $user->setAvatar($this->config['web']['root'] . $filePath);
+            //$user->setAvatar($this->config['web']['root'] .$filePath);
+            $user->setAvatar($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -712,7 +707,7 @@ class User extends BaseRepository
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($this->config['web']['root'] . $filePath);
+            $user->setCoverPhoto($filePath);
         }
 
         $user->setUpdateDate(new \DateTime());
@@ -760,7 +755,9 @@ class User extends BaseRepository
             $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
             $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
         } else {
-            $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+            // @TODO : Changing to near temporarily for testing with more users
+            //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+            $query->field('currentLocation')->near($location['lat'], $location['lng']);
         }
 
         $result = $query->getQuery()->execute();
@@ -771,7 +768,6 @@ class User extends BaseRepository
             $users = $this->_toArrayAll($result, true);
 
             foreach ($users as &$user) {
-                $user['isFriend'] = in_array($user['id'], $friends);
                 $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
             }
 

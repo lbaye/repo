@@ -8,12 +8,13 @@ use Respect\Validation\Validator;
 use Document\Circle;
 
 /**
- * @ODM\Document(collection="users",repositoryClass="Repository\User")
+ * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  */
 class User
 {
     const SALT = 'socialmaps';
+
 
     /** @ODM\Id */
     protected $id;
@@ -104,6 +105,11 @@ class User
     protected $currentLocation = array(
         'lng' => 0, 'lat' => 0
     );
+    /**
+     * @ODM\String
+     * The string address of users current position
+     */
+    protected $lastSeenAt = null;
 
     /** @ODM\Boolean */
     protected $visible = true;
@@ -156,13 +162,13 @@ class User
 
     /** @ODM\Hash */
     protected $platformSettings = array(
-        'fb'         => true,
-        '4sq'        => true,
+        'fb' => true,
+        '4sq' => true,
         'googlePlus' => true,
-        'gmail'      => true,
-        'twitter'    => true,
-        'yahoo'      => true,
-        'badoo'      => true,
+        'gmail' => true,
+        'twitter' => true,
+        'yahoo' => true,
+        'badoo' => true,
     );
 
     /** @ODM\Hash */
@@ -171,15 +177,21 @@ class User
     );
 
     /** @ODM\Hash */
+    protected $pushSettings = array(
+        'device_type' => null,
+        'device_id' => null
+    );
+
+    /** @ODM\Hash */
     protected $notificationSettings = array(
-        'friend_requests'       => array('sm' => true, 'mail' => true),
-        'posts_by_friends'      => array('sm' => true, 'mail' => true),
-        'comments'              => array('sm' => true, 'mail' => true),
-        'messages'              => array('sm' => true, 'mail' => true),
-        'recommendations'       => array('sm' => true, 'mail' => true),
-        'proximity_alerts'      => array('sm' => true, 'mail' => true),
+        'friend_requests' => array('sm' => true, 'mail' => true),
+        'posts_by_friends' => array('sm' => true, 'mail' => true),
+        'comments' => array('sm' => true, 'mail' => true),
+        'messages' => array('sm' => true, 'mail' => true),
+        'recommendations' => array('sm' => true, 'mail' => true),
+        'proximity_alerts' => array('sm' => true, 'mail' => true),
         'offline_notifications' => array('sm' => true, 'mail' => true),
-        'proximity_radius'      => 0
+        'proximity_radius' => 0
     );
 
     /** @ODM\Hash */
@@ -220,22 +232,22 @@ class User
      * Possible options: all, friends, none, circles, custom
      */
     protected $sharingPreferenceSettings = array(
-        'firstName'          => 'all',
-        'lastName'           => 'all',
-        'email'              => 'all',
-        'dateOfBirth'        => 'all',
-        'bio'                => 'all',
-        'interests'          => 'all',
-        'workStatus'         => 'all',
+        'firstName' => 'all',
+        'lastName' => 'all',
+        'email' => 'all',
+        'dateOfBirth' => 'all',
+        'bio' => 'all',
+        'interests' => 'all',
+        'workStatus' => 'all',
         'relationshipStatus' => 'all',
-        'address'            => 'all',
-        'friendRequest'      => 'all',
-        'circles'            => 'all',
-        'newsfeed'           => 'all',
-        'avatar'             => 'all',
-        'username'           => 'all',
-        'name'               => 'all',
-        'gender'             => 'all'
+        'address' => 'all',
+        'friendRequest' => 'all',
+        'circles' => 'all',
+        'newsfeed' => 'all',
+        'avatar' => 'all',
+        'username' => 'all',
+        'name' => 'all',
+        'gender' => 'all'
     );
 
     public function isValid()
@@ -274,6 +286,7 @@ class User
             'lastName',
             'avatar',
             'enabled',
+            'status',
             'lastLogin',
             'settings',
             'currentLocation',
@@ -283,9 +296,12 @@ class User
             'age',
             'gender',
             'address',
+            'coverPhoto',
             'relationshipStatus',
             'workStatus',
-            'dateOfBirth'
+            'regMedia',
+            'dateOfBirth',
+            'lastSeenAt'
         );
 
         $items = array();
@@ -301,43 +317,49 @@ class User
             $items[$field] = $this->{"get{$field}"}();
         }
 
+        if ($this->getAddress()) {
+            $items['address'] = $this->getAddress()->toArray();
+        } else {
+            $items['address'] = null;
+        }
+
         return $items;
     }
 
     public function toArrayDetailed()
     {
         $data = array(
-            'id'                 => $this->getId(),
-            'email'              => $this->getEmail(),
-            'firstName'          => $this->getFirstName(),
-            'lastName'           => $this->getLastName(),
-            'avatar'             => $this->getAvatar(),
-            'deactivated'        => $this->getDeactivated(),
-            'authToken'          => $this->getAuthToken(),
-            'settings'           => $this->getSettings(),
-            'source'             => $this->getSource(),
-            'dateOfBirth'        => $this->getDateOfBirth(),
-            'bio'                => $this->getBio(),
-            'gender'             => $this->getGender(),
-            'username'           => $this->getUsername(),
-            'interests'          => $this->getInterests(),
-            'workStatus'         => $this->getWorkStatus(),
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'avatar'   => $this->getAvatar(),
+            'coverPhoto'   => $this->getCoverPhoto(),
+            'deactivated' => $this->getDeactivated(),
+            'authToken' => $this->getAuthToken(),
+            'settings' => $this->getSettings(),
+            'source' => $this->getSource(),
+            'dateOfBirth' => $this->getDateOfBirth(),
+            'bio' => $this->getBio(),
+            'gender' => $this->getGender(),
+            'username' => $this->getUsername(),
+            'interests' => $this->getInterests(),
+            'workStatus' => $this->getWorkStatus(),
             'relationshipStatus' => $this->getRelationshipStatus(),
-            'currentLocation'    => $this->getCurrentLocation(),
-            'enabled'            => $this->getEnabled(),
-            'visible'            => $this->getVisible(),
-            'regMedia'           => $this->getRegMedia(),
-            'loginCount'         => $this->getLoginCount(),
-            'lastLogin'          => $this->getLastLogin(),
-            'createDate'         => $this->getCreateDate(),
-            'updateDate'         => $this->getUpdateDate(),
-            'blockedUsers'       => $this->getBlockedUsers(),
-            'blockedBy'          => $this->getBlockedBy(),
-            'distance'           => $this->getDistance(),
-            'age'                => $this->getAge(),
-            'coverPhoto'         => $this->getCoverPhoto(),
-            'status'             => $this->getStatus(),
-            'company'            => $this->getCompany()
+            'currentLocation' => $this->getCurrentLocation(),
+            'enabled' => $this->getEnabled(),
+            'visible' => $this->getVisible(),
+            'regMedia' => $this->getRegMedia(),
+            'loginCount' => $this->getLoginCount(),
+            'lastLogin' => $this->getLastLogin(),
+            'createDate' => $this->getCreateDate(),
+            'updateDate' => $this->getUpdateDate(),
+            'blockedUsers' => $this->getBlockedUsers(),
+            'blockedBy' => $this->getBlockedBy(),
+            'distance' => $this->getDistance(),
+            'age' => $this->getAge(),
+            'status' => $this->getStatus(),
+            'company' => $this->getCompany()
         );
 
         if ($this->getCircles()) {
@@ -346,6 +368,7 @@ class User
                 $data['circles'][] = $circle->toArray();
             }
         }
+
 
         if ($this->getAddress()) {
             $data['address'] = $this->getAddress()->toArray();
@@ -436,6 +459,7 @@ class User
     {
         return $this->avatar;
     }
+
 
     public function setFirstName($firstName)
     {
@@ -858,7 +882,7 @@ class User
 
     public function toArrayFiltered(User $viewer)
     {
-        $info     = $this->toArray();
+        $info = $this->toArray();
         $shearing = $this->getSharingPreferenceSettings();
 
         foreach ($shearing as $field => $value) {
@@ -899,7 +923,7 @@ class User
         $friends = array();
 
         foreach ($circles as $circle) {
-            if(is_array($inCircles) && !in_array($circle->getId(), $inCircles)) continue;
+            if (is_array($inCircles) && !in_array($circle->getId(), $inCircles)) continue;
 
             if ($circle->getType() != 'system') {
                 $friends = array_merge($friends, $circle->getFriends());
@@ -939,5 +963,70 @@ class User
         return $this->status;
     }
 
+    public function getDomainName()
+    {
+        return $this->config['web']['root'];
+    }
+
+    public function setLastSeenAt($nowAt)
+    {
+        $this->lastSeenAt = $nowAt;
+    }
+
+    public function getLastSeenAt()
+    {
+        return $this->lastSeenAt;
+    }
+
+    public function setPushSettings($pushSettings)
+    {
+        $this->pushSettings = $pushSettings;
+    }
+
+    public function getPushSettings()
+    {
+        return $this->pushSettings;
+    }
+
+
+    /*********************************************
+     * Additional wrapper/helper function
+     ********************************************/
+
+    public function getFriendship(User $user)
+    {
+        if(in_array($user->getId(), $this->getFriends())) {
+            return 'friend';
+        } else if($requestedByMe = $this->_getFriendRequest($this, $user)) {
+            return ($requestedByMe->getAccepted() === false)? 'rejected_by_me' : 'requested';
+        } else if($requestedByHim = $this->_getFriendRequest($user, $this)) {
+            return ($requestedByHim->getAccepted() === false)? 'rejected_by_him' : 'pending';
+        } else {
+            return 'none';
+        }
+    }
+
+    /**
+     * @param User $from
+     * @param User $to
+     * @return bool|FriendRequest
+     */
+    private function _getFriendRequest(User $from, User $to)
+    {
+        $friendRequests = $to->getFriendRequest();
+
+        foreach ($friendRequests as $friendRequest) {
+            if ($friendRequest->getUserId() == $from->getId()) {
+                return $friendRequest;
+            }
+        }
+
+        return false;
+    }
+
+    public function getName()
+    {
+        return $this->lastName.' '.$this->lastName;
+    }
 
 }

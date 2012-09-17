@@ -4,11 +4,11 @@ namespace Repository;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Document\User as UserDocument;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Document\Message as MessageDocument;
 use Helper\Security as SecurityHelper;
 
-class Message extends DocumentRepository
+class MessageRepo extends Base
 {
 
     private $userRepository;
@@ -93,18 +93,6 @@ class Message extends DocumentRepository
         $this->dm->flush();
     }
 
-    public function delete($id)
-    {
-        $message = $this->find($id);
-
-        if (is_null($message)) {
-            throw new \Exception("Not found", 404);
-        }
-
-        $this->dm->remove($message);
-        $this->dm->flush();
-    }
-
     public function updateStatus(MessageDocument $message, $status)
     {
         $message->setStatus($status);
@@ -139,7 +127,7 @@ class Message extends DocumentRepository
         $formFields = array('subject', 'content');
 
         # Set recipients object's reference
-        $this->setRecipients($data, $message);
+        $this->setRecipients($data, $message, $sender);
 
         # Set thread object
         $this->setThreadDependentProperties($formFields, $data, $message);
@@ -153,16 +141,6 @@ class Message extends DocumentRepository
         $message->setSender($sender);
 
         return $message;
-    }
-
-    protected function _toArrayAll($results)
-    {
-        $messages = array();
-        foreach ($results as $message) {
-            $messages[] = $message->toArray();
-        }
-
-        return $messages;
     }
 
     private function setThreadDependentProperties(
@@ -183,14 +161,15 @@ class Message extends DocumentRepository
         }
     }
 
-    private function setRecipients(array $data, MessageDocument &$message)
+    private function setRecipients(array $data, MessageDocument &$message, $sender = null)
     {
         if (!empty($data['recipients'])) {
             $recipients = $data['recipients'];
-            $recipientsObjects = array();
+            $recipientsObjects = array($sender);
 
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
+
             $message->setRecipients($recipientsObjects);
         }
     }

@@ -4,8 +4,9 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
+use Repository\UserRepo as userRepository;
 //use Repository\resource as resourceRepository;
+use Helper\Status;
 
 /**
  * Template class for all content serving controllers
@@ -16,11 +17,6 @@ class Tmpl extends Base
      * @var  resourceRepository
      */
     private $resourceRepository;
-
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.
@@ -46,7 +42,7 @@ class Tmpl extends Base
     public function index()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -60,7 +56,7 @@ class Tmpl extends Base
     public function getById($id)
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -73,7 +69,7 @@ class Tmpl extends Base
     public function getByCurrentUser()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -86,7 +82,7 @@ class Tmpl extends Base
     public function getByUser()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -99,7 +95,7 @@ class Tmpl extends Base
     public function create()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -112,7 +108,7 @@ class Tmpl extends Base
     public function update()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -125,7 +121,7 @@ class Tmpl extends Base
     public function delete()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }

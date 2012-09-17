@@ -9,7 +9,7 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
- * @ODM\Document(collection="meetups",repositoryClass="Repository\Gathering")
+ * @ODM\Document(collection="meetups",repositoryClass="Repository\GatheringRepo")
  */
 class Meetup extends Gathering
 {
@@ -34,7 +34,9 @@ class Meetup extends Gathering
     public function toArray()
     {
         $result = parent::toArray();
+        unset($result['description'], $result['guests'],$result['title'],$result['eventShortSummary'],$result['eventImage'],$result['guestsCanInvite'],$result['distance']);
         $result['duration'] = $this->getDuration();
+        $result['message'] = $this->getMessage();
 
         return $result;
     }

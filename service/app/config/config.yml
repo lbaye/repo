@@ -1,5 +1,5 @@
 web:
-  root: http://localhost/social-maps-service/web
+  root: http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com
 
 mongodb:
   host: '127.0.0.1'
@@ -7,7 +7,7 @@ mongodb:
   database: 'socialmaps'
 
 gearman:
-  host: '127.0.0.1'
+  host: 127.0.0.1
   port: 4730
 
 swiftmailer:

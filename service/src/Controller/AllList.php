@@ -3,9 +3,9 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Place as placeRepository;
-use Repository\Deal as DealRepository;
+use Repository\PlaceRepo as placeRepository;
+use Repository\DealRepo as DealRepository;
+use Helper\Status;
 
 class AllList extends Base
 {
@@ -14,11 +14,6 @@ class AllList extends Base
      * @var placeRepository
      */
     private $LocationMarkRepository;
-
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * @var  dealRepository
@@ -50,7 +45,7 @@ class AllList extends Base
     public function index($type = 'place')
     {
         $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
 
@@ -92,7 +87,7 @@ class AllList extends Base
         $deals = $this->dealRepository->getNearBy($location['lat'], $location['lng']);
 
         $this->response->setContent(json_encode(array('places' => $places, 'users' => $users, 'deals' => $deals)));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;*/
     }
@@ -101,7 +96,7 @@ class AllList extends Base
     public function getUsers()
     {
         $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
 
@@ -112,16 +107,16 @@ class AllList extends Base
 
         if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
         } else {
             $users = $this->userRepository->getNearBy($location['lat'], $location['lng'], $limit);
 
             if (!empty($users)) {
                 $this->response->setContent(json_encode($users));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
             } else {
                 $this->response->setContent(json_encode(array('message' => 'No user found')));
-                $this->response->setStatusCode(204);
+                $this->response->setStatusCode(Status::NO_CONTENT);
             }
         }
 
@@ -132,7 +127,7 @@ class AllList extends Base
     public function getDeals()
     {
         $this->response->setContent(json_encode(array('message' => 'Please use the search route.')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
 
@@ -141,17 +136,17 @@ class AllList extends Base
 
         if (!isset($location['lat']) || !isset($location['lng'])) {
             $this->response->setContent(json_encode(array('message' => 'Users Current location is not updated!')));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
 
         } else {
             $deals = $this->dealRepository->getNearBy($location['lat'], $location['lng']);
 
             if (!empty($deals)) {
                 $this->response->setContent(json_encode($deals));
-                $this->response->setStatusCode(200);
+                $this->response->setStatusCode(Status::OK);
             } else {
                 $this->response->setContent(json_encode(array('message' => 'No deals found')));
-                $this->response->setStatusCode(204);
+                $this->response->setStatusCode(Status::NO_CONTENT);
             }
         }
 
@@ -197,7 +192,7 @@ class AllList extends Base
     private function returnResponse($result)
     {
         $this->response->setContent(json_encode(array('result' => $result)));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
     }

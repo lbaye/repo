@@ -5,8 +5,8 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Document\User;
-use Repository\User as userRepository;
-use Repository\Gathering as gatheringRepository;
+use Repository\GatheringRepo as gatheringRepository;
+use Helper\Status;
 
 class Gathering extends Base
 {
@@ -16,17 +16,11 @@ class Gathering extends Base
     private $gatheringRepository;
 
     /**
-     * @var userRepository
-     */
-    private $userRepository;
-
-    /**
      * Initialize the controller.
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -43,25 +37,21 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
+
     public function index($type)
     {
-        $start = $this->request->get('start', 0);
-        $limit = $this->request->get('limit', 20);
-
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 80);
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
 
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
 
-            $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
-            $this->response->setStatusCode(200);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
-            $this->response->setContent(json_encode(array()));
-            $this->response->setStatusCode(204);
+            return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
         }
-
-        return $this->response;
     }
 
     /**
@@ -73,27 +63,37 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function getById($id, $type)
     {
         $this->_initRepository($type);
         $gathering = $this->gatheringRepository->find($id);
 
         if (null !== $gathering) {
-
             if ($gathering->isPermittedFor($this->user)) {
-                $this->response->setContent(json_encode($gathering->toArrayDetailed()));
-                $this->response->setStatusCode(200);
+
+                $data = $gathering->toArrayDetailed();
+                $data['my_response'] = $gathering->getUserResponse($this->user->getId());
+                $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
+
+                $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+                $guests['circles']  = $data['guests']['circles'];
+                $data['guests'] = $guests;
+
+                if (!empty($data['eventImage'])) {
+                    $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+                }
+
+                $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
+                $data['ownerDetail'] = $ownerDetail[0];
+
+                return $this->_generateResponse($data);
+
             } else {
-                $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));
-                $this->response->setStatusCode(403);
+                return $this->_generateForbidden('Not permitted for you');
             }
         } else {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            return $this->_generate404();
         }
-
-        return $this->response;
     }
 
     /**
@@ -127,18 +127,13 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
-                $this->response->setContent(json_encode($gatherings));
-                $this->response->setStatusCode(200);
+                return $this->_generateResponse($gatherings);
             } else {
-                $this->response->setContent('[]'); // No content
-                $this->response->setStatusCode(204);
+                return $this->_generateResponse(null, Status::NO_CONTENT);
             }
-        } else {
-            $this->response->setContent(json_encode(array('message' => 'Invalid user')));
-            $this->response->setStatusCode(406);
         }
 
-        return $this->response;
+        return $this->_generateErrorResponse('Invalid user');
     }
 
     /**
@@ -148,25 +143,51 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function create($type)
     {
         $postData = $this->request->request->all();
         $this->_initRepository($type);
-
         try {
+
+            if ($type === 'meetup'){
+                $postData['time'] = date('Y-m-d h:i:s a', time());
+            }
+
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
 
-            $this->response->setContent(json_encode($meetup->toArrayDetailed()));
-            $this->response->setStatusCode(201);
+            if (!empty($postData['eventImage'])) {
+                $this->gatheringRepository->saveEventImage($meetup->getId(), $postData['eventImage']);
+            }
+
+            if (empty($postData['guestsCanInvite'])) {
+                $meetup->setGuestsCanInvite(0);
+            }
 
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        if (!empty($postData['users'])) {
+            $users = $this->userRepository->getAllByIds($postData['users'], false);
+            $notification = new \Document\Notification();
+            $notificationData = array(
+                'title' => $this->user->getName() . " shared an {$type} Request",
+                'message' => "{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!",
+                'objectId' => $meetup->getId(),
+                'objectType' => $type,
+            );
+
+            \Helper\Notification::send($notificationData, $users);
+        }
+
+        $data = $meetup->toArrayDetailed();
+
+        if(!empty($data['eventImage'])) {
+            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+        }
+
+        return $this->_generateResponse($data, Status::CREATED);
     }
 
     /**
@@ -184,32 +205,43 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        if ($gathering === false) {
-            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
-            $this->response->setStatusCode(404);
-
-            return $this->response;
+        if ($gathering === null) {
+            return $this->_generate404();
         }
 
         if ($gathering->getOwner() != $this->user) {
-            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this ' . $type)));
-            $this->response->setStatusCode(401);
 
-            return $this->response;
+            if ($gathering->getGuestsCanInvite() && in_array($this->user->getId(), $gathering->getGuests())) {
+                if (!empty($postData['guests']))
+                    $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+
+                return $this->_generateResponse(array('message' => 'New guests has been added'));
+            } else {
+                return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
+            }
+        }
+
+        if(!empty($postData['invitedCircles'])){
+            $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
         }
 
         try {
             $place = $this->gatheringRepository->update($postData, $gathering);
 
-            $this->response->setContent(json_encode($place->toArray()));
-            $this->response->setStatusCode(200);
-
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
+        }
+        $data = $place->toArrayDetailed();
+
+        $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+        $guests['circles']  = $data['guests']['circles'];
+        $data['guests'] = $guests;
+
+        if(!empty($data['eventImage'])) {
+            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
         }
 
-        return $this->response;
+        return $this->_generateResponse($data);
     }
 
     /**
@@ -226,32 +258,22 @@ class Gathering extends Base
 
         $gathering = $this->gatheringRepository->find($id);
 
-        if ($gathering === false) {
-            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
-            $this->response->setStatusCode(404);
-
-            return $this->response;
+        if ($gathering === null) {
+            return $this->_generate404();
         }
 
         if ($gathering->getOwner() != $this->user) {
-            $this->response->setContent(json_encode(array('message' => 'You do not have permission to edit this ' . $type)));
-            $this->response->setStatusCode(401);
-
-            return $this->response;
+            return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
         }
 
         try {
             $this->gatheringRepository->delete($id);
 
-            $this->response->setContent(json_encode(array('message' => 'Deleted Successfully')));
-            $this->response->setStatusCode(200);
-
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
 
     private function _initRepository($type)
@@ -266,65 +288,109 @@ class Gathering extends Base
     }
 
     /**
-     * PUT /events/{id}/user/{user}/attend/
+     * PUT /events/{id}/rsvp
+     * PUT /meetups/{id}/rsvp
      *
      * @param $id
-     * @param $user
-     *
      * @param $type
+     *
+     * @internal param $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function willAttend($id, $user, $type)
+
+    public function setRsvp($id, $type)
     {
         $this->_initRepository($type);
 
         $gathering = $this->gatheringRepository->find($id);
-        $postData = $this->request->request->all();
 
-        if ($gathering === false) {
-            $this->response->setContent(json_encode(array('message' => ucfirst($type) . ' not found')));
-            $this->response->setStatusCode(404);
+        $userRsvp = $gathering->getUserResponse($this->user->getId());
+        $rsvp = $gathering->getRsvp();
 
-            return $this->response;
+        if (!empty($userRsvp)) {
+            $key = array_search($this->user->getId(), $rsvp[$userRsvp]);
+            unset($rsvp[$userRsvp][$key]);
         }
+        $response = $this->request->get('response');
+        array_push($rsvp[$response], $this->user->getId());
 
-        try {
-
-            var_dump($gathering);die;
-
-            $attend = $gathering->getWhoWillAttend();
-
-            if ($this->request->getMethod() == 'GET') {
-                return $this->returnResponse($attend);
-            }
-
-            $attendUser = array_merge($attend, $postData);
-            $gathering->setWhoWillAttend($attendUser);
-
-            return $this->persistAndReturn($attendUser);
-
-        } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
-        }
-
-        return $this->response;
-
-    }
-
-    private function persistAndReturn($result)
-    {
-        $this->dm->persist($this->user);
+        $gathering->setRsvp($rsvp);
+        $this->dm->persist($gathering);
         $this->dm->flush();
 
-        return $this->returnResponse($result);
+        return $this->_generateResponse($gathering->toArray());
     }
 
-    private function returnResponse($result)
-    {
-        $this->response->setContent(json_encode(array('result' => $result)));
-        $this->response->setStatusCode(200);
+    /**
+     * POST /events/{id}/share
+     * POST /meetups/{id}/share
+     * POST /plans/{id}/share
+     *
+     * @param $id
+     * @param $type
+     *
+     * @internal param $response
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
 
-        return $this->response;
+    public function share($id, $type)
+    {
+        $this->_initRepository($type);
+
+        $postData = $this->request->request->all();
+        $gathering = $this->gatheringRepository->find($id);
+
+        $users = $this->userRepository->getAllByIds($postData['users'],false);
+
+        $notification = new \Document\Notification();
+        $notificationData = array(
+            'title' => $this->user->getName() . " shared an {$type} Request",
+            'message' => "{$this->user->getName()} has created {$gathering->getTitle()}. He wants you to check it out!",
+            'objectId' => $gathering->getId(),
+            'objectType' => $type,
+        );
+
+        \Helper\Notification::send($notificationData, $users);
+
+        return $this->_generateResponse(array('message' => 'Shared successfully!'));
+    }
+
+    protected function _toArrayAll(array $results)
+    {
+        $gatheringItems = array();
+        foreach ($results as $place) {
+            $gatheringItem = $place->toArray();
+            $gatheringItem['event_type'] = $this->_checkGatheringType($place->getOwner());
+
+            if ($this->user == $place->getOwner()) {
+                $gatheringItem['my_response'] = 'yes';
+            } else {
+                $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+            }
+
+            $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
+
+            if (!empty($gatheringItem['eventImage'])){
+              $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
+            }
+            $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
+            $gatheringItem['ownerDetail'] = $ownerDetail[0];
+            $gatheringItems[] = $gatheringItem;
+        }
+
+        return $gatheringItems;
+    }
+
+    protected function _checkGatheringType($owner)
+    {
+        $friends = $this->_getFriendList($this->user);
+
+        if ($owner == $this->user) {
+            return "my_event";
+        } elseif (!empty($friends)) {
+            return "friends_event";
+        } else {
+            return "public_event";
+        }
     }
 }

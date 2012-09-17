@@ -4,8 +4,9 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Breadcrumb as breadcrumbRepository;
+use Repository\UserRepo as userRepository;
+use Repository\BreadcrumbRepo as breadcrumbRepository;
+use Helper\Status;
 
 class Breadcrumb extends Base
 {
@@ -14,10 +15,6 @@ class Breadcrumb extends Base
      */
     private $breadcrumbRepository;
 
-    /**
-     * @var userRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.
@@ -49,10 +46,10 @@ class Breadcrumb extends Base
 
         if (!empty($breadcrumbs)) {
             $this->response->setContent(json_encode($breadcrumbs));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('message' => 'No breadcrumb found')));
-            $this->response->setStatusCode(204);
+            $this->response->setStatusCode(Status::NO_CONTENT);
         }
 
         return $this->response;
@@ -72,10 +69,10 @@ class Breadcrumb extends Base
 
         if (null !== $breadcrumb) {
             $this->response->setContent(json_encode($breadcrumb->toArray()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -92,10 +89,10 @@ class Breadcrumb extends Base
 
         if ($breadcrumb) {
             $this->response->setContent(json_encode($breadcrumb));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -109,7 +106,7 @@ class Breadcrumb extends Base
     public function getByUser()
     {
         $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
+        $this->response->setStatusCode(Status::NOT_IMPLEMENTED);
 
         return $this->response;
     }
@@ -128,7 +125,7 @@ class Breadcrumb extends Base
             $this->breadcrumbRepository->insert($breadcrumb);
 
             $this->response->setContent(json_encode($breadcrumb->toArray()));
-            $this->response->setStatusCode(201);
+            $this->response->setStatusCode(Status::CREATED);
 
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => $e->getMessage())));
@@ -153,7 +150,7 @@ class Breadcrumb extends Base
             $breadcrumb = $this->breadcrumbRepository->update($postData, $id);
 
             $this->response->setContent(json_encode($breadcrumb->toArray()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => $e->getMessage())));
@@ -178,7 +175,7 @@ class Breadcrumb extends Base
             $breadcrumb = $this->breadcrumbRepository->addPhoto($postData, $id);
 
             $this->response->setContent(json_encode($breadcrumb->toArray()));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => $e->getMessage())));
@@ -201,7 +198,7 @@ class Breadcrumb extends Base
             $this->breadcrumbRepository->delete($id);
 
             $this->response->setContent(json_encode(array('message' => 'Deleted Successfully')));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => $e->getMessage())));

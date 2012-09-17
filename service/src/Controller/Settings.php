@@ -3,23 +3,19 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Helper\Location;
+use Helper\Status;
 
 class Settings extends Base
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -30,6 +26,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/share/location
+     * GET /settings/share/location
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -39,7 +36,7 @@ class Settings extends Base
         $settings = $this->user->getLocationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));;
         }
 
         $settings = array_merge($settings, $data);
@@ -56,6 +53,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/geo_fence
+     * PUT /settings/geo_fence
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -65,7 +63,7 @@ class Settings extends Base
         $settings = $this->user->getGeoFence();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         if (isset($data['lat'])) {
@@ -84,6 +82,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/notifications
+     * GET /settings/notifications
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -93,7 +92,7 @@ class Settings extends Base
         $settings = $this->user->getNotificationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -109,11 +108,8 @@ class Settings extends Base
                 if (isset($data[$opt . '_mail'])) {
                     $settings[$opt]['mail'] = (boolean) $data[$opt . '_mail'];
                 }
-
             } else {
-
                 $settings[$opt] = $data[$opt];
-
             }
 
         }
@@ -124,6 +120,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/platforms
+     * GET /settings/platforms
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -133,7 +130,7 @@ class Settings extends Base
         $settings = $this->user->getPlatformSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -148,6 +145,7 @@ class Settings extends Base
 
     /**
      * PUT /settings/layers
+     * GET /settings/layers
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -157,7 +155,7 @@ class Settings extends Base
         $settings = $this->user->getLayersSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($settings);
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $options = array_keys($settings);
@@ -171,16 +169,45 @@ class Settings extends Base
     }
 
     /**
+     * GET /settings/push
+     * PUT /settings/push
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function push()
+    {
+        $data     = $this->request->request->all();
+        $settings = $this->user->getPushSettings();
+
+        if ($this->request->getMethod() == 'GET') {
+            return $this->_generateResponse(array('result' => $settings));
+        }
+
+        $options = array_keys($settings);
+        foreach ($options as $opt) {
+            if (isset($data[$opt]))
+                $settings[$opt] = $data[$opt];
+        }
+
+        $this->user->setPushSettings($settings);
+        return $this->persistAndReturn($settings);
+    }
+
+    /**
      * PUT /settings/account_settings
+     * GET /settings/account_settings
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function accountSettings()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($this->user->toArrayDetailed());
+            return $this->_generateResponse(array('result' => $this->user->toArrayDetailed()));
         }
 
         try {
@@ -191,26 +218,24 @@ class Settings extends Base
                 $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            }
 
         } catch (\Exception\ResourceNotFoundException $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generate404();
 
         } catch (\Exception\UnauthorizedException $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateUnauthorized($e->getMessage());
 
-        } catch (\Exception\ResourceAlreadyExistsException $e) {
+        } catch (\Exception $e) {
 
-            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse($user->toArrayDetailed());
     }
 
     /**
@@ -230,7 +255,7 @@ class Settings extends Base
         $settings = array_merge($settings, $data);
         $this->user->setSharingPreferenceSettings($settings);
 
-        return $this->persistAndReturn($settings);
+        return $this->persistAndReturn( $settings);
     }
 
     /**
@@ -254,7 +279,18 @@ class Settings extends Base
             $location['lng'] = floatval($data['lng']);
 
             $this->user->setCurrentLocation($location);
+
             $this->_updateVisibility($this->user);
+
+            // Update additional information
+            try {
+                // TODO: Use background job for _updateLastSeenAt
+                $this->_updateLastSeenAt($this->user);
+                $this->_sendProximityAlerts($this->user);
+            } catch (\Exception $e) {
+                // Do the location update even if
+                return $this->persistAndReturn($location);
+            }
 
             return $this->persistAndReturn($location);
 
@@ -286,20 +322,37 @@ class Settings extends Base
 
     }
 
+    /**
+     * Update the address user currently at
+     *
+     * @param \Document\User $user
+     *
+     */
+    private function _updateLastSeenAt(\Document\User $user)
+    {
+        $reverseGeo = new \Service\Geolocation\Reverse($this->config['googlePlace']['apiKey']);
+
+        $address = $reverseGeo->getAddress($user->getCurrentLocation());
+        $user->setLastSeenAt($address);
+    }
+
     private function persistAndReturn($result)
     {
+        $this->user->setUpdateDate(new \DateTime());
         $this->dm->persist($this->user);
         $this->dm->flush();
 
-        return $this->returnResponse($result);
+        return $this->_generateResponse(array('result' => $result));
+    }
+
+    private function _sendProximityAlerts(\Document\User $user)
+    {
+        $this->addTask('proximity_alert', json_encode(array('user_id' => $user->getId())));
     }
 
     private function returnResponse($result)
     {
-        $this->response->setContent(json_encode(array('result' => $result)));
-        $this->response->setStatusCode(200);
-
-        return $this->response;
+        return $this->_generateResponse(array('result' => $result));
     }
 
     /**
@@ -328,7 +381,7 @@ class Settings extends Base
                                                     'sharingPreference' => $sharingPreference,
                                                     'currentLocation'   => $currentLocation
                                                 )));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
 

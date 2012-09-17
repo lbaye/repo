@@ -7,6 +7,7 @@ use Respect\Validation\Validator;
 
 use Document\User as User;
 use Document\Location as Location;
+use Helper\Location as LocationHelper;
 
 /**
  * @abstract
@@ -14,6 +15,8 @@ use Document\Location as Location;
  */
 abstract class Gathering extends Content
 {
+
+
     /** @ODM\String */
     protected $title;
 
@@ -27,18 +30,7 @@ abstract class Gathering extends Content
     protected $guests = array();
 
     /** @ODM\Hash */
-    protected $circles = array();
-
-    /** @ODM\Hash */
-    protected $whoWillAttend = array(
-
-        'yes' => array(),
-        'no' => array(),
-        'mayBe' => array(),
-    );
-
-    /** @ODM\String */
-    protected $message;
+    protected $invitedCircles = array();
 
     /**
      * @ODM\EmbedOne(targetDocument="Location")
@@ -48,6 +40,28 @@ abstract class Gathering extends Content
 
     /** @ODM\Date */
     protected $time;
+
+    /** @ODM\String */
+    protected $eventShortSummary;
+
+    /** @ODM\Float */
+    protected $eventDistance;
+
+    /** @ODM\String */
+    protected $eventImage;
+
+    /** @ODM\Boolean */
+    protected $guestsCanInvite;
+
+     /** @ODM\String */
+    protected $message;
+
+    /** @ODM\Hash */
+    protected $rsvp = array(
+        'yes' => array(),
+        'no' => array(),
+        'maybe' => array(),
+    );
 
     //<editor-fold desc="Setters">
     public function setTitle($title)
@@ -77,13 +91,14 @@ abstract class Gathering extends Content
 
     public function setType($type)
     {
-        $this->type =  $type;
+        $this->type = $type;
     }
 
     public function setGuests(array $guests)
     {
         $this->guests = $guests;
     }
+
     //</editor-fold>
 
     //<editor-fold desc="Getters">
@@ -126,31 +141,32 @@ abstract class Gathering extends Content
         return $this->guests;
     }
 
-    public function setCircles($circles)
-    {
-        $this->circles = $circles;
-    }
-
-    public function getCircles()
-    {
-        return $this->circles;
-    }
-
     //</editor-fold>
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title','description','message', 'time', 'createDate');
+        $fieldsToExpose = array(
+            'id', 'title', 'description', 'eventShortSummary','eventImage',
+            'time', 'rsvp','guestsCanInvite', 'createDate'
+        );
+
         $result = array();
 
-        foreach($fieldsToExpose as $field) {
+        foreach ($fieldsToExpose as $field) {
             $result[$field] = $this->{"get{$field}"}();
         }
 
+        $userLocation = $this->getOwner()->getCurrentLocation();
+
+        $distance = LocationHelper::distance(
+            $userLocation['lat'],
+            $userLocation['lng'],
+            $this->getLocation()->getLat(),
+            $this->getLocation()->getLng());
+
         $result['owner'] = $this->getOwner()->getId();
         $result['location'] = $this->getLocation()->toArray();
-        $result['guests'] = $this->getGuests();
-        $result['circles'] = $this->getCircles();
+        $result['distance'] = $distance;
 
         return $result;
     }
@@ -158,8 +174,9 @@ abstract class Gathering extends Content
     public function toArrayDetailed()
     {
         $result = $this->toArray();
-        $result['guests'] = $this->getGuests();
-        $result['circles'] = $this->getCircles();
+        $guests['users']   = $this->getGuests();
+        $guests['circles'] = $this->getInvitedCircles();
+        $result['guests']  = $guests;
 
         return $result;
     }
@@ -177,14 +194,70 @@ abstract class Gathering extends Content
         return true;
     }
 
-    public function setWhoWillAttend($whoWillAttend)
+    public function setEventDistance($eventDistance)
     {
-        $this->whoWillAttend = $whoWillAttend;
+        $this->eventDistance = $eventDistance;
     }
 
-    public function getWhoWillAttend()
+    public function getEventDistance()
     {
-        return $this->whoWillAttend;
+        return $this->eventDistance;
+    }
+
+    public function setEventImage($eventImage)
+    {
+        $this->eventImage = $eventImage;
+    }
+
+    public function getEventImage()
+    {
+        return $this->eventImage;
+    }
+
+    public function setEventShortSummary($eventShortSummary)
+    {
+        $this->eventShortSummary = $eventShortSummary;
+    }
+
+    public function getEventShortSummary()
+    {
+        return $this->eventShortSummary;
+    }
+
+    public function setRsvp($whoWillAttend)
+    {
+        $this->rsvp = $whoWillAttend;
+    }
+
+    public function getRsvp()
+    {
+        return array(
+            'yes' => array_values($this->rsvp['yes']),
+            'no' => array_values($this->rsvp['no']),
+            'maybe' => array_values($this->rsvp['maybe']),
+        );
+
+    }
+
+    public function setGuestsCanInvite($guestsCanInvite)
+    {
+        $this->guestsCanInvite = (boolean) $guestsCanInvite;
+    }
+
+    public function getGuestsCanInvite()
+    {
+        return $this->guestsCanInvite;
+    }
+
+
+    public function setInvitedCircles($invitedCircles)
+    {
+        $this->invitedCircles = $invitedCircles;
+    }
+
+    public function getInvitedCircles()
+    {
+        return $this->invitedCircles;
     }
 
     public function setMessage($message)
@@ -196,5 +269,25 @@ abstract class Gathering extends Content
     {
         return $this->message;
     }
+
+
+    public function getUserResponse($userId)
+    {
+        $rsvp = $this->getRsvp();
+
+        if(in_array($userId, $rsvp['yes']))   return 'yes';
+        if(in_array($userId, $rsvp['no']))    return 'no';
+        if(in_array($userId, $rsvp['maybe'])) return 'maybe';
+    }
+
+    public function isPermittedFor(\Document\User $user)
+    {
+        if(in_array($user->getId(), $this->getGuests())){
+            return true;
+        } else {
+            return parent::isPermittedFor($user);
+        }
+    }
+
 
 }

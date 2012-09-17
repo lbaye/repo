@@ -8,7 +8,6 @@ a_event:
   defaults: { _controller: Controller\Gathering::getById, type: event }
   requirements: { _method: GET }
 
-
 events_of_user:
   pattern:  /users/{user}/events
   defaults: { _controller: Controller\Gathering::getByUser, type: event }
@@ -35,7 +34,12 @@ delete_event:
   requirements: { _method: DELETE }
 
 who_will_attend:
-  pattern:  /events/{id}/user/{user}/attend/
-  defaults: { _controller: Controller\Gathering::willAttend, type: event }
+  pattern:  /events/{id}/rsvp
+  defaults: { _controller: Controller\Gathering::setRsvp, type: event }
   requirements: { _method: PUT }
 
+
+share:
+  pattern: /events/{id}/share
+  defaults: { _controller: Controller\Gathering::share, type: event }
+  requirements: { _method: POST}

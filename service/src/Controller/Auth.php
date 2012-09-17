@@ -3,17 +3,14 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Document\FriendRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Helper\Email as EmailHelper;
+use Helper\Status;
 
 class Auth extends Base
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
 
     /**
      * Initialize the controller.
@@ -37,6 +34,11 @@ class Auth extends Base
     {
         $data = $this->request->request->all();
 
+
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
+
         try {
 
             $user = $this->userRepository->insert($data);
@@ -49,8 +51,11 @@ class Auth extends Base
                 $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
             }
 
+            $data = $user->toArrayDetailed();
+            $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+            $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
@@ -79,17 +84,26 @@ class Auth extends Base
     public function login()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
         $user = $this->userRepository->validateLogin($data);
 
         $this->userRepository->setCurrentUser($user);
 
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+
+            $userData = $user->toArrayDetailed();
+            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
+            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
+            $userData['friends'] = $this->_getFriendList($user);
+
+            $this->response->setContent(json_encode($userData));
+            $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            $this->response->setStatusCode(Status::NOT_FOUND);
         }
 
         return $this->response;
@@ -103,10 +117,13 @@ class Auth extends Base
     public function fbLogin()
     {
         $data = $this->request->request->all();
+        if(!empty($data['email'])){
+            $data['email'] = strtolower($data['email']);
+        }
 
         if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
             $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
-            $this->response->setStatusCode(406);
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
             return $this->response;
         }
 
@@ -122,6 +139,10 @@ class Auth extends Base
                     $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
                 }
 
+                if (!empty($data['coverPhoto'])) {
+                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+                }
+
                 $this->userRepository->updateLoginCount($user->getId());
                 $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
 
@@ -130,9 +151,13 @@ class Auth extends Base
                 $user = $this->userRepository->insert($data);
 
             }
+            $userData = $user->toArrayDetailed();
+            $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
+            $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
+            $userData['friends'] = $this->_getFriendList($user);
 
-            $this->response->setContent(json_encode($user->toArrayDetailed()));
-            $this->response->setStatusCode(200);
+            $this->response->setContent(json_encode($userData));
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
 
@@ -169,14 +194,15 @@ class Auth extends Base
         } else {
             $userId        = $user->getId();
             $passwordToken = $this->userRepository->getPasswordToken($userId);
-            $url           = "http://203.76.126.69/social_maps/web/auth/pass/token/" . $passwordToken;
+
+            $url           = $this->config['web']['root'] ."/auth/pass/token/" . $passwordToken;
             $this->userRepository->updateForgetPasswordToken($userId, $passwordToken);
             $message = "Please click the link to reset your password {$url} ";
 
             EmailHelper::sendMail($email, $message);
 
             $this->response->setContent(json_encode(array('message' => "Please check your email for instruction.")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
             return $this->response;
 
@@ -202,7 +228,7 @@ class Auth extends Base
             throw new \Exception\ResourceNotFoundException();
         } else {
 
-            return new RedirectResponse("http://203.76.126.69/social_maps/web/pass_socialmaps/index.php");
+            return new RedirectResponse($this->config['web']['root']."/pass_socialmaps/index.php");
 
         }
     }
@@ -222,23 +248,21 @@ class Auth extends Base
 
         if (false === $user) {
             $this->response->setContent(json_encode(array('message' => "No user found with this email.")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         }
 
         if ($data['password'] != $data['retypePassword']) {
 
             $this->response->setContent(json_encode(array('message' => "password and retype password didn't match")));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
         }
 
         $userId   = $user->getId();
         $password = $this->userRepository->resetPassword($data, $userId);
         $this->response->setContent(json_encode(array('password' => $password)));
-        $this->response->setStatusCode(200);
+        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
-
-
     }
 
     /**
@@ -255,7 +279,7 @@ class Auth extends Base
         try {
             $this->userRepository->changePassword($data);
             $this->response->setContent(json_encode(array('password' => true)));
-            $this->response->setStatusCode(200);
+            $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {
 

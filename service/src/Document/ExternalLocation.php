@@ -6,7 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
- * @ODM\Document(collection="external_locations",repositoryClass="Repository\ExternalLocation")
+ * @ODM\Document(collection="external_locations",repositoryClass="Repository\ExternalLocationRepo")
  * @ODM\Index(keys={"coords"="2d"})
  * @ODM\UniqueIndex(keys={"refId"="asc", "source"="asc"})
  */

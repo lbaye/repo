@@ -4,9 +4,8 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Repository\User as userRepository;
-use Repository\Place as placeRepository;
-use Repository\Deal as DealRepository;
+use Repository\PlaceRepo as placeRepository;
+use Helper\Status;
 
 class Place extends Base
 {
@@ -17,17 +16,11 @@ class Place extends Base
     private $LocationMarkRepository;
 
     /**
-     * @var userRepository
-     */
-    private $userRepository;
-
-    /**
      * Initialize the controller.
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository  = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -54,14 +47,10 @@ class Place extends Base
         if (!empty($places)) {
             $permittedDocs = $this->_filterByPermission($places);
 
-            $this->response->setContent(json_encode($this->_toArrayAll($permittedDocs)));
-            $this->response->setStatusCode(200);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
-            $this->response->setContent(json_encode(array('message' => 'No places found')));
-            $this->response->setStatusCode(204);
+            return $this->_generateResponse(array('message' => 'No places found'), Status::NO_CONTENT);
         }
-
-        return $this->response;
     }
 
     /**
@@ -79,18 +68,13 @@ class Place extends Base
 
         if (null !== $place) {
             if($place->isPermittedFor($this->user)){
-                $this->response->setContent(json_encode($place->toArray()));
-                $this->response->setStatusCode(200);
+                return $this->_generateResponse($place->toArray());
             } else {
-                $this->response->setContent(json_encode(array('message' => 'Not permitted for you')));
-                $this->response->setStatusCode(403);
+                return $this->_generateForbidden('Not permitted for you');
             }
         } else {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(404);
+            return $this->_generate404();
         }
-
-        return $this->response;
     }
 
     /**
@@ -105,14 +89,10 @@ class Place extends Base
         $places = $this->LocationMarkRepository->getByUser($this->user);
 
         if ($places) {
-            $this->response->setContent(json_encode($places));
-            $this->response->setStatusCode(200);
+            return $this->_generateResponse($places);
         } else {
-            $this->response->setContent('[]'); // No content
-            $this->response->setStatusCode(200);
+            return $this->_generateResponse(null, Status::NO_CONTENT);
         }
-
-        return $this->response;
     }
 
     /**
@@ -123,10 +103,7 @@ class Place extends Base
      */
     public function getByUser($type = 'place')
     {
-        $this->response->setContent(json_encode(array('message' => 'Not implemented')));
-        $this->response->setStatusCode(501);
-
-        return $this->response;
+        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
     }
 
     /**
@@ -144,15 +121,11 @@ class Place extends Base
             $place = $this->LocationMarkRepository->map($postData, $this->user);
             $this->LocationMarkRepository->insert($place);
 
-            $this->response->setContent(json_encode($place->toArray()));
-            $this->response->setStatusCode(201);
-
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse($place->toArray(), Status::CREATED);
     }
 
     /**
@@ -170,28 +143,21 @@ class Place extends Base
         $place = $this->LocationMarkRepository->find($id);
 
         if(empty($place) || $place->getOwner() != $this->user){
-            $this->response->setContent(json_encode(array('message' => 'You are not permitted to update this resource')));
-            $this->response->setStatusCode(401);
-            return $this->response;
+            return $this->_generateUnauthorized();
         }
 
         try {
             $place = $this->LocationMarkRepository->update($postData, $id);
 
             if($place) {
-                $this->response->setContent(json_encode($place->toArray()));
-                $this->response->setStatusCode(200);
+                return $this->_generateResponse(json_encode($place->toArray()));
             } else {
-                $this->response->setContent(json_encode(array('message' => 'Invalid request params')));
-                $this->response->setStatusCode(406);
+                return $this->_generateErrorResponse('Invalid request params');
             }
 
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            return $this->_generateException($e);
         }
-
-        return $this->response;
     }
 
     /**
@@ -208,16 +174,11 @@ class Place extends Base
 
         try {
             $this->LocationMarkRepository->delete($id);
-
-            $this->response->setContent(json_encode(array('message' => 'Deleted Successfully')));
-            $this->response->setStatusCode(200);
-
         } catch (\Exception $e) {
-            $this->response->setContent(json_encode(array('message' => $e->getMessage())));
-            $this->response->setStatusCode($e->getCode());
+            $this->_generateException($e);
         }
 
-        return $this->response;
+        return $this->_generateResponse(array('message'=>'Deleted Successfully'));
     }
 
     private function _initRepository($type)

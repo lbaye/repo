@@ -9,7 +9,7 @@ use Document\Position;
 
 
 /**
- * @ODM\Document(collection="breadcrumbs",repositoryClass="Repository\Breadcrumb")
+ * @ODM\Document(collection="breadcrumbs",repositoryClass="Repository\BreadcrumbRepo")
  */
 class Breadcrumb extends Content
 {

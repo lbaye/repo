@@ -6,7 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 use Document\User;
-use Repository\User as userRepository;
+use Repository\UserRepo as userRepository;
 /**
  * @ODM\EmbeddedDocument
  */

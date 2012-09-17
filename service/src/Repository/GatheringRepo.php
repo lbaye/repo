@@ -7,21 +7,22 @@ use Document\Meetup as MeetupDocument;
 use Document\Event as EventDocument;
 use Document\Plan as PlanDocument;
 use Document\User as UserDocument;
-use Repository\User as UserRepository;
+use Repository\UserRepo as UserRepository;
 use Helper\Security as SecurityHelper;
+use Helper\Image as ImageHelper;
 
-class Gathering extends DocumentRepository
+class GatheringRepo extends Base
 {
 
     public function getByUser(UserDocument $user)
     {
-        $gatherings = $this->findBy(array('owner' => $user->getId()));
+        $gatherings = $this->findBy(array('owner' => $user->getId(),'guests' => $user->getId()), array('createDate' => 'DESC'));
         return $this->_toArrayAll($gatherings);
     }
 
-    public function getAll($limit = 20, $offset = 0)
+    public function getAll($limit = 80, $offset = 0)
     {
-        return $this->findBy(array(), null, $limit, $offset);
+        return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
 
     public function insert($gatheringObj)
@@ -58,6 +59,44 @@ class Gathering extends DocumentRepository
         return $gathering;
     }
 
+    public function addGuests($newGuests, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $guests = $gathering->getGuests();
+        foreach($newGuests as $guest) array_push($guests, $guest);
+
+        $gathering->setGuests($guests);
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
+    }
+
+    public function addCircles($newCircles, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $circles = $gathering->getInvitedCircles();
+        foreach($newCircles as $circle) array_push($circles, $circle);
+
+        $gathering->setInvitedCircles($circles);
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
+    }
+
     public function delete($id)
     {
         $gatheringObj = $this->find($id);
@@ -80,7 +119,7 @@ class Gathering extends DocumentRepository
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration','message', 'time');
+        $setIfExistFields = array('title', 'description', 'duration','message','eventShortSummary', 'time', 'guestsCanInvite');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -88,17 +127,17 @@ class Gathering extends DocumentRepository
             }
         }
 
-        if(empty($data['time'])){
-            $gathering->setTime(new \DateTime());
-        }
-
-        if(isset($data['guests'])){
+        if(isset($data['guests']) && is_array($data['guests'])){
             $users = $this->trimInvalidUsers($data['guests']);
+            $users[] = $owner->getId();
             $gathering->setGuests($users);
+        }else{
+            $guests[] = $owner->getId();
+            $gathering->setGuests($guests);
         }
 
-        if(isset($data['circles'])){
-            $gathering->setCircles($data['circles']);
+        if(isset($data['invitedCircles']) && is_array($data['invitedCircles'])){
+            $gathering->setInvitedCircles($data['invitedCircles']);
         }
 
         if(isset($data['permission'])){
@@ -158,4 +197,53 @@ class Gathering extends DocumentRepository
 
         return $gatheringItems;
     }
+
+     public function updateWhoWillAttend($data, $gathering)
+    {
+        if (   !$gathering instanceof \Document\Event
+            && !$gathering instanceof \Document\Meetup
+            && !$gathering instanceof \Document\Plan) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $gathering = $this->map($data, $gathering->getOwner(), $gathering);
+
+        if ($gathering->isValid() === false) {
+            return false;
+        }
+
+        $this->dm->persist($gathering);
+        $this->dm->flush();
+
+        return $gathering;
+    }
+
+    public function saveEventImage($id , $eventImage)
+    {
+        $user = $this->find($id);
+
+        if (false === $user) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
+        $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
+
+        if ($eventImageUrl !== false) {
+            $user->setEventImage($eventImageUrl);
+        } else {
+            $serverUrl = $this->config['web']['root'];
+
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
+            $user->setEventImage($serverUrl . $filePath);
+        }
+
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
 }
