@@ -304,7 +304,7 @@
 		4FE425B815C0699F00A6B6A3 /* FBTestSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258115C0699F00A6B6A3 /* FBTestSession.m */; };
 		4FE425B915C0699F00A6B6A3 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258315C0699F00A6B6A3 /* FBURLConnection.m */; };
 		4FE425BA15C0699F00A6B6A3 /* FBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258515C0699F00A6B6A3 /* FBUtility.m */; };
-		4FE425BB15C0699F00A6B6A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4258815C0699F00A6B6A3 /* Info.plist */; };
+		4FE425BB15C0699F00A6B6A3 /* FB-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4258815C0699F00A6B6A3 /* FB-Info.plist */; };
 		4FE425BC15C0699F00A6B6A3 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258C15C0699F00A6B6A3 /* NSObject+SBJSON.m */; };
 		4FE425BD15C0699F00A6B6A3 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258E15C0699F00A6B6A3 /* NSString+SBJSON.m */; };
 		4FE425BE15C0699F00A6B6A3 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4259015C0699F00A6B6A3 /* SBJSON.m */; };
@@ -822,7 +822,7 @@
 		4FE4258315C0699F00A6B6A3 /* FBURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBURLConnection.m; sourceTree = "<group>"; };
 		4FE4258415C0699F00A6B6A3 /* FBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBUtility.h; sourceTree = "<group>"; };
 		4FE4258515C0699F00A6B6A3 /* FBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBUtility.m; sourceTree = "<group>"; };
-		4FE4258815C0699F00A6B6A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FE4258815C0699F00A6B6A3 /* FB-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "FB-Info.plist"; sourceTree = "<group>"; };
 		4FE4258A15C0699F00A6B6A3 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		4FE4258B15C0699F00A6B6A3 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		4FE4258C15C0699F00A6B6A3 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -1549,7 +1549,7 @@
 		4FE4258715C0699F00A6B6A3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4FE4258815C0699F00A6B6A3 /* Info.plist */,
+				4FE4258815C0699F00A6B6A3 /* FB-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1646,7 +1646,7 @@
 				4F98A2D615BB387D000B3124 /* InfoPlist.strings in Resources */,
 				4F98A2DF15BB387D000B3124 /* MainStoryboard.storyboard in Resources */,
 				4FE425AB15C0699F00A6B6A3 /* FBiOSSDKResources.bundle in Resources */,
-				4FE425BB15C0699F00A6B6A3 /* Info.plist in Resources */,
+				4FE425BB15C0699F00A6B6A3 /* FB-Info.plist in Resources */,
 				4FE425C215C0699F00A6B6A3 /* 01package-contents.xml in Resources */,
 				4FE425C315C0699F00A6B6A3 /* 01package.xml in Resources */,
 				4FE425C415C0699F00A6B6A3 /* index.xml in Resources */,
@@ -2038,8 +2038,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2054,8 +2054,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2065,8 +2065,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2075,8 +2075,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2085,8 +2085,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2097,8 +2097,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2107,8 +2107,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2119,8 +2119,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
