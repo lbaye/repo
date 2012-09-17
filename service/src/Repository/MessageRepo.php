@@ -173,4 +173,17 @@ class MessageRepo extends Base
             $message->setRecipients($recipientsObjects);
         }
     }
+
+    protected function _toArrayAll($results)
+    {
+        $docsAsArr = array();
+        foreach ($results as $place) {
+            $placeArr = $place->toArray();
+            $placeArr['sender']['avatar'] = $this->config['web']['root'] . $placeArr['sender']['avatar'];
+
+            $docsAsArr[] = $placeArr;
+        }
+
+        return $docsAsArr;
+    }
 }

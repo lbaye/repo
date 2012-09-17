@@ -405,14 +405,17 @@ class Gathering extends Base
      */
     public function getInvitedMeetups($type)
     {
-
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getInvitedMeetups($this->user->getId());
+        $gatheringIMNotOwner = array();
 
         if (!empty($gatheringObjs)) {
-            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+            foreach($gatheringObjs as $gathering){
+                if($gathering->getOwner()->getId() != $this->user->getId())
+                    $gatheringIMNotOwner[] = $gathering;
+            }
 
-            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+            return $this->_generateResponse($this->_toArrayAll($gatheringIMNotOwner));
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
         }

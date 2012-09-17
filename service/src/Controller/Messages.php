@@ -17,6 +17,7 @@ class Messages extends Base
         parent::init();
 
         $this->messageRepository = $this->dm->getRepository('Document\Message');
+        $this->messageRepository->setConfig($this->config);
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
