@@ -71,10 +71,10 @@ BOOL isBackgroundTaskRunning=FALSE;
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
-    if (globalEvent.isInvited==FALSE)
-    {
-        rsvpView.hidden=YES;
-    }
+//    if (globalEvent.isInvited==FALSE)
+//    {
+//        rsvpView.hidden=YES;
+//    }
 
     //mapview data
     if ([self.mapView.annotations count]>0)
