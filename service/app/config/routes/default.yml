@@ -8,7 +8,7 @@ hello_gearman:
   defaults: { _controller: Controller\Hello::gearman }
   requirements: { _method: GET }
 
-hello_gearman:
+hello_gcm:
   pattern: /test/gcm
   defaults: { _controller: Controller\Hello::GCM }
   requirements: { _method: GET }
