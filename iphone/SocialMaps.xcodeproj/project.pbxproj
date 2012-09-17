@@ -137,6 +137,7 @@
 		4F50CC0715C82BAA00A3AFA8 /* NotifMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0615C82BAA00A3AFA8 /* NotifMessage.m */; };
 		4F50CC0A15C82C3900A3AFA8 /* TagNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0915C82C3800A3AFA8 /* TagNotification.m */; };
 		4F50CC0D15C82CA700A3AFA8 /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0C15C82CA600A3AFA8 /* Invite.m */; };
+		4F5151D41607417B00271EAC /* venueimg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F5151D31607417B00271EAC /* venueimg.png */; };
 		4F59C33F15E7EB060060C8D9 /* MapAnnotationPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */; };
 		4F5C4B8415D6372C001D510F /* LocationSharingCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8315D6372B001D510F /* LocationSharingCircle.m */; };
 		4F5C4B8815D66DF7001D510F /* LocationSharingPlaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8715D66DF7001D510F /* LocationSharingPlaces.m */; };
@@ -548,6 +549,7 @@
 		4F50CC0915C82C3800A3AFA8 /* TagNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagNotification.m; sourceTree = "<group>"; };
 		4F50CC0B15C82CA600A3AFA8 /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
 		4F50CC0C15C82CA600A3AFA8 /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
+		4F5151D31607417B00271EAC /* venueimg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = venueimg.png; path = Images/venueimg.png; sourceTree = SOURCE_ROOT; };
 		4F59C33D15E7EB060060C8D9 /* MapAnnotationPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationPlace.h; sourceTree = "<group>"; };
 		4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationPlace.m; sourceTree = "<group>"; };
 		4F5C4B8215D6372B001D510F /* LocationSharingCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSharingCircle.h; sourceTree = "<group>"; };
@@ -1250,6 +1252,7 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4F5151D31607417B00271EAC /* venueimg.png */,
 				4F4CA53915C45351004234E5 /* accept_button_a.png */,
 				4F4CA53815C45351004234E5 /* accept_button_h.png */,
 				4F4CA53415C45351004234E5 /* add_friend_button.png */,
@@ -1851,6 +1854,7 @@
 				208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */,
 				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
 				4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */,
+				4F5151D41607417B00271EAC /* venueimg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

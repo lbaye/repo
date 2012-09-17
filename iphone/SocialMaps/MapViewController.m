@@ -381,7 +381,7 @@ ButtonClickCallbackData callBackData;
     
     // Get Information
     [smAppDelegate getUserInformation:smAppDelegate.authToken];
-
+    
     mapAnno = [[MapAnnotation alloc] init];
     mapAnno.currState = MapAnnotationStateNormal;
     mapAnno.delegate = self;
@@ -1524,7 +1524,7 @@ ButtonClickCallbackData callBackData;
             for (Places *item in listings.placeArr) {
                 __block NSNumber *indx;
                 if ((indx=[smAppDelegate.placeIndex objectForKey:item.ID]) == nil) {
-                    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+                    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"venueimg" ofType:@"png"];
                     UIImage *icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
                     NSString* bgPath = [[NSBundle mainBundle] pathForResource:@"banner_bar" ofType:@"png"];
                     UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
