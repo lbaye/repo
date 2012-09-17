@@ -44,6 +44,7 @@ class ProximityAlert extends Base
 
         // Collect list of friends who needs to be notified.
         $friendsToNotify = array();
+        $friendsNotificationData = $this->_createNotificationData($user);
 
         foreach($friends as $friend) {
             // Retrieve friend's current location
@@ -54,16 +55,25 @@ class ProximityAlert extends Base
 
             // Determine whether target user should be notified if friend with in the range
             if($this->_shouldNotify($user, $friend, $distance)){
-                \Helper\Notification::send($this->_createNotificationData($friend), array($user));
+                $userNotificationData = $this->_createNotificationData($friend);
+                \Helper\Notification::send($userNotificationData, array($user));
+
+                $pushSettings = $user->getPushSettings();
+                $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+                if($pushNotifier) echo $pushNotifier->send($userNotificationData, array($pushSettings['device_id']));
             }
 
             // Determine whether friend should be notified if user is in range
             if($this->_shouldNotify($friend, $user, $distance)){
                $friendsToNotify[] = $friend;
+
+                $pushSettings = $friend->getPushSettings();
+                $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+                if($pushNotifier) echo $pushNotifier->send($friendsNotificationData, array($pushSettings['device_id']));
             }
         }
 
-        \Helper\Notification::send($this->_createNotificationData($user), $friendsToNotify);
+        \Helper\Notification::send($friendsNotificationData, $friendsToNotify);
         # Publish push notification
 
     }
@@ -87,5 +97,4 @@ class ProximityAlert extends Base
             'message' => 'Your friend '. $friend->getName() .' is near your location!',
         );
     }
-
 }
