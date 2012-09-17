@@ -97,4 +97,17 @@ class Base extends DocumentRepository
 
         return $docsAsArr;
     }
+
+    protected function _buildAbsoluteUrl($prefix, $suffix) {
+        $http_prefixed = preg_match("/http:\/\//i", $suffix) ||
+                preg_match("/https:\/\//i", $suffix);
+
+        if (empty($suffix)) {
+            return $prefix;
+        } else if ($http_prefixed) {
+            return $suffix;
+        } else {
+            return $prefix . $suffix;
+        }
+    }
 }
