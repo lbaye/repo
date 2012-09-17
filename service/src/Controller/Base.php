@@ -241,7 +241,7 @@ abstract class Base
     }
 
     protected function _buildCoverPhotoUrl($data) {
-        return $this->config['web']['root'] . $data['coverPhoto'];
+        return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['coverPhoto']);
     }
 
     protected function _buildAvatarUrl($data) {
