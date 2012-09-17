@@ -664,7 +664,7 @@
 		4F88406915F79C4B00E4DFC8 /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messages.png; path = Images/messages.png; sourceTree = SOURCE_ROOT; };
 		4F96D4B115D2C01E006104D6 /* PhotoPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPicker.h; sourceTree = "<group>"; };
 		4F96D4B215D2C01E006104D6 /* PhotoPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPicker.m; sourceTree = "<group>"; };
-		4F98A2C715BB387D000B3124 /* SocialMaps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialMaps.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F98A2C715BB387D000B3124 /* SocialMapz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialMapz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F98A2CB15BB387D000B3124 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4F98A2CD15BB387D000B3124 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4F98A2CF15BB387D000B3124 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1156,7 +1156,7 @@
 		4F98A2C815BB387D000B3124 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4F98A2C715BB387D000B3124 /* SocialMaps.app */,
+				4F98A2C715BB387D000B3124 /* SocialMapz.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1595,9 +1595,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F98A2C615BB387D000B3124 /* SocialMaps */ = {
+		4F98A2C615BB387D000B3124 /* SocialMapz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMaps" */;
+			buildConfigurationList = 4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMapz" */;
 			buildPhases = (
 				4F98A2C315BB387D000B3124 /* Sources */,
 				4F98A2C415BB387D000B3124 /* Frameworks */,
@@ -1607,9 +1607,9 @@
 			);
 			dependencies = (
 			);
-			name = SocialMaps;
+			name = SocialMapz;
 			productName = SocialMaps;
-			productReference = 4F98A2C715BB387D000B3124 /* SocialMaps.app */;
+			productReference = 4F98A2C715BB387D000B3124 /* SocialMapz.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1633,7 +1633,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4F98A2C615BB387D000B3124 /* SocialMaps */,
+				4F98A2C615BB387D000B3124 /* SocialMapz */,
 			);
 		};
 /* End PBXProject section */
@@ -2138,7 +2138,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMaps" */ = {
+		4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMapz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F98A2E615BB387D000B3124 /* Debug */,
