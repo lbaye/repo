@@ -52,9 +52,9 @@ DDAnnotation *annotation;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
-    radio.delegate = self;
-    [self.view addSubview:radio];
+//    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
+//    radio.delegate = self;
+//    [self.view addSubview:radio];
     
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
     NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
@@ -76,7 +76,7 @@ DDAnnotation *annotation;
     [self loadDummydata];
     
     //reloading scrollview to start asynchronous download.
-    [self reloadScrolview]; 
+    //[self reloadScrolview]; 
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
    
@@ -112,11 +112,14 @@ DDAnnotation *annotation;
     labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
     
     self.currentAddress = @"";
+    selectedPlaceIndex = 0;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    int selectedRadioButtonIndex = 0;
     
     if (self.selectedfriendId) {
         for (int i = 0; i < [filteredList count]; i++) {
@@ -131,12 +134,18 @@ DDAnnotation *annotation;
             if ([self.selectedLocatonItem isEqual:aPlaceItem]) {
                 NSLog(@"select table row %d", i);
                 selectedPlaceIndex = i + 1;
+                selectedRadioButtonIndex = 2;
                 labelAddress.text = self.selectedLocatonItem.placeInfo.name;
                 annotation.coordinate = self.selectedLocatonItem.coordinate;
                 [tableViewPlaces reloadData];
             }
         }
+        
     }
+    
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
+    radio.delegate = self;
+    [self.view addSubview:radio];
     
     /*
     for (int i = 0; i < [selectedFriendsIndex count]; i++) {
