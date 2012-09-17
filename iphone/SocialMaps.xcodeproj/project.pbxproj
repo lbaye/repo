@@ -664,7 +664,7 @@
 		4F88406915F79C4B00E4DFC8 /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messages.png; path = Images/messages.png; sourceTree = SOURCE_ROOT; };
 		4F96D4B115D2C01E006104D6 /* PhotoPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPicker.h; sourceTree = "<group>"; };
 		4F96D4B215D2C01E006104D6 /* PhotoPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPicker.m; sourceTree = "<group>"; };
-		4F98A2C715BB387D000B3124 /* SocialMapz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialMapz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F98A2C715BB387D000B3124 /* SocialMaps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialMaps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F98A2CB15BB387D000B3124 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4F98A2CD15BB387D000B3124 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4F98A2CF15BB387D000B3124 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1156,7 +1156,7 @@
 		4F98A2C815BB387D000B3124 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4F98A2C715BB387D000B3124 /* SocialMapz.app */,
+				4F98A2C715BB387D000B3124 /* SocialMaps.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1595,9 +1595,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F98A2C615BB387D000B3124 /* SocialMapz */ = {
+		4F98A2C615BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMapz" */;
+			buildConfigurationList = 4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMaps" */;
 			buildPhases = (
 				4F98A2C315BB387D000B3124 /* Sources */,
 				4F98A2C415BB387D000B3124 /* Frameworks */,
@@ -1607,9 +1607,9 @@
 			);
 			dependencies = (
 			);
-			name = SocialMapz;
+			name = SocialMaps;
 			productName = SocialMaps;
-			productReference = 4F98A2C715BB387D000B3124 /* SocialMapz.app */;
+			productReference = 4F98A2C715BB387D000B3124 /* SocialMaps.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1633,7 +1633,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4F98A2C615BB387D000B3124 /* SocialMapz */,
+				4F98A2C615BB387D000B3124 /* SocialMaps */,
 			);
 		};
 /* End PBXProject section */
@@ -2038,8 +2038,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2065,8 +2065,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2085,8 +2085,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2097,8 +2097,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2107,8 +2107,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2119,8 +2119,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2136,16 +2136,16 @@
 				4F98A2E415BB387D000B3124 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMapz" */ = {
+		4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMaps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F98A2E615BB387D000B3124 /* Debug */,
 				4F98A2E715BB387D000B3124 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

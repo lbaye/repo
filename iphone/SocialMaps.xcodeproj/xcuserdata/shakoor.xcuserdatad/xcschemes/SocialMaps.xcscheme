@@ -15,7 +15,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4F98A2C615BB387D000B3124"
                BuildableName = "SocialMaps.app"
-               BlueprintName = "SocialMapz"
+               BlueprintName = "SocialMaps"
                ReferencedContainer = "container:SocialMaps.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,7 +33,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4F98A2C615BB387D000B3124"
             BuildableName = "SocialMaps.app"
-            BlueprintName = "SocialMapz"
+            BlueprintName = "SocialMaps"
             ReferencedContainer = "container:SocialMaps.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,7 +51,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4F98A2C615BB387D000B3124"
             BuildableName = "SocialMaps.app"
-            BlueprintName = "SocialMapz"
+            BlueprintName = "SocialMaps"
             ReferencedContainer = "container:SocialMaps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -69,7 +69,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4F98A2C615BB387D000B3124"
             BuildableName = "SocialMaps.app"
-            BlueprintName = "SocialMapz"
+            BlueprintName = "SocialMaps"
             ReferencedContainer = "container:SocialMaps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
