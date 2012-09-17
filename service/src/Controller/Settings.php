@@ -235,7 +235,11 @@ class Settings extends Base
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($user->toArrayDetailed());
+        $data = $user->toArrayDetailed();
+        $data['avatar'] = $this->config['web']['root']. $data['avatar'];
+        $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
+
+        return $this->_generateResponse($data);
     }
 
     /**

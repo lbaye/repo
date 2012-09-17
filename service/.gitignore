@@ -8,5 +8,8 @@ composer.phar
 .svn
 .DS_Store
 
+<<<<<<< HEAD
+=======
 !.gitignore
 
+>>>>>>> bc07e03aa44864ef19b8613f17d0e985b348bacd

@@ -34,7 +34,7 @@ class Meetup extends Gathering
     public function toArray()
     {
         $result = parent::toArray();
-        unset($result['description'], $result['guests'],$result['title'],$result['eventShortSummary'],$result['eventImage'],$result['guestsCanInvite'],$result['distance']);
+        unset($result['description'], $result['guests'],$result['title'],$result['eventShortSummary'],$result['eventImage'],$result['guestsCanInvite'],$result['distance'],$result['event_type']);
         $result['duration'] = $this->getDuration();
         $result['message'] = $this->getMessage();
 

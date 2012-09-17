@@ -93,6 +93,7 @@ class Base extends DocumentRepository
         $docsAsArr = array();
         foreach ($results as $place) {
             $docsAsArr[] = $place->toArray();
+
         }
 
         return $docsAsArr;

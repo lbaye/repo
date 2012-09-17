@@ -8,7 +8,6 @@ a_geotag:
   defaults: { _controller: Controller\Place::getById, type: geotag }
   requirements: { _method: GET }
 
-
 geotags_of_user:
   pattern:  /users/{userId}/geotags
   defaults: { _controller: Controller\Place::getByUser, type: geotag }
