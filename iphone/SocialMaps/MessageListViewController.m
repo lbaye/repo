@@ -432,7 +432,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 [self startReplyIconDownload:msgReply forIndexPath:indexPath];
             }            
         }  else {
-            NSLog(@"image crash = %@", msgReply.senderImage);
+            //NSLog(@"image crash = %@", msgReply.senderImage);
             //imageViewReply.image = msgReply.senderImage;
             imageViewReply.image = iconDownloader.userFriends.userProfileImage;
         }

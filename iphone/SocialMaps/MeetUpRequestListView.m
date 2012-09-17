@@ -13,7 +13,6 @@
 #import "AppDelegate.h"
 #import "ShowOnMapController.h"
 #import "UtilityClass.h"
-#import "IconDownloader.h"
 #import "Globals.h"
 #import "UserFriends.h"
 #import "RestClient.h"
@@ -48,7 +47,8 @@
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
-        //imageDownloadsInProgress = [NSMutableDictionary dictionary];
+        imageDownloadsInProgress = [NSMutableDictionary dictionary];
+        [imageDownloadsInProgress retain];
         
         tableViewMeetUps.dataSource = self;
         tableViewMeetUps.delegate = self;
@@ -100,21 +100,8 @@
         lblMessage.textColor = [UIColor darkGrayColor];
         lblMessage.backgroundColor = [UIColor clearColor];
         lblMessage.numberOfLines=2;
-        //lblMessage.backgroundColor=[UIColor redColor];
         [cell.contentView addSubview:lblMessage];
-        /*
-        // Message
-        UITextView *txtViewTxtMsg = [[[UITextView alloc] initWithFrame:msgFrame] autorelease];
-        txtViewTxtMsg.tag = 3005;
-        txtViewTxtMsg.textColor = [UIColor blackColor];
-        txtViewTxtMsg.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
-        [txtViewTxtMsg.layer setCornerRadius:5.0f];
-        [txtViewTxtMsg.layer setBorderWidth:0.5];
-        [txtViewTxtMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-        [txtViewTxtMsg.layer setMasksToBounds:YES];
-        txtViewTxtMsg.userInteractionEnabled = NO;
-        [cell.contentView addSubview:txtViewTxtMsg];
-        */
+        
         //Thumb Image
         UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 48, 48)];
         imageViewReply.tag = 3006;
@@ -132,8 +119,6 @@
         [buttonAddress addTarget:self action:@selector(actionAddressButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:buttonAddress];
         
-        
-//        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, cell.contentView.frame.size.height-52, 300, 50)];
         MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 82, 300, 50)];
         meetUpListButtonView.backgroundColor = [UIColor clearColor];
         meetUpListButtonView.delegate = self;
@@ -142,15 +127,12 @@
         [meetUpListButtonView release];
     }
     
-     MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3007];
+    MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3007];
     [meetUpListButtonView adjustButtons:meetUpReq];
     
-    //CGSize meetUpTitleSize = [meetUpReq.meetUpTitle sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-    
     UILabel     *labelMeetUpTitle  = (UILabel*) [cell viewWithTag:3002];
-    //labelMeetUpTitle.frame = CGRectMake(10, 10, meetUpTitleSize.width, meetUpTitleSize.height);
     
-    UIButton *buttonAddress;// = (UIButton*) [cell viewWithTag:3003];
+    UIButton *buttonAddress;
     
     for (UIView *subView in [cell.contentView subviews]) {
         if ([subView isKindOfClass:[UIButton class]]) {
@@ -165,25 +147,7 @@
     UILabel *labelMsg = (UILabel*)[cell.contentView viewWithTag:3005];
 
     UIImageView *imageViewSender = (UIImageView*) [cell viewWithTag:3006];
-    //imageViewSender.frame = CGRectMake(10, (CELL_HEIGHT - 48) / 2, 48, 48);
-    imageViewSender.image = [UIImage imageNamed:@"thum.png"];
-    /*
-    if ([smAppDelegate.userId isEqualToString:msgReply.senderID]) {
-        imageViewReply.frame = CGRectMake(10, (rowHeight - 48) / 2, 48, 48);
-        lblTime.frame = timeFrame;
-        txtMsg.frame = msgFrame;
-        lblSender.frame = senderFrame;
-        lblTime.textAlignment = UITextAlignmentRight;
-        
-    } else {
-        imageViewReply.frame = CGRectMake(tableView.frame.size.width - 60, (rowHeight - 48) / 2, 48, 48);
-        lblSender.frame = CGRectMake(tableView.frame.size.width - senderFrame.size.width - 64, senderFrame.origin.y, senderFrame.size.width, senderFrame.size.height);
-        
-        lblTime.frame = CGRectMake(10, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
-        txtMsg.frame = CGRectMake(10, txtMsg.frame.origin.y, txtMsg.frame.size.width, msgFrame.size.height);
-        lblTime.textAlignment = UITextAlignmentLeft;
-    }
-    */
+    
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     
@@ -192,40 +156,24 @@
         meetUpListButtonView.hidden = YES;
     } else {
         labelMeetUpTitle.text = [NSString stringWithFormat:@"%@ has invited you to meet-up at", meetUpReq.meetUpSender];
+        meetUpListButtonView.hidden = NO;
     }
     
-    //labelMeetUpTitle.text = () ? 
     [buttonAddress setTitle:meetUpReq.meetUpAddress forState:UIControlStateNormal];
     labelTime.text =  [UtilityClass timeAsString:meetUpReq.meetUpTime];
     labelMsg.text=meetUpReq.meetUpDescription;
     
-    //UserFriends *userFriend = [self getUserFriend:meetUpReq];
-    /*
-    if (!userFriend) {
-        return cell;
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:meetUpReq.meetUpSenderId];
+    
+    if (!iconDownloader)
+    {
+        imageViewSender.image = [UIImage imageNamed:@"thum.png"];
+        if (tableView.dragging == NO && tableView.decelerating == NO) {
+            [self startIconDownload:meetUpReq forIndexPath:indexPath];
+        }            
+    }  else {
+        imageViewSender.image = iconDownloader.userFriends.userProfileImage;
     }
-    */
-    //IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:meetUpReq.meetUpSenderId];
-    
-//    if (!iconDownloader)
-//    {
-//        imageViewSender.image = [UIImage imageNamed:@"thum.png"];
-//        if (tableView.dragging == NO && tableView.decelerating == NO) {
-//            
-//            [self startIconDownload:userFriend forIndexPath:indexPath];
-//        }            
-//    }  else {
-//        
-//        imageViewSender.image = iconDownloader.userFriends.userProfileImage;
-//    }
-    
-    
-    //[buttonAddress setTitle:[meetUpReq.meetUpAddress substringToIndex:15] forState:UIControlStateNormal];
-        //lblTime.text = [self timeAsString:msgReply.time];
-    //txtMsg.text = msgReply.content;
-    
-    
-    //cell.imageView.image = [UIImage imageNamed:@"thum.png"];
     
     return cell;
     
@@ -401,5 +349,109 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
          [super dealloc];
 }
+
+#pragma mark -
+#pragma mark Table cell image support
+
+- (void)startIconDownload:(MeetUpRequest*)meetUpReq forIndexPath:(NSIndexPath *)indexPath
+{
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:meetUpReq.meetUpSenderId];
+    
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        UserFriends *userFriends = [[UserFriends alloc] init];
+        userFriends.userId = meetUpReq.meetUpSenderId;
+        userFriends.imageUrl = meetUpReq.meetUpAvater;
+        //userFriends.imageUrl = @"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR-9WzQL5NV_6vQ3f1Djlt7mbbUTkFTc_g4vpWKU7t0JPpMSXtZ9_qPwQ";
+        iconDownloader.userFriends = userFriends;
+        NSLog(@"iconDownloader.userFriends.imageUrl = %@",iconDownloader.userFriends.imageUrl);
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [imageDownloadsInProgress setObject:iconDownloader forKey:meetUpReq.meetUpSenderId];
+        [iconDownloader startDownload];
+        [iconDownloader release];  
+        [userFriends release];
+    } 
+}
+- (void)loadImagesForOnscreenRows
+{
+    if ([meetUpRequestList count] > 0)
+    {
+        NSArray *visiblePaths = [tableViewMeetUps indexPathsForVisibleRows];
+            
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            //UIImage *replyImage = ((MeetUpRequest*)[meetUpRequestList objectAtIndex:indexPath.row]).meetUpSenderId.senderImage;
+            
+            MeetUpRequest *meetUpReq = [meetUpRequestList objectAtIndex:indexPath.row];
+            [self startIconDownload:meetUpReq forIndexPath:indexPath];
+                
+            //if (!replyImage) // avoid the app icon download if the app already has an icon
+                //{
+                    //[self startReplyIconDownload:msgReply forIndexPath:indexPath];
+                //}
+                //                } else {
+                //                    //MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
+                //                    UITableViewCell *cell = [messageReplyTableView cellForRowAtIndexPath:indexPath];
+                //                    UIImageView *imageViewReply = (UIImageView*) [cell viewWithTag:3006];
+                //                    imageViewReply.image = msgReply.senderImage;
+                //                }
+            //}
+        }
+        
+        //[messageReplyTableView reloadData];
+        return;
+    }
+}
+
+// called by our ImageDownloader when an icon is ready to be displayed
+- (void)appImageDidLoad:(NSString *)userId
+{
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
+    if (iconDownloader != nil)
+    {
+//        if (!messageRepiesView.hidden) {
+//            for (MessageReply *msgReply in messageReplyList) {
+//                if (msgReply.senderID == userId) {
+//                    msgReply.senderImage = iconDownloader.userFriends.userProfileImage;
+//                }
+//            }
+//            [messageReplyTableView reloadData];
+//            return;
+//        }
+        
+        UITableViewCell *cell = [tableViewMeetUps cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        
+        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@", 
+              iconDownloader.userFriends.userName,
+              iconDownloader.userFriends.userId, 
+              iconDownloader.userFriends.imageUrl);
+        
+        UIImageView *imageViewSender = (UIImageView*) [cell viewWithTag:3006];
+        imageViewSender.image = iconDownloader.userFriends.userProfileImage;
+        //cell.imageView.image = iconDownloader.userFriends.userProfileImage;
+        
+    }
+}
+
+#pragma mark -
+#pragma mark Deferred image loading (UIScrollViewDelegate)
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForOnscreenRows];
+}
+
+//Lazy loading method ends.
 
 @end

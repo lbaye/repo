@@ -3793,6 +3793,7 @@
     [request setPostValue:longitude forKey:@"lng"];
     [request setPostValue:address forKey:@"address"];
     [request setPostValue:time forKey:@"time"];
+    [request setPostValue:@"private" forKey:@"permission"];
     
     for (NSString *id in recipients) {
         [request addPostValue:id forKey:@"guests[]"];
@@ -4070,7 +4071,7 @@
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    NSString *route = [NSString stringWithFormat:@"%@/me/meetups",WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/meetups",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *meetUpRequests = [[NSMutableArray alloc] init];
     
@@ -4105,6 +4106,7 @@
                 meetUpReq.meetUpTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
                 meetUpReq.meetUpSenderId = [self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil];
                 meetUpReq.meetUpSender = [self getNestedKeyVal:item key1:@"ownerDetail" key2:@"firstName" key3:nil];
+                meetUpReq.meetUpAvater = [self getNestedKeyVal:item key1:@"ownerDetail" key2:@"avatar" key3:nil];
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
