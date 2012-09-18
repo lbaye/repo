@@ -52,6 +52,13 @@ class Auth extends Base
             }
 
             $data = $user->toArrayDetailed();
+
+            if($this->_validateURL($data['avatar'])){
+
+            }else{
+
+            }
+
             $data['avatar'] = $this->config['web']['root']. $data['avatar'];
             $data['coverPhoto'] = $this->config['web']['root']. $data['coverPhoto'];
 
@@ -95,6 +102,7 @@ class Auth extends Base
             $this->userRepository->updateLoginCount($user->getId());
 
             $userData = $user->toArrayDetailed();
+
             $userData['avatar'] = $this->config['web']['root']. $userData['avatar'];
             $userData['coverPhoto'] = $this->config['web']['root']. $userData['coverPhoto'];
             $userData['friends'] = $this->_getFriendList($user);
