@@ -20,7 +20,7 @@ class GatheringRepo extends Base
         return $this->_toArrayAll($gatherings);
     }
 
-    public function getAll($limit = 80, $offset = 0)
+    public function getAll($limit = 20, $offset = 0)
     {
         return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
