@@ -432,7 +432,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 [self startReplyIconDownload:msgReply forIndexPath:indexPath];
             }            
         }  else {
-            NSLog(@"image crash = %@", msgReply.senderImage);
+            //NSLog(@"image crash = %@", msgReply.senderImage);
             //imageViewReply.image = msgReply.senderImage;
             imageViewReply.image = iconDownloader.userFriends.userProfileImage;
         }
@@ -558,6 +558,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             
             // Add first name to title string buffer
             [recipientNames addObject:[recipient valueForKey:@"firstName"]];
+            
+            NSLog(@"******* ToDo: appStore_V1 has latest code for null url avater checking******");
             
             // Add avatar to avatar array
             NSString *urlAvatar = [recipient valueForKey:@"avatar"];

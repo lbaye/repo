@@ -22,5 +22,6 @@
 @synthesize meetUpRsvpYes;
 @synthesize meetUpRsvpNo;
 @synthesize meetUpRsvpIgnore;
+@synthesize meetUpAvater;
 
 @end

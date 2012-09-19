@@ -17,6 +17,8 @@
 #import "Event.h"
 #import "Globals.h"
 #import "UserCircle.h"
+#import "LocationItemPlace.h"
+#import "SelectCircleTableCell.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -37,13 +39,13 @@
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
 @synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
-@synthesize createButton,createLabel;
+@synthesize createButton,createLabel,circleView,circleTableView;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
-
+int locationFlag=0;
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -58,6 +60,7 @@ DDAnnotation *annotation;
 bool isBackgroundTaskRunning;
 int createNotf=0;
 int updateNotf=0;
+NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -165,9 +168,18 @@ int updateNotf=0;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
+    selectedCircleCheckArr=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
+    neearMeAddressArr=[[NSMutableArray alloc] init];
+    for (int i=0; i<[smAppDelegate.placeList count]; i++)
+    {
+        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
+        [neearMeAddressArr addObject:aPlaceItem.placeInfo.name];
+        NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
+    }
+
     //set scroll view content size.
     [self loadDummydata];
     
@@ -216,7 +228,7 @@ int updateNotf=0;
 
 	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
-	
+	[circleView removeFromSuperview];
     if (editFlag==true)
     {
         event=globalEditEvent;
@@ -385,13 +397,14 @@ int updateNotf=0;
     [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
 }
 
--(IBAction)neamePlaceButtonAction
+-(IBAction)neamePlaceButtonAction:(id)sender
 {
     [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-
+    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
 }
 
 -(IBAction)pointOnMapButtonAction
@@ -407,7 +420,18 @@ int updateNotf=0;
 //show circle
 -(IBAction)showCircle:(id)sender
 {
-    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
+//    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
+    [self.view addSubview:circleView];
+}
+
+-(IBAction)saveCircle:(id)sender
+{
+    [circleView removeFromSuperview];
+}
+
+-(IBAction)cancelCircle:(id)sender
+{
+    [circleView removeFromSuperview];
 }
 
 -(IBAction)guestCanInvite:(id)sender
@@ -474,7 +498,7 @@ int updateNotf=0;
         [msg appendString:@"date"];
         validationFlag=true;
     }
-
+    
     if (validationFlag==true) 
     {
         [UtilityClass showAlert:@"Social Maps" :msg];
@@ -490,11 +514,14 @@ int updateNotf=0;
             frnd=[[UserFriends alloc] init];
             frnd=[selectedFriendsIndex objectAtIndex:i];
             [userIDs addObject:frnd.userId];
+            event.guestList=userIDs;
         }
-        event.guestList=userIDs;
-        event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
-        event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
-        event.eventAddress=annotation.subtitle;
+        if (locationFlag!=1) 
+        {
+            event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+            event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
+            event.eventAddress=annotation.subtitle;
+        }
         if (editFlag==true)
         {
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
@@ -549,6 +576,19 @@ int updateNotf=0;
 	int selectedCircleIndex = [selectedIndex intValue];
 }
 
+-(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
+{
+    locationFlag=1;
+    int selectedLocation=[selectedIndex intValue];
+    NSLog(@"selectedLocation %d",selectedLocation);
+    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
+    NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
+    event.eventLocation.latitude=aPlaceItem.placeInfo.location.latitude;
+    event.eventLocation.longitude=aPlaceItem.placeInfo.location.longitude;
+    event.eventAddress=aPlaceItem.placeInfo.name;
+    addressLabel.text=aPlaceItem.placeInfo.name;
+}
+
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
     NSDate *date =selectedDate;
@@ -589,6 +629,66 @@ int updateNotf=0;
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
     annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
+
+//table view delegate methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    return [circleList count];
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"circleTableCell";
+    int nodeCount = [filteredList count];
+        
+    SelectCircleTableCell *cell = [circleTableView
+                                dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+            cell = [[SelectCircleTableCell alloc]
+                    initWithStyle:UITableViewCellStyleDefault 
+                    reuseIdentifier:CellIdentifier];
+    }
+    
+    // Configure the cell...
+    cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+    [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    
+    
+}
+
+-(void)handleTableViewCheckbox:(id)sender
+{
+    SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
+//    [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    if ([selectedCircleCheckArr containsObject:clickedButtonPath])
+    {
+        [selectedCircleCheckArr removeObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [selectedCircleCheckArr addObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+    }
+    NSLog(@"selectedCircleCheckArr: %@",selectedCircleCheckArr);    
+}
+
 
 #pragma mark -
 #pragma mark MKMapViewDelegate

@@ -56,6 +56,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet MKMapView *mapView;
     IBOutlet UIView *mapContainerView;
     IBOutlet UILabel *addressLabel;
+    IBOutlet UIView *circleView;
+    IBOutlet UITableView *circleTableView;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
@@ -94,6 +96,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 @property(nonatomic,retain) IBOutlet UILabel *addressLabel;
 
+@property(nonatomic,retain) IBOutlet UIView *circleView;
+@property(nonatomic,retain) IBOutlet UITableView *circleTableView;
+
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    
 -(IBAction)descriptionButtonAction;
@@ -108,7 +113,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(IBAction)curLocButtonAction;
 -(IBAction)myPlaceButtonAction;    
--(IBAction)neamePlaceButtonAction;
+-(IBAction)neamePlaceButtonAction:(id)sender;
 -(IBAction)pointOnMapButtonAction;    
 
 -(IBAction)showCircle:(id)sender;
@@ -124,6 +129,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(IBAction)saveMapLoc:(id)sender;
 -(IBAction)cancelMapLoc:(id)sender;
+
+-(IBAction)saveCircle:(id)sender;
+-(IBAction)cancelCircle:(id)sender;
 
 -(void)beganEditing;
 -(void)endEditing;

@@ -146,9 +146,9 @@ BOOL isBackgroundTaskRunning=FALSE;
     if([smAppDelegate.userId isEqualToString:aEvent.owner])
     {
         
-        [deleteEventButton setEnabled:YES];
-        [editEventButton setEnabled:YES];
-        [inviteEventButton setEnabled:YES];
+        [deleteEventButton setHidden:NO];
+        [editEventButton setHidden:NO];
+        [inviteEventButton setHidden:NO];
         
         [yesButton setUserInteractionEnabled:NO];
         [noButton setUserInteractionEnabled:NO];
@@ -160,9 +160,9 @@ BOOL isBackgroundTaskRunning=FALSE;
     }
     else
     {
-        [deleteEventButton setEnabled:NO];
-        [editEventButton setEnabled:NO];
-        [inviteEventButton setEnabled:NO];
+        [deleteEventButton setHidden:YES];
+        [editEventButton setHidden:YES];
+        [inviteEventButton setHidden:YES];
         
         [yesButton setUserInteractionEnabled:YES];
         [noButton setUserInteractionEnabled:YES];

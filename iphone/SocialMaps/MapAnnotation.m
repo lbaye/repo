@@ -214,4 +214,29 @@
     }
 }
 
+- (void) changeStateClicked2:(id) anno {
+    NSLog(@"MapAnnotation: changeStateClicked2");
+    LocationItem *locItem = (LocationItem*)anno;
+    
+    NSLog(@"changeStateClicked Name=%@", locItem.itemName);
+    
+            // Don't show details for non-SM users
+            if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+                LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+                if (locItemPeople.userInfo.external == false) 
+                    locItem.currDisplayState = MapAnnotationStateDetailed;
+                else
+                    locItem.currDisplayState = MapAnnotationStateNormal;
+            } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+                locItem.currDisplayState = MapAnnotationStateDetailed;
+            } 
+    
+    //selAnno.selected=TRUE;
+    
+    //[selAnno setNeedsDisplay];
+    //if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:sender:)]) {
+        //[self.delegate mapAnnotationChanged:[selAnno annotation] sender:sender];
+    //}
+}
+
 @end

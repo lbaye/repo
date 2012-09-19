@@ -11,6 +11,7 @@
 #import <CoreLocation/CLLocationManager.h>
 #import "IconDownloader.h"
 #import "AppDelegate.h"
+#import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
 

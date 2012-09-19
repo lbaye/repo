@@ -47,6 +47,7 @@ typedef enum _MAP_USER_ACTION {
 @property (nonatomic,assign) id<MapAnnotationDelegate>    delegate;
 
 - (void) changeStateClicked:(id) sender;
+- (void) changeStateClicked2:(id) sender;
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem;
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem;
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem;

@@ -31,7 +31,8 @@
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
 #import "UserBasicProfileViewController.h"
-
+#import "Globals.h"
+#import "ViewCircleListViewController.h"
 
 @interface MapViewController ()
 
@@ -206,7 +207,24 @@ ButtonClickCallbackData callBackData;
     
     [self.view setNeedsDisplay];
 }
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
+    LocationItem *selLocation = (LocationItem*) anno;
+    [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
+}
+
+-(void) startMoveMap:(LocationItem*)locItem
+{
+    MKMapRect r = [self.mapView visibleMapRect];
+    MKMapPoint pt = MKMapPointForCoordinate(locItem.coordinate);
+    r.origin.x = pt.x - r.size.width * 0.3;
+    r.origin.y = pt.y - r.size.height * 0.5;
+    [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self mapAnnotationChanged:locItem];
+    [mapAnno changeStateClicked2:locItem];
+    
+}
 
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
@@ -226,9 +244,47 @@ ButtonClickCallbackData callBackData;
 //    [self.view setNeedsDisplay];
 }
 
+- (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
+    LocationItemPlace *locItem = (LocationItemPlace*) anno;
+    
+    NSLog(@"meetupRequestPlaceSelected");
+    
+    for (LocationItemPlace *eachLocationItem in smAppDelegate.placeList) {
+        if ([eachLocationItem.placeInfo.location isEqual:locItem.placeInfo.location]) {
+            MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+            controller.selectedLocatonItem = locItem;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
+        }
+    }
+    
+}
+
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
+    NSLog(@"class = %@", [anno class]);
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    
+    int i = 0;
+    for (; i < [friendListGlobalArray count]; i++) {
+        UserInfo *userInfo = [friendListGlobalArray objectAtIndex:i];
+        if ([userInfo.userId isEqualToString:locItem.userInfo.userId]) {
+            break;
+        }
+    }
+    if (i == [friendListGlobalArray count]) {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",locItem.userInfo.firstName]];
+        return;
+    }
+    
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.selectedfriendId = locItem.userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
+
 - (void) directionSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:directionSelected");
 }
@@ -307,6 +363,9 @@ ButtonClickCallbackData callBackData;
             break;
         case MapAnnoUserActionDirection:
             [self directionSelected:locItem];
+            break;
+        case MapAnnoUserActionMeetupPlace:
+            [self meetupRequestPlaceSelected:locItem];
             break;
         default:
             break;
@@ -567,7 +626,7 @@ ButtonClickCallbackData callBackData;
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
         [_mapView addAnnotation:anno];
     }
-    
+
     // 4
     if (smAppDelegate.needToCenterMap == TRUE) {
         NSLog(@"MapViewController:loadAnnotations centering map");
@@ -715,6 +774,8 @@ ButtonClickCallbackData callBackData;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     NSLog(@"In prepareForSegue:MapViewController");
+    LocationItem *selLocation = (LocationItem*) selectedAnno;
+    selLocation.currDisplayState = MapAnnotationStateNormal;
 }
 
 - (IBAction)showPullDown:(id)sender {
@@ -1144,7 +1205,11 @@ ButtonClickCallbackData callBackData;
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
 
 //    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
-     [self performSegueWithIdentifier:@"eventList" sender: self];
+   // viewEventList
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
     [smAppDelegate showActivityViewer:self.view];
 }
 
@@ -1194,6 +1259,18 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMapix:(id)sender
 {
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+//    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+    
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+
+
 }
 
 - (IBAction)gotoEditFilters:(id)sender
@@ -1353,7 +1430,11 @@ ButtonClickCallbackData callBackData;
     }
     smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
-
+//test code
+    //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:5];
+    //[self showAnnotationDetailView:locItem];
+    
+    
 }
 
 - (void) getSortedDisplayList {
