@@ -29,6 +29,7 @@
 #import "Globals.h"
 #import "MessageReply.h"
 #import "UtilityClass.h"
+#import "MeetUpRequest.h"
 
 @implementation RestClient
 
@@ -64,15 +65,18 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -222,15 +226,18 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -918,7 +925,9 @@
     aUserInfo.blockedBy = [self getNestedKeyVal:jsonObjects key1:@"blockedBy" key2:nil key3:nil];
     aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil] integerValue];
     aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"age" key2:nil key3:nil] integerValue];
-    
+    aUserInfo.coverPhoto = [self getNestedKeyVal:jsonObjects key1:@"coverPhoto" key2:nil key3:nil];
+    aUserInfo.status = [self getNestedKeyVal:jsonObjects key1:@"status" key2:nil key3:nil];
+        
     aUserInfo.circles = [[NSMutableArray alloc] init];
     for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
         UserCircle *aCircle = [[UserCircle alloc] init];
@@ -946,7 +955,7 @@
     aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
     aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
     aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
-    
+
     return aUserInfo;
 }
 /*
@@ -1076,6 +1085,68 @@
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getAccountSettings");
+    [request startAsynchronous];
+
+}
+
+-(void)getUserProfile:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/settings/account_settings",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    __block UserInfo *aUserInfo = nil;
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            
+            NSLog(@"getAccountSettings: %@",jsonObjects);
+            NSLog(@"aUserInfo.avatar %@",aUserInfo.avatar);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:aUserInfo];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getBasicProfile");
     [request startAsynchronous];
 
 }
@@ -1286,6 +1357,66 @@
     [request startAsynchronous];
 }
 
+-(void)getMyPlaces:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/places",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *myPlaces = [[NSMutableArray alloc] init];
+    
+    NSLog(@"route = %@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            for (NSDictionary *item in jsonObjects) {
+                Places *aPlace = [[Places alloc] init];
+                
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+                aPlace.location = loc;
+                aPlace.address = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
+                aPlace.name = [self getNestedKeyVal:item key1:@"location" key2:@"title" key3:nil];
+                
+                [myPlaces addObject:aPlace];
+                
+            }
+            
+            NSLog(@"messageReplies = %@", myPlaces);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:myPlaces];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getReplies");
+    [request startAsynchronous];
+}
+
 -(void)getNotifications:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/settings/notifications",WS_URL];
@@ -1444,67 +1575,76 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            
-            //get all people
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
-            {
-                People *people=[[People alloc] init];
 
-                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
-                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
-                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
-                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
-                people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
-                people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
-                people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
-                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
-                people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
-                people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
-                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
-                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
-                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
-                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+            // Do the parsing in the background as this seems to make the user interaction sluggish
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                //get all people
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
+                {
+                    People *people=[[People alloc] init];
+
+                    people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                    people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                    people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                    people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                    people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                    people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+                    people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+                    people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+                    people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+                    NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                    people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                    people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+                    people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                    
+                    people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+                    [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+                    
+                    people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                    people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+                    
+                    people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                    
+                    people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                    
+                    [searchLocation.peopleArr addObject:people];
+                    
+                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
+                }
                 
-                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
-                [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
-                
-                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
-                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
-                
-                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];              
-                [searchLocation.peopleArr addObject:people];
-                
-                NSLog(@"User: first %@  last:%@  id:%@",people.firstName, people.lastName, people.userId);
-            }
-            
-            //get all places
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
-            {
-                Places *place=[[Places alloc] init];
-                
-                place.location = [[Geolocation alloc] init];
-                place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
-                place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                
-                place.northeast = [[Geolocation alloc] init];
-                place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
-                place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
-                
-                place.southwest = [[Geolocation alloc] init];
-                place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
-                place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
-                place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
-                [place setIcon:[item objectForKey:@"icon"] ];
-                [place setID:[item objectForKey:@"id"] ];
-                [place setName:[item objectForKey:@"name"] ];
-                [place setReference:[item objectForKey:@"reference"]];
-                [place setTypeArr:[item objectForKey:@"types"]];
-                [place setVicinity:[item objectForKey:@"vicinity"] ];
-                [searchLocation.placeArr addObject:place];
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                //get all places
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                {
+                    Places *place=[[Places alloc] init];
+                    
+                    place.location = [[Geolocation alloc] init];
+                    place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                    place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
+                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
+                    place.northeast = [[Geolocation alloc] init];
+                    place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                    place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
+                    
+                    place.southwest = [[Geolocation alloc] init];
+                    place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                    place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
+                    place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                    [place setIcon:[item objectForKey:@"icon"] ];
+                    [place setID:[item objectForKey:@"id"] ];
+                    [place setName:[item objectForKey:@"name"] ];
+                    [place setReference:[item objectForKey:@"reference"]];
+                    [place setTypeArr:[item objectForKey:@"types"]];
+                    [place setVicinity:[item objectForKey:@"vicinity"] ];
+                    [searchLocation.placeArr addObject:place];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                });
+            });
         } 
         else 
         {
@@ -1574,9 +1714,11 @@
                 
                 [aEvent setEventCreateDate:date];
                 
+                date=[[Date alloc] init];
                 date.date=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"date" key3:nil];
                 date.timezone=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone" key3:nil];            
                 date.timezoneType=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"time" key2:@"timezone_type" key3:nil];           
+                [aEvent setEventDate:date];
                 
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"location" key2:@"lat" key3:nil];
@@ -1670,7 +1812,8 @@
                 date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
                 date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
                 date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
-                
+                [aEvent setEventDate:date];
+            
                 Geolocation *loc=[[Geolocation alloc] init];
                 loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
                 loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
@@ -1687,22 +1830,25 @@
             [aEvent setGuestCanInvite:[[self getNestedKeyVal:jsonObjects key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
             [aEvent setOwner:[self getNestedKeyVal:jsonObjects key1:@"owner" key2:nil key3:nil]]; 
             
+            [aEvent setYesArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"yes" key3:nil]];
+            [aEvent setNoArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"no" key3:nil]];
+            [aEvent setMaybeArr:[self getNestedKeyVal:jsonObjects key1:@"rsvp" key2:@"maybe" key3:nil]];
+            
             NSMutableArray *guestList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
+            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] count]; i++)
             {
                 UserFriends *guest=[[UserFriends alloc] init];
-                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
-                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
+                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
+                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
             [aEvent setGuestList:guestList];
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
-                
-                [aEvent.eventList addObject:aEvent];
-                        
+//                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+
+            [aEvent.eventList addObject:aEvent];                        
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:aEvent];
         } 
         else 
@@ -1907,10 +2053,11 @@
             date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
             date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
+            [aEvent setEventDate:date];
             
             Geolocation *loc=[[Geolocation alloc] init];
             loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
-            loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+            loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
             [aEvent setEventLocation:loc];
             [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
             [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];
@@ -1954,7 +2101,7 @@
     [request startAsynchronous];
 }
 
--(void)updateEven:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue
+-(void)updateEvent:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/events/%@",WS_URL,eventID];
     NSURL *url = [NSURL URLWithString:route];
@@ -1964,7 +2111,7 @@
     searchLocation.placeArr  = [[NSMutableArray alloc] init];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setRequestMethod:@"POST"];
+    [request setRequestMethod:@"PUT"];
     [request addRequestHeader:authToken value:authTokenValue];
     [request addPostValue:event.eventName forKey:@"title"];
     [request addPostValue:event.eventDescription forKey:@"description"];
@@ -2018,17 +2165,17 @@
             date.date=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"date" key3:nil];
             
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone" key3:nil];
-            date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];
-            
+            date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];            
             [aEvent setEventCreateDate:date];
             
             date.date=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"date" key3:nil];
             date.timezone=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone" key3:nil];            
             date.timezoneType=[self getNestedKeyVal:jsonObjects key1:@"time" key2:@"timezone_type" key3:nil];           
+            [aEvent setEventDate:date];
             
             Geolocation *loc=[[Geolocation alloc] init];
             loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lat" key3:nil];
-            loc.latitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
+            loc.longitude=[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"lng" key3:nil];
             [aEvent setEventLocation:loc];
             [aEvent setEventAddress:[self getNestedKeyVal:jsonObjects key1:@"location" key2:@"address" key3:nil]];
             [aEvent setEventDistance:[self getNestedKeyVal:jsonObjects key1:@"distance" key2:nil key3:nil]];
@@ -2043,16 +2190,16 @@
             [aEvent setOwner:[self getNestedKeyVal:jsonObjects key1:@"owner" key2:nil key3:nil]]; 
             
             NSMutableArray *guestList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] count]; i++)
+            for (int i=0; i<[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] count]; i++)
             {
                 UserFriends *guest=[[UserFriends alloc] init];
-                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
-                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"id"];
-                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
+                guest.userId=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.userName=[NSString stringWithFormat:@"%@ %@",[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"firstName"],[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"lastName"]];
+                [[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"id"];
+                guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:[jsonObjects valueForKey:@"message"]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:aEvent];
         } 
         else 
         {
@@ -3265,6 +3412,126 @@
 
 }
 
+-(void)updateUserProfile:(UserInfo *)userInfo:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/account_settings",WS_URL]];    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];  
+    if (userInfo.firstName)
+    {
+        [request addPostValue:userInfo.firstName forKey:@"firstName"];
+    }
+    if(userInfo.lastName)
+    {
+        [request addPostValue:userInfo.lastName forKey:@"lastName"];
+    }
+    if(userInfo.email)
+    {
+        [request addPostValue:userInfo.email forKey:@"email"];
+    }
+    //    [request addPostValue:userInfo.p forKey:@"password"];
+    if(userInfo.avatar)
+    {
+        [request addPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.gender)
+    {
+        [request addPostValue:userInfo.gender forKey:@"gender"];
+    }
+    if(userInfo.username)
+    {
+        [request addPostValue:userInfo.username forKey:@"username"];
+    }
+    if(userInfo.address.city)
+    {
+        [request addPostValue:userInfo.address.city forKey:@"city"];
+    }
+    if(userInfo.address.postCode)
+    {
+        [request addPostValue:userInfo.address.postCode forKey:@"postCode"];
+    }
+    if(userInfo.address.country)
+    {
+        [request addPostValue:userInfo.address.country forKey:@"country"];
+    }
+    if(userInfo.workStatus)
+    {
+        [request addPostValue:userInfo.workStatus forKey:@"workStatus"];
+    }
+    if(userInfo.relationshipStatus)
+    {
+        [request addPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
+    }
+    if(userInfo.unit)
+    {
+        [request addPostValue:userInfo.settings forKey:@"settings[units]"];
+    }
+    if(userInfo.bio)
+    {
+        [request addPostValue:userInfo.bio forKey:@"bio"];
+    }
+    if(userInfo.interests)
+    {
+        [request addPostValue:userInfo.interests forKey:@"interests"];
+    }
+    if(userInfo.dateOfBirth)
+    {
+        [request setPostValue:[UtilityClass convertNSDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
+    }
+    if(userInfo.avatar)
+    {
+        [request setPostValue:userInfo.avatar forKey:@"avatar"];
+    }
+    if(userInfo.coverPhoto)
+    {
+        [request setPostValue:userInfo.coverPhoto forKey:@"coverPhoto"];
+    }
+    if (userInfo.status)
+    {
+        [request setPostValue:userInfo.status forKey:@"status"];
+    }
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) 
+        {
+            UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
+            
+            NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:aUserInfo];
+        } 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
+     }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+    
+}
+
 -(void)setGeofence:(Geofence *)geofence:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/geo_fence",WS_URL]];
@@ -3509,6 +3776,117 @@
 
 }
 
+// Send meet up request to one or more SM users
+- (void) sendMeetUpRequest:(NSString*)title description:(NSString*)description latitude:(NSString*)latitude longitude:(NSString*)longitude address:(NSString*)address time:(NSString*)time recipients:(NSArray*)recipients authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/meetups"]];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request setPostValue:title forKey:@"title"];
+    [request setPostValue:description forKey:@"description"];
+    [request setPostValue:latitude forKey:@"lat"];
+    [request setPostValue:longitude forKey:@"lng"];
+    [request setPostValue:address forKey:@"address"];
+    [request setPostValue:time forKey:@"time"];
+    
+    for (NSString *id in recipients) {
+        [request addPostValue:id forKey:@"guests[]"];
+    }
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            [UtilityClass showAlert:@"" :@"Meet-up request sent"];
+            NSLog(@"sendMessage successful:status=%d", responseStatus);
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+            //getmeetuprequestdone
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
+        } else {
+            NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"sendMeetup failed: unknown error");
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+}
+
+- (void) updateMeetUpRequest:(NSString*)meetUpId response:(NSString*)response authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/meetups/%@/rsvp", WS_URL, meetUpId];
+    
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request setPostValue:response forKey:@"response"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            NSLog(@"updateMeetUp successful:status=%d", responseStatus);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+        } else {
+            NSLog(@"updateMeetUp unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Failed to save meet-up response"];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"sendMeetup failed: unknown error");
+        [UtilityClass showAlert:@"" :@"Failed to save meet-up response"];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+    
+}
+
 - (void) sendReply:(NSString*)msgId content:(NSString*)content authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue{
     NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/messages"]];
     
@@ -3536,7 +3914,7 @@
         
         if (responseStatus == 200 || responseStatus == 201) {
             NSLog(@"sendMessage successful:status=%d", responseStatus);
-            [UtilityClass showAlert:@"" :@"Reply sent"];
+            //[UtilityClass showAlert:@"" :@"Reply sent"];
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
@@ -3586,6 +3964,7 @@
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
         if (responseStatus == 200 || responseStatus == 201) {
+            [UtilityClass showAlert:@"" :@"Friend request sent"];
             NSLog(@"sendFriendRequest successful:status=%d", responseStatus);
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
@@ -3685,6 +4064,86 @@
     [request startAsynchronous];
 }
 
+- (void) getMeetUpRequest:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    
+    NSLog(@"in RestClient getMeetUpRequest");
+    NSLog(@"authTokenValue = %@", authTokenValue);
+    NSLog(@"authToken = %@", authToken);
+    
+    NSString *route = [NSString stringWithFormat:@"%@/meetups",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *meetUpRequests = [[NSMutableArray alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            for (NSDictionary *item in jsonObjects) {
+                MeetUpRequest *meetUpReq = [[MeetUpRequest alloc] init];
+                
+                meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                meetUpReq.meetUpTitle  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
+                meetUpReq.meetUpDescription  = [self getNestedKeyVal:item key1:@"description" key2:nil key3:nil];
+                NSString *date = [self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
+                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];
+                NSString *timeZone = [self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
+                meetUpReq.meetUpTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                meetUpReq.meetUpSenderId = [self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil];
+                meetUpReq.meetUpSender = [self getNestedKeyVal:item key1:@"ownerDetail" key2:@"firstName" key3:nil];
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+    
+                meetUpReq.meetUpLocation = loc;
+                
+                meetUpReq.meetUpAddress = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
+                meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                
+                meetUpReq.meetUpRsvpYes = [self getNestedKeyVal:item key1:@"rsvp" key2:@"yes" key3:nil];
+                meetUpReq.meetUpRsvpNo = [self getNestedKeyVal:item key1:@"rsvp" key2:@"no" key3:nil];
+                meetUpReq.meetUpRsvpIgnore = [self getNestedKeyVal:item key1:@"rsvp" key2:@"maybe" key3:nil];
+                
+                [meetUpRequests addObject:meetUpReq];
+            }
+            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:meetUpRequests];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getMeetUpReq");
+    [request startAsynchronous];
+    
+}
+
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
     
     //authTokenValue = @"44f89c2b1dc7b1b84dd57561556cb86486b5b38a";  //for test
@@ -3732,7 +4191,7 @@
                 msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
                 NSString * firstName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
                 NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];              
-                msg.notifSender   = [[[NSArray alloc] initWithObjects:firstName, lastName, nil] componentsJoinedByString:@" "];
+                msg.notifSender   = [NSString stringWithFormat:@"%@ %@", firstName,  lastName];
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
@@ -3775,11 +4234,12 @@
     NSLog(@"in RestClient getReplies");
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
+    NSLog(@"ti = %@", ti);
     
-    //NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
     
     //if (!ti) {
-       NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
+       //NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
     //}
     
     NSURL *url = [NSURL URLWithString:route];
@@ -3803,43 +4263,38 @@
         
         if (responseStatus == 200 || responseStatus == 204) 
         {
-            NSDictionary *items;
-            
-            //if (ti) {
-              //  items = jsonObjects;
-            //} else {
-                items = [jsonObjects objectForKey:@"replies"];
-            //}
-            
-                for (NSDictionary *item in items)
-                {
-                    MessageReply *messageReply = [[MessageReply alloc] init]; 
-                    
-                    NSString *content = [item objectForKey:@"content"];
-                    messageReply.content = content;
-                    NSLog(@"content is: %@",content);
-                    
-                    NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                    NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                    NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
-                    messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-                    
-                    NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
-                    messageReply.senderName = senderName;
-                    NSLog(@"sender name is: %@",senderName);
-                    
-                    NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
-                    messageReply.senderID = senderID;
-                    NSLog(@"sender id is: %@",senderID);
-                    
-                    NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
-                    messageReply.senderAvater = senderAvater;
-                    NSLog(@"sender avater is: %@",senderAvater);
-                    
-                    //messageReply.senderImage = nil;
-                    
-                    [messageReplies addObject:messageReply];
-                }
+            for (NSDictionary *item in jsonObjects) {
+                MessageReply *messageReply = [[MessageReply alloc] init];
+                
+                NSString *content = [item objectForKey:@"content"];
+                messageReply.content = content;
+                NSLog(@"content is: %@",content);
+                
+                NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                NSLog(@"TIME is: %@",messageReply.time);
+                
+                NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
+                messageReply.senderName = senderName;
+                NSLog(@"sender name is: %@",senderName);
+                
+                NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
+                messageReply.senderID = senderID;
+                NSLog(@"sender id is: %@",senderID);
+                
+                NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
+                messageReply.senderAvater = senderAvater;
+                NSLog(@"sender avater is: %@",senderAvater);
+                
+                NSString *msgId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                messageReply.msgId = msgId;
+                NSLog(@"sender msgId is: %@",msgId);
+                
+                [messageReplies addObject:messageReply];
+                
+            }
             
             NSLog(@"messageReplies = %@", messageReplies);
 

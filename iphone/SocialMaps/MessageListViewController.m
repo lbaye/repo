@@ -17,6 +17,7 @@
 #import "UserCircle.h"
 #import "Globals.h"
 #import "UtilityClass.h"
+#import "MeetUpRequestListView.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -24,10 +25,12 @@
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_TABLEVIEW_REPLY     1001
 #define     TAG_TABLEVIEW_INBOX     1002
+#define     TAG_MEETUP_VIEW         1003
 
 @implementation MessageListViewController
 
 @synthesize msgParentID;
+@synthesize timeSinceLastUpdate;
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
@@ -89,15 +92,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
+    
+    MeetUpRequestListView *meetUpRequestListView = [[MeetUpRequestListView alloc] initWithFrame:CGRectMake(0, 0, messageRepiesView.frame.size.width, messageRepiesView.frame.size.height) andParentControllder:self];
+    meetUpRequestListView.tag = TAG_MEETUP_VIEW;
+    meetUpRequestListView.hidden = YES;
+    [messageRepiesView addSubview:meetUpRequestListView];
+    [meetUpRequestListView release];
+    
 }
-
-//- (void) actionTestBtn 
-//{
-//    for (MessageReply *msgReply in messageReplyList) {
-//        NSLog(@"msgReply.senderImage = %@", msgReply.senderImage);
-//    } 
-//}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -114,6 +116,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)viewDidUnload
 {
     NSLog(@"called View did unload");
+    [replyTimer invalidate];
+    replyTimer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     msgListTableView = nil;
@@ -157,7 +161,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (!messageCreationView.hidden) {
         if ([textViewNewMsg isFirstResponder]) {
             [textViewNewMsg resignFirstResponder];
-            [self doTopViewAnimation:msgWritingView];
+            [self setViewMovedDown:msgWritingView];
         }else {
             [self doTopViewAnimation:messageCreationView];
         }
@@ -167,22 +171,35 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }else if (!messageRepiesView.hidden) {
         [self doLeftViewAnimation:messageRepiesView];
     }
-    msgListTableView.tag = TAG_TABLEVIEW_INBOX;
+    [friendSearchbar resignFirstResponder];
+    //msgListTableView.tag = TAG_TABLEVIEW_INBOX;
+    
+    [messageRepiesView viewWithTag:TAG_MEETUP_VIEW].hidden = YES;
 }
 
 - (IBAction)actionMeetUpBtn:(id)sender {
     buttonMeetUp.selected = YES;
     buttonMessage.selected = NO;
     NSLog(@"actionMeetUpBtn");
+    
+    messageRepiesView.hidden = NO;
+    [messageRepiesView viewWithTag:TAG_MEETUP_VIEW].hidden = NO;
+    
 }
 
 - (IBAction)actionNewMessageBtn:(id)sender {
     NSLog(@"actionNewMessageBtn");
+    [selectedFriendsIndex removeAllObjects];
+    [self reloadScrolview];
     [self doBottomViewAnimation:messageCreationView];
 }
 
 - (IBAction)actionBackBtn:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
 }
 
 - (IBAction)actionCancelBtn:(id)sender {
@@ -202,7 +219,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     if ([selectedFriendsIndex count] == 0) {
         [UtilityClass showAlert:@"" :@"Please select recipient"];
-    } else if ([textViewNewMsg.text isEqualToString:@""] || [textViewReplyMsg.text isEqualToString:@"Your Message..."]) {
+    } else if ([textViewNewMsg.text isEqualToString:@""] || [textViewNewMsg.text isEqualToString:@"Your Message..."]) {
         [UtilityClass showAlert:@"" :@"Please enter your message"];
     } else {
         [self sendMessage:sender];
@@ -222,7 +239,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     } else {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        [self doTopViewAnimation:messageRepiesView];
+        //[self doTopViewAnimation:messageRepiesView];
         [self clearTextView:textViewReplyMsg];
     }
 }
@@ -271,64 +288,54 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void) getReplyMessages:(NSNotification *)notif {
     NSLog(@"gotReplyMessages");
     
-    NSMutableArray *msgReplies = [notif object];
-    [messageReplyList addObjectsFromArray:msgReplies];
+    //NSDate *currentTime = [NSDate date];
+    //NSTimeInterval ti = [currentTime timeIntervalSince1970];
+    //self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 50];
     
+    NSMutableArray *msgReplies = [notif object];
+
+    /*
+    if ([msgReplies count] == 0  || [((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] -1]).time isEqual:((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time]) {
+        return;
+    }
+    */
+    
+    if ([msgReplies count] == 0) {
+        return;
+    }
+    /*
+    NSTimeInterval ti =[((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time timeIntervalSince1970];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
+    */
+    
+    /*
     for (MessageReply *eachMsgReply in messageReplyList) {
             MessageReply *parentMsg = (MessageReply*)[messageReplyList objectAtIndex:0];
             if ([eachMsgReply.senderID isEqualToString:parentMsg.senderID]) {
                 eachMsgReply.senderImage = parentMsg.senderImage;
             }
     }
-    
-    [messageReplyTableView reloadData];
-    
-    //NSLog(@"start timer for reply update with since command");
-    //http://203.76.126.69/social_maps/web/messages/504233b9f69c29b12c000001/replies?since=424343
-    
-    NSDate *currentTime = [NSDate date];
-    
-    NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
-
-}
-
-//Duplicate in Notification Class
-- (NSString*) timeAsString:(NSDate*)notifTime {
-    NSString *timeStr = nil;
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];
-    
-    NSDateComponents *today = [[NSDateComponents alloc] init];
-    NSDateComponents *todayComponents =
-    [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit) fromDate:[NSDate date]];
-    today.day = [todayComponents day];
-    today.month = [todayComponents month];
-    today.year = [todayComponents year];
-    today.hour = 0;
-    today.minute = 0;
-    today.second = 0;
-    NSDate *todayDate = [gregorian dateFromComponents:today];
-    NSDate *yesterdayDate = [[NSDate alloc] initWithTimeInterval:-24*60*60 sinceDate:todayDate];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
-    if ([notifTime timeIntervalSinceDate:todayDate] >= 0) {
-        // Today
-        [dateFormatter setDateFormat:@"HH:mm"];
-        timeStr = [dateFormatter stringFromDate:notifTime];
-    }else if ([notifTime timeIntervalSinceDate:yesterdayDate] >= 0){
-        // Yesterday
-        timeStr = @"Yesterday";
-        
-    } else {
-        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-        
-        timeStr = [dateFormatter stringFromDate:notifTime];
+    */
+    for (int i = 0; i < [msgReplies count]; i++) {
+        for (int j = 0; j < [messageReplyList count]; j++) {
+            if ([((MessageReply*)[msgReplies objectAtIndex:i]).msgId isEqualToString:((MessageReply*)[messageReplyList objectAtIndex:j]).msgId]) {
+                [msgReplies removeObjectAtIndex:i];
+            }
+        }
     }
-    return timeStr;
+    
+    [messageReplyList addObjectsFromArray:msgReplies];
+    [messageReplyTableView reloadData];
+    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+
+    
+    NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
+    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
+    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
 }
+
 
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -431,7 +438,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
         
         lblSender.text = msgReply.senderName;
-        lblTime.text = [self timeAsString:msgReply.time];
+        lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
         
         return cell;
@@ -501,7 +508,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
-    lblTime.text = [self timeAsString:msg.notifTime];
+    lblTime.text = [UtilityClass timeAsString:msg.notifTime];
     txtMsg.text = msg.notifMessage;
     
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
@@ -553,7 +560,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [recipientNames addObject:[recipient valueForKey:@"firstName"]];
             
             // Add avatar to avatar array
-            [avatarImages addObject:[recipient valueForKey:@"avatar"]];
+            NSString *urlAvatar = [recipient valueForKey:@"avatar"];
+            NSLog(@"Avatar=%@", urlAvatar);
+            if ((urlAvatar==NULL)||[urlAvatar isEqual:[NSNull null]])
+                urlAvatar=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+
+            [avatarImages addObject:urlAvatar];
         }
     }
     
@@ -613,21 +625,26 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [messageReply release];
     
     [messageReplyTableView reloadData];
-    
-    msgParentID = msg.notifID;
-    timeSinceLastUpdate = @"";
-    [self startReqForReplyMessages];
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self doRightViewAnimation:messageRepiesView];
     
+    msgParentID = msg.notifID;
+    self.timeSinceLastUpdate = @"420";
+    [self startReqForReplyMessages];
+    if (!replyTimer) {
+        replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
      
 - (void)startReqForReplyMessages
 {
-    if (!messageReplyTableView.hidden) {
+    if (!messageRepiesView.hidden) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:timeSinceLastUpdate];
+        [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
+    } else {
+        [replyTimer invalidate];
+        replyTimer = nil;
     }
 }
 
@@ -656,7 +673,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize msgStringSize = [msgReply.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
 
+    int newLine = [[msgReply.content componentsSeparatedByString:@"\n"] count];
+    
     CGFloat msgRows = ceil(msgStringSize.width / (tv.frame.size.width - SENDER_NAME_START_POSX - 45));
+    
+    msgRows = msgRows + newLine - 1;
     
     cellRowHeight = senderStringSize.height + msgRows*15 + 15;
     
@@ -687,7 +708,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 {
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msg.notifSenderId];
    
-   if (iconDownloader == nil)
+   if (iconDownloader == nil && msg.notifAvater != nil)
    {
         iconDownloader = [[IconDownloader alloc] init];
         UserFriends *userFriends = [[UserFriends alloc] init];
@@ -957,7 +978,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)dealloc 
 {
     [messageReplyList release];
-    [imageDownloadsInProgress release];
+    //[imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];
@@ -1057,6 +1078,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     else
     {
         searchText=@"";
+        [selectedFriendsIndex removeAllObjects];
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
@@ -1097,6 +1119,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     [filteredList removeAllObjects];
     filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
+    [selectedFriendsIndex removeAllObjects];
     [self reloadScrolview];
     [friendSearchbar resignFirstResponder];
 }
@@ -1117,7 +1140,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)searchResult
 {
-    [self loadDummydata];
+    //[self loadDummydata];
     searchTexts = friendSearchbar.text;
 
     //NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
@@ -1247,7 +1270,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             UserFriends *userFrnd=[[UserFriends alloc] init];
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            if (userFrnd.imageUrl == nil) {
+                imgView.image = [UIImage imageNamed:@"girl.png"];
+            }            
+            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
@@ -1349,48 +1375,20 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)loadDummydata
 {
-    circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
-    [circleList removeAllObjects];
-    UserCircle *circle=[[UserCircle alloc]init];
-    
-    for (int i=0; i<[circleListGlobalArray count]; i++)
-    {
-        circle=[circleListGlobalArray objectAtIndex:i];
-        [circleList addObject:circle.circleName];
-    }
     UserFriends *frnds=[[UserFriends alloc] init];
-    ImgesName = [[NSMutableArray alloc] initWithObjects:   
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005479.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005484.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
-    
-    searchTexts=[[NSString alloc] initWithString:@""];
-    friendsNameArr=[[NSMutableArray alloc] initWithObjects:@"karin",@"foyzul",@"dulal",@"abbas",@"gafur",@"fuad",@"robi",@"karim",@"tinki",@"suma",@"tilok",@"babu",@"imran", nil];
-    friendsIDArr=[[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13", nil];
-    filteredList=[[NSMutableArray alloc] init];
-    friendListArr=[[NSMutableArray alloc] init];
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
-        //        frnds.userName=[friendsNameArr objectAtIndex:i];
-        //        frnds.userId=[friendsIDArr objectAtIndex:i];
-        //        frnds.imageUrl=[ImgesName objectAtIndex:i];
         frnds=[friendListGlobalArray objectAtIndex:i];
+        if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
+        {
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            NSLog(@"img url null %d",i);
+        }
         [friendListArr addObject:frnds];
     }
     filteredList=[friendListArr mutableCopy];
 }
-
 
 @end

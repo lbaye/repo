@@ -37,6 +37,7 @@
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
 @synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
+@synthesize createButton,createLabel;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
 bool searchFlag;
@@ -54,6 +55,9 @@ AppDelegate *smAppDelegate;
 Event *event;
 int entityFlag=0;
 DDAnnotation *annotation;
+bool isBackgroundTaskRunning;
+int createNotf=0;
+int updateNotf=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,54 +69,91 @@ DDAnnotation *annotation;
 }
 
 -(void)loadDummydata
+
 {
-    circleList=[[NSMutableArray alloc] initWithObjects:@"Friends",@"Family",@"Collegue",@"Close Friends",@"Relatives", nil];
+    
+    circleList=[[NSMutableArray alloc] init];
+    
     [circleList removeAllObjects];
+    
     UserCircle *circle=[[UserCircle alloc]init];
     
+    
+    
     for (int i=0; i<[circleListGlobalArray count]; i++)
+        
     {
+        
         circle=[circleListGlobalArray objectAtIndex:i];
+        
         [circleList addObject:circle.circleName];
+        
     }
+    
     UserFriends *frnds=[[UserFriends alloc] init];
-    ImgesName = [[NSMutableArray alloc] initWithObjects:   
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005479.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005484.jpg",
-                 @"http://www.cnewsvoice.com/C_NewsImage/NI00005483.jpg",nil ];    
+    
+    ImgesName = [[NSMutableArray alloc] init];    
+    
+    
     
     searchTexts=[[NSString alloc] initWithString:@""];
-    friendsNameArr=[[NSMutableArray alloc] initWithObjects:@"karin",@"foyzul",@"dulal",@"abbas",@"gafur",@"fuad",@"robi",@"karim",@"tinki",@"suma",@"tilok",@"babu",@"imran", nil];
-    friendsIDArr=[[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13", nil];
+    
+    friendsNameArr=[[NSMutableArray alloc] init];
+    
+    friendsIDArr=[[NSMutableArray alloc] init];
+    
     filteredList=[[NSMutableArray alloc] init];
+    
     friendListArr=[[NSMutableArray alloc] init];
-
+    
+    
+    
     for (int i=0; i<[friendListGlobalArray count]; i++)
+        
     {
+        
         frnds=[[UserFriends alloc] init];
-//        frnds.userName=[friendsNameArr objectAtIndex:i];
-//        frnds.userId=[friendsIDArr objectAtIndex:i];
-//        frnds.imageUrl=[ImgesName objectAtIndex:i];
+        
         frnds=[friendListGlobalArray objectAtIndex:i];
+        
+        if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
+            
+        {
+            
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            
+            NSLog(@"img url null %d",i);
+            
+        }
+        
+        else
+            
+        {
+            
+            NSLog(@"img url not null %d",i);            
+            
+        }
+        
+        
+        
         [friendListArr addObject:frnds];
+        
+        [friendListArr replaceObjectAtIndex:i withObject:frnds];
+        
+        NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
+        
     }
+    
     filteredList=[friendListArr mutableCopy];
-//    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
+    
+    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
@@ -144,13 +185,17 @@ DDAnnotation *annotation;
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
 //    NSLog(@"annotation.coordinate %@",annotation.coordinate);
-    MKCoordinateRegion newRegion;
-    newRegion.center.latitude = annotation.coordinate.latitude;
-    newRegion.center.longitude = annotation.coordinate.longitude;
-    newRegion.span.latitudeDelta = 1.112872;
-    newRegion.span.longitudeDelta = 1.109863;
+//    MKCoordinateRegion newRegion;
+//    newRegion.center.latitude = annotation.coordinate.latitude;
+//    newRegion.center.longitude = annotation.coordinate.longitude;
+//    newRegion.span.latitudeDelta = 1.112872;
+//    newRegion.span.longitudeDelta = 1.109863;
     
-    [self.mapView setRegion:newRegion animated:YES];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES];
+    
+//    [self.mapView setRegion:newRegion animated:YES];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
@@ -166,9 +211,33 @@ DDAnnotation *annotation;
 
 - (void)viewWillAppear:(BOOL)animated 
 {
-	
+     createNotf=0;
+     updateNotf=0;
+
+	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
 	
+    if (editFlag==true)
+    {
+        event=globalEditEvent;
+    }
+    else
+    {
+        event=[[Event alloc] init];
+    }
+    
+    if (editFlag==true)
+    {
+        [createButton setTitle:@"Update" forState:UIControlStateNormal];
+        [createLabel setText:@"Update Event"];
+
+    }
+    else
+    {
+        [createButton setTitle:@"Create" forState:UIControlStateNormal];
+        [createLabel setText:@"Create Event"];
+    }
+    
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     
@@ -186,16 +255,26 @@ DDAnnotation *annotation;
     addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
 	
 	[super viewWillDisappear:animated];
-	
+    [self viewDidUnload];
+	isBackgroundTaskRunning=false;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    globalEditEvent=NULL;
+    editFlag=false;
+    dicImages_msg=nil;
+    ImgesName=nil;
+    frndListScrollView=nil;
+
+//    [self viewDidUnload];
 }
 
 
-- (void) photoPickerDone:(bool)status image:(UIImage*)img {
+- (void) photoPickerDone:(bool)status image:(UIImage*)img
+{
     NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
     if (status == TRUE) 
     {
@@ -363,23 +442,71 @@ DDAnnotation *annotation;
 
 -(IBAction)createEvent:(id)sender
 {
-    [smAppDelegate showActivityViewer:self.view];
-    RestClient *rc=[[RestClient alloc] init];
-    UserFriends *frnd;
-    NSMutableArray *userIDs=[[NSMutableArray alloc] init];
-    for (int i=0; i<[selectedFriendsIndex count]; i++)
-    {
-        frnd=[[UserFriends alloc] init];
-        frnd=[selectedFriendsIndex objectAtIndex:i];
-        [userIDs addObject:frnd.userId];
-    }
-    event.guestList=userIDs;
-    event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
-    event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
-    event.eventAddress=annotation.subtitle;
-    
-    [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
+    //title*, description*,eventShortSummary,eventImage, guests[], address, lat, lng*, time* , 
+    NSMutableString *msg=[[NSMutableString alloc] init];
+    [msg appendString:@"Please enter "];
+    bool validationFlag=false;
     NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
+    
+    if (event.eventName==NULL)
+    {
+        [msg appendString:@"name, "];
+        validationFlag=true;
+    }
+    
+    if (event.eventDescription==NULL)
+    {
+        [msg appendString:@"description, "];
+            validationFlag=true;
+    }
+    if (event.eventShortSummary==NULL)
+    {
+        [msg appendString:@"short summary, "];
+                validationFlag=true;
+    }
+//    if (event.eventLocation.longitude==NULL)
+//    {
+//        [msg appendString:@"event location, "];
+//                validationFlag=true;
+//    }
+    if (event.eventDate.date==NULL)
+    {
+        [msg appendString:@"date"];
+        validationFlag=true;
+    }
+
+    if (validationFlag==true) 
+    {
+        [UtilityClass showAlert:@"Social Maps" :msg];
+    }
+    else
+    {
+        [smAppDelegate showActivityViewer:self.view];
+        RestClient *rc=[[RestClient alloc] init];
+        UserFriends *frnd;
+        NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+        for (int i=0; i<[selectedFriendsIndex count]; i++)
+        {
+            frnd=[[UserFriends alloc] init];
+            frnd=[selectedFriendsIndex objectAtIndex:i];
+            [userIDs addObject:frnd.userId];
+        }
+        event.guestList=userIDs;
+        event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+        event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
+        event.eventAddress=annotation.subtitle;
+        if (editFlag==true)
+        {
+            [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
+        }
+        else
+        {
+            [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
+        }
+        NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
+
+    }
+    
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -480,7 +607,8 @@ DDAnnotation *annotation;
 	}
 }
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
 	
     if ([annotation isKindOfClass:[MKUserLocation class]])
     {
@@ -538,6 +666,9 @@ DDAnnotation *annotation;
 
 -(void) reloadScrolview
 {
+    NSLog(@"event create scroll init");
+    if (isBackgroundTaskRunning==true)
+    {
     int x=0; //declared for imageview x-axis point    
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     UIImageView *imgView;
@@ -553,7 +684,8 @@ DDAnnotation *annotation;
         }
     }
     frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
-
+    
+    NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
     for(int i=0; i<[filteredList count];i++)               
     {
         if(i< [filteredList count]) 
@@ -561,7 +693,11 @@ DDAnnotation *annotation;
             UserFriends *userFrnd=[[UserFriends alloc] init];
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            if (userFrnd.imageUrl == nil) 
+            {
+                imgView.image = [UIImage imageNamed:@"thum.png"];
+            } 
+            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
@@ -572,14 +708,14 @@ DDAnnotation *annotation;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }               
             }
 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
@@ -625,10 +761,13 @@ DDAnnotation *annotation;
         }
         x+=65;
     }
+    }
 }
 
 -(void)DownLoad:(NSNumber *)path
 {
+    if (isBackgroundTaskRunning==true)
+    {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
@@ -641,10 +780,12 @@ DDAnnotation *annotation;
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+        [self reloadScrolview];
     }
     // Now, we need to reload scroll view to load downloaded image
-    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
+    }
 }
 
 //handling selection from scroll view of friends selection
@@ -654,20 +795,23 @@ DDAnnotation *annotation;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList objectAtIndex:[sender.view tag]]])
     {
-        [selectedFriendsIndex removeObject:[friendListArr objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex removeObject:[filteredList objectAtIndex:[sender.view tag]]];
     } 
     else 
     {
-        [selectedFriendsIndex addObject:[friendListArr objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex addObject:[filteredList objectAtIndex:[sender.view tag]]];
     }
+    UserFriends *frnds=[[UserFriends alloc] init];
+    frnds=[filteredList objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
-        if (l==imageIndex)
+        UIView *im=[subviews objectAtIndex:l];
+        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
+        UIImageView *im1=[subviews1 objectAtIndex:0];
+
+        if ([im1.image isEqual:frnds.userProfileImage])
         {
-            UIView *im=[subviews objectAtIndex:l];
-            NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
-            UIImageView *im1=[subviews1 objectAtIndex:0];
             [im1 setAlpha:1.0];
             im1.layer.borderWidth=2.0;
             im1.layer.masksToBounds = YES;
@@ -899,12 +1043,12 @@ DDAnnotation *annotation;
 
 - (void)createEventDone:(NSNotification *)notif
 {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    NSLog(@"dele %@",[notif object]);
+    createNotf++;
+    if (createNotf==1)
+    {
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     //    [self presentModalViewController:modalViewControllerTwo animated:YES];
     //    NSLog(@"GOT SERVICE DATA.. :D");
     
@@ -912,16 +1056,19 @@ DDAnnotation *annotation;
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
-    RestClient *rc=[[RestClient alloc] init];
-    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
-    [self dismissModalViewControllerAnimated:YES];
+    }
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    NSLog(@"dele %@",[notif object]);
 
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateEventDone:(NSNotification *)notif
 {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
+    updateNotf++;
+    if (updateNotf==1) 
+    {
     NSLog(@"dele %@",[notif object]);
     ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
     //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
@@ -932,7 +1079,10 @@ DDAnnotation *annotation;
     //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
+    [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
+    }
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
 

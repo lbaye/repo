@@ -14,7 +14,7 @@
     IBOutlet UILabel *eventDate;
     IBOutlet UILabel *eventAddress;
     IBOutlet UILabel *eventDistance;
-    IBOutlet UITextView *eventDetail;
+    IBOutlet UILabel *eventDetail;
     IBOutlet UIButton *viewEventOnMap;
     IBOutlet UIImageView *eventImage;
 }
@@ -23,7 +23,7 @@
 @property(nonatomic,retain)IBOutlet UILabel *eventDate;
 @property(nonatomic,retain)IBOutlet UILabel *eventAddress;
 @property(nonatomic,retain)IBOutlet UILabel *eventDistance;
-@property(nonatomic,retain)IBOutlet UITextView *eventDetail;
+@property(nonatomic,retain)IBOutlet UILabel *eventDetail;
 @property(nonatomic,retain)IBOutlet UIButton *viewEventOnMap;
 @property(nonatomic,retain)IBOutlet UIImageView *eventImage;
 

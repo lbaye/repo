@@ -13,6 +13,7 @@
 #import "CustomAlert.h"
 #import "FacebookHelper.h"
 #import "AppDelegate.h"
+#import "UtilityClass.h"
 
 @implementation LoginController
 @synthesize txtEmail;
@@ -53,12 +54,26 @@
 {
 }
 */
-
-
+- (void) checkNetwork {
+    if (![UtilityClass hasConnectivity]) {
+        [CustomAlert setBackgroundColor:[UIColor redColor] 
+                        withStrokeColor:[UIColor redColor]];
+        CustomAlert *loginAlert = [[CustomAlert alloc]
+                                   initWithTitle:@"No network connectivity"
+                                   message:@"Please enable network and retry!"
+                                   delegate:nil
+                                   cancelButtonTitle:@"Done"
+                                   otherButtonTitles:nil];
+        
+        [loginAlert show];
+        [loginAlert autorelease];
+    }
+}
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDone:) name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forgotPWDone:) name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
@@ -190,7 +205,13 @@
         [prefs setObject:userInfo.authToken forKey:@"authToken"];
         [prefs setObject:userInfo.id forKey:@"userId"];
         [prefs synchronize];
-
+        if (userInfo.currentLocationLat != nil && userInfo.currentLocationLng != nil &&
+            [userInfo.currentLocationLat floatValue] != 0.0 &&
+            [userInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = userInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = userInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = userInfo.authToken;
         smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
@@ -253,7 +274,19 @@
 
 - (IBAction)doLogin:(id)sender {
     NSLog(@"In LoginController:doLogin");
-    if ([txtEmail.text isEqualToString:@""] || [txtPassword.text isEqualToString:@""] ||
+    if (![UtilityClass hasConnectivity]) {
+        [CustomAlert setBackgroundColor:[UIColor redColor] 
+                        withStrokeColor:[UIColor redColor]];
+        CustomAlert *loginAlert = [[CustomAlert alloc]
+                                   initWithTitle:@"No network connectivity"
+                                   message:@"Please enable network and retry!"
+                                   delegate:nil
+                                   cancelButtonTitle:@"Done"
+                                   otherButtonTitles:nil];
+        
+        [loginAlert show];
+        [loginAlert autorelease];
+    } else if ([txtEmail.text isEqualToString:@""] || [txtPassword.text isEqualToString:@""] ||
         txtEmail.text == nil || txtPassword.text == nil){
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
@@ -307,7 +340,13 @@
         [prefs setObject:regInfo.authToken forKey:@"authToken"];
         [prefs setObject:regInfo.id forKey:@"userId"];
         [prefs synchronize];
-        
+        if (regInfo.currentLocationLat != nil && regInfo.currentLocationLng != nil &&
+            [regInfo.currentLocationLat floatValue] != 0.0 &&
+            [regInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = regInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = regInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = regInfo.authToken;
         smAppDelegate.userId = regInfo.id;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
@@ -366,7 +405,19 @@
 
 - (IBAction)doConnectFB:(id)sender {
     NSLog(@"In LoginController:doConnectFB");
-    if (![facebook isSessionValid]) {
+    if (![UtilityClass hasConnectivity]) {
+        [CustomAlert setBackgroundColor:[UIColor redColor] 
+                        withStrokeColor:[UIColor redColor]];
+        CustomAlert *loginAlert = [[CustomAlert alloc]
+                                   initWithTitle:@"No network connectivity"
+                                   message:@"Please enable network and retry!"
+                                   delegate:nil
+                                   cancelButtonTitle:@"Done"
+                                   otherButtonTitles:nil];
+        
+        [loginAlert show];
+        [loginAlert autorelease];
+    } else if (![facebook isSessionValid]) {
         [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",
@@ -389,9 +440,6 @@
 
         [smAppDelegate.fbHelper getUserFriendListRequest:self];
         
-//        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-//        [restClient loginFacebook:(User *)user];
-//
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
     }

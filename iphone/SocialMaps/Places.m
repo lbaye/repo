@@ -19,4 +19,5 @@
 @synthesize typeArr;
 @synthesize vicinity;
 @synthesize distance;
+@synthesize address;
 @end

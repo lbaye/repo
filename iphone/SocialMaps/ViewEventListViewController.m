@@ -19,6 +19,7 @@
 #import "AppDelegate.h"
 #import "ViewEventDetailViewController.h"
 #import "UtilityClass.h"
+#import "CreateEventViewController.h"
 
 @interface ViewEventListViewController ()
 
@@ -27,7 +28,7 @@
 @end
 
 @implementation ViewEventListViewController
-@synthesize eventListTableView,eventSearchBar,downloadedImageDict,mapView,mapContainer;
+@synthesize eventListTableView,eventSearchBar,downloadedImageDict,mapView,mapContainer,newEventButton;
  
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -67,20 +68,28 @@ bool searchFlags=true;
     Event *aEvent=[[Event alloc] init];
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+
 	// Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    filteredList=[[self loadDummyData] mutableCopy]; 
+    eventListArray=[[self loadDummyData] mutableCopy];
     [self.mapContainer removeFromSuperview];
-    
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    NSLog(@"activity start.  %@",smAppDelegate);
+    [self.eventSearchBar setText:@""];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    RestClient *rc=[[RestClient alloc] init];
+    [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
@@ -88,300 +97,14 @@ bool searchFlags=true;
 
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [self.eventSearchBar resignFirstResponder];
+}
+
 -(NSMutableArray *)loadDummyData
 {
     NSMutableArray *eventList=[[NSMutableArray alloc] init];
-    Event *aEvent=[[Event alloc] init];
-// event1    
-    aEvent.eventID=@"50360335f69c29bc05000001";
-    aEvent.eventName=@"Eid Fair";
-
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005482.jpg";
-    [eventList addObject:aEvent];
-    
-// event2    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000002";
-    aEvent.eventName=@"Birthday";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"29.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Birthday Party";
-    aEvent.eventAddress=@"Home";
-    aEvent.eventDistance=@"125m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005457.jpg";   
-    [eventList addObject:aEvent];
-    
-// event3    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000003";
-    aEvent.eventName=@"Pohela Baishakh";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"30.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Pohela Get together";
-    aEvent.eventAddress=@"Ramna Botomul";
-    aEvent.eventDistance=@"150m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
-    [eventList addObject:aEvent];
-
-    // event4    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000004";
-    aEvent.eventName=@"Lunch";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005470.jpg";
-    [eventList addObject:aEvent];
-
-    // event5    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000005";
-    aEvent.eventName=@"Dinner";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005463.jpg";
-    [eventList addObject:aEvent];
-
-    // event6    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000006";
-    aEvent.eventName=@"breakfast";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005465.jpg";
-    [eventList addObject:aEvent];
-
-    // event7    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000007";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005466.jpg";
-    [eventList addObject:aEvent];
-
-    // event8    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000008";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005469.jpg";
-    [eventList addObject:aEvent];
-
-    
-    // event9    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc05000009";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005472.jpg";
-    [eventList addObject:aEvent];
-
-    
-    // event10    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc050000010";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
-    [eventList addObject:aEvent];
-    
-    // event11    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc050000010";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
-    [eventList addObject:aEvent];
-
-    
-    // event12    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc050000010";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
-    [eventList addObject:aEvent];
-
-    
-    // event13    
-    aEvent=[[Event alloc] init];
-    aEvent.eventID=@"50360335f69c29bc050000010";
-    aEvent.eventName=@"Eid Fair";
-    
-    aEvent.eventDate.timezone=@"Europe/London";
-    aEvent.eventDate.timezoneType=@"3";
-    aEvent.eventDate.date=@"26.08.2012";
-    
-    aEvent.eventCreateDate.timezone=@"Europe/London";
-    aEvent.eventCreateDate.timezoneType=@"3";
-    aEvent.eventCreateDate.date=@"28.08.2012";
-    
-    aEvent.eventShortSummary=@"Eid Get together";
-    aEvent.eventAddress=@"Gulshan circle 2";
-    aEvent.eventDistance=@"100m";
-    aEvent.eventLocation.latitude=@"10";
-    aEvent.eventLocation.longitude=@"20";
-    aEvent.willAttend=@"yes";
-    aEvent.eventImageUrl=@"http://www.cnewsvoice.com/C_NewsImage/NI00005475.jpg";
-    [eventList addObject:aEvent];
-
-
     for (int i=0; i<[eventListGlobalArray count]; i++)
     {
         NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
@@ -399,6 +122,35 @@ bool searchFlags=true;
     return eventListGlobalArray;
 }
 
+- (void)getAllEventsDone:(NSNotification *)notif
+{
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    eventListGlobalArray=[[notif object] mutableCopy];
+    NSLog(@"GOT SERVICE DATA EVENT.. :D  %@",[notif object]);
+    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self viewDidLoad];
+    filteredList=[[self loadDummyData] mutableCopy]; 
+    eventListArray=[[self loadDummyData] mutableCopy];
+    [self.eventListTableView reloadData];
+}
+
+-(void)hideActivity
+{
+    NSArray* subviews = [NSArray arrayWithArray: self.view.subviews];
+    UIActivityIndicatorView *indView;
+    for (UIView* view in subviews) 
+    {
+        if([view isKindOfClass :[UIActivityIndicatorView class]])
+        {
+            [view removeFromSuperview];
+        }
+    }
+
+    [smAppDelegate hideActivityViewer];
+    NSLog(@"activity removed %@",smAppDelegate);
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -408,6 +160,7 @@ bool searchFlags=true;
 -(IBAction)dateAction:(id)sender
 {
     NSLog(@"date");
+        [self.eventSearchBar resignFirstResponder];
     //Event *even=[[Event alloc] init];
     //even.eventDate.date
     
@@ -419,6 +172,7 @@ bool searchFlags=true;
 -(IBAction)distanceAction:(id)sender
 {
     NSLog(@"distance");
+        [self.eventSearchBar resignFirstResponder];
     filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
         NSString *first = [(Event*)a eventDistance];
         NSString *second = [(Event*)b eventDistance];
@@ -431,6 +185,7 @@ bool searchFlags=true;
 -(IBAction)friendsEventAction:(id)sender
 {
     NSLog(@"friends event");
+        [self.eventSearchBar resignFirstResponder];
     Event *event;
     [filteredList removeAllObjects];
     for (int i=0; i<[eventListArray count]; i++)
@@ -453,6 +208,7 @@ bool searchFlags=true;
 -(IBAction)myEventAction:(id)sender
 {
     NSLog(@"my event");
+        [self.eventSearchBar resignFirstResponder];
     Event *event;
     [filteredList removeAllObjects];
     for (int i=0; i<[eventListArray count]; i++)
@@ -476,6 +232,7 @@ bool searchFlags=true;
 -(IBAction)publicEventAction:(id)sender
 {
     NSLog(@"public event");
+        [self.eventSearchBar resignFirstResponder];
     Event *event;
     [filteredList removeAllObjects];
     for (int i=0; i<[eventListArray count]; i++)
@@ -496,7 +253,13 @@ bool searchFlags=true;
 
 -(IBAction)newEventAction:(id)sender
 {
+//    [self.eventListTableView reloadData];
+    [self.eventSearchBar resignFirstResponder];
     NSLog(@"new event");
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 
@@ -524,6 +287,7 @@ bool searchFlags=true;
     
     Event *event=[[Event alloc] init];
     event = [filteredList objectAtIndex:indexPath.row];
+    NSLog(@"[filteredList count] %d",[filteredList count]);
     
     EventListTableCell *cell = [tableView
                               dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -558,26 +322,49 @@ bool searchFlags=true;
     cell1.noButton.tag=indexPath.row;
     cell1.maybesButton.tag=indexPath.row;
     cell1.viewEventOnMap.tag=indexPath.row;
-    if ([event.myResponse isEqualToString:@"yes"])
+//    NSLog(@"event.myResponse: %@",event.myResponse);
+    NSLog(@"event: %@",event);
+    if(event.isInvited)
     {
+        if ([event.myResponse isEqualToString:@"yes"])
+        {
+            [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+            [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        }
+        else if([event.myResponse isEqualToString:@"no"]) 
+        {
+            [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+            [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];            
+        }
+        else
+        {
+            [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+            [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+            [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];            
+        }
+    }
+    
+    if([smAppDelegate.userId isEqualToString:event.owner])
+    {
+        
+        [cell1.yesButton setUserInteractionEnabled:NO];
+        [cell1.noButton setUserInteractionEnabled:NO];
+        [cell1.maybesButton setUserInteractionEnabled:NO];
+        
         [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
         [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
         [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     }
-    else if([event.myResponse isEqualToString:@"no"]) 
-    {
-        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-
-    }
     else
     {
-        [cell1.yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-        [cell1.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-        [cell1.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-
+        [cell1.yesButton setUserInteractionEnabled:YES];
+        [cell1.noButton setUserInteractionEnabled:YES];
+        [cell1.maybesButton setUserInteractionEnabled:YES];
     }
+
+    
     [cell1.yesButton addTarget:self action:@selector(yesButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.noButton addTarget:self action:@selector(noButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.maybesButton addTarget:self action:@selector(maybeButton:) forControlEvents:UIControlEventTouchUpInside];    
@@ -684,12 +471,17 @@ bool searchFlags=true;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     
-    [smAppDelegate showActivityViewer:self.view];    
+//    [smAppDelegate showActivityViewer:self.view];
     RestClient *rc=[[RestClient alloc] init];
     Event *aEvent=[[Event alloc] init];
     aEvent=[filteredList objectAtIndex:indexPath.row];
-    NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
-    [rc getEventDetailById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
+    globalEvent=[[Event alloc] init];
+    globalEvent=aEvent;
+    NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+    [self presentModalViewController:controller animated:YES];
+
 }
 
 //Lazy loading method starts
@@ -739,10 +531,8 @@ bool searchFlags=true;
     EventImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:eventID];
     if (iconDownloader != nil)
     {
-        //UserFriends *friend = [filteredList objectAtIndex:indexPath.row];
-        //friend.userProfileImage = iconDownloader.userFriends.userProfileImage;
         NSNumber *indx = [eventListIndex objectForKey:eventID];
-        Event *event = [eventListArray objectAtIndex:[indx intValue]];
+        Event *event = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
         event.eventImage = iconDownloader.event.eventImage;
         
         EventListTableCell *cell = [self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
@@ -787,6 +577,7 @@ bool searchFlags=true;
     //[self loadFriendListsData]; TODO: commented this
     searchText=eventSearchBar.text;
     
+    [newEventButton setUserInteractionEnabled:NO];
     if ([searchText length]>0) 
     {
         [self performSelector:@selector(searchResult) withObject:nil afterDelay:0.1];
@@ -799,7 +590,8 @@ bool searchFlags=true;
         searchText=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: eventListArray];
+        filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
+        NSLog(@"eventListGlobalArray: %@",eventListGlobalArray);
         [self.eventListTableView reloadData];
     }
     
@@ -816,7 +608,8 @@ bool searchFlags=true;
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
     
-    NSLog(@"2");    
+    NSLog(@"2");  
+    [newEventButton setUserInteractionEnabled:NO];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
@@ -826,6 +619,7 @@ bool searchFlags=true;
     // We don't need to do anything here.
     [self.eventListTableView reloadData];
     [eventSearchBar resignFirstResponder];
+        [newEventButton setUserInteractionEnabled:YES];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -854,7 +648,8 @@ bool searchFlags=true;
     searchText=eventSearchBar.text;
     searchFlags=false;
     [self searchResult];
-    [eventSearchBar resignFirstResponder];    
+    [eventSearchBar resignFirstResponder];  
+        [newEventButton setUserInteractionEnabled:YES];
 }
 
 -(void)searchResult
@@ -867,10 +662,10 @@ bool searchFlags=true;
     {
         NSLog(@"null string");
         eventSearchBar.text=@"";
-        filteredList = [[NSMutableArray alloc] initWithArray: eventListArray];
+        filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
     }
     else
-        for (Event *sTemp in eventListArray)
+        for (Event *sTemp in eventListGlobalArray)
         {
             NSRange titleResultsRange = [sTemp.eventName rangeOfString:searchText options:NSCaseInsensitiveSearch];		
             if (titleResultsRange.length > 0)
@@ -959,6 +754,7 @@ bool searchFlags=true;
 -(IBAction)backButton:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
+    [self.eventSearchBar resignFirstResponder];
 }
 
 -(IBAction)viewLocationButton:(id)sender
@@ -976,11 +772,6 @@ bool searchFlags=true;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    MKCoordinateRegion newRegion;
-//    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
-//    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    newRegion.span.latitudeDelta = 1.112872;
-//    newRegion.span.longitudeDelta = 1.109863;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES]; 
@@ -994,7 +785,7 @@ bool searchFlags=true;
     {
         aEvent.eventAddress=@"Not found";
     }
-	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
+	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
@@ -1040,22 +831,6 @@ bool searchFlags=true;
 	return draggablePinView;
 }
 
-- (void)getEventDetailDone:(NSNotification *)notif
-{
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    globalEvent=[notif object];
-    NSLog(@"globalEvent %@",globalEvent.eventID);
-////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-//    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:modalViewControllerTwo animated:YES];
-//    NSLog(@"GOT SERVICE DATA.. :D");
-    
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    [self presentModalViewController:controller animated:YES];
-}
 
 - (void)setRsvpDone:(NSNotification *)notif
 {

@@ -20,15 +20,23 @@
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
 @synthesize yesButton,noButton,maybeButton,descriptionView,guestScrollView,rsvpView,detailView;
 @synthesize mapContainer,mapView,eventImgView;
+@synthesize editEventButton;
+@synthesize deleteEventButton;    
+@synthesize inviteEventButton;        
 
-NSMutableArray *imageArr, *nameArr;
+
+NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
+int notfCounter=0;
+int detNotfCounter=0;
+BOOL isBackgroundTaskRunning=FALSE;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self)
+    {
         // Custom initialization
     }
     return self;
@@ -36,23 +44,23 @@ AppDelegate *smAppDelegate;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ((globalEvent.eventImageUrl)&&(!globalEvent.eventImage))
-    {
-        [self performSelector:@selector(loadImageView) withObject:nil afterDelay:0.1];
-        NSLog(@"globalEvent.eventImageUrl %@ globalEvent.eventImage %@",globalEvent.eventImageUrl,globalEvent.eventImage);
-    }
-    else if(globalEvent.eventImage)
-    {
-        eventImgView.image=globalEvent.eventImage;
-         NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
-    }
-}
+    [super viewDidAppear:animated];
+    notfCounter=0;
+    detNotfCounter=0;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+    NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[[Event alloc] init];
+    aEvent=globalEvent;
+    NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
+    [rc getEventDetailById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    NSLog(@"globalEvent det %@",globalEvent.eventID);
-
+    isBackgroundTaskRunning=TRUE;
+    
+    
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventName.text=globalEvent.eventName;
@@ -63,81 +71,150 @@ AppDelegate *smAppDelegate;
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
-    if (globalEvent.isInvited==FALSE)
+//    if (globalEvent.isInvited==FALSE)
+//    {
+//        rsvpView.hidden=YES;
+//    }
+
+    //mapview data
+    if ([self.mapView.annotations count]>0)
     {
-        rsvpView.hidden=YES;
+        [self.mapView removeAnnotations:[self.mapView annotations]];
     }
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
-    [prefs stringForKey:@"userId"];
-    
-    imageArr=[[NSMutableArray alloc] initWithObjects:@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png",@"girl.png", nil];
-    
-    //    [self loadScrollView];
-	// Do any additional setup after loading the view.
-    
-    guestScrollView.delegate = self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
-    ImgesName = [[NSMutableArray alloc] init];   
-    nameArr=[[NSMutableArray alloc] init];
-    
-    UserFriends *frnd;
-    for (int i=0; i<[globalEvent.guestList count]; i++)
-    {
-        frnd=[[UserFriends alloc] init];
-        frnd=[globalEvent.guestList objectAtIndex:i];
-        NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
-        [ImgesName addObject:frnd.imageUrl];
-        [nameArr addObject:frnd.userName];
-    }
-    //set scroll view content size.
-    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
-    
-    [self.mapContainer removeFromSuperview];
-    [self.mapView removeAnnotations:[self.mapView annotations]];
-    
-    Event *aEvent=[[Event alloc] init];
+    [mapView removeAnnotations:[self.mapView annotations]];
+    aEvent=[[Event alloc] init];
     aEvent=globalEvent;
-    [self.mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
     theCoordinate.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    MKCoordinateRegion newRegion;
-//    newRegion.center.latitude = [aEvent.eventLocation.latitude doubleValue];
-//    newRegion.center.longitude = [aEvent.eventLocation.longitude doubleValue];
-//    newRegion.span.latitudeDelta = 1.112872;
-//    newRegion.span.longitudeDelta = 1.109863;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES]; 
     
-//    [self.mapView setRegion:newRegion animated:YES];
     NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
     
     if (!aEvent.eventAddress)
     {
-        aEvent.eventAddress=@"Not found";
+        aEvent.eventAddress=@"Address not found";
     }
-	annotation.title =[NSString stringWithFormat:@"Address: %@",aEvent.eventAddress];
+	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
-    //reloading scrollview to start asynchronous download.
+
+    //scroll view data
+    //set scroll view content size.
+    NSLog(@"setting scroll size.");
     [self reloadScrolview]; 
+
+    
+    //my response & image
+    NSLog(@"aEvent.myResponse %@",aEvent.myResponse);
+    if ([aEvent.myResponse isEqualToString:@"yes"])
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else if([aEvent.myResponse isEqualToString:@"no"]) 
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+    }
+    
+    if ((globalEvent.eventImageUrl)&&(!globalEvent.eventImage))
+    {
+        [self performSelector:@selector(loadImageView) withObject:nil afterDelay:0.1];
+        NSLog(@"globalEvent.eventImageUrl %@ globalEvent.eventImage %@",globalEvent.eventImageUrl,globalEvent.eventImage);
+    }
+    else if(globalEvent.eventImage)
+    {
+        eventImgView.image=globalEvent.eventImage;
+        NSLog(@"globalEvent.eventImage %@",globalEvent.eventImage);
+    }
+    
+    if([smAppDelegate.userId isEqualToString:aEvent.owner])
+    {
+        
+        [deleteEventButton setEnabled:YES];
+        [editEventButton setEnabled:YES];
+        [inviteEventButton setEnabled:YES];
+        
+        [yesButton setUserInteractionEnabled:NO];
+        [noButton setUserInteractionEnabled:NO];
+        [maybeButton setUserInteractionEnabled:NO];
+        
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [deleteEventButton setEnabled:NO];
+        [editEventButton setEnabled:NO];
+        [inviteEventButton setEnabled:NO];
+        
+        [yesButton setUserInteractionEnabled:YES];
+        [noButton setUserInteractionEnabled:YES];
+        [maybeButton setUserInteractionEnabled:YES];
+
+    }
+
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.mapContainer removeFromSuperview];
+    detNotfCounter=0;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    NSLog(@"globalEvent det %@",globalEvent.eventID);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
+    
+    guestScrollView.delegate = self;
+    dicImages_msg = [[NSMutableDictionary alloc] init];
+    nameArr=[[NSMutableArray alloc] init];
+    idArr=[[NSMutableArray alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
+    
+    //reloading scrollview to start asynchronous download.
+    NSLog(@"before reload.");
+    
 }
 
 -(void)loadImageView
 {
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:globalEvent.eventImageUrl]]];
-    eventImgView.image=img;
+    if (img)
+    {
+        eventImgView.image=img;
+    }
+    else
+    {
+        eventImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
+    }
+    NSLog(@"image setted after download. %@",img);
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
     // Release any retained subviews of the main view.
 }
 
@@ -193,6 +270,11 @@ AppDelegate *smAppDelegate;
 -(IBAction)backButton:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
+//    [self viewDidUnload];
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
 }
 
 -(void)resetButton:(int)index
@@ -227,7 +309,14 @@ AppDelegate *smAppDelegate;
 
 -(IBAction)invitePeople:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"invite people");    
+    globalEditEvent=globalEvent;
+    editFlag=true;
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 -(IBAction)deleteEvent:(id)sender
@@ -237,6 +326,8 @@ AppDelegate *smAppDelegate;
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     
     [smAppDelegate showActivityViewer:self.view];    
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
     RestClient *rc=[[RestClient alloc] init];
     Event *aEvent=[[Event alloc] init];
     aEvent=globalEvent;
@@ -246,27 +337,27 @@ AppDelegate *smAppDelegate;
 
 -(IBAction)editEvent:(id)sender
 {
+    detNotfCounter=0;
     NSLog(@"edit event");
+    globalEditEvent=globalEvent;
+    editFlag=true;
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 - (void)deleteEventDone:(NSNotification *)notif
 {
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    NSLog(@"dele %@",[notif object]);
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-//    [self presentModalViewController:controller animated:YES];
-    RestClient *rc= [[RestClient alloc] init];
-    [rc getAllEvents:@"Auth-Token" :smAppDelegate.authToken];
-    [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
-    [self dismissModalViewControllerAnimated:YES];
+    notfCounter++;
+    if (notfCounter==1)
+    {
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        NSLog(@"dele %@",[notif object]);
+        [UtilityClass showAlert:@"Social Maps" :@"Event Deleted"];
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 -(void)loadScrollView
@@ -276,7 +367,7 @@ AppDelegate *smAppDelegate;
     {
         UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(i*60, 0, 60, 65)];
         UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-        [imgView setImage:[UIImage imageNamed:@"girl.png"]];
+        [imgView setImage:[UIImage imageNamed:@"thum.png"]];
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
         [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [name setNumberOfLines:0];
@@ -328,11 +419,14 @@ AppDelegate *smAppDelegate;
 
 -(void) reloadScrolview
 {
+    NSLog(@"event detail in scroll init %d",[ImgesName count]);
+    if (isBackgroundTaskRunning==TRUE)  
+    {
+    NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
-    int y=0;  
     
     NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
-    UIImageView *imgView;
     for (UIView* view in subviews) 
     {
         if([view isKindOfClass :[UIView class]])
@@ -344,6 +438,7 @@ AppDelegate *smAppDelegate;
             // [view removeFromSuperview];
         }
     }
+    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
     for(int i=0; i<[ImgesName count];i++)       
         
     {
@@ -361,13 +456,15 @@ AppDelegate *smAppDelegate;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:[ImgesName objectAtIndex:i]]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+//                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
+                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                    imgView.image = [UIImage imageNamed:@"thum.png"];
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image                    
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
                 }               
             }
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
@@ -386,9 +483,22 @@ AppDelegate *smAppDelegate;
             imgView.exclusiveTouch = YES;
             imgView.clipsToBounds = NO;
             imgView.opaque = YES;
+
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            if ([globalEvent.yesArr containsObject:[idArr objectAtIndex:i]] ||[[idArr objectAtIndex:i] isEqualToString:globalEvent.owner])
+            {
             imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+            }
+            else if([globalEvent.noArr containsObject:[idArr objectAtIndex:i]]) 
+            {
+            imgView.layer.borderColor=[[UIColor redColor] CGColor];
+            }
+            else
+            {
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            }
             imgView.userInteractionEnabled=YES;
-            imgView.layer.borderWidth=2.0;
+            imgView.layer.borderWidth=1.5;
             imgView.layer.masksToBounds = YES;
             [imgView.layer setCornerRadius:7.0];
             [aView addSubview:imgView];
@@ -397,10 +507,14 @@ AppDelegate *smAppDelegate;
         }       
             x+=65;   
     }
+    [pl drain];
+    }
 }
 
 -(void)DownLoad:(NSNumber *)path
 {
+    if (isBackgroundTaskRunning==TRUE) 
+    {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     NSString *Link = [ImgesName objectAtIndex:index];
@@ -410,10 +524,18 @@ AppDelegate *smAppDelegate;
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+//        [self reloadScrolview];
+        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        
+    }
+    else
+    {
+        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:index]];
     }
     // Now, we need to reload scroll view to load downloaded image
-    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -464,6 +586,64 @@ AppDelegate *smAppDelegate;
 	}		
 	
 	return draggablePinView;
+}
+
+- (void)getEventDetailDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    globalEvent=[notif object];
+    detNotfCounter++;
+    NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
+    ImgesName = [[NSMutableArray alloc] init];   
+    
+    NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
+    UserFriends *frnd;
+    for (int i=0; i<[globalEvent.guestList count]; i++)
+    {
+        frnd=[[UserFriends alloc] init];
+        frnd=[globalEvent.guestList objectAtIndex:i];
+        NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+        if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
+        {
+            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            NSLog(@"img url null %d",i);
+        }
+        else
+        {
+            NSLog(@"img url not null %d",i);            
+        }
+        [ImgesName addObject:frnd.imageUrl];
+        [nameArr addObject:frnd.userName];
+        [idArr addObject:frnd.userId];
+    }
+    
+    if (detNotfCounter>=1)
+    {
+        [self reloadScrolview];
+    }
+    NSLog(@"detNotfCounter %d",detNotfCounter);
+    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+    //    NSLog(@"GOT SERVICE DATA.. :D");
+    
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+//    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    isBackgroundTaskRunning=FALSE;
+    [self viewDidUnload];
+    dicImages_msg=nil;
+    ImgesName=nil;
+    nameArr=nil;
+    guestScrollView=nil;
+    detNotfCounter=0;
 }
 
 @end

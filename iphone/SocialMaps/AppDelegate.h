@@ -51,6 +51,7 @@
     NSMutableArray *dealList;
     NSMutableArray *displayList;
     NSMutableArray *friendList;
+    NSMutableArray *meetUpRequests;
     // Preferences
     Platform        *platformPrefs;
     Layer           *layerPrefs;
@@ -65,6 +66,7 @@
     bool            showPlaces;
     bool            showDeals;
     bool            gotListing;
+    bool needToCenterMap;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -104,10 +106,12 @@
 @property (nonatomic, retain)NotificationPref    *notifPrefs;
 @property (nonatomic, retain) Geolocation        *currPosition;
 @property (nonatomic, retain) Geolocation        *lastPosition;
+@property (nonatomic, retain) NSMutableArray    *meetUpRequests;
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;
 @property (atomic) bool gotListing;
+@property (atomic) bool needToCenterMap;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

@@ -85,7 +85,10 @@
     UIView *infoView = [annoView viewWithTag:11002];
     LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
 
-    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
+    // TODO: making the height smaller for appstore submission as we are removing the 
+    // buttons at the bottom
+//    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
+    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
@@ -120,6 +123,10 @@
     addFriendBtn.backgroundColor = [UIColor clearColor];
     addFriendBtn.tag = 11003;
     [infoView addSubview:addFriendBtn];
+    if (locItemPeople.userInfo.isFriend == TRUE)
+        addFriendBtn.hidden = TRUE;
+    else
+        addFriendBtn.hidden = FALSE;
     
     // Meet-up request
     UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -129,6 +136,8 @@
     meetupBtn.backgroundColor = [UIColor clearColor];
     meetupBtn.tag = 11004;
     [infoView addSubview:meetupBtn];
+    // TODO: hiding for appstore submission. revert back once feature is implemenetd
+    meetupBtn.hidden = TRUE;
 
     // Directions request
     UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -138,10 +147,15 @@
     directionBtn.backgroundColor = [UIColor clearColor];
     directionBtn.tag = 11005;
     [infoView addSubview:directionBtn];
+    // TODO: hiding for appstore submission. revert back once feature is implemenetd
+    directionBtn.hidden = TRUE;
     
     // Message request
     UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
+    // TODO: repositioning message button for appstore submission. SInce we are hiding
+    // meetup/direction we are putting this under friend request button
+//    messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
+    messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+20+42, 57, 27);
     [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
     messageBtn.backgroundColor = [UIColor clearColor];

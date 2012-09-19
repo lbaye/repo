@@ -15,6 +15,9 @@
 UIPickerViewDelegate,
 UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate>
 {
+    IBOutlet UILabel *createLabel;
+    IBOutlet UIButton *createButton;
+    
     IBOutlet UIButton *curLoc;
     IBOutlet UIButton *myPlace;    
     IBOutlet UIButton *neamePlace;
@@ -54,6 +57,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *mapContainerView;
     IBOutlet UILabel *addressLabel;
 }
+
+@property(nonatomic,retain) IBOutlet UILabel *createLabel;
+@property(nonatomic,retain) IBOutlet UIButton *createButton;
 
 @property(nonatomic,retain) IBOutlet UIButton *curLoc;
 @property(nonatomic,retain) IBOutlet UIButton *myPlace;    

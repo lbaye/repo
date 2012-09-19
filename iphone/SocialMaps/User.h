@@ -40,6 +40,8 @@
     
     NSMutableArray *friendsList;
     NSMutableArray *circleList;
+    NSString *currentLocationLat;
+    NSString *currentLocationLng;
 }
 
 @property (atomic, retain) NSString *id;
@@ -72,5 +74,7 @@
 
 @property(nonatomic,retain) NSMutableArray *friendsList;
 @property(nonatomic,retain) NSMutableArray *circleList;
+@property (atomic, retain) NSString *currentLocationLat;
+@property (atomic, retain) NSString *currentLocationLng;
 
 @end

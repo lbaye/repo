@@ -10,6 +10,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
+#import "ShowOnMapController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -70,7 +71,8 @@
     [listViewfilter addSubview:label];
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
+//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces], nil] labels:[NSArray arrayWithObjects:@"People",@"Places", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -150,7 +152,8 @@
 }
 
 // Tableview stuff
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
     anItem.delegate = self;
@@ -169,6 +172,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSLog(@"displayList count %d", [smAppDelegate.displayList count]);
     return [smAppDelegate.displayList count];
 }
 
@@ -192,7 +196,8 @@
     return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)] autorelease];
 }
 
-- (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender {
+- (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
+{
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
     switch (btnNum) {
         case 0:
@@ -224,9 +229,17 @@
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
     LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
+    ShowOnMapController *controller;
     switch (action) {
         case LocationActionTypeGotoMap:
-            [self dismissViewControllerAnimated:YES completion:nil];
+            //[self dismissViewControllerAnimated:YES completion:nil];
+            
+            NSLog(@"cordinate %f %f", anItem.coordinate.longitude, anItem.coordinate.latitude);
+            
+            controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem.coordinate];
+            controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
             break;
             
         default:

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
 
-@interface ViewEventDetailViewController : UIViewController
+@interface ViewEventDetailViewController : UIViewController<UIScrollViewDelegate>
 {
     IBOutlet UILabel *eventName;
     IBOutlet UILabel *eventDate;
@@ -33,6 +33,11 @@
     
     IBOutlet UIView *mapContainer;
     IBOutlet MKMapView *mapView;
+    
+    IBOutlet UIButton *editEventButton;
+    IBOutlet UIButton *deleteEventButton;    
+    IBOutlet UIButton *inviteEventButton;
+    BOOL isBackgroundTaskRunning;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;
@@ -56,6 +61,10 @@
 
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet MKMapView *mapView;
+
+@property(nonatomic,retain) IBOutlet UIButton *editEventButton;
+@property(nonatomic,retain) IBOutlet UIButton *deleteEventButton;    
+@property(nonatomic,retain) IBOutlet UIButton *inviteEventButton;        
 
 -(void)DownLoad:(NSNumber *)path;
 -(void) reloadScrolview;

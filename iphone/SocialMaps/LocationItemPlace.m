@@ -58,6 +58,8 @@
 		
 		[cell.contentView addSubview:review];
     }
+    // TODO: Hiding review for appstore submission. revert once feature is implemented
+    review.hidden = TRUE;
     
 	// Name
     CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
@@ -76,7 +78,7 @@
 }
 
 // Button click handlers
-- (int) getCellRow:(id)sender {
+- (int) getCellRowForReview:(id)sender {
     UIButton *button = (UIButton *)sender;
     // Get the UITableViewCell which is the superview of the UITableViewCellContentView which is the superview of the UIButton
     UITableViewCell *cell = (UITableViewCell *) [[button superview] superview];
@@ -87,7 +89,7 @@
 
 - (void) showReview:(id)sender {
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(buttonClicked:row:)]) {
-        int row = [self getCellRow:sender];
+        int row = [self getCellRowForReview:sender];
         [delegate buttonClicked:LocationActionTypePlaceReview row:row];
     }
 }

@@ -10,7 +10,9 @@
 
 //NSString * const WS_URL = @"http://174.143.240.157:81";
 //NSString * const WS_URL = @"http://203.76.126.69";
-NSString * const WS_URL = @"http://203.76.126.69/social_maps/web";
+////NSString * const WS_URL = @"http://203.76.126.69/social_maps/web"; //
+NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
+//NSString * const WS_URL = @"http://203.76.126.69/social-maps-service/web"; 
 //NSString * const WS_URL = @"http://192.168.1.71/social_maps_git/social-maps-service/web";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
@@ -36,13 +38,19 @@ NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdo
 NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";
 NSString * const NOTIF_SET_RSVP_EVENT_DONE= @"com.genweb2.socialmaps.setrsvpeventdone";
 NSString * const NOTIF_UPDATE_EVENT_DONE= @"com.genweb2.socialmaps.updateeventdone";
+NSString * const NOTIF_GET_MY_PLACES_DONE= @"com.genweb2.socialmaps.getmyplacesdone";
+NSString * const NOTIF_GET_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.getmeetuprequestdone";
+NSString * const NOTIF_GET_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.getbasicprofiledone";
+NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.updatebasicprofiledone";
+NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.updatemeetuprequestdone";
+NSString * const NOTIF_SEND_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.sendmeetuprequestdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
 //NSString * const FB_APPID = @"474672942546031";  // SMTest2
 //NSString * const FB_APPID = @"264070030370962";  // SMTest3
 //NSString * const FB_APPID = @"335618886520303";  // SMTest4
-NSString * const FB_APPID = @"272972866144692"; // Social Maps
+NSString * const FB_APPID = @"260432304058696"; // Social Maps
 
 
 NSString * const kFontName			= @"HelveticaNeue";

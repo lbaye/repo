@@ -5,7 +5,7 @@
 //  Created by Arif Shakoor on 7/22/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
-
+#import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 #import "CustomAlert.h"
 #import "FacebookHelper.h"
@@ -65,6 +65,8 @@
 @synthesize peopleIndex;
 @synthesize gotListing;
 @synthesize placeIndex;
+@synthesize meetUpRequests;
+@synthesize needToCenterMap;
 
 - (void)dealloc
 {
@@ -77,6 +79,7 @@
     // Override point for customization after application launch.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     gotListing = FALSE;
+    needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
     email = [prefs stringForKey:@"email"];
     password = [prefs stringForKey:@"password"];
@@ -137,6 +140,9 @@
     
     // Notifications
     notifications  = [[NSMutableArray alloc] init];
+    
+    // Meet up request
+    meetUpRequests = [[NSMutableArray alloc] init];
     
     // Setup default platforms
     defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 
@@ -220,6 +226,7 @@
 
 -(void)hideActivityViewer
 {
+    [activityView stopAnimating];
 	[activityView removeFromSuperview];
 	activityView = nil;
 }
@@ -227,9 +234,15 @@
 -(void)showActivityViewer:(UIView*) sender
 {
 	CGRect frame = CGRectMake(sender.frame.size.width / 2 - 12, sender.frame.size.height / 2 - 12, 24, 24);
+    
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
+    [activityView.layer setCornerRadius:4.0f];
+    [activityView.layer setMasksToBounds:YES];
+    
+    activityView.backgroundColor = [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:25.0/255.0 alpha:0.7];
 	[activityView startAnimating];
-	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [activityView hidesWhenStopped];
+	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
 	[activityView sizeToFit];
 	activityView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
                                      UIViewAutoresizingFlexibleRightMargin |
@@ -248,6 +261,7 @@
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:token];
     [restClient getInbox:@"Auth-Token" authTokenVal:token];
+    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:token];
 }
 
 // Get preferences settings
