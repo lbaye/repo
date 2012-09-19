@@ -179,8 +179,8 @@ class MessageRepo extends Base
         $docsAsArr = array();
         foreach ($results as $place) {
             $placeArr = $place->toArray();
-            $placeArr['sender']['avatar'] = $this->_buildAbsoluteUrl($this->config['web']['root'], $placeArr['sender']['avatar']);
 
+            $placeArr['sender']['avatar'] = $this->_buildAvatarUrl($placeArr['sender']['avatar']);
             $docsAsArr[] = $placeArr;
         }
 

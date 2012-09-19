@@ -155,7 +155,13 @@ class User extends Base
     public function getCurrentUser()
     {
         if ($this->user instanceof \Document\User) {
-            $this->response->setContent(json_encode($this->user->toArrayDetailed()));
+
+            $data = $this->user->toArrayDetailed();
+
+            $data['avatar'] = $this->_buildAvatarUrl($data);
+            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+
+            $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
         } else {
             $this->response->setContent(json_encode(array('message' => 'Unauthorized acecss. Auth-Token not found or invalid')));
@@ -442,6 +448,7 @@ class User extends Base
 
         $friendRequests = $this->user->getFriendRequest();
         $notifications  = $this->user->getNotification();
+        $notifications  = $this->user->getNotification();
 
         $friendResult   = array();
         $notificationResult = array();
@@ -540,6 +547,19 @@ class User extends Base
         $this->response->setStatusCode(Status::OK);
 
         return $this->response;
+    }
+
+    /**
+     * PUT /me/circles/:id
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function editCustomCircle($id)
+    {
+
     }
 
 
