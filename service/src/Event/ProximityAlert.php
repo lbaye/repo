@@ -57,25 +57,27 @@ class ProximityAlert extends Base
             if($this->_shouldNotify($user, $friend, $distance)){
                 $userNotificationData = $this->_createNotificationData($friend);
                 \Helper\Notification::send($userNotificationData, array($user));
-
-                $pushSettings = $user->getPushSettings();
-                $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
-                if($pushNotifier) echo $pushNotifier->send($userNotificationData, array($pushSettings['device_id']));
+                $this->_sendPushNotification($user, $userNotificationData);
             }
 
             // Determine whether friend should be notified if user is in range
             if($this->_shouldNotify($friend, $user, $distance)){
                $friendsToNotify[] = $friend;
 
-                $pushSettings = $friend->getPushSettings();
-                $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
-                if($pushNotifier) echo $pushNotifier->send($friendsNotificationData, array($pushSettings['device_id']));
+                $this->_sendPushNotification($friend, $friendsNotificationData);
             }
         }
 
         \Helper\Notification::send($friendsNotificationData, $friendsToNotify);
-        # Publish push notification
+    }
 
+    private function _sendPushNotification($user, $userNotificationData)
+    {
+        $pushSettings = $user->getPushSettings();
+
+        $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+        if ($pushNotifier)
+            echo $pushNotifier->send($userNotificationData, array($pushSettings['device_id']));
     }
 
     private function _shouldNotify($user, $friend, $distance)
@@ -90,7 +92,7 @@ class ProximityAlert extends Base
     private function _createNotificationData($friend)
     {
         return array(
-            'title' => 'Your friend is here!',
+            'title' => 'Your friend is here! Check him!',
             'photoUrl' => $friend->getAvatar(),
             'objectId' => $friend->getId(),
             'objectType' => 'proximity_alert',

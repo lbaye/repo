@@ -11,14 +11,9 @@ class GCM extends Notifier
 
     public function send(array $data, array $deviceIds)
     {
-        $pushData['message'] = $data['title'];
-        $pushData['objectType'] = $data['objectType'];
-        $pushData['objectId'] = $data['objectId'];
-
-
         $fields = array(
             'registration_ids'  => $deviceIds,
-            'data'              => $pushData,
+            'data'              => $this->_createPushData($data),
         );
 
         $headers = array(
@@ -26,9 +21,17 @@ class GCM extends Notifier
             'Content-Type: application/json'
         );
 
-        $result = $this->_sendToGCM($headers, $fields);
+        return $this->_sendToGCM($headers, $fields);
+    }
 
-        return $result;
+    private function _createPushData($data)
+    {
+        $pushData = array(
+            'message' => $data['title'],
+            'objectType' => $data['objectType'],
+            'objectId' => $data['objectId'],
+        );
+        return $pushData;
     }
 
     private function _sendToGCM($headers, $fields)

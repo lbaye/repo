@@ -21,7 +21,9 @@ class PushFactory
                 $notifier = new GCM($config['googleGCM']['apiKey'], $config['googleGCM']['endPoint']);
                 break;
             case 'iOS':
-                // create ios notifier
+                $notifier = new IOS($config['iOSPushNotification']['pemFile'],
+                                    $config['iOSPushNotification']['endPoint'],
+                                    $config['iOSPushNotification']['passphrase']);
                 break;
             default:
                 throw new \Exception('Unknown or invalid Push Notification service type provided');
