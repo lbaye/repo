@@ -18,6 +18,13 @@
     IBOutlet UIView *mapContainer;
     IBOutlet MKMapView *mapView;
     IBOutlet UIButton *newEventButton;
+    
+    IBOutlet UIButton *dateButton;
+    IBOutlet UIButton *distanceButton;
+    IBOutlet UIButton *friendsEventButton;
+    IBOutlet UIButton *myEventButton;
+    IBOutlet UIButton *publicEventButton;
+
 }
 @property(nonatomic,retain) IBOutlet UITableView *eventListTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *eventSearchBar;
@@ -25,6 +32,13 @@
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet MKMapView *mapView;
 @property(nonatomic,retain) IBOutlet UIButton *newEventButton;
+
+@property(nonatomic,retain) IBOutlet UIButton *dateButton;
+@property(nonatomic,retain) IBOutlet UIButton *distanceButton;
+@property(nonatomic,retain) IBOutlet UIButton *friendsEventButton;
+@property(nonatomic,retain) IBOutlet UIButton *myEventButton;
+@property(nonatomic,retain) IBOutlet UIButton *publicEventButton;
+
 
 -(IBAction)dateAction:(id)sender;
 -(IBAction)distanceAction:(id)sender;
