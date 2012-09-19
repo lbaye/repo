@@ -198,18 +198,30 @@ abstract class Base
         return $this->_generateErrorResponse($e->getMessage(), $e->getCode());
     }
 
-    protected function _getFriendList($user) {
+    protected function _getFriendList($user, array $fields = array('id', 'firstName', 'lastName', 'avatar')) {
         $friends = $user->getFriends();
-        return $this->_getUserSummaryList($friends);
+        return $this->_getUserSummaryList($friends, $fields);
     }
 
     protected function _getUserSummaryList(array $userIds, array $fields = array('id', 'firstName', 'lastName', 'avatar'))
     {
         $userData = $this->userRepository->getAllByIds($userIds);
 
-        array_walk($userData, function(&$friend, $k, $fields) {
-           $friend = array_intersect_key($friend, array_flip($fields));
-        }, $fields);
+        $locationHelper = new \Helper\Location();
+        $currentUser = $this->user;
+        array_walk($userData, function(&$friend, $k, $fields) use($locationHelper, $currentUser) {
+
+            if(in_array('distance', $fields)) $fields[] = 'currentLocation';
+
+            $friend = array_intersect_key($friend, array_flip($fields));
+
+            if(in_array('distance', $fields)) {
+                $from = $currentUser->getCurrentLocation();
+                $to = $friend['currentLocation'];
+
+                $friend['distance'] = $locationHelper::distance($from['lat'], $from['lng'],$to['lat'],$to['lng']);
+            }
+        },$fields);
 
         return $userData;
     }
