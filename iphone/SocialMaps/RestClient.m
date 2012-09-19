@@ -4071,7 +4071,7 @@
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    NSString *route = [NSString stringWithFormat:@"%@/meetups",WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/meetups/invited",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *meetUpRequests = [[NSMutableArray alloc] init];
     

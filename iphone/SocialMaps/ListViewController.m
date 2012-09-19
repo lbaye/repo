@@ -10,7 +10,6 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
-#import "ShowOnMapController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -116,8 +115,26 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    if ([segue.identifier isEqualToString:@"segueShowDetailAnno"]) {
+        //[self dismissModalViewControllerAnimated:YES];
+        [self backToMapview:nil];
+        [[segue destinationViewController] performSelector:@selector(showAnnotationDetailView:) withObject:(LocationItem*)sender];
+        //[self dismissModalViewControllerAnimated:YES];
+    }
+    
+    //NSLog(@"In prepareForSegue:ListViewController");
+    //NSLog(@"segue destinationViewController = %@", [segue destinationViewController]);
+    
+    //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:0];
+    //[self showAnnotationDetailView:locItem];
+    
+}
+
 - (IBAction)backToMapview:(id)sender {
     [self removeFromParentViewController];
+    
 }
 
 - (IBAction)closePullup:(id)sender {
@@ -228,17 +245,20 @@
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
     LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
-    ShowOnMapController *controller;
+    //ShowOnMapController *controller;
     switch (action) {
         case LocationActionTypeGotoMap:
-            //[self dismissViewControllerAnimated:YES completion:nil];
             
             NSLog(@"cordinate %f %f", anItem.coordinate.longitude, anItem.coordinate.latitude);
             
-            controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem.coordinate];
-            controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
-            [self presentModalViewController:controller animated:YES];
-            [controller release];
+            //controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem.coordinate];
+            //controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
+            //[self presentModalViewController:controller animated:YES];
+            //[controller release];
+            
+            LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:row];
+            [self performSegueWithIdentifier:@"segueShowDetailAnno" sender:locItem];
+            
             break;
             
         default:

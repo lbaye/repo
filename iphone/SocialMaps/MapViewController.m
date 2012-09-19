@@ -199,6 +199,24 @@ ButtonClickCallbackData callBackData;
     
 }
 
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
+
+    LocationItem *selLocation = (LocationItem*) anno;
+    [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
+}
+
+-(void) startMoveMap:(LocationItem*)locItem
+{
+    MKMapRect r = [self.mapView visibleMapRect];
+    MKMapPoint pt = MKMapPointForCoordinate(locItem.coordinate);
+    r.origin.x = pt.x - r.size.width * 0.3;
+    r.origin.y = pt.y - r.size.height * 0.5;
+    [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self mapAnnotationChanged:locItem];
+    [mapAnno changeStateClicked2:locItem];
+    
+}
 
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
@@ -218,15 +236,6 @@ ButtonClickCallbackData callBackData;
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
     LocationItemPlace *locItem = (LocationItemPlace*) anno;
-    /*
-    int i = 0;
-    for (; i < [smAppDelegate.placeList count]; i++) {
-        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
-        if ([locItem.placeInfo.location isEqual:aPlaceItem.placeInfo.location]) {
-            
-        }
-    }
-    */
     
     NSLog(@"meetupRequestPlaceSelected");
     
@@ -240,8 +249,6 @@ ButtonClickCallbackData callBackData;
         }
     }
     
-    //smAppDelegate.placeList
-    //locItem.placeInfo.location = 
 }
 
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
@@ -598,7 +605,7 @@ ButtonClickCallbackData callBackData;
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
         [_mapView addAnnotation:anno];
     }
-    
+
     // 4
     if (smAppDelegate.needToCenterMap == TRUE) {
         NSLog(@"MapViewController:loadAnnotations centering map");
@@ -729,6 +736,8 @@ ButtonClickCallbackData callBackData;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     NSLog(@"In prepareForSegue:MapViewController");
+    LocationItem *selLocation = (LocationItem*) selectedAnno;
+    selLocation.currDisplayState = MapAnnotationStateNormal;
 }
 
 - (IBAction)showPullDown:(id)sender {
@@ -1385,7 +1394,11 @@ ButtonClickCallbackData callBackData;
     _mapView.showsUserLocation=YES;
     smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
-
+//test code
+    //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:5];
+    //[self showAnnotationDetailView:locItem];
+    
+    
 }
 
 - (void) getSortedDisplayList {
