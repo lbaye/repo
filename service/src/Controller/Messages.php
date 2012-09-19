@@ -64,8 +64,10 @@ class Messages extends Base
 
     public function getInbox()
     {
-        return $this->_generateResponse(
-            $this->messageRepository->getByRecipient($this->user));
+
+        $data = $this->messageRepository->getByRecipient($this->user);
+
+        return $this->_generateResponse($data);
     }
 
     /**

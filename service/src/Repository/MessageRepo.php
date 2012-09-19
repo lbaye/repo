@@ -177,11 +177,15 @@ class MessageRepo extends Base
     protected function _toArrayAll($results)
     {
         $docsAsArr = array();
-        foreach ($results as $place) {
-            $placeArr = $place->toArray();
+        foreach ($results as $message) {
+            $messageArr = $message->toArray();
+            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-            $placeArr['sender']['avatar'] = $this->_buildAvatarUrl($placeArr['sender']['avatar']);
-            $docsAsArr[] = $placeArr;
+            foreach($messageArr['recipients'] AS &$recipient){
+                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
+            }
+
+            $docsAsArr[] = $messageArr;
         }
 
         return $docsAsArr;

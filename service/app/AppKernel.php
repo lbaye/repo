@@ -43,6 +43,7 @@ class AppKernel
 
         // @TODO : Replace with a DIC
         Dependencies::$dm = $this->dm;
+        Dependencies::$rootUrl = $this->conf['web']['root'];
     }
 
     public function handle()
