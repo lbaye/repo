@@ -271,7 +271,7 @@ bool searchFlags=true;
     {
         event=[[Event alloc] init];
         event=[eventListArray objectAtIndex:i];
-        if ([event.eventType isEqualToString:@"public_event"])
+        if ([event.permission isEqualToString:@"public"])
         {
             [filteredList addObject:event];
         }

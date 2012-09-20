@@ -1736,6 +1736,8 @@
                 [aEvent setGuestCanInvite:[[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
                 [aEvent setOwner:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"owner" key2:nil key3:nil]];           
                 [aEvent setEventType:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"event_type" key2:nil key3:nil]];
+                [aEvent setPermission:[self getNestedKeyVal:[jsonObjects objectAtIndex:i] key1:@"permission" key2:nil key3:nil]];
+                
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
 //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
@@ -1847,7 +1849,7 @@
             [aEvent setGuestList:guestList];
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
 //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
-
+            [aEvent setPermission:[self getNestedKeyVal:jsonObjects key1:@"permission" key2:nil key3:nil]];
             [aEvent.eventList addObject:aEvent];                        
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:aEvent];
         } 
@@ -1901,16 +1903,18 @@
     }
 
     [request addPostValue:event.permission forKey:@"permission"];
-    for (int i=0; i<[event.permittedUsers count]; i++)
+    if ([event.permission isEqualToString:@"custom"])
     {
-        [request addPostValue:[event.permittedUsers objectAtIndex:i] forKey:@"permittedUsers[]"];
+        for (int i=0; i<[event.permittedUsers count]; i++)
+        {
+            [request addPostValue:[event.permittedUsers objectAtIndex:i] forKey:@"permittedUsers[]"];
+        }
+        
+        for (int i=0; i<[event.permittedCircles count]; i++)
+        {
+            [request addPostValue:[event.permittedCircles objectAtIndex:i] forKey:@"permittedCircles[]"];
+        }
     }
-    
-    for (int i=0; i<[event.permittedCircles count]; i++)
-    {
-        [request addPostValue:[event.permittedCircles objectAtIndex:i] forKey:@"permittedCircles[]"];
-    }
-
     // Handle successful REST call
     [request setCompletionBlock:^{
         
@@ -2091,6 +2095,7 @@
                 guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:nil key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
+            [aEvent setPermission:[self getNestedKeyVal:jsonObjects key1:@"permission" key2:nil key3:nil]];
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_RSVP_EVENT_DONE object:[jsonObjects valueForKey:@"message"]];
         } 
         else 
@@ -2209,6 +2214,7 @@
                 guest.imageUrl=[[[self getNestedKeyVal:jsonObjects key1:@"guests" key2:@"users" key3:nil] objectAtIndex:i] valueForKey:@"avatar"];
                 [guestList addObject:guest];
             }
+            [aEvent setPermission:[self getNestedKeyVal:jsonObjects key1:@"permission" key2:nil key3:nil]];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:aEvent];
         } 
         else 

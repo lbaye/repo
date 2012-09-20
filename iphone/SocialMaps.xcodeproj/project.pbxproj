@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		200746CF160ADB11001A0873 /* BlockUnblockCircleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */; };
+		200746D3160ADB39001A0873 /* ViewCircleWisePeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */; };
 		2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */; };
 		2018C29C160466F800457BB6 /* CircleListTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29B160466F800457BB6 /* CircleListTableCell.m */; };
 		2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */; };
@@ -384,6 +386,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockUnblockCircleViewController.h; sourceTree = "<group>"; };
+		200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockUnblockCircleViewController.m; sourceTree = "<group>"; };
+		200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewCircleWisePeopleViewController.h; sourceTree = "<group>"; };
+		200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCircleWisePeopleViewController.m; sourceTree = "<group>"; };
 		2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CirclesStoryboard.storyboard; sourceTree = "<group>"; };
 		2018C29A160466F800457BB6 /* CircleListTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleListTableCell.h; sourceTree = "<group>"; };
 		2018C29B160466F800457BB6 /* CircleListTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleListTableCell.m; sourceTree = "<group>"; };
@@ -1255,9 +1261,12 @@
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
 				4F98A2E015BB387D000B3124 /* ViewController.h */,
 				4F98A2E115BB387D000B3124 /* ViewController.m */,
+				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
+				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
 				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
-				4F1D96AD15DCC93B00511624 /* Address.h */,
+				200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */,
+				200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
@@ -2048,7 +2057,9 @@
 				2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */,
 				2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */,
 				2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */,
-				4F03B64F1609D6E2002C1636 /* PushNotification.m in Sources */,
+				B075B17C1609C2B100081E8C /* FriendListViewController.m in Sources */,
+				200746CF160ADB11001A0873 /* BlockUnblockCircleViewController.m in Sources */,
+				200746D3160ADB39001A0873 /* ViewCircleWisePeopleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

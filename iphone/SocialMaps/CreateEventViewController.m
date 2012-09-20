@@ -19,6 +19,7 @@
 #import "UserCircle.h"
 #import "LocationItemPlace.h"
 #import "SelectCircleTableCell.h"
+#import <Foundation/Foundation.h> 
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -38,10 +39,15 @@
 @synthesize photoButton;
 @synthesize deleteButton,eventImagview,friendSearchbar;
 @synthesize friends,degreeFriends,people,custom,guestCanInviteButton,frndListScrollView;
-@synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel;
-@synthesize createButton,createLabel,circleView,circleTableView;
+@synthesize createView,photoPicker,eventImage,picSel,entryTextField,mapView,mapContainerView,addressLabel,segmentControl;
+@synthesize createButton,createLabel,circleView,circleTableView,customSelectionView;
 
-__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *circleList;
+@synthesize customScrollView;
+@synthesize customSearchBar;
+@synthesize customTableView;
+@synthesize private;
+
+__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *filteredList2, *circleList;
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
@@ -60,7 +66,8 @@ DDAnnotation *annotation;
 bool isBackgroundTaskRunning;
 int createNotf=0;
 int updateNotf=0;
-NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
+NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr, *selectedCustomCircleCheckArr;
+NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -148,7 +155,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     }
     
     filteredList=[friendListArr mutableCopy];
-    
+    filteredList2=[friendListArr mutableCopy];
     //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
@@ -165,10 +172,16 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 	self.picSel.delegate = self;	
     
     frndListScrollView.delegate = self;
+    customScrollView.delegate=self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
+    filteredList2=[[NSMutableArray alloc] init];
     selectedCircleCheckArr=[[NSMutableArray alloc] init];
+    selectedCustomCircleCheckArr=[[NSMutableArray alloc] init];
+    permittedUserArr=[[NSMutableArray alloc] init]; 
+    permittedCircleArr=[[NSMutableArray alloc] init];
+    userCircleArr=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
@@ -184,6 +197,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     [self loadDummydata];
     
     selectedFriendsIndex=[[NSMutableArray alloc] init];
+    customSelectedFriendsIndex=[[NSMutableArray alloc] init];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
     [self.mapContainerView  removeFromSuperview];
@@ -196,13 +210,8 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
-//    NSLog(@"annotation.coordinate %@",annotation.coordinate);
-//    MKCoordinateRegion newRegion;
-//    newRegion.center.latitude = annotation.coordinate.latitude;
-//    newRegion.center.longitude = annotation.coordinate.longitude;
-//    newRegion.span.latitudeDelta = 1.112872;
-//    newRegion.span.longitudeDelta = 1.109863;
-    
+
+    event.permission=@"private";
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
@@ -228,6 +237,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 
 	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
+    [customSelectionView removeFromSuperview];
 	[circleView removeFromSuperview];
     if (editFlag==true)
     {
@@ -343,29 +353,45 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 //event info entry ends
 
 //share with radio button starts
+-(IBAction)privateButtonAction
+{
+    [private setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+    [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    event.permission=@"private";
+    
+}
+
 -(IBAction)friendsButtonAction
 {
+    [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [friends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    event.permission=@"friends";
 }
 
 -(IBAction)degreeFriendsButtonAction
 {
+    [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+    event.permission=@"circles";
 }
 
 -(IBAction)peopleButtonAction
 {
+    [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-
+    event.permission=@"public";
 }
 
 -(IBAction)customButtonAction
@@ -374,8 +400,55 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+    event.permission=@"custom";
+    [self.view addSubview:customSelectionView];
 }
 //share with radio button ends up
+
+-(IBAction)saveCustom:(id)sender
+{
+    [permittedUserArr removeAllObjects]; 
+    [permittedCircleArr removeAllObjects]; 
+    for (int i=0; i<[selectedCustomCircleCheckArr count]; i++) 
+    {
+       NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleName) ;
+        NSLog(@"selectedCustomCircleCheckArr %@ circleList %@",selectedCustomCircleCheckArr,circleListGlobalArray);
+        
+        [permittedCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleID];
+    }
+    
+    for (int i=0; i<[customSelectedFriendsIndex count]; i++)
+    {
+//        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
+        [permittedUserArr addObject:((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId];
+    }
+    NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
+    event.permittedUsers=permittedUserArr;
+    event.circleList=permittedCircleArr;
+    [customSelectionView removeFromSuperview];
+}
+
+-(IBAction)cancelCustom:(id)sender
+{
+    [customSelectionView removeFromSuperview];
+}
+
+-(IBAction)customSegment:(id)sender
+{
+    NSLog(@"segmentControl.selectedSegmentIndex: %d",segmentControl.selectedSegmentIndex);
+    if (segmentControl.selectedSegmentIndex==0)
+    {
+        [customTableView setHidden:NO];
+        [customScrollView setHidden:YES];
+        [customSearchBar setHidden:YES];
+    }
+    else
+    {
+        [customTableView setHidden:YES];
+        [customScrollView setHidden:NO];
+        [customSearchBar setHidden:NO];
+    }
+}
 
 //location with radio button starts
 -(IBAction)curLocButtonAction
@@ -470,7 +543,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     NSMutableString *msg=[[NSMutableString alloc] init];
     [msg appendString:@"Please enter "];
     bool validationFlag=false;
-    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
+    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@ event.permission %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date,event.permission);
     
     if (event.eventName==NULL)
     {
@@ -515,6 +588,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
             frnd=[selectedFriendsIndex objectAtIndex:i];
             [userIDs addObject:frnd.userId];
             event.guestList=userIDs;
+            
         }
         if (locationFlag!=1) 
         {
@@ -522,6 +596,14 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
             event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
             event.eventAddress=annotation.subtitle;
         }
+        
+        [userCircleArr removeAllObjects];
+        for (int i=0; i<[selectedCircleCheckArr count]; i++) 
+        {
+            NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleName) ;            
+            [userCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
+        }
+        event.circleList=userCircleArr;        
         if (editFlag==true)
         {
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
@@ -648,20 +730,38 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"circleTableCell";
+    static NSString *CustomCellIdentifier = @"customCircleTableCell";
+    
     int nodeCount = [filteredList count];
         
     SelectCircleTableCell *cell = [circleTableView
                                 dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    SelectCircleTableCell *customCell = [customTableView
+                                   dequeueReusableCellWithIdentifier:CustomCellIdentifier];
+
     if (cell == nil)
     {
             cell = [[SelectCircleTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
                     reuseIdentifier:CellIdentifier];
+        
+        customCell = [[SelectCircleTableCell alloc]
+                initWithStyle:UITableViewCellStyleDefault 
+                reuseIdentifier:CustomCellIdentifier];
     }
     
     // Configure the cell...
     cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
     [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
+
+    customCell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+    [customCell.circrcleCheckbox addTarget:self action:@selector(handleCustomTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (tableView==customTableView)
+    {
+        return customCell;
+    }
     return cell;
 }
 
@@ -675,7 +775,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-//    [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+//    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -689,6 +789,23 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     NSLog(@"selectedCircleCheckArr: %@",selectedCircleCheckArr);    
 }
 
+-(void)handleCustomTableViewCheckbox:(id)sender
+{
+    SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [self.customTableView indexPathForCell:clickedCell];
+    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    if ([selectedCustomCircleCheckArr containsObject:clickedButtonPath])
+    {
+        [selectedCustomCircleCheckArr removeObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [selectedCustomCircleCheckArr addObject:clickedButtonPath];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+    }
+    NSLog(@"selectedCircleCheckArr: %@",selectedCustomCircleCheckArr);    
+}
 
 #pragma mark -
 #pragma mark MKMapViewDelegate
@@ -769,98 +886,186 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     NSLog(@"event create scroll init");
     if (isBackgroundTaskRunning==true)
     {
-    int x=0; //declared for imageview x-axis point    
-    NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
-    UIImageView *imgView;
-    for (UIView* view in subviews) 
-    {
-        if([view isKindOfClass :[UIView class]])
+        int x=0; //declared for imageview x-axis point    
+        int x2=0; //declared for imageview x-axis point            
+        NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
+        UIImageView *imgView;
+        for (UIView* view in subviews) 
         {
-            [view removeFromSuperview];
-        }
-        else if([view isKindOfClass :[UIImageView class]])
-        {
-            // [view removeFromSuperview];
-        }
-    }
-    frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
-    
-    NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-    for(int i=0; i<[filteredList count];i++)               
-    {
-        if(i< [filteredList count]) 
-        { 
-            UserFriends *userFrnd=[[UserFriends alloc] init];
-            userFrnd=[filteredList objectAtIndex:i];
-            imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if (userFrnd.imageUrl == nil) 
+            if([view isKindOfClass :[UIView class]])
             {
-                imgView.image = [UIImage imageNamed:@"thum.png"];
-            } 
-            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+                [view removeFromSuperview];
+            }
+            else if([view isKindOfClass :[UIImageView class]])
+            {
+                // [view removeFromSuperview];
+            }
+        }
+        subviews = [NSArray arrayWithArray: customScrollView.subviews];
+        for (UIView* view in subviews) 
+        {
+            if([view isKindOfClass :[UIView class]])
+            {
+                [view removeFromSuperview];
+            }
+            else if([view isKindOfClass :[UIImageView class]])
+            {
+                // [view removeFromSuperview];
+            }
+        }   
+        
+        frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
+        customScrollView.contentSize=CGSizeMake([filteredList2 count]*65, 65);
+        
+        NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+        for(int i=0; i<[filteredList count];i++)               
+        {
+            if(i< [filteredList count]) 
             { 
-                //If image available in dictionary, set it to imageview 
-                imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-            } 
-            else 
-            { 
-                if(!isDragging_msg && !isDecliring_msg) 
-                    
+                UserFriends *userFrnd=[[UserFriends alloc] init];
+                userFrnd=[filteredList objectAtIndex:i];
+                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+                if (userFrnd.imageUrl == nil) 
                 {
-                    //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
-                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                }
+                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                } 
+                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+                { 
+                    //If image available in dictionary, set it to imageview 
+                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
+                } 
                 else 
                 { 
-                    // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                }               
-            }
-//            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
-            UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
-            UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
-            [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
-            [name setNumberOfLines:0];
-            [name setText:userFrnd.userName];
-            [name setBackgroundColor:[UIColor clearColor]];
-            imgView.userInteractionEnabled = YES;
-            imgView.tag = i;
-            aView.tag=i;
-            imgView.exclusiveTouch = YES;
-            imgView.clipsToBounds = NO;
-            imgView.opaque = YES;
-            imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-            imgView.userInteractionEnabled=YES;
-            imgView.layer.borderWidth=2.0;
-            imgView.layer.masksToBounds = YES;
-            [imgView.layer setCornerRadius:7.0];
-
-            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-            for (int c=0; c<[selectedFriendsIndex count]; c++)
-            {
-                if ([[filteredList objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
-                {
-                    imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                    NSLog(@"found selected: %@",[selectedFriendsIndex objectAtIndex:c]);
+                    if(!isDragging_msg && !isDecliring_msg) 
+                        
+                    {
+                        //If scroll view moves set a placeholder image and start download image. 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                    }
+                    else 
+                    { 
+                        // Image is not available, so set a placeholder image
+                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                    }               
                 }
-                else
+                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
+                [name setNumberOfLines:0];
+                [name setText:userFrnd.userName];
+                [name setBackgroundColor:[UIColor clearColor]];
+                imgView.userInteractionEnabled = YES;
+                imgView.tag = i;
+                aView.tag=i;
+                imgView.exclusiveTouch = YES;
+                imgView.clipsToBounds = NO;
+                imgView.opaque = YES;
+                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
+                imgView.userInteractionEnabled=YES;
+                imgView.layer.borderWidth=2.0;
+                imgView.layer.masksToBounds = YES;
+                [imgView.layer setCornerRadius:7.0];
+                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+                for (int c=0; c<[selectedFriendsIndex count]; c++)
                 {
+                    if ([[filteredList objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
+                    {
+                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+                        NSLog(@"found selected: %@",[selectedFriendsIndex objectAtIndex:c]);
+                    }
+                    else
+                    {
+                    }
                 }
-
-            }
-            [aView addSubview:imgView];
-            [aView addSubview:name];
-            UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-            tapGesture.numberOfTapsRequired = 1;
-            [aView addGestureRecognizer:tapGesture];
-            [tapGesture release];
-
-            [frndListScrollView addSubview:aView];
+                [aView addSubview:imgView];
+                [aView addSubview:name];
+                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+                tapGesture.numberOfTapsRequired = 1;
+                [aView addGestureRecognizer:tapGesture];
+                [tapGesture release];           
+                [frndListScrollView addSubview:aView];
+            }        
+            x+=65;
         }
-        x+=65;
-    }
+        
+        //handling custom scroller
+        for(int i=0; i<[filteredList2 count];i++)               
+        {
+            if(i< [filteredList2 count]) 
+            { 
+                UserFriends *userFrnd=[[UserFriends alloc] init];
+                userFrnd=[filteredList2 objectAtIndex:i];
+                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+                if (userFrnd.imageUrl == nil) 
+                {
+                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                } 
+                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+                { 
+                    //If image available in dictionary, set it to imageview 
+                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
+                } 
+                else 
+                { 
+                    if(!isDragging_msg && !isDecliring_msg) 
+                        
+                    {
+                        //If scroll view moves set a placeholder image and start download image. 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                    }
+                    else 
+                    { 
+                        // Image is not available, so set a placeholder image
+                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                    }               
+                }
+                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
+                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
+                [name setNumberOfLines:0];
+                [name setText:userFrnd.userName];
+                [name setBackgroundColor:[UIColor clearColor]];
+                imgView.userInteractionEnabled = YES;
+                imgView.tag = i;
+                aView.tag=i;
+                imgView.exclusiveTouch = YES;
+                imgView.clipsToBounds = NO;
+                imgView.opaque = YES;
+                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
+                imgView.userInteractionEnabled=YES;
+                imgView.layer.borderWidth=2.0;
+                imgView.layer.masksToBounds = YES;
+                [imgView.layer setCornerRadius:7.0];
+                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+                for (int c=0; c<[customSelectedFriendsIndex count]; c++)
+                {
+                    if ([[filteredList2 objectAtIndex:i] isEqual:[customSelectedFriendsIndex objectAtIndex:c]]) 
+                    {
+                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+                        NSLog(@"found selected: %@",[customSelectedFriendsIndex objectAtIndex:c]);
+                    }
+                    else
+                    {
+                    }
+                }
+                [aView addSubview:imgView];
+                [aView addSubview:name];
+                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
+                tapGesture.numberOfTapsRequired = 1;
+                [aView addGestureRecognizer:tapGesture];
+                [tapGesture release];           
+                [customScrollView addSubview:aView];
+            }        
+            x2+=65;
+        }
     }
 }
 
@@ -931,6 +1136,41 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     [self reloadScrolview];
 }
 
+//handling selection from custom scroll view of friends selection
+-(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
+{
+    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+    NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
+    if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
+    {
+        [customSelectedFriendsIndex removeObject:[filteredList2 objectAtIndex:[sender.view tag]]];
+    } 
+    else 
+    {
+        [customSelectedFriendsIndex addObject:[filteredList2 objectAtIndex:[sender.view tag]]];
+    }
+    UserFriends *frnds=[[UserFriends alloc] init];
+    frnds=[filteredList2 objectAtIndex:[sender.view tag]];
+    NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
+    for (int l=0; l<[subviews count]; l++)
+    {
+        UIView *im=[subviews objectAtIndex:l];
+        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
+        UIImageView *im1=[subviews1 objectAtIndex:0];
+        
+        if ([im1.image isEqual:frnds.userProfileImage])
+        {
+            [im1 setAlpha:1.0];
+            im1.layer.borderWidth=2.0;
+            im1.layer.masksToBounds = YES;
+            [im1.layer setCornerRadius:7.0];
+            im1.layer.borderColor=[[UIColor greenColor]CGColor];
+        }        
+    }
+    [self reloadScrolview];
+}
+
+//scroll view delegate method
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     isDragging_msg = FALSE;
@@ -959,6 +1199,31 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     // If you wanted to display results as the user types 
     // you would do that here.
     //[self loadFriendListsData]; TODO: commented this
+    if (searchBar==customSearchBar)
+    {
+        searchText=customSearchBar.text;
+        
+        if ([searchText length]>0) 
+        {
+            [self performSelector:@selector(searchResultCustom) withObject:nil afterDelay:0.1];
+            searchFlag=true;
+            NSLog(@"searchText  %@",searchText);
+        }
+        else
+        {
+            searchText=@"";
+            //[self loadFriendListsData]; TODO: commented this
+            [filteredList2 removeAllObjects];
+            filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
+            [self reloadScrolview];
+        }
+        
+
+    }
+    else
+    {
+        
+    }
     searchText=friendSearchbar.text;
     
     if ([searchText length]>0) 
@@ -984,11 +1249,20 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     // focus is given to the UISearchBar
     // call our activate method so that we can do some 
     // additional things when the UISearchBar shows.
+    if (searchBar==customSearchBar)
+    {
+        searchTexts=customSearchBar.text;
+        [self beganEditing:customSearchBar];
+    }
+    else
+    {
     searchTexts=friendSearchbar.text;
+    [self beganEditing:friendSearchbar];
+
+    }
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
-    [self beganEditing];
     NSLog(@"2");    
 }
 
@@ -1000,20 +1274,33 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
 //    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
+    [customSearchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     // Clear the search text
     // Deactivate the UISearchBar
+    if (searchBar==customSearchBar)
+    {
+        customSearchBar.text=@"";
+        searchTexts=@"";        
+        [filteredList2 removeAllObjects];
+        filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
+        [self reloadScrolview];
+        [customSearchBar resignFirstResponder];
+        NSLog(@"3");        
+    }
+    else
+    {
     friendSearchbar.text=@"";
-    searchTexts=@"";
-    
+    searchTexts=@"";    
     [filteredList removeAllObjects];
     filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
     [self reloadScrolview];
     [friendSearchbar resignFirstResponder];
     NSLog(@"3");
+    }
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
@@ -1023,12 +1310,24 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     // You'll probably want to do this on another thread
     // SomeService is just a dummy class representing some 
     // api that you are using to do the search
-    
-    NSLog(@"Search button clicked");
-    searchTexts=friendSearchbar.text;
-    searchFlag=false;
-    [self searchResult];
-    [friendSearchbar resignFirstResponder];    
+    if (searchBar==customSearchBar)
+    {
+        NSLog(@"Search button clicked");
+        searchTexts=customSearchBar.text;
+        searchFlag=false;
+        [self searchResultCustom];
+        [customSearchBar resignFirstResponder];    
+
+    }
+    else
+    {
+        NSLog(@"Search button clicked");
+        searchTexts=friendSearchbar.text;
+        searchFlag=false;
+        [self searchResult];
+        [friendSearchbar resignFirstResponder];    
+
+    }
 }
 
 -(void)searchResult
@@ -1069,15 +1368,55 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
     [self reloadScrolview];
 }
+
+-(void)searchResultCustom
+{
+    [self loadDummydata];
+    searchTexts = customSearchBar.text;
+    NSLog(@"in search method..");
+    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
+    
+    [filteredList2 removeAllObjects];
+    
+    if ([searchTexts isEqualToString:@""])
+    {
+        NSLog(@"null string");
+        customSearchBar.text=@"";
+        filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
+    }
+    else
+    {
+        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
+        
+        for (UserFriends *sTemp in friendListArr)
+        {
+            NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
+            NSLog(@"sTemp.userName: %@",sTemp.userName);
+            if (titleResultsRange.length > 0)
+            {
+                [filteredList2 addObject:sTemp];
+                NSLog(@"filtered friend: %@", sTemp.userName);            
+            }
+            else
+            {
+            }
+        }
+    }
+    searchFlag=false;    
+    
+    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
+    [self reloadScrolview];
+}
+
 //searchbar delegate method end
 
 //keyboard hides input fields deleget methods
 
--(void)beganEditing
+-(void)beganEditing:(UISearchBar *)searchBar
 {
     //UIControl need to config here
     CGRect textFieldRect =
-	[self.view.window convertRect:friendSearchbar.bounds fromView:friendSearchbar];
+	[self.view.window convertRect:friendSearchbar.bounds fromView:searchBar];
     
     CGRect viewRect =
 	[self.view.window convertRect:self.view.bounds fromView:self.view];
@@ -1181,6 +1520,7 @@ NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr;
     //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
     }
+    globalEvent=[notif object];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self dismissModalViewControllerAnimated:YES];
