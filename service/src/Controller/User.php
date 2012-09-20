@@ -562,5 +562,32 @@ class User extends Base
 
     }
 
+    /**
+     * PUT /me/friends
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getFriendList()
+    {
+        $user = $this->user;
+
+        if ($user instanceof \Document\User) {
+
+            $data = $user->toArrayDetailed();
+            $userData['circles'] = $data['circles'];
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance','address','regMedia'));
+
+            $this->response->setContent(json_encode($userData));
+            $this->response->setStatusCode(Status::OK);
+        } else {
+            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
+
+        return $this->response;
+    }
+
+
 
 }

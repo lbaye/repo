@@ -42,3 +42,8 @@ list:
   pattern: /list
   defaults: { _controller: Controller\AllList::index}
   requirements: { _method: GET|PUT}
+
+friends:
+  pattern: /me/friends
+  defaults: { _controller: Controller\User::getFriendList}
+  requirements: { _method: GET}
