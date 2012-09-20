@@ -48,7 +48,7 @@ class Messages extends Base
                     $avatar['sender']['avatar'] = \Helper\Url::buildAvatarUrl($avatar['sender']);
                 }
 
-                $messageDetail[] = $messageArr;
+                $messageDetail = $messageArr;
 
             $this->_generateResponse($messageDetail);
         }
