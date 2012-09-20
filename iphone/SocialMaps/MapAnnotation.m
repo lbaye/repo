@@ -74,7 +74,7 @@
     
     changeState = [UIButton buttonWithType:UIButtonTypeCustom];
     changeState.frame = CGRectMake(imgFrame.size.width-12, 23, 23, 23);
-    [changeState addTarget:self action:@selector(changeStateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [changeState addTarget:self action:@selector(changeStateClicked:) forControlEvents:UIControlEventTouchDown];
     [changeState setImage:[UIImage imageNamed:@"map_right_arrow.png"] forState:UIControlStateNormal];
     changeState.backgroundColor = [UIColor clearColor];
     changeState.tag = 11001;
@@ -214,7 +214,7 @@
     }
 }
 
-- (void) changeStateClicked2:(id) anno {
+- (void) changeStateToDetails:(id) anno {
     NSLog(@"MapAnnotation: changeStateClicked2");
     LocationItem *locItem = (LocationItem*)anno;
     
@@ -237,6 +237,12 @@
     //if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:sender:)]) {
         //[self.delegate mapAnnotationChanged:[selAnno annotation] sender:sender];
     //}
+}
+
+- (void) changeStateToNormal:(id) anno
+{
+    LocationItem *locItem = (LocationItem*)anno;
+    locItem.currDisplayState = MapAnnotationStateNormal;
 }
 
 @end

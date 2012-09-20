@@ -45,6 +45,8 @@ typedef enum _SHARING_TYPES {
     MapAnnotationPlace *mapAnnoPlace;
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
+    BOOL isMapAnnotationChanged;
+                                    
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;

@@ -220,6 +220,8 @@ ButtonClickCallbackData callBackData;
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
     LocationItem *selLocation = (LocationItem*) anno;
+    [self mapAnnotationChanged:selLocation];
+    [mapAnno changeStateToDetails:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
 }
 
@@ -246,12 +248,9 @@ ButtonClickCallbackData callBackData;
         [_mapView addAnnotation:(id <MKAnnotation>)selectedAnno];
     }
     
-    [self mapAnnotationInfoUpdated:anno];
-//    [_mapView removeAnnotation:anno];
-//    [_mapView addAnnotation:anno];
-//    selectedAnno = anno;
-//    
-//    [self.view setNeedsDisplay];
+    [self.view setNeedsDisplay];
+    
+    isMapAnnotationChanged = YES;
 }
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
@@ -424,6 +423,11 @@ ButtonClickCallbackData callBackData;
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
     [_mapView addGestureRecognizer:panRec];
+    
+    UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
+                                      initWithTarget:self action:@selector(didTapMap)];
+    [_mapView addGestureRecognizer:tapRec];
+    [tapRec release];
 
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
@@ -535,14 +539,8 @@ ButtonClickCallbackData callBackData;
     
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
-    if (smAppDelegate.gotListing == FALSE) {
-        [smAppDelegate.window setUserInteractionEnabled:NO];
-        [smAppDelegate showActivityViewer:self.view];
-
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-    }
-
+    
+    isMapAnnotationChanged = NO;
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -560,6 +558,19 @@ ButtonClickCallbackData callBackData;
     return YES;
 }
 
+- (void)didTapMap
+{
+    NSLog(@"Tap Map");
+    
+    if (!isMapAnnotationChanged) {
+        
+        LocationItem *selLocation = (LocationItem*)selectedAnno;
+        [self mapAnnotationChanged:selLocation];
+        [mapAnno changeStateToNormal:selLocation];
+    }
+    isMapAnnotationChanged = NO;
+}
+		
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"Map drag ended");
