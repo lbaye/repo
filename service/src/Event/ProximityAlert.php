@@ -36,6 +36,9 @@ class ProximityAlert extends Base
 
     private function sendNotificationToNearbyFriends($user)
     {
+        if (empty($user))
+            return;
+
         // Retrieve target user's friends
         $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
 
