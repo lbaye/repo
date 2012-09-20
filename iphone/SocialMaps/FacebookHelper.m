@@ -253,6 +253,7 @@ UserDefault *userDefault;
     {
         //Getting friend list from user by zubair
         [self getUserFriendListFromFB:result];
+       
     }
 };
                                                                       
@@ -265,14 +266,14 @@ UserDefault *userDefault;
 {
     facebook = [[Facebook alloc] initWithAppId:FB_APPID andDelegate:self];
     
-    
-   
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
         NSString * stringOfFriends = [frndList componentsJoinedByString:@","];
         NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                       @"My Title", @"title",
-                                       @"Come check out my app.",  @"message",
-                                       stringOfFriends, @"to",[userDefault readFromUserDefaults:@"FBAccessTokenKey"], @"access_token",
+                                       @"Social Maps", @"title",
+                                       @"Come check out Social Maps.",  @"message",
+                                       stringOfFriends, @"to",[prefs stringForKey:@"FBAccessTokenKey"], @"access_token",
                                        nil]; 
 //        [params setObject:stringOfFriends forKey:@"to"];
         

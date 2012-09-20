@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -184,12 +184,12 @@
                                             <action selector="doConnectFB:" destination="hmN-q9-RwG" eventType="touchUpInside" id="L6C-aj-bv8"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="girl.png" id="b6k-er-2Ae" userLabel="girlImage">
-                                        <rect key="frame" x="27" y="272" width="57" height="57"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_facebook.png" id="b6k-er-2Ae" userLabel="girlImage">
+                                        <rect key="frame" x="38" y="283" width="35" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <view hidden="YES" contentMode="scaleToFill" id="2Dt-9Q-zJH" userLabel="forgotPWView">
-                                        <rect key="frame" x="0.0" y="201" width="300" height="154"/>
+                                        <rect key="frame" x="-1" y="199" width="300" height="154"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Enter your email to reset your password:" lineBreakMode="tailTruncation" minimumFontSize="10" id="m2Z-9g-QLJ">
@@ -259,6 +259,7 @@
                         <outlet property="dialogView" destination="Pc9-iA-ULX" id="2Rt-RC-x3W"/>
                         <outlet property="forgotPWView" destination="2Dt-9Q-zJH" id="zdi-KC-vDC"/>
                         <outlet property="forgotPassword" destination="RNU-8s-qZl" id="X71-7H-HPc"/>
+                        <outlet property="profileImageView" destination="b6k-er-2Ae" id="CRy-ql-hSe"/>
                         <outlet property="rememberMeSel" destination="EMK-Jg-6sR" id="qRd-vo-CWd"/>
                         <outlet property="txtEmail" destination="D35-7U-IjJ" id="Rzj-ET-IMn"/>
                         <outlet property="txtForgotPWEmail" destination="Ylw-GR-GUd" id="IAl-rC-f2M"/>
@@ -894,9 +895,6 @@
                                                 <state key="highlighted">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <connections>
-                                                    <action selector="gotoMapix:" destination="wC3-So-nVM" eventType="touchUpInside" id="54b-UJ-URG"/>
-                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -1078,8 +1076,8 @@
                                     <segue destination="i7v-82-K9c" kind="modal" identifier="showSettingsMenu" id="nZq-Wq-bvl"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" id="nsE-l8-xQj" userLabel="FacebookInvite">
-                                <rect key="frame" x="25" y="80" width="270" height="340"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="nsE-l8-xQj" userLabel="FacebookInvite">
+                                <rect key="frame" x="25" y="60" width="270" height="340"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="a4d-Ll-JJs">
@@ -4436,10 +4434,10 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="email_acc_creat.png" width="640" height="78"/>
         <image name="event_item_bg.png" width="640" height="333"/>
         <image name="friends_rqst_icon.png" width="80" height="66"/>
-        <image name="girl.png" width="48" height="48"/>
         <image name="header.png" width="640" height="91"/>
         <image name="icon_arrow_down.png" width="17" height="12"/>
         <image name="icon_arrow_right.png" width="12" height="17"/>
+        <image name="icon_facebook.png" width="108" height="108"/>
         <image name="icon_filter.png" width="52" height="53"/>
         <image name="icon_lock.png" width="54" height="64"/>
         <image name="icon_settings.png" width="43" height="45"/>
@@ -4493,4 +4491,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="qvJ-bu-e6k"/>
+        <segue reference="muZ-DO-Isb"/>
+    </inferredMetricsTieBreakers>
 </document>
