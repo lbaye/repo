@@ -81,11 +81,11 @@
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
     
     
-    UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
-    buttonTestFriendList.backgroundColor = [UIColor redColor];
-    [buttonTestFriendList addTarget:self action:@selector(actionTestFriendListButton) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonTestFriendList];
+//    UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
+//    buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
+//    buttonTestFriendList.backgroundColor = [UIColor redColor];
+//    [buttonTestFriendList addTarget:self action:@selector(actionTestFriendListButton) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:buttonTestFriendList];
 
 }
 
