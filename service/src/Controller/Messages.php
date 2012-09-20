@@ -98,6 +98,7 @@ class Messages extends Base
             if($showLastReply == true){
                 if(!empty($messageArr['replies'])){
                 $messageArr['replies'] = end($messageArr['replies']);
+                $messageArr['replies']['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies']['sender']);
                 }else{
                 $messageArr['replies'] = null;
                 }
