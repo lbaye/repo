@@ -264,8 +264,7 @@ UserDefault *userDefault;
 
 -(void)inviteFriends:(NSMutableArray *)frndList
 {
-    facebook = [[Facebook alloc] initWithAppId:FB_APPID andDelegate:self];
-    
+    facebook = [[FacebookHelper sharedInstance] facebook];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
@@ -277,7 +276,9 @@ UserDefault *userDefault;
                                        nil]; 
 //        [params setObject:stringOfFriends forKey:@"to"];
         
-    NSLog(@"%@", params);
+    NSLog(@"facebook params: %@", params);
+    NSLog(@"delegate %@  userdef %@ fb %@", smAppDelegate.fbAccessToken,[prefs stringForKey:@"FBAccessTokenKey"],[facebook accessToken]);
+
     [facebook dialog:@"apprequests" andParams:params andDelegate:self];
 
 
