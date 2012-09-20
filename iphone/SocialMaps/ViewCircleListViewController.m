@@ -149,19 +149,6 @@ bool searchFlag2=true;
     // Release any retained subviews of the main view.
 }
 
--(IBAction)newEventAction:(id)sender
-{
-    //    [self.eventListTableView reloadData];
-//    [self.eventSearchBar resignFirstResponder];
-//    NSLog(@"new event");
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
-}
-
-
-
 //table view delegate methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
