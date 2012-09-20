@@ -55,7 +55,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "371"
-         endingLineNumber = "371">
+         endingLineNumber = "371"
+         landmarkName = "-gotAccountSettings:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -67,7 +69,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "375"
-         endingLineNumber = "375">
+         endingLineNumber = "375"
+         landmarkName = "-gotGeofence:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -79,7 +83,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "379"
-         endingLineNumber = "379">
+         endingLineNumber = "379"
+         landmarkName = "-gotShareLoc:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -91,7 +97,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "383"
-         endingLineNumber = "383">
+         endingLineNumber = "383"
+         landmarkName = "-gotNotifications:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -140,7 +148,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "812"
          endingLineNumber = "812"
-         landmarkName = "-tableView:cellForRowAtIndexPath:"
+         landmarkName = "-numberOfSectionsInTableView:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -154,7 +162,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "904"
          endingLineNumber = "904"
-         landmarkName = "-loadImagesForOnscreenRows"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -168,8 +176,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "869"
          endingLineNumber = "869"
-         landmarkName = "@implementation MapViewController"
-         landmarkType = "3">
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -182,7 +190,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1039"
          endingLineNumber = "1039"
-         landmarkName = "-searchResult"
+         landmarkName = "-searchBarTextDidBeginEditing:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -210,7 +218,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "1027"
          endingLineNumber = "1027"
-         landmarkName = "-searchResult"
+         landmarkName = "-searchBar:textDidChange:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -266,7 +274,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "299"
          endingLineNumber = "299"
-         landmarkName = "-gotAccountSettings:"
+         landmarkName = "-showActivityViewer:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -322,7 +330,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "320"
          endingLineNumber = "320"
-         landmarkName = "-fbFriendListDone:"
+         landmarkName = "-doLogin:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -350,8 +358,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "637"
          endingLineNumber = "637"
-         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
-         landmarkType = "5">
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -364,7 +372,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "582"
          endingLineNumber = "582"
-         landmarkName = "-viewWillAppear:"
+         landmarkName = "-viewDidUnload"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

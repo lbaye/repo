@@ -215,7 +215,13 @@
         smAppDelegate.authToken = userInfo.authToken;
         smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
-       
+    
+        // Register device token if new
+        if (smAppDelegate.deviceTokenChanged == TRUE) {
+            RestClient *restClient = [[RestClient alloc] init];
+            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:userInfo.authToken];
+        }
+        
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
@@ -351,6 +357,13 @@
         smAppDelegate.userId = regInfo.id;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
         [smAppDelegate getUserInformation:regInfo.authToken];
+        
+        // Register device token if new
+        if (smAppDelegate.deviceTokenChanged == TRUE) {
+            RestClient *restClient = [[RestClient alloc] init];
+            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
+        }
+        
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else 

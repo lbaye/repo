@@ -67,6 +67,8 @@
     bool            showDeals;
     bool            gotListing;
     bool needToCenterMap;
+    NSString        *deviceTokenId;   // For PUSH notification
+    bool            deviceTokenChanged;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -112,6 +114,8 @@
 @property (atomic) bool showDeals;
 @property (atomic) bool gotListing;
 @property (atomic) bool needToCenterMap;
+@property (atomic, copy) NSString *deviceTokenId;
+@property (atomic) bool deviceTokenChanged;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
