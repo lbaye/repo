@@ -2057,7 +2057,6 @@
 				2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */,
 				2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */,
 				2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */,
-				B075B17C1609C2B100081E8C /* FriendListViewController.m in Sources */,
 				200746CF160ADB11001A0873 /* BlockUnblockCircleViewController.m in Sources */,
 				200746D3160ADB39001A0873 /* ViewCircleWisePeopleViewController.m in Sources */,
 			);
