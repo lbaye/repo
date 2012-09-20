@@ -249,8 +249,7 @@ ButtonClickCallbackData callBackData;
     }
     
     [self.view setNeedsDisplay];
-    
-    isMapAnnotationChanged = YES;
+
 }
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
@@ -427,6 +426,7 @@ ButtonClickCallbackData callBackData;
     UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
                                       initWithTarget:self action:@selector(didTapMap)];
     [_mapView addGestureRecognizer:tapRec];
+    tapRec.delegate = self;
     [tapRec release];
 
     // GCD notifications
@@ -539,8 +539,6 @@ ButtonClickCallbackData callBackData;
     
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
-    
-    isMapAnnotationChanged = NO;
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -561,14 +559,22 @@ ButtonClickCallbackData callBackData;
 - (void)didTapMap
 {
     NSLog(@"Tap Map");
-    
-    if (!isMapAnnotationChanged) {
+
+    if (selectedAnno) {
         
         LocationItem *selLocation = (LocationItem*)selectedAnno;
         [self mapAnnotationChanged:selLocation];
         [mapAnno changeStateToNormal:selLocation];
     }
-    isMapAnnotationChanged = NO;
+    
+    selectedAnno = nil;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIButton class]]) {
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
 }
 		
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
