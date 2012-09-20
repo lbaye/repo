@@ -536,7 +536,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my friends"]; 
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
-    
+
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
 }
@@ -608,6 +608,8 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    userFriendslistArray=[[NSMutableArray alloc] init];
+
 }
 
 - (void)viewDidUnload
