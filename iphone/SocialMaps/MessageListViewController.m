@@ -559,10 +559,16 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             // Add first name to title string buffer
             [recipientNames addObject:[recipient valueForKey:@"firstName"]];
             
+            NSString *recipientAvater = [recipient valueForKey:@"avatar"];
+            
             NSLog(@"******* ToDo: appStore_V1 has latest code for null url avater checking******");
+            if ((recipientAvater==NULL)||[recipientAvater isEqual:[NSNull null]])
+            {
+                recipientAvater=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            }
             
             // Add avatar to avatar array
-            [avatarImages addObject:[recipient valueForKey:@"avatar"]];
+            [avatarImages addObject:recipientAvater];
         }
     }
     
@@ -854,15 +860,16 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         UITableViewCell *cell = [msgListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
-        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@", 
+        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@ image = %@", 
               iconDownloader.userFriends.userName,
               iconDownloader.userFriends.userId, 
-              iconDownloader.userFriends.imageUrl);
+              iconDownloader.userFriends.imageUrl,
+              iconDownloader.userFriends.userProfileImage);
         
         cell.imageView.image = iconDownloader.userFriends.userProfileImage;
-        [profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];
+        //[profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];
         
-        [self setDuplicateSenderImage:iconDownloader];
+        //[self setDuplicateSenderImage:iconDownloader];
     }
 }
 

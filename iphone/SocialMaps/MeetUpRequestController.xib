@@ -53,6 +53,7 @@
 								<string key="NSFrameSize">{320, 45}</string>
 								<reference key="NSSuperview" ref="1019192863"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="925481109"/>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
@@ -174,7 +175,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">Label</string>
+								<string key="IBUIText"/>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">2</int>
 									<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -200,7 +201,7 @@
 						<string key="NSFrameSize">{320, 45}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="925481109"/>
+						<reference key="NSNextKeyView" ref="615291220"/>
 						<object class="NSColor" key="IBUIBackgroundColor" id="1011514764">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -572,6 +573,7 @@
 										<string key="NSFrame">{{164, 4}, {136, 21}}</string>
 										<reference key="NSSuperview" ref="332198240"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 										<int key="IBUIContentHorizontalAlignment">0</int>

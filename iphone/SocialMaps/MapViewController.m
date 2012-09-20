@@ -202,6 +202,8 @@ ButtonClickCallbackData callBackData;
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
     LocationItem *selLocation = (LocationItem*) anno;
+    [self mapAnnotationChanged:selLocation];
+    [mapAnno changeStateClicked2:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
 }
 
@@ -212,10 +214,6 @@ ButtonClickCallbackData callBackData;
     r.origin.x = pt.x - r.size.width * 0.3;
     r.origin.y = pt.y - r.size.height * 0.5;
     [self.mapView setVisibleMapRect:r animated:YES];
-    
-    [self mapAnnotationChanged:locItem];
-    [mapAnno changeStateClicked2:locItem];
-    
 }
 
 // MapAnnotation delegate methods
