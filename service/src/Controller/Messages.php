@@ -28,11 +28,29 @@ class Messages extends Base
 
     public function getById($id)
     {
-        $message = $this->messageRepository->find($id);
-        if (empty($message)) {
+        $data = $this->messageRepository->find($id);
+        if (empty($data)) {
             $this->_generate404();
         } else {
-            $this->_generateResponse($message->toArray(true));
+
+            $messageDetail = array();
+
+                $messageArr = $data->toArray(true);
+
+                $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+
+                foreach ($messageArr['recipients'] AS &$recipient) {
+                    $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
+                }
+
+                foreach ($messageArr['replies'] AS &$avatar) {
+
+                    $avatar['sender']['avatar'] = \Helper\Url::buildAvatarUrl($avatar['sender']);
+                }
+
+                $messageDetail[] = $messageArr;
+
+            $this->_generateResponse($messageDetail);
         }
 
         return $this->response;
@@ -64,10 +82,35 @@ class Messages extends Base
 
     public function getInbox()
     {
+        $showLastReply = (boolean) $this->request->get('show_last_reply');
 
-        $data = $this->messageRepository->getByRecipient($this->user);
+        $messages = $this->messageRepository->getByRecipient($this->user);
 
-        return $this->_generateResponse($data);
+        $docsAsArr = array();
+        foreach ($messages as $message) {
+            $messageArr = $message->toArray(true);
+            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+
+            foreach($messageArr['recipients'] AS &$recipient){
+                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
+            }
+
+            if($showLastReply == true){
+                if(!empty($messageArr['replies'])){
+                $messageArr['replies'] = end($messageArr['replies']);
+                }else{
+                $messageArr['replies'] = null;
+                }
+            }else{
+                unset($messageArr['replies']);
+            }
+
+            $docsAsArr[] = $messageArr;
+        }
+
+        $this->_generateResponse($docsAsArr);
+
+        return $this->response;
     }
 
     /**
