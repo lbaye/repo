@@ -412,6 +412,7 @@
     if (userInfo != nil) {
         // Do registration if first login
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        NSLog(@"userInfo.facebookId: %@",userInfo.facebookId);
         [restClient loginFacebook:(User *)userInfo];
         
         [smAppDelegate.window setUserInteractionEnabled:NO];
