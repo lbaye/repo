@@ -375,9 +375,9 @@
 		B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5015F5E74300020D49 /* tab_icon_message.png */; };
 		B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5115F5E74300020D49 /* top_curve_bg.png */; };
 		B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5215F5E74300020D49 /* whitle_blend.png */; };
-		B075B17C1609C2B100081E8C /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B075B17A1609C2B100081E8C /* FriendListViewController.m */; };
-		B075B17D1609C2B100081E8C /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B075B17B1609C2B100081E8C /* FriendListViewController.xib */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
+		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
+		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
@@ -926,11 +926,11 @@
 		B01DFC5015F5E74300020D49 /* tab_icon_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message.png; path = Images/tab_icon_message.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5115F5E74300020D49 /* top_curve_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_curve_bg.png; path = Images/top_curve_bg.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5215F5E74300020D49 /* whitle_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whitle_blend.png; path = Images/whitle_blend.png; sourceTree = SOURCE_ROOT; };
-		B075B1791609C2B100081E8C /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
-		B075B17A1609C2B100081E8C /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
-		B075B17B1609C2B100081E8C /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
+		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
+		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
+		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
 		B0C206AD15FB26C900177132 /* ShowOnMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowOnMapController.h; sourceTree = "<group>"; };
 		B0C206AE15FB26C900177132 /* ShowOnMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowOnMapController.m; sourceTree = "<group>"; };
 		B0C206AF15FB26C900177132 /* ShowOnMapController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowOnMapController.xib; sourceTree = "<group>"; };
@@ -1210,14 +1210,14 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
+				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
+				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
+				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
 				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
 				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
 				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
 				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
-				B075B1791609C2B100081E8C /* FriendListViewController.h */,
-				B075B17A1609C2B100081E8C /* FriendListViewController.m */,
-				B075B17B1609C2B100081E8C /* FriendListViewController.xib */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
@@ -1898,7 +1898,7 @@
 				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
 				4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */,
 				2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */,
-				B075B17D1609C2B100081E8C /* FriendListViewController.xib in Resources */,
+				B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2059,6 +2059,7 @@
 				2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */,
 				200746CF160ADB11001A0873 /* BlockUnblockCircleViewController.m in Sources */,
 				200746D3160ADB39001A0873 /* ViewCircleWisePeopleViewController.m in Sources */,
+				B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
