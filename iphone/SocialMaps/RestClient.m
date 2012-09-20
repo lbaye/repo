@@ -4172,7 +4172,8 @@
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    NSString *route = [NSString stringWithFormat:@"%@/messages/inbox",WS_URL];
+    //NSString *route = [NSString stringWithFormat:@"%@/messages/inbox",WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/messages/inbox?show_last_reply=1",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageInbox = [[NSMutableArray alloc] init];
     
@@ -4221,8 +4222,11 @@
                 msg.notifAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];
+                msg.lastReply = [item valueForKey:@"replies"];
                 
                 NSLog(@"msg.notifAvater %@", msg.notifAvater);
+                NSLog(@"msg.lastReply %@", msg.lastReply);
+                
                 [messageInbox addObject:msg];
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);

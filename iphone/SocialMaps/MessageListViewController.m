@@ -509,7 +509,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
     lblTime.text = [UtilityClass timeAsString:msg.notifTime];
-    txtMsg.text = msg.notifMessage;
+    
+    NSString *lastReply = [msg.lastReply valueForKey:@"content"];
+    
+    if ((lastReply == NULL) || [lastReply isEqual:[NSNull null]]) {
+        txtMsg.text = msg.notifMessage;
+    } else {
+        txtMsg.text = lastReply;
+    }
     
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
     
