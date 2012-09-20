@@ -3983,9 +3983,10 @@
         if (responseStatus == 200 || responseStatus == 201) {
             [UtilityClass showAlert:@"" :@"Friend request sent"];
             NSLog(@"sendFriendRequest successful:status=%d", responseStatus);
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+            [UtilityClass showAlert:@"" :@"Friend request sent"];
         } else {
             NSLog(@"sendFriendRequest unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Friend request previously sent to this user."];
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
@@ -3995,6 +3996,7 @@
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         NSLog(@"sendFriendRequest failed: unknown error");
+        [UtilityClass showAlert:@"" :@"Failed to send friend request"];
         //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
