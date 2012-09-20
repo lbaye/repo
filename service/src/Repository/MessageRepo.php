@@ -44,7 +44,8 @@ class MessageRepo extends Base
                 ->sort('updateDate', 'desc')
                 ->getQuery()
                 ->execute();
-        return $this->_toArrayAll($messages);
+
+        return $messages;
     }
 
     public function getRepliesSince($thread, $since)
@@ -190,4 +191,5 @@ class MessageRepo extends Base
 
         return $docsAsArr;
     }
+
 }
