@@ -28,6 +28,7 @@
 @synthesize autoLogin;
 @synthesize facebook;
 @synthesize smAppDelegate;
+@synthesize profileImageView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -104,6 +105,27 @@
     [dialogView.layer setBorderWidth:1.5f];
     [dialogView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
 
+    [profileImageView.layer setCornerRadius:10.0f];
+    [profileImageView.layer setMasksToBounds:YES];
+    [profileImageView.layer setBorderWidth:1.5f];
+    [profileImageView.layer setBorderColor:[UIColor whiteColor].CGColor];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    NSData *data =[prefs objectForKey:@"FBProfilePic"];
+    UIImage *profileImage=[NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSLog(@"profileImage %@",profileImage);
+    if (profileImage==NULL)
+    {
+        [profileImageView setImage:[UIImage imageNamed:@"icon_facebook.png"]];
+    }
+    else
+    {
+        [profileImageView setImage:profileImage];
+    }
+    [prefs synchronize];
+
+    
     facebook = [[FacebookHelper sharedInstance] facebook];
 }
 

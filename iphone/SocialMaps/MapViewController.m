@@ -135,6 +135,16 @@ ButtonClickCallbackData callBackData;
     [restClient sendMessage:subject content:callBackData.txtView.text recipients:[NSArray arrayWithObject:callBackData.locItem.userInfo.userId] authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
+-(void)saveFBProfileImage
+{
+    NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",smAppDelegate.fbId];
+    UIImage *profileImage=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:profileImageUrl]]];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs removeObjectForKey:@"FBProfilePic"];
+    NSLog(@"profileImageUrl is %@  %@", profileImageUrl, profileImage );
+    [prefs setObject:[NSKeyedArchiver archivedDataWithRootObject:profileImage] forKey:@"FBProfilePic"];
+    [prefs synchronize];
+}
 
 // Send the friend request out
 - (void) sendRequest:(id)sender {
@@ -412,6 +422,7 @@ ButtonClickCallbackData callBackData;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    [self performSelectorInBackground:@selector(saveFBProfileImage) withObject:nil];
     _mapView.delegate=self;
     _mapView.showsUserLocation=YES;
     locationManager = [[CLLocationManager alloc] init];
@@ -458,7 +469,8 @@ ButtonClickCallbackData callBackData;
     }
     else
     {
-        [inviteFriendView setHidden:NO];
+        [fbHelper inviteFriends:nil];
+//        [inviteFriendView setHidden:NO];
     }
     //[self loadFriendListsData]; TODO: commented this
     
