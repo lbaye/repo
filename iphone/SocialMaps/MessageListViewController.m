@@ -874,9 +874,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
               iconDownloader.userFriends.userProfileImage);
         
         cell.imageView.image = iconDownloader.userFriends.userProfileImage;
-        //[profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];
+        [profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];
         
-        //[self setDuplicateSenderImage:iconDownloader];
+        [self setDuplicateSenderImage:iconDownloader];
     }
 }
 
