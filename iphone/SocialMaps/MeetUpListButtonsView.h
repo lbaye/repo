@@ -8,6 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MeetUpListButtonsView : UIView
+@class MeetUpRequest;
+
+@protocol MeetUpListButtonsDelegate<NSObject>
+- (void) buttonClicked:(NSString*)actionName cellButton:(id)sender;
+@end
+
+@interface MeetUpListButtonsView : UIView 
+{
+    UIButton *buttonAccept;
+    UIButton *buttonDecline;
+    UIButton *buttonIgnore;
+    
+    MeetUpRequest  *meetUpReq;
+    
+    id<MeetUpListButtonsDelegate> delegate;
+}
+
+@property (assign) id<MeetUpListButtonsDelegate> delegate;
+
+- (void)adjustButtons:(MeetUpRequest*)meetUpReq;
 
 @end

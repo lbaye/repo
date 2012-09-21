@@ -31,7 +31,8 @@
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
 #import "UserBasicProfileViewController.h"
-
+#import "Globals.h"
+#import "ViewCircleListViewController.h"
 
 @interface MapViewController ()
 
@@ -134,6 +135,16 @@ ButtonClickCallbackData callBackData;
     [restClient sendMessage:subject content:callBackData.txtView.text recipients:[NSArray arrayWithObject:callBackData.locItem.userInfo.userId] authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
+-(void)saveFBProfileImage
+{
+    NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",smAppDelegate.fbId];
+    UIImage *profileImage=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:profileImageUrl]]];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs removeObjectForKey:@"FBProfilePic"];
+    NSLog(@"profileImageUrl is %@  %@", profileImageUrl, profileImage );
+    [prefs setObject:[NSKeyedArchiver archivedDataWithRootObject:profileImage] forKey:@"FBProfilePic"];
+    [prefs synchronize];
+}
 
 // Send the friend request out
 - (void) sendRequest:(id)sender {
@@ -206,7 +217,22 @@ ButtonClickCallbackData callBackData;
     
     [self.view setNeedsDisplay];
 }
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
+    LocationItem *selLocation = (LocationItem*) anno;
+    [self mapAnnotationChanged:selLocation];
+    [mapAnno changeStateToDetails:selLocation];
+    [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
+}
+
+-(void) startMoveMap:(LocationItem*)locItem
+{
+    MKMapRect r = [self.mapView visibleMapRect];
+    MKMapPoint pt = MKMapPointForCoordinate(locItem.coordinate);
+    r.origin.x = pt.x - r.size.width * 0.3;
+    r.origin.y = pt.y - r.size.height * 0.5;
+    [self.mapView setVisibleMapRect:r animated:YES];
+}
 
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
@@ -226,9 +252,47 @@ ButtonClickCallbackData callBackData;
 //    [self.view setNeedsDisplay];
 }
 
+- (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
+    LocationItemPlace *locItem = (LocationItemPlace*) anno;
+    
+    NSLog(@"meetupRequestPlaceSelected");
+    
+    for (LocationItemPlace *eachLocationItem in smAppDelegate.placeList) {
+        if ([eachLocationItem.placeInfo.location isEqual:locItem.placeInfo.location]) {
+            MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+            controller.selectedLocatonItem = locItem;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
+        }
+    }
+    
+}
+
 - (void) meetupRequestSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:meetupRequestSelecetd");
+    NSLog(@"class = %@", [anno class]);
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    
+    int i = 0;
+    for (; i < [friendListGlobalArray count]; i++) {
+        UserInfo *userInfo = [friendListGlobalArray objectAtIndex:i];
+        if ([userInfo.userId isEqualToString:locItem.userInfo.userId]) {
+            break;
+        }
+    }
+    if (i == [friendListGlobalArray count]) {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",locItem.userInfo.firstName]];
+        return;
+    }
+    
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.selectedfriendId = locItem.userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
+
 - (void) directionSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:directionSelected");
 }
@@ -308,6 +372,9 @@ ButtonClickCallbackData callBackData;
         case MapAnnoUserActionDirection:
             [self directionSelected:locItem];
             break;
+        case MapAnnoUserActionMeetupPlace:
+            [self meetupRequestPlaceSelected:locItem];
+            break;
         default:
             break;
     }
@@ -355,6 +422,12 @@ ButtonClickCallbackData callBackData;
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
     [_mapView addGestureRecognizer:panRec];
+    
+    UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
+                                      initWithTarget:self action:@selector(didTapMap)];
+    [_mapView addGestureRecognizer:tapRec];
+    tapRec.delegate = self;
+    [tapRec release];
 
     // GCD notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
@@ -364,6 +437,7 @@ ButtonClickCallbackData callBackData;
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
+    [self performSelectorInBackground:@selector(saveFBProfileImage) withObject:nil];
     _mapView.delegate=self;
     if ([CLLocationManager locationServicesEnabled])
         _mapView.showsUserLocation=YES;
@@ -414,7 +488,8 @@ ButtonClickCallbackData callBackData;
     }
     else
     {
-        [inviteFriendView setHidden:NO];
+        [fbHelper inviteFriends:nil];
+//        [inviteFriendView setHidden:NO];
     }
     //[self loadFriendListsData]; TODO: commented this
     
@@ -459,7 +534,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my friends"]; 
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
-    
+
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
     if (smAppDelegate.gotListing == FALSE) {
@@ -487,6 +562,27 @@ ButtonClickCallbackData callBackData;
     return YES;
 }
 
+- (void)didTapMap
+{
+    NSLog(@"Tap Map");
+
+    if (selectedAnno) {
+        
+        LocationItem *selLocation = (LocationItem*)selectedAnno;
+        [self mapAnnotationChanged:selLocation];
+        [mapAnno changeStateToNormal:selLocation];
+    }
+    
+    selectedAnno = nil;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIButton class]]) {
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
+}
+		
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"Map drag ended");
@@ -518,6 +614,8 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    userFriendslistArray=[[NSMutableArray alloc] init];
+
 }
 
 - (void)viewDidUnload
@@ -567,7 +665,7 @@ ButtonClickCallbackData callBackData;
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
         [_mapView addAnnotation:anno];
     }
-    
+
     // 4
     if (smAppDelegate.needToCenterMap == TRUE) {
         NSLog(@"MapViewController:loadAnnotations centering map");
@@ -715,6 +813,8 @@ ButtonClickCallbackData callBackData;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     NSLog(@"In prepareForSegue:MapViewController");
+    LocationItem *selLocation = (LocationItem*) selectedAnno;
+    selLocation.currDisplayState = MapAnnotationStateNormal;
 }
 
 - (IBAction)showPullDown:(id)sender {
@@ -1144,7 +1244,11 @@ ButtonClickCallbackData callBackData;
 //    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
 
 //    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
-     [self performSegueWithIdentifier:@"eventList" sender: self];
+   // viewEventList
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
     [smAppDelegate showActivityViewer:self.view];
 }
 
@@ -1194,6 +1298,18 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMapix:(id)sender
 {
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+//    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+    
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+
+
 }
 
 - (IBAction)gotoEditFilters:(id)sender

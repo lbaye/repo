@@ -22,6 +22,7 @@
     NSMutableArray *meetUpRsvpYes;
     NSMutableArray *meetUpRsvpNo;
     NSMutableArray *meetUpRsvpIgnore;
+    NSString       *meetUpAvater;
 }
 
 @property (nonatomic,retain) NSString *meetUpId;
@@ -35,5 +36,6 @@
 @property (nonatomic,retain) NSMutableArray *meetUpRsvpYes;
 @property (nonatomic,retain) NSMutableArray *meetUpRsvpNo;
 @property (nonatomic,retain) NSMutableArray *meetUpRsvpIgnore;
+@property (nonatomic,retain) NSString *meetUpAvater;
 
 @end

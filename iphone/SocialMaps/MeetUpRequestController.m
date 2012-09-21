@@ -19,6 +19,7 @@
 #import "UtilityClass.h"
 #import "LocationItemPlace.h"
 #import "RestClient.h"
+#import "LocationItemPlace.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_MY_PLACES           1002
@@ -41,6 +42,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 @implementation MeetUpRequestController
 
 @synthesize currentAddress;
+@synthesize selectedfriendId;
+@synthesize selectedLocatonItem;
 
 DDAnnotation *annotation;
 
@@ -49,9 +52,9 @@ DDAnnotation *annotation;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
-    radio.delegate = self;
-    [self.view addSubview:radio];
+//    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
+//    radio.delegate = self;
+//    [self.view addSubview:radio];
     
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
     NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
@@ -73,7 +76,7 @@ DDAnnotation *annotation;
     [self loadDummydata];
     
     //reloading scrollview to start asynchronous download.
-    [self reloadScrolview]; 
+    //[self reloadScrolview]; 
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
    
@@ -109,15 +112,50 @@ DDAnnotation *annotation;
     labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
     
     self.currentAddress = @"";
+    selectedPlaceIndex = 0;
 }
-/*
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self setAddressLabelFromLatLon];
+    int selectedRadioButtonIndex = 0;
+    
+    if (self.selectedfriendId) {
+        for (int i = 0; i < [filteredList count]; i++) {
+            if ([((UserFriends*)[filteredList objectAtIndex:i]).userId isEqualToString:self.selectedfriendId]) {
+                [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",i]];
+            }
+        }
+    } else if (self.selectedLocatonItem) {
+        [self radioButtonClicked:2 sender:nil];
+        for (int i = 0; i < [smAppDelegate.placeList count]; i++) {
+            LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
+            if ([self.selectedLocatonItem isEqual:aPlaceItem]) {
+                NSLog(@"select table row %d", i);
+                selectedPlaceIndex = i + 1;
+                selectedRadioButtonIndex = 2;
+                labelAddress.text = self.selectedLocatonItem.placeInfo.name;
+                annotation.coordinate = self.selectedLocatonItem.coordinate;
+                [tableViewPlaces reloadData];
+            }
+        }
+        
+    }
+    
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
+    radio.delegate = self;
+    [self.view addSubview:radio];
+    
+    /*
+    for (int i = 0; i < [selectedFriendsIndex count]; i++) {
+        NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;
+        [userIDs addObject:userId];
+    }
+     */
+    [self reloadScrolview];
 }
-*/
+
 - (void)viewDidUnload
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
@@ -734,35 +772,35 @@ DDAnnotation *annotation;
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
 }
-
+/*
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];
     
-    
+    for (int i=0; i<[friendListGlobalArray count]; i++)
+    {
+        frnds=[[UserFriends alloc] init];
+        frnds=[friendListGlobalArray objectAtIndex:i];
+        [friendListArr addObject:frnds];
+    }
+    filteredList=[friendListArr mutableCopy];
+}
+*/
+-(void)loadDummydata
+{
+    UserFriends *frnds=[[UserFriends alloc] init];
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
-        
     {
-        
         frnds=[[UserFriends alloc] init];
-        
         frnds=[friendListGlobalArray objectAtIndex:i];
-        
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
-            
         {
-            
             frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
-            
             NSLog(@"img url null %d",i);
-            
         }
-        
         [friendListArr addObject:frnds];
-        
     }
-    
     filteredList=[friendListArr mutableCopy];
 }
 

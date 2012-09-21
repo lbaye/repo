@@ -19,6 +19,7 @@
     bool autoLogin;
     Facebook *facebook;
     AppDelegate *smAppDelegate;
+    IBOutlet UIImageView *profileImageView;
 }
 
 @property (retain, nonatomic) NSString *strUserID;
@@ -36,6 +37,7 @@
 @property (retain, nonatomic) IBOutlet UIView *forgotPWView;
 @property (retain, nonatomic) IBOutlet UITextField *txtForgotPWEmail;
 @property (retain, nonatomic) IBOutlet UIView *dialogView;
+@property (nonatomic,retain) IBOutlet UIImageView *profileImageView;
 
 - (IBAction)doLogin:(id)sender;
 - (IBAction)doConnectFB:(id)sender;

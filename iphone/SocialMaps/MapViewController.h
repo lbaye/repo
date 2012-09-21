@@ -11,6 +11,7 @@
 #import <CoreLocation/CLLocationManager.h>
 #import "IconDownloader.h"
 #import "AppDelegate.h"
+#import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
 
@@ -44,6 +45,7 @@ typedef enum _SHARING_TYPES {
     MapAnnotationPlace *mapAnnoPlace;
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
+                                    
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;

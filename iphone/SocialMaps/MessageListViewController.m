@@ -432,7 +432,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 [self startReplyIconDownload:msgReply forIndexPath:indexPath];
             }            
         }  else {
-            NSLog(@"image crash = %@", msgReply.senderImage);
+            //NSLog(@"image crash = %@", msgReply.senderImage);
             //imageViewReply.image = msgReply.senderImage;
             imageViewReply.image = iconDownloader.userFriends.userProfileImage;
         }
@@ -509,7 +509,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
     lblTime.text = [UtilityClass timeAsString:msg.notifTime];
-    txtMsg.text = msg.notifMessage;
+    
+    NSString *lastReply = [msg.lastReply valueForKey:@"content"];
+    
+    if ((lastReply == NULL) || [lastReply isEqual:[NSNull null]]) {
+        txtMsg.text = msg.notifMessage;
+    } else {
+        txtMsg.text = lastReply;
+    }
     
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
     
@@ -558,6 +565,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             
             // Add first name to title string buffer
             [recipientNames addObject:[recipient valueForKey:@"firstName"]];
+            
+            NSString *recipientAvater = [recipient valueForKey:@"avatar"];
+            
+            NSLog(@"******* ToDo: appStore_V1 has latest code for null url avater checking******");
+            if ((recipientAvater==NULL)||[recipientAvater isEqual:[NSNull null]])
+            {
+                recipientAvater=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            }
             
             // Add avatar to avatar array
             NSString *urlAvatar = [recipient valueForKey:@"avatar"];
@@ -857,10 +872,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         UITableViewCell *cell = [msgListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
-        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@", 
+        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@ image = %@", 
               iconDownloader.userFriends.userName,
               iconDownloader.userFriends.userId, 
-              iconDownloader.userFriends.imageUrl);
+              iconDownloader.userFriends.imageUrl,
+              iconDownloader.userFriends.userProfileImage);
         
         cell.imageView.image = iconDownloader.userFriends.userProfileImage;
         [profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];

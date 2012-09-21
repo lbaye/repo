@@ -13,7 +13,7 @@
 
 @interface CreateEventViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate>
+UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
 {
     IBOutlet UILabel *createLabel;
     IBOutlet UIButton *createButton;
@@ -23,6 +23,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIButton *neamePlace;
     IBOutlet UIButton *pointOnMap;    
 
+    IBOutlet UIButton *private;
     IBOutlet UIButton *friends;
     IBOutlet UIButton *degreeFriends;    
     IBOutlet UIButton *people;
@@ -47,7 +48,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     NSMutableArray *ImgesName;
     
     CGFloat animatedDistance;
-    NSMutableArray *selectedFriendsIndex;
+    NSMutableArray *selectedFriendsIndex, *customSelectedFriendsIndex;
     IBOutlet UIView *createView;
     PhotoPicker *photoPicker;
     UIImage *eventImage;
@@ -56,11 +57,19 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet MKMapView *mapView;
     IBOutlet UIView *mapContainerView;
     IBOutlet UILabel *addressLabel;
+    IBOutlet UIView *circleView;
+    IBOutlet UITableView *circleTableView;
+    IBOutlet UIView *customSelectionView;
+    IBOutlet UISegmentedControl *segmentControl;
+    IBOutlet UIScrollView *customScrollView;
+    IBOutlet UISearchBar *customSearchBar;
+    IBOutlet UITableView *customTableView;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
 @property(nonatomic,retain) IBOutlet UIButton *createButton;
 
+@property(nonatomic,retain) IBOutlet UIButton *private;
 @property(nonatomic,retain) IBOutlet UIButton *curLoc;
 @property(nonatomic,retain) IBOutlet UIButton *myPlace;    
 @property(nonatomic,retain) IBOutlet UIButton *neamePlace;
@@ -94,6 +103,16 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 @property(nonatomic,retain) IBOutlet UILabel *addressLabel;
 
+@property(nonatomic,retain) IBOutlet UIView *circleView;
+@property(nonatomic,retain) IBOutlet UITableView *circleTableView;
+
+@property(nonatomic,retain) IBOutlet UIView *customSelectionView;
+@property(nonatomic,retain) IBOutlet UISegmentedControl *segmentControl;
+
+@property(nonatomic,retain) IBOutlet UIScrollView *customScrollView;
+@property(nonatomic,retain) IBOutlet UISearchBar *customSearchBar;
+@property(nonatomic,retain) IBOutlet UITableView *customTableView;
+
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    
 -(IBAction)descriptionButtonAction;
@@ -101,6 +120,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)photoButtonAction;
 -(IBAction)deleteButtonAction;    
 
+-(IBAction)privateButtonAction;
 -(IBAction)friendsButtonAction;
 -(IBAction)degreeFriendsButtonAction;    
 -(IBAction)peopleButtonAction;
@@ -108,7 +128,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(IBAction)curLocButtonAction;
 -(IBAction)myPlaceButtonAction;    
--(IBAction)neamePlaceButtonAction;
+-(IBAction)neamePlaceButtonAction:(id)sender;
 -(IBAction)pointOnMapButtonAction;    
 
 -(IBAction)showCircle:(id)sender;
@@ -125,7 +145,14 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)saveMapLoc:(id)sender;
 -(IBAction)cancelMapLoc:(id)sender;
 
--(void)beganEditing;
+-(IBAction)saveCircle:(id)sender;
+-(IBAction)cancelCircle:(id)sender;
+
+-(IBAction)saveCustom:(id)sender;
+-(IBAction)cancelCustom:(id)sender;
+-(IBAction)customSegment:(id)sender;
+
+-(void)beganEditing:(UISearchBar *)searchBar;
 -(void)endEditing;
 -(IBAction)backButton:(id)sender;
 

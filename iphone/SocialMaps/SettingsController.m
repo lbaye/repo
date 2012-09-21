@@ -15,6 +15,7 @@
 #import "RadioButtonItem.h"
 #import "SelectFriends.h"
 #import "RestClient.h"
+#import "FriendListViewController.h"
 
 @implementation SettingsController
 @synthesize settingsScrollView;
@@ -78,6 +79,13 @@
         notifCount.text = @"";
     else
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+    
+    
+//    UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
+//    buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
+//    buttonTestFriendList.backgroundColor = [UIColor redColor];
+//    [buttonTestFriendList addTarget:self action:@selector(actionTestFriendListButton) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:buttonTestFriendList];
 
 }
 
@@ -188,6 +196,14 @@
                          layersView.frame.size.height);
     layersView.frame = rowFrame;
 
+}
+
+- (void)actionTestFriendListButton
+{
+    FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 - (void) collapseLayersSettings:(id) sender {

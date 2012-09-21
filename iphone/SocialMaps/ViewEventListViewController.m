@@ -30,6 +30,12 @@
 @implementation ViewEventListViewController
 @synthesize eventListTableView,eventSearchBar,downloadedImageDict,mapView,mapContainer,newEventButton;
  
+@synthesize dateButton;
+@synthesize distanceButton;
+@synthesize friendsEventButton;
+@synthesize myEventButton;
+@synthesize publicEventButton;
+
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
@@ -167,6 +173,12 @@ bool searchFlags=true;
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     [self.eventListTableView reloadData];
+    
+    [dateButton setBackgroundColor:[UIColor lightGrayColor]];
+    [distanceButton setBackgroundColor:[UIColor clearColor]];
+    [friendsEventButton setBackgroundColor:[UIColor clearColor]];
+    [myEventButton setBackgroundColor:[UIColor clearColor]];
+    [publicEventButton setBackgroundColor:[UIColor clearColor]];
 }
 
 -(IBAction)distanceAction:(id)sender
@@ -180,6 +192,13 @@ bool searchFlags=true;
     }] mutableCopy];
     
     [self.eventListTableView reloadData];
+    
+    [dateButton setBackgroundColor:[UIColor clearColor]];
+    [distanceButton setBackgroundColor:[UIColor lightGrayColor]];
+    [friendsEventButton setBackgroundColor:[UIColor clearColor]];
+    [myEventButton setBackgroundColor:[UIColor clearColor]];
+    [publicEventButton setBackgroundColor:[UIColor clearColor]];
+
 }
 
 -(IBAction)friendsEventAction:(id)sender
@@ -197,6 +216,13 @@ bool searchFlags=true;
             [filteredList addObject:event];
         }
     }
+    
+    [dateButton setBackgroundColor:[UIColor clearColor]];
+    [distanceButton setBackgroundColor:[UIColor clearColor]];
+    [friendsEventButton setBackgroundColor:[UIColor lightGrayColor]];
+    [myEventButton setBackgroundColor:[UIColor clearColor]];
+    [publicEventButton setBackgroundColor:[UIColor clearColor]];
+
     
     [self.eventListTableView reloadData];
     if ([filteredList count]==0)
@@ -220,6 +246,12 @@ bool searchFlags=true;
             [filteredList addObject:event];
         }
     }
+    
+    [dateButton setBackgroundColor:[UIColor clearColor]];
+    [distanceButton setBackgroundColor:[UIColor clearColor]];
+    [friendsEventButton setBackgroundColor:[UIColor clearColor]];
+    [myEventButton setBackgroundColor:[UIColor lightGrayColor]];
+    [publicEventButton setBackgroundColor:[UIColor clearColor]];
 
     [self.eventListTableView reloadData];
     if ([filteredList count]==0)
@@ -239,11 +271,18 @@ bool searchFlags=true;
     {
         event=[[Event alloc] init];
         event=[eventListArray objectAtIndex:i];
-        if ([event.eventType isEqualToString:@"public_event"])
+        if ([event.permission isEqualToString:@"public"])
         {
             [filteredList addObject:event];
         }
     }
+    
+    [dateButton setBackgroundColor:[UIColor clearColor]];
+    [distanceButton setBackgroundColor:[UIColor clearColor]];
+    [friendsEventButton setBackgroundColor:[UIColor clearColor]];
+    [myEventButton setBackgroundColor:[UIColor clearColor]];
+    [publicEventButton setBackgroundColor:[UIColor lightGrayColor]];
+
     [self.eventListTableView reloadData];
     if ([filteredList count]==0)
     {
