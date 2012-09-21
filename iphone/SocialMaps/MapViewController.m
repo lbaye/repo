@@ -527,7 +527,8 @@ ButtonClickCallbackData callBackData;
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
     if (smAppDelegate.gotListing == FALSE) {
-        [fbHelper inviteFriends:nil];
+        if (smAppDelegate.facebookLogin == TRUE)
+            [fbHelper inviteFriends:nil];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
 

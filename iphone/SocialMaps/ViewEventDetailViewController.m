@@ -76,10 +76,12 @@ BOOL isBackgroundTaskRunning=FALSE;
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
-    if (globalEvent.isInvited==FALSE)
-    {
-        rsvpView.hidden=YES;
-    }
+//    if (globalEvent.isInvited==FALSE)
+//    {
+//        rsvpView.hidden=YES;
+//    }
+//    else
+//        rsvpView.hidden=NO;
     
     //mapview data
     if ([self.mapView.annotations count]>0)
@@ -173,6 +175,9 @@ BOOL isBackgroundTaskRunning=FALSE;
         [noButton setUserInteractionEnabled:YES];
         [maybeButton setUserInteractionEnabled:YES];
         
+        [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     }
 }
 
@@ -198,6 +203,13 @@ BOOL isBackgroundTaskRunning=FALSE;
     guestScrollView.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteEventDone:) name:NOTIF_DELETE_EVENT_DONE object:nil];
+    
+    if (globalEvent.isInvited==FALSE)
+    {
+        rsvpView.hidden=YES;
+    }
+    else
+        rsvpView.hidden=NO;
     
     //reloading scrollview to start asynchronous download.
     NSLog(@"before reload.");

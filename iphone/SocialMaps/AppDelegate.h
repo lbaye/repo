@@ -69,6 +69,7 @@
     bool needToCenterMap;
     NSString        *deviceTokenId;   // For PUSH notification
     bool            deviceTokenChanged;
+    bool            facebookLogin;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -116,6 +117,7 @@
 @property (atomic) bool needToCenterMap;
 @property (atomic, copy) NSString *deviceTokenId;
 @property (atomic) bool deviceTokenChanged;
+@property (atomic) bool facebookLogin;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

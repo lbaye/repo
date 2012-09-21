@@ -440,6 +440,7 @@
 
 - (IBAction)doConnectFB:(id)sender {
     NSLog(@"In LoginController:doConnectFB");
+    smAppDelegate.facebookLogin = TRUE;
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
