@@ -135,39 +135,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
+         timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "812"
-         endingLineNumber = "812"
-         landmarkName = "-tableView:cellForRowAtIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "904"
-         endingLineNumber = "904"
-         landmarkName = "-loadImagesForOnscreenRows"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "869"
-         endingLineNumber = "869"
+         startingLineNumber = "813"
+         endingLineNumber = "813"
          landmarkName = "@implementation MapViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -177,25 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
+         timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1039"
-         endingLineNumber = "1039"
-         landmarkName = "-searchResult"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "831"
-         endingLineNumber = "831"
+         startingLineNumber = "905"
+         endingLineNumber = "905"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,13 +163,55 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
+         timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1027"
-         endingLineNumber = "1027"
-         landmarkName = "-searchResult"
+         startingLineNumber = "870"
+         endingLineNumber = "870"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/MapViewController.m"
+         timestampString = "369906843.442763"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1040"
+         endingLineNumber = "1040"
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/MapViewController.m"
+         timestampString = "369906843.442763"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "832"
+         endingLineNumber = "832"
+         landmarkName = "-numberOfComponentsInPickerView:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "SocialMaps/MapViewController.m"
+         timestampString = "369906843.442763"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1028"
+         endingLineNumber = "1028"
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -322,7 +322,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "320"
          endingLineNumber = "320"
-         landmarkName = "-fbFriendListDone:"
+         landmarkName = "-doLogin:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -345,12 +345,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
+         timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "637"
-         endingLineNumber = "637"
-         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         startingLineNumber = "638"
+         endingLineNumber = "638"
+         landmarkName = "-viewDidUnload"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -359,12 +359,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "369578969.929459"
+         timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "582"
-         endingLineNumber = "582"
-         landmarkName = "-viewWillAppear:"
+         startingLineNumber = "583"
+         endingLineNumber = "583"
+         landmarkName = "-gestureRecognizer:shouldReceiveTouch:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

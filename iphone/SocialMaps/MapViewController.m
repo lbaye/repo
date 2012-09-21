@@ -219,6 +219,7 @@ ButtonClickCallbackData callBackData;
 }
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
+    selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
     [self mapAnnotationChanged:selLocation];
     [mapAnno changeStateToDetails:selLocation];
@@ -481,17 +482,16 @@ ButtonClickCallbackData callBackData;
     searchText=[[NSString alloc] init];
 
     fbHelper=[FacebookHelper sharedInstance];
-    NSLog(@"frnd arrayk count %d ",[userFriendslistArray count]);
-    if ([userFriendslistArray count]==0)
-    {
-        [inviteFriendView setHidden:YES];
-    }
-    else
-    {
-        [fbHelper inviteFriends:nil];
-//        [inviteFriendView setHidden:NO];
-    }
-    //[self loadFriendListsData]; TODO: commented this
+//    NSLog(@"frnd arrayk count %d ",[userFriendslistArray count]);
+//    if ([userFriendslistArray count]==0)
+//    {
+//        [inviteFriendView setHidden:YES];
+//    }
+//    else
+//    {
+//        [fbHelper inviteFriends:nil];
+////        [inviteFriendView setHidden:NO];
+//    }
     
     imageDownloadsInProgress = [NSMutableDictionary dictionary];
     [imageDownloadsInProgress retain];
@@ -538,6 +538,7 @@ ButtonClickCallbackData callBackData;
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
     if (smAppDelegate.gotListing == FALSE) {
+        [fbHelper inviteFriends:nil];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
 

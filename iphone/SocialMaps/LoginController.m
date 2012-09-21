@@ -461,7 +461,9 @@
         user.facebookId = smAppDelegate.fbId;
         user.facebookAuthToken = smAppDelegate.fbAccessToken;
 
-        [smAppDelegate.fbHelper getUserFriendListRequest:self];
+        //[smAppDelegate.fbHelper getUserFriendListRequest:self];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient loginFacebook:(User *)user];
         
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];

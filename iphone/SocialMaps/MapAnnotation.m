@@ -228,7 +228,7 @@
                 else
                     locItem.currDisplayState = MapAnnotationStateNormal;
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-                locItem.currDisplayState = MapAnnotationStateDetailed;
+                locItem.currDisplayState = MapAnnotationStateSummary;
             } 
     
     //selAnno.selected=TRUE;

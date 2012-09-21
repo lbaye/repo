@@ -246,7 +246,7 @@ UserDefault *userDefault;
         [prefs synchronize];
 
         frndListFlag=TRUE;
-        [self getUserFriendListRequest:self];
+        //[self getUserFriendListRequest:self];
     }
     
     else
