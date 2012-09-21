@@ -215,28 +215,21 @@
 }
 
 - (void) changeStateToDetails:(id) anno {
-    NSLog(@"MapAnnotation: changeStateClicked2");
+    NSLog(@"MapAnnotation: changeStateToDetails");
     LocationItem *locItem = (LocationItem*)anno;
     
-    NSLog(@"changeStateClicked Name=%@", locItem.itemName);
+    NSLog(@"changeStateToDetails Name=%@", locItem.itemName);
     
-            // Don't show details for non-SM users
-            if ([locItem isKindOfClass:[LocationItemPeople class]]) {
-                LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
-                if (locItemPeople.userInfo.external == false) 
-                    locItem.currDisplayState = MapAnnotationStateDetailed;
-                else
-                    locItem.currDisplayState = MapAnnotationStateNormal;
-            } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-                locItem.currDisplayState = MapAnnotationStateSummary;
-            } 
-    
-    //selAnno.selected=TRUE;
-    
-    //[selAnno setNeedsDisplay];
-    //if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:sender:)]) {
-        //[self.delegate mapAnnotationChanged:[selAnno annotation] sender:sender];
-    //}
+    // Don't show details for non-SM users
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if (locItemPeople.userInfo.external == false) 
+            locItem.currDisplayState = MapAnnotationStateDetailed;
+        else
+            locItem.currDisplayState = MapAnnotationStateNormal;
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+        locItem.currDisplayState = MapAnnotationStateSummary;
+    } 
 }
 
 - (void) changeStateToNormal:(id) anno

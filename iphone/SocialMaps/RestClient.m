@@ -4610,4 +4610,55 @@
     return status;
 
 }
+
+- (void) setPushNotificationSettings:(NSString*)deviceToken authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    NSLog(@"setPushNotificationSettings: device_id=%@", deviceToken);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/push",WS_URL]];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request addPostValue:@"iOS" forKey:@"device_type"];
+    [request addPostValue:deviceToken forKey:@"device_id"];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200) 
+        {
+            NSLog(@"Registered device: %@",jsonObjects);
+            
+        } 
+        else
+        {
+            NSLog(@"Failed to register device: status=%d", responseStatus);
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+     }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+}
+
 @end

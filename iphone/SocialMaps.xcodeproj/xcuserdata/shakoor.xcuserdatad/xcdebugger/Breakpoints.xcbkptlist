@@ -55,7 +55,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "371"
-         endingLineNumber = "371">
+         endingLineNumber = "371"
+         landmarkName = "-gotAccountSettings:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -67,7 +69,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "375"
-         endingLineNumber = "375">
+         endingLineNumber = "375"
+         landmarkName = "-gotGeofence:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -79,7 +83,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "379"
-         endingLineNumber = "379">
+         endingLineNumber = "379"
+         landmarkName = "-gotShareLoc:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -91,7 +97,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "383"
-         endingLineNumber = "383">
+         endingLineNumber = "383"
+         landmarkName = "-gotNotifications:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -138,10 +146,17 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "813"
          endingLineNumber = "813"
          landmarkName = "@implementation MapViewController"
          landmarkType = "3">
+=======
+         startingLineNumber = "812"
+         endingLineNumber = "812"
+         landmarkName = "-numberOfSectionsInTableView:"
+         landmarkType = "5">
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -152,8 +167,13 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "905"
          endingLineNumber = "905"
+=======
+         startingLineNumber = "904"
+         endingLineNumber = "904"
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -166,8 +186,13 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "870"
          endingLineNumber = "870"
+=======
+         startingLineNumber = "869"
+         endingLineNumber = "869"
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -180,10 +205,17 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "1040"
          endingLineNumber = "1040"
          landmarkName = "@implementation MapViewController"
          landmarkType = "3">
+=======
+         startingLineNumber = "1039"
+         endingLineNumber = "1039"
+         landmarkName = "-searchBarTextDidBeginEditing:"
+         landmarkType = "5">
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -208,10 +240,17 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "1028"
          endingLineNumber = "1028"
          landmarkName = "@implementation MapViewController"
          landmarkType = "3">
+=======
+         startingLineNumber = "1027"
+         endingLineNumber = "1027"
+         landmarkName = "-searchBar:textDidChange:"
+         landmarkType = "5">
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -266,7 +305,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "299"
          endingLineNumber = "299"
-         landmarkName = "-gotAccountSettings:"
+         landmarkName = "-showActivityViewer:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -348,10 +387,17 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "638"
          endingLineNumber = "638"
          landmarkName = "-viewDidUnload"
          landmarkType = "5">
+=======
+         startingLineNumber = "637"
+         endingLineNumber = "637"
+         landmarkName = "@implementation MapViewController"
+         landmarkType = "3">
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -362,9 +408,15 @@
          timestampString = "369906843.442763"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
          startingLineNumber = "583"
          endingLineNumber = "583"
          landmarkName = "-gestureRecognizer:shouldReceiveTouch:"
+=======
+         startingLineNumber = "582"
+         endingLineNumber = "582"
+         landmarkName = "-viewDidUnload"
+>>>>>>> 4eb6c5276bb0ec8e1fda847dd29c55958d5d488b
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

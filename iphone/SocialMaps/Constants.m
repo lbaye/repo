@@ -10,7 +10,7 @@
 
 //NSString * const WS_URL = @"http://174.143.240.157:81";
 //NSString * const WS_URL = @"http://203.76.126.69";
-////NSString * const WS_URL = @"http://203.76.126.69/social_maps/web"; //
+//NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web"; //
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
 //NSString * const WS_URL = @"http://203.76.126.69/social-maps-service/web"; 
 //NSString * const WS_URL = @"http://192.168.1.71/social_maps_git/social-maps-service/web";
@@ -45,6 +45,7 @@ NSString * const NOTIF_GET_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.getbasic
 NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.updatebasicprofiledone";
 NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.updatemeetuprequestdone";
 NSString * const NOTIF_SEND_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.sendmeetuprequestdone";
+NSString * const NOTIF_PUSH_NOTIFICATION_RECEIVED= @"com.genweb2.socialmaps.sendmeetuprequestdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
