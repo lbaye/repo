@@ -100,8 +100,8 @@ class Messages extends Base
 
                 if(!empty($messageArr['replies'])){
 
-                    $messageArr['replies'] = array(end($messageArr['replies']));
-                    $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
+                    $messageArr['replies'] = end($messageArr['replies']);
+                    $messageArr['replies']['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies']['sender']);
                 }else{
                     $messageArr['replies'] = null;
                 }
