@@ -22,7 +22,7 @@
 @synthesize mapContainer,mapView,eventImgView;
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
-@synthesize inviteEventButton;        
+@synthesize inviteEventButton;               
 
 
 NSMutableArray *imageArr, *nameArr, *idArr;

@@ -83,8 +83,8 @@ bool searchFlags=true;
 -(void)viewWillAppear:(BOOL)animated
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    filteredList=[[self loadDummyData] mutableCopy]; 
-    eventListArray=[[self loadDummyData] mutableCopy];
+//    filteredList=[[self loadDummyData] mutableCopy]; 
+//    eventListArray=[[self loadDummyData] mutableCopy];
     [self.mapContainer removeFromSuperview];
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
@@ -118,12 +118,11 @@ bool searchFlags=true;
         NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
         Event *aEvent=[[Event alloc] init];
         aEvent=[eventListGlobalArray objectAtIndex:i];
-        NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
         if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
         {
             aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-            NSLog(@"aEvent.eventImageUrl %@",aEvent.eventImageUrl);
         }
+        NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
         [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
         [pool drain];
     }
@@ -138,7 +137,7 @@ bool searchFlags=true;
 //    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [self hideActivity];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    [self viewDidLoad];
+    [self.view setNeedsDisplay];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     [self.eventListTableView reloadData];
@@ -331,9 +330,9 @@ bool searchFlags=true;
     event = [filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
-    EventListTableCell *cell = [tableView
+    EventListTableCell *cell = [self.eventListTableView
                               dequeueReusableCellWithIdentifier:CellIdentifier];
-    EventListRsvpTableCell *cell1= [tableView
+    EventListRsvpTableCell *cell1= [self.eventListTableView
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell == nil)
     {

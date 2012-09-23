@@ -23,6 +23,7 @@
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
+-(void)DownLoad:(NSNumber *)path;
 @end
 
 @implementation CreateEventViewController
@@ -281,7 +282,6 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 {
 	
 	[super viewWillDisappear:animated];
-    [self viewDidUnload];
 	isBackgroundTaskRunning=false;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
@@ -937,7 +937,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                 } 
                 else 
                 { 
-                    if(!isDragging_msg && !isDecliring_msg) 
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
@@ -1012,7 +1012,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                 } 
                 else 
                 { 
-                    if(!isDragging_msg && !isDecliring_msg) 
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil)) 
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
