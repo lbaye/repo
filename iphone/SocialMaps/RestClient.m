@@ -4213,6 +4213,7 @@
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];
                 msg.lastReply = [item valueForKey:@"replies"];
+                msg.msgStatus=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
                 
                 NSLog(@"msg.notifAvater %@", msg.notifAvater);
                 NSLog(@"msg.lastReply %@", msg.lastReply);
@@ -4331,6 +4332,56 @@
     NSLog(@"asyn srt getReplies");
     [request startAsynchronous];
     
+}
+
+-(void)setMessageStatus:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId status:(NSString*)status
+{
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/status/%@", WS_URL, messageId, status];
+    
+    //if (!ti) {
+    //NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
+    //}
+    
+    NSURL *url = [NSURL URLWithString:route];
+    NSMutableArray *messageReplies = [[NSMutableArray alloc] init];
+    
+    NSLog(@"route = %@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_MESSAGE_STATUS_DONE object:messageReplies];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt set msg status");
+    [request startAsynchronous];
 }
 
 /*

@@ -270,7 +270,7 @@ UserDefault *userDefault;
         
         NSString * stringOfFriends = [frndList componentsJoinedByString:@","];
         NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                       @"Social Maps", @"title",
+                                       @"Invite your Facebook friends", @"title",
                                        @"Come check out Social Maps.",  @"message",
                                        stringOfFriends, @"to",[prefs stringForKey:@"FBAccessTokenKey"], @"access_token",
                                        nil]; 

@@ -16,6 +16,7 @@
 @synthesize notifID;
 @synthesize recipients;
 @synthesize lastReply;
+@synthesize msgStatus;
 
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller{
     CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];

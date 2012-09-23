@@ -35,6 +35,8 @@
 
 #define SECTION_HEADER_HEIGHT   44
 
+NSMutableArray *unreadMesg;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -72,7 +74,7 @@
                                  currFrame.size.width, currFrame.size.height);
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMessageStatus:) name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
     // Dummy cotifications
     int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
@@ -104,9 +106,24 @@
     // Default notification type
     selectedType = Message;
     smAppDelegate.msgRead = TRUE;
-    
+    unreadMesg=[[NSMutableArray alloc] init];
     // NotifRequest delegate
     
+}
+
+-(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
+{
+    NSMutableArray *unReadMessage=[[NSMutableArray alloc] init];
+    for (int i=0; i<[smAppDelegate.messages count]; i++)
+    {
+        NSString *msgSts=((NotifMessage *)[smAppDelegate.messages objectAtIndex:i]).msgStatus;
+        if ([msgSts isEqualToString:@"unread"])
+        {
+            [unReadMessage addObject:[smAppDelegate.messages objectAtIndex:i]];
+        }
+    }
+    
+    return unReadMessage;
 }
 
 - (void)viewDidUnload
@@ -280,6 +297,17 @@
             break;
     }
      */
+//    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
+    if (selectedType==0)
+    {
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
+        NSLog(@"indexPath.row %d %d %@",selectedType,indexPath.row,((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID);
+        NSString *msgId=((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID; 
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
+
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -370,6 +398,13 @@
         msg.showDetail = TRUE;
     [smAppDelegate.messages replaceObjectAtIndex:clickedButtonPath.row withObject:msg];
     [notificationItems reloadData];
+}
+
+- (void)setMessageStatus:(NSNotification *)notif
+{
+    NSLog(@"message sts updated.");
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];    
 }
 
 // NotifRequestDelegate methods
