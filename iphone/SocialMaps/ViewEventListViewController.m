@@ -97,6 +97,8 @@ bool searchFlags=true;
     RestClient *rc=[[RestClient alloc] init];
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [filteredList removeAllObjects];
+    [eventListArray removeAllObjects];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     [self.eventListTableView reloadData];
@@ -133,7 +135,8 @@ bool searchFlags=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventListGlobalArray=[[notif object] mutableCopy];
     NSLog(@"GOT SERVICE DATA EVENT.. :D  %@",[notif object]);
-    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+//    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [self hideActivity];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self viewDidLoad];
     filteredList=[[self loadDummyData] mutableCopy]; 
@@ -334,7 +337,7 @@ bool searchFlags=true;
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell == nil)
     {
-        if (event.isInvited==false)
+        if ((event.isInvited==false)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
         {
             cell = [[EventListTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
@@ -363,7 +366,7 @@ bool searchFlags=true;
     cell1.viewEventOnMap.tag=indexPath.row;
 //    NSLog(@"event.myResponse: %@",event.myResponse);
     NSLog(@"event: %@",event);
-    if(event.isInvited)
+    if ((event.isInvited==true)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
     {
         if ([event.myResponse isEqualToString:@"yes"])
         {

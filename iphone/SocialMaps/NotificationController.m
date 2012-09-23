@@ -268,6 +268,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
+    /*
+    NotifMessage *msg;
+    
+    switch (selectedType) {
+        case Message:
+            msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
+            
+            break;
+        default:
+            break;
+    }
+     */
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

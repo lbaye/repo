@@ -33,6 +33,7 @@
 #import "UserBasicProfileViewController.h"
 #import "Globals.h"
 #import "ViewCircleListViewController.h"
+#import "ViewEventListViewController.h"
 
 @interface MapViewController ()
 
@@ -1209,7 +1210,7 @@ ButtonClickCallbackData callBackData;
 //    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
    // viewEventList
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [smAppDelegate showActivityViewer:self.view];

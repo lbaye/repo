@@ -47,7 +47,7 @@
 @synthesize customTableView;
 @synthesize private;
 
-__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList, *filteredList2, *circleList;
+__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
@@ -112,7 +112,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     
     friendsIDArr=[[NSMutableArray alloc] init];
     
-    filteredList=[[NSMutableArray alloc] init];
+    filteredList1=[[NSMutableArray alloc] init];
     
     friendListArr=[[NSMutableArray alloc] init];
     
@@ -154,7 +154,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
         
     }
     
-    filteredList=[friendListArr mutableCopy];
+    filteredList1=[friendListArr mutableCopy];
     filteredList2=[friendListArr mutableCopy];
     //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
@@ -175,7 +175,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     customScrollView.delegate=self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    filteredList=[[NSMutableArray alloc] init];
+    filteredList1=[[NSMutableArray alloc] init];
     filteredList2=[[NSMutableArray alloc] init];
     selectedCircleCheckArr=[[NSMutableArray alloc] init];
     selectedCustomCircleCheckArr=[[NSMutableArray alloc] init];
@@ -530,9 +530,9 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 
 -(IBAction)addAll:(id)sender
 {
-    for (int i=0; i<[filteredList count]; i++)
+    for (int i=0; i<[filteredList1 count]; i++)
     {
-        [selectedFriendsIndex addObject:[filteredList objectAtIndex:i]];
+        [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:i]];
     }
     [self reloadScrolview];
 }
@@ -732,7 +732,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     static NSString *CellIdentifier = @"circleTableCell";
     static NSString *CustomCellIdentifier = @"customCircleTableCell";
     
-    int nodeCount = [filteredList count];
+    int nodeCount = [filteredList1 count];
         
     SelectCircleTableCell *cell = [circleTableView
                                 dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -914,18 +914,19 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
             }
         }   
         
-        frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
+        frndListScrollView.contentSize=CGSizeMake([filteredList1 count]*65, 65);
         customScrollView.contentSize=CGSizeMake([filteredList2 count]*65, 65);
         
         NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-        for(int i=0; i<[filteredList count];i++)               
+        for(int i=0; i<[filteredList1 count];i++)               
         {
-            if(i< [filteredList count]) 
+            if(i< [filteredList1 count]) 
             { 
                 UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[filteredList objectAtIndex:i];
+                userFrnd=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-                if (userFrnd.imageUrl == nil) 
+                
+                if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
                 {
                     imgView.image = [UIImage imageNamed:@"thum.png"];
                 } 
@@ -972,7 +973,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
                 for (int c=0; c<[selectedFriendsIndex count]; c++)
                 {
-                    if ([[filteredList objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
+                    if ([[filteredList1 objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
                     {
                         imgView.layer.borderColor=[[UIColor greenColor] CGColor];
                         NSLog(@"found selected: %@",[selectedFriendsIndex objectAtIndex:c]);
@@ -1076,7 +1077,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
-    userFrnd=[filteredList objectAtIndex:index];
+    userFrnd=[filteredList1 objectAtIndex:index];
 
     NSString *Link = userFrnd.imageUrl;
     //Start download image from url
@@ -1098,16 +1099,16 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 {
     int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
-    if ([selectedFriendsIndex containsObject:[filteredList objectAtIndex:[sender.view tag]]])
+    if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
-        [selectedFriendsIndex removeObject:[filteredList objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex removeObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     } 
     else 
     {
-        [selectedFriendsIndex addObject:[filteredList objectAtIndex:[sender.view tag]]];
+        [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     }
     UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList objectAtIndex:[sender.view tag]];
+    frnds=[filteredList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -1236,8 +1237,8 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     {
         searchText=@"";
         //[self loadFriendListsData]; TODO: commented this
-        [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
+        [filteredList1 removeAllObjects];
+        filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
     }
     
@@ -1295,8 +1296,8 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     {
     friendSearchbar.text=@"";
     searchTexts=@"";    
-    [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
+    [filteredList1 removeAllObjects];
+    filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
     [self reloadScrolview];
     [friendSearchbar resignFirstResponder];
     NSLog(@"3");
@@ -1335,19 +1336,19 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     [self loadDummydata];
     searchTexts = friendSearchbar.text;
     NSLog(@"in search method..");
-    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
+    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
 
-    [filteredList removeAllObjects];
+    [filteredList1 removeAllObjects];
     
     if ([searchTexts isEqualToString:@""])
     {
         NSLog(@"null string");
         friendSearchbar.text=@"";
-        filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
+        filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
+        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
 
         for (UserFriends *sTemp in friendListArr)
         {
@@ -1355,7 +1356,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
             NSLog(@"sTemp.userName: %@",sTemp.userName);
             if (titleResultsRange.length > 0)
             {
-                [filteredList addObject:sTemp];
+                [filteredList1 addObject:sTemp];
                 NSLog(@"filtered friend: %@", sTemp.userName);            
             }
             else
@@ -1365,7 +1366,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     }
     searchFlag=false;    
     
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
+    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
     [self reloadScrolview];
 }
 
