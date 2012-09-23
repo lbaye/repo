@@ -11,7 +11,7 @@ class ProximityAlert extends Base
      */
     protected $userRepository;
 
-    const DEFAULT_RADIUS = 7;
+    const DEFAULT_RADIUS = 4;
 
     protected function setFunction()
     {
@@ -36,6 +36,9 @@ class ProximityAlert extends Base
 
     private function sendNotificationToNearbyFriends($user)
     {
+        if (empty($user))
+            return;
+
         // Retrieve target user's friends
         $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
 
@@ -89,10 +92,10 @@ class ProximityAlert extends Base
                $notificationSettings['proximity_alerts']['sm'];
     }
 
-    private function _createNotificationData($friend)
+    private function _createNotificationData(\Document\User $friend)
     {
         return array(
-            'title' => 'Your friend is here! Check him!',
+            'title' => 'Your friend '. $friend->getName() .' is here!',
             'photoUrl' => $friend->getAvatar(),
             'objectId' => $friend->getId(),
             'objectType' => 'proximity_alert',

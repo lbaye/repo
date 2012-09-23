@@ -292,6 +292,7 @@ class Settings extends Base
                 $this->_updateLastSeenAt($this->user);
                 $this->_sendProximityAlerts($this->user);
             } catch (\Exception $e) {
+                $this->_sendProximityAlerts($this->user);
                 // Do the location update even if
                 return $this->persistAndReturn($location);
             }

@@ -47,3 +47,6 @@ friends:
   pattern: /me/friends
   defaults: { _controller: Controller\User::getFriendList}
   requirements: { _method: GET}
+
+
+
