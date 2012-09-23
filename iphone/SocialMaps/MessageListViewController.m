@@ -575,7 +575,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             }
             
             // Add avatar to avatar array
-            [avatarImages addObject:recipientAvater];
+            NSString *urlAvatar = [recipient valueForKey:@"avatar"];
+            NSLog(@"Avatar=%@", urlAvatar);
+            if ((urlAvatar==NULL)||[urlAvatar isEqual:[NSNull null]])
+                urlAvatar=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+
+            [avatarImages addObject:urlAvatar];
         }
     }
     
@@ -718,7 +723,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 {
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msg.notifSenderId];
    
-   if (iconDownloader == nil)
+   if (iconDownloader == nil && msg.notifAvater != nil)
    {
         iconDownloader = [[IconDownloader alloc] init];
         UserFriends *userFriends = [[UserFriends alloc] init];
@@ -1281,7 +1286,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             UserFriends *userFrnd=[[UserFriends alloc] init];
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            if (userFrnd.imageUrl == nil) {
+                imgView.image = [UIImage imageNamed:@"girl.png"];
+            }            
+            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 

@@ -114,7 +114,8 @@
             [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
 
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-        [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
+        // TODO: for appstore submission do not show detailed annotation
+        [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     }else {
         //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
@@ -135,10 +136,14 @@
     UIImageView *imgView = (UIImageView*)[annoView viewWithTag:11000];
     imgView.frame = CGRectMake(8, 8, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
     
-    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
+    // TODO: temporary change for appstore submission
+    //CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
+    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);
     annoView.frame = annoFrame;
     
-    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
+    // TODO: temporary change for appstore submission
+    //CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
+    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
     infoView = [[UIView alloc] initWithFrame:infoFrame];
     infoView.backgroundColor = [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0]; 
     infoView.tag = 11002;
@@ -189,7 +194,8 @@
                 else
                     locItem.currDisplayState = MapAnnotationStateNormal;
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-                locItem.currDisplayState = MapAnnotationStateDetailed;
+                // TODO: for appstore submission do not show detailed annotation
+                locItem.currDisplayState = MapAnnotationStateNormal;
             } else {
                 locItem.currDisplayState = MapAnnotationStateNormal;
             }
@@ -209,28 +215,21 @@
 }
 
 - (void) changeStateToDetails:(id) anno {
-    NSLog(@"MapAnnotation: changeStateClicked2");
+    NSLog(@"MapAnnotation: changeStateToDetails");
     LocationItem *locItem = (LocationItem*)anno;
     
-    NSLog(@"changeStateClicked Name=%@", locItem.itemName);
+    NSLog(@"changeStateToDetails Name=%@", locItem.itemName);
     
-            // Don't show details for non-SM users
-            if ([locItem isKindOfClass:[LocationItemPeople class]]) {
-                LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
-                if (locItemPeople.userInfo.external == false) 
-                    locItem.currDisplayState = MapAnnotationStateDetailed;
-                else
-                    locItem.currDisplayState = MapAnnotationStateNormal;
-            } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-                locItem.currDisplayState = MapAnnotationStateDetailed;
-            } 
-    
-    //selAnno.selected=TRUE;
-    
-    //[selAnno setNeedsDisplay];
-    //if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:sender:)]) {
-        //[self.delegate mapAnnotationChanged:[selAnno annotation] sender:sender];
-    //}
+    // Don't show details for non-SM users
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if (locItemPeople.userInfo.external == false) 
+            locItem.currDisplayState = MapAnnotationStateDetailed;
+        else
+            locItem.currDisplayState = MapAnnotationStateNormal;
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+        locItem.currDisplayState = MapAnnotationStateSummary;
+    } 
 }
 
 - (void) changeStateToNormal:(id) anno

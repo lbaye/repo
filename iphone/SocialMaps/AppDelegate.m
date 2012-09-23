@@ -5,7 +5,7 @@
 //  Created by Arif Shakoor on 7/22/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
-
+#import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 #import "CustomAlert.h"
 #import "FacebookHelper.h"
@@ -19,6 +19,7 @@
 #import "UserCircle.h"
 #import "Globals.h"
 #import "UserDefault.h"
+#import "PushNotification.h"
 
 @implementation AppDelegate
 
@@ -67,6 +68,9 @@
 @synthesize placeIndex;
 @synthesize meetUpRequests;
 @synthesize needToCenterMap;
+@synthesize deviceTokenId;
+@synthesize deviceTokenChanged;
+@synthesize facebookLogin;
 
 - (void)dealloc
 {
@@ -77,7 +81,23 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    // Let the device know we want to receive push notifications
+	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
+    if (launchOptions != nil)
+	{
+		NSDictionary* dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+		if (dictionary != nil)
+		{
+			NSLog(@"Launched from push notification: %@", dictionary);
+            PushNotification *newNotif = [PushNotification parsePayload:dictionary];
+            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
+		}
+	}
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    facebookLogin = FALSE;
     gotListing = FALSE;
     needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
@@ -88,9 +108,12 @@
     fbId = [prefs stringForKey:@"FBUserId"];
     fbAccessToken = [prefs stringForKey:@"FBAccessTokenKey"];
     loginCount = [prefs integerForKey:@"loginCount"];
+    deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
+    deviceTokenChanged = FALSE;
     NSLog(@"email=%@,password=%@,remember=%d, login count=%d, authToken=%@",email,password,rememberLoginInfo,
           loginCount, authToken);
     NSLog(@"FB id=%@, FBAuthToken=%@", fbId, fbAccessToken);
+    NSLog(@"Device Token=%@", deviceTokenId);
 
     // Singleton instance
     fbHelper = [FacebookHelper sharedInstance];
@@ -169,7 +192,43 @@
     
     return YES;
 }
-							
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+	NSLog(@"My token is: %@", deviceToken);
+    
+    // Need to update server if new token received
+    NSString* newToken = [deviceToken description];
+	newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+	newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"New token=[%@] old token=[%@]", newToken, deviceTokenId);
+    if ([newToken caseInsensitiveCompare:deviceTokenId] != NSOrderedSame) {
+        deviceTokenId = [[NSString alloc] initWithString: newToken];
+        deviceTokenChanged = TRUE;
+        NSLog(@"Updating device token");
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:deviceTokenId forKey:@"deviceTokenId"];
+        [prefs synchronize];
+    }
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
+
+//
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
+{
+	NSLog(@"Received notification: %@", userInfo);
+    PushNotification *newNotif = [PushNotification parsePayload:userInfo];
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+    [restClient getLocation:currPosition :@"Auth-Token" :authToken];
+    [restClient getInbox:@"Auth-Token" authTokenVal:authToken];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -234,10 +293,15 @@
 -(void)showActivityViewer:(UIView*) sender
 {
 	CGRect frame = CGRectMake(sender.frame.size.width / 2 - 12, sender.frame.size.height / 2 - 12, 24, 24);
+    
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
+    [activityView.layer setCornerRadius:4.0f];
+    [activityView.layer setMasksToBounds:YES];
+    
+    activityView.backgroundColor = [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:25.0/255.0 alpha:0.7];
 	[activityView startAnimating];
     [activityView hidesWhenStopped];
-	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
 	[activityView sizeToFit];
 	activityView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
                                      UIViewAutoresizingFlexibleRightMargin |

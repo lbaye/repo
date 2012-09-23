@@ -772,20 +772,7 @@ DDAnnotation *annotation;
     [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
 }
-/*
--(void)loadDummydata
-{
-    UserFriends *frnds=[[UserFriends alloc] init];
-    
-    for (int i=0; i<[friendListGlobalArray count]; i++)
-    {
-        frnds=[[UserFriends alloc] init];
-        frnds=[friendListGlobalArray objectAtIndex:i];
-        [friendListArr addObject:frnds];
-    }
-    filteredList=[friendListArr mutableCopy];
-}
-*/
+
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];

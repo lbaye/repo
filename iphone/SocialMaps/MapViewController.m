@@ -210,11 +210,20 @@ ButtonClickCallbackData callBackData;
     
 }
 
+- (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno {
+    NSLog(@"MapViewController:mapAnnotationInfoUpdated");
+    [_mapView removeAnnotation:anno];
+    [_mapView addAnnotation:anno];
+    selectedAnno = anno;
+    
+    [self.view setNeedsDisplay];
+}
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
+    selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
-    [self mapAnnotationChanged:selLocation];
     [mapAnno changeStateToDetails:selLocation];
+    //[self mapAnnotationChanged:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
 }
 
@@ -225,6 +234,10 @@ ButtonClickCallbackData callBackData;
     r.origin.x = pt.x - r.size.width * 0.3;
     r.origin.y = pt.y - r.size.height * 0.5;
     [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self mapAnnotationChanged:locItem];
+    [mapAnno changeStateToDetails:locItem];
+    
 }
 
 // MapAnnotation delegate methods
@@ -236,12 +249,8 @@ ButtonClickCallbackData callBackData;
         [_mapView removeAnnotation:(id <MKAnnotation>)selectedAnno];
         [_mapView addAnnotation:(id <MKAnnotation>)selectedAnno];
     }
-    [_mapView removeAnnotation:anno];
-    [_mapView addAnnotation:anno];
-    selectedAnno = anno;
     
-    [self.view setNeedsDisplay];
-
+    [self mapAnnotationInfoUpdated:anno];
 }
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
@@ -346,7 +355,7 @@ ButtonClickCallbackData callBackData;
     LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
 
     //selectedAnno = [annoView annotation];
-    [self mapAnnotationChanged:[annoView annotation]];
+    [self mapAnnotationInfoUpdated:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
     
     NSLog(@"MapViewController: performUserAction %@ type=%d", locItem.itemName, actionType);
@@ -408,7 +417,8 @@ ButtonClickCallbackData callBackData;
     [super viewDidLoad];  
     
     NSLog(@"MapViewController:viewDidLoad" );
-
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     // Map drag handler
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
@@ -428,22 +438,24 @@ ButtonClickCallbackData callBackData;
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
-    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     [self performSelectorInBackground:@selector(saveFBProfileImage) withObject:nil];
     _mapView.delegate=self;
-    _mapView.showsUserLocation=YES;
+    if ([CLLocationManager locationServicesEnabled])
+        _mapView.showsUserLocation=YES;
+    else
+        _mapView.showsUserLocation=NO;
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
     [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
-    
+    _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
+        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     // Get Information
     [smAppDelegate getUserInformation:smAppDelegate.authToken];
-
+    
     mapAnno = [[MapAnnotation alloc] init];
     mapAnno.currState = MapAnnotationStateNormal;
     mapAnno.delegate = self;
@@ -470,17 +482,6 @@ ButtonClickCallbackData callBackData;
     searchText=[[NSString alloc] init];
 
     fbHelper=[FacebookHelper sharedInstance];
-    NSLog(@"frnd arrayk count %d ",[userFriendslistArray count]);
-    if ([userFriendslistArray count]==0)
-    {
-        [inviteFriendView setHidden:YES];
-    }
-    else
-    {
-        [fbHelper inviteFriends:nil];
-//        [inviteFriendView setHidden:NO];
-    }
-    //[self loadFriendListsData]; TODO: commented this
     
     imageDownloadsInProgress = [NSMutableDictionary dictionary];
     [imageDownloadsInProgress retain];
@@ -526,6 +527,16 @@ ButtonClickCallbackData callBackData;
 
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
+    if (smAppDelegate.gotListing == FALSE) {
+        if (smAppDelegate.facebookLogin == TRUE)
+            [fbHelper inviteFriends:nil];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
+
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+    }
+
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -658,7 +669,10 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    _mapView.showsUserLocation = YES;
+    if ([CLLocationManager locationServicesEnabled])
+        _mapView.showsUserLocation=YES;
+    else
+        _mapView.showsUserLocation=NO;
     // 1
     CLLocationCoordinate2D zoomLocation;
     
@@ -677,13 +691,23 @@ ButtonClickCallbackData callBackData;
     [super viewWillAppear:animated];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
+    NSLog(@"MapViewController:didFailWithError error code=%d msg=%@", [inError code], [inError localizedFailureReason]);
+    _mapView.showsUserLocation = NO;
+    [manager stopUpdatingLocation];
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
+        return;
+    
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
     NSDate *now = [NSDate date];
     int elapsedTime = [now timeIntervalSinceDate:smAppDelegate.currPosition.positionTime];
-
+    _mapView.showsUserLocation = YES;
+    
     CLLocationDistance distanceMoved = [newLocation distanceFromLocation:lastPos];
     NSLog(@"MapViewController:didUpdateToLocation - old {%f,%f}, new {%f,%f}, distance moved=%f, elapsed time=%d",
           oldLocation.coordinate.latitude, oldLocation.coordinate.longitude,
@@ -692,11 +716,11 @@ ButtonClickCallbackData callBackData;
     
 
     // Update location if new position detected and one of the following is true
-    // 1. Moved 10 meters and 1 minute has elapsed.
-    // 2. 5 mintes have elapsed. This is to get new people around and I am mostly stationary
+    // 1. Moved 10 meters and 10 seconds has elapsed.
+    // 2. 60 seconds has elapsed. This is to get new people around and I am mostly stationary
     // 3. First time - smAppDelegate.gotListing == FALSE
     //
-    if ((distanceMoved >= 10 && elapsedTime > 60) || elapsedTime > 300 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
+    if ((distanceMoved >= 10 && elapsedTime > 10) || elapsedTime > 60 || smAppDelegate.gotListing == FALSE) { // TODO : use distance
         // Update the position
         smAppDelegate.lastPosition = smAppDelegate.currPosition;
         smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
@@ -711,9 +735,13 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        smAppDelegate.gotListing = TRUE;
+        //smAppDelegate.gotListing = TRUE;
     }
 
+}
+
+- (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
+    mapView.showsUserLocation = NO;
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
@@ -1420,26 +1448,20 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) updateLocation:(id) sender {
-    NSLog(@"MapViewController: updateLocation");
+    CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
+    _mapView.centerCoordinate = lastPos;
+    NSLog(@"MapViewController: updateLocation lat:%f lng:%f", lastPos.latitude, lastPos.longitude);
     if ([CLLocationManager locationServicesEnabled]) {
-        [locationManager stopUpdatingLocation];
-        [locationManager startUpdatingLocation];
-        _mapView.centerCoordinate = self.mapView.userLocation.location.coordinate;
+        _mapView.showsUserLocation=YES;
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     } else {
-        CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.lastPosition.longitude doubleValue]);
-        _mapView.centerCoordinate = lastPos;
+        _mapView.showsUserLocation=NO;
     }
-    _mapView.showsUserLocation=YES;
     smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
-//test code
-    //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:5];
-    //[self showAnnotationDetailView:locItem];
-    
-    
+
 }
 
 - (void) getSortedDisplayList {
@@ -1558,7 +1580,7 @@ ButtonClickCallbackData callBackData;
                                     //
                                     //[image release];
                                     if (smAppDelegate.showPeople == TRUE)
-                                        [self mapAnnotationChanged:person];
+                                        [self mapAnnotationInfoUpdated:person];
                                 });
                             });
                         }
@@ -1576,7 +1598,7 @@ ButtonClickCallbackData callBackData;
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemDistance = distanceFromMe;
                         if (smAppDelegate.showPeople == TRUE)
-                            [self mapAnnotationChanged:aPerson];
+                            [self mapAnnotationInfoUpdated:aPerson];
                     }
                 }
             }
@@ -1617,7 +1639,7 @@ ButtonClickCallbackData callBackData;
             for (Places *item in listings.placeArr) {
                 __block NSNumber *indx;
                 if ((indx=[smAppDelegate.placeIndex objectForKey:item.ID]) == nil) {
-                    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+                    NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"venueimg" ofType:@"png"];
                     UIImage *icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
                     NSString* bgPath = [[NSBundle mainBundle] pathForResource:@"banner_bar" ofType:@"png"];
                     UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
@@ -1648,7 +1670,7 @@ ButtonClickCallbackData callBackData;
                                 LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
                                 place.itemIcon = image;
                                 if (smAppDelegate.showPlaces == TRUE)
-                                    [self mapAnnotationChanged:place];
+                                    [self mapAnnotationInfoUpdated:place];
                             });
                         });
                     } 
@@ -1670,7 +1692,11 @@ ButtonClickCallbackData callBackData;
 
         }
     }
-
+    if (smAppDelegate.gotListing == FALSE) {
+        smAppDelegate.gotListing = TRUE;
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        [smAppDelegate hideActivityViewer];
+    }
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];

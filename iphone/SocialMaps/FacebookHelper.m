@@ -237,7 +237,7 @@ UserDefault *userDefault;
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
         [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture", userName]]; 
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
         
         // Save the FB id
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -246,7 +246,7 @@ UserDefault *userDefault;
         [prefs synchronize];
 
         frndListFlag=TRUE;
-        [self getUserFriendListRequest:self];
+        //[self getUserFriendListRequest:self];
     }
     
     else

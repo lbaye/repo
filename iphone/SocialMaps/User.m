@@ -38,5 +38,7 @@
 @synthesize circles;
 @synthesize friendsList;
 @synthesize circleList;
+@synthesize currentLocationLat;
+@synthesize currentLocationLng;
 
 @end

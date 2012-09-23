@@ -347,6 +347,7 @@
 		4F50CC0715C82BAA00A3AFA8 /* NotifMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0615C82BAA00A3AFA8 /* NotifMessage.m */; };
 		4F50CC0A15C82C3900A3AFA8 /* TagNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0915C82C3800A3AFA8 /* TagNotification.m */; };
 		4F50CC0D15C82CA700A3AFA8 /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F50CC0C15C82CA600A3AFA8 /* Invite.m */; };
+		4F5151D41607417B00271EAC /* venueimg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F5151D31607417B00271EAC /* venueimg.png */; };
 		4F59C33F15E7EB060060C8D9 /* MapAnnotationPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */; };
 		4F5C4B8415D6372C001D510F /* LocationSharingCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8315D6372B001D510F /* LocationSharingCircle.m */; };
 		4F5C4B8815D66DF7001D510F /* LocationSharingPlaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C4B8715D66DF7001D510F /* LocationSharingPlaces.m */; };
@@ -513,7 +514,7 @@
 		4FE425B815C0699F00A6B6A3 /* FBTestSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258115C0699F00A6B6A3 /* FBTestSession.m */; };
 		4FE425B915C0699F00A6B6A3 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258315C0699F00A6B6A3 /* FBURLConnection.m */; };
 		4FE425BA15C0699F00A6B6A3 /* FBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258515C0699F00A6B6A3 /* FBUtility.m */; };
-		4FE425BB15C0699F00A6B6A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4258815C0699F00A6B6A3 /* Info.plist */; };
+		4FE425BB15C0699F00A6B6A3 /* FB-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FE4258815C0699F00A6B6A3 /* FB-Info.plist */; };
 		4FE425BC15C0699F00A6B6A3 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258C15C0699F00A6B6A3 /* NSObject+SBJSON.m */; };
 		4FE425BD15C0699F00A6B6A3 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4258E15C0699F00A6B6A3 /* NSString+SBJSON.m */; };
 		4FE425BE15C0699F00A6B6A3 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4259015C0699F00A6B6A3 /* SBJSON.m */; };
@@ -566,6 +567,7 @@
 		4FF09BF215CFBC8000F8AD19 /* icon_arrow_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF09BEC15CFBC8000F8AD19 /* icon_arrow_gray.png */; };
 		4FF09BF315CFBC8000F8AD19 /* icon_arrow_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF09BED15CFBC8000F8AD19 /* icon_arrow_dark.png */; };
 		4FF09BF615CFE6E600F8AD19 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF09BF515CFE6E600F8AD19 /* SettingsController.m */; };
+		4FF1E8BC160C6808004A63D3 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03B64E1609D6E2002C1636 /* PushNotification.m */; };
 		4FF81C6C15D6C7260097759A /* cal-48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FF81C6B15D6C7250097759A /* cal-48x48.png */; };
 		B01DFC4615F5E61000020D49 /* MessageReply.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4515F5E61000020D49 /* MessageReply.m */; };
 		B01DFC4A15F5E61F00020D49 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B01DFC4915F5E61F00020D49 /* MessageListViewController.m */; };
@@ -858,6 +860,8 @@
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		20E75BE015EA0343000B6B8A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		4F03B64D1609D6E2002C1636 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
+		4F03B64E1609D6E2002C1636 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
 		4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
 		4F1B8DDF15E40FC0004AC402 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sm_icon@2x.png"; path = "Images/sm_icon@2x.png"; sourceTree = SOURCE_ROOT; };
 		4F1B99AE15CC377D0066BF16 /* tagged_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tagged_image.png; path = Images/tagged_image.png; sourceTree = SOURCE_ROOT; };
@@ -977,6 +981,7 @@
 		4F50CC0915C82C3800A3AFA8 /* TagNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagNotification.m; sourceTree = "<group>"; };
 		4F50CC0B15C82CA600A3AFA8 /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
 		4F50CC0C15C82CA600A3AFA8 /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
+		4F5151D31607417B00271EAC /* venueimg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = venueimg.png; path = Images/venueimg.png; sourceTree = SOURCE_ROOT; };
 		4F59C33D15E7EB060060C8D9 /* MapAnnotationPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationPlace.h; sourceTree = "<group>"; };
 		4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationPlace.m; sourceTree = "<group>"; };
 		4F5C4B8215D6372B001D510F /* LocationSharingCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSharingCircle.h; sourceTree = "<group>"; };
@@ -1249,7 +1254,7 @@
 		4FE4258315C0699F00A6B6A3 /* FBURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBURLConnection.m; sourceTree = "<group>"; };
 		4FE4258415C0699F00A6B6A3 /* FBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBUtility.h; sourceTree = "<group>"; };
 		4FE4258515C0699F00A6B6A3 /* FBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBUtility.m; sourceTree = "<group>"; };
-		4FE4258815C0699F00A6B6A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FE4258815C0699F00A6B6A3 /* FB-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "FB-Info.plist"; sourceTree = "<group>"; };
 		4FE4258A15C0699F00A6B6A3 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		4FE4258B15C0699F00A6B6A3 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		4FE4258C15C0699F00A6B6A3 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -1678,6 +1683,8 @@
 				4F6036D915DD4DAD00C1BD4E /* Places.m */,
 				20B0E7E715D7BA89009A500A /* Platform.h */,
 				20B0E7E815D7BA89009A500A /* Platform.m */,
+				4F03B64D1609D6E2002C1636 /* PushNotification.h */,
+				4F03B64E1609D6E2002C1636 /* PushNotification.m */,
 				4FE9419515D46A2E0017B654 /* RadioButton.h */,
 				4FE9419615D46A2F0017B654 /* RadioButton.m */,
 				4FC6E53E15D4D04600C82B39 /* RadioButtonItem.h */,
@@ -1909,9 +1916,9 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4F4CA53415C45351004234E5 /* add_friend_button.png */,
 				4F4CA53915C45351004234E5 /* accept_button_a.png */,
 				4F4CA53815C45351004234E5 /* accept_button_h.png */,
-				4F4CA53415C45351004234E5 /* add_friend_button.png */,
 				4FB7A04715D124E2001EB905 /* arrow_solid_left.png */,
 				4FB7A04615D124E2001EB905 /* arrow_solid_right.png */,
 				4FE4260915C06FAD00A6B6A3 /* b_accept_n_login.png */,
@@ -1986,13 +1993,13 @@
 				4FF09BEC15CFBC8000F8AD19 /* icon_arrow_gray.png */,
 				4FF09BEB15CFBC8000F8AD19 /* icon_arrow_right.png */,
 				4FB7A02C15D124E2001EB905 /* icon_arrow_up.png */,
-				20E46765160B0F86006FC759 /* Images */,
 				4F1B99B315CC377D0066BF16 /* icon_filter.png */,
 				4FE4261A15C06FAD00A6B6A3 /* icon_lock.png */,
 				4F1B99B215CC377D0066BF16 /* icon_monocole_selected.png */,
 				4FF09BEA15CFBC8000F8AD19 /* icon_settings.png */,
 				4F4CA53D15C45351004234E5 /* ignore_button_a.png */,
 				4F4CA53C15C45351004234E5 /* ignore_button_h.png */,
+				20E46765160B0F86006FC759 /* Images */,
 				4FF09BE915CFBC8000F8AD19 /* img_settings_header_bg.png */,
 				4FF09BE815CFBC8000F8AD19 /* img_settings_list_bg.png */,
 				B01DFC4C15F5E74300020D49 /* line.png */,
@@ -2103,6 +2110,7 @@
 				4F4CA51B15C45351004234E5 /* user_thumb.png */,
 				4F4CA51A15C45351004234E5 /* user_thumb_only.png */,
 				4FC081F215DAFC7200203C21 /* user_thumb_only2.png */,
+				4F5151D31607417B00271EAC /* venueimg.png */,
 				B01DFC5215F5E74300020D49 /* whitle_blend.png */,
 				4F4CA53F15C45351004234E5 /* xlose_icon.png */,
 				4F72290815C7F4BB008B60A8 /* yes_button.png */,
@@ -2206,7 +2214,7 @@
 		4FE4258715C0699F00A6B6A3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4FE4258815C0699F00A6B6A3 /* Info.plist */,
+				4FE4258815C0699F00A6B6A3 /* FB-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2303,7 +2311,7 @@
 				4F98A2D615BB387D000B3124 /* InfoPlist.strings in Resources */,
 				4F98A2DF15BB387D000B3124 /* MainStoryboard.storyboard in Resources */,
 				4FE425AB15C0699F00A6B6A3 /* FBiOSSDKResources.bundle in Resources */,
-				4FE425BB15C0699F00A6B6A3 /* Info.plist in Resources */,
+				4FE425BB15C0699F00A6B6A3 /* FB-Info.plist in Resources */,
 				4FE425C215C0699F00A6B6A3 /* 01package-contents.xml in Resources */,
 				4FE425C315C0699F00A6B6A3 /* 01package.xml in Resources */,
 				4FE425C415C0699F00A6B6A3 /* index.xml in Resources */,
@@ -2511,6 +2519,7 @@
 				208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */,
 				208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */,
 				4F4FB0A41601014C00E142A7 /* MeetUpRequestListView.xib in Resources */,
+				4F5151D41607417B00271EAC /* venueimg.png in Resources */,
 				2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */,
 				B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */,
 				20E46830160B0F86006FC759 /* accept_button_a.png in Resources */,
@@ -2725,6 +2734,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FF1E8BC160C6808004A63D3 /* PushNotification.m in Sources */,
 				4F4FB0A7160101CE00E142A7 /* UserBasicProfileViewController.m in Sources */,
 				4F98A2D815BB387D000B3124 /* main.m in Sources */,
 				4F98A2DC15BB387D000B3124 /* AppDelegate.m in Sources */,
@@ -2906,8 +2916,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2922,8 +2932,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2933,8 +2943,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2943,8 +2953,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2953,8 +2963,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2965,8 +2975,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2975,8 +2985,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2987,8 +2997,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F12E6B0E-6153-4B3B-9AA9-7FEE0F73D7A7";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3004,7 +3014,7 @@
 				4F98A2E415BB387D000B3124 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		4F98A2E515BB387D000B3124 /* Build configuration list for PBXNativeTarget "SocialMaps" */ = {
 			isa = XCConfigurationList;
@@ -3013,7 +3023,7 @@
 				4F98A2E715BB387D000B3124 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

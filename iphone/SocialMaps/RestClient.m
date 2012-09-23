@@ -65,15 +65,18 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -223,15 +226,18 @@
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
-            
+            aUser.currentLocationLat = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil] stringValue];
+            aUser.currentLocationLng = [[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lng" key3:nil] stringValue];
+
             [jsonObjects objectForKey:@"friends"];
             NSMutableArray *frndList=[[NSMutableArray alloc] init];
-            for (int i=0; i<[[jsonObjects objectForKey:@"friends"] count];i++)
-            {
-                UserFriends *frnd=[[UserFriends alloc] init];
-                frnd.userId=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"id"];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@",[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"firstName"],[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"lastName"]];
-                frnd.imageUrl=[[[jsonObjects objectForKey:@"friends"] objectAtIndex:i] objectForKey:@"avatar"];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"]) {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -886,7 +892,6 @@
     if (user != nil)
         aUserInfo = *user;
     else
-    {
         aUserInfo = [[UserInfo alloc] init];
     aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
     aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:nil key3:nil];
@@ -950,7 +955,7 @@
     aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"state" key3:nil];
     aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"postCode" key3:nil];
     aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"address" key2:@"country" key3:nil];
-    }
+
     return aUserInfo;
 }
 /*
@@ -1570,72 +1575,76 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            
-            //get all people
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
-            {
-                People *people=[[People alloc] init];
 
-                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
-                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
-                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
-                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
-                people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
-                people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
-                people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
-                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
-                people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
-                people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
-                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
-                people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
-                people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
-                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
-                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
-                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+            // Do the parsing in the background as this seems to make the user interaction sluggish
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                //get all people
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"people"]) 
+                {
+                    People *people=[[People alloc] init];
+
+                    people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                    people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                    people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                    people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                    people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                    people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
+                    people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
+                    people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
+                    people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
+                    NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                    people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                    people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
+                    people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                    
+                    people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
+                    [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
+                    
+                    people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
+                    people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
+                    
+                    people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                    
+                    people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
+                    
+                    [searchLocation.peopleArr addObject:people];
+                    
+                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
+                }
                 
-                people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
-                [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
-                
-                people.createDate = [self getDateFromJsonStruct:item name:@"createDate"];
-                people.updateDate = [self getDateFromJsonStruct:item name:@"updateDate"];
-                
-                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
-                
-                people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
-                
-                [searchLocation.peopleArr addObject:people];
-                
-                NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
-            }
-            
-            //get all places
-            for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
-            {
-                Places *place=[[Places alloc] init];
-                
-                place.location = [[Geolocation alloc] init];
-                place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
-                place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
-                place.northeast = [[Geolocation alloc] init];
-                place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
-                place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
-                
-                place.southwest = [[Geolocation alloc] init];
-                place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
-                place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
-                place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
-                [place setIcon:[item objectForKey:@"icon"] ];
-                [place setID:[item objectForKey:@"id"] ];
-                [place setName:[item objectForKey:@"name"] ];
-                [place setReference:[item objectForKey:@"reference"]];
-                [place setTypeArr:[item objectForKey:@"types"]];
-                [place setVicinity:[item objectForKey:@"vicinity"] ];
-                [searchLocation.placeArr addObject:place];
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                //get all places
+                for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                {
+                    Places *place=[[Places alloc] init];
+                    
+                    place.location = [[Geolocation alloc] init];
+                    place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                    place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
+                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
+                    place.northeast = [[Geolocation alloc] init];
+                    place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                    place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
+                    
+                    place.southwest = [[Geolocation alloc] init];
+                    place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                    place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
+                    place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                    [place setIcon:[item objectForKey:@"icon"] ];
+                    [place setID:[item objectForKey:@"id"] ];
+                    [place setName:[item objectForKey:@"name"] ];
+                    [place setReference:[item objectForKey:@"reference"]];
+                    [place setTypeArr:[item objectForKey:@"types"]];
+                    [place setVicinity:[item objectForKey:@"vicinity"] ];
+                    [searchLocation.placeArr addObject:place];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                });
+            });
         } 
         else 
         {
@@ -4202,7 +4211,7 @@
                 msg.notifSenderId = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
                 NSString * firstName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
                 NSString * lastName = [self getNestedKeyVal:item key1:@"sender" key2:@"lastName" key3:nil];              
-                msg.notifSender   = [[[NSArray alloc] initWithObjects:firstName, lastName, nil] componentsJoinedByString:@" "];
+                msg.notifSender   = [NSString stringWithFormat:@"%@ %@", firstName,  lastName];
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
@@ -4601,4 +4610,55 @@
     return status;
 
 }
+
+- (void) setPushNotificationSettings:(NSString*)deviceToken authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    NSLog(@"setPushNotificationSettings: device_id=%@", deviceToken);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/push",WS_URL]];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request addPostValue:@"iOS" forKey:@"device_type"];
+    [request addPostValue:deviceToken forKey:@"device_id"];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200) 
+        {
+            NSLog(@"Registered device: %@",jsonObjects);
+            
+        } 
+        else
+        {
+            NSLog(@"Failed to register device: status=%d", responseStatus);
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+     }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+}
+
 @end

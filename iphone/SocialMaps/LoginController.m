@@ -55,10 +55,6 @@
 {
 }
 */
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    exit(EXIT_FAILURE);
-}
-
 - (void) checkNetwork {
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
@@ -231,11 +227,23 @@
         [prefs setObject:userInfo.authToken forKey:@"authToken"];
         [prefs setObject:userInfo.id forKey:@"userId"];
         [prefs synchronize];
-
+        if (userInfo.currentLocationLat != nil && userInfo.currentLocationLng != nil &&
+            [userInfo.currentLocationLat floatValue] != 0.0 &&
+            [userInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = userInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = userInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = userInfo.authToken;
         smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
-       
+    
+        // Register device token if new
+        if (smAppDelegate.deviceTokenChanged == TRUE) {
+            RestClient *restClient = [[RestClient alloc] init];
+            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:userInfo.authToken];
+        }
+        
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
@@ -360,11 +368,24 @@
         [prefs setObject:regInfo.authToken forKey:@"authToken"];
         [prefs setObject:regInfo.id forKey:@"userId"];
         [prefs synchronize];
-        
+        if (regInfo.currentLocationLat != nil && regInfo.currentLocationLng != nil &&
+            [regInfo.currentLocationLat floatValue] != 0.0 &&
+            [regInfo.currentLocationLng floatValue] != 0.0) {
+            smAppDelegate.currPosition.latitude = regInfo.currentLocationLat;
+            smAppDelegate.currPosition.longitude = regInfo.currentLocationLng;
+            smAppDelegate.currPosition.positionTime = [NSDate date];
+        }
         smAppDelegate.authToken = regInfo.authToken;
         smAppDelegate.userId = regInfo.id;
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
         [smAppDelegate getUserInformation:regInfo.authToken];
+        
+        // Register device token if new
+        if (smAppDelegate.deviceTokenChanged == TRUE) {
+            RestClient *restClient = [[RestClient alloc] init];
+            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
+        }
+        
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else 
@@ -397,7 +418,6 @@
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
         
-        //[self performSegueWithIdentifier: @"showMapView" sender: self];
     } else {
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
@@ -420,6 +440,7 @@
 
 - (IBAction)doConnectFB:(id)sender {
     NSLog(@"In LoginController:doConnectFB");
+    smAppDelegate.facebookLogin = TRUE;
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
@@ -453,7 +474,8 @@
         user.facebookId = smAppDelegate.fbId;
         user.facebookAuthToken = smAppDelegate.fbAccessToken;
 
-        [smAppDelegate.fbHelper getUserFriendListRequest:self];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient loginFacebook:(User *)user];
         
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];

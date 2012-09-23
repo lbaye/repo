@@ -269,8 +269,14 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 
 -(void)getCurrentAddress
 {
-    addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+    addressLabel.text = @"";
     annotation.subtitle=addressLabel.text;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            annotation.subtitle=addressLabel.text;
+        });
+    });
 }
 
 -(void)getAddressFromMap
