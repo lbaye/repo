@@ -2,3 +2,8 @@ search_all:
   pattern: /search
   defaults: { _controller: Controller\Search::all }
   requirements: { _method: POST }
+
+search_people:
+  pattern: /search/people
+  defaults: { _controller: Controller\Search::allPeopleList}
+  requirements: { _method: POST}

@@ -105,4 +105,15 @@ class Search extends Base
     {
         return array();
     }
+
+    
+
+    public function allPeopleList()
+    {
+        $data = $this->request->request->all();
+        $results = array();
+        $results = $this->people($data);
+
+        return $this->_generateResponse($results);
+    }
 }
