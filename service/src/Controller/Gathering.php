@@ -76,7 +76,7 @@ class Gathering extends Base
                 $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
 
                 $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
-                $guests['circles']  = $data['guests']['circles'];
+                $guests['circles'] = $data['guests']['circles'];
                 $data['guests'] = $guests;
 
                 if (!empty($data['eventImage'])) {
@@ -150,7 +150,7 @@ class Gathering extends Base
         $this->_initRepository($type);
         try {
 
-            if ($type === 'meetup'){
+            if ($type === 'meetup') {
                 $postData['time'] = date('Y-m-d h:i:s a', time());
             }
 
@@ -184,7 +184,7 @@ class Gathering extends Base
 
         $data = $meetup->toArrayDetailed();
 
-        if(!empty($data['eventImage'])) {
+        if (!empty($data['eventImage'])) {
             $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
         }
 
@@ -222,7 +222,12 @@ class Gathering extends Base
             }
         }
 
-        if(!empty($postData['invitedCircles'])){
+        if (!empty($postData['guests'])) {
+            $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+        }
+
+
+        if (!empty($postData['invitedCircles'])) {
             $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
         }
 
@@ -235,10 +240,10 @@ class Gathering extends Base
         $data = $place->toArrayDetailed();
 
         $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
-        $guests['circles']  = $data['guests']['circles'];
+        $guests['circles'] = $data['guests']['circles'];
         $data['guests'] = $guests;
 
-        if(!empty($data['eventImage'])) {
+        if (!empty($data['eventImage'])) {
             $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
         }
 
@@ -341,7 +346,7 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        $users = $this->userRepository->getAllByIds($postData['users'],false);
+        $users = $this->userRepository->getAllByIds($postData['users'], false);
 
         $notification = new \Document\Notification();
         $notificationData = array(
@@ -371,8 +376,8 @@ class Gathering extends Base
 
             $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
 
-            if (!empty($gatheringItem['eventImage'])){
-              $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
+            if (!empty($gatheringItem['eventImage'])) {
+                $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
             }
             $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
@@ -396,7 +401,7 @@ class Gathering extends Base
         }
     }
 
-     /**
+    /**
      * GET /meetups/invited
      *
      * @param $type
@@ -410,8 +415,8 @@ class Gathering extends Base
         $gatheringIMNotOwner = array();
 
         if (!empty($gatheringObjs)) {
-            foreach($gatheringObjs as $gathering){
-                if($gathering->getOwner()->getId() != $this->user->getId())
+            foreach ($gatheringObjs as $gathering) {
+                if ($gathering->getOwner()->getId() != $this->user->getId())
                     $gatheringIMNotOwner[] = $gathering;
             }
 
@@ -419,6 +424,52 @@ class Gathering extends Base
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
         }
+
+    }
+
+
+    /**
+     * PUT /events/{id}/guests/
+     *
+     * @param $id
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function addGuests($id, $type)
+    {
+        $this->_initRepository($type);
+
+        $postData = $this->request->request->all();
+        $gathering = $this->gatheringRepository->find($id);
+
+        if ($gathering === null) {
+            return $this->_generate404();
+        }
+
+        if ($gathering->getOwner() != $this->user) {
+
+            if ($gathering->getGuestsCanInvite() && in_array($this->user->getId(), $gathering->getGuests())) {
+                if (!empty($postData['guests']))
+                    $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+
+                return $this->_generateResponse(array('message' => 'New guests has been added'));
+            } else {
+                return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
+            }
+        }
+
+        if (!empty($postData['guests'])) {
+            $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+        }
+
+        $data = $gathering->toArrayDetailed();
+        $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+        $guests['circles'] = $data['guests']['circles'];
+        $data['guests'] = $guests;
+
+        return $this->_generateResponse($data);
 
     }
 }

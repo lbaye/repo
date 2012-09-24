@@ -68,9 +68,8 @@ class GatheringRepo extends Base
         }
 
         $guests = $gathering->getGuests();
-        foreach($newGuests as $guest) array_push($guests, $guest);
 
-        $gathering->setGuests($guests);
+        $gathering->setGuests(array_unique(array_merge($guests, $newGuests)));
 
         $this->dm->persist($gathering);
         $this->dm->flush();
