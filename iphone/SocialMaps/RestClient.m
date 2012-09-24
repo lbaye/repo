@@ -1595,6 +1595,7 @@
                     people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
                     people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
                     NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+					people.friendshipStatus = friendship;
                     people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
                     people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                     people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];

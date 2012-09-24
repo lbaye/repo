@@ -31,6 +31,7 @@
 
 @synthesize msgParentID;
 @synthesize timeSinceLastUpdate;
+@synthesize selectedMessage;
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
@@ -99,6 +100,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [messageRepiesView addSubview:meetUpRequestListView];
     [meetUpRequestListView release];
     
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.selectedMessage) {
+        [self setMsgReplyTableView:self.selectedMessage];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -626,6 +636,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NotifMessage *msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
     
+    [self setMsgReplyTableView:msg];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+     
+-(void) setMsgReplyTableView:(NotifMessage*)msg
+{
     MessageReply *messageReply = [[MessageReply alloc] init];
     messageReply.content = msg.notifMessage;
     messageReply.time = msg.notifTime;
@@ -633,8 +650,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.senderName = [components objectAtIndex:0];
     messageReply.senderID = msg.notifSenderId;
     messageReply.senderAvater = msg.notifAvater;
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    messageReply.senderImage = cell.imageView.image;
+    //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    //messageReply.senderImage = cell.imageView.image;
     [messageReplyList removeAllObjects];
     [messageReplyList addObject:messageReply];
     [messageReply release];
@@ -648,10 +665,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (!replyTimer) {
         replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
     }
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-     
+
 - (void)startReqForReplyMessages
 {
     if (!messageRepiesView.hidden) {

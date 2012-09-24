@@ -1594,6 +1594,7 @@ ButtonClickCallbackData callBackData;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
                         aPerson.coordinate = loc;
+                        aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                         
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemDistance = distanceFromMe;

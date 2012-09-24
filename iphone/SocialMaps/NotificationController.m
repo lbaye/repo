@@ -13,6 +13,7 @@
 #import "CustomAlert.h"
 #import "MapViewController.h"
 #import "RestClient.h"
+#import "MessageListViewController.h"
 
 @implementation NotificationController
 
@@ -268,18 +269,21 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
-    /*
+    
     NotifMessage *msg;
     
     switch (selectedType) {
         case Message:
             msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
-            
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+            controller.selectedMessage = msg;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
             break;
         default:
             break;
     }
-     */
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

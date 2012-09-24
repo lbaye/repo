@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "IconDownloader.h"
-#import "MessageReply.h"
 
 @class AppDelegate;
+@class MessageReply;
+@class NotifMessage;
 
 @interface MessageListViewController : UIViewController <IconDownloaderDelegate, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource> {
     
@@ -46,10 +47,13 @@
     CGFloat animatedDistance;
     NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName;
+    
+    NotifMessage *selectedMessage;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
 @property (nonatomic, retain) NSString *timeSinceLastUpdate; //needed for automatic reply update
+@property (nonatomic, retain) NotifMessage *selectedMessage;
 
 - (IBAction)actionMessageBtn:(id)sender;
 - (IBAction)actionMeetUpBtn:(id)sender;

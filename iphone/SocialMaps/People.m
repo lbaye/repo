@@ -33,5 +33,5 @@
 @synthesize age;
 @synthesize lastSeenAt;
 @synthesize isFriend;
-
+@synthesize friendshipStatus;
 @end
