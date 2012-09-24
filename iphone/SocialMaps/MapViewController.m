@@ -574,18 +574,33 @@ ButtonClickCallbackData callBackData;
 -(void) displayNotificationCount {
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
-        ignoreCount += [smAppDelegate.messages count];
+        ignoreCount += [[self getUnreadMessage:smAppDelegate.messages] count];
     
     if (smAppDelegate.notifRead == TRUE)
         ignoreCount += [smAppDelegate.notifications count];
     
     int totalNotif = smAppDelegate.friendRequests.count+
-    smAppDelegate.messages.count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
-    
+    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
+    NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
     if (totalNotif == 0)
         _mapNotifCount.text = @"";
     else
         _mapNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
+-(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
+{
+    NSMutableArray *unReadMessage=[[NSMutableArray alloc] init];
+    for (int i=0; i<[messageList count]; i++)
+    {
+        NSString *msgSts=((NotifMessage *)[messageList objectAtIndex:i]).msgStatus;
+        if ([msgSts isEqualToString:@"unread"])
+        {
+            [unReadMessage addObject:[messageList objectAtIndex:i]];
+        }
+    }
+    
+    return unReadMessage;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
