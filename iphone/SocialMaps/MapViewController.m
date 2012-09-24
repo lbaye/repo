@@ -222,8 +222,8 @@ ButtonClickCallbackData callBackData;
 
     selectedAnno = anno;
     LocationItem *selLocation = (LocationItem*) anno;
-    [mapAnno changeStateToDetails:selLocation];
-    //[self mapAnnotationChanged:selLocation];
+    [self mapAnnotationChanged:selLocation];
+    [mapAnno changeStateToSummary:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
 }
 
@@ -234,10 +234,6 @@ ButtonClickCallbackData callBackData;
     r.origin.x = pt.x - r.size.width * 0.3;
     r.origin.y = pt.y - r.size.height * 0.5;
     [self.mapView setVisibleMapRect:r animated:YES];
-    
-    [self mapAnnotationChanged:locItem];
-    [mapAnno changeStateToDetails:locItem];
-    
 }
 
 // MapAnnotation delegate methods
@@ -434,6 +430,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNotifMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequests:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentFriendRequest:) name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
@@ -612,6 +609,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
     userFriendslistArray=[[NSMutableArray alloc] init];
 
 }
@@ -1731,4 +1729,10 @@ ButtonClickCallbackData callBackData;
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     [self displayNotificationCount];
 }
+- (void)sentFriendRequest:(NSNotification *)notif {
+    callBackData.locItem.userInfo.friendshipStatus = @"requested";
+    [self mapAnnotationChanged:callBackData.locItem];
+    [mapAnno changeStateToDetails:callBackData.locItem];
+}
+
 @end
