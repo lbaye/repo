@@ -29,8 +29,9 @@ class GCM extends Notifier
         $pushData = array(
             'message' => $data['title'],
             'objectType' => $data['objectType'],
-            'objectId' => $data['objectId'],
+            'objectId' => isset($data['objectId']) ? $data['objectId'] : null
         );
+
         return $pushData;
     }
 

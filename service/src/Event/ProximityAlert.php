@@ -107,8 +107,6 @@ class ProximityAlert extends Base
             $groupedNames = $this->_createGroupedFriendNames($friend);
             return array(
                 'title' => 'Your friend '. $groupedNames .' here!',
-                'photoUrl' => null,
-                'objectId' => null,
                 'objectType' => 'proximity_alert',
                 'message' => 'Your friend '. $groupedNames .' near your location!'
             );

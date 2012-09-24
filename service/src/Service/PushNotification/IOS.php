@@ -54,7 +54,7 @@ class IOS extends Notifier
                 'sound' => 'default',
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
-                    'objectId' => $data['objectId'],
+                    'objectId' => isset($data['objectId']) ? $data['objectId'] : null
                 )
             )
         );
