@@ -28,14 +28,14 @@ class Messages extends Base
 
     public function getById($id)
     {
-        $data = $this->messageRepository->find($id);
-        if (empty($data)) {
+        $message = $this->messageRepository->find($id);
+        if (empty($message)) {
             $this->_generate404();
         } else {
 
             $messageDetail = array();
 
-                $messageArr = $data->toArray(true);
+                $messageArr = $message->toArray(true);
 
                 $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
@@ -49,6 +49,12 @@ class Messages extends Base
                 }
 
                 $messageDetail = $messageArr;
+
+                $status = 'read';
+                if($this->messageRepository->updateStatus($message, $status)){
+                    $messageDetail['status'] = $status;
+                }
+
 
             $this->_generateResponse($messageDetail);
         }
@@ -174,6 +180,9 @@ class Messages extends Base
         try {
             $message = $this->messageRepository->find($id);
 
+            $status = 'read';
+            $this->messageRepository->updateStatus($message, $status);
+
             if (empty($message))
                 return $this->_generate404();
 
@@ -196,6 +205,7 @@ class Messages extends Base
                 array(
                     'except' => array('replies', 'thread', 'recipients')
                 ));
+
 
         } catch (\Exception $e) {
             $this->_generate500($e->getMessage());
