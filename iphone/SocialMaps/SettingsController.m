@@ -16,6 +16,8 @@
 #import "SelectFriends.h"
 #import "RestClient.h"
 #import "FriendListViewController.h"
+#import "NotificationController.h"
+#import "UtilityClass.h"
 
 @implementation SettingsController
 @synthesize settingsScrollView;
@@ -26,7 +28,7 @@
 @synthesize settingsMainHeader;
 @synthesize backButton;
 //@synthesize defPlatforms;
-@synthesize smAppDelegate;
+@synthesize smAppDelegate,totalNotifCount;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -80,7 +82,7 @@
     else
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
     
-    
+    [self displayNotificationCount];
 //    UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
 //    buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
 //    buttonTestFriendList.backgroundColor = [UIColor redColor];
@@ -457,6 +459,21 @@
     
 }
 
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
 
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
 
 @end

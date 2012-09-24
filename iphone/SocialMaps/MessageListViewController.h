@@ -49,11 +49,13 @@
     NSMutableArray *ImgesName;
     
     NotifMessage *selectedMessage;
+    IBOutlet UILabel *totalNotifCount;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
 @property (nonatomic, retain) NSString *timeSinceLastUpdate; //needed for automatic reply update
 @property (nonatomic, retain) NotifMessage *selectedMessage;
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 - (IBAction)actionMessageBtn:(id)sender;
 - (IBAction)actionMeetUpBtn:(id)sender;
@@ -68,5 +70,7 @@
 - (void)startReqForReplyMessages;
 -(void)doTopViewAnimation:(UIView*)incomingView;
 -(void)loadDummydata;
+
+-(IBAction)gotoNotification:(id)sender;
 
 @end

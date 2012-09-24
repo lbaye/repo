@@ -39,6 +39,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     BOOL isBackgroundTaskRunning;
     UIImage *coverImage;
     UIImage *profileImage;
+    IBOutlet UILabel *totalNotifCount;
 }
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
@@ -62,6 +63,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) UIImage *profileImage;
 @property (nonatomic, retain) UIImagePickerController *picSel;
 
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
 -(IBAction)editStatusButton:(id)sender;
@@ -73,5 +76,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)cancelEntity:(id)sender;
 -(IBAction)backButton:(id)sender;
 -(IBAction)hideKeyboard:(id)sender;
+-(IBAction)gotoNotification:(id)sender;
 
 @end

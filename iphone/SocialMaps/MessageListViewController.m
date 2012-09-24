@@ -18,6 +18,7 @@
 #import "Globals.h"
 #import "UtilityClass.h"
 #import "MeetUpRequestListView.h"
+#import "NotificationController.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -32,6 +33,7 @@
 @synthesize msgParentID;
 @synthesize timeSinceLastUpdate;
 @synthesize selectedMessage;
+@synthesize totalNotifCount;
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
@@ -104,6 +106,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidAppear:(BOOL)animated
 {
+    [self displayNotificationCount];
     [super viewDidAppear:animated];
     
     if (self.selectedMessage) {
@@ -276,6 +279,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [profileImageList addObject:@""];
     }
     [msgListTableView reloadData];
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 - (void) sendMessage:(id)sender {
@@ -1420,6 +1431,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [friendListArr addObject:frnds];
     }
     filteredList=[friendListArr mutableCopy];
+}
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
 }
 
 @end

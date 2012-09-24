@@ -15,6 +15,8 @@
 #import "UIImageView+roundedCorner.h"
 #import "DDAnnotation.h"
 #import "DDAnnotationView.h"
+#import "NotificationController.h"
+#import "UtilityClass.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -36,6 +38,7 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
+@synthesize totalNotifCount;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -58,6 +61,7 @@ BOOL coverImgFlag;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
     self.picSel = [[UIImagePickerController alloc] init];
@@ -154,6 +158,23 @@ BOOL coverImgFlag;
     NSLog(@"cancel");
     [statusContainer removeFromSuperview];
     [entityTextField resignFirstResponder];
+}
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 - (void) photoPickerDone:(bool)status image:(UIImage*)img

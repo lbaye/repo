@@ -20,6 +20,7 @@
 #import "LocationItemPlace.h"
 #import "RestClient.h"
 #import "LocationItemPlace.h"
+#import "NotificationController.h"
 
 #define     kOFFSET_FOR_KEYBOARD    215
 #define     TAG_MY_PLACES           1002
@@ -44,6 +45,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 @synthesize currentAddress;
 @synthesize selectedfriendId;
 @synthesize selectedLocatonItem;
+@synthesize totalNotifCount;
 
 DDAnnotation *annotation;
 
@@ -118,6 +120,7 @@ DDAnnotation *annotation;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self displayNotificationCount];
     
     int selectedRadioButtonIndex = 0;
     
@@ -297,6 +300,22 @@ DDAnnotation *annotation;
     [self dismissModalViewControllerAnimated:YES];
 }
 
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
 
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

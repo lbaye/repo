@@ -38,11 +38,13 @@
     
     NSString    *selectedfriendId;
     LocationItemPlace    *selectedLocatonItem;
+   IBOutlet UILabel *totalNotifCount;
 }
 
 @property (nonatomic, retain) NSString *currentAddress;
 @property (nonatomic, retain) NSString *selectedfriendId;
 @property (nonatomic, retain) LocationItemPlace *selectedLocatonItem;
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)actionMeetUpReqButton:(id)sender;

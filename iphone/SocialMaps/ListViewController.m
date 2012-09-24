@@ -10,6 +10,8 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
+#import "NotificationController.h"
+#import "UtilityClass.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -22,6 +24,7 @@
 @synthesize selectedType;
 @synthesize selectedItemIndex;
 @synthesize smAppDelegate;
+@synthesize totalNotifCount;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,6 +56,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self displayNotificationCount];
     listPulldownMenu.backgroundColor = [UIColor clearColor];
     listPullupMenu.backgroundColor   = [UIColor clearColor];
     
@@ -156,6 +160,24 @@
 
 - (IBAction)goToNotifications:(id)sender {
 }
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
 - (void)dealloc {
     [listPullupMenu release];
     [listPulldownMenu release];

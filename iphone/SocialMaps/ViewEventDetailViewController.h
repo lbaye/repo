@@ -38,6 +38,7 @@
     IBOutlet UIButton *deleteEventButton;    
     IBOutlet UIButton *inviteEventButton;
     BOOL isBackgroundTaskRunning;
+    IBOutlet UILabel *totalNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;
@@ -64,7 +65,8 @@
 
 @property(nonatomic,retain) IBOutlet UIButton *editEventButton;
 @property(nonatomic,retain) IBOutlet UIButton *deleteEventButton;    
-@property(nonatomic,retain) IBOutlet UIButton *inviteEventButton;        
+@property(nonatomic,retain) IBOutlet UIButton *inviteEventButton;     
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 -(void)DownLoad:(NSNumber *)path;
 -(void) reloadScrolview;
@@ -82,6 +84,8 @@
 -(IBAction)closeMap:(id)sender;
 
 -(IBAction)backButton:(id)sender;
+
+-(IBAction)gotoNotification:(id)sender;
 
 -(void)resetButton:(int)index;
 -(void)loadScrollView;

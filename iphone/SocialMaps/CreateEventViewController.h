@@ -64,6 +64,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIScrollView *customScrollView;
     IBOutlet UISearchBar *customSearchBar;
     IBOutlet UITableView *customTableView;
+    
+    IBOutlet UILabel *totalNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
@@ -113,6 +115,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UISearchBar *customSearchBar;
 @property(nonatomic,retain) IBOutlet UITableView *customTableView;
 
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    
 -(IBAction)descriptionButtonAction;
@@ -155,5 +159,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(void)beganEditing:(UISearchBar *)searchBar;
 -(void)endEditing;
 -(IBAction)backButton:(id)sender;
+
+-(IBAction)gotoNotification:(id)sender;
 
 @end

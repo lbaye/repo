@@ -13,6 +13,7 @@
 @interface SettingsController : UIViewController<CustomCheckboxDelegate> {
     //NSMutableArray *defPlatforms;
     AppDelegate     *smAppDelegate;
+    IBOutlet UILabel *totalNotifCount;
 }
 //@property (nonatomic, retain) NSMutableArray *defPlatforms;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
@@ -24,6 +25,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *notifCount;
 @property (retain, nonatomic) IBOutlet UIView *settingsMainHeader;
 @property (retain, nonatomic) IBOutlet UIButton *backButton;
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 - (IBAction)expandPlatformSettings:(id)sender;
 - (IBAction)expandLayersSettings:(id)sender;
@@ -32,5 +34,6 @@
 - (IBAction)goBack:(id)sender;
 - (IBAction)setLocationSharing:(id)sender;
 - (IBAction)setNotifSettings:(id)sender;
+-(IBAction)gotoNotification:(id)sender;
 
 @end

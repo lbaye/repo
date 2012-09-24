@@ -18,6 +18,7 @@
     OBJECT_TYPES   selectedType;
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;
+    IBOutlet UILabel *totalNotifCount;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
@@ -30,6 +31,7 @@
 @property (retain, nonatomic) IBOutlet UIButton *listPulldown;
 @property (retain, nonatomic) IBOutlet UITableView *itemList;
 @property (retain, nonatomic) IBOutlet UILabel *listNotifCount;
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 - (IBAction)backToMapview:(id)sender;
 - (IBAction)closePullup:(id)sender;
@@ -37,7 +39,7 @@
 - (IBAction)showPullUpMenu:(id)sender;
 - (IBAction)showPulldownMenu:(id)sender;
 - (IBAction)goToNotifications:(id)sender;
-
+-(IBAction)gotoNotification:(id)sender;
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender;
 - (void) getSortedDisplayList;
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row;

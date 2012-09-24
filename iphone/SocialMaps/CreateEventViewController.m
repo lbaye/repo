@@ -20,6 +20,7 @@
 #import "LocationItemPlace.h"
 #import "SelectCircleTableCell.h"
 #import <Foundation/Foundation.h> 
+#import "NotificationController.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -47,6 +48,8 @@
 @synthesize customSearchBar;
 @synthesize customTableView;
 @synthesize private;
+
+@synthesize totalNotifCount;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
@@ -236,6 +239,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
      createNotf=0;
      updateNotf=0;
 
+    [self displayNotificationCount];
 	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
     [customSelectionView removeFromSuperview];
@@ -1532,6 +1536,24 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
 
 - (void)viewDidUnload
 {

@@ -15,6 +15,7 @@
 #import "DDAnnotation.h"
 #import "UserFriends.h"
 #import <QuartzCore/QuartzCore.h>
+#import "NotificationController.h"
 
 @implementation ViewEventDetailViewController
 @synthesize eventName,eventDate,eventShortDetail,eventAddress,eventDistance;    
@@ -22,7 +23,7 @@
 @synthesize mapContainer,mapView,eventImgView;
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
-@synthesize inviteEventButton;               
+@synthesize inviteEventButton,totalNotifCount;               
 
 
 NSMutableArray *imageArr, *nameArr, *idArr;
@@ -183,6 +184,7 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
 }
@@ -608,6 +610,23 @@ BOOL isBackgroundTaskRunning=FALSE;
 	}		
 	
 	return draggablePinView;
+}
+
+-(IBAction)gotoNotification:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 - (void)getEventDetailDone:(NSNotification *)notif

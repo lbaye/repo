@@ -25,6 +25,7 @@
     IBOutlet UIButton *friendsEventButton;
     IBOutlet UIButton *myEventButton;
     IBOutlet UIButton *publicEventButton;
+    IBOutlet UILabel *totalNotifCount;
 
 }
 @property(nonatomic,retain) IBOutlet UITableView *eventListTableView;
@@ -39,6 +40,7 @@
 @property(nonatomic,retain) IBOutlet UIButton *friendsEventButton;
 @property(nonatomic,retain) IBOutlet UIButton *myEventButton;
 @property(nonatomic,retain) IBOutlet UIButton *publicEventButton;
+@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
 
 -(IBAction)dateAction:(id)sender;
@@ -57,5 +59,6 @@
 -(IBAction)backButton:(id)sender;
 -(NSMutableArray *)loadDummyData;
 - (void)appImageDidLoad:(NSString *)eventID;
+-(IBAction)gotoNotification:(id)sender;
 
 @end
