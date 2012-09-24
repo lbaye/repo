@@ -335,10 +335,12 @@ class Settings extends Base
      */
     private function _updateLastSeenAt(\Document\User $user)
     {
-        $reverseGeo = new \Service\Geolocation\Reverse($this->config['googlePlace']['apiKey']);
+        $this->addTask('update_last_seen_address', json_encode(array('user_id' => $user->getId())));
 
-        $address = $reverseGeo->getAddress($user->getCurrentLocation());
-        $user->setLastSeenAt($address);
+//        $reverseGeo = new \Service\Geolocation\Reverse($this->config['googlePlace']['apiKey']);
+//
+//        $address = $reverseGeo->getAddress($user->getCurrentLocation());
+//        $user->setLastSeenAt($address);
     }
 
     private function persistAndReturn($result)

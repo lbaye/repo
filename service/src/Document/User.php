@@ -1026,7 +1026,7 @@ class User
 
     public function getName()
     {
-        return $this->lastName.' '.$this->lastName;
+        return $this->firstName.' '.$this->lastName;
     }
 
 }

@@ -2,12 +2,19 @@
 
 namespace Event;
 
+use Symfony\Component\Yaml\Parser;
+
 abstract class Base
 {
     /**
      * @var array
      */
     protected $conf;
+
+    /**
+     * @var array
+     */
+    protected $serviceConf;
 
     /**
      * @var array
@@ -28,6 +35,7 @@ abstract class Base
     {
         $this->conf = $conf;
         $this->services = $services;
+        $this->serviceConf = $this->_getServiceConfig();
 
         $this->setFunction();
         $this->setupGearman();
@@ -57,6 +65,12 @@ abstract class Base
     protected function runTasks()
     {
         $this->gearmanClient->runTasks();
+    }
+
+    private static function _getServiceConfig()
+    {
+        $yaml = new Parser();
+        return $yaml->parse(file_get_contents(ROOTDIR .'/../app/config/services.yml'));
     }
 
     abstract protected function setFunction();
