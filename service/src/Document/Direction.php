@@ -13,6 +13,21 @@ use Document\Location as Location;
  */
 class Direction extends Content
 {
+    /** @ODM\Id */
+    protected $id;
+
+    /** @ODM\Float */
+    protected $latFrom;
+
+    /** @ODM\Float */
+    protected $lngFrom;
+
+    /** @ODM\Float */
+    protected $latTo;
+
+    /** @ODM\Float */
+    protected $lngTo;
+
     /**
      * @ODM\EmbedOne(targetDocument="Location")
      * @var Location
@@ -25,6 +40,38 @@ class Direction extends Content
      */
     protected $to;
 
+
+    /** @ODM\Date */
+    protected $createDate;
+
+
+    //<editor-fold desc="Setters">
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    //<editor-fold desc="Setters">
+    public function setlatFrom($latFrom)
+    {
+        $this->latFrom = $latFrom;
+    }
+    //<editor-fold desc="Setters">
+    public function setlngFrom($lngFrom)
+    {
+        $this->lngFrom = $lngFrom;
+    }
+    //<editor-fold desc="Setters">
+    public function setlatTo($latTo)
+    {
+        $this->latTo = $latTo;
+    }
+    //<editor-fold desc="Setters">
+    public function setlngTo($lngTo)
+    {
+        $this->lngTo = $lngTo;
+    }
+
     public function setFrom($location)
     {
         $this->from = $location;
@@ -36,7 +83,18 @@ class Direction extends Content
     }
     //</editor-fold>
 
+    public function setCreateDate(\DateTime $created)
+    {
+        $this->createDate = $created;
+    }
+
     //<editor-fold desc="Getters">
+
+    //<editor-fold desc="Getters">
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return Location
@@ -54,11 +112,20 @@ class Direction extends Content
         return $this->to;
     }
 
+
+
+    public function getCreateDate()
+    {
+        return $this->createDate;
+    }
+
+
+
     //</editor-fold>
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'from', 'to', 'createDate');
+        $fieldsToExpose = array('id', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {
@@ -66,7 +133,9 @@ class Direction extends Content
         }
 
         $result['owner'] = $this->getOwner()->getId();
-        $result['location'] = $this->getLocation()->toArray();
+        $result['from'] = $this->getFrom()->toArray();
+        $result['to'] = $this->getTo()->toArray();
+//        $result['location'] = $this->getLocation()->toArray();
 
         return $result;
     }
@@ -74,9 +143,8 @@ class Direction extends Content
     public function isValid()
     {
         try {
-
-            Validator::create()->alnum()->assert($this->getTitle());
-            Validator::create()->equals($this->getLocation()->isValid())->assert(true);
+            Validator::create()->equals($this->getFrom()->isValid())->assert(true);
+            Validator::create()->equals($this->getTo()->isValid())->assert(true);
 
         } catch (\InvalidArgumentException $e) {
             return false;

@@ -89,6 +89,7 @@ class Messages extends Base
         $docsAsArr = array();
         foreach ($messages as $message) {
             $messageArr = $message->toArray(true);
+
             $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
             foreach($messageArr['recipients'] AS &$recipient){
@@ -96,11 +97,13 @@ class Messages extends Base
             }
 
             if($showLastReply == true){
+
                 if(!empty($messageArr['replies'])){
-                $messageArr['replies'] = end($messageArr['replies']);
-                $messageArr['replies']['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies']['sender']);
+
+                    $messageArr['replies'] = end($messageArr['replies']);
+                    $messageArr['replies']['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies']['sender']);
                 }else{
-                $messageArr['replies'] = null;
+                    $messageArr['replies'] = null;
                 }
             }else{
                 unset($messageArr['replies']);

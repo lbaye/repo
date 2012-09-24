@@ -1026,7 +1026,10 @@ class User
 
     public function getName()
     {
-        return $this->lastName.' '.$this->lastName;
+        return implode(
+            " ", array_filter(
+                   array($this->firstName, 
+                        $this->lastName)));
     }
 
 }

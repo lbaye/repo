@@ -9,42 +9,52 @@ use Helper\Security as SecurityHelper;
 
 class DirectionRepo extends Base
 {
-    public function update($data, $id)
+    public function update($data,$id)
     {
-        $place = $this->find($id);
+        $data = $this->map($data,$id);
 
-        if (false === $place) {
-            throw new \Exception\ResourceNotFoundException();
-        }
-
-        $place = $this->map($data, $place->getOwner(), $place);
-
-        if ($place->isValid() === false) {
+        if ($data->isValid() === false) {
             return false;
         }
 
-        $this->dm->persist($place);
+        $this->dm->persist($data);
         $this->dm->flush();
 
-        return $place;
+        return $data;
     }
+
 
     public function map(array $data, UserDocument $owner, \Document\Direction $directionDoc = null)
     {
+
         if(is_null($directionDoc)){
             $directionDoc = new DirectionDocument();
+            $directionDoc->setCreateDate(new \DateTime());
         } else {
             $directionDoc->setUpdateDate(new \DateTime());
         }
 
         $directionDoc->setOwner($owner);
-        $directionDoc->setFrom(new \Document\Location($data['from']));
-        $directionDoc->setTo(new \Document\Location($data['to']));
+        $directionDoc->setFrom(new \Document\Location(array('lat' => $data['latFrom'], 'lng' => $data['lngFrom'])));
+        $directionDoc->setTo(new \Document\Location(array('lat' => $data['latTo'], 'lng' => $data['lngTo'])));
 
         if(isset($data['permission'])){
-            $directionDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
+          $directionDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
         return $directionDoc;
+    }
+
+
+    protected function trimInvalidUsers($data)
+    {
+        $userRepo = $this->dm->getRepository('Document\User');
+        $users = array();
+
+        foreach ($data as $permissionUserId) {
+            $user = $userRepo->find($permissionUserId);
+            if ($user) array_push($users, $user->getId());
+        }
+        return $users;
     }
 }
