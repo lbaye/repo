@@ -288,6 +288,20 @@ NSMutableArray *unreadMesg;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
     
+    //Zubair vai code for notification makes userinteraction disable
+    //    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
+    if (selectedType==0)
+    {
+        //[smAppDelegate.window setUserInteractionEnabled:NO];
+        //[smAppDelegate showActivityViewer:self.view];
+        //NSLog(@"indexPath.row %d %d %@",selectedType,indexPath.row,((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID);
+        //NSString *msgId=((NotifMessage *)[unreadMesg objectAtIndex:indexPath.row]).notifID; 
+        //RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        //[restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
+        [smAppDelegate.messages removeObject:[unreadMesg objectAtIndex:indexPath.row]];
+        //[self.notificationItems reloadData];
+    }
+    
     NotifMessage *msg;
     
     switch (selectedType) {
@@ -302,19 +316,7 @@ NSMutableArray *unreadMesg;
         default:
             break;
     }
-     
-//    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
-    if (selectedType==0)
-    {
-        [smAppDelegate.window setUserInteractionEnabled:NO];
-        [smAppDelegate showActivityViewer:self.view];
-        NSLog(@"indexPath.row %d %d %@",selectedType,indexPath.row,((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID);
-        NSString *msgId=((NotifMessage *)[unreadMesg objectAtIndex:indexPath.row]).notifID; 
-//        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-//        [restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
-        [smAppDelegate.messages removeObject:[unreadMesg objectAtIndex:indexPath.row]];
-        [self.notificationItems reloadData];
-    }
+      
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -406,14 +408,14 @@ NSMutableArray *unreadMesg;
     [unreadMesg replaceObjectAtIndex:clickedButtonPath.row withObject:msg];
     [notificationItems reloadData];
 }
-
+/*
 - (void)setMessageStatus:(NSNotification *)notif
 {
     NSLog(@"message sts updated.");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];    
 }
-
+*/
 // NotifRequestDelegate methods
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);

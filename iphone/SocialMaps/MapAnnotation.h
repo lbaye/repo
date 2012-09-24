@@ -49,6 +49,7 @@ typedef enum _MAP_USER_ACTION {
 - (void) changeStateClicked:(id) sender;
 - (void) changeStateToDetails:(id) anno;
 - (void) changeStateToNormal:(id) anno;
+- (void) changeStateToSummary:(id) anno;
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem;
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem;
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem;

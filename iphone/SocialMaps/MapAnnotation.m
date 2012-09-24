@@ -221,15 +221,22 @@
     NSLog(@"changeStateToDetails Name=%@", locItem.itemName);
     
     // Don't show details for non-SM users
-    //if ([locItem isKindOfClass:[LocationItemPeople class]]) {
-        //LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
-        //if (locItemPeople.userInfo.external == false) 
-            //locItem.currDisplayState = MapAnnotationStateDetailed;
-        //else
-            //locItem.currDisplayState = MapAnnotationStateSummary;
-    //} else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if (locItemPeople.userInfo.external == false) 
+            locItem.currDisplayState = MapAnnotationStateDetailed;
+        else
+            locItem.currDisplayState = MapAnnotationStateSummary;
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         locItem.currDisplayState = MapAnnotationStateSummary;
-    //} 
+    } 
+}
+
+- (void) changeStateToSummary:(id) anno 
+{
+    NSLog(@"MapAnnotation: changeStateToSummary");
+    LocationItem *locItem = (LocationItem*)anno;
+    locItem.currDisplayState = MapAnnotationStateSummary;
 }
 
 - (void) changeStateToNormal:(id) anno
