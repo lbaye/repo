@@ -75,7 +75,7 @@
                                         <rect key="frame" x="44" y="60" width="211" height="13"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <textField clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" clearsOnBeginEditing="YES" minimumFontSize="17" id="D35-7U-IjJ" userLabel="emailTxt">
+                                    <textField clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Email" borderStyle="roundedRect" placeholder="Email" clearsOnBeginEditing="YES" minimumFontSize="17" id="D35-7U-IjJ" userLabel="emailTxt">
                                         <rect key="frame" x="35" y="92" width="229" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -85,7 +85,7 @@
                                             <outlet property="delegate" destination="hmN-q9-RwG" id="Eki-sP-XQX"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" clearsOnBeginEditing="YES" minimumFontSize="17" id="9JO-hG-uxg" userLabel="passwordTxt">
+                                    <textField opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Password" borderStyle="roundedRect" placeholder="Password" clearsOnBeginEditing="YES" minimumFontSize="17" id="9JO-hG-uxg" userLabel="passwordTxt">
                                         <rect key="frame" x="35" y="140" width="229" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1814,7 +1814,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="XYB-c9-szR" userLabel="regEmail">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Required" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="XYB-c9-szR" userLabel="regEmail">
                                 <rect key="frame" x="90" y="167" width="210" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -1823,7 +1823,7 @@
                                     <outlet property="delegate" destination="dhQ-Hm-f8i" id="hxt-u2-w19"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="62k-D8-Sl9" userLabel="regPassword">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Required" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="62k-D8-Sl9" userLabel="regPassword">
                                 <rect key="frame" x="90" y="214" width="124" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -1832,7 +1832,7 @@
                                     <outlet property="delegate" destination="dhQ-Hm-f8i" id="58C-It-x7h"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Gender..." minimumFontSize="17" background="email_acc_creat.png" id="law-hU-RxI" userLabel="regMF">
+                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Gender..." borderStyle="roundedRect" placeholder="Gender..." minimumFontSize="17" background="email_acc_creat.png" id="law-hU-RxI" userLabel="regMF">
                                 <rect key="frame" x="222" y="214" width="78" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -1853,22 +1853,22 @@
                                     <action selector="selectGender:" destination="dhQ-Hm-f8i" eventType="touchUpInside" id="FFh-KZ-yct"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="Wry-pZ-hYL" userLabel="regName">
-                                <rect key="frame" x="93" y="313" width="207" height="31"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Required" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="Wry-pZ-hYL" userLabel="regName">
+                                <rect key="frame" x="93" y="264" width="207" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <outlet property="delegate" destination="dhQ-Hm-f8i" id="1Hp-74-htA"/>
+                                    <outlet property="delegate" destination="dhQ-Hm-f8i" id="dfn-i4-afm"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="5hA-hw-Yv0" userLabel="regFirstName">
-                                <rect key="frame" x="93" y="264" width="207" height="31"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Required" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="5hA-hw-Yv0" userLabel="regFirstName">
+                                <rect key="frame" x="93" y="313" width="207" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <outlet property="delegate" destination="dhQ-Hm-f8i" id="MET-yi-p4x"/>
+                                    <outlet property="delegate" destination="dhQ-Hm-f8i" id="Ohl-ci-G1i"/>
                                 </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Email" lineBreakMode="tailTruncation" minimumFontSize="10" id="uKh-Et-U5M">
@@ -1885,14 +1885,14 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="First Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="vYk-l5-TpF">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="vYk-l5-TpF">
                                 <rect key="frame" x="8" y="269" width="75" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="nVA-1z-fUf">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="First Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="nVA-1z-fUf">
                                 <rect key="frame" x="8" y="317" width="77" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1927,7 +1927,7 @@
                                 </connections>
                             </button>
                             <pickerView hidden="YES" contentMode="scaleToFill" id="6e1-Y8-1Jh" userLabel="regMFPicker">
-                                <rect key="frame" x="1000" y="160" width="320" height="216"/>
+                                <rect key="frame" x="0.0" y="160" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <outlet property="dataSource" destination="dhQ-Hm-f8i" id="Sm5-RN-NIz"/>
@@ -1942,9 +1942,9 @@
                     <connections>
                         <outlet property="picSelButton" destination="c4u-ET-NDc" id="1fC-xc-2OM"/>
                         <outlet property="regEmail" destination="XYB-c9-szR" id="FA1-Si-fZG"/>
-                        <outlet property="regFirstName" destination="5hA-hw-Yv0" id="k0t-OS-z0R"/>
+                        <outlet property="regFirstName" destination="5hA-hw-Yv0" id="129-IS-arR"/>
                         <outlet property="regGender" destination="law-hU-RxI" id="Ygd-HP-ZxY"/>
-                        <outlet property="regName" destination="Wry-pZ-hYL" id="RSu-YY-VfD"/>
+                        <outlet property="regName" destination="Wry-pZ-hYL" id="yQo-IY-VvA"/>
                         <outlet property="regPassword" destination="62k-D8-Sl9" id="gj0-2v-FoL"/>
                         <outlet property="selMaleFemale" destination="6e1-Y8-1Jh" id="S6X-GX-CH0"/>
                         <segue destination="hmN-q9-RwG" kind="modal" identifier="regBackToLogin" modalTransitionStyle="crossDissolve" id="55q-NQ-wYQ"/>
@@ -4683,6 +4683,9 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
             </relationships>
         </class>
+        <class className="NSDictionary" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
+        </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
             <relationships>
@@ -4813,4 +4816,8 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="qvJ-bu-e6k"/>
+        <segue reference="muZ-DO-Isb"/>
+    </inferredMetricsTieBreakers>
 </document>

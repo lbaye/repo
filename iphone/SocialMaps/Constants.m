@@ -46,6 +46,7 @@ NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.updat
 NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.updatemeetuprequestdone";
 NSString * const NOTIF_SEND_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.sendmeetuprequestdone";
 NSString * const NOTIF_PUSH_NOTIFICATION_RECEIVED= @"com.genweb2.socialmaps.sendmeetuprequestdone";
+NSString * const NOTIF_SET_MESSAGE_STATUS_DONE= @"com.genweb2.socialmaps.setmessagestatusdone";;
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

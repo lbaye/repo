@@ -11,6 +11,8 @@
 
 #import "UtilityClass.h"
 #import "CustomAlert.h"
+#import "AppDelegate.h"
+#import "NotifMessage.h"
 
 @implementation UtilityClass
 
@@ -216,6 +218,41 @@
     }
     
     return NO;
+}
+
++(int) getNotificationCount {
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    int ignoreCount = 0;
+    if (smAppDelegate.msgRead == TRUE)
+        ignoreCount += [[self getUnreadMessage:smAppDelegate.messages] count];
+    
+    if (smAppDelegate.notifRead == TRUE)
+        ignoreCount += [smAppDelegate.notifications count];
+    
+    int totalNotif = smAppDelegate.friendRequests.count+
+    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount;
+    
+//    int totalNotif = smAppDelegate.friendRequests.count+
+//    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
+
+    
+    NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
+    return totalNotif;
+}
+
++(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
+{
+    NSMutableArray *unReadMessage=[[NSMutableArray alloc] init];
+    for (int i=0; i<[messageList count]; i++)
+    {
+        NSString *msgSts=((NotifMessage *)[messageList objectAtIndex:i]).msgStatus;
+        if ([msgSts isEqualToString:@"unread"])
+        {
+            [unReadMessage addObject:[messageList objectAtIndex:i]];
+        }
+    }
+    
+    return unReadMessage;
 }
 
 @end

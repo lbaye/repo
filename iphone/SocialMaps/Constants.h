@@ -38,6 +38,7 @@ extern NSString * const NOTIF_GET_MEET_UP_REQUEST_DONE;
 extern NSString * const NOTIF_SEND_MEET_UP_REQUEST_DONE;
 extern NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE;
 extern NSString * const NOTIF_PUSH_NOTIFICATION_RECEIVED;
+extern NSString * const NOTIF_SET_MESSAGE_STATUS_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

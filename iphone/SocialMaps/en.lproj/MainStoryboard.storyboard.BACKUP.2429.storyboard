@@ -4683,6 +4683,12 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
             </relationships>
         </class>
+<<<<<<< HEAD
+        <class className="NSDictionary" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
+        </class>
+=======
+>>>>>>> 37c58bf70cd40c548a49e809bd0951b46311ecaa
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
             <relationships>

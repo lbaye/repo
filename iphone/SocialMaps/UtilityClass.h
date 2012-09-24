@@ -23,4 +23,6 @@
 +(NSString *)convertNSDateToUnix:(NSDate *)date;
 + (NSString*) timeAsString:(NSDate*)notifTime;
 +(BOOL)hasConnectivity;
++(int) getNotificationCount;
++(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList;
 @end
