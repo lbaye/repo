@@ -10,6 +10,7 @@
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
 #import "UtilityClass.h"
+#import "Constants.h"
 
 @implementation MapAnnotationPeople
 
@@ -124,6 +125,29 @@
         addFriendBtn.hidden = TRUE;
     else
         addFriendBtn.hidden = FALSE;
+    
+    
+    [addFriendBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    [addFriendBtn setTitleColor:[UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
+    
+    NSString *friendShipStatus = locItemPeople.userInfo.friendshipStatus;
+    
+    if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
+        [addFriendBtn setTitle:@"Rejected" forState:UIControlStateNormal];
+        [addFriendBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [addFriendBtn setImage:nil forState:UIControlStateNormal];
+        addFriendBtn.userInteractionEnabled = NO;
+    } else if ([friendShipStatus isEqualToString:@"requested"]) {
+        [addFriendBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize-2]];
+        [addFriendBtn setImage:nil forState:UIControlStateNormal];
+        [addFriendBtn setTitle:@"Requested" forState:UIControlStateNormal];
+        addFriendBtn.userInteractionEnabled = NO;
+    } else if ([friendShipStatus isEqualToString:@"pending"]) {
+        [addFriendBtn setImage:nil forState:UIControlStateNormal];
+        [addFriendBtn setTitle:@"Pending" forState:UIControlStateNormal];
+        addFriendBtn.userInteractionEnabled = NO;
+    }
+    
     
     // Meet-up request
     UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];

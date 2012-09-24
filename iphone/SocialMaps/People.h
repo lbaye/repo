@@ -9,6 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "Date.h"
 
+typedef enum _FRIENDSHIP_STATUS {
+    Friend=0,
+    RejectedByMe,
+    Requested,
+    RejectedByHim,
+    Pending
+} FRIENDSHIP_STATUS;
+
 @interface People : NSObject
 {
     NSString *userId;
@@ -34,6 +42,7 @@
     NSString *age;
     NSString *lastSeenAt;
     BOOL isFriend;
+    NSString *friendshipStatus;
 }
 
 @property(nonatomic,retain) NSString *userId;
@@ -59,4 +68,5 @@
 @property(nonatomic,retain) NSString *age;
 @property(nonatomic,retain) NSString *lastSeenAt;
 @property(nonatomic) BOOL isFriend;
+@property(nonatomic, retain) NSString *friendshipStatus;
 @end
