@@ -3984,6 +3984,7 @@
         if (responseStatus == 200 || responseStatus == 201) {
             NSLog(@"sendFriendRequest successful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Friend request sent"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
         } else {
             NSLog(@"sendFriendRequest unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Friend request previously sent to this user."];
