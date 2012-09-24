@@ -302,7 +302,7 @@ NSMutableArray *unreadMesg;
         default:
             break;
     }
-     
+     /*
 //    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
     if (selectedType==0)
     {
@@ -315,6 +315,7 @@ NSMutableArray *unreadMesg;
         [smAppDelegate.messages removeObject:[unreadMesg objectAtIndex:indexPath.row]];
         [self.notificationItems reloadData];
     }
+      */
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
