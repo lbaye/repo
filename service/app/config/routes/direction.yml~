@@ -1,0 +1,4 @@
+all_meetups:
+  pattern: /direction/share
+  defaults: { _controller: Controller\Direction::index, type: direction }
+  requirements: { _method: GET }

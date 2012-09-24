@@ -233,16 +233,18 @@ class UserRepo extends Base
 
     public function sendFriendRequests($data, $friendId)
     {
-        $user = $this->find($friendId);
+        $recipient = $this->find($friendId);
 
-        if (is_null($user)) {
+        if (is_null($recipient)) {
             throw new \Exception\ResourceNotFoundException($friendId);
         }
 
-        $existingFriendRequests = $user->getFriendRequest();
+        $existingFriendRequests = $recipient->getFriendRequest();
+
         foreach ($existingFriendRequests as $existingFriendRequest) {
-            if ($existingFriendRequest->getRecipientId() == $friendId) {
-                throw new \Exception('Friend request previously sent to this user.');
+
+            if ($existingFriendRequest->getUserId() == $this->currentUser->getId()) {
+                throw new \Exception('Friend request previously sent to this recipient.');
             }
         }
 
@@ -253,18 +255,18 @@ class UserRepo extends Base
         $friendRequest = new FriendRequest($data);
         $friendRequest->setRequestdate(new \DateTime);
 
-        $user->addFriendRequest($friendRequest);
+        $recipient->addFriendRequest($friendRequest);
 
         $this->dm->persist($friendRequest);
-        $this->dm->persist($user);
+        $this->dm->persist($recipient);
 
         $this->dm->flush();
 
         $data = array(
             'userId'     => $friendId,
-            'objectId'   => $user->getId(),
+            'objectId'   => $recipient->getId(),
             'objectType' => 'FriendRequest',
-            'message'    => (!empty($data['message']) ? $data['message'] : $user->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+            'message'    => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
         );
 
         $this->addTask('new_friend_request', json_encode($data));
