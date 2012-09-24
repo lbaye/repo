@@ -305,9 +305,10 @@ NSMutableArray *unreadMesg;
         [smAppDelegate showActivityViewer:self.view];
         NSLog(@"indexPath.row %d %d %@",selectedType,indexPath.row,((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID);
         NSString *msgId=((NotifMessage *)[unreadMesg objectAtIndex:indexPath.row]).notifID; 
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
-
+//        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+//        [restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
+        [smAppDelegate.messages removeObject:[unreadMesg objectAtIndex:indexPath.row]];
+        [self.notificationItems reloadData];
     }
 }
 
