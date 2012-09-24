@@ -39,7 +39,7 @@ class DirectionRepo extends Base
         $directionDoc->setTo(new \Document\Location(array('lat' => $data['latTo'], 'lng' => $data['lngTo'])));
 
         if(isset($data['permission'])){
-            $directionDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
+          $directionDoc->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
         return $directionDoc;

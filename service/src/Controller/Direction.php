@@ -32,7 +32,6 @@ class Direction extends Base
         $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
 
-
     }
 
     /**
@@ -50,15 +49,14 @@ class Direction extends Base
         $direction         = $this->directionRepository->map($latlngInfo, $this->user);
         $directionLocation = $this->directionRepository->insert($direction);
 
-
         $notification  = new \Document\Notification();
 
-            $notificationData = array(
-                'title' => $this->user->getName() . " shared an direction Request",
-                'message' => "{$this->user->getName()} has shared direction with you",
-                'objectId' => $direction->getId(),
-                'objectType' => 'direction',
-            );
+        $notificationData = array(
+            'title' => $this->user->getName() . " shared an direction Request",
+            'message' => "{$this->user->getName()} has shared direction with you",
+            'objectId' => $direction->getId(),
+            'objectType' => 'direction',
+        );
 
         \Helper\Notification::send($notificationData, $this->userRepository->getAllByIds($latlngInfo['permittedUsers'], false) );
 
@@ -72,7 +70,7 @@ class Direction extends Base
     private function _initRepository($type)
     {
        if ($type == 'direction') {
-                $this->directionRepository = $this->dm->getRepository('Document\Direction');
+           $this->directionRepository = $this->dm->getRepository('Document\Direction');
        }
     }
 
