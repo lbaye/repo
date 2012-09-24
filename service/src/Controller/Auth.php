@@ -41,6 +41,12 @@ class Auth extends Base
 
         try {
 
+            if (empty($data['firstName']) || empty($data['lastName']) || empty($data['password']) || empty($data['avatar'])) {
+                $this->response->setContent(json_encode(array('message' => "Required field must not be empty!")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
             $user = $this->userRepository->insert($data);
 
             if (!empty($data['avatar'])) {
