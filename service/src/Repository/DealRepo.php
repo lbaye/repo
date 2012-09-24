@@ -12,8 +12,7 @@ class DealRepo extends Base
     public function getNearBy($lat, $lng, $limit = 20)
     {
         $deals = $this->createQueryBuilder()
-            ->field('location.lat')->near($lat)
-            ->field('location.lng')->near($lng)
+            ->field('location')->near($lat, $lng)
             ->limit($limit)
             ->getQuery()->execute();
 

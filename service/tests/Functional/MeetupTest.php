@@ -22,7 +22,7 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
     public function testCreateMeetupWorks()
     {
         $data = array(
-            'title' => 'New deal',
+            'title' => 'New test Meetup',
             'description' => 'A loooong description',   // Message here
             'duration'=> '2 hours',                     // Textual duration info
             'lat' => 90.05,
@@ -39,7 +39,7 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
         list($responseCode, $responseBody) = sendPostRequest($this->endpoint, array_slice($data, 2, 2), $this->user1Headers);
         $this->assertEquals(406, $responseCode);
 
-        // Insert an meetup
+        // Insert a meetup
         list($responseCode, $responseBody) = sendPostRequest($this->endpoint, $data, $this->user1Headers);
         $inserted = json_decode($responseBody);
         $this->assertEquals(201, $responseCode);
@@ -47,21 +47,38 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
         // Retrieve it and check
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint .'/'. $inserted->id, array(), $this->user1Headers);
         $retrieved = json_decode($responseBody);
-        $this->assertEquals($retrieved->title, $data['title']);
+
+        $this->assertEquals($retrieved->duration, $data['duration']);
         $this->assertEquals($data['lat'], $retrieved->location->lat);
-        $this->assertEquals(2, count($retrieved->guests));
+
+        // Owner himself added in guest list
+        $this->assertEquals(3, count($retrieved->guests->users));
     }
 
     public function testMeetupAccessWillCheckPermission()
     {
         // Accessing User1's private Event
         list($responseCodeForUser1, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0033', array(), $this->user1Headers);
-        list($responseCodeForUser2, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0033', array(), $this->user2Headers);
+        list($responseCodeForUser2, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0033', array(), $this->user3Headers);
 
         $this->assertEquals(200, $responseCodeForUser1);
         $this->assertEquals(403, $responseCodeForUser2);
+    }
+
+        public function testPrivateMeetupWillRemainVisibleToGuests()
+    {
+        // Accessing User1's private Event. User2 is a guest
+        list($responseCodeForUser2, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0033', array(), $this->user2Headers);
+
+        // Accessing User1's private Event. User3 is not a guest
+        list($responseCodeForUser3, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0033', array(), $this->user3Headers);
+
+        $this->assertEquals(200, $responseCodeForUser2);
+        $this->assertEquals(403, $responseCodeForUser3);
 
     }
+
+
     public function testMeetupListing()
     {
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint, array(), $this->user1Headers);
@@ -76,7 +93,7 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
     {
         // One event of User1 is private so should not be listed for User2
         list($responseCode, $responseBody1) = sendGetRequest($this->endpoint, array(), $this->user1Headers);
-        list($responseCode, $responseBody2) = sendGetRequest($this->endpoint, array(), $this->user2Headers);
+        list($responseCode, $responseBody2) = sendGetRequest($this->endpoint, array(), $this->user3Headers);
         $retrievedForUser1 = json_decode($responseBody1);
         $retrievedForUser2 = json_decode($responseBody2);
 
@@ -143,7 +160,7 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($retrieved));
     }
 
-    public function testEventTitleTimeAndLocationIsEditable()
+    public function testEventTimeAndLocationIsEditable()
     {
         $data = array(
             'title' => 'Updated title',
@@ -161,7 +178,6 @@ class MeetupsTest extends \PHPUnit_Framework_TestCase
         list($responseCode, $responseBody) = sendGetRequest($this->endpoint .'/5003e8bc757df2020d0f0000', array(), $this->user1Headers);
         $edited = json_decode($responseBody);
 
-        $this->assertEquals($data['title'], $edited->title);
         $this->assertEquals($data['address'], $edited->location->address);
         $this->assertEquals($data['time'], $edited->time->date);
     }
