@@ -12,6 +12,7 @@ class ProximityAlert extends Base
     protected $userRepository;
 
     const DEFAULT_RADIUS = 4;
+    const VALIDITY_MS   = 7200; // 2 hours
 
     protected function setFunction()
     {
@@ -23,13 +24,14 @@ class ProximityAlert extends Base
         //file_put_contents('/tmp/workload.txt', json_encode(count($friends)));
         $workload = json_decode($job->workload());
 
-        $this->userRepository = $this->services['dm']->getRepository('Document\User');
+        if($this->_stillValid($workload)){
+            $this->userRepository = $this->services['dm']->getRepository('Document\User');
 
-        // Retrieve target user
-        $user = $this->userRepository->find($workload->user_id);
-
-        // Find friends who needs to be informed
-        $this->sendNotificationToNearbyFriends($user);
+            $user = $this->userRepository->find($workload->user_id);
+            $this->sendNotificationToNearbyFriends($user);
+        } else {
+            echo 'Skipping proximity alert push for '. $workload->user_id .' because of outdated'. PHP_EOL;
+        }
 
         $this->runTasks();
     }
@@ -131,5 +133,10 @@ class ProximityAlert extends Base
         } else {
             return $friends[0]->getName() .' is ';
         }
+    }
+
+    private function _stillValid($workload)
+    {
+        return ((time() - intval($workload->timestamp)) < self::VALIDITY_MS);
     }
 }
