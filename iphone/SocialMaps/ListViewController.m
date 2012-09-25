@@ -197,7 +197,7 @@
     LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
     anItem.delegate = self;
     UITableViewCell * cell = [anItem getTableViewCell:tv sender:self];
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
