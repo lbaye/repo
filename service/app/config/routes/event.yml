@@ -43,3 +43,9 @@ share:
   pattern: /events/{id}/share
   defaults: { _controller: Controller\Gathering::share, type: event }
   requirements: { _method: POST}
+
+
+add_guests:
+  pattern: /events/{id}/guests
+  defaults: { _controller: Controller\Gathering::addGuests, type: event }
+  requirements: { _method: PUT}
