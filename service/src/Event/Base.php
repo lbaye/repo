@@ -73,6 +73,14 @@ abstract class Base
         return $yaml->parse(file_get_contents(ROOTDIR .'/../app/config/services.yml'));
     }
 
+    protected function _stillValid($workload)
+    {
+        // 0 means always valid
+        if(empty($workload->validity)) return true;
+
+        return ((time() - intval($workload->timestamp)) < intval($workload->validity));
+    }
+
     abstract protected function setFunction();
     abstract public function run(\GearmanJob $job);
 }

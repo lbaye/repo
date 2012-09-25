@@ -349,7 +349,11 @@ class Settings extends Base
 
     private function _sendProximityAlerts(\Document\User $user)
     {
-        $this->addTask('proximity_alert', json_encode(array('user_id' => $user->getId(), 'timestamp' => time())));
+        $this->addTask('proximity_alert', json_encode(array(
+            'user_id' => $user->getId(),
+            'timestamp' => time(),
+            'validity' => 7200, // 2 hours
+        )));
     }
 
     private function returnResponse($result)
