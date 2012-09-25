@@ -15,6 +15,7 @@
 #import "CounterItem.h"
 #import "RadioButtonItem.h"
 #import "LocationSharingPref.h"
+#import "AppDelegate.h"
 
 #define ROW_HEIGHT 62
 
@@ -41,31 +42,38 @@
                                                  alpha:1.0];
     int startTag = 2000;
     int rowNum = 0;
+    /*
     //Erase history
     SettingsMaster *eraseView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Erase history" subTitle:@"Erase all the messages, notifications, etc..." bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
     
     // Delete account
     SettingsMaster *deleteView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Delete Account..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    
-    // Change password
-    SettingsMaster *changePWView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Change password..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+    */
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if ([smAppDelegate.fbId isEqualToString:@""]) {
+        // Change password
+        SettingsMaster *changePWView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Change password..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag+2];
+        [self addSubview:changePWView];
+    }
+   
     
     // Personal information
-    SettingsMaster *infoView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Personal information..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    
+    SettingsMaster *infoView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Personal information..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag+3];
+    /*
     // Units
     ToggleView *unitView = [[ToggleView alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Units..." labels:[NSArray arrayWithObjects:@"Metric",@"Imperial", nil] sender:self tag:startTag++];
-    
+    */
     // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
                                     (ROW_HEIGHT+2)*rowNum);
     [self setContentSize:contentSize];
                                                                           
-    [self addSubview:eraseView];
-    [self addSubview:deleteView];
-    [self addSubview:changePWView];
+    //[self addSubview:eraseView];
+    //[self addSubview:deleteView];
+    
     [self addSubview:infoView];
-    [self addSubview:unitView];
+    //[self addSubview:unitView];
+    
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {

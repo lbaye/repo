@@ -248,6 +248,9 @@
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
             [self performSegueWithIdentifier: @"showMapView" sender: self];
+        
+        smAppDelegate.fbId = @"";
+        
     } else {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
