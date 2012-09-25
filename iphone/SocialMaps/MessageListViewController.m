@@ -346,6 +346,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
     }
     
+    if ([msgReplies count] == 0) {
+        return;
+    }
+    
     [messageReplyList addObjectsFromArray:msgReplies];
     [messageReplyTableView reloadData];
     NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
@@ -531,13 +535,24 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
     lblTime.text = [UtilityClass timeAsString:msg.notifTime];
     
-    NSString *lastReply = [msg.lastReply valueForKey:@"content"];
-    
-    if ((lastReply == NULL) || [lastReply isEqual:[NSNull null]]) {
-        txtMsg.text = msg.notifMessage;
+    //NSString *lastReply = [msg.lastReply valueForKey:@"content"];
+    NSLog(@"%@", msg.lastReply);
+    if (![msg.lastReply isEqual:[NSNull null]]) {
+        for (NSDictionary *lastReplyDic in msg.lastReply) {
+            
+            NSString *lastReply = [lastReplyDic valueForKey:@"content"];
+            
+            if ((lastReply == NULL) || [lastReply isEqual:[NSNull null]]) {
+                txtMsg.text = msg.notifMessage;
+            } else {
+                txtMsg.text = lastReply;
+            }
+        }
     } else {
-        txtMsg.text = lastReply;
+        txtMsg.text = msg.notifMessage;
     }
+    
+    
     
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
     
