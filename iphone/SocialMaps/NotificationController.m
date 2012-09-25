@@ -14,6 +14,7 @@
 #import "MapViewController.h"
 #import "RestClient.h"
 #import "MessageListViewController.h"
+#import "UtilityClass.h"
 
 @implementation NotificationController
 
@@ -79,12 +80,18 @@ NSMutableArray *unreadMesg;
     // Dummy cotifications
     int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
-    if (smAppDelegate.msgRead == TRUE) {
+//    if (smAppDelegate.msgRead == TRUE) {
+//        msgCount.text = @"";
+//        ignoreCount += [unreadMesg count];
+//    } else
+    if ([[UtilityClass getUnreadMessage:smAppDelegate.messages] count]==0)
+    {
         msgCount.text = @"";
-        ignoreCount += [unreadMesg count];
-    } else
-        msgCount.text   = [NSString stringWithFormat:@"%d",unreadMesg.count];
-    
+    }
+    else
+    {
+    msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
+    }
     if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
         ignoreCount += [smAppDelegate.notifications count];
@@ -93,10 +100,11 @@ NSMutableArray *unreadMesg;
     
     int totalCount = smAppDelegate.friendRequests.count+unreadMesg.count+
                         smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
-    if (totalCount == 0)
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
         notifCount.text = @"";
     else
-        notifCount.text = [NSString stringWithFormat:@"%d", totalCount];
+        notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
     
     int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
     if (requestCount == 0)
@@ -178,7 +186,7 @@ NSMutableArray *unreadMesg;
     if (smAppDelegate.notifRead == TRUE)
         ignoreCount += [smAppDelegate.notifications count];
 
-    msgCount.text   = @"";
+//    msgCount.text   = @"";
     int totalCount = smAppDelegate.friendRequests.count+
                     unreadMesg.count+smAppDelegate.notifications.count-
                     smAppDelegate.ignoreCount-ignoreCount;
