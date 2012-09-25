@@ -30,13 +30,9 @@
     CGRect lblNameFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2, infoView.frame.size.width-4-ANNO_IMG_WIDTH, lblStringSize.height);
     UILabel *lblName = [[UILabel alloc] initWithFrame:lblNameFrame];
     
-    NSString *age=@""; 
-    if (locItemPeople.userInfo.dateOfBirth != nil )
-        age = [NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:locItemPeople.userInfo.dateOfBirth]];
-    else if ([locItemPeople.userInfo.age intValue] > 0)
-        age = locItemPeople.userInfo.age;
+    NSString *age = [self getAgeString:locItemPeople];
     
-    lblName.text = [NSString stringWithFormat:@"%@ - Age: %@", locItemPeople.itemName, age];
+    lblName.text = [NSString stringWithFormat:@"%@%@", locItemPeople.itemName, age];
     lblName.backgroundColor = [UIColor clearColor];
     lblName.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     [infoView addSubview:lblName];
@@ -81,6 +77,22 @@
     return annoView;
 }
 
+- (NSString*) getAgeString:(LocationItemPeople*)locItemPpl
+{
+    NSString *age = @"";
+    
+    if (locItemPpl.userInfo.dateOfBirth != nil )
+        age = [NSString stringWithFormat:@" - Age: %d",[UtilityClass getAgeFromBirthday:locItemPpl.userInfo.dateOfBirth]];
+    else if ([locItemPpl.userInfo.age intValue] > 0)
+        age = [NSString stringWithFormat:@" - Age: %@",locItemPpl.userInfo.age];
+    
+    if ([age isEqualToString:@" - Age: 0"]) {
+        age = @"";
+    }
+    
+    return age;
+}
+
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [super getViewForStateDetailed:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
@@ -94,13 +106,9 @@
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
     
-    NSString *age=@""; 
-    if (locItemPeople.userInfo.dateOfBirth != nil )
-        age = [NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:locItemPeople.userInfo.dateOfBirth]];
-    else if ([locItemPeople.userInfo.age intValue] > 0)
-        age = locItemPeople.userInfo.age;
+    NSString *age = [self getAgeString:locItemPeople];
     
-    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b> - Age: <b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
+    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
                                  locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                                  locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                                  age, 
