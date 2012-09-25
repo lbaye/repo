@@ -111,7 +111,6 @@ class Search extends Base
     public function allPeopleList()
     {
         $data = $this->request->request->all();
-        $results = array();
         $results = $this->people($data);
 
         return $this->_generateResponse($results);
