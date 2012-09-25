@@ -318,9 +318,9 @@ NSMutableArray *unreadMesg;
     
     switch (selectedType) {
         case Message:
-            msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
+            msg = [unreadMesg objectAtIndex:indexPath.row];
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-            MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+            MessageListViewController *controller =[[storybrd instantiateViewControllerWithIdentifier:@"messageList"] retain];
             controller.selectedMessage = msg;
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
