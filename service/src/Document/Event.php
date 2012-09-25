@@ -25,7 +25,6 @@ class Event extends Gathering
 
         try {
             Validator::create()->notEmpty()->assert($this->getTitle());
-            Validator::create()->notEmpty()->assert($this->getDescription());
             Validator::create()->date()->assert($this->getTime());
 
         } catch (\InvalidArgumentException $e) {
