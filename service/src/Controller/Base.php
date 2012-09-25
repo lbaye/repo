@@ -52,6 +52,8 @@ abstract class Base
      */
     protected $gearmanClient;
 
+    protected $missingFields;
+
     /**
      * Inject the Request object for further use.
      *
@@ -258,5 +260,29 @@ abstract class Base
 
     protected function _buildAvatarUrl($data) {
         return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
+    }
+
+    protected function _isRequiredFieldsFound(array $required_fields, array $data) {
+        $missing_fields = array();
+
+        foreach ($required_fields as $key) {
+            if (!isset($data[$key])) {
+                $missing_fields[] = $key;
+            }
+        }
+
+        if (!empty($missing_fields)) {
+            $this->missingFields = $missing_fields;
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function _generateMissingFieldsError() {
+        $fields_comma_joined = implode(", ", array_filter($this->missingFields));
+        $is_or_are = (count($this->missingFields) > 1 ? 'are' : 'is');
+
+        return $this->_generate500($fields_comma_joined . ' ' . $is_or_are . " required parameters.");
     }
 }

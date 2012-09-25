@@ -47,11 +47,16 @@ class Search extends Base
     public function all()
     {
         $data = $this->request->request->all();
-        $results = array();
-        $results['people'] = $this->people($data);
-        $results['places'] = $this->places($data);
 
-        return $this->_generateResponse($results);
+        if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
+            $results = array();
+            $results['people'] = $this->people($data);
+            $results['places'] = $this->places($data);
+
+            return $this->_generateResponse($results);
+        } else {
+            return $this->_generateMissingFieldsError();
+        }
     }
 
     protected function people($data)
@@ -90,14 +95,17 @@ class Search extends Base
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $googlePlaces = new \Service\Venue\GooglePlaces($this->config['googlePlace']['apiKey']);
-
         try {
-            $places = $googlePlaces->search($keywords, $location);
-            return $places;
+            return $this->findPlaces($keywords, $location);
         } catch (\Exception $e) {
-            return array();
+            return array("message" => $e->getMessage());
         }
+    }
+
+    protected function findPlaces($keywords, $location) {
+        return \Service\Location\PlacesServiceFactory::
+                getInstance($this->dm, $this->config, \Service\Location\PlacesServiceFactory::CACHED_GOOGLE_PLACES)
+                ->search($location, $keywords);
     }
 
     /** TODO: Finalize deals search */
