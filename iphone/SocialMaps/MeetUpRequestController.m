@@ -82,20 +82,20 @@ DDAnnotation *annotation;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
    
-    //load map data
-    CLLocationCoordinate2D theCoordinate;
-	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
-    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
-	
-	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-    
-	annotation.title = @"Drag to Move Pin";
-    
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
-    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
-    [pointOnMapView setRegion:adjustedRegion animated:NO];
-    
-	[pointOnMapView addAnnotation:annotation];
+//    //load map data
+//    CLLocationCoordinate2D theCoordinate;
+//	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+//    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+//	
+//	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+//    
+//	annotation.title = @"Drag to Move Pin";
+//    
+//    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+//    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
+//    [pointOnMapView setRegion:adjustedRegion animated:NO];
+//    
+//	[pointOnMapView addAnnotation:annotation];
     
     //tableView setup
     tableViewPlaces.dataSource = self;
@@ -121,6 +121,21 @@ DDAnnotation *annotation;
 {
     [super viewDidAppear:animated];
     [self displayNotificationCount];
+    
+    //load map data
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+	
+	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
+	annotation.title = @"Drag to Move Pin";
+    
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
+    [pointOnMapView setRegion:adjustedRegion animated:NO];
+    
+	[pointOnMapView addAnnotation:annotation];
     
     int selectedRadioButtonIndex = 0;
     
