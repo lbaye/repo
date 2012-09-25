@@ -34,6 +34,7 @@
 #import "Globals.h"
 #import "ViewCircleListViewController.h"
 #import "ViewEventListViewController.h"
+#import "UserBasicProfileViewController.h"
 
 @interface MapViewController ()
 
@@ -693,6 +694,7 @@ ButtonClickCallbackData callBackData;
         [self loadAnnotations:animated];
     
     [super viewWillAppear:animated];
+//    [self initPullView];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
@@ -820,6 +822,13 @@ ButtonClickCallbackData callBackData;
 - (IBAction)hidePulldown:(id)sender {
     pickSavedFilter.hidden = TRUE;
     _mapPulldown.hidden = TRUE;
+}
+
+-(IBAction)gotoProfile:(id)sender
+{
+    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 // Select filter
@@ -1449,6 +1458,40 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)closePullupMenu:(id)sender {
     _mapPullupMenu.hidden = TRUE;
+}
+
+-(void)initPullView
+{
+    CGFloat xOffset = 0;
+    pullUpView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
+    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height);
+    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height + 200);
+    pullUpView.center = pullUpView.closedCenter;
+    pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
+    pullUpView.delegate = self;
+    
+    [self.view addSubview:pullUpView];
+    [pullUpView addSubview:_mapPullupMenu];
+    
+    pullDownView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset,230);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -200);
+    pullDownView.center = pullDownView.closedCenter;
+    
+    [self.view addSubview:pullDownView];
+    [pullDownView addSubview:_mapPulldown];
+
+}
+
+- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
+    if (opened)
+    {
+        NSLog(@"Now I'm open!");
+    }
+    else
+    {
+        NSLog(@"Now I'm closed, pull me up again!");
+    }
 }
 
 - (void) updateLocation:(id) sender {

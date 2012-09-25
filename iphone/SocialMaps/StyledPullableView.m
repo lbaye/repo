@@ -1,9 +1,12 @@
+//
+//  StyledPullableView.m
+//  Pull-Down Menu
+//
+//  Created by Abdullah Md. Zubair on 9/25/12.
+//  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
+//
 
 #import "StyledPullableView.h"
-
-/**
- @author Fabio Rodella fabio@crocodella.com.br
- */
 
 @implementation StyledPullableView
 

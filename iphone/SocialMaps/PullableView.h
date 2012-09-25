@@ -1,3 +1,10 @@
+//
+//  PullableView.h
+//  Pull-Down Menu
+//
+//  Created by Abdullah Md. Zubair on 9/25/12.
+//  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
+//
 
 #import <UIKit/UIKit.h>
 
@@ -18,15 +25,6 @@
 
 @end
 
-/**
- Class that implements a view that can be pulled out by a handle, 
- similar to the Notification Center in iOS 5. This class supports
- pulling in the horizontal or vertical axis. This is determined by
- the values for openedCenter and closedCenter that you set: if
- both have the same x coordinate, the pulling should happen in the
- vertical axis, or the horizontal axis otherwise.
- @author Fabio Rodella fabio@crocodella.com.br
- */
 @interface PullableView : UIView {
     
     CGPoint closedCenter;

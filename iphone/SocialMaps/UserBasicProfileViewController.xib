@@ -68,7 +68,7 @@
 								<string key="NSFrame">{{100, 8}, {121, 30}}</string>
 								<reference key="NSSuperview" ref="318762632"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="555237858"/>
+								<reference key="NSNextKeyView" ref="173480013"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MSAxIDEgMAA</bytes>
@@ -88,7 +88,7 @@
 								<string key="NSFrame">{{282, 9}, {28, 28}}</string>
 								<reference key="NSSuperview" ref="318762632"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="173480013"/>
+								<reference key="NSNextKeyView" ref="1043095065"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAgMAA</bytes>
@@ -127,10 +127,10 @@
 								<reference key="NSNextResponder" ref="318762632"/>
 								<int key="NSvFlags">1316</int>
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
-								<string key="NSFrame">{{280, 14}, {28, 18}}</string>
+								<string key="NSFrame">{{280, 8}, {28, 18}}</string>
 								<reference key="NSSuperview" ref="318762632"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="1043095065"/>
+								<reference key="NSNextKeyView" ref="555237858"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -235,7 +235,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">Photo-0.png</string>
+							<string key="NSResourceName">thum.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="467620490">
@@ -776,6 +776,7 @@
 						<string key="NSFrame">{{168, 421}, {140, 32}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1824,7 +1825,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="Photo-0.png">{124, 124}</string>
 			<string key="back_b_small.png">{70, 35}</string>
 			<string key="btn_bg_light.png">{344, 64}</string>
 			<string key="bubble_count_icon.png">{55, 57}</string>
@@ -1838,6 +1838,7 @@
 			<string key="search_field.png">{410, 80}</string>
 			<string key="show_on_map.png">{43, 43}</string>
 			<string key="sp2.png">{1, 60}</string>
+			<string key="thum.png">{139, 139}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>

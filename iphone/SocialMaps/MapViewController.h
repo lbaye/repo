@@ -14,6 +14,7 @@
 #import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
+#import "StyledPullableView.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -29,7 +30,7 @@ typedef enum _SHARING_TYPES {
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
                                 MapAnnotationDelegate, IconDownloaderDelegate,
-                                UIGestureRecognizerDelegate> {
+                                UIGestureRecognizerDelegate,PullableViewDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -46,6 +47,8 @@ typedef enum _SHARING_TYPES {
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
                                     
+    StyledPullableView *pullDownView;                                    
+    StyledPullableView *pullUpView;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -103,6 +106,7 @@ typedef enum _SHARING_TYPES {
 -(IBAction)inviteAllUsers:(id)sender;
 -(IBAction)inviteSelectedUsers:(id)sender;
 
+-(IBAction)gotoProfile:(id)sender;
 //
 - (void) resetShareButton:(SHARING_TYPES)newSel;
 -(void)searchResult;
