@@ -47,6 +47,8 @@ class GatheringRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
+
+
         $gathering = $this->map($data, $gathering->getOwner(), $gathering);
 
         if ($gathering->isValid() === false) {
@@ -143,7 +145,10 @@ class GatheringRepo extends Base
             $gathering->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
-        $gathering->setLocation(new \Document\Location($data));
+        if(isset($data['lat']) && isset($data['lng'])){
+           $gathering->setLocation(new \Document\Location($data));
+        }
+
         $gathering->setOwner($owner);
 
         return $gathering;

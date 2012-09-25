@@ -431,7 +431,6 @@ db.getCollection("meetups").insert({
   "duration": "1 hour",
   "guests": [
     "5003e8bc757df2020d000006",
-    "5003e8bc757df2020d000000"
   ],
   "location": {
     "lat": 90.5,
@@ -457,7 +456,6 @@ db.getCollection("meetups").insert({
   "duration": "1 hour",
   "guests": [
     "5003e8bc757df2020d000006",
-    "5003e8bc757df2020d000000"
   ],
   "location": {
     "lat": 90.5,

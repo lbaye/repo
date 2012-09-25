@@ -75,8 +75,7 @@ class UserRepo extends Base
     public function getNearBy($lat, $lng, $limit = 20)
     {
         $users = $this->createQueryBuilder()
-            ->field('currentLocation.lat')->near($lat)
-            ->field('currentLocation.lng')->near($lng)
+            ->field('currentLocation')->near($lat, $lng)
             ->field('id')->notIn($this->currentUser->getblockedBy())
             ->field('visible')->equals(true)
             ->limit($limit)
