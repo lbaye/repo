@@ -380,6 +380,7 @@
 		B01DFC5815F5E74300020D49 /* tab_icon_message.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5015F5E74300020D49 /* tab_icon_message.png */; };
 		B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5115F5E74300020D49 /* top_curve_bg.png */; };
 		B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5215F5E74300020D49 /* whitle_blend.png */; };
+		B01FDC891611EDC800BB3271 /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = B01FDC881611EDC700BB3271 /* icon_event.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
@@ -939,6 +940,7 @@
 		B01DFC5015F5E74300020D49 /* tab_icon_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tab_icon_message.png; path = Images/tab_icon_message.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5115F5E74300020D49 /* top_curve_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_curve_bg.png; path = Images/top_curve_bg.png; sourceTree = SOURCE_ROOT; };
 		B01DFC5215F5E74300020D49 /* whitle_blend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whitle_blend.png; path = Images/whitle_blend.png; sourceTree = SOURCE_ROOT; };
+		B01FDC881611EDC700BB3271 /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
 		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
@@ -1362,6 +1364,7 @@
 				4F4CA54615C45351004234E5 /* bubble_count_icon.png */,
 				4FF81C6B15D6C7250097759A /* cal-48x48.png */,
 				4F88406815F79C4B00E4DFC8 /* Calendar.png */,
+				B01FDC881611EDC700BB3271 /* icon_event.png */,
 				4F4296FC15E6CF35001AB56F /* category_bar.png */,
 				4F42970715E6CF35001AB56F /* category_bar_dark.png */,
 				4F42970515E6CF35001AB56F /* category_dining.png */,
@@ -1922,6 +1925,7 @@
 				2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */,
 				B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */,
 				20CF833F1611BAAA0075E647 /* icon_profile.png in Resources */,
+				B01FDC891611EDC800BB3271 /* icon_event.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
