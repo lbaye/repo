@@ -3408,6 +3408,7 @@
             UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
             
             NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
+            [UtilityClass showAlert:@"Social Maps" :@"Your Personal Information Saved"];
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
         } 
         {

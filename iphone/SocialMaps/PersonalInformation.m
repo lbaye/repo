@@ -159,6 +159,7 @@
     email = [self getTextField:itemFrame text:@"Email..." tag:currTag++];
     email.delegate = parent;
     email.text = smAppDelegate.userAccountPrefs.email;
+    [email setEnabled:NO];
     [self addSubview:email];
     heightOffset += TEXT_HEIGHT + 5;
     
