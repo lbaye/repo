@@ -222,11 +222,6 @@ class Gathering extends Base
             }
         }
 
-        if (!empty($postData['guests'])) {
-            $this->gatheringRepository->addGuests($postData['guests'], $gathering);
-        }
-
-
         if (!empty($postData['invitedCircles'])) {
             $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
         }
@@ -458,18 +453,18 @@ class Gathering extends Base
             } else {
                 return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
             }
-        }
+        }else {
 
-        if (!empty($postData['guests'])) {
-            $this->gatheringRepository->addGuests($postData['guests'], $gathering);
-        }
+             if (!empty($postData['guests'])) {
+                $this->gatheringRepository->addGuests($postData['guests'], $gathering);
+             }
 
-        $data = $gathering->toArrayDetailed();
-        $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
-        $guests['circles'] = $data['guests']['circles'];
-        $data['guests'] = $guests;
+            $data = $gathering->toArrayDetailed();
+            $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
+            $guests['circles'] = $data['guests']['circles'];
+            $data['guests'] = $guests;
+        }
 
         return $this->_generateResponse($data);
-
     }
 }
