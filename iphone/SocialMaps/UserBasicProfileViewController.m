@@ -204,8 +204,13 @@ BOOL coverImgFlag;
 
 -(IBAction)backButton:(id)sender
 {
-    [self.entityTextField resignFirstResponder];
-    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
+//    [self.entityTextField resignFirstResponder];
+//    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -217,7 +222,7 @@ BOOL coverImgFlag;
 //     profileImageView.image;
     userInfo=[notif object];
      nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
-     statusMsgLabel.text=@"It's a beautiful day";
+     statusMsgLabel.text=@"";
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
      ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
@@ -237,6 +242,11 @@ BOOL coverImgFlag;
     {
         [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
     }
+    regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    regStatus.userInteractionEnabled=YES;
+    regStatus.layer.borderWidth=1.0;
+    regStatus.layer.masksToBounds = YES;
+    [regStatus.layer setCornerRadius:5.0];
     
     [self performSelectorInBackground:@selector(loadImage) withObject:nil];
     [self performSelectorInBackground:@selector(loadImage2) withObject:nil];    
@@ -329,7 +339,7 @@ BOOL coverImgFlag;
     }
     else
     {
-        profileImageView.image=[UIImage imageNamed:@"Photo-0.png"];
+        profileImageView.image=[UIImage imageNamed:@"thum.png"];
     }
     
     NSLog(@"image setted after download2. %@",img2);    
