@@ -1611,7 +1611,8 @@
                     people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
                     
                     people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
-                    
+                    people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
                     NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);

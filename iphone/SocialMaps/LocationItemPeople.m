@@ -27,22 +27,29 @@
         CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
         
         CGFloat msgHeight = msgRows*msgStringSize.height+16;
-        CGRect msgFrame = CGRectMake(10+itemIcon.size.width+10, 
+//        CGRect msgFrame = CGRectMake(10+itemIcon.size.width+10, 
+//                                     lblName.frame.origin.y+lblName.frame.size.height+5,
+//                                     tv.frame.size.width/2, msgHeight);
+        CGRect msgFrame = CGRectMake(80, 
                                      lblName.frame.origin.y+lblName.frame.size.height+5,
                                      tv.frame.size.width/2, msgHeight);
+
         txtMsg = [[[UITextView alloc] initWithFrame:msgFrame] autorelease];
 		txtMsg.tag = 2006;
-		txtMsg.textColor = [UIColor blackColor];
+		txtMsg.textColor = [UIColor whiteColor];
 		txtMsg.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
 		txtMsg.backgroundColor = [UIColor clearColor];
 		[txtMsg setTextAlignment:UITextAlignmentLeft];
-		
-		[cell.contentView addSubview:txtMsg];
+        if (userInfo.statusMsg) 
+        {
+            txtMsg.text = userInfo.statusMsg;
+        }
+        NSLog(@"people.statusMsg %@ %lf  %lf",userInfo.statusMsg, msgFrame.origin.x, msgFrame.origin.y);
+        txtMsg.userInteractionEnabled = FALSE;
+        [cell.contentView addSubview:txtMsg];
     }
     
 	// Message
-    txtMsg.text = userInfo.statusMsg;
-    txtMsg.userInteractionEnabled = FALSE;
     
     // Debug
 //    CGRect tmp = CGRectMake(lblAddress.frame.origin.x,lblAddress.frame.origin.y,cell.frame.size.width, 37);

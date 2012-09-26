@@ -789,7 +789,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
-//    [imageDownloadsInProgress release];
+//.
+    [imageDownloadsInProgress release];
 //    [imageDownloadsInProgressCopy release];
     [_mapView release];
     [_mapView release];
