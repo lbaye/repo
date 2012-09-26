@@ -13,7 +13,7 @@ class GooglePlaces extends Base
         $this->endpoint = $endpoint;
     }
 
-    public function search($keyword = null, $location = array())
+    public function search($keyword = null, $location = array(), $radius = '2000')
     {
         $params['location'] = $location['lat'] . ',' . $location['lng'];
 
@@ -21,7 +21,7 @@ class GooglePlaces extends Base
             $params['keyword'] = $keyword;
         }
 
-        $params['radius'] = '2000';
+        $params['radius'] = $radius;
         $params['sensor'] = 'false';
         $params['key'] = urlencode($this->apiKey);
 
