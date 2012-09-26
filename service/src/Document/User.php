@@ -222,7 +222,7 @@ class User
 
     /** @var array */
     public $defaultSettings = array(
-        'unit' => 'Metrics',
+        'unit' => 'metric',
         'visible' => true
     );
 
@@ -867,10 +867,10 @@ class User
         return $this->distance;
     }
 
-    private function unitConvert($value, $unitName = "Metrics")
+    private function unitConvert($value, $unitName = "metric")
     {
         if ($unitName != "") {
-            if ($unitName == "Imperial") {
+            if ($unitName == "imperial") {
                 if (isset($this->$value)) {
                     $value = $value * 0.6214;
                 }
