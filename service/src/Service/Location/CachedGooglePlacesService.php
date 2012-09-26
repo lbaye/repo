@@ -22,28 +22,36 @@ class CachedGooglePlacesService implements \Service\Location\IPlacesService {
         $this->ensureLocationIsSet($location);
 
         # Round lat and lng value
-        $location['lat'] = round($location['lat'], 2);
-        $location['lng'] = round($location['lng'], 2);
+        $rounded_location = array(
+            'lat' => round($location['lat'], 2),
+            'lng' => round($location['lng'], 2)
+        );
 
         # Search CachedPlacesData by rounded lat and lng
-        $cachedData = $this->mRepository->find($this->mRepository->buildId($location));
+        $cachedData = $this->mRepository->find($this->mRepository->buildId($rounded_location));
         if ($cachedData == null) {
             # If not found retrieve from google
             # Cache google places result
-            $result = $this->mService->search($location, $keywords, $radius);
+            $result = $this->mService->search($rounded_location, $keywords, $radius);
             $this->mRepository->insert($this->mRepository->map(array(
-                'lat' => $location['lat'],
-                'lng' => $location['lng'],
+                'lat' => $rounded_location['lat'],
+                'lng' => $rounded_location['lng'],
                 'source' => 'google',
                 'cachedData' => $result)));
             return $result;
         } else {
-            return $cachedData->getCachedData();
+            return $this->updateDistance($location, $cachedData->getCachedData());
         }
     }
 
-    private function buildCache($result, $location) {
-
+    private function updateDistance($location, $cachedData) {
+        foreach ($cachedData as &$place) {
+            $place->distance = \Helper\Location::distance(
+                $location['lat'], $location['lng'],
+                $place->geometry->location->lat,
+                $place->geometry->location->lng);
+        }
+        return $cachedData;
     }
 
     private function ensureLocationIsSet($location) {
