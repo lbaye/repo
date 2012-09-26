@@ -103,11 +103,13 @@ ButtonClickCallbackData callBackData;
     
     MKAnnotationView *pin = nil;
     
-    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
         pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else if ([locItem isKindOfClass:[LocationItemPlace class]])
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    } else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
         //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
         pin = nil;
     }

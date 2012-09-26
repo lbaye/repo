@@ -49,7 +49,12 @@
     
     // Keep provision for comma separated list
     NSString *objectIds = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectId"];
-    NSArray *users = [objectIds componentsSeparatedByString:@","];
+    NSArray *users = nil;
+    
+    // ObjectIds is null for multiple friend notification
+    if ((objectIds!=NULL)&&![objectIds isEqual:[NSNull null]])
+        users = [objectIds componentsSeparatedByString:@","];
+    
     if ([type caseInsensitiveCompare:@"proximity_alert"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationProximityAlert;
         newNotif.objectIds = [NSArray arrayWithArray:users];
