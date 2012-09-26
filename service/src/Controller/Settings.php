@@ -291,14 +291,13 @@ class Settings extends Base
 
             // Update additional information
             try {
-                // TODO: Use background job for _updateLastSeenAt
                 $this->_updateLastSeenAt($this->user);
                 $this->_sendProximityAlerts($this->user);
             } catch (\Exception $e) {
-                $this->_sendProximityAlerts($this->user);
-                // Do the location update even if
-                return $this->persistAndReturn($location);
+                // Do nothing
             }
+
+            //$this->_sendPushNotification($this->user->getId(), 'TEst generic push', 'example_push_event');
 
             return $this->persistAndReturn($location);
 
@@ -352,7 +351,11 @@ class Settings extends Base
 
     private function _sendProximityAlerts(\Document\User $user)
     {
-        $this->addTask('proximity_alert', json_encode(array('user_id' => $user->getId(), 'timestamp' => time())));
+        $this->addTask('proximity_alert', json_encode(array(
+            'user_id' => $user->getId(),
+            'timestamp' => time(),
+            'validity' => 7200, // 2 hours
+        )));
     }
 
     private function returnResponse($result)

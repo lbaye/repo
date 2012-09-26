@@ -139,6 +139,9 @@ class User extends Base
 
         try {
             $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
+
+            $this->_sendPushNotification(array($friendId), $this->_createPushMessage(), 'friend_request');
+
             $this->response->setContent(json_encode($frequest->toArray()));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
@@ -593,6 +596,10 @@ class User extends Base
         return $this->response;
     }
 
+    private function _createPushMessage()
+    {
+        return $this->user->getFirstName() . " added you as a friend.";
+    }
 
 
 }

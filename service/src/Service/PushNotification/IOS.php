@@ -34,7 +34,7 @@ class IOS extends Notifier
         // Close the connection
         fclose($apns);
 
-        return empty($error)? 'OK' : $errorString;
+        return empty($error)? 'OK'.PHP_EOL : $errorString.PHP_EOL;
     }
 
     public function _packMessage($deviceIds, $payload)
@@ -49,15 +49,15 @@ class IOS extends Notifier
     {
         $load = array(
             'aps' => array(
-                'alert' => $data['title'],
+                'alert' => substr($data['title'], 0, 30),
                 'badge' => 1,
-                'sound' => 'default',
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
-                    'objectId' => isset($data['objectId']) ? $data['objectId'] : null
+                    'objectId' => isset($data['objectId']) ? $data['objectId'] : 0,
                 )
             )
         );
+
         $payload = json_encode($load);
         return $payload;
     }

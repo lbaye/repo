@@ -44,27 +44,32 @@ class Direction extends Base
     public function index()
     {
         $this->_initRepository('direction');
-        $latlngInfo = $this->request->request->all();
+        $postData = $this->request->request->all();
 
-        $direction         = $this->directionRepository->map($latlngInfo, $this->user);
+        $direction         = $this->directionRepository->map($postData, $this->user);
         $directionLocation = $this->directionRepository->insert($direction);
 
-        $notification  = new \Document\Notification();
-
         $notificationData = array(
-            'title' => $this->user->getName() . " shared an direction Request",
-            'message' => "{$this->user->getName()} has shared direction with you",
+            'title' => $this->user->getName() . " shared a direction with you",
+            'message' => "{$this->user->getName()} has shared a direction with you",
             'objectId' => $direction->getId(),
             'objectType' => 'direction',
         );
 
-        \Helper\Notification::send($notificationData, $this->userRepository->getAllByIds($latlngInfo['permittedUsers'], false) );
-
         if (!empty($directionLocation)) {
+
+            \Helper\Notification::send($notificationData, $this->userRepository->getAllByIds($postData['permittedUsers'], false) );
+            $this->_sendPushNotification($postData['permittedUsers'], $this->_createPushMessage(), 'direction_share');
             return $this->_generateResponse($directionLocation->toArray(), Status::CREATED);
+
         } else {
             return $this->_generateResponse(array('message' => 'No direction found'), Status::NO_CONTENT);
         }
+    }
+
+    private function _createPushMessage()
+    {
+        return $this->user->getFirstName() . " has shared a direction with you.";
     }
 
     private function _initRepository($type)
