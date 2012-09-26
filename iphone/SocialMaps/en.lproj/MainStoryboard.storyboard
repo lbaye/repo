@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -556,18 +556,18 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
-                                        <rect key="frame" x="122" y="8" width="95" height="60"/>
+                                        <rect key="frame" x="112.5" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Calendar.png" highlightedImage="map_direction_icon.png" id="CIq-Uf-1T3">
-                                                <rect key="frame" x="31" y="0.0" width="36" height="34"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_event.png" highlightedImage="map_direction_icon.png" id="CIq-Uf-1T3">
+                                                <rect key="frame" x="34" y="0.0" width="30" height="37"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Events" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="kHB-6o-nmL">
                                                 <rect key="frame" x="10" y="31" width="78" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gxy-sW-Fxj" userLabel="gotoDirections">
@@ -592,15 +592,15 @@
                                         <rect key="frame" x="220" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bubble_count_icon.png" id="5y7-kx-KgI">
-                                                <rect key="frame" x="30" y="0.0" width="36" height="34"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="messages.png" id="5y7-kx-KgI">
+                                                <rect key="frame" x="26" y="1" width="44" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Messages" lineBreakMode="tailTruncation" minimumFontSize="10" id="f6m-HY-Ga0">
-                                                <rect key="frame" x="10" y="25" width="90" height="35"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Messages" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="f6m-HY-Ga0">
+                                                <rect key="frame" x="9" y="31.5" width="78" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WCn-nu-QFI" userLabel="gotoBreadcrumbs">
@@ -622,11 +622,11 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="h9n-hE-u7D">
-                                        <rect key="frame" x="111" y="8" width="1" height="60"/>
+                                        <rect key="frame" x="105.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="3dl-ai-vvi">
-                                        <rect key="frame" x="220" y="8" width="1" height="60"/>
+                                        <rect key="frame" x="211.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="0ok-4Z-2ne" userLabel="mapDividerOne">
@@ -675,11 +675,11 @@
                                                 <rect key="frame" x="36" y="0.0" width="30" height="35"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up" lineBreakMode="tailTruncation" minimumFontSize="10" id="X6H-hS-ti1">
-                                                <rect key="frame" x="21" y="28" width="78" height="29"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="X6H-hS-ti1">
+                                                <rect key="frame" x="12" y="31.5" width="78" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="chR-P5-ZnW" userLabel="gotoMeetupReq">
@@ -4514,7 +4514,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         </scene>
     </scenes>
     <resources>
-        <image name="Calendar.png" width="79" height="79"/>
         <image name="b_accept_n_login.png" width="280" height="72"/>
         <image name="b_creat_acc.png" width="280" height="70"/>
         <image name="b_login.png" width="160" height="70"/>
@@ -4538,6 +4537,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="header.png" width="640" height="91"/>
         <image name="icon_arrow_down.png" width="17" height="12"/>
         <image name="icon_arrow_right.png" width="12" height="17"/>
+        <image name="icon_event.png" width="32" height="40"/>
         <image name="icon_facebook.png" width="108" height="108"/>
         <image name="icon_filter.png" width="52" height="53"/>
         <image name="icon_lock.png" width="54" height="64"/>
