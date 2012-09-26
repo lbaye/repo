@@ -88,6 +88,8 @@ NSMutableArray *unreadMesg;
 //        msgCount.text = @"";
 //        ignoreCount += [unreadMesg count];
 //    } else
+    
+    /*////////
     if ([[UtilityClass getUnreadMessage:smAppDelegate.messages] count]==0)
     {
         msgCount.text = @"";
@@ -96,19 +98,17 @@ NSMutableArray *unreadMesg;
     {
     msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
     }
+    */
+    
     if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
         ignoreCount += [smAppDelegate.notifications count];
     } else
         alertCount.text = [NSString stringWithFormat:@"%d",smAppDelegate.notifications.count];
     
-    int totalCount = smAppDelegate.friendRequests.count+unreadMesg.count+
-                        smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
-    int totalNotif= [UtilityClass getNotificationCount];
-    if (totalNotif == 0)
-        notifCount.text = @"";
-    else
-        notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+    //int totalCount = smAppDelegate.friendRequests.count+unreadMesg.count+
+      //                  smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
+    
     
     int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
     if (requestCount == 0)
@@ -124,6 +124,25 @@ NSMutableArray *unreadMesg;
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
+     msgCount.text = @"";
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    int totalNotif= [UtilityClass getNotificationCount];
+    
+    if (totalNotif == 0)
+        notifCount.text = @"";
+    else
+        notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+    
+    
+    if ([[UtilityClass getUnreadMessage:smAppDelegate.messages] count]==0)
+        msgCount.text = @"";
+    else
+        msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
@@ -217,8 +236,7 @@ NSMutableArray *unreadMesg;
 
 //    msgCount.text   = @"";
     int totalCount = smAppDelegate.friendRequests.count+
-                    unreadMesg.count+smAppDelegate.notifications.count-
-                    smAppDelegate.ignoreCount-ignoreCount;
+                    unreadMesg.count+smAppDelegate.notifications.count;
     if (totalCount == 0)
         notifCount.text = @"";
     else
@@ -255,8 +273,10 @@ NSMutableArray *unreadMesg;
 
     alertCount.text   = @"";
     int totalCount = smAppDelegate.friendRequests.count+
-    unreadMesg.count+smAppDelegate.notifications.count-
-    smAppDelegate.ignoreCount-ignoreCount;
+    unreadMesg.count+smAppDelegate.notifications.count;
+//    int totalCount = smAppDelegate.friendRequests.count+
+//    unreadMesg.count+smAppDelegate.notifications.count-
+//    smAppDelegate.ignoreCount-ignoreCount;
     if (totalCount == 0)
         notifCount.text = @"";
     else
@@ -327,7 +347,7 @@ NSMutableArray *unreadMesg;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
-    
+    /*
     //Zubair vai code for notification makes userinteraction disable
     //    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
     if (selectedType==0)
@@ -342,25 +362,36 @@ NSMutableArray *unreadMesg;
         msg=[unreadMesg objectAtIndex:indexPath.row];
         msg.msgStatus=@"read";
         [smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
-        [self.notificationItems reloadData];
-        NSLog(@"index: %d ",[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]]);
+        
+        //NSLog(@"index: %d ",[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]]);
     }
-    
+    */
     NotifMessage *msg;
     
     switch (selectedType) {
         case Message:
+            
             msg = [unreadMesg objectAtIndex:indexPath.row];
+            
+            msg.msgStatus=@"read";
+            [smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
+            
+            
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-            MessageListViewController *controller =[[storybrd instantiateViewControllerWithIdentifier:@"messageList"] retain];
+            MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
             controller.selectedMessage = msg;
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
+            
+            [unreadMesg removeObjectAtIndex:indexPath.row];
+            [self.notificationItems reloadData];
+            
             break;
         default:
             break;
     }
       
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
