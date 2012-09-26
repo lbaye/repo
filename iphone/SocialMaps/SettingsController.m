@@ -304,7 +304,7 @@
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Account settings";
     
-    CGRect scrollFrame = CGRectMake(5, 80, 310, 380);
+    CGRect scrollFrame = CGRectMake(5, 100, 310, 360);
     AccountSettings *scrollView = [[AccountSettings alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                  green:247.0/255.0 
