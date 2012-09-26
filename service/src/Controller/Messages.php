@@ -33,7 +33,7 @@ class Messages extends Base
             $this->_generate404();
         } else {
 
-            $messageDetail = array();
+                $messageDetail = array();
 
                 $messageArr = $message->toArray(true);
 
@@ -50,11 +50,12 @@ class Messages extends Base
 
                 $messageDetail = $messageArr;
 
-                $status = 'read';
-                if($this->messageRepository->updateStatus($message, $status)){
-                    $messageDetail['status'] = $status;
+                if(!in_array($this->user->getId(),$messageDetail['readBy'] )){
+                   $this->messageRepository->updateStatus($message, $this->user->getId());
+                   $messageDetail['status'] = 'unread';
+                } else {
+                    $messageDetail['status'] = 'read';
                 }
-
 
             $this->_generateResponse($messageDetail);
         }
@@ -180,8 +181,12 @@ class Messages extends Base
         try {
             $message = $this->messageRepository->find($id);
 
-            $status = 'read';
-            $this->messageRepository->updateStatus($message, $status);
+             if(!in_array($this->user->getId(),$message->readBy )){
+                   $this->messageRepository->updateStatus($message, $this->user->getId());
+                   $messageDetail['status'] = 'unread';
+             } else {
+                    $messageDetail['status'] = 'read';
+             }
 
             if (empty($message))
                 return $this->_generate404();

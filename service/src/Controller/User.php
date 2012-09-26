@@ -79,9 +79,9 @@ class User extends Base
         }
 
         if (empty($result)) {
-            $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
+            $this->_generateResponse(array(),STATUS::NO_CONTENT);
         } else {
-            $this->response->setContent(json_encode($result));
+            $this->_generateResponse($result,STATUS::OK);
         }
 
         return $this->response;

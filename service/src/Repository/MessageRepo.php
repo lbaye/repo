@@ -94,9 +94,11 @@ class MessageRepo extends Base
         $this->dm->flush();
     }
 
-    public function updateStatus(MessageDocument $message, $status)
+    public function updateStatus(MessageDocument $message, $userId)
     {
-        $message->setStatus($status);
+        $users = $message->getReadBy();
+
+        $message->setReadBy(array_push($users, $userId));
 
         $this->dm->persist($message);
         $this->dm->flush();
