@@ -40,6 +40,7 @@ class GooglePlaces extends Base
 
             foreach ($content->results as &$result) {
                 $result->distance = \Helper\Location::distance($location['lat'], $location['lng'], $result->geometry->location->lat, $result->geometry->location->lng);
+                $result->streeViewImage = "http://maps.googleapis.com/maps/api/streetview?size=450x200&location={$result->geometry->location->lat},%20{$result->geometry->location->lng}&sensor=false&key=$this->apiKey";
                 $sorted[] = $result;
             }
 
@@ -60,4 +61,5 @@ class GooglePlaces extends Base
 
         }
     }
+
 }

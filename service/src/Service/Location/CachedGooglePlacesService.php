@@ -21,15 +21,11 @@ class CachedGooglePlacesService implements \Service\Location\IPlacesService {
     public function search(array $location, $keywords, $radius = 2000) {
         $this->ensureLocationIsSet($location);
 
-        # Round lat and lng value
         $location['lat'] = round($location['lat'], 2);
         $location['lng'] = round($location['lng'], 2);
 
-        # Search CachedPlacesData by rounded lat and lng
         $cachedData = $this->mRepository->find($this->mRepository->buildId($location));
         if ($cachedData == null) {
-            # If not found retrieve from google
-            # Cache google places result
             $result = $this->mService->search($location, $keywords, $radius);
             $this->mRepository->insert($this->mRepository->map(array(
                 'lat' => $location['lat'],
