@@ -169,9 +169,8 @@ class Gathering extends Base
             return $this->_generateException($e);
         }
 
-        if (!empty($postData['users'])) {
-            $users = $this->userRepository->getAllByIds($postData['users'], false);
-            $notification = new \Document\Notification();
+        if (!empty($postData['guests'])) {
+            $users = $this->userRepository->getAllByIds($postData['guests'], false);
             $notificationData = array(
                 'title' => $this->user->getName() . " shared an {$type} Request",
                 'message' => "{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!",
@@ -179,6 +178,7 @@ class Gathering extends Base
                 'objectType' => $type,
             );
 
+            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
             \Helper\Notification::send($notificationData, $users);
         }
 
@@ -418,6 +418,17 @@ class Gathering extends Base
             return $this->_generateResponse($this->_toArrayAll($gatheringIMNotOwner));
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
+        }
+
+    }
+
+    private function _createInvitePushMessage($postData, $type)
+    {
+        if($type == 'event')
+            return $this->user->getName() . ' has invited you in ' . $postData['title'];
+        else {
+            $address = isset($postData['address'])? " at {$postData['address']}" : '';
+            return $this->user->getName() . " wants to meet you $address";
         }
 
     }

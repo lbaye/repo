@@ -24,10 +24,13 @@ class LastSeenAddress extends Base
         $user = $this->userRepository->find($workload->user_id);
 
         echo 'Running update_last_seen_address for '.$user->getId().' ('. $user->getName() .') '. PHP_EOL;
-        $address = @$this->_getAddress($user);
-        $this->_updateUserAddress($user, $address);
+        try {
+            $address = $this->_getAddress($user);
+            $this->_updateUserAddress($user, $address);
+        } catch (\Exception $e) {
+            echo 'Exception from google API in update_last_seen_address: '. $e->getMessage() . PHP_EOL;
+        }
 
-        echo 'Done update_last_seen_address for '.$user->getId().' ('. $user->getName() .") at $address ". PHP_EOL;
         $this->runTasks();
     }
 

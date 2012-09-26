@@ -40,8 +40,6 @@ class ProximityAlert extends Base
         if (empty($user))
             return;
 
-        print_r($user->getFriends());
-        // Retrieve target user's friends
         $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
 
         // Retrieve target user's current location

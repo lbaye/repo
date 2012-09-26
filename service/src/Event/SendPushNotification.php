@@ -22,10 +22,15 @@ class SendPushNotification extends Base
         $workload = json_decode($job->workload());
 
         if($this->_stillValid($workload)) {
+
+            echo 'Running send_push_notification for '.$workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
             $this->userRepository = $this->services['dm']->getRepository('Document\User');
 
             $user = $this->userRepository->find($workload->user_id);
-            $this->_sendPushNotification($user, $workload->notification);
+
+            $this->_sendPushNotification($user, get_object_vars($workload->notification));
+
+            echo 'Done send_push_notification for '. $workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
 
         } else {
             echo 'Skipping proximity alert push for '. $workload->user_id .' because of outdated'. PHP_EOL;

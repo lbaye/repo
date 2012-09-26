@@ -288,14 +288,13 @@ class Settings extends Base
 
             // Update additional information
             try {
-                // TODO: Use background job for _updateLastSeenAt
                 $this->_updateLastSeenAt($this->user);
                 $this->_sendProximityAlerts($this->user);
             } catch (\Exception $e) {
-                $this->_sendProximityAlerts($this->user);
-                // Do the location update even if
-                return $this->persistAndReturn($location);
+                // Do nothing
             }
+
+            //$this->_sendPushNotification($this->user->getId(), 'TEst generic push', 'example_push_event');
 
             return $this->persistAndReturn($location);
 

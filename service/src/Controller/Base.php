@@ -234,6 +234,23 @@ abstract class Base
         }
     }
 
+    protected function _sendPushNotification(array $userIds, $title, $objectType, $objectId = null, $validity = 0)
+    {
+        foreach ($userIds as $userId) {
+
+            $this->addTask('send_push_notification', json_encode(array(
+                'user_id' => $userId,
+                'notification' => array(
+                    'title' => $title,
+                    'objectId' => $objectId,
+                    'objectType' => $objectType,
+                ),
+                'timestamp' => time(),
+                'validity' => $validity,
+            )));
+        }
+    }
+
     protected function _validateURL($URL) {
             $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
             return (bool)preg_match($v, $URL);
