@@ -141,6 +141,8 @@ ButtonClickCallbackData callBackData;
 
 -(void)saveFBProfileImage
 {
+    if (smAppDelegate.fbId) 
+    {
     NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",smAppDelegate.fbId];
     UIImage *profileImage=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:profileImageUrl]]];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -148,6 +150,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"profileImageUrl is %@  %@", profileImageUrl, profileImage );
     [prefs setObject:[NSKeyedArchiver archivedDataWithRootObject:profileImage] forKey:@"FBProfilePic"];
     [prefs synchronize];
+    }
 }
 
 // Send the friend request out
