@@ -12,7 +12,6 @@ class ProximityAlert extends Base
     protected $userRepository;
 
     const DEFAULT_RADIUS = 4;
-    const VALIDITY_MS   = 7200; // 2 hours
 
     protected function setFunction()
     {
@@ -41,8 +40,6 @@ class ProximityAlert extends Base
         if (empty($user))
             return;
 
-        print_r($user->getFriends());
-        // Retrieve target user's friends
         $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
 
         // Retrieve target user's current location
@@ -133,10 +130,5 @@ class ProximityAlert extends Base
         } else {
             return $friends[0]->getName() .' is ';
         }
-    }
-
-    private function _stillValid($workload)
-    {
-        return ((time() - intval($workload->timestamp)) < self::VALIDITY_MS);
     }
 }

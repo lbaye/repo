@@ -21,74 +21,39 @@ class SendPushNotification extends Base
         //file_put_contents('/tmp/workload.txt', json_encode(count($friends)));
         $workload = json_decode($job->workload());
 
-        $this->userRepository = $this->services['dm']->getRepository('Document\User');
+        if($this->_stillValid($workload)) {
 
-        // Retrieve target user
-        $user = $this->userRepository->find($workload->user_id);
+            echo 'Running send_push_notification for '.$workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
+            $this->userRepository = $this->services['dm']->getRepository('Document\User');
 
-        // Find friends who needs to be informed
-        $this->sendNotificationToNearbyFriends($user);
+            $user = $this->userRepository->find($workload->user_id);
+
+            $this->_sendPushNotification($user, get_object_vars($workload->notification));
+
+            echo 'Done send_push_notification for '. $workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
+
+        } else {
+            echo 'Skipping proximity alert push for '. $workload->user_id .' because of outdated'. PHP_EOL;
+        }
 
         $this->runTasks();
     }
 
-    private function sendNotification($user)
-    {
-        if (empty($user))
-            return;
-
-        // Retrieve target user's friends
-        $friends = $this->userRepository->getAllByIds($user->getFriends(), false);
-
-        // Retrieve target user's current location
-        $from = $user->getCurrentLocation();
-
-        // Collect list of friends who needs to be notified.
-        $friendsToNotify = array();
-        $friendsNotificationData = $this->_createNotificationData($user);
-
-        foreach($friends as $friend) {
-            // Retrieve friend's current location
-            $to = $friend->getCurrentLocation();
-
-            // Calculate distance between friend and target user
-            $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
-
-            // Determine whether target user should be notified if friend with in the range
-            if($this->_shouldNotify($user, $friend, $distance)){
-                $userNotificationData = $this->_createNotificationData($friend);
-                \Helper\Notification::send($userNotificationData, array($user));
-                $this->_sendPushNotification($user, $userNotificationData);
-            }
-
-            // Determine whether friend should be notified if user is in range
-            if($this->_shouldNotify($friend, $user, $distance)){
-               $friendsToNotify[] = $friend;
-
-                $this->_sendPushNotification($friend, $friendsNotificationData);
-            }
-        }
-
-        \Helper\Notification::send($friendsNotificationData, $friendsToNotify);
-    }
-
-    private function _sendPushNotification($user, $userNotificationData)
+    /**
+     * $notificationData must have the following keys -
+     *   - title
+     *   - objectId
+     *   - objectType
+     *
+     * @param \Document\User $user
+     * @param array $notificationData
+     */
+    private function _sendPushNotification(\Document\User $user, array $notificationData)
     {
         $pushSettings = $user->getPushSettings();
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
         if ($pushNotifier)
-            echo $pushNotifier->send($userNotificationData, array($pushSettings['device_id']));
-    }
-
-    private function _createNotificationData(\Document\User $friend)
-    {
-        return array(
-            'title' => 'Your friend '. $friend->getName() .' is here!',
-            'photoUrl' => $friend->getAvatar(),
-            'objectId' => $friend->getId(),
-            'objectType' => 'proximity_alert',
-            'message' => 'Your friend '. $friend->getName() .' is near your location!',
-        );
+            echo $pushNotifier->send($notificationData, array($pushSettings['device_id']));
     }
 }
