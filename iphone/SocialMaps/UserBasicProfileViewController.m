@@ -204,13 +204,8 @@ BOOL coverImgFlag;
 
 -(IBAction)backButton:(id)sender
 {
-//    [self.entityTextField resignFirstResponder];
-//    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
-
+    [self.entityTextField resignFirstResponder];
+    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -285,7 +280,11 @@ BOOL coverImgFlag;
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     userInfo=[notif object];
-    [self dismissModalViewControllerAnimated:YES];
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
 }
 
 -(IBAction)hideKeyboard:(id)sender
