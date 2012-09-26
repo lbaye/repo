@@ -694,6 +694,8 @@ ButtonClickCallbackData callBackData;
         [self loadAnnotations:animated];
     
     [super viewWillAppear:animated];
+    [_mapPulldown removeFromSuperview];
+    [_mapPullupMenu removeFromSuperview];
 //    [self initPullView];
 }
 

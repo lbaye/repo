@@ -33,6 +33,10 @@ typedef enum _NOTIFY_TYPES {
 @property (retain, nonatomic) IBOutlet UILabel *alertCount;
 @property (retain, nonatomic) IBOutlet UITableView *notificationItems;
 
+@property (nonatomic,retain) IBOutlet UIButton *notifButton;
+@property (nonatomic,retain) IBOutlet UIButton *msgButton;
+@property (nonatomic,retain) IBOutlet UIButton *reqButton;
+
 - (IBAction)showMessages:(id)sender;
 - (IBAction)showFriendRequests:(id)sender;
 - (IBAction)showNotifications:(id)sender;

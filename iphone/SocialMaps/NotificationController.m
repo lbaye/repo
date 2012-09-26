@@ -34,6 +34,10 @@
 @synthesize notificationItems;
 @synthesize notifTabArrow;
 @synthesize smAppDelegate;
+@synthesize notifButton;
+@synthesize msgButton;
+@synthesize reqButton;
+
 
 #define SECTION_HEADER_HEIGHT   44
 
@@ -119,6 +123,7 @@ NSMutableArray *unreadMesg;
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
+    [self setNotificationImage];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
@@ -134,6 +139,30 @@ NSMutableArray *unreadMesg;
     }
     
     return unReadMessage;
+}
+
+-(void)setNotificationImage
+{
+    if (selectedType==0)
+    {
+        [msgButton setImage:[UIImage imageNamed:@"icon_message_notification_selected.png"] forState:UIControlStateNormal];
+        [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
+        [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
+    }
+    else if (selectedType==1)
+    {
+        [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
+        [reqButton setImage:[UIImage imageNamed:@"icon_friend_request_selected.png"] forState:UIControlStateNormal];
+        [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
+        
+    }
+    else if (selectedType==2) 
+    {
+        [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
+        [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
+        [notifButton setImage:[UIImage imageNamed:@"icon_notify_selected.png"] forState:UIControlStateNormal];
+        
+    }
 }
 
 - (void)viewDidUnload
@@ -195,6 +224,7 @@ NSMutableArray *unreadMesg;
     else
         notifCount.text = [NSString stringWithFormat:@"%d",totalCount];
     [notificationItems reloadData];
+    [self setNotificationImage];
 }
 
 - (IBAction)showFriendRequests:(id)sender {
@@ -204,6 +234,7 @@ NSMutableArray *unreadMesg;
     notifTabArrow.frame = newFrame;
     selectedType = Request;
     [notificationItems reloadData];
+    [self setNotificationImage];
 }
 
 - (IBAction)showNotifications:(id)sender {
@@ -232,6 +263,7 @@ NSMutableArray *unreadMesg;
         notifCount.text = [NSString stringWithFormat:@"%d",totalCount];
 
     [notificationItems reloadData];
+    [self setNotificationImage];    
 }
 - (void)dealloc {
     [notifTabArrow release];

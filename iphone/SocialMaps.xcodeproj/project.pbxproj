@@ -47,6 +47,9 @@
 		20CF833A16118B130075E647 /* PullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833916118B130075E647 /* PullableView.m */; };
 		20CF833D16118BA60075E647 /* StyledPullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833C16118BA60075E647 /* StyledPullableView.m */; };
 		20CF833F1611BAAA0075E647 /* icon_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF833E1611BAAA0075E647 /* icon_profile.png */; };
+		20CF83431611F9780075E647 /* icon_friend_request_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83401611F9770075E647 /* icon_friend_request_selected.png */; };
+		20CF83441611F9780075E647 /* icon_message_notification_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83411611F9770075E647 /* icon_message_notification_selected.png */; };
+		20CF83451611F9780075E647 /* icon_notify_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83421611F9780075E647 /* icon_notify_selected.png */; };
 		20E4A12115D8EB80009A1F6B /* NewsFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4A12015D8EB80009A1F6B /* NewsFeed.m */; };
 		20E75BE115EA0345000B6B8A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E75BE015EA0343000B6B8A /* Event.m */; };
 		4F1B8DDD15E40FB0004AC402 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */; };
@@ -460,6 +463,9 @@
 		20CF833B16118BA60075E647 /* StyledPullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPullableView.h; sourceTree = "<group>"; };
 		20CF833C16118BA60075E647 /* StyledPullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyledPullableView.m; sourceTree = "<group>"; };
 		20CF833E1611BAAA0075E647 /* icon_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_profile.png; sourceTree = "<group>"; };
+		20CF83401611F9770075E647 /* icon_friend_request_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_friend_request_selected.png; sourceTree = "<group>"; };
+		20CF83411611F9770075E647 /* icon_message_notification_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_message_notification_selected.png; sourceTree = "<group>"; };
+		20CF83421611F9780075E647 /* icon_notify_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_notify_selected.png; sourceTree = "<group>"; };
 		20E4A11F15D8EB80009A1F6B /* NewsFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeed.h; sourceTree = "<group>"; };
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -1394,6 +1400,9 @@
 				4FB7A02C15D124E2001EB905 /* icon_arrow_up.png */,
 				4F1B99B315CC377D0066BF16 /* icon_filter.png */,
 				4FE4261A15C06FAD00A6B6A3 /* icon_lock.png */,
+				20CF83401611F9770075E647 /* icon_friend_request_selected.png */,
+				20CF83411611F9770075E647 /* icon_message_notification_selected.png */,
+				20CF83421611F9780075E647 /* icon_notify_selected.png */,
 				4F1B99B215CC377D0066BF16 /* icon_monocole_selected.png */,
 				4FF09BEA15CFBC8000F8AD19 /* icon_settings.png */,
 				20CF833E1611BAAA0075E647 /* icon_profile.png */,
@@ -1922,6 +1931,9 @@
 				2018C29816045BFC00457BB6 /* CirclesStoryboard.storyboard in Resources */,
 				B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */,
 				20CF833F1611BAAA0075E647 /* icon_profile.png in Resources */,
+				20CF83431611F9780075E647 /* icon_friend_request_selected.png in Resources */,
+				20CF83441611F9780075E647 /* icon_message_notification_selected.png in Resources */,
+				20CF83451611F9780075E647 /* icon_notify_selected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
