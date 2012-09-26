@@ -353,12 +353,15 @@ class User extends Base
      */
     public function getCircles()
     {
-        $this->userRepository->setCurrentUser($this->user);
         $circles = $this->user->getCircles();
 
         $result = array();
         foreach ($circles as $circle) {
-            $result[] = $circle->toArray();
+
+            $data = $circle->toArray();
+            $data['friends'] = $this->_getUserSummaryList($data['friends'], array('id', 'firstName', 'lastName','status', 'avatar', 'distance','address','regMedia'));
+
+            $result[] = $data;
         }
 
         $this->response->setContent(json_encode($result));
@@ -532,7 +535,6 @@ class User extends Base
      */
     public function getCircleDetail($id)
     {
-        $this->userRepository->setCurrentUser($this->user);
         $circles = $this->user->getCircles();
 
         $result = array();
@@ -542,7 +544,7 @@ class User extends Base
             }
         }
 
-        $result['friends'] = $this->_getUserSummaryList($result['friends']);
+        $result['friends'] = $this->_getUserSummaryList($result['friends'],array('id', 'firstName', 'lastName','status', 'avatar', 'distance','address','regMedia'));
         $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::OK);
 
@@ -557,9 +559,30 @@ class User extends Base
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function editCustomCircle($id)
+    public function updateCustomCircle($id)
     {
+        $circles = $this->user->getCircles();
 
+        $result = array();
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id){
+                $result= $circle->toArray();
+            }
+        }
+
+        if ($result['type'] == 'system'){
+             $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+             return $this->response;
+        }
+
+        $circleData = $this->request->request->all();
+
+        $circle = $this->userRepository->addCircle($circleData);
+
+        $this->response->setContent(json_encode($circle->toArray()));
+        $this->response->setStatusCode(Status::CREATED);
+
+        return $this->response;
     }
 
     /**
@@ -587,7 +610,5 @@ class User extends Base
 
         return $this->response;
     }
-
-
 
 }
