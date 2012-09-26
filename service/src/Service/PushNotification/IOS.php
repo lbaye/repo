@@ -49,7 +49,7 @@ class IOS extends Notifier
     {
         $load = array(
             'aps' => array(
-                'alert' => substr($data['title'], 0, 25),
+                'alert' => substr($data['title'], 0, 30),
                 'badge' => 1,
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
