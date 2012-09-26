@@ -53,7 +53,7 @@ class IOS extends Notifier
                 'badge' => 1,
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
-                    'objectId' => isset($data['objectId']) ? $data['objectId'] : 0,
+                    'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
                 )
             )
         );
