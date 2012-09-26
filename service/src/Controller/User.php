@@ -448,7 +448,6 @@ class User extends Base
 
         $friendRequests = $this->user->getFriendRequest();
         $notifications  = $this->user->getNotification();
-        $notifications  = $this->user->getNotification();
 
         $friendResult   = array();
         $notificationResult = array();
@@ -462,7 +461,7 @@ class User extends Base
         }
 
         if (empty($friendResult) or (empty($notificationResult))) {
-            $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
+            $this->response->setContent(json_encode(array()));
         } else {
             $this->response->setContent(json_encode(array(
                 'friend request' => $friendResult,
