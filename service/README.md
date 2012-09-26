@@ -5,14 +5,19 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
 
 1. Install composer:
 
-    curl -s http://getcomposer.org/installer | php
+    ```BASH
+    $ curl -s http://getcomposer.org/installer | php
+    ```
 
 2. Install the vendor libraries by running composer:
 
-    php composer.phar install
+    ```BASH
+    $ php composer.phar install
+    ```
 
 3. Setup <APP-ROOT>/web/.htaccess, Set application environment. ie - "prod" for production mode:
-
+    
+    ```CONFIGURATION
     SetEnv APPLICATION_ENV prod
 
     <IfModule mod_rewrite.c>
@@ -20,9 +25,11 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
       RewriteCond %{REQUEST_FILENAME} !-f
       RewriteRule ^(.*)$ index.php [QSA,L]
     </IfModule>
+    ```
 
 4. Setup a VirtualHost with the following configuration (modify as needed):
-
+    
+    ```CONFIGURATION
     <VirtualHost *:80>
 
         ServerName api.socialmaps.local
@@ -35,19 +42,27 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
         </Directory>
 
     </VirtualHost>
+    ```
 
 5. Test the default controller using cURL:
 
-    curl http://api.socialmaps.local/hello
+    ```BASH
+    $ curl http://api.socialmaps.local/hello
+    ```
     
 6. Setup background worker process:
+
+    ```BASH
     $ nohup php <Project ROOT>/bin/worker.php
+    ```
 
 7. Enjoy!
 
 8. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
 
+    ```javascript
     db.getCollection("deals").ensureIndex({"location":"2d"});
     db.getCollection("users").ensureIndex({"currentLocation":"2d"});
     db.getCollection("external_locations").ensureIndex({"coords":"2d"});
     db.getCollection("external_locations").ensureIndex({"refId":1, "source":1},{"unique": true});
+    ```
