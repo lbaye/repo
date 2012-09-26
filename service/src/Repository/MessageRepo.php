@@ -98,8 +98,7 @@ class MessageRepo extends Base
     {
         $users = $message->getReadBy();
 
-        $message->setReadBy(array_push($users, $userId));
-
+        $message->setReadBy(array_unique(array_merge($users,array($userId))));
         $this->dm->persist($message);
         $this->dm->flush();
 
