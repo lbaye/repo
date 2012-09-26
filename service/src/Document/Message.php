@@ -44,6 +44,10 @@ class Message
     /** @ODM\String */
     protected $status = self::STATUS_UNREAD;
 
+     /** @ODM\Hash */
+    protected $readBy = array();
+
+
     public function isValid()
     {
         try {
@@ -229,7 +233,7 @@ class Message
     {
         $serializableFields = array(
             'id', 'subject', 'content', 'createDate',
-            'updateDate', 'status'
+            'updateDate', 'status','readBy'
         );
 
         $result = array();
@@ -238,6 +242,16 @@ class Message
             $result[$field] = $this->{"get{$field}"}();
 
         return $result;
+    }
+
+    public function setReadBy($readBy)
+    {
+        $this->readBy = $readBy;
+    }
+
+    public function getReadBy()
+    {
+        return $this->readBy;
     }
 
 }
