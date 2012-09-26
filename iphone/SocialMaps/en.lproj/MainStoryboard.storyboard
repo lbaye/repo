@@ -1987,7 +1987,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Kzz-7a-uOL">
-                                <rect key="frame" x="5" y="80" width="310" height="380"/>
+                                <rect key="frame" x="5" y="100" width="310" height="380"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" id="xGi-rO-1ad" userLabel="accountSharing">
@@ -4526,7 +4526,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="down_arrow_white.png" width="11" height="11"/>
         <image name="email_acc_creat.png" width="640" height="78"/>
         <image name="event_item_bg.png" width="640" height="333"/>
-        <image name="friends_rqst_icon.png" width="80" height="66"/>
+        <image name="friends_rqst_icon.png" width="108" height="66"/>
         <image name="header.png" width="640" height="91"/>
         <image name="icon_arrow_down.png" width="17" height="12"/>
         <image name="icon_arrow_right.png" width="12" height="17"/>
@@ -4555,10 +4555,10 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="map_view_icon.png" width="44" height="36"/>
         <image name="mapix_mode_icon.png" width="34" height="34"/>
         <image name="meet_up_icon.png" width="37" height="43"/>
-        <image name="message_notify_icon.png" width="97" height="65"/>
+        <image name="message_notify_icon.png" width="108" height="66"/>
         <image name="messages.png" width="50" height="39"/>
         <image name="monocle_icon.png" width="37" height="30"/>
-        <image name="notify_icon.png" width="108" height="64"/>
+        <image name="notify_icon.png" width="108" height="66"/>
         <image name="on_off_on.png" width="36" height="36"/>
         <image name="other_circle_icon.png" width="90" height="140"/>
         <image name="people_checked.png" width="60" height="60"/>
