@@ -114,6 +114,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
 }
 
+- (void) viewDidDisappear:(BOOL)animated
+{
+    NSArray *allDownloads = [imageDownloadsInProgress allValues];
+    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
+    [super viewDidDisappear:animated];
+}
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.

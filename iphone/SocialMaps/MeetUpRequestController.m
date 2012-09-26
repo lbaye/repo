@@ -299,7 +299,14 @@ DDAnnotation *annotation;
 
 - (void)setAddressLabelFromLatLon
 {
-    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        labelAddress.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+        //dispatch_async(dispatch_get_main_queue(), ^{
+            //annotation.subtitle=addressLabel.text;
+        //});
+    });
+    
+    //labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
 - (void)getMyPlaces:(NSNotification *)notif {
@@ -364,7 +371,13 @@ DDAnnotation *annotation;
         labelPlaceName.text = aPlaceItem.name;
     } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
         if ([self.currentAddress isEqual:@""]) {
-            self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    labelPlaceName.text = self.currentAddress;
+                });
+            });
+            //self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         }
         NSLog(@"current address = %@", self.currentAddress);
         labelPlaceName.text = self.currentAddress;
