@@ -207,7 +207,10 @@ class Settings extends Base
         }
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_generateResponse(array('result' => $this->user->toArrayDetailed()));
+            $data = $this->user->toArrayDetailed();
+            $data['avatar'] = $this->_buildAvatarUrl($data);
+            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            return $this->_generateResponse(array('result' => $data));
         }
 
         try {
