@@ -70,7 +70,12 @@ class User extends Base
         $result = array();
 
         foreach ($notifications as $notification) {
-            $result[] = $notification->toArray();
+
+            if($notification->getViewed() != true){
+                $result[] = $notification->toArray();
+                $this->updateNotification($notification->getId());
+            }
+
         }
 
         if (empty($result)) {
@@ -410,12 +415,8 @@ class User extends Base
      */
     public function updateNotification($notificationId)
     {
-        $data = $this->request->request->all();
-
         try {
-
-            $user = $this->userRepository->updateNotification($notificationId);
-            $this->response->setContent(json_encode($user->toArray()));
+            $this->userRepository->updateNotification($notificationId);
             $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {
@@ -457,10 +458,15 @@ class User extends Base
         }
 
         foreach ($notifications as $notification) {
-            $notificationResult[] = $notification->toArray();
+
+            if($notification->getViewed() != true){
+                 $notificationResult[] = $notification->toArray();
+                 $this->updateNotification($notification->getId());
+            }
+
         }
 
-        if (empty($friendResult) or (empty($notificationResult))) {
+        if (empty($friendResult) AND (empty($notificationResult))) {
             $this->response->setContent(json_encode(array()));
         } else {
             $this->response->setContent(json_encode(array(
