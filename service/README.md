@@ -39,10 +39,13 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
 5. Test the default controller using cURL:
 
     curl http://api.socialmaps.local/hello
+    
+6. Setup background worker process:
+    $ nohup php <Project ROOT>/bin/worker.php
 
-6. Enjoy!
+7. Enjoy!
 
-7. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
+8. After you've rejoiced a bit, run the following commands in your mongo shell to ensure indexing:
 
     db.getCollection("deals").ensureIndex({"location":"2d"});
     db.getCollection("users").ensureIndex({"currentLocation":"2d"});
