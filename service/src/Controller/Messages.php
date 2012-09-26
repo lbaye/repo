@@ -69,7 +69,11 @@ class Messages extends Base
 
         try {
             $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
             $this->messageRepository->insert($message);
+
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
 
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
@@ -115,6 +119,12 @@ class Messages extends Base
             }else{
                 unset($messageArr['replies']);
             }
+
+            if(!in_array($this->user->getId(), $messageArr['readBy'] )){
+                   $messageArr['status'] = 'unread';
+             } else {
+                   $messageArr['status'] = 'read';
+             }
 
             $docsAsArr[] = $messageArr;
         }

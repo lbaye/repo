@@ -254,4 +254,12 @@ class Message
         return $this->readBy;
     }
 
+    public function addReadStatusFor(\Document\User $user) {
+        if (empty($this->readBy)) {
+            $this->readBy = array($user->getId());
+        } else {
+            $this->readBy[] = $user->getId();
+        }
+    }
+
 }
