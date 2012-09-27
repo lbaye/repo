@@ -282,7 +282,6 @@ BOOL coverImgFlag;
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
 
     userInfo=[notif object];
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
