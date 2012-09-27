@@ -74,6 +74,8 @@ class Messages extends Base
 
             // Don't put it before insert operation. this is intentional
             $message->setStatus('read');
+            $msgText = ' sent your new message.';
+            $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
 
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
@@ -242,5 +244,10 @@ class Messages extends Base
         }
 
         return $this->response;
+    }
+
+    private function _createPushMessage($msgText)
+    {
+        return $this->user->getFirstName() .$msgText ;
     }
 }
