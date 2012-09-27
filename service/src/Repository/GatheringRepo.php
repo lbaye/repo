@@ -232,7 +232,7 @@ class GatheringRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg?".$timeStamp;
+        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
         $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
 
         if ($eventImageUrl !== false) {
@@ -240,7 +240,7 @@ class GatheringRepo extends Base
         } else {
 
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
-            $user->setEventImage($filePath);
+            $user->setEventImage($filePath. "?". $timeStamp);
         }
 
         $this->dm->persist($user);

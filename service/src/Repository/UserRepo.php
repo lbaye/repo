@@ -681,15 +681,14 @@ class UserRepo extends Base
 
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
-        $filePath = "/images/avatar/" . $user->getId() . ".jpeg?" .$timeStamp;
+        $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-
-            $user->setAvatar($filePath);
+            $user->setAvatar($filePath . "?" . $timeStamp);
         }
 
 
@@ -710,14 +709,14 @@ class UserRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg?".$timeStamp;
+        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
         $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
 
         if ($coverPhotoUrl !== false) {
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($filePath);
+            $user->setCoverPhoto($filePath."?".$timeStamp);
         }
 
 
