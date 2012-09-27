@@ -224,9 +224,11 @@
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
-    RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-    [restClient getLocation:currPosition :@"Auth-Token" :authToken];
-    [restClient getInbox:@"Auth-Token" authTokenVal:authToken];
+    if (gotListing == TRUE) {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:currPosition :@"Auth-Token" :authToken];
+        [restClient getInbox:@"Auth-Token" authTokenVal:authToken];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
