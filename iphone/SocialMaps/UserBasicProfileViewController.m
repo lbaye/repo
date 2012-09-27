@@ -245,8 +245,12 @@ BOOL coverImgFlag;
     regStatus.layer.masksToBounds = YES;
     [regStatus.layer setCornerRadius:5.0];
     
-    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
-    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];    
+//    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+//    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    
+    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
@@ -313,6 +317,7 @@ BOOL coverImgFlag;
 
 -(void)loadImage
 {
+    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
     //temp use
 //    userInfo.coverPhoto=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
@@ -327,11 +332,12 @@ BOOL coverImgFlag;
     }
 
     NSLog(@"image setted after download1. %@",img);
-
+    [pl drain];
 }
 
 -(void)loadImage2
 {
+    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
     //temp use
 //    userInfo.avatar=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
@@ -342,10 +348,11 @@ BOOL coverImgFlag;
     }
     else
     {
-        profileImageView.image=[UIImage imageNamed:@"thum.png"];
+        profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
     }
     
     NSLog(@"image setted after download2. %@",img2);    
+    [pl drain];
 }
 
 //handling map view
@@ -418,7 +425,7 @@ BOOL coverImgFlag;
                 } 
                 else 
                 { 
-                    if(!isDragging_msg && !isDecliring_msg) 
+                    if(!isDragging_msg && !isDecliring_msg && ![dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]) 
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 

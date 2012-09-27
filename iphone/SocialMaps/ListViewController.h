@@ -43,5 +43,6 @@
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender;
 - (void) getSortedDisplayList;
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row;
+-(IBAction)gotoProfile:(id)sender;
 
 @end

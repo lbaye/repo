@@ -97,6 +97,11 @@ bool searchFlags=true;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [dateButton setBackgroundColor:[UIColor lightGrayColor]];
+    [distanceButton setBackgroundColor:[UIColor clearColor]];
+    [friendsEventButton setBackgroundColor:[UIColor clearColor]];
+    [myEventButton setBackgroundColor:[UIColor clearColor]];
+    [publicEventButton setBackgroundColor:[UIColor clearColor]];
     RestClient *rc=[[RestClient alloc] init];
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

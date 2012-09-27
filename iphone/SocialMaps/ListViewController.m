@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "NotificationController.h"
 #import "UtilityClass.h"
+#import "UserBasicProfileViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -135,6 +136,13 @@
     //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:0];
     //[self showAnnotationDetailView:locItem];
     
+}
+
+-(IBAction)gotoProfile:(id)sender
+{
+    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 - (IBAction)backToMapview:(id)sender {

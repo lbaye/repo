@@ -235,7 +235,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">thum.png</string>
+							<string key="NSResourceName">sm_icon@2x.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="467620490">
@@ -1837,8 +1837,8 @@
 			<string key="profile_pen_icon.png">{34, 32}</string>
 			<string key="search_field.png">{410, 80}</string>
 			<string key="show_on_map.png">{43, 43}</string>
+			<string key="sm_icon@2x.png">{114, 114}</string>
 			<string key="sp2.png">{1, 60}</string>
-			<string key="thum.png">{139, 139}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>

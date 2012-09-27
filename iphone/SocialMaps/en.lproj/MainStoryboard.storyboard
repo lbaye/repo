@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -461,7 +461,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="fgr-fq-SqM" kind="modal" id="DMQ-no-Pka"/>
+                                            <segue destination="fgr-fq-SqM" kind="modal" modalTransitionStyle="crossDissolve" id="DMQ-no-Pka"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jdA-qO-031" userLabel="mapView">
@@ -1442,7 +1442,7 @@
                                         </state>
                                         <connections>
                                             <action selector="backToMapview:" destination="fgr-fq-SqM" eventType="touchUpInside" id="9oi-ez-NdY"/>
-                                            <segue destination="wC3-So-nVM" kind="modal" identifier="" id="AQm-b1-ECC"/>
+                                            <segue destination="wC3-So-nVM" kind="modal" identifier="" modalTransitionStyle="crossDissolve" id="AQm-b1-ECC"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jBS-qp-zOM" userLabel="monocleView">
@@ -1457,12 +1457,32 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="fJ1-Zu-WLe">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="fJ1-Zu-WLe">
                                         <rect key="frame" x="160" y="27" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="nm2-jo-c86">
-                                        <rect key="frame" x="206" y="27" width="1" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hbi-zK-EWm">
+                                        <rect key="frame" x="151" y="30" width="24" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="icon_profile.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="gotoProfile:" destination="fgr-fq-SqM" eventType="touchUpInside" id="esZ-rj-AhO"/>
+                                            <action selector="gotoProfile:" destination="wC3-So-nVM" eventType="touchUpInside" id="sKP-YQ-Tc2"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="nm2-jo-c86">
+                                        <rect key="frame" x="205" y="27" width="1" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="huZ-ip-p2I">
+                                        <rect key="frame" x="122" y="24" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ox8-7G-87f" userLabel="listClosePullup">
@@ -1528,7 +1548,7 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <connections>
-                                                    <segue destination="wC3-So-nVM" kind="modal" identifier="segueShowDetailAnno" id="r7Q-WQ-M5h"/>
+                                                    <segue destination="wC3-So-nVM" kind="modal" identifier="segueShowDetailAnno" modalTransitionStyle="crossDissolve" id="r7Q-WQ-M5h"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -4689,6 +4709,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="closePullup:"/>
                 <relationship kind="action" name="goToNotifications:"/>
                 <relationship kind="action" name="gotoNotification:"/>
+                <relationship kind="action" name="gotoProfile:"/>
                 <relationship kind="action" name="showPullUpMenu:"/>
                 <relationship kind="action" name="showPulldownMenu:"/>
                 <relationship kind="outlet" name="itemList" candidateClass="UITableView"/>
@@ -4797,9 +4818,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
             </relationships>
-        </class>
-        <class className="NSDictionary" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
