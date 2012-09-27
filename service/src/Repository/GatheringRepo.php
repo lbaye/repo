@@ -230,7 +230,9 @@ class GatheringRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
+        $user->setUpdateDate(new \DateTime());
+        $timeStamp = $user->getUpdateDate()->getTimestamp();
+        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg?".$timeStamp;
         $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
 
         if ($eventImageUrl !== false) {
@@ -240,8 +242,6 @@ class GatheringRepo extends Base
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
             $user->setEventImage($filePath);
         }
-
-        $user->setUpdateDate(new \DateTime());
 
         $this->dm->persist($user);
         $this->dm->flush();
