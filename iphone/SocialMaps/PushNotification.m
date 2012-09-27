@@ -52,8 +52,10 @@
     NSArray *users = nil;
     
     // ObjectIds is null for multiple friend notification
-    if ((objectIds!=NULL)&&![objectIds isEqual:[NSNull null]])
+    if ((objectIds != NULL) && ![objectIds isEqual:[NSNull null]]) {
+        NSLog(@"Object ids - %@", objectIds);
         users = [objectIds componentsSeparatedByString:@","];
+    }
     
     if ([type caseInsensitiveCompare:@"proximity_alert"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationProximityAlert;

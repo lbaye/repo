@@ -205,6 +205,8 @@ BOOL coverImgFlag;
 -(IBAction)backButton:(id)sender
 {
     [self.entityTextField resignFirstResponder];
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
     [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
 }
 
@@ -279,6 +281,9 @@ BOOL coverImgFlag;
     NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
     userInfo=[notif object];
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
