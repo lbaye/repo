@@ -192,7 +192,7 @@ class Messages extends Base
     {
         try {
             $message = $this->messageRepository->find($id);
-     
+
              if(!in_array($this->user->getId(),$message->getReadBy() )){
                    $this->messageRepository->updateStatus($message, $this->user->getId());
                    $messageDetail['status'] = 'unread';
