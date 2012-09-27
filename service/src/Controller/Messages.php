@@ -105,10 +105,7 @@ class Messages extends Base
              }
 
             }
-
-
-
-
+            
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
