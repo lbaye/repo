@@ -229,6 +229,11 @@ class Gathering extends Base
         try {
             $place = $this->gatheringRepository->update($postData, $gathering);
 
+            if (!empty($postData['eventImage'])) {
+                $this->gatheringRepository->saveEventImage($place->getId(), $postData['eventImage']);
+            }
+
+
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
