@@ -75,7 +75,39 @@ class Messages extends Base
             // Don't put it before insert operation. this is intentional
             $message->setStatus('read');
             $msgText = ' sent your new message.';
-            $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
+
+            if(isset($postData['recipients']))
+            {
+                $postData['recipients'] = array_diff($postData['recipients'], array($this->user->getId()));
+
+                if(!empty($postData['recipients']))
+                {
+                $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
+                }
+            }
+
+            if(isset($postData['thread']))
+            {
+                $msgInfo  = $message->toArray(true);
+                $replyRecipient[] =  $msgInfo['thread']['sender']['id'];
+
+                foreach($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo)
+                {
+                   $replyRecipient[] =  $extractRecipientMsgInfo['id'];
+                }
+
+             $msgText = ' replied on your message.';
+             $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
+
+             if(!empty($replyRecipient))
+             {
+             $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
+             }
+
+            }
+
+
+
 
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
