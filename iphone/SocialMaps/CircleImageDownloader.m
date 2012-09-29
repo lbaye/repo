@@ -7,22 +7,23 @@
 //
 
 #import "CircleImageDownloader.h"
-#import "UserFriends.h"
+#import "People.h"
+#import "LocationItemPeople.h"
 
 @implementation CircleImageDownloader
 
-@synthesize userFriend;
+@synthesize people;
 @synthesize indexPathInTableView;
 @synthesize delegate;
 @synthesize activeDownload;
 @synthesize imageConnection;
 
 #pragma mark
-#define kAppIconHeight 48
+#define kAppIconHeight 60
 
 - (void)dealloc
 {
-    [userFriend release];
+    [people release];
     [indexPathInTableView release];
     
     [activeDownload release];
@@ -39,7 +40,7 @@
     // alloc+init and start an NSURLConnection; release on completion/failure
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:
                              [NSURLRequest requestWithURL:
-                              [NSURL URLWithString:userFriend.imageUrl]] delegate:self];
+                              [NSURL URLWithString:people.userInfo.coverPhotoUrl]] delegate:self];
     self.imageConnection = conn;
     [conn release];
 }
@@ -80,13 +81,13 @@
 		UIGraphicsBeginImageContext(itemSize);
 		CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
 		[image drawInRect:imageRect];
-		self.userFriend.userProfileImage = UIGraphicsGetImageFromCurrentImageContext();
+		self.people.userInfo.coverImage = UIGraphicsGetImageFromCurrentImageContext();
 		UIGraphicsEndImageContext();
-        self.userFriend.userProfileImage = image;
+        self.people.userInfo.coverImage = image;
     }
     else
     {
-        self.userFriend.userProfileImage = image;
+        self.people.userInfo.coverImage = image;
     }
     
     self.activeDownload = nil;
@@ -97,7 +98,7 @@
     
     // call our delegate and tell it that our icon is ready for display
     //[delegate appImageDidLoad:self.indexPathInTableView];
-    [delegate appImageDidLoad:self.userFriend.userId];
+    [delegate appImageDidLoad:self.people.userInfo.userId];
 }
 
 @end

@@ -34,4 +34,9 @@
 @synthesize lastSeenAt;
 @synthesize isFriend;
 @synthesize friendshipStatus;
+@synthesize coverPhotoUrl;
+@synthesize avatarImage;
+@synthesize coverImage;
+@synthesize regMedia;
+
 @end

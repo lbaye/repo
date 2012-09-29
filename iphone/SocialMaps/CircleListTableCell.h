@@ -17,7 +17,9 @@
     IBOutlet UIButton *messageButton;
     IBOutlet UIButton *showOnMapButton;
     IBOutlet UIImageView *profilePicImgView;
-    IBOutlet UIImageView *coverPicImgView;    
+    IBOutlet UIImageView *coverPicImgView;
+    IBOutlet UIImageView *regStsImgView;
+    IBOutlet UIButton *friendShipStatus;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *firstNameLabel;
@@ -28,5 +30,6 @@
 @property(nonatomic,retain) IBOutlet UIButton *showOnMapButton;
 @property(nonatomic,retain) IBOutlet UIImageView *profilePicImgView;
 @property(nonatomic,retain) IBOutlet UIImageView *coverPicImgView;    
-
+@property(nonatomic,retain) IBOutlet UIImageView *regStsImgView;
+@property(nonatomic,retain) IBOutlet UIButton *friendShipStatus;
 @end

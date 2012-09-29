@@ -43,6 +43,10 @@ typedef enum _FRIENDSHIP_STATUS {
     NSString *lastSeenAt;
     BOOL isFriend;
     NSString *friendshipStatus;
+    NSString *coverPhotoUrl;
+    UIImage *avatarImage;
+    UIImage *coverImage;
+    NSString *regMedia;
 }
 
 @property(nonatomic,retain) NSString *userId;
@@ -69,4 +73,9 @@ typedef enum _FRIENDSHIP_STATUS {
 @property(nonatomic,retain) NSString *lastSeenAt;
 @property(nonatomic) BOOL isFriend;
 @property(nonatomic, retain) NSString *friendshipStatus;
+@property(nonatomic,retain) NSString *coverPhotoUrl;
+@property(nonatomic,retain) UIImage *avatarImage;
+@property(nonatomic,retain) UIImage *coverImage;
+@property(nonatomic,retain) NSString *regMedia;
+
 @end

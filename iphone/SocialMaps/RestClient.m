@@ -1612,6 +1612,7 @@
                     
                     people.lastSeenAt = [self getNestedKeyVal:item key1:@"lastSeenAt" key2:nil key3:nil];
                     people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                    people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
                     NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     

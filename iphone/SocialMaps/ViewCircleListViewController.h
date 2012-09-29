@@ -20,4 +20,6 @@
 @property(nonatomic,retain) IBOutlet UISearchBar *circleSearchBar;
 @property(nonatomic,retain) NSDictionary *downloadedImageDict;
 
+-(IBAction)gotoTabBar:(id)sender;
+
 @end

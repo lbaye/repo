@@ -838,6 +838,15 @@ ButtonClickCallbackData callBackData;
     [self presentModalViewController:controller animated:YES];
 }
 
+-(IBAction)gotoCircle:(id)sender
+{
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+}
+
 // Select filter
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
     

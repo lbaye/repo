@@ -107,6 +107,7 @@ typedef enum _SHARING_TYPES {
 -(IBAction)inviteSelectedUsers:(id)sender;
 
 -(IBAction)gotoProfile:(id)sender;
+-(IBAction)gotoCircle:(id)sender;
 //
 - (void) resetShareButton:(SHARING_TYPES)newSel;
 -(void)searchResult;

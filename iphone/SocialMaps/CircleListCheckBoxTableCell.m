@@ -19,6 +19,8 @@
 @synthesize showOnMapButton;
 @synthesize profilePicImgView;
 @synthesize coverPicImgView;    
+@synthesize regStsImgView;
+@synthesize friendShipStatus;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-@class UserFriends;
+@class LocationItemPeople;
 @class ViewCircleListViewController;
 
 @protocol CircleImageDownloaderDelegate;
 
 @interface CircleImageDownloader : NSObject
 {
-UserFriends *userFriend;
+LocationItemPeople *people;
 NSIndexPath *indexPathInTableView;
 id <CircleImageDownloaderDelegate> delegate;
 
@@ -22,7 +22,7 @@ NSMutableData *activeDownload;
 NSURLConnection *imageConnection;
 }
 
-@property (nonatomic, retain) UserFriends *userFriend;
+@property (nonatomic, retain) LocationItemPeople *people;
 @property (nonatomic, retain) NSIndexPath *indexPathInTableView;
 @property (nonatomic, assign) id <CircleImageDownloaderDelegate> delegate;
 
