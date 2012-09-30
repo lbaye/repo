@@ -86,7 +86,7 @@ class Messages extends Base
         return $this->response;
     }
 
-    private function _sendNotification($postData, $message)
+    private function _sendNotification($postData, \Document\Message $message)
     {
         $replyRecipient = array();
 
@@ -95,7 +95,7 @@ class Messages extends Base
             $usersToGetNotified = array_diff($postData['recipients'], array($this->user->getId()));
 
             if (!empty($usersToGetNotified)) {
-                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new');
+                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new', $message->getId());
             }
         } else if (isset($postData['thread'])) {
 
@@ -110,7 +110,7 @@ class Messages extends Base
             $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
 
             if (!empty($replyRecipient)) {
-                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
+                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply', $message->getId());
             }
 
         }
