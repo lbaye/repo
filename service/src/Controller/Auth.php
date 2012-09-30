@@ -103,6 +103,7 @@ class Auth extends Base
 
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
+            $this->user = $user;
 
             $userData = $user->toArrayDetailed();
 
@@ -110,6 +111,7 @@ class Auth extends Base
             $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
 
             $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
