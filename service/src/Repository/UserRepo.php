@@ -677,6 +677,10 @@ class UserRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
+        $user->setUpdateDate(new \DateTime());
+
+        $timeStamp = $user->getUpdateDate()->getTimestamp();
+
         $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
@@ -684,11 +688,10 @@ class UserRepo extends Base
             $user->setAvatar($avatarUrl);
         } else {
             ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
-
-            $user->setAvatar($filePath);
+            $user->setAvatar($filePath . "?" . $timeStamp);
         }
 
-        $user->setUpdateDate(new \DateTime());
+
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -704,6 +707,8 @@ class UserRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
+        $user->setUpdateDate(new \DateTime());
+        $timeStamp = $user->getUpdateDate()->getTimestamp();
         $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
         $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
 
@@ -711,10 +716,10 @@ class UserRepo extends Base
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($filePath);
+            $user->setCoverPhoto($filePath."?".$timeStamp);
         }
 
-        $user->setUpdateDate(new \DateTime());
+
 
         $this->dm->persist($user);
         $this->dm->flush();

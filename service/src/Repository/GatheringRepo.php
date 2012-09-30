@@ -230,6 +230,8 @@ class GatheringRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
+        $user->setUpdateDate(new \DateTime());
+        $timeStamp = $user->getUpdateDate()->getTimestamp();
         $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
         $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
 
@@ -238,10 +240,8 @@ class GatheringRepo extends Base
         } else {
 
             ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
-            $user->setEventImage($filePath);
+            $user->setEventImage($filePath. "?". $timeStamp);
         }
-
-        $user->setUpdateDate(new \DateTime());
 
         $this->dm->persist($user);
         $this->dm->flush();

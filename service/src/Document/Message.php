@@ -14,6 +14,10 @@ class Message
     const STATUS_READ = 'read';
     const STATUS_UNREAD = 'unread';
 
+    const DETAILS_ARRAY = 'details';
+    const SHORT_ARRAY = 'short';
+
+
     /** @ODM\Id */
     protected $id;
 
@@ -43,6 +47,10 @@ class Message
 
     /** @ODM\String */
     protected $status = self::STATUS_UNREAD;
+
+     /** @ODM\Hash */
+    protected $readBy = array();
+
 
     public function isValid()
     {
@@ -160,7 +168,7 @@ class Message
         return $this->replies;
     }
 
-    public function toArray($detail = false)
+    public function toArray($detail = self::SHORT_ARRAY)
     {
         $items = $this->buildSerializableFields();
 
@@ -177,7 +185,7 @@ class Message
             $items['thread'] = null;
         }
 
-        if($detail) {
+        if($detail == self::DETAILS_ARRAY) {
             if ($this->replies->count() > 0) {
                 $items['replies'] = $this->toArrayOfMessages($this->getReplies());
             } else {
@@ -229,7 +237,7 @@ class Message
     {
         $serializableFields = array(
             'id', 'subject', 'content', 'createDate',
-            'updateDate', 'status'
+            'updateDate', 'status','readBy'
         );
 
         $result = array();
@@ -238,6 +246,24 @@ class Message
             $result[$field] = $this->{"get{$field}"}();
 
         return $result;
+    }
+
+    public function setReadBy($readBy)
+    {
+        $this->readBy = $readBy;
+    }
+
+    public function getReadBy()
+    {
+        return $this->readBy;
+    }
+
+    public function addReadStatusFor(\Document\User $user) {
+        if (empty($this->readBy)) {
+            $this->readBy = array($user->getId());
+        } else {
+            $this->readBy[] = $user->getId();
+        }
     }
 
 }

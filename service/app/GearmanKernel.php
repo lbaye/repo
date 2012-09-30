@@ -54,7 +54,7 @@ class GearmanKernel
 
     private function setupGearman()
     {
-        $this->worker = new GearmanWorker();
+        $this->worker = new \GearmanWorker();
         $this->worker->addServer($this->conf['gearman']['host'], $this->conf['gearman']['port']);
     }
 

@@ -70,13 +70,20 @@ class User extends Base
         $result = array();
 
         foreach ($notifications as $notification) {
-            $result[] = $notification->toArray();
+
+            if($notification->getViewed() != true){
+                $result[] = $notification;
+                $this->updateNotification($notification->getId());
+            }
+
         }
 
         if (empty($result)) {
-            $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
+           $this->response->setStatusCode(Status::NO_CONTENT);
         } else {
-            $this->response->setContent(json_encode($result));
+
+            $this->response->setContent(json_encode($this->_toArrayAll($result)));
+            $this->response->setStatusCode(Status::OK);
         }
 
         return $this->response;
@@ -134,6 +141,9 @@ class User extends Base
 
         try {
             $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
+
+            $this->_sendPushNotification(array($friendId), $this->_createPushMessage(), 'friend_request');
+
             $this->response->setContent(json_encode($frequest->toArray()));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
@@ -358,10 +368,10 @@ class User extends Base
         $result = array();
         foreach ($circles as $circle) {
 
-            $data = $circle->toArray();
-            $data['friends'] = $this->_getUserSummaryList($data['friends'], array('id', 'firstName', 'lastName','status', 'avatar', 'distance','address','regMedia'));
+            $friends = $circle->toArray();
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+            $result[] = $friends;
 
-            $result[] = $data;
         }
 
         $this->response->setContent(json_encode($result));
@@ -413,12 +423,8 @@ class User extends Base
      */
     public function updateNotification($notificationId)
     {
-        $data = $this->request->request->all();
-
         try {
-
-            $user = $this->userRepository->updateNotification($notificationId);
-            $this->response->setContent(json_encode($user->toArray()));
+            $this->userRepository->updateNotification($notificationId);
             $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception\ResourceNotFoundException $e) {
@@ -451,7 +457,6 @@ class User extends Base
 
         $friendRequests = $this->user->getFriendRequest();
         $notifications  = $this->user->getNotification();
-        $notifications  = $this->user->getNotification();
 
         $friendResult   = array();
         $notificationResult = array();
@@ -461,11 +466,16 @@ class User extends Base
         }
 
         foreach ($notifications as $notification) {
-            $notificationResult[] = $notification->toArray();
+
+            if($notification->getViewed() != true){
+                 $notificationResult[] = $notification->toArray();
+                 $this->updateNotification($notification->getId());
+            }
+
         }
 
-        if (empty($friendResult) or (empty($notificationResult))) {
-            $this->response->setContent(json_encode(array('message' => 'There is no notification for you.')));
+        if (empty($friendResult) AND (empty($notificationResult))) {
+            $this->response->setContent(json_encode(array()));
         } else {
             $this->response->setContent(json_encode(array(
                 'friend request' => $friendResult,
@@ -540,11 +550,12 @@ class User extends Base
         $result = array();
         foreach ($circles as $circle) {
             if ($circle->getId() == $id){
-                $result= $circle->toArray();
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+                $result[] = $friends;
             }
         }
 
-        $result['friends'] = $this->_getUserSummaryList($result['friends'],array('id', 'firstName', 'lastName','status', 'avatar', 'distance','address','regMedia'));
         $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::OK);
 
@@ -609,6 +620,11 @@ class User extends Base
         }
 
         return $this->response;
+    }
+
+    private function _createPushMessage()
+    {
+        return $this->user->getFirstName() . " added you as a friend.";
     }
 
 }

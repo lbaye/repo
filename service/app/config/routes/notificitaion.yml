@@ -5,7 +5,7 @@ user_all_notofications:
 
 update_user_notofications:
   pattern: /me/notification/{notificationId}
-  defaults: { _controller: Controller\User::getNotifications}
+  defaults: { _controller: Controller\User::updateNotification}
 
 user_notofications:
   pattern: /me/notifications

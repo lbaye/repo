@@ -33,7 +33,7 @@ class Messages extends Base
             $this->_generate404();
         } else {
 
-            $messageDetail = array();
+                $messageDetail = array();
 
                 $messageArr = $message->toArray(true);
 
@@ -50,11 +50,12 @@ class Messages extends Base
 
                 $messageDetail = $messageArr;
 
-                $status = 'read';
-                if($this->messageRepository->updateStatus($message, $status)){
-                    $messageDetail['status'] = $status;
+                if(!in_array($this->user->getId(),$messageDetail['readBy'] )){
+                   $this->messageRepository->updateStatus($message, $this->user->getId());
+                   $messageDetail['status'] = 'unread';
+                } else {
+                    $messageDetail['status'] = 'read';
                 }
-
 
             $this->_generateResponse($messageDetail);
         }
@@ -68,8 +69,13 @@ class Messages extends Base
 
         try {
             $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
             $this->messageRepository->insert($message);
 
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
+            $this->_sendNotification($postData, $message);
+            
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
@@ -78,6 +84,36 @@ class Messages extends Base
         }
 
         return $this->response;
+    }
+
+    private function _sendNotification($postData, \Document\Message $message)
+    {
+        $replyRecipient = array();
+
+        if (isset($postData['recipients'])) {
+            $msgText = ' has sent you a new message.';
+            $usersToGetNotified = array_diff($postData['recipients'], array($this->user->getId()));
+
+            if (!empty($usersToGetNotified)) {
+                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new', $message->getId());
+            }
+        } else if (isset($postData['thread'])) {
+
+            $msgText = ' has replied on a thread.';
+            $msgInfo = $message->toArray(\Document\Message::DETAILS_ARRAY);
+            $replyRecipient[] = $msgInfo['thread']['sender']['id'];
+
+            foreach ($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
+                $replyRecipient[] = $extractRecipientMsgInfo['id'];
+            }
+
+            $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
+
+            if (!empty($replyRecipient)) {
+                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply', $message->getId());
+            }
+
+        }
     }
 
     public function getByCurrentUser()
@@ -114,6 +150,12 @@ class Messages extends Base
             }else{
                 unset($messageArr['replies']);
             }
+
+            if(!in_array($this->user->getId(), $messageArr['readBy'] )){
+                   $messageArr['status'] = 'unread';
+             } else {
+                   $messageArr['status'] = 'read';
+             }
 
             $docsAsArr[] = $messageArr;
         }
@@ -180,8 +222,12 @@ class Messages extends Base
         try {
             $message = $this->messageRepository->find($id);
 
-            $status = 'read';
-            $this->messageRepository->updateStatus($message, $status);
+             if(!in_array($this->user->getId(),$message->getReadBy() )){
+                   $this->messageRepository->updateStatus($message, $this->user->getId());
+                   $messageDetail['status'] = 'unread';
+             } else {
+                    $messageDetail['status'] = 'read';
+             }
 
             if (empty($message))
                 return $this->_generate404();
@@ -227,5 +273,10 @@ class Messages extends Base
         }
 
         return $this->response;
+    }
+
+    private function _createPushMessage($msgText)
+    {
+        return $this->user->getFirstName() .$msgText ;
     }
 }

@@ -222,7 +222,7 @@ class User
 
     /** @var array */
     public $defaultSettings = array(
-        'unit' => 'Metrics',
+        'unit' => 'metric',
         'visible' => true
     );
 
@@ -856,21 +856,20 @@ class User
     public function getDistance()
     {
         if (isset($this->distance)) {
-            $metricValue = floatval($this->distance) * 111.12; // Convert to Km
+            return (floatval($this->distance) * 111120); // Convert to Meter
         } else {
             return 0;
         }
 
-        $unitName = $this->getSettings();
-        $this->distance = $this->unitConvert($metricValue, @$unitName['unit']);
+//        $unitName = $this->getSettings();
+//        $this->distance = $this->unitConvert($metricValue, @$unitName['unit']);
 
-        return $this->distance;
     }
 
-    private function unitConvert($value, $unitName = "Metrics")
+    private function unitConvert($value, $unitName = "metric")
     {
         if ($unitName != "") {
-            if ($unitName == "Imperial") {
+            if ($unitName == "imperial") {
                 if (isset($this->$value)) {
                     $value = $value * 0.6214;
                 }

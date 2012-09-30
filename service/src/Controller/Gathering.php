@@ -76,7 +76,7 @@ class Gathering extends Base
                 $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
 
                 $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
-                $guests['circles'] = $data['guests']['circles'];
+                $guests['circles']  = $data['guests']['circles'];
                 $data['guests'] = $guests;
 
                 if (!empty($data['eventImage'])) {
@@ -150,7 +150,7 @@ class Gathering extends Base
         $this->_initRepository($type);
         try {
 
-            if ($type === 'meetup') {
+            if ($type === 'meetup'){
                 $postData['time'] = date('Y-m-d h:i:s a', time());
             }
 
@@ -169,9 +169,8 @@ class Gathering extends Base
             return $this->_generateException($e);
         }
 
-        if (!empty($postData['users'])) {
-            $users = $this->userRepository->getAllByIds($postData['users'], false);
-            $notification = new \Document\Notification();
+        if (!empty($postData['guests'])) {
+            $users = $this->userRepository->getAllByIds($postData['guests'], false);
             $notificationData = array(
                 'title' => $this->user->getName() . " shared an {$type} Request",
                 'message' => "{$this->user->getName()} has created {$meetup->getTitle()}. He wants you to check it out!",
@@ -179,6 +178,7 @@ class Gathering extends Base
                 'objectType' => $type,
             );
 
+            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
             \Helper\Notification::send($notificationData, $users);
         }
 
@@ -222,12 +222,17 @@ class Gathering extends Base
             }
         }
 
-        if (!empty($postData['invitedCircles'])) {
+        if(!empty($postData['invitedCircles'])){
             $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
         }
 
         try {
             $place = $this->gatheringRepository->update($postData, $gathering);
+
+            if (!empty($postData['eventImage'])) {
+                $this->gatheringRepository->saveEventImage($place->getId(), $postData['eventImage']);
+            }
+
 
         } catch (\Exception $e) {
             return $this->_generateException($e);
@@ -235,10 +240,10 @@ class Gathering extends Base
         $data = $place->toArrayDetailed();
 
         $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
-        $guests['circles'] = $data['guests']['circles'];
+        $guests['circles']  = $data['guests']['circles'];
         $data['guests'] = $guests;
 
-        if (!empty($data['eventImage'])) {
+        if(!empty($data['eventImage'])) {
             $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
         }
 
@@ -341,7 +346,7 @@ class Gathering extends Base
         $postData = $this->request->request->all();
         $gathering = $this->gatheringRepository->find($id);
 
-        $users = $this->userRepository->getAllByIds($postData['users'], false);
+        $users = $this->userRepository->getAllByIds($postData['users'],false);
 
         $notification = new \Document\Notification();
         $notificationData = array(
@@ -371,8 +376,8 @@ class Gathering extends Base
 
             $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
 
-            if (!empty($gatheringItem['eventImage'])) {
-                $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
+            if (!empty($gatheringItem['eventImage'])){
+              $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
             }
             $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
@@ -396,7 +401,7 @@ class Gathering extends Base
         }
     }
 
-    /**
+     /**
      * GET /meetups/invited
      *
      * @param $type
@@ -410,8 +415,8 @@ class Gathering extends Base
         $gatheringIMNotOwner = array();
 
         if (!empty($gatheringObjs)) {
-            foreach ($gatheringObjs as $gathering) {
-                if ($gathering->getOwner()->getId() != $this->user->getId())
+            foreach($gatheringObjs as $gathering){
+                if($gathering->getOwner()->getId() != $this->user->getId())
                     $gatheringIMNotOwner[] = $gathering;
             }
 
@@ -421,7 +426,18 @@ class Gathering extends Base
         }
 
     }
+    
+    private function _createInvitePushMessage($postData, $type)
+    {
+        if($type == 'event')
+            return $this->user->getName() . ' has invited you in ' . $postData['title'];
+        else {
+            $address = isset($postData['address'])? " at {$postData['address']}" : '';
+            return $this->user->getName() . " wants to meet you $address";
+        }
 
+    }    
+    
 
     /**
      * PUT /events/{id}/guests/
@@ -431,7 +447,6 @@ class Gathering extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function addGuests($id, $type)
     {
         $this->_initRepository($type);
@@ -453,7 +468,7 @@ class Gathering extends Base
             } else {
                 return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
             }
-        }else {
+        } else {
 
              if (!empty($postData['guests'])) {
                 $this->gatheringRepository->addGuests($postData['guests'], $gathering);
