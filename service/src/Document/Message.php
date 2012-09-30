@@ -14,6 +14,10 @@ class Message
     const STATUS_READ = 'read';
     const STATUS_UNREAD = 'unread';
 
+    const DETAILS_ARRAY = 'details';
+    const SHORT_ARRAY = 'short';
+
+
     /** @ODM\Id */
     protected $id;
 
@@ -164,7 +168,7 @@ class Message
         return $this->replies;
     }
 
-    public function toArray($detail = false)
+    public function toArray($detail = self::SHORT_ARRAY)
     {
         $items = $this->buildSerializableFields();
 
@@ -181,7 +185,7 @@ class Message
             $items['thread'] = null;
         }
 
-        if($detail) {
+        if($detail == self::DETAILS_ARRAY) {
             if ($this->replies->count() > 0) {
                 $items['replies'] = $this->toArrayOfMessages($this->getReplies());
             } else {

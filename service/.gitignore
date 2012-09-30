@@ -7,9 +7,6 @@ composer.phar
 .nbproject
 .svn
 .DS_Store
+nohup.out
 
-<<<<<<< HEAD
-=======
 !.gitignore
-
->>>>>>> bc07e03aa44864ef19b8613f17d0e985b348bacd
