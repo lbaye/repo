@@ -79,9 +79,11 @@ class User extends Base
         }
 
         if (empty($result)) {
-            $this->_generateResponse(array(),STATUS::NO_CONTENT);
+           $this->response->setStatusCode(Status::NO_CONTENT);
         } else {
-            $this->_generateResponse($result,STATUS::OK);
+
+            $this->response->setContent($result);
+            $this->response->setStatusCode(Status::OK);
         }
 
         return $this->response;
