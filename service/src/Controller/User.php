@@ -72,7 +72,7 @@ class User extends Base
         foreach ($notifications as $notification) {
 
             if($notification->getViewed() != true){
-                $result[] = $notification->toArray();
+                $result[] = $notification;
                 $this->updateNotification($notification->getId());
             }
 
@@ -82,7 +82,7 @@ class User extends Base
            $this->response->setStatusCode(Status::NO_CONTENT);
         } else {
 
-            $this->response->setContent($result);
+            $this->response->setContent(json_encode($this->_toArrayAll($result)));
             $this->response->setStatusCode(Status::OK);
         }
 
