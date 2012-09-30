@@ -1320,12 +1320,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         {
             [view removeFromSuperview];
         }
-        else if([view isKindOfClass :[UIImageView class]])
-        {
-            // [view removeFromSuperview];
-        }
     }
-    frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
+    
+    frndListScrollView.contentSize = CGSizeMake([filteredList count]*65 - 10, 65);
     
     for(int i=0; i<[filteredList count];i++)               
     {

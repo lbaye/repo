@@ -710,7 +710,7 @@ DDAnnotation *annotation;
             // [view removeFromSuperview];
         }
     }
-    frndListScrollView.contentSize=CGSizeMake([filteredList count]*45, 45);
+    frndListScrollView.contentSize=CGSizeMake([filteredList count] * 50, 45);
     
     for(int i=0; i<[filteredList count];i++)               
     {
