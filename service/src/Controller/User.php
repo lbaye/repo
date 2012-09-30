@@ -368,7 +368,9 @@ class User extends Base
 
         $result = array();
         foreach ($circles as $circle) {
-            $result[] = $circle->toArray();
+            $friends = $circle->toArray();
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+            $result[] = $friends;
         }
 
         $this->response->setContent(json_encode($result));
@@ -548,11 +550,12 @@ class User extends Base
         $result = array();
         foreach ($circles as $circle) {
             if ($circle->getId() == $id){
-                $result= $circle->toArray();
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+                $result[] = $friends;
             }
         }
 
-        $result['friends'] = $this->_getUserSummaryList($result['friends']);
         $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::OK);
 
