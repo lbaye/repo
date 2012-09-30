@@ -74,32 +74,7 @@ class Messages extends Base
 
             // Don't put it before insert operation. this is intentional
             $message->setStatus('read');
-            $msgText = ' sent your new message.';
-
-            if(isset($postData['recipients'])) {
-               $postData['recipients'] = array_diff($postData['recipients'], array($this->user->getId()));
-
-                if(!empty($postData['recipients'])) {
-                   $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
-                }
-            }
-
-            if(isset($postData['thread'])) {
-               $msgInfo  = $message->toArray(true);
-               $replyRecipient[] =  $msgInfo['thread']['sender']['id'];
-
-               foreach($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
-                       $replyRecipient[] =  $extractRecipientMsgInfo['id'];
-                }
-
-               $msgText = ' replied on your message.';
-               $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
-
-             if(!empty($replyRecipient)) {
-                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
-             }
-
-            }
+            $this->_sendNotification($postData, $message);
             
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
@@ -109,6 +84,36 @@ class Messages extends Base
         }
 
         return $this->response;
+    }
+
+    private function _sendNotification($postData, $message)
+    {
+        $replyRecipient = array();
+
+        if (isset($postData['recipients'])) {
+            $msgText = ' has sent you a new message.';
+            $usersToGetNotified = array_diff($postData['recipients'], array($this->user->getId()));
+
+            if (!empty($usersToGetNotified)) {
+                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new');
+            }
+        } else if (isset($postData['thread'])) {
+
+            $msgText = ' has replied on a thread.';
+            $msgInfo = $message->toArray(\Document\Message::DETAILS_ARRAY);
+            $replyRecipient[] = $msgInfo['thread']['sender']['id'];
+
+            foreach ($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
+                $replyRecipient[] = $extractRecipientMsgInfo['id'];
+            }
+
+            $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
+
+            if (!empty($replyRecipient)) {
+                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
+            }
+
+        }
     }
 
     public function getByCurrentUser()
