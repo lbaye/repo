@@ -1,5 +1,5 @@
 web:
-  root: http://203.76.126.69/stage_social_maps/web
+  root: http://203.76.126.69/social_maps/web
 
 mongodb:
   host: 'localhost'
