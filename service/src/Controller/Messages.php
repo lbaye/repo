@@ -76,32 +76,27 @@ class Messages extends Base
             $message->setStatus('read');
             $msgText = ' sent your new message.';
 
-            if(isset($postData['recipients']))
-            {
-                $postData['recipients'] = array_diff($postData['recipients'], array($this->user->getId()));
+            if(isset($postData['recipients'])) {
+               $postData['recipients'] = array_diff($postData['recipients'], array($this->user->getId()));
 
-                if(!empty($postData['recipients']))
-                {
-                $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
+                if(!empty($postData['recipients'])) {
+                   $this->_sendPushNotification($postData['recipients'], $this->_createPushMessage($msgText), 'message_new');
                 }
             }
 
-            if(isset($postData['thread']))
-            {
-                $msgInfo  = $message->toArray(true);
-                $replyRecipient[] =  $msgInfo['thread']['sender']['id'];
+            if(isset($postData['thread'])) {
+               $msgInfo  = $message->toArray(true);
+               $replyRecipient[] =  $msgInfo['thread']['sender']['id'];
 
-                foreach($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo)
-                {
-                   $replyRecipient[] =  $extractRecipientMsgInfo['id'];
+               foreach($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
+                       $replyRecipient[] =  $extractRecipientMsgInfo['id'];
                 }
 
-             $msgText = ' replied on your message.';
-             $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
+               $msgText = ' replied on your message.';
+               $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
 
-             if(!empty($replyRecipient))
-             {
-             $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
+             if(!empty($replyRecipient)) {
+                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply');
              }
 
             }
