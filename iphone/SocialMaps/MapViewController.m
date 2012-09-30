@@ -540,6 +540,8 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
     }
 
+    [self initPullView];
+    pullDownView.hidden = YES;
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -641,6 +643,16 @@ ButtonClickCallbackData callBackData;
     [self setSelSavedFilter:nil];
     [self setSelectedFilter:nil];
     [self setMapPullupMenu:nil];
+    [buttonListView release];
+    buttonListView = nil;
+    [buttonProfileView release];
+    buttonProfileView = nil;
+    [buttonMapView release];
+    buttonMapView = nil;
+    [imageViewSliderOpenClose release];
+    imageViewSliderOpenClose = nil;
+    [viewNotification release];
+    viewNotification = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -701,7 +713,15 @@ ButtonClickCallbackData callBackData;
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
-//    [self initPullView];
+   //[self initPullView];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //[self initPullView];
+    pullDownView.hidden = NO;
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
@@ -812,6 +832,11 @@ ButtonClickCallbackData callBackData;
     [_selSavedFilter release];
     [_selectedFilter release];
     [_mapPullupMenu release];
+    [buttonListView release];
+    [buttonProfileView release];
+    [buttonMapView release];
+    [imageViewSliderOpenClose release];
+    [viewNotification release];
     [super dealloc];
 }
 
@@ -1469,34 +1494,79 @@ ButtonClickCallbackData callBackData;
 
 -(void)initPullView
 {
+    //_mapPulldown.hidden = NO;
+    
     CGFloat xOffset = 0;
-    pullUpView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
-    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height);
-    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height + 200);
+    pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
+    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
+    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height);
     pullUpView.center = pullUpView.closedCenter;
     pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
     pullUpView.delegate = self;
+    //pullUpView.backgroundColor = [UIColor blueColor];
     
-    [self.view addSubview:pullUpView];
     [pullUpView addSubview:_mapPullupMenu];
+    _mapPullupMenu.userInteractionEnabled = NO;
+    [pullUpView addSubview:buttonListView];
+    [pullUpView addSubview:buttonMapView];
+    [pullUpView addSubview:buttonProfileView];
+    _mapPullupMenu.hidden = NO;
+    _mapPullupMenu.frame = CGRectMake(0, 0, _mapPullupMenu.frame.size.width, _mapPullupMenu.frame.size.height);
+    [self.view addSubview:pullUpView];
     
-    pullDownView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset,230);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, -200);
+    
+    UIImageView *imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+    [pullUpView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullUpView bringSubviewToFront:pullUpView.handleView];
+    imageViewFooterSliderOpen.tag = 420;    
+    [imageViewFooterSliderOpen release];
+    
+    
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 150)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5);
     pullDownView.center = pullDownView.closedCenter;
+    
+    pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
+    pullDownView.delegate = self;
+    //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
+    
+    //pullDownView.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:pullDownView];
     [pullDownView addSubview:_mapPulldown];
-
+    [self.view bringSubviewToFront:viewNotification];
+    _mapPulldown.userInteractionEnabled = NO;
+    for (UIView *view in [_mapPulldown subviews]) {
+        //if ([view isKindOfClass:[UIButton class]]) {
+            [pullDownView addSubview:view];
+        //}
+    }
+    _mapPulldown.hidden = NO;
+    _mapPulldown.frame = CGRectMake(0, 0, _mapPulldown.frame.size.width, _mapPulldown.frame.size.height);
+    
+    imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"slide_close_bar.png"];
+    [pullDownView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullDownView bringSubviewToFront:pullDownView.handleView];
+    imageViewFooterSliderOpen.tag = 840;    
+    [imageViewFooterSliderOpen release];
+     
 }
 
 - (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
     if (opened)
     {
         NSLog(@"Now I'm open!");
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
     }
     else
     {
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
+        
         NSLog(@"Now I'm closed, pull me up again!");
     }
 }

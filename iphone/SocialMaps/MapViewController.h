@@ -14,7 +14,7 @@
 #import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
-#import "StyledPullableView.h"
+#import "PullableView.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -47,8 +47,14 @@ typedef enum _SHARING_TYPES {
     NSMutableArray *filteredList;
     MapAnnotation *selectedAnno;
                                     
-    StyledPullableView *pullDownView;                                    
-    StyledPullableView *pullUpView;
+    PullableView *pullDownView;                                    
+    PullableView *pullUpView;
+    IBOutlet UIButton *buttonListView;
+    IBOutlet UIButton *buttonProfileView;
+    IBOutlet UIButton *buttonMapView;
+    IBOutlet UIImageView *imageViewSliderOpenClose;
+                                    
+    IBOutlet UIView *viewNotification;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
