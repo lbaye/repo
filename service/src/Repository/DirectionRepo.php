@@ -33,6 +33,14 @@ class DirectionRepo extends Base
         } else {
             $directionDoc->setUpdateDate(new \DateTime());
         }
+        
+        $setIfExistFields = array('title', 'type');
+
+        foreach ($setIfExistFields as $field) {
+            if (isset($data[$field]) && !is_null($data[$field])) {
+                $directionDoc->{"set{$field}"}($data[$field]);
+            }
+        }
 
         $directionDoc->setOwner($owner);
         $directionDoc->setFrom(new \Document\Location(array('lat' => $data['latFrom'], 'lng' => $data['lngFrom'])));
