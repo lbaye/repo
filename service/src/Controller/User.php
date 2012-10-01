@@ -369,7 +369,7 @@ class User extends Base
         foreach ($circles as $circle) {
 
             $friends = $circle->toArray();
-            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
             $result[] = $friends;
 
         }
@@ -551,7 +551,7 @@ class User extends Base
         foreach ($circles as $circle) {
             if ($circle->getId() == $id){
                 $friends = $circle->toArray();
-                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
                 $result[] = $friends;
             }
         }

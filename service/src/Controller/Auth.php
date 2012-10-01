@@ -110,7 +110,7 @@ class Auth extends Base
             $userData['avatar'] = $this->_buildAvatarUrl($userData);
             $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
 
-            $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','coverPhoto', 'distance','address','regMedia'));
+            $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
 
 
             $this->response->setContent(json_encode($userData));
