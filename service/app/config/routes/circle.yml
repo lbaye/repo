@@ -14,7 +14,7 @@ get_circle_detail:
   defaults: { _controller: Controller\User::getCircleDetail}
   requirements: { _method: GET}
 
-edit_circle:
+update_circle:
   pattern: /me/circles/{id}
   defaults: { _controller: Controller\User::updateCustomCircle}
   requirements: { _method: PUT}

@@ -213,7 +213,9 @@ class UserRepo extends Base
     {
         $circle = new \Document\Circle($data);
 
-        foreach ($data['friends'] as $friendId) {
+        $users = $this->_trimInvalidUsers($data['friends']);
+
+        foreach ($users as $friendId) {
             $friend = $this->find($friendId);
             if (!empty($friend)) {
                 $circle->addFriend($friend);
@@ -228,6 +230,36 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return $circle;
+    }
+
+    public function updateCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id){
+
+                if(!empty($data['name'])){
+                    $circle->setName($data['name']);
+                }
+
+                if(!empty($data['friends'])){
+
+                    $friends = (array_unique(array_merge($circle->getFriends(), $data['friends'])));
+                    $circle->addFriend($friends);
+                }
+
+
+            }
+        }
+
+        $this->currentUser->setCircles($circle);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+
     }
 
     public function sendFriendRequests($data, $friendId)
@@ -512,8 +544,8 @@ class UserRepo extends Base
 
     public function generatePassword($length = 8)
     {
-        $password = "";
-        $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $password  = "";
+        $possible  = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $maxlength = strlen($possible);
 
         if ($length > $maxlength) {
@@ -681,7 +713,7 @@ class UserRepo extends Base
 
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
-        $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
+        $filePath = "/images/avatar/" . $user->getId();
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
@@ -709,7 +741,7 @@ class UserRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
+        $filePath = "/images/cover-photo/" . $user->getId();
         $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
 
         if ($coverPhotoUrl !== false) {

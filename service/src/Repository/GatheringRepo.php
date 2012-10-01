@@ -232,7 +232,7 @@ class GatheringRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/event-photo/" . $user->getId() . ".jpeg";
+        $filePath = "/images/event-photo/" . $user->getId();
         $eventImageUrl = filter_var($eventImage, FILTER_VALIDATE_URL);
 
         if ($eventImageUrl !== false) {

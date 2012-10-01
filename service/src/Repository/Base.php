@@ -108,4 +108,17 @@ class Base extends DocumentRepository {
     protected function _buildAvatarUrl($data) {
         return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
     }
+
+    protected function _trimInvalidUsers($data)
+    {
+        $userRepo = $this->dm->getRepository('Document\User');
+        $users = array();
+
+        foreach ($data as $userId) {
+            $user = $userRepo->find($userId);
+            if ($user) array_push($users, $user->getId());
+        }
+        return $users;
+    }
+
 }
