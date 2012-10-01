@@ -50,7 +50,6 @@
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
 		20CF833A16118B130075E647 /* PullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833916118B130075E647 /* PullableView.m */; };
-		20CF833D16118BA60075E647 /* StyledPullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833C16118BA60075E647 /* StyledPullableView.m */; };
 		20CF833F1611BAAA0075E647 /* icon_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF833E1611BAAA0075E647 /* icon_profile.png */; };
 		20CF83431611F9780075E647 /* icon_friend_request_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83401611F9770075E647 /* icon_friend_request_selected.png */; };
 		20CF83441611F9780075E647 /* icon_message_notification_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83411611F9770075E647 /* icon_message_notification_selected.png */; };
@@ -386,6 +385,8 @@
 		B01DFC5915F5E74300020D49 /* top_curve_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5115F5E74300020D49 /* top_curve_bg.png */; };
 		B01DFC5A15F5E74300020D49 /* whitle_blend.png in Resources */ = {isa = PBXBuildFile; fileRef = B01DFC5215F5E74300020D49 /* whitle_blend.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
+		B08845681619584C00676EFA /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08845651619584C00676EFA /* OverlayView.xib */; };
+		B08845691619584C00676EFA /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08845671619584C00676EFA /* OverlayViewController.m */; };
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
@@ -467,8 +468,6 @@
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
 		20CF833816118B130075E647 /* PullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullableView.h; sourceTree = "<group>"; };
 		20CF833916118B130075E647 /* PullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullableView.m; sourceTree = "<group>"; };
-		20CF833B16118BA60075E647 /* StyledPullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPullableView.h; sourceTree = "<group>"; };
-		20CF833C16118BA60075E647 /* StyledPullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyledPullableView.m; sourceTree = "<group>"; };
 		20CF833E1611BAAA0075E647 /* icon_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_profile.png; sourceTree = "<group>"; };
 		20CF83401611F9770075E647 /* icon_friend_request_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_friend_request_selected.png; sourceTree = "<group>"; };
 		20CF83411611F9770075E647 /* icon_message_notification_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_message_notification_selected.png; sourceTree = "<group>"; };
@@ -952,6 +951,9 @@
 		B01FDC881611EDC700BB3271 /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
+		B08845651619584C00676EFA /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
+		B08845661619584C00676EFA /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
+		B08845671619584C00676EFA /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
 		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
 		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
@@ -1081,6 +1083,9 @@
 				4F50CC0315C82B4F00A3AFA8 /* NotifRequest.m */,
 				4F29A6C915CB231200305523 /* NSData+Base64.h */,
 				4F29A6C815CB231200305523 /* NSData+Base64.m */,
+				B08845651619584C00676EFA /* OverlayView.xib */,
+				B08845661619584C00676EFA /* OverlayViewController.h */,
+				B08845671619584C00676EFA /* OverlayViewController.m */,
 				4F6036DE15DD4DAD00C1BD4E /* People.h */,
 				4F6036DD15DD4DAD00C1BD4E /* People.m */,
 				4F3A4EEF15D244900033AC9E /* PersonalInformation.h */,
@@ -1109,8 +1114,6 @@
 				4FB7A06815D19612001EB905 /* SettingsMaster.m */,
 				4F1D96A515DCC93B00511624 /* ShareLocation.h */,
 				4F1D96A415DCC93B00511624 /* ShareLocation.m */,
-				20CF833B16118BA60075E647 /* StyledPullableView.h */,
-				20CF833C16118BA60075E647 /* StyledPullableView.m */,
 				4F50CC0815C82C3800A3AFA8 /* TagNotification.h */,
 				4F50CC0915C82C3800A3AFA8 /* TagNotification.m */,
 				4FB7A06A15D1B29A001EB905 /* ToggleView.h */,
@@ -1944,6 +1947,7 @@
 				20B5D570161319A6001105AF /* message_notify_icon.png in Resources */,
 				20B5D572161319B9001105AF /* notify_icon.png in Resources */,
 				20BFC311161707B000F76226 /* icon_facebook.png in Resources */,
+				B08845681619584C00676EFA /* OverlayView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,7 +2111,7 @@
 				200746D3160ADB39001A0873 /* ViewCircleWisePeopleViewController.m in Sources */,
 				B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */,
 				20CF833A16118B130075E647 /* PullableView.m in Sources */,
-				20CF833D16118BA60075E647 /* StyledPullableView.m in Sources */,
+				B08845691619584C00676EFA /* OverlayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
