@@ -376,8 +376,6 @@
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
 	
-	//[self searchTableView];
-    //searching = NO;
     [searchBar resignFirstResponder];
 }
 

@@ -53,8 +53,10 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIButton *buttonProfileView;
     IBOutlet UIButton *buttonMapView;
     IBOutlet UIImageView *imageViewSliderOpenClose;
-                                    
     IBOutlet UIView *viewNotification;
+    IBOutlet UIView *viewSearch;
+    IBOutlet UISearchBar *searchBar;
+    NSMutableArray		*copySearchAnnotationList;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -124,4 +126,8 @@ typedef enum _SHARING_TYPES {
 -(void) displayNotificationCount;
 - (void) getSortedDisplayList;
 - (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno;
+- (IBAction)actionSearchButton:(id)sender;
+- (IBAction)actionShowHideSearchBtn:(id)sender;
+
+
 @end
