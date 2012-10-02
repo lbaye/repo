@@ -589,7 +589,7 @@ class User extends Base
         $circleData = $this->request->request->all();
 
         $circle = $this->userRepository->updateCircle($id,$circleData);
-
+        var_dump($circle); die;
         $this->response->setContent(json_encode($circle->toArray()));
         $this->response->setStatusCode(Status::OK);
 

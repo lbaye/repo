@@ -236,6 +236,7 @@ class UserRepo extends Base
     {
         $circles = $this->currentUser->getCircles();
 
+        $users = $this->_trimInvalidUsers($data['friends']);
 
         foreach ($circles as $circle) {
             if ($circle->getId() == $id){
@@ -246,15 +247,20 @@ class UserRepo extends Base
 
                 if(!empty($data['friends'])){
 
-                    $friends = (array_unique(array_merge($circle->getFriends(), $data['friends'])));
-                    $circle->addFriend($friends);
-                }
+                    $friends = (array_unique(array_merge($circle->getFriends(), $users)));
 
+                    foreach($friends as $friend){
+                        $friendId = $this->find($friend);
+
+                        $circle->addFriend($friendId);
+                    }
+
+                }
 
             }
         }
 
-        $this->currentUser->setCircles($circle);
+        $this->currentUser->setCircles($circles);
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
