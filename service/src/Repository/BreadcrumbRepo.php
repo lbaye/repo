@@ -39,7 +39,6 @@ class BreadcrumbRepo extends Base
         }
 
         $breadcrumb = $this->mapPhoto($data, $breadcrumb->getOwner(), $breadcrumb);
-       //ImageHelper::saveImageFromBase64($breadcrumb->getImage());
 
         $this->dm->persist($breadcrumb);
         $this->dm->flush();

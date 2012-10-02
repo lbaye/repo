@@ -14,7 +14,18 @@ get_circle_detail:
   defaults: { _controller: Controller\User::getCircleDetail}
   requirements: { _method: GET}
 
-edit_circle:
+update_circle:
   pattern: /me/circles/{id}
   defaults: { _controller: Controller\User::updateCustomCircle}
   requirements: { _method: PUT}
+
+remove_friend:
+  pattern: /me/circles/{id}/remove
+  defaults: { _controller: Controller\User::removeFriendFromCircle}
+  requirements: { _method: PUT}
+
+delete_circle:
+  pattern: /me/circles/{id}
+  defaults: { _controller: Controller\User::deleteCustomCircle}
+  requirements: { _method: DELETE}
+
