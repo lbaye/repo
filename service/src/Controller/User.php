@@ -71,7 +71,7 @@ class User extends Base
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
+            if ($notification->getViewed() != true) {
                 $result[] = $notification;
                 $this->updateNotification($notification->getId());
             }
@@ -79,7 +79,7 @@ class User extends Base
         }
 
         if (empty($result)) {
-           $this->response->setStatusCode(Status::NO_CONTENT);
+            $this->response->setStatusCode(Status::NO_CONTENT);
         } else {
 
             $this->response->setContent(json_encode($this->_toArrayAll($result)));
@@ -99,7 +99,7 @@ class User extends Base
     public function getFriendRequest($status = 'all')
     {
         $friendRequests = $this->user->getFriendRequest();
-        $result         = array();
+        $result = array();
 
         foreach ($friendRequests as $friendRequest) {
             if ($status != 'all') {
@@ -274,7 +274,7 @@ class User extends Base
     {
         $this->_ensureLoggedIn();
         $data = $this->request->request->all();
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
         }
 
@@ -369,7 +369,7 @@ class User extends Base
         foreach ($circles as $circle) {
 
             $friends = $circle->toArray();
-            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
             $result[] = $friends;
 
         }
@@ -456,9 +456,9 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         $friendRequests = $this->user->getFriendRequest();
-        $notifications  = $this->user->getNotification();
+        $notifications = $this->user->getNotification();
 
-        $friendResult   = array();
+        $friendResult = array();
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
@@ -467,9 +467,9 @@ class User extends Base
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
-                 $notificationResult[] = $notification->toArray();
-                 $this->updateNotification($notification->getId());
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
+                $this->updateNotification($notification->getId());
             }
 
         }
@@ -479,7 +479,7 @@ class User extends Base
         } else {
             $this->response->setContent(json_encode(array(
                 'friend request' => $friendResult,
-                'notifications'  => $notificationResult
+                'notifications' => $notificationResult
             )));
         }
 
@@ -549,9 +549,9 @@ class User extends Base
 
         $result = array();
         foreach ($circles as $circle) {
-            if ($circle->getId() == $id){
+            if ($circle->getId() == $id) {
                 $friends = $circle->toArray();
-                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(),array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
                 $result[] = $friends;
             }
         }
@@ -572,26 +572,44 @@ class User extends Base
 
     public function updateCustomCircle($id)
     {
-        $circles = $this->user->getCircles();
+        $this->_ensureLoggedIn();
 
-        $result = array();
-        foreach ($circles as $circle) {
-            if ($circle->getId() == $id){
-                $result= $circle->toArray();
+        try {
+
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
             }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->updateCircle($id, $circleData);
+
+            $updateResult = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $updateFriends = $circle->toArray();
+                    $updateFriends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                    $updateResult[] = $updateFriends;
+                }
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
         }
-
-        if ($result['type'] == 'system'){
-             $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-             return $this->response;
-        }
-
-        $circleData = $this->request->request->all();
-
-        $circle = $this->userRepository->updateCircle($id,$circleData);
-        var_dump($circle); die;
-        $this->response->setContent(json_encode($circle->toArray()));
-        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
     }
@@ -610,7 +628,7 @@ class User extends Base
 
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance','address','regMedia'));
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);

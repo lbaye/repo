@@ -236,6 +236,7 @@ class UserRepo extends Base
     {
         $circles = $this->currentUser->getCircles();
 
+
         $users = $this->_trimInvalidUsers($data['friends']);
 
         foreach ($circles as $circle) {
@@ -251,7 +252,6 @@ class UserRepo extends Base
 
                     foreach($friends as $friend){
                         $friendId = $this->find($friend);
-
                         $circle->addFriend($friendId);
                     }
 
