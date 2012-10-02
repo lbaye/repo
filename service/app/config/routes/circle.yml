@@ -18,3 +18,14 @@ update_circle:
   pattern: /me/circles/{id}
   defaults: { _controller: Controller\User::updateCustomCircle}
   requirements: { _method: PUT}
+
+remove_friend:
+  pattern: /me/circles/{id}/remove
+  defaults: { _controller: Controller\User::removeFriendFromCircle}
+  requirements: { _method: PUT}
+
+delete_circle:
+  pattern: /me/circles/{id}
+  defaults: { _controller: Controller\User::deleteCustomCircle}
+  requirements: { _method: DELETE}
+

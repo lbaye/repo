@@ -18,7 +18,7 @@ class UserRepo extends Base
         $user = $this->map($data);
 
         $user = $this->findOneBy(array(
-            'email'    => $data['email'],
+            'email' => $data['email'],
             'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
         ));
 
@@ -88,7 +88,7 @@ class UserRepo extends Base
     public function getAllByIds(array $ids, $asArray = true)
     {
         $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
-        return $asArray? $this->_toArrayAll($users) : $users;
+        return $asArray ? $this->_toArrayAll($users) : $users;
     }
 
     public function insert($data)
@@ -155,12 +155,12 @@ class UserRepo extends Base
             $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
         }
 
-        if(isset($data['email'])) {
+        if (isset($data['email'])) {
 
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if($result->count() >0) {
+        if ($result->count() > 0) {
             return true;
         }
 
@@ -213,14 +213,17 @@ class UserRepo extends Base
     {
         $circle = new \Document\Circle($data);
 
-        $users = $this->_trimInvalidUsers($data['friends']);
+        if (!empty($data['friends'])) {
+            $users = $this->_trimInvalidUsers($data['friends']);
 
-        foreach ($users as $friendId) {
-            $friend = $this->find($friendId);
-            if (!empty($friend)) {
-                $circle->addFriend($friend);
+            foreach ($users as $friendId) {
+                $friend = $this->find($friendId);
+                if (!empty($friend)) {
+                    $circle->addFriend($friend);
+                }
             }
         }
+
 
         $this->currentUser->setUpdateDate(new \DateTime());
         $this->currentUser->addCircle($circle);
@@ -240,17 +243,17 @@ class UserRepo extends Base
         $users = $this->_trimInvalidUsers($data['friends']);
 
         foreach ($circles as $circle) {
-            if ($circle->getId() == $id){
+            if ($circle->getId() == $id) {
 
-                if(!empty($data['name'])){
+                if (!empty($data['name'])) {
                     $circle->setName($data['name']);
                 }
 
-                if(!empty($data['friends'])){
+                if (!empty($data['friends'])) {
 
                     $friends = (array_unique(array_merge($circle->getFriends(), $users)));
 
-                    foreach($friends as $friend){
+                    foreach ($friends as $friend) {
                         $friendId = $this->find($friend);
                         $circle->addFriend($friendId);
                     }
@@ -285,8 +288,8 @@ class UserRepo extends Base
             }
         }
 
-        $data['userId']      = $this->currentUser->getId();
-        $data['friendName']  = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        $data['userId'] = $this->currentUser->getId();
+        $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
         $data['recipientId'] = $friendId;
 
         $friendRequest = new FriendRequest($data);
@@ -300,10 +303,10 @@ class UserRepo extends Base
         $this->dm->flush();
 
         $data = array(
-            'userId'     => $friendId,
-            'objectId'   => $recipient->getId(),
+            'userId' => $friendId,
+            'objectId' => $recipient->getId(),
             'objectType' => 'FriendRequest',
-            'message'    => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+            'message' => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
         );
 
         $this->addTask('new_friend_request', json_encode($data));
@@ -550,8 +553,8 @@ class UserRepo extends Base
 
     public function generatePassword($length = 8)
     {
-        $password  = "";
-        $possible  = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $password = "";
+        $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $maxlength = strlen($possible);
 
         if ($length > $maxlength) {
@@ -599,7 +602,7 @@ class UserRepo extends Base
     {
         $users = array();
         foreach ($results as $user) {
-            $userArr = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr = ($filterFields) ? $user->toArrayFiltered($this->currentUser) : $user->toArray();
             $userArr['friendship'] = $this->currentUser->getFriendship($user);
 
             $userArr['avatar'] = $this->_buildAvatarUrl($userArr);
@@ -730,14 +733,13 @@ class UserRepo extends Base
         }
 
 
-
         $this->dm->persist($user);
         $this->dm->flush();
 
         return $user;
     }
 
-    public function saveCoverPhoto($id , $coverPhoto)
+    public function saveCoverPhoto($id, $coverPhoto)
     {
         $user = $this->find($id);
 
@@ -754,9 +756,8 @@ class UserRepo extends Base
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
             ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($filePath."?".$timeStamp);
+            $user->setCoverPhoto($filePath . "?" . $timeStamp);
         }
-
 
 
         $this->dm->persist($user);
@@ -768,8 +769,8 @@ class UserRepo extends Base
     public function updateForgetPasswordToken($userId, $passwordToken)
     {
         $userDetail = $this->find($userId);
-        $data       = array();
-        $user       = $this->map($data, $userDetail);
+        $data = array();
+        $user = $this->map($data, $userDetail);
 
         $user->setForgetPasswordToken($passwordToken);
         $user->setUpdateDate(new \DateTime());
@@ -840,4 +841,24 @@ class UserRepo extends Base
         return (count($users)) ? $users : array();
     }
 
+    public function removeFriendFromCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+        $friends = $this->_trimInvalidUsers($data['friends']);
+
+        if (!empty($data['friends'])) {
+            foreach ($circles as $circle) {
+                if ($circle->getId() === $id) {
+                    $circleFriends = $circle->getFriends();
+                    $circle->setFriendIds(array_diff($circleFriends, $friends));
+                }
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
 }

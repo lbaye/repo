@@ -348,9 +348,19 @@ class User extends Base
     {
         $circleData = $this->request->request->all();
 
-        $circle = $this->userRepository->addCircle($circleData);
+        $this->userRepository->addCircle($circleData);
 
-        $this->response->setContent(json_encode($circle->toArray()));
+        $circles = $this->user->getCircles();
+
+        $result = array();
+        foreach ($circles as $circle) {
+
+            $friends = $circle->toArray();
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $result[] = $friends;
+        }
+
+        $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::CREATED);
 
         return $this->response;
@@ -594,13 +604,14 @@ class User extends Base
 
             $this->userRepository->updateCircle($id, $circleData);
 
+            $allCircles = $this->user->getCircles();
+
             $updateResult = array();
-            foreach ($circles as $circle) {
-                if ($circle->getId() == $id) {
-                    $updateFriends = $circle->toArray();
-                    $updateFriends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
-                    $updateResult[] = $updateFriends;
-                }
+            foreach ($allCircles as $circle) {
+
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $updateResult[] = $friends;
             }
 
             $this->response->setContent(json_encode($updateResult));
@@ -643,6 +654,95 @@ class User extends Base
     private function _createPushMessage()
     {
         return $this->user->getFirstName() . " added you as a friend.";
+    }
+
+    /**
+     * DELETE /me/circles/{id}
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteCustomCircle($id)
+    {
+            $this->_ensureLoggedIn();
+
+            try {
+                $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
+            }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+                $this->userRepository->delete($id);
+                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
+                $this->response->setStatusCode(Status::OK);
+            } catch (\InvalidArgumentException $e) {
+
+                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+                $this->response->setStatusCode(Status::NOT_FOUND);
+            }
+
+
+        return $this->response;
+    }
+
+    /**
+     * PUT /circles/:id/remove
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeFriendFromCircle($id)
+    {
+            $this->_ensureLoggedIn();
+
+            try {
+             $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
+            }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->removeFriendFromCircle($id, $circleData);
+
+            $updateResult = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $updateFriends = $circle->toArray();
+                    $updateFriends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                    $updateResult[] = $updateFriends;
+                }
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+            } catch (\InvalidArgumentException $e) {
+
+                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+                $this->response->setStatusCode(Status::NOT_FOUND);
+            }
+
+
+        return $this->response;
     }
 
 }
