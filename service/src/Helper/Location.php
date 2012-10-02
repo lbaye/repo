@@ -30,7 +30,7 @@ class Location
         $unit  = strtoupper($unit);
 
         if ($unit == "K") {
-            return ($miles * 1.609344);
+            return ($miles * 1609.344);
         } else if ($unit == "N") {
             return ($miles * 0.8684);
         } else {
