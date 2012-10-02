@@ -15,6 +15,12 @@ class Direction extends Content
 {
     /** @ODM\Id */
     protected $id;
+    
+    /** @ODM\String */
+    protected $title;
+    
+    /** @ODM\String */
+    protected $type;
 
     /** @ODM\Float */
     protected $latFrom;
@@ -49,6 +55,16 @@ class Direction extends Content
     public function setId($id)
     {
         $this->id = $id;
+    }
+   
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     //<editor-fold desc="Setters">
@@ -89,11 +105,19 @@ class Direction extends Content
     }
 
     //<editor-fold desc="Getters">
-
-    //<editor-fold desc="Getters">
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -125,7 +149,7 @@ class Direction extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'createDate');
+        $fieldsToExpose = array('id','title','type','createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {
