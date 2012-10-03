@@ -758,6 +758,10 @@ ButtonClickCallbackData callBackData;
         [_mapView setRegion:adjustedRegion animated:YES];
         [_mapView setCenterCoordinate:zoomLocation animated:YES];
     }
+    
+    if (viewSearch.frame.origin.y > 44) {
+        [self searchAnnotations];
+    }
 }
 
 
@@ -1718,6 +1722,11 @@ ButtonClickCallbackData callBackData;
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"In gotListings");
+    
+    if (viewSearch.frame.origin.y > 44) {
+        return;
+    }
+    
     //[smAppDelegate.peopleList removeAllObjects];
 
     SearchLocation * listings = [notif object];

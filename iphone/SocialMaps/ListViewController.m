@@ -115,6 +115,8 @@
     [self setListNotifCount:nil];
     [searchBar release];
     searchBar = nil;
+    [viewSearch release];
+    viewSearch = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -201,6 +203,7 @@
     [itemList release];
     [listNotifCount release];
     [searchBar release];
+    [viewSearch release];
     [super dealloc];
 }
 
@@ -276,6 +279,9 @@
             break;
     }
     [self getSortedDisplayList];
+    if (viewSearch.frame.origin.y > 44) {
+        [self searchTableView];
+    }
     [itemList reloadData];
 }
 
@@ -337,22 +343,22 @@
 	
 	ovController.rvController = self;
 	
-	[self.view insertSubview:ovController.view aboveSubview:itemList];
+	//////////////[self.view insertSubview:ovController.view aboveSubview:itemList];
 	
 	//searching = YES;
-	letUserSelectRow = NO;
-	itemList.scrollEnabled = NO;
+	/////////letUserSelectRow = NO;
+	////////itemList.scrollEnabled = NO;
 	
     /*
 	self.navigationItem.rightBarButtonItem	= [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)] autorelease];
 	self.navigationItem.leftBarButtonItem.enabled = NO;
     */
 }
-
+/*
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
 	
 	//Remove all objects first.
-	[copyListOfItems removeAllObjects];
+	//[copyListOfItems removeAllObjects];
 	
 	if([searchText length] > 0) {
 		
@@ -364,25 +370,49 @@
 	}
 	else {
 		
-		[self.view insertSubview:ovController.view aboveSubview:itemList];
+		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
 		
 		searching = NO;
-		letUserSelectRow = NO;
-		itemList.scrollEnabled = NO;
+		/////////letUserSelectRow = NO;
+		/////////itemList.scrollEnabled = NO;
+	}
+	
+	[itemList reloadData];
+}
+*/
+- (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
+	
+    [searchBar resignFirstResponder];
+    
+    if([searchBar.text length] > 0) {
+		
+		[ovController.view removeFromSuperview];
+		searching = YES;
+		letUserSelectRow = YES;
+		itemList.scrollEnabled = YES;
+		[self searchTableView];
+	}
+	else {
+		
+		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
+		
+		searching = NO;
+		/////////letUserSelectRow = NO;
+		/////////itemList.scrollEnabled = NO;
 	}
 	
 	[itemList reloadData];
 }
 
-- (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
-	
-    [searchBar resignFirstResponder];
-}
-
 - (void) searchTableView 
 {
 	NSString *searchText = searchBar.text;
-    
+    /*
+    if ([searchText isEqualToString:@""]) {
+        return;
+    }
+    */
+    [copyListOfItems removeAllObjects];
 	for (LocationItem *sTemp in smAppDelegate.displayList)
 	{
 		LocationItem *info = (LocationItem*)sTemp;
@@ -396,18 +426,24 @@
 -(void)moveSearchBarAnimation:(int)moveby
 {
     if (moveby > 0) {
-        itemList.contentInset = UIEdgeInsetsMake(31,0.0,0,0.0);
+        itemList.contentInset = UIEdgeInsetsMake(43,0.0,0,0.0);
     } else {
         itemList.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
     }
     
     //itemList.contentOffset = CGPointZero;
-    CGRect viewFrame = searchBar.frame;
+    CGRect viewFrame = viewSearch.frame;
     viewFrame.origin.y += moveby;
+    CGRect listPullDownFrame = listPulldown.frame;
+    listPullDownFrame.origin.y += moveby;
+    CGRect listPullDownMenuFrame = listPulldownMenu.frame;
+    listPullDownMenuFrame.origin.y += moveby;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:0.3];    
-    [searchBar setFrame:viewFrame];    
+    [viewSearch setFrame:viewFrame];  
+    [listPulldown setFrame:listPullDownFrame]; 
+    [listPulldownMenu setFrame:listPullDownMenuFrame]; 
     [UIView commitAnimations];    
 }
 
@@ -443,15 +479,19 @@
 }
 
 - (IBAction)actionSearchButton:(id)sender {
-    if (searchBar.frame.origin.y > 44) {
+    if (viewSearch.frame.origin.y > 44) {
         [self moveSearchBarAnimation:-44];
         [self doneSearching_Clicked:nil];
     } else {
         [self moveSearchBarAnimation:44];
-        listPulldownMenu.hidden = TRUE;
+        //listPulldownMenu.hidden = TRUE;
         [searchBar becomeFirstResponder];
     }
     
+}
+
+- (IBAction)actionSearchOkButton:(id)sender {
+    [self searchBarSearchButtonClicked:searchBar];
 }
 
 @end

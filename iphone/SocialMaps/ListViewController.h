@@ -26,6 +26,7 @@
     BOOL						letUserSelectRow;
     NSMutableArray				*copyListOfItems;
     IBOutlet UISearchBar *searchBar;
+    IBOutlet UIView *viewSearch;
     
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
@@ -54,5 +55,6 @@
 -(IBAction)gotoProfile:(id)sender;
 - (void) doneSearching_Clicked:(id)sender;
 - (IBAction)actionSearchButton:(id)sender;
+- (IBAction)actionSearchOkButton:(id)sender;
 
 @end
