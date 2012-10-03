@@ -18,6 +18,8 @@
 #import "CircleImageDownloader.h"
 #import "LocationItemPeople.h"
 #import "RestClient.h"
+#import "UtilityClass.h"
+#import "NotificationController.h"
 
 @interface InviteFromCircleViewController ()
 - (void)startIconDownload:(LocationItemPeople *)people forIndexPath:(NSIndexPath *)indexPath;
@@ -78,6 +80,7 @@ bool searchFlag4=true;
     //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
     
     // Do any additional setup after loading the view.
+    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -160,6 +163,8 @@ bool searchFlag4=true;
 
 - (void)viewDidUnload
 {
+    [labelNotifCount release];
+    labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -447,6 +452,13 @@ bool searchFlag4=true;
     [msgView removeFromSuperview];
 }
 
+- (IBAction)actionNotificationButton:(id)sender {
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];    
+}
+
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {    
@@ -645,5 +657,9 @@ bool searchFlag4=true;
     NSLog(@"rsvp updated.");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+- (void)dealloc {
+    [labelNotifCount release];
+    [super dealloc];
 }
 @end

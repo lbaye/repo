@@ -16,6 +16,7 @@
     NSDictionary *downloadedImageDict;
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
+    IBOutlet UILabel *labelNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *circleListTableView;
@@ -33,5 +34,7 @@
 -(IBAction)gotoBlockUnBlock:(id)sender;
 -(IBAction)sendMsg:(id)sender;
 -(IBAction)cancelMsg:(id)sender;
+- (IBAction)actionNotificationButton:(id)sender;
+
 
 @end

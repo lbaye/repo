@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G56" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="1kw-4S-2Az">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="1kw-4S-2Az">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
@@ -69,6 +69,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="actionNotificationButton:" destination="1kw-4S-2Az" eventType="touchUpInside" id="94a-Kp-ngz"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="rT2-Oj-aeq" userLabel="notifCount">
                                         <rect key="frame" x="280" y="8" width="28" height="18"/>
@@ -476,6 +479,7 @@
                     <connections>
                         <outlet property="circleListTableView" destination="j6a-v0-jUB" id="jPe-fP-jsz"/>
                         <outlet property="circleSearchBar" destination="OiL-LF-Nfg" id="Guh-ui-c6d"/>
+                        <outlet property="labelNotifCount" destination="rT2-Oj-aeq" id="O11-nM-BVU"/>
                         <outlet property="listPulldown" destination="4po-9c-22F" id="kTY-Xz-mWD"/>
                         <outlet property="listPulldownMenu" destination="UOf-gC-WDA" id="Gw5-h1-Nd1"/>
                         <outlet property="listViewfilter" destination="yxH-2g-tHf" id="wfr-YE-5si"/>
@@ -549,6 +553,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="actionNotificationButton:" destination="JB6-8Y-JdM" eventType="touchUpInside" id="4OC-1q-Anv"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="dTy-Vl-cAj" userLabel="notifCount">
                                         <rect key="frame" x="280" y="8" width="28" height="18"/>
@@ -928,6 +935,7 @@
                     <connections>
                         <outlet property="blockSearchBar" destination="dSM-Bu-rne" id="RM7-8d-kzH"/>
                         <outlet property="blockTableView" destination="UbJ-to-inp" id="3ov-9G-KDH"/>
+                        <outlet property="labelNotifCount" destination="dTy-Vl-cAj" id="bdE-pR-Exi"/>
                         <outlet property="msgView" destination="lqD-2R-r9b" id="jyA-Kt-6K9"/>
                         <outlet property="textViewNewMsg" destination="g3G-09-fGL" id="QZG-ld-k7h"/>
                     </connections>
@@ -999,6 +1007,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="actionNotificationButton:" destination="vVB-Eq-x2M" eventType="touchUpInside" id="z8n-Kh-8zy"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="eWC-CS-d3j" userLabel="notifCount">
                                         <rect key="frame" x="280" y="8" width="28" height="18"/>
@@ -1295,6 +1306,7 @@
                         <outlet property="circleNameTextField" destination="zdu-PS-45M" id="Mdq-Ic-Lmg"/>
                         <outlet property="circleSelectTableView" destination="52n-fF-7V6" id="csK-a4-5Lg"/>
                         <outlet property="circleTableView" destination="fdI-5Y-E1Q" id="LWe-bC-F5G"/>
+                        <outlet property="labelNotifCount" destination="eWC-CS-d3j" id="jzs-iJ-2Mq"/>
                         <outlet property="msgView" destination="nMB-Hd-eu0" id="CIZ-h8-yPJ"/>
                         <outlet property="textViewNewMsg" destination="m08-Bp-TBk" id="mGI-zX-JkQ"/>
                     </connections>
@@ -1366,6 +1378,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="actionNotificationButton:" destination="SxH-nc-hmz" eventType="touchUpInside" id="rjs-2t-aaD"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="wRa-Dn-Plw" userLabel="notifCount">
                                         <rect key="frame" x="280" y="8" width="28" height="18"/>
@@ -1746,6 +1761,7 @@
                     <connections>
                         <outlet property="inviteSearchBar" destination="74M-bJ-ESQ" id="EZa-LJ-qNE"/>
                         <outlet property="inviteTableView" destination="fnG-ZA-HIJ" id="U85-qI-JzJ"/>
+                        <outlet property="labelNotifCount" destination="wRa-Dn-Plw" id="kuE-Tn-PiL"/>
                         <outlet property="msgView" destination="NiE-dJ-1QN" id="Zjr-fd-8cA"/>
                         <outlet property="textViewNewMsg" destination="iiI-EO-5gj" id="Xvv-am-57z"/>
                     </connections>
@@ -1787,112 +1803,6 @@
         <image name="sp2.png" width="1" height="60"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
-    <classes>
-        <class className="BlockUnblockCircleViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BlockUnblockCircleViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancel:"/>
-                <relationship kind="action" name="cancelMsg:"/>
-                <relationship kind="action" name="selectAllpeople:"/>
-                <relationship kind="action" name="selectedUser:"/>
-                <relationship kind="action" name="sendMsg:"/>
-                <relationship kind="action" name="viewLocationButton:"/>
-                <relationship kind="outlet" name="blockSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="blockTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="CircleListCheckBoxTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListCheckBoxTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="checkBoxButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="CircleListTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="InviteFromCircleViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteFromCircleViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancel:"/>
-                <relationship kind="action" name="cancelMsg:"/>
-                <relationship kind="action" name="selectAllpeople:"/>
-                <relationship kind="action" name="selectedUser:"/>
-                <relationship kind="action" name="sendMsg:"/>
-                <relationship kind="action" name="viewLocationButton:"/>
-                <relationship kind="outlet" name="inviteSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="inviteTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ViewCircleListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelMsg:"/>
-                <relationship kind="action" name="gotoBlockUnBlock:"/>
-                <relationship kind="action" name="gotoCircles:"/>
-                <relationship kind="action" name="gotoInvites:"/>
-                <relationship kind="action" name="gotoTabBar:"/>
-                <relationship kind="action" name="sendMsg:"/>
-                <relationship kind="outlet" name="circleListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listViewfilter" candidateClass="UIView"/>
-                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="ViewCircleWisePeopleViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleWisePeopleViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addCircleAction:"/>
-                <relationship kind="action" name="cancelAction:"/>
-                <relationship kind="action" name="cancelMsg:"/>
-                <relationship kind="action" name="okAction:"/>
-                <relationship kind="action" name="sendMsg:"/>
-                <relationship kind="outlet" name="circleCreateView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="circleListTableCell" candidateClass="CircleListTableCell"/>
-                <relationship kind="outlet" name="circleNameTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="circleSelectTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

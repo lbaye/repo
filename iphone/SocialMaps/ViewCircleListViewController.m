@@ -19,6 +19,7 @@
 #import "CustomCheckbox.h"
 #import "LocationItemPeople.h"
 #import "RestClient.h"
+#import "NotificationController.h"
 
 @interface ViewCircleListViewController ()
 - (void)startIconDownload:(UserFriends *)userFriend forIndexPath:(NSIndexPath *)indexPath;
@@ -89,6 +90,8 @@ bool showSM=true;
     
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -231,6 +234,8 @@ bool showSM=true;
 
 - (void)viewDidUnload
 {
+    [labelNotifCount release];
+    labelNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -316,6 +321,13 @@ bool showSM=true;
 {
     [textViewNewMsg resignFirstResponder];
     [msgView removeFromSuperview];
+}
+
+- (IBAction)actionNotificationButton:(id)sender {
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 //table view delegate methods
@@ -564,5 +576,9 @@ bool showSM=true;
     NSLog(@"rsvp updated.");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];    
+}
+- (void)dealloc {
+    [labelNotifCount release];
+    [super dealloc];
 }
 @end
