@@ -2,6 +2,7 @@
 
 namespace Repository;
 
+use Symfony\Component\HttpFoundation\Response;
 use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
@@ -901,6 +902,42 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return true;
+
+    }
+
+    public function getNotificationsCount()
+    {
+        $friendRequests = $this->currentUser->getFriendRequest();
+        $notifications  = $this->currentUser->getNotification();
+
+        $friendResult   = array();
+        $notificationResult = array();
+
+        foreach ($friendRequests as $friendRequest) {
+            $friendResult[] = $friendRequest->toArray();
+        }
+
+        foreach ($notifications as $notification) {
+
+            if($notification->getViewed() != true){
+                 $notificationResult[] = $notification->toArray();
+            }
+
+        }
+
+        if (empty($friendResult) AND (empty($notificationResult))) {
+            return array();
+        } else {
+
+            return json_encode(json_encode(array(
+                'friend request' => $friendResult,
+                'notifications'  => $notificationResult
+            )));
+        }
+//        $counTotal = count($notificationResult)+count($friendResult);
+//        var_dump($counTotal);
+//        var_dump($friendResult);
+//        var_dump($this->response);
 
     }
 }

@@ -54,7 +54,7 @@ class SendPushNotification extends Base
     {
         $pushSettings = $user->getPushSettings();
 
-        $notificationCounts = $user->getNotificationsCount();
+        $notificationCounts = $this->userRepository->getNotificationsCount();
         $counTotal = count($notificationCounts['friend request'])+count($notificationCounts['notifications']);
         $notificationData['badge'] = array_sum($notificationCounts);
         $notificationData['tabCounts'] = implode(":", $notificationCounts);
