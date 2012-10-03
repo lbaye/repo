@@ -54,11 +54,6 @@ class SendPushNotification extends Base
     {
         $pushSettings = $user->getPushSettings();
 
-        $notificationCounts = $user->getNotificationsCount();
-        $counTotal = count($notificationCounts['friend request'])+count($notificationCounts['notifications']);
-        $notificationData['badge'] = array_sum($notificationCounts);
-        $notificationData['tabCounts'] = implode(":", $notificationCounts);
-
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
         if ($pushNotifier)
             echo $pushNotifier->send($notificationData, array($pushSettings['device_id']));
