@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "ViewCircleWisePeopleViewController.h"
 #import "SectionInfo.h"
 #import "SectionHeaderView.h"
@@ -286,7 +287,14 @@ NSString *userID;
 //        [cell.inviteButton addTarget:self action:@selector(removeFromCircle:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         cell.showOnMapButton.hidden=YES;
-        cell.profilePicImgView.image=[UIImage imageNamed:@"thum.png"];
+        cell.profilePicImgView.image=[self getImageFromPeopleListByuserId:userFrnd.userId];
+        NSLog(@"userFrnd.userId %@",userFrnd.userId);
+        cell.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        cell.profilePicImgView.userInteractionEnabled=YES;
+        cell.profilePicImgView.layer.borderWidth=1.0;
+        cell.profilePicImgView.layer.masksToBounds = YES;
+        [cell.regStsImgView.layer setCornerRadius:5.0];
+        
         cell.coverPicImgView.image=[UIImage imageNamed:@"cover_pic_default.png"];
         if ([userFrnd.regMedia isEqualToString:@"fb"]) 
         {
@@ -603,6 +611,21 @@ NSString *userID;
     NSLog(@"circle name %@",((UserCircle *)[circleListDetailGlobalArray objectAtIndex:clickedButtonPath.row]).circleName);
     [self.circleSelectTableView reloadData];
     NSLog(@"selectedCircleCheckArr: %@",selectedCircleCheckArr); 
+}
+
+-(UIImage *)getImageFromPeopleListByuserId:(NSString *)userId
+{
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        NSLog(@"id %@ %@",((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.userId,userId);
+        if ([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.userId isEqualToString:userId])
+        {
+            NSLog(@"image found");
+            return ((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).itemIcon;
+        }
+    }
+    NSLog(@"image not found");
+    return [UIImage imageNamed:@"thum.png"];
 }
 
 -(NSMutableArray *)getCircleListByUser:(NSString *)userId
