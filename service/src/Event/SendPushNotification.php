@@ -42,6 +42,8 @@ class SendPushNotification extends Base
     /**
      * $notificationData must have the following keys -
      *   - title
+     *   - badge
+     *   - tabCounts
      *   - objectId
      *   - objectType
      *
@@ -51,6 +53,11 @@ class SendPushNotification extends Base
     private function _sendPushNotification(\Document\User $user, array $notificationData)
     {
         $pushSettings = $user->getPushSettings();
+
+        $notificationCounts = $user->getNotificationsCount();
+        $counTotal = count($notificationCounts['friend request'])+count($notificationCounts['notifications']);
+        $notificationData['badge'] = array_sum($notificationCounts);
+        $notificationData['tabCounts'] = implode(":", $notificationCounts);
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
         if ($pushNotifier)

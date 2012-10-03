@@ -11,3 +11,8 @@ user_notofications:
   pattern: /me/notifications
   defaults: { _controller: Controller\User::getNotifications}
   requirements: { _method: GET}
+
+user_notoficationscount:
+  pattern: /me/notificationscount
+  defaults: { _controller: Controller\User::getNotificationsCount}
+  requirements: { _method: GET}

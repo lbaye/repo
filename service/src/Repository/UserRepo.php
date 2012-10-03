@@ -497,7 +497,7 @@ class UserRepo extends Base
 
         foreach ($notifications as &$notification) {
             if ($notification->getId() == $notificationId) {
-                $notification->setViewed(true);
+//                $notification->setViewed(true);
             }
         }
 
@@ -866,20 +866,19 @@ class UserRepo extends Base
     {
         $circles = $this->currentUser->getCircles();
 
-
         $user = $this->_trimInvalidUsers(array($id));
         if (!empty($data['circles'])) {
 
             foreach ($circles as $circle) {
 
-                if ($circle->getType() == 'system') {
 
-                throw new \InvalidArgumentException('Invalid request', 406);
-              }
                 foreach ($data['circles'] AS $circleId) {
 
                     if ($circle->getId() == $circleId) {
 
+                        if ($circle->getType() == 'system') {
+                            throw new \InvalidArgumentException('Invalid request', 406);
+                        }
                         $friends = (array_unique(array_merge($circle->getFriends(), $user)));
 
                         foreach ($friends as $friend) {
