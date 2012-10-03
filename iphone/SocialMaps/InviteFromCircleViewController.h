@@ -16,6 +16,7 @@
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
 
+    IBOutlet UILabel *labelNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *inviteTableView;
@@ -30,5 +31,7 @@
 
 -(IBAction)sendMsg:(id)sender;
 -(IBAction)cancelMsg:(id)sender;
+
+- (IBAction)actionNotificationButton:(id)sender;
 
 @end

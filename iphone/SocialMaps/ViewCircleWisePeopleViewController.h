@@ -21,6 +21,7 @@
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
 
+    IBOutlet UILabel *labelNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *circleTableView;
@@ -40,4 +41,6 @@
 -(IBAction)addCircleAction:(id)sender;
 -(IBAction)okAction:(id)sender;
 -(IBAction)cancelAction:(id)sender;
+- (IBAction)actionNotificationButton:(id)sender;
+
 @end

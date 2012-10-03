@@ -20,6 +20,8 @@
 #import "SelectCircleTableCell.h"
 #import "UtilityClass.h"
 #import "RestClient.h"
+#import "NotificationController.h"
+
 #pragma mark -
 #pragma mark EmailMenuItem
 
@@ -113,6 +115,7 @@ NSString *userID;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createCircleDone:) name:NOTIF_CREATE_CIRCLE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCircleDone:) name:NOTIF_UPDATE_CIRCLE_DONE object:nil];
 
+    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
 }
 
 
@@ -196,8 +199,17 @@ NSString *userID;
     [circleCreateView removeFromSuperview];    
 }
 
+- (IBAction)actionNotificationButton:(id)sender {
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+}
+
 - (void)viewDidUnload {
     
+    [labelNotifCount release];
+    labelNotifCount = nil;
     [super viewDidUnload];
     
     // To reduce memory pressure, reset the section info array if the view is unloaded.
@@ -869,4 +881,8 @@ NSString *userID;
 #pragma mark Memory management
 
 
+- (void)dealloc {
+    [labelNotifCount release];
+    [super dealloc];
+}
 @end

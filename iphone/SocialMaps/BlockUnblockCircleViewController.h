@@ -17,6 +17,7 @@
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
 
+    IBOutlet UILabel *labelNotifCount;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *blockTableView;
@@ -32,5 +33,6 @@
 -(IBAction)cancel:(id)sender;
 -(IBAction)selectedUser:(id)sender;
 -(IBAction)selectAllpeople:(id)sender;
+- (IBAction)actionNotificationButton:(id)sender;
 
 @end
