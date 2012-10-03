@@ -1031,4 +1031,43 @@ class User
                         $this->lastName)));
     }
 
+     public function getNotificationsCount()
+    {
+        $friendRequests = $this->getFriendRequest();
+        $notifications  = $this->getNotification();
+
+        $friendResult   = array();
+        $notificationResult = array();
+
+        foreach ($friendRequests as $friendRequest) {
+            $friendResult[] = $friendRequest->toArray();
+        }
+
+        foreach ($notifications as $notification) {
+
+            if($notification->getViewed() != true){
+                 $notificationResult[] = $notification->toArray();
+                 $this->updateNotification($notification->getId());
+            }
+
+        }
+
+        if (empty($friendResult) AND (empty($notificationResult))) {
+            $this->response->setContent(json_encode(array()));
+        } else {
+            $this->response->setContent(json_encode(array(
+                'friend request' => $friendResult,
+                'notifications'  => $notificationResult
+            )));
+        }
+//        $counTotal = count($notificationResult)+count($friendResult);
+//        var_dump($counTotal);
+//        var_dump($friendResult);
+//        var_dump($this->response);
+
+
+
+       return $this->response;
+    }
+
 }

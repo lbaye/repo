@@ -89,11 +89,7 @@ class User extends Base
         return $this->response;
     }
 
-     /**
-     * GET /me/notificationscount
-     *`
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+
     public function getNotificationsCount()
     {
         $this->_ensureLoggedIn();
