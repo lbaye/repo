@@ -71,6 +71,7 @@
 @synthesize mapAnnoPlace;
 @synthesize filteredList;
 @synthesize selectedAnno;
+@synthesize circleView;
 
 UserFriends *afriend;
 NSMutableDictionary *imageDownloadsInProgress;
@@ -767,6 +768,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [circleView removeFromSuperview];
     if ([CLLocationManager locationServicesEnabled])
         _mapView.showsUserLocation=YES;
     else
@@ -1431,6 +1433,15 @@ ButtonClickCallbackData callBackData;
     [self presentModalViewController:prof animated:YES];
 }
 
+-(IBAction)gotoSettings:(id)sender
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];   
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+}
+
 - (IBAction)gotoMeetupReq:(id)sender
 {
     MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
@@ -1453,6 +1464,16 @@ ButtonClickCallbackData callBackData;
     [self presentModalViewController:initialHelpView animated:YES];
 
 
+}
+
+-(IBAction)addCircleView:(id)sender
+{
+    [self.view addSubview:circleView];
+}
+
+-(IBAction)removeCircleView:(id)sender
+{
+    [circleView removeFromSuperview];
 }
 
 - (IBAction)gotoEditFilters:(id)sender

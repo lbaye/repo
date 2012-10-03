@@ -57,6 +57,7 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *viewSearch;
     IBOutlet UISearchBar *searchBar;
     NSMutableArray		*copySearchAnnotationList;
+    IBOutlet UIView *circleView;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -88,6 +89,7 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UIView *inviteFriendView;
 @property(nonatomic,retain) IBOutlet UITableView *inviteFrndTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
+@property(nonatomic,retain) IBOutlet UIView *circleView;
 //@property(nonatomic,retain) NSMutableDictionary *imageDownloadsInProgress; 
 
 - (IBAction)showPullDown:(id)sender;
@@ -116,6 +118,7 @@ typedef enum _SHARING_TYPES {
 
 -(IBAction)gotoProfile:(id)sender;
 -(IBAction)gotoCircle:(id)sender;
+-(IBAction)gotoSettings:(id)sender;
 //
 - (void) resetShareButton:(SHARING_TYPES)newSel;
 -(void)searchResult;
@@ -128,6 +131,6 @@ typedef enum _SHARING_TYPES {
 - (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno;
 - (IBAction)actionSearchButton:(id)sender;
 - (IBAction)actionShowHideSearchBtn:(id)sender;
-
-
+-(IBAction)addCircleView:(id)sender;
+-(IBAction)removeCircleView:(id)sender;
 @end
