@@ -556,3 +556,91 @@ just wrote payload: {"aps":{"alert":"Your friend Warif Rishi i","badge":1,"custo
 {"multicast_id":8469866847403490833,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1348657184244881%2ffb3871f9fd7ecd"}]}just wrote payload: {"aps":{"alert":"Your friend Warif Rishi i","badge":1,"custom_data":{"objectType":"proximity_alert","objectId":"5058621a781d6e2828000001"}}}OK
 just wrote payload: {"aps":{"alert":"Your friend Ahmed, Mahadi","badge":1,"custom_data":{"objectType":"proximity_alert","objectId":0}}}OK
 Waiting for job...
+Waiting for job...
+Running update_last_seen_address for 5058621a781d6e2828000001 (Warif Rishi) 
+Waiting for job...
+Running update_last_seen_address for 5058621a781d6e2828000001 (Warif Rishi) 
+Waiting for job...
+Running update_last_seen_address for 5058621a781d6e2828000001 (Warif Rishi) 
+Waiting for job...
+Running update_last_seen_address for 5058621a781d6e2828000001 (Warif Rishi) 
+PHP Warning:  file_get_contents(http://maps.google.com/maps/geo?q=23.804417%2C90.414369&output=json&sensor=false&key=AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw): failed to open stream: Connection timed out in /var/www/social_maps/src/Helper/Remote.php on line 18
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\LastSeenAddress->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\LastSeenAddress->_getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:28
+PHP   6. Service\Geolocation\Reverse->getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:48
+PHP   7. Helper\Remote::sendGetRequest() /var/www/social_maps/src/Service/Geolocation/Reverse.php:16
+PHP   8. file_get_contents() /var/www/social_maps/src/Helper/Remote.php:18
+PHP Notice:  Trying to get property of non-object in /var/www/social_maps/src/Service/Geolocation/Reverse.php on line 24
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\LastSeenAddress->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\LastSeenAddress->_getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:28
+PHP   6. Service\Geolocation\Reverse->getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:48
+PHP Notice:  Trying to get property of non-object in /var/www/social_maps/src/Service/Geolocation/Reverse.php on line 24
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\LastSeenAddress->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\LastSeenAddress->_getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:28
+PHP   6. Service\Geolocation\Reverse->getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:48
+PHP Notice:  Trying to get property of non-object in /var/www/social_maps/src/Service/Geolocation/Reverse.php on line 27
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\LastSeenAddress->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\LastSeenAddress->_getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:28
+PHP   6. Service\Geolocation\Reverse->getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:48
+PHP Notice:  Trying to get property of non-object in /var/www/social_maps/src/Service/Geolocation/Reverse.php on line 27
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\LastSeenAddress->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\LastSeenAddress->_getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:28
+PHP   6. Service\Geolocation\Reverse->getAddress() /var/www/social_maps/src/Event/LastSeenAddress.php:48
+Exception from google API in update_last_seen_address: Service Unavailable (Google Maps API said: '')
+Waiting for job...
+Running update_last_seen_address for 5058621a781d6e2828000001 (Warif Rishi) 
+Waiting for job...
+Running update_last_seen_address for 5058215c781d6e0514000000 (Das Oveget) 
+Waiting for job...
+Running update_last_seen_address for 5058215c781d6e0514000000 (Das Oveget) 
+Waiting for job...
+Running send_push_notification for 50643cc7781d6e1d1d000001 [direction_share :  has shared a direction with you.] 
+PHP Catchable fatal error:  Argument 1 passed to Event\SendPushNotification::_sendPushNotification() must be an instance of Document\User, null given, called in /var/www/social_maps/src/Event/SendPushNotification.php on line 31 and defined in /var/www/social_maps/src/Event/SendPushNotification.php on line 53
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\SendPushNotification->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\SendPushNotification->_sendPushNotification() /var/www/social_maps/src/Event/SendPushNotification.php:31
+Waiting for job...
+Running send_push_notification for 50643cc7781d6e1d1d000001 [direction_share :  has shared a direction with you.] 
+PHP Catchable fatal error:  Argument 1 passed to Event\SendPushNotification::_sendPushNotification() must be an instance of Document\User, null given, called in /var/www/social_maps/src/Event/SendPushNotification.php on line 31 and defined in /var/www/social_maps/src/Event/SendPushNotification.php on line 53
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\SendPushNotification->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\SendPushNotification->_sendPushNotification() /var/www/social_maps/src/Event/SendPushNotification.php:31
+Waiting for job...
+Running update_last_seen_address for 50698178781d6ea64c000000 (Zunaid Kazi) 
+Waiting for job...
+Running update_last_seen_address for 50698178781d6ea64c000000 (Zunaid Kazi) 
+Waiting for job...
+Running send_push_notification for 50643cc7781d6e1d1d000001 [direction_share :  has shared a direction with you.] 
+PHP Catchable fatal error:  Argument 1 passed to Event\SendPushNotification::_sendPushNotification() must be an instance of Document\User, null given, called in /var/www/social_maps/src/Event/SendPushNotification.php on line 31 and defined in /var/www/social_maps/src/Event/SendPushNotification.php on line 53
+PHP Stack trace:
+PHP   1. {main}() /var/www/social_maps/bin/worker.php:0
+PHP   2. GearmanKernel->handle() /var/www/social_maps/bin/worker.php:16
+PHP   3. GearmanWorker->work() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   4. Event\SendPushNotification->run() /var/www/social_maps/app/GearmanKernel.php:47
+PHP   5. Event\SendPushNotification->_sendPushNotification() /var/www/social_maps/src/Event/SendPushNotification.php:31

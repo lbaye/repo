@@ -930,7 +930,7 @@ class UserRepo extends Base
         } else {
 
             return json_encode(json_encode(array(
-                'friend request' => $friendResult,
+                'friend_request' => $friendResult,
                 'notifications'  => $notificationResult
             )));
         }

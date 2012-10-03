@@ -3,6 +3,7 @@
 namespace Event;
 
 use Repository\UserRepo as UserRepository;
+use Repository\MessageRepo as MessageRepository;
 
 class SendPushNotification extends Base
 {
@@ -55,7 +56,8 @@ class SendPushNotification extends Base
         $pushSettings = $user->getPushSettings();
 
         $notificationCounts = $this->userRepository->getNotificationsCount();
-        $counTotal = count($notificationCounts['friend request'])+count($notificationCounts['notifications']);
+        $message = count($this->messageRepository->getByRecipient($user));
+        $counTotal = count($notificationCounts['friend_request'])+count($notificationCounts['notifications']);
         $notificationData['badge'] = array_sum($notificationCounts);
         $notificationData['tabCounts'] = implode(":", $notificationCounts);
 
