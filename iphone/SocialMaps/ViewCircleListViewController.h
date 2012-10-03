@@ -19,7 +19,13 @@
 @property(nonatomic,retain) IBOutlet UITableView *circleListTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *circleSearchBar;
 @property(nonatomic,retain) NSDictionary *downloadedImageDict;
+@property (retain, nonatomic) IBOutlet UIView *listPulldownMenu;
+@property (retain, nonatomic) IBOutlet UIButton *listPulldown;
+@property (retain, nonatomic) IBOutlet UIView *listViewfilter;
 
 -(IBAction)gotoTabBar:(id)sender;
+-(IBAction)gotoInvites:(id)sender;
+-(IBAction)gotoCircles:(id)sender;
+-(IBAction)gotoBlockUnBlock:(id)sender;
 
 @end

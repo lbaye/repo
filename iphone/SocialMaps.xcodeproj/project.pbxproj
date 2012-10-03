@@ -36,6 +36,7 @@
 		20B0E7E915D7BA89009A500A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7E815D7BA89009A500A /* Platform.m */; };
 		20B0E7EC15D7BC55009A500A /* Layer.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EB15D7BC54009A500A /* Layer.m */; };
 		20B0E7EF15D7BEAC009A500A /* InformationPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */; };
+		20B2902016197A810056D5E2 /* cover_pic_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B2901F16197A810056D5E2 /* cover_pic_default.png */; };
 		20B5D56B1612EE27001105AF /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56A1612EE27001105AF /* icon_event.png */; };
 		20B5D56E16131975001105AF /* friends_rqst_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56D16131975001105AF /* friends_rqst_icon.png */; };
 		20B5D570161319A6001105AF /* message_notify_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56F161319A5001105AF /* message_notify_icon.png */; };
@@ -49,6 +50,10 @@
 		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
+		20C92B811618022B000B3D58 /* SectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B7E1618022B000B3D58 /* SectionHeaderView.m */; };
+		20C92B821618022B000B3D58 /* SectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B801618022B000B3D58 /* SectionInfo.m */; };
+		20C92B891618042D000B3D58 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20C92B881618042D000B3D58 /* MessageUI.framework */; };
+		20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */; };
 		20CF833A16118B130075E647 /* PullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833916118B130075E647 /* PullableView.m */; };
 		20CF833D16118BA60075E647 /* StyledPullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CF833C16118BA60075E647 /* StyledPullableView.m */; };
 		20CF833F1611BAAA0075E647 /* icon_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF833E1611BAAA0075E647 /* icon_profile.png */; };
@@ -444,6 +449,7 @@
 		20B0E7EB15D7BC54009A500A /* Layer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Layer.m; sourceTree = "<group>"; };
 		20B0E7ED15D7BEAB009A500A /* InformationPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationPrefs.h; sourceTree = "<group>"; };
 		20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationPrefs.m; sourceTree = "<group>"; };
+		20B2901F16197A810056D5E2 /* cover_pic_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_pic_default.png; sourceTree = "<group>"; };
 		20B5D56A1612EE27001105AF /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		20B5D56D16131975001105AF /* friends_rqst_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_rqst_icon.png; sourceTree = "<group>"; };
 		20B5D56F161319A5001105AF /* message_notify_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message_notify_icon.png; sourceTree = "<group>"; };
@@ -465,6 +471,13 @@
 		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
 		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
+		20C92B7D1618022B000B3D58 /* SectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderView.h; sourceTree = "<group>"; };
+		20C92B7E1618022B000B3D58 /* SectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderView.m; sourceTree = "<group>"; };
+		20C92B7F1618022B000B3D58 /* SectionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionInfo.h; sourceTree = "<group>"; };
+		20C92B801618022B000B3D58 /* SectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionInfo.m; sourceTree = "<group>"; };
+		20C92B881618042D000B3D58 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteFromCircleViewController.h; sourceTree = "<group>"; };
+		20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteFromCircleViewController.m; sourceTree = "<group>"; };
 		20CF833816118B130075E647 /* PullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullableView.h; sourceTree = "<group>"; };
 		20CF833916118B130075E647 /* PullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullableView.m; sourceTree = "<group>"; };
 		20CF833B16118BA60075E647 /* StyledPullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPullableView.h; sourceTree = "<group>"; };
@@ -970,6 +983,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20C92B891618042D000B3D58 /* MessageUI.framework in Frameworks */,
 				2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */,
 				4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */,
 				4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */,
@@ -1103,6 +1117,10 @@
 				4F8257B515BD964E00760CE1 /* RestClient.m */,
 				4F6036DC15DD4DAD00C1BD4E /* SearchLocation.h */,
 				4F6036DB15DD4DAD00C1BD4E /* SearchLocation.m */,
+				20C92B7D1618022B000B3D58 /* SectionHeaderView.h */,
+				20C92B7E1618022B000B3D58 /* SectionHeaderView.m */,
+				20C92B7F1618022B000B3D58 /* SectionInfo.h */,
+				20C92B801618022B000B3D58 /* SectionInfo.m */,
 				4F3B3C8515D8F9600025F8DD /* SelectFriends.h */,
 				4F3B3C8615D8F9600025F8DD /* SelectFriends.m */,
 				4FB7A06715D19612001EB905 /* SettingsMaster.h */,
@@ -1197,6 +1215,7 @@
 		4F98A2BC15BB387D000B3124 = {
 			isa = PBXGroup;
 			children = (
+				20C92B881618042D000B3D58 /* MessageUI.framework */,
 				4F469CD115FD1CC4008341C2 /* Default@2x.png */,
 				4F469CCF15FD1CB5008341C2 /* Default.png */,
 				2063A1E115F3332100529CB2 /* QuartzCore.framework */,
@@ -1263,6 +1282,8 @@
 				20B656C515EF580600A441E9 /* EventListTableCell.h */,
 				20B656C615EF580600A441E9 /* EventListTableCell.m */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
+				20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */,
+				20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
@@ -1383,6 +1404,7 @@
 				4F4CA52B15C45351004234E5 /* cn_with_fb.png */,
 				4F4CA54115C45351004234E5 /* collapse_icon.png */,
 				4FE4261415C06FAD00A6B6A3 /* connect_w_fackbook.png */,
+				20B2901F16197A810056D5E2 /* cover_pic_default.png */,
 				4F4CA53B15C45351004234E5 /* decline_button_a.png */,
 				4F4CA53A15C45351004234E5 /* decline_button_h.png */,
 				4FE4261515C06FAD00A6B6A3 /* Default.png */,
@@ -1944,6 +1966,7 @@
 				20B5D570161319A6001105AF /* message_notify_icon.png in Resources */,
 				20B5D572161319B9001105AF /* notify_icon.png in Resources */,
 				20BFC311161707B000F76226 /* icon_facebook.png in Resources */,
+				20B2902016197A810056D5E2 /* cover_pic_default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2108,6 +2131,9 @@
 				B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */,
 				20CF833A16118B130075E647 /* PullableView.m in Sources */,
 				20CF833D16118BA60075E647 /* StyledPullableView.m in Sources */,
+				20C92B811618022B000B3D58 /* SectionHeaderView.m in Sources */,
+				20C92B821618022B000B3D58 /* SectionInfo.m in Sources */,
+				20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

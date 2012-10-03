@@ -19,4 +19,9 @@
 @property(nonatomic,retain) IBOutlet UITableView *blockTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *blockSearchBar;
 @property(nonatomic,retain) NSDictionary *downloadedImageDict;
+
+-(IBAction)cancel:(id)sender;
+-(IBAction)selectedUser:(id)sender;
+-(IBAction)selectAllpeople:(id)sender;
+
 @end

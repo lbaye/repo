@@ -16,6 +16,7 @@ NSMutableDictionary *userFriendslistIndex;
 NSMutableArray *eventListGlobalArray;
 NSMutableArray *friendListGlobalArray;
 NSMutableArray *circleListGlobalArray;
+NSMutableArray *circleListDetailGlobalArray;
 Event *globalEvent;
 Event *globalEditEvent;
 BOOL editFlag;

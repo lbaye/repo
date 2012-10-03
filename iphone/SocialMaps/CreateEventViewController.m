@@ -762,10 +762,16 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     }
     
     // Configure the cell...
-    cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+    if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
+    {
+        cell.circrcleName.text=@"Custom";
+    }
+    else 
+    {
+        cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+    }
     [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
 
-    customCell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
     [customCell.circrcleCheckbox addTarget:self action:@selector(handleCustomTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
     
     if (tableView==customTableView)

@@ -1,13 +1,13 @@
 //
-// BlockUnblockCircleViewController.m
-// SocialMaps
+//  InviteFromCircleViewController.m
+//  SocialMaps
 //
-// Created by Abdullah Md. Zubair on 9/20/12.
-// Copyright (c) 2012 Genweb2. All rights reserved.
+//  Created by Abdullah Md. Zubair on 9/30/12.
+//  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import "BlockUnblockCircleViewController.h"
+#import "InviteFromCircleViewController.h"
 #import "CircleListCheckBoxTableCell.h"
 #import "UserCircle.h"
 #import "AppDelegate.h"
@@ -18,7 +18,7 @@
 #import "CircleImageDownloader.h"
 #import "LocationItemPeople.h"
 
-@interface BlockUnblockCircleViewController ()
+@interface InviteFromCircleViewController ()
 - (void)startIconDownload:(LocationItemPeople *)people forIndexPath:(NSIndexPath *)indexPath;
 -(void)inviteButtonAction:(id)sender;
 -(void)messageButtonAction:(id)sender;
@@ -26,17 +26,17 @@
 -(IBAction)viewLocationButton:(id)sender;
 @end
 
-@implementation BlockUnblockCircleViewController
-@synthesize blockTableView,blockSearchBar,downloadedImageDict;
+@implementation InviteFromCircleViewController
+@synthesize inviteTableView,inviteSearchBar,downloadedImageDict;
 
 __strong NSMutableArray *filteredList, *peopleListArray, *selectedPeople;
 __strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
-NSString *searchText3=@"";
+NSString *searchText4=@"";
 AppDelegate *smAppDelegate;
 
 //rsvpFlag=
-bool searchFlag3=true;
+bool searchFlag4=true;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,13 +65,13 @@ bool searchFlag3=true;
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     NSLog(@"smAppDelegate.peopleList %@",smAppDelegate.peopleList);
     NSLog(@"smAppDelegate.peopleIndex %@",smAppDelegate.peopleIndex);
-
+    
     [super viewDidLoad];
-//    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
+    //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
     
     // Do any additional setup after loading the view.
 }
@@ -85,7 +85,7 @@ bool searchFlag3=true;
     // [smAppDelegate showActivityViewer:self.view];
     // [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start. %@",smAppDelegate);
-    [self.blockSearchBar setText:@""];
+    [self.inviteSearchBar setText:@""];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -95,38 +95,38 @@ bool searchFlag3=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
-    [self.blockTableView reloadData];
+    [self.inviteTableView reloadData];
     
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    [self.blockSearchBar resignFirstResponder];
+    [self.inviteSearchBar resignFirstResponder];
 }
 
 -(NSMutableArray *)loadDummyData
 {
-//    for (int i=0; i<[friendListGlobalArray count]; i++)
-//    {
-//        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//        UserFriends *aUserFriends=[[UserFriends alloc] init];
-//        aUserFriends=[friendListGlobalArray objectAtIndex:i];
-//        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
-//        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
-//        {
-//            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-//            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
-//        }
-//        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
-//        [pool drain];
-//    }
+    //    for (int i=0; i<[friendListGlobalArray count]; i++)
+    //    {
+    //        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+    //        UserFriends *aUserFriends=[[UserFriends alloc] init];
+    //        aUserFriends=[friendListGlobalArray objectAtIndex:i];
+    //        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
+    //        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
+    //        {
+    //            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
+    //            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
+    //        }
+    //        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
+    //        [pool drain];
+    //    }
     return smAppDelegate.peopleList;
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
+    
     friendListGlobalArray=[[notif object] mutableCopy];
     NSLog(@"GOT SERVICE DATA EVENT.. :D %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
@@ -134,7 +134,7 @@ bool searchFlag3=true;
     [self viewDidLoad];
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
-    [self.blockTableView reloadData];
+    [self.inviteTableView reloadData];
 }
 
 -(void)hideActivity
@@ -175,7 +175,7 @@ bool searchFlag3=true;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    static NSString *CellIdentifier = @"circleListTableCell";
+    //    static NSString *CellIdentifier = @"circleListTableCell";
     static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
     
@@ -183,13 +183,13 @@ bool searchFlag3=true;
     people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
-//    CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    //    CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     CircleListCheckBoxTableCell *cell1= [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell1 == nil)
     {
-            cell1 = [[CircleListCheckBoxTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault
-                     reuseIdentifier:CellIdentifier1];
+        cell1 = [[CircleListCheckBoxTableCell alloc]
+                 initWithStyle:UITableViewCellStyleDefault
+                 reuseIdentifier:CellIdentifier1];
     }
     
     // Configure the cell...    
@@ -217,12 +217,12 @@ bool searchFlag3=true;
         if (!people.userInfo.coverImage)
         {
             NSLog(@"!userFriends.userProfileImage");
-            if (self.blockTableView.dragging == NO && self.blockTableView.decelerating == NO)
+            if (self.inviteTableView.dragging == NO && self.inviteTableView.decelerating == NO)
             {
                 [self startIconDownload:people forIndexPath:indexPath];
                 NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
             }
-            else if(searchFlag3==true)
+            else if(searchFlag4==true)
             {
                 NSLog(@"search flag true start download");
                 [self startIconDownload:people forIndexPath:indexPath];
@@ -242,10 +242,12 @@ bool searchFlag3=true;
         {
             NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
             cell1.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+            cell1.inviteButton.hidden=NO;
         }
         else
         {
             cell1.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            cell1.inviteButton.hidden=YES;
         }
         
         if ([people.userInfo.friendshipStatus isEqualToString:@"friend"]) 
@@ -286,9 +288,9 @@ bool searchFlag3=true;
         [cell1.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.checkBoxButton addTarget:self action:@selector(checkBoxButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-
+        
     }
-
+    
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     return cell1;
 }
@@ -354,7 +356,7 @@ bool searchFlag3=true;
 {
     if ([filteredList count] > 0)
     {
-        NSArray *visiblePaths = [self.blockTableView indexPathsForVisibleRows];
+        NSArray *visiblePaths = [self.inviteTableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
             LocationItemPeople *people = [filteredList objectAtIndex:indexPath.row];
@@ -373,19 +375,19 @@ bool searchFlag3=true;
     CircleImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userID];
     if (iconDownloader != nil)
     {
-//        NSNumber *indx = [eventListIndex objectForKey:userID];
+        //        NSNumber *indx = [eventListIndex objectForKey:userID];
         LocationItemPeople *people = [peopleListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
         people.userInfo.coverImage = people.userInfo.coverImage;
         
-        CircleListTableCell *cell = (CircleListTableCell *)[self.blockTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        CircleListCheckBoxTableCell *cell1 = (CircleListCheckBoxTableCell*)[self.blockTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        CircleListTableCell *cell = (CircleListTableCell *)[self.inviteTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        CircleListCheckBoxTableCell *cell1 = (CircleListCheckBoxTableCell*)[self.inviteTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
         [downloadedImageDict setValue:iconDownloader.people.userInfo.coverImage forKey:userID];
         cell.profilePicImgView.image = iconDownloader.people.userInfo.coverImage;
         cell1.profilePicImgView.image = iconDownloader.people.userInfo.coverImage;
         //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
-        [self.blockTableView reloadData];
+        [self.inviteTableView reloadData];
     }
 }
 
@@ -401,7 +403,7 @@ bool searchFlag3=true;
 -(IBAction)selectAllpeople:(id)sender
 {
     selectedPeople =[filteredList mutableCopy];
-    [self.blockTableView reloadData];
+    [self.inviteTableView reloadData];
 }
 
 
@@ -433,23 +435,23 @@ bool searchFlag3=true;
     // If you wanted to display results as the user types
     // you would do that here.
     //[self loadFriendListsData]; TODO: commented this
-    searchText3=blockSearchBar.text;
+    searchText4=inviteSearchBar.text;
     
-    if ([searchText3 length]>0)
+    if ([searchText4 length]>0)
     {
         [self performSelector:@selector(searchResult) withObject:nil afterDelay:0.1];
-        searchFlag3=true;
-        [self.blockTableView reloadData];
-        NSLog(@"searchText %@",searchText3);
+        searchFlag4=true;
+        [self.inviteTableView reloadData];
+        NSLog(@"searchText %@",searchText4);
     }
     else
     {
-        searchText3=@"";
+        searchText4=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
         NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);
-        [self.blockTableView reloadData];
+        [self.inviteTableView reloadData];
     }
     
 }
@@ -460,7 +462,7 @@ bool searchFlag3=true;
     // focus is given to the UISearchBar
     // call our activate method so that we can do some
     // additional things when the UISearchBar shows.
-    searchText3=blockSearchBar.text;
+    searchText4=inviteSearchBar.text;
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
@@ -473,21 +475,21 @@ bool searchFlag3=true;
     // searchBarTextDidEndEditing is fired whenever the
     // UISearchBar loses focus
     // We don't need to do anything here.
-    [self.blockTableView reloadData];
-    [blockSearchBar resignFirstResponder];
+    [self.inviteTableView reloadData];
+    [inviteSearchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     // Clear the search text
     // Deactivate the UISearchBar
-    blockSearchBar.text=@"";
-    searchText3=@"";
+    inviteSearchBar.text=@"";
+    searchText4=@"";
     
     [filteredList removeAllObjects];
     filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
-    [self.blockTableView reloadData];
-    [blockSearchBar resignFirstResponder];
+    [self.inviteTableView reloadData];
+    [inviteSearchBar resignFirstResponder];
     NSLog(@"3");
 }
 
@@ -500,28 +502,28 @@ bool searchFlag3=true;
     // api that you are using to do the search
     
     NSLog(@"Search button clicked");
-    searchText3=blockSearchBar.text;
-    searchFlag3=false;
+    searchText4=inviteSearchBar.text;
+    searchFlag4=false;
     [self searchResult];
-    [blockSearchBar resignFirstResponder];
+    [inviteSearchBar resignFirstResponder];
 }
 
 -(void)searchResult
 {
-    searchText3 = blockSearchBar.text;
+    searchText4 = inviteSearchBar.text;
     NSLog(@"in search method..");
     [filteredList removeAllObjects];
     
-    if ([searchText3 isEqualToString:@""])
+    if ([searchText4 isEqualToString:@""])
     {
         NSLog(@"null string");
-        blockSearchBar.text=@"";
+        inviteSearchBar.text=@"";
         filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
     }
     else
         for (LocationItemPeople *sTemp in smAppDelegate.peopleList)
         {
-            NSRange titleResultsRange = [sTemp.itemName rangeOfString:searchText3 options:NSCaseInsensitiveSearch];	
+            NSRange titleResultsRange = [sTemp.itemName rangeOfString:searchText4 options:NSCaseInsensitiveSearch];	
             if (titleResultsRange.length > 0)
             {
                 [filteredList addObject:sTemp];
@@ -531,10 +533,10 @@ bool searchFlag3=true;
             {
             }
         }
-    searchFlag3=false;
+    searchFlag4=false;
     
     NSLog(@"filteredList %@ %d %d imageDownloadsInProgress: %@",filteredList,[filteredList count],[peopleListArray count], imageDownloadsInProgress);
-    [self.blockTableView reloadData];
+    [self.inviteTableView reloadData];
 }
 //searchbar delegate method end
 
@@ -546,7 +548,7 @@ bool searchFlag3=true;
 -(IBAction)backButton:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
-    [self.blockSearchBar resignFirstResponder];
+    [self.inviteSearchBar resignFirstResponder];
 }
 
 -(void)inviteButtonAction:(id)sender
@@ -561,7 +563,7 @@ bool searchFlag3=true;
 {
     NSLog(@"yesButton tag: %d",[sender tag]);
     CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
-    NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];
+    NSIndexPath *clickedButtonPath = [self.inviteTableView indexPathForCell:clickedCell];
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
     if ([selectedPeople containsObject:[filteredList objectAtIndex:[sender tag]]])
     {

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "ViewCircleListViewController.h"
 #import "UserCircle.h"
 #import "UserFriends.h"
@@ -15,6 +16,8 @@
 #import "CircleListTableCell.h"
 #import "CircleListCheckBoxTableCell.h"
 #import "CircleImageDownloader.h"
+#import "CustomCheckbox.h"
+#import "LocationItemPeople.h"
 
 @interface ViewCircleListViewController ()
 - (void)startIconDownload:(UserFriends *)userFriend forIndexPath:(NSIndexPath *)indexPath;
@@ -22,6 +25,8 @@
 
 @implementation ViewCircleListViewController
 @synthesize circleListTableView,circleSearchBar;
+@synthesize listPulldownMenu,listPulldown,downloadedImageDict;
+@synthesize listViewfilter;
 
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -31,6 +36,8 @@ AppDelegate         *smAppDelegate;
 
 //rsvpFlag=
 bool searchFlag2=true;
+bool showFB=true;
+bool showSM=true;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,19 +58,34 @@ bool searchFlag2=true;
     imageDownloadsInProgress=[[NSMutableDictionary alloc] init];
     [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
+    listPulldownMenu.backgroundColor = [UIColor clearColor];
     
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     
-    [super viewDidLoad];
-    UserFriends *aUserFriends=[[UserFriends alloc] init];
-//    EventList *eventList=[[EventList alloc] init];
-//    NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    NSString *lblStr = [NSString stringWithString:@"Show in list:"];
+    CGSize   strSize = [lblStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0f]];
+    
+    CGRect labelFrame = CGRectMake(2, (listViewfilter.frame.size.height-strSize.height)/2, strSize.width, strSize.height);
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    label.text = @"Show in list:";
+    label.font = [UIFont fontWithName:@"Helvetica" size:14.0f];
+    label.textColor = [UIColor blackColor];
+    label.backgroundColor = [UIColor clearColor];
+    [listViewfilter addSubview:label];
+    
+    CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
+    //    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:showFB],[NSNumber numberWithInt:showSM], nil] labels:[NSArray arrayWithObjects:@"Facebook",@"Social Maps", nil]];
+    chkBox.delegate = self;
+    [listViewfilter addSubview:chkBox];
+    [chkBox release];
+    
+    [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }
 
@@ -97,21 +119,65 @@ bool searchFlag2=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    for (int i=0; i<[friendListGlobalArray count]; i++)
-    {
-        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-        UserFriends *aUserFriends=[[UserFriends alloc] init];
-        aUserFriends=[friendListGlobalArray objectAtIndex:i];
-        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
-        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
-        {
-            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
-        }
-        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
-        [pool drain];
+    return smAppDelegate.peopleList;
+}
+
+- (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
+{
+    NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
+    switch (btnNum) {
+        case 0:
+            if (newState == 0)
+                showFB = FALSE;
+            else
+                showFB = TRUE;
+            break;
+        case 1:
+            if (newState == 0)
+                showSM = FALSE;
+            else
+                showSM = TRUE;
+            break;
+        case 2:
+            if (newState == 0)
+                smAppDelegate.showDeals = FALSE;
+            else
+                smAppDelegate.showDeals = TRUE;
+            break;
+        default:
+            break;
     }
-    return friendListGlobalArray;
+    [self getSortedDisplayList];
+    [circleListTableView reloadData];
+}
+
+- (void) getSortedDisplayList {
+    NSMutableArray *tempList = [[NSMutableArray alloc] init];
+    [filteredList removeAllObjects];
+    if (showFB == TRUE) 
+    {
+        for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+        {
+            if([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"fb"])
+            {
+                [tempList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
+            }
+        }
+    }
+    if (showSM == TRUE)
+    {
+        for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+        {
+            if(![((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.regMedia isEqualToString:@"fb"])
+            {
+                [tempList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
+            }
+        }
+    }
+    
+    // Sort by distance
+    NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
+    [filteredList addObjectsFromArray:sortedArray];
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
@@ -153,10 +219,50 @@ bool searchFlag2=true;
 {
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
+    controller.selectedIndex=0;
     controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 
 }
+
+-(IBAction)gotoInvites:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
+    controller.selectedIndex=0;
+    controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    
+}
+
+-(IBAction)gotoCircles:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
+    controller.selectedIndex=1;
+    controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
+}
+
+-(IBAction)gotoBlockUnBlock:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
+    controller.selectedIndex=2;
+    controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
+}
+
+- (IBAction)closePulldown:(id)sender {
+    listPulldownMenu.hidden = TRUE;
+}
+
+- (IBAction)showPulldownMenu:(id)sender {
+    listPulldownMenu.hidden = FALSE;
+}
+
 
 //table view delegate methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -176,29 +282,19 @@ bool searchFlag2=true;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"circleListTableCell";
-    static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
     
-    UserFriends *userFriend=[[UserFriends alloc] init];
-    userFriend = [filteredList objectAtIndex:indexPath.row];
+    LocationItemPeople *people=[[LocationItemPeople alloc] init];
+    people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
+
     
     CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    CircleListCheckBoxTableCell *cell1= [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell == nil)
     {
-        if (indexPath.row%2==1)
-        {
             cell = [[CircleListTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
                     reuseIdentifier:CellIdentifier];
-        }
-        else
-        {
-            cell1 = [[CircleListCheckBoxTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault 
-                     reuseIdentifier:CellIdentifier1];
-        }
     }
     
     // Configure the cell...
@@ -209,204 +305,79 @@ bool searchFlag2=true;
     cell.showOnMapButton.tag=indexPath.row;
     [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
     
-    cell1.checkBoxButton.tag=indexPath.row;
-    cell1.showOnMapButton.tag=indexPath.row;
+    cell.showOnMapButton.tag=indexPath.row;
     //    NSLog(@"event.myResponse: %@",event.myResponse);
-    NSLog(@"event: %@",userFriend);
-    
-    UIImage *eventPhoto = [UIImage imageNamed:@"1.png"];
     
     // Leave cells empty if there's no data yet
     if (nodeCount > 0)
 	{
         // Set up the cell...
-        
-        
-		NSString *cellValue;		
-        cellValue=userFriend.userName;
+        NSString *cellValue;	
+        cellValue=people.itemName;
         cell.firstNameLabel.text = cellValue;
-//        cell.addressLabel.text=userFriend.userAddress;
-//        cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",[userFriend.eventDistance doubleValue]];
-        
-        cell1.firstNameLabel.text = cellValue;
-//        cell1.addressLabel.text=event.eventAddress;
-//        cell1.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",[userFriend.eventDistance doubleValue]];
-        
-        
-        // Only load cached images; defer new downloads until scrolling ends
-        NSLog(@"nodeCount > 0 %@",userFriend.imageUrl);
-        if (!userFriend.userProfileImage)
+        cell.addressLabel.text=people.itemAddress;
+        cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",people.itemDistance];
+        cell.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        cell.regStsImgView.userInteractionEnabled=YES;
+        cell.regStsImgView.layer.borderWidth=1.0;
+        cell.regStsImgView.layer.masksToBounds = YES;
+        [cell.regStsImgView.layer setCornerRadius:5.0];
+        if ([people.userInfo.regMedia isEqualToString:@"fb"]) 
         {
-            NSLog(@"!userFriends.userProfileImage");
-            if (self.circleListTableView.dragging == NO && self.circleListTableView.decelerating == NO)
-            {
-                [self startIconDownload:userFriend forIndexPath:indexPath];
-                NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
-            }            
-            else if(searchFlag2==true)
-            {
-                NSLog(@"search flag true start download");
-                [self startIconDownload:userFriend forIndexPath:indexPath];
-            }
-            
-            NSLog(@"userFriends %@   %@",userFriend.userProfileImage,userFriend.imageUrl);
-            // if a download is deferred or in progress, return a placeholder image
-            cell.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];                
-        }
-        
-        if ([downloadedImageDict objectForKey:userFriend.userId])
-        {
-            cell.profilePicImgView.image=[downloadedImageDict objectForKey:userFriend.userId];                
-            cell1.profilePicImgView.image=[downloadedImageDict objectForKey:userFriend.userId];      
+            NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
+            cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+            cell.inviteButton.hidden=NO;
         }
         else
         {
-            cell.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];      
+            cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            cell.inviteButton.hidden=YES;
         }
         
-        //        else if ([[imageDownloadsInProgress objectForKey:event.eventID]isEqual:event.eventID]&&([imageDownloadsInProgress objectForKey:event.eventImage]!=NULL) ) 
-        //        {
-        //             EventImageDownloader *iconDownloader=[imageDownloadsInProgress objectForKey:event.eventID];
-        //            cell.eventImage.image = iconDownloader.event.eventImage;
-        //            cell1.eventImage.image = iconDownloader.event.eventImage;
-        //        }
-        //        else
-        //        {
-        //            cell.eventImage.image = event.eventImage;
-        //            cell1.eventImage.image=event.eventImage;                
-        //        }
+        if ([people.userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            cell.friendShipStatus.hidden=NO;
+        }
+        else
+        {
+            cell.friendShipStatus.hidden=YES;
+        }
+        cell.profilePicImgView.image=people.itemIcon;
+        cell.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        cell.profilePicImgView.userInteractionEnabled=YES;
+        cell.profilePicImgView.layer.borderWidth=1.0;
+        cell.profilePicImgView.layer.masksToBounds = YES;
+        cell.coverPicImgView.image=people.itemBg;
+        [cell.profilePicImgView.layer setCornerRadius:5.0];
+        [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+
     }
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     //    cell.eventImage.image = eventPhoto;
-    if (indexPath.row%2==0)
-    {
-        return cell;        
-    }
-    else
-    {
-        return cell1;
-    }
     return cell;
 }
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UserFriends *aUserFriends=[[UserFriends alloc] init];
-//    aUserFriends=[filteredList objectAtIndex:indexPath.row];
-//    if (indexPath.row%2==0)
-//    {
-//        return 122;
-//    }
-//    else
-//    {
-//        return 172;
-//    }
-//    return 122;
-//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    
-    //    [smAppDelegate showActivityViewer:self.view];
-//    RestClient *rc=[[RestClient alloc] init];
-//    Event *aEvent=[[Event alloc] init];
-//    aEvent=[filteredList objectAtIndex:indexPath.row];
-//    globalEvent=[[Event alloc] init];
-//    globalEvent=aEvent;
-//    NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-//    [self presentModalViewController:controller animated:YES];
-    
 }
 
 //Lazy loading method starts
 
-#pragma mark -
-#pragma mark Table cell image support
-
-- (void)startIconDownload:(UserFriends *)userFriends forIndexPath:(NSIndexPath *)indexPath
-{
-    CircleImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
-    if (iconDownloader == nil)
-    {
-        iconDownloader = [[CircleImageDownloader alloc] init];
-//        iconDownloader.userFriend = userFriends;
-        iconDownloader.indexPathInTableView = indexPath;
-        iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-        NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
-        [iconDownloader startDownload];
-        //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
-        NSLog(@"start downloads ... %@ %d",userFriends.userId, indexPath.row);
-        [iconDownloader release];   
-    }
-}
-
-// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
-- (void)loadImagesForOnscreenRows
-{
-    if ([filteredList count] > 0)
-    {
-        NSArray *visiblePaths = [self.circleListTableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths)
-        {
-            UserFriends *userFriend = [filteredList objectAtIndex:indexPath.row];
-            
-            if (!userFriend.userProfileImage) // avoid the app icon download if the app already has an icon
-            {
-                [self startIconDownload:userFriend forIndexPath:indexPath];
-            }
-        }
-    }
-}
-
-// called by our ImageDownloader when an icon is ready to be displayed
-- (void)appImageDidLoad:(NSString *)eventID
-{
-    CircleImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:eventID];
-    if (iconDownloader != nil)
-    {
-        NSNumber *indx = [eventListIndex objectForKey:eventID];
-        UserFriends *userFriend = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
-//        userFriend.userProfileImage = iconDownloader.userFriend.userProfileImage;
-//        
-//        CircleListTableCell *cell = (CircleListTableCell *)[self.circleListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-//        CircleListCheckBoxTableCell *cell1 = (CircleListCheckBoxTableCell*)[self.circleListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-//        
-//        // Display the newly loaded image
-//        [downloadedImageDict setValue:iconDownloader.userFriend.userProfileImage forKey:eventID];
-//        cell.profilePicImgView.image = iconDownloader.userFriend.userProfileImage;
-//        cell1.profilePicImgView.image = iconDownloader.userFriend.userProfileImage;
-        //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
-        [self.circleListTableView reloadData];
-    }
-}
-
-#pragma mark -
-#pragma mark Deferred image loading (UIScrollViewDelegate)
-
-// Load images for all onscreen rows when scrolling is finished
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (!decelerate)
-	{
-        [self loadImagesForOnscreenRows];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self loadImagesForOnscreenRows];
-}
-
 //Lazy loading method ends.
 
+-(void)viewLocationButton:(id)sender
+{}
+
+-(void)inviteButtonAction:(id)sender
+{}
+
+-(void)messageButtonAction:(id)sender
+{}
 
 //search bar delegate method starts
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText 
@@ -530,10 +501,6 @@ bool searchFlag2=true;
 {
     [self dismissModalViewControllerAnimated:YES];
     [self.circleSearchBar resignFirstResponder];
-}
-
--(IBAction)viewLocationButton:(id)sender
-{
 }
 
 - (void)setRsvpDone:(NSNotification *)notif
