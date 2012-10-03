@@ -224,6 +224,72 @@ ButtonClickCallbackData callBackData;
     
     [self.view setNeedsDisplay];
 }
+
+- (IBAction)actionSearchButton:(id)sender {
+    [self searchAnnotations];
+}
+
+- (IBAction)actionShowHideSearchBtn:(id)sender {
+    if (viewSearch.frame.origin.y > 44) {
+        [self moveSearchBarAnimation:-44];
+        searchBar.text = @"";
+        [self searchAnnotations];
+        pullDownView.openedCenter = CGPointMake(160, 120);
+        pullDownView.closedCenter = CGPointMake(160, -5);
+    } else {
+        [self moveSearchBarAnimation:44];
+        [searchBar becomeFirstResponder];
+        pullDownView.openedCenter = CGPointMake(160, 120 + 44);
+        pullDownView.closedCenter = CGPointMake(160, -5 + 44);
+    }
+}
+
+-(void)moveSearchBarAnimation:(int)moveby
+{
+    CGRect pullDownViewFrame = pullDownView.frame;
+    pullDownViewFrame.origin.y += moveby;
+    CGRect searchBarFrame = viewSearch.frame;
+    searchBarFrame.origin.y += moveby;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3];    
+    [viewSearch setFrame:searchBarFrame];    
+    [pullDownView setFrame:pullDownViewFrame];  
+    [UIView commitAnimations];    
+}
+
+- (void) searchAnnotations
+{
+    for (id<MKAnnotation> annotation in _mapView.annotations) {
+        [_mapView removeAnnotation:annotation];
+    }
+    
+    if([searchBar.text length] > 0) {
+        [copySearchAnnotationList removeAllObjects];
+        NSString *searchText = searchBar.text;
+        
+        for (LocationItem *sTemp in smAppDelegate.displayList) {
+            LocationItem *info = (LocationItem*)sTemp;
+            NSRange titleResultsRange = [info.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            if (titleResultsRange.length > 0)
+                [copySearchAnnotationList addObject:sTemp];
+        }
+        
+        for (int i=0; i < copySearchAnnotationList.count; i++) {
+            LocationItem *anno = (LocationItem*) [copySearchAnnotationList objectAtIndex:i];
+            [_mapView addAnnotation:anno];
+        }
+    } else {
+        for (int i=0; i < smAppDelegate.displayList.count; i++) {
+            LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
+            [_mapView addAnnotation:anno];
+        }
+    }
+    
+    [searchBar resignFirstResponder];
+}
+
 - (void) showAnnotationDetailView:(id <MKAnnotation>) anno {
 
     selectedAnno = anno;
@@ -540,6 +606,10 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
     }
 
+    [self initPullView];
+    pullDownView.hidden = YES;
+    copySearchAnnotationList = [[NSMutableArray alloc] init];
+
 }
 /*
 - (id)initWithCoder:(NSCoder *)decoder
@@ -641,6 +711,20 @@ ButtonClickCallbackData callBackData;
     [self setSelSavedFilter:nil];
     [self setSelectedFilter:nil];
     [self setMapPullupMenu:nil];
+    [buttonListView release];
+    buttonListView = nil;
+    [buttonProfileView release];
+    buttonProfileView = nil;
+    [buttonMapView release];
+    buttonMapView = nil;
+    [imageViewSliderOpenClose release];
+    imageViewSliderOpenClose = nil;
+    [viewNotification release];
+    viewNotification = nil;
+    [viewSearch release];
+    viewSearch = nil;
+    [searchBar release];
+    searchBar = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -674,6 +758,10 @@ ButtonClickCallbackData callBackData;
         [_mapView setRegion:adjustedRegion animated:YES];
         [_mapView setCenterCoordinate:zoomLocation animated:YES];
     }
+    
+    if (viewSearch.frame.origin.y > 44) {
+        [self searchAnnotations];
+    }
 }
 
 
@@ -701,7 +789,16 @@ ButtonClickCallbackData callBackData;
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
-//    [self initPullView];
+   //[self initPullView];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //[self initPullView];
+    pullDownView.hidden = NO;
+    //[self.view bringSubviewToFront:viewSearch];
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
@@ -796,6 +893,7 @@ ButtonClickCallbackData callBackData;
 {
 //.   [imageDownloadsInProgress release];
 //    [imageDownloadsInProgressCopy release];
+    [copySearchAnnotationList release];
     [_mapView release];
     [_mapView release];
     [_mapPulldown release];
@@ -812,6 +910,13 @@ ButtonClickCallbackData callBackData;
     [_selSavedFilter release];
     [_selectedFilter release];
     [_mapPullupMenu release];
+    [buttonListView release];
+    [buttonProfileView release];
+    [buttonMapView release];
+    [imageViewSliderOpenClose release];
+    [viewNotification release];
+    [viewSearch release];
+    [searchBar release];
     [super dealloc];
 }
 
@@ -1066,8 +1171,11 @@ ButtonClickCallbackData callBackData;
 //Lazy loading method ends.
 
 //search bar delegate method starts
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText 
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText 
 {
+    if ([theSearchBar isEqual:searchBar]) {
+        return;
+    }
     // We don't want to do anything until the user clicks 
     // the 'Search' button.
     // If you wanted to display results as the user types 
@@ -1093,7 +1201,11 @@ ButtonClickCallbackData callBackData;
     
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+
+    if ([theSearchBar isEqual:searchBar]) {
+        return;
+    }
     // searchBarTextDidBeginEditing is called whenever 
     // focus is given to the UISearchBar
     // call our activate method so that we can do some 
@@ -1106,8 +1218,11 @@ ButtonClickCallbackData callBackData;
     NSLog(@"2");    
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
+- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar 
 {
+    if ([theSearchBar isEqual:searchBar]) {
+        return;
+    }
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
@@ -1129,7 +1244,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"3");
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
 {
     // Do the search and show the results in tableview
     // Deactivate the UISearchBar
@@ -1138,11 +1253,18 @@ ButtonClickCallbackData callBackData;
     // SomeService is just a dummy class representing some 
     // api that you are using to do the search
     
+    if ([theSearchBar isEqual:searchBar]) {
+        [self searchAnnotations];
+        [searchBar resignFirstResponder];
+        return;
+    }
+    
     NSLog(@"Search button clicked");
     searchText=friendSearchBar.text;
     searchFlag=false;
     [self searchResult];
-    [friendSearchBar resignFirstResponder];    
+    [friendSearchBar resignFirstResponder];   
+    
 }
 
 -(void)searchResult
@@ -1478,34 +1600,81 @@ ButtonClickCallbackData callBackData;
 
 -(void)initPullView
 {
+    //_mapPulldown.hidden = NO;
+    
     CGFloat xOffset = 0;
-    pullUpView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
-    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height);
-    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height + 200);
+    pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
+    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
+    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height);
     pullUpView.center = pullUpView.closedCenter;
     pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
     pullUpView.delegate = self;
+    //pullUpView.backgroundColor = [UIColor blueColor];
     
-    [self.view addSubview:pullUpView];
     [pullUpView addSubview:_mapPullupMenu];
+    _mapPullupMenu.userInteractionEnabled = NO;
+    [pullUpView addSubview:buttonListView];
+    [pullUpView addSubview:buttonMapView];
+    [pullUpView addSubview:buttonProfileView];
+    _mapPullupMenu.hidden = NO;
+    _mapPullupMenu.frame = CGRectMake(0, 0, _mapPullupMenu.frame.size.width, _mapPullupMenu.frame.size.height);
+    [self.view addSubview:pullUpView];
     
-    pullDownView = [[StyledPullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 460)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset,230);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, -200);
+    
+    UIImageView *imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+    [pullUpView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullUpView bringSubviewToFront:pullUpView.handleView];
+    imageViewFooterSliderOpen.tag = 420;    
+    [imageViewFooterSliderOpen release];
+    
+    
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 150)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5);
     pullDownView.center = pullDownView.closedCenter;
     
+    pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
+    pullDownView.delegate = self;
+    //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
+    
+    //pullDownView.backgroundColor = [UIColor redColor];
+    
     [self.view addSubview:pullDownView];
+    [self.view bringSubviewToFront:viewSearch];
+    [self.view bringSubviewToFront:viewNotification];
     [pullDownView addSubview:_mapPulldown];
-
+    [self.view bringSubviewToFront:viewNotification];
+    _mapPulldown.userInteractionEnabled = NO;
+    for (UIView *view in [_mapPulldown subviews]) {
+        //if ([view isKindOfClass:[UIButton class]]) {
+            [pullDownView addSubview:view];
+        //}
+    }
+    _mapPulldown.hidden = NO;
+    _mapPulldown.frame = CGRectMake(0, 0, _mapPulldown.frame.size.width, _mapPulldown.frame.size.height);
+    
+    imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"slide_close_bar.png"];
+    [pullDownView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullDownView bringSubviewToFront:pullDownView.handleView];
+    imageViewFooterSliderOpen.tag = 840;    
+    [imageViewFooterSliderOpen release];
+     
 }
 
 - (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
     if (opened)
     {
         NSLog(@"Now I'm open!");
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
     }
     else
     {
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
+        
         NSLog(@"Now I'm closed, pull me up again!");
     }
 }
@@ -1553,6 +1722,11 @@ ButtonClickCallbackData callBackData;
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"In gotListings");
+    
+    if (viewSearch.frame.origin.y > 44) {
+        return;
+    }
+    
     //[smAppDelegate.peopleList removeAllObjects];
 
     SearchLocation * listings = [notif object];

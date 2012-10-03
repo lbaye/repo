@@ -165,6 +165,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReplyTableView = nil;
     [msgReplyCreationView release];
     msgReplyCreationView = nil;
+    [viewSearch release];
+    viewSearch = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -1056,6 +1058,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [textViewReplyMsg release];
     [messageReplyTableView release];
     [msgReplyCreationView release];
+    [viewSearch release];
     [super dealloc];
 }
 
@@ -1320,12 +1323,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         {
             [view removeFromSuperview];
         }
-        else if([view isKindOfClass :[UIImageView class]])
-        {
-            // [view removeFromSuperview];
-        }
     }
-    frndListScrollView.contentSize=CGSizeMake([filteredList count]*65, 65);
+    
+    frndListScrollView.contentSize = CGSizeMake([filteredList count]*65 - 10, 65);
     
     for(int i=0; i<[filteredList count];i++)               
     {
@@ -1462,6 +1462,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     
+}
+
+- (IBAction)actionAddMoreButton:(id)sender {
+    [self.view addSubview:viewSearch];
+    messageRepiesView.userInteractionEnabled = NO;
 }
 
 @end

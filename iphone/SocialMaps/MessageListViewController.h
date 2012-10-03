@@ -50,6 +50,7 @@
     
     NotifMessage *selectedMessage;
     IBOutlet UILabel *totalNotifCount;
+    IBOutlet UIView *viewSearch;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
@@ -72,5 +73,6 @@
 -(void)loadDummydata;
 
 -(IBAction)gotoNotification:(id)sender;
+- (IBAction)actionAddMoreButton:(id)sender;
 
 @end

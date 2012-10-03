@@ -12,6 +12,8 @@
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
 
+@class OverlayViewController;
+
 #define SECTION_HEADER_HEIGHT   44
 
 @interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate> {
@@ -19,6 +21,13 @@
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;
     IBOutlet UILabel *totalNotifCount;
+    BOOL						searching;
+    OverlayViewController		*ovController;
+    BOOL						letUserSelectRow;
+    NSMutableArray				*copyListOfItems;
+    IBOutlet UISearchBar *searchBar;
+    IBOutlet UIView *viewSearch;
+    
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
@@ -44,5 +53,8 @@
 - (void) getSortedDisplayList;
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row;
 -(IBAction)gotoProfile:(id)sender;
+- (void) doneSearching_Clicked:(id)sender;
+- (IBAction)actionSearchButton:(id)sender;
+- (IBAction)actionSearchOkButton:(id)sender;
 
 @end
