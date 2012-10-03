@@ -616,7 +616,6 @@ bool searchFlag4=true;
 
 -(void)messageButtonAction:(id)sender
 {
-    [self.view addSubview:msgView];
 }
 
 -(void)checkBoxButtonAction:(id)sender

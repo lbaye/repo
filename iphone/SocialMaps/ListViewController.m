@@ -13,6 +13,7 @@
 #import "NotificationController.h"
 #import "UtilityClass.h"
 #import "UserBasicProfileViewController.h"
+#import "OverlayViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -84,6 +85,8 @@
     itemList.delegate = self;
     itemList.dataSource = self;
     [self.view sendSubviewToBack:listView];
+    
+    copyListOfItems = [[NSMutableArray alloc] init];
 }
 
 - (void) getSortedDisplayList {
@@ -110,6 +113,10 @@
     [self setListPulldown:nil];
     [self setItemList:nil];
     [self setListNotifCount:nil];
+    [searchBar release];
+    searchBar = nil;
+    [viewSearch release];
+    viewSearch = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -190,11 +197,13 @@
     [listPullupMenu release];
     [listPulldownMenu release];
     [listViewfilter release];
-    
+    [ovController release];
     [listView release];
     [listPulldown release];
     [itemList release];
     [listNotifCount release];
+    [searchBar release];
+    [viewSearch release];
     [super dealloc];
 }
 
@@ -203,6 +212,8 @@
 {
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
+    if(searching) 
+		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
     anItem.delegate = self;
     UITableViewCell * cell = [anItem getTableViewCell:tv sender:self];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -219,8 +230,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"displayList count %d", [smAppDelegate.displayList count]);
-    return [smAppDelegate.displayList count];
+    return (searching) ? [copyListOfItems count] :[smAppDelegate.displayList count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -269,6 +279,9 @@
             break;
     }
     [self getSortedDisplayList];
+    if (viewSearch.frame.origin.y > 44) {
+        [self searchTableView];
+    }
     [itemList reloadData];
 }
 
@@ -288,6 +301,9 @@
             //[controller release];
             
             LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:row];
+            if(searching)
+                locItem = (LocationItem*)[copyListOfItems objectAtIndex:row];
+            
             [self performSegueWithIdentifier:@"segueShowDetailAnno" sender:locItem];
             
             break;
@@ -295,6 +311,187 @@
         default:
             break;
     }
+}
+
+#pragma mark -
+#pragma mark Search Bar 
+
+- (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+	
+	//This method is called again when the user clicks back from teh detail view.
+	//So the overlay is displayed on the results, which is something we do not want to happen.
+	if(searching)
+		return;
+	
+    if (itemList.dragging) {
+        return;
+    }
+    
+	//Add the overlay view.
+	if(ovController == nil)
+		ovController = [[OverlayViewController alloc] initWithNibName:@"OverlayView" bundle:[NSBundle mainBundle]];
+	
+	CGFloat yaxis = 87;//self.navigationController.navigationBar.frame.size.height;
+	CGFloat width = self.view.frame.size.width;
+	CGFloat height = self.view.frame.size.height;
+	
+	//Parameters x = origion on x-axis, y = origon on y-axis.
+	CGRect frame = CGRectMake(0, yaxis, width, height);
+	ovController.view.frame = frame;	
+	ovController.view.backgroundColor = [UIColor grayColor];
+	ovController.view.alpha = 0.5;
+	
+	ovController.rvController = self;
+	
+	//////////////[self.view insertSubview:ovController.view aboveSubview:itemList];
+	
+	//searching = YES;
+	/////////letUserSelectRow = NO;
+	////////itemList.scrollEnabled = NO;
+	
+    /*
+	self.navigationItem.rightBarButtonItem	= [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)] autorelease];
+	self.navigationItem.leftBarButtonItem.enabled = NO;
+    */
+}
+/*
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+	
+	//Remove all objects first.
+	//[copyListOfItems removeAllObjects];
+	
+	if([searchText length] > 0) {
+		
+		[ovController.view removeFromSuperview];
+		searching = YES;
+		letUserSelectRow = YES;
+		itemList.scrollEnabled = YES;
+		[self searchTableView];
+	}
+	else {
+		
+		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
+		
+		searching = NO;
+		/////////letUserSelectRow = NO;
+		/////////itemList.scrollEnabled = NO;
+	}
+	
+	[itemList reloadData];
+}
+*/
+- (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
+	
+    [searchBar resignFirstResponder];
+    
+    if([searchBar.text length] > 0) {
+		
+		[ovController.view removeFromSuperview];
+		searching = YES;
+		letUserSelectRow = YES;
+		itemList.scrollEnabled = YES;
+		[self searchTableView];
+	}
+	else {
+		
+		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
+		
+		searching = NO;
+		/////////letUserSelectRow = NO;
+		/////////itemList.scrollEnabled = NO;
+	}
+	
+	[itemList reloadData];
+}
+
+- (void) searchTableView 
+{
+	NSString *searchText = searchBar.text;
+    /*
+    if ([searchText isEqualToString:@""]) {
+        return;
+    }
+    */
+    [copyListOfItems removeAllObjects];
+	for (LocationItem *sTemp in smAppDelegate.displayList)
+	{
+		LocationItem *info = (LocationItem*)sTemp;
+		NSRange titleResultsRange = [info.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
+		
+		if (titleResultsRange.length > 0)
+			[copyListOfItems addObject:sTemp];
+	}
+}
+
+-(void)moveSearchBarAnimation:(int)moveby
+{
+    if (moveby > 0) {
+        itemList.contentInset = UIEdgeInsetsMake(43,0.0,0,0.0);
+    } else {
+        itemList.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
+    }
+    
+    //itemList.contentOffset = CGPointZero;
+    CGRect viewFrame = viewSearch.frame;
+    viewFrame.origin.y += moveby;
+    CGRect listPullDownFrame = listPulldown.frame;
+    listPullDownFrame.origin.y += moveby;
+    CGRect listPullDownMenuFrame = listPulldownMenu.frame;
+    listPullDownMenuFrame.origin.y += moveby;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3];    
+    [viewSearch setFrame:viewFrame];  
+    [listPulldown setFrame:listPullDownFrame]; 
+    [listPulldownMenu setFrame:listPullDownMenuFrame]; 
+    [UIView commitAnimations];    
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)theSearchBar
+{
+    //[self doneSearching_Clicked:nil];
+    [self actionSearchButton:nil];
+}
+
+- (void) doneSearching_Clicked:(id)sender {
+	
+	searchBar.text = @"";
+	[searchBar resignFirstResponder];
+	
+	letUserSelectRow = YES;
+	searching = NO;
+    /*
+	self.navigationItem.rightBarButtonItem	= [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(actionCreateNewFolder:)] autorelease];
+	self.navigationItem.leftBarButtonItem.enabled = YES;
+     */
+	itemList.scrollEnabled = YES;
+	
+	[ovController.view removeFromSuperview];
+	[ovController release];
+	ovController = nil;
+	
+	[itemList reloadData];
+    
+    if (sender) {
+        [self actionSearchButton:nil];
+    }
+
+}
+
+- (IBAction)actionSearchButton:(id)sender {
+    if (viewSearch.frame.origin.y > 44) {
+        [self moveSearchBarAnimation:-44];
+        [self doneSearching_Clicked:nil];
+    } else {
+        [self moveSearchBarAnimation:44];
+        //listPulldownMenu.hidden = TRUE;
+        [searchBar becomeFirstResponder];
+    }
+    
+}
+
+- (IBAction)actionSearchOkButton:(id)sender {
+    [self searchBarSearchButtonClicked:searchBar];
 }
 
 @end
