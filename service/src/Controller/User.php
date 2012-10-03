@@ -745,4 +745,42 @@ class User extends Base
         return $this->response;
     }
 
+    /**
+     * PUT  /me/circles/friends/:id
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addFriendToMultipleCircle($id)
+    {
+         $this->_ensureLoggedIn();
+
+        try {
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->addFriendToMultipleCircle($id, $circleData);
+
+            $allCircles = $this->user->getCircles();
+
+            $updateResult = array();
+            foreach ($allCircles as $circle) {
+
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $updateResult[] = $friends;
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
+        return $this->response;
+    }
+
 }

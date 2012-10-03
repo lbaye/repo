@@ -29,3 +29,9 @@ delete_circle:
   defaults: { _controller: Controller\User::deleteCustomCircle}
   requirements: { _method: DELETE}
 
+add_friend_to_multiple_circle:
+  pattern: /me/circles/friend/{id}
+  defaults: { _controller: Controller\User::addFriendToMultipleCircle}
+  requirements: { _method: PUT}
+
+
