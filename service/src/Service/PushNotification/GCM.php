@@ -27,9 +27,11 @@ class GCM extends Notifier
     private function _createPushData($data)
     {
         $pushData = array(
-            'message' => $data['title'],
+            'message'    => $data['title'],
+            'badge'      => $data['badge'],
+            'tabCounts'  => $data['tabCounts'],
             'objectType' => $data['objectType'],
-            'objectId' => isset($data['objectId']) ? $data['objectId'] : null
+            'objectId'   => isset($data['objectId']) ? $data['objectId'] : null
         );
 
         return $pushData;
