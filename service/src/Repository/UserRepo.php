@@ -861,4 +861,46 @@ class UserRepo extends Base
 
         return true;
     }
+
+    public function addFriendToMultipleCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+
+        $user = $this->_trimInvalidUsers(array($id));
+        if (!empty($data['circles'])) {
+
+            foreach ($circles as $circle) {
+
+                if ($circle->getType() == 'system') {
+
+                throw new \InvalidArgumentException('Invalid request', 406);
+              }
+                foreach ($data['circles'] AS $circleId) {
+
+                    if ($circle->getId() == $circleId) {
+
+                        $friends = (array_unique(array_merge($circle->getFriends(), $user)));
+
+                        foreach ($friends as $friend) {
+                            $friendId = $this->find($friend);
+                            $circle->addFriend($friendId);
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+
+    }
 }
