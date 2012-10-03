@@ -163,6 +163,7 @@ NSString *userID;
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [rc createCircle:@"Auth-Token" :smAppDelegate.authToken :userCircle];
+        circleNameTextField.text=@"";
         [circleCreateView removeFromSuperview];
     }
 }
@@ -649,7 +650,7 @@ NSString *userID;
 //    [smAppDelegate.window setUserInteractionEnabled:YES];
 //    [self.circleTableView reloadData];
 //    [self.view setNeedsDisplay];
-    userCircle_=circleListDetailGlobalArray;
+    self.userCircle=circleListDetailGlobalArray;
     [self viewWillAppear:NO];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
@@ -662,15 +663,20 @@ NSString *userID;
 
 - (void)createCircleDone:(NSNotification *)notif
 {
-    userCircle_=circleListDetailGlobalArray;
+    self.userCircle=circleListDetailGlobalArray;
     [self viewWillAppear:NO];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    [self.circleTableView reloadData];
     [self.view setNeedsDisplay];
+    openSectionIndex_ = NSNotFound;
+    [self.circleTableView reloadData];
     [self.circleSelectTableView reloadData];
-    NSLog(@"self.circleSelectTableView %@",self.circleSelectTableView);
-    [self.circleCreateView setNeedsDisplay]; 
+    NSLog(@"self.circleSelectTableView %@",circleListDetailGlobalArray);
+    [self.circleCreateView setNeedsDisplay];    
+    NSRange range = NSMakeRange(0, [circleListDetailGlobalArray count]-1);
+    NSIndexSet *section = [NSIndexSet indexSetWithIndexesInRange:range];                                     
+    [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+ 
 }
 
 - (void)updateCircleDone:(NSNotification *)notif
@@ -690,19 +696,23 @@ NSString *userID;
     //    [smAppDelegate.window setUserInteractionEnabled:YES];
     //    [self.circleTableView reloadData];
     //    [self.view setNeedsDisplay];
-    NSRange range = NSMakeRange(0, [circleListDetailGlobalArray count]-1);
-    NSIndexSet *section = [NSIndexSet indexSetWithIndexesInRange:range];                                     
-    [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
-    openSectionIndex_ = NSNotFound;
-    userCircle_=circleListDetailGlobalArray;
+    self.userCircle=circleListDetailGlobalArray;
     [self viewWillAppear:NO];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    [self.circleTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
     [self.view setNeedsDisplay];
+    openSectionIndex_ = NSNotFound;
+    [self.circleTableView reloadData];
     [self.circleSelectTableView reloadData];
-    NSLog(@"self.circleSelectTableView %@",self.circleSelectTableView);
-    [self.circleCreateView setNeedsDisplay]; 
+    NSLog(@"self.circleSelectTableView %@",circleListDetailGlobalArray);
+    [self.circleCreateView setNeedsDisplay];    
+    NSRange range = NSMakeRange(0, [circleListDetailGlobalArray count]-1);
+    NSIndexSet *section = [NSIndexSet indexSetWithIndexesInRange:range];                                     
+    [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+    [self.circleTableView beginUpdates];
+    [self.circleTableView endUpdates];
+//    [self.circleTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    [self.circleTableView  performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
 }
 
 
