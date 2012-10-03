@@ -13,4 +13,11 @@
 @synthesize userName;
 @synthesize imageUrl;
 @synthesize userProfileImage;
+@synthesize distance;
+@synthesize coverImageUrl;
+@synthesize coverImage;
+@synthesize address;
+@synthesize statusMsg;
+@synthesize regMedia;
+
 @end

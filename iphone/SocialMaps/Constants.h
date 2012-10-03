@@ -40,6 +40,9 @@ extern NSString * const NOTIF_UPDATE_MEET_UP_REQUEST_DONE;
 extern NSString * const NOTIF_PUSH_NOTIFICATION_RECEIVED;
 extern NSString * const NOTIF_SET_MESSAGE_STATUS_DONE;
 extern NSString * const NOTIF_SEND_FRIEND_REQUEST_DONE;
+extern NSString * const NOTIF_GET_ALL_CIRCLES_DONE;
+extern NSString * const NOTIF_CREATE_CIRCLE_DONE;
+extern NSString * const NOTIF_UPDATE_CIRCLE_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

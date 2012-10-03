@@ -77,6 +77,12 @@
                 NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
                 frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
                 frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                frnd.distance = [[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil] doubleValue];
+                frnd.coverImageUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+                frnd.address =[NSString stringWithFormat:@"%@, %@",[self getNestedKeyVal:item key1:@"address" key2:@"street" key3:nil],[self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil]];
+                frnd.statusMsg = [self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                frnd.regMedia = [self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
+
                 [frndList addObject:frnd];
                 NSLog(@"frnd.userId: %@",frnd.userId);
             }
@@ -4714,6 +4720,299 @@
      }];
     
     //[request setDelegate:self];
+    [request startAsynchronous];
+}
+
+//getting all circles from here
+-(void) getAllCircles:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/circles",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    UserCircle *platform = [[UserCircle alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+                if ([[self getNestedKeyVal:item key1:@"type" key2:nil key3:nil] caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                {
+                    circle.type = CircleTypeSystem;
+                }
+                else
+                {
+                    circle.type = CircleTypeCustom;
+                }
+
+//                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
+//                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+                for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
+                {
+                    UserFriends *userFrnd=[[UserFriends alloc] init];
+                    userFrnd.userName=[self getNestedKeyVal:frndDic key1:@"firstName" key2:nil key3:nil];
+                    userFrnd.userId=[self getNestedKeyVal:frndDic key1:@"id" key2:nil key3:nil];
+                    userFrnd.imageUrl=[self getNestedKeyVal:frndDic key1:@"avatar" key2:nil key3:nil];
+                    userFrnd.distance=[[self getNestedKeyVal:frndDic key1:@"distance" key2:nil key3:nil] doubleValue];
+                    userFrnd.coverImageUrl=[self getNestedKeyVal:frndDic key1:@"coverPhoto" key2:nil key3:nil];
+                    userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
+                    userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
+                    userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    [userFrnds addObject:userFrnd];
+                }
+                circle.friends=userFrnds;
+                [circleList addObject:circle];        
+            }
+            circleListDetailGlobalArray=circleList;
+            
+            NSLog(@"getPlatforms response: %@",jsonObjects);    
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:circleList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getPlatForm");
+    [request startAsynchronous];
+    
+}
+
+-(void) createCircle:(NSString *)authToken:(NSString *)authTokenValue:(UserCircle *)userCircle
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/circles",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:userCircle.circleName forKey:@"name"];
+    for (int i=0; i<[userCircle.friends count]; i++)
+    {
+        [request addPostValue:((UserFriends *)[userCircle.friends objectAtIndex:i]).userId forKey:@"friends[]"];
+    }
+    
+     // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+                
+                if ([[self getNestedKeyVal:item key1:@"type" key2:nil key3:nil] caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                {
+                    circle.type = CircleTypeSystem;
+                }
+                else
+                {
+                    circle.type = CircleTypeCustom;
+                }
+                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
+                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+                for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
+                {
+                    UserFriends *userFrnd=[[UserFriends alloc] init];
+                    userFrnd.userName=[self getNestedKeyVal:frndDic key1:@"firstName" key2:nil key3:nil];
+                    userFrnd.userId=[self getNestedKeyVal:frndDic key1:@"id" key2:nil key3:nil];
+                    userFrnd.imageUrl=[self getNestedKeyVal:frndDic key1:@"avatar" key2:nil key3:nil];
+                    userFrnd.distance=[[self getNestedKeyVal:frndDic key1:@"distance" key2:nil key3:nil] doubleValue];
+                    userFrnd.coverImageUrl=[self getNestedKeyVal:frndDic key1:@"coverPhoto" key2:nil key3:nil];
+                    userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
+                    userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
+                    userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    [userFrnds addObject:userFrnd];
+                }
+                circle.friends=userFrnds;
+                [circleList addObject:circle];        
+            }
+            circleListDetailGlobalArray=circleList;
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_CIRCLE_DONE object:circleList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_CIRCLE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_CIRCLE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void) updateCircle:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)friendId:(NSMutableArray *)userCircleArr
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/circles/friend/%@",WS_URL,friendId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    NSLog(@"friend ID: %@",friendId);
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    for (int i=0; i<[userCircleArr count]; i++)
+    {
+        UserCircle *circle=[userCircleArr objectAtIndex:i];
+        NSLog(@"in service circle.circleID: %@",circle.circleID);
+        [request addPostValue:circle.circleID forKey:@"circles[]"];
+    }
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+                if ([[self getNestedKeyVal:item key1:@"type" key2:nil key3:nil] caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                {
+                    circle.type = CircleTypeSystem;
+                }
+                else
+                {
+                    circle.type = CircleTypeCustom;
+                }
+
+                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
+                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+                for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
+                {
+                    UserFriends *userFrnd=[[UserFriends alloc] init];
+                    userFrnd.userName=[self getNestedKeyVal:frndDic key1:@"firstName" key2:nil key3:nil];
+                    userFrnd.userId=[self getNestedKeyVal:frndDic key1:@"id" key2:nil key3:nil];
+                    userFrnd.imageUrl=[self getNestedKeyVal:frndDic key1:@"avatar" key2:nil key3:nil];
+                    userFrnd.distance=[[self getNestedKeyVal:frndDic key1:@"distance" key2:nil key3:nil] doubleValue];
+                    userFrnd.coverImageUrl=[self getNestedKeyVal:frndDic key1:@"coverPhoto" key2:nil key3:nil];
+                    userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
+                    userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
+                    userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    [userFrnds addObject:userFrnd];
+                }
+                circle.friends=userFrnds;
+                [circleList addObject:circle];        
+            }
+            circleListDetailGlobalArray=circleList;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_CIRCLE_DONE object:circleList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_CIRCLE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_CIRCLE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 

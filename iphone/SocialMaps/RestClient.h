@@ -19,6 +19,7 @@
 #import "ShareLocation.h"
 #import "Geolocation.h"
 #import "Event.h"
+#import "UserCircle.h"
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
@@ -74,5 +75,8 @@
 -(void)setMessageStatus:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId status:(NSString*)status;
 - (void) updateMeetUpRequest:(NSString*)meetUpId response:(NSString*)response authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) setPushNotificationSettings:(NSString*)deviceToken authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+-(void) getAllCircles:(NSString *)authToken:(NSString *)authTokenValue;
+-(void) createCircle:(NSString *)authToken:(NSString *)authTokenValue:(UserCircle *)userCircle;
+-(void) updateCircle:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)friendId:(NSMutableArray *)userCircleArr;
 
 @end

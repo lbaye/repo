@@ -14,6 +14,7 @@ extern NSMutableDictionary *userFriendslistIndex;
 extern NSMutableArray *eventListGlobalArray;
 extern NSMutableArray *friendListGlobalArray;
 extern NSMutableArray *circleListGlobalArray;
+extern NSMutableArray *circleListDetailGlobalArray;
 extern Event *globalEvent;
 extern Event *globalEditEvent;
 extern BOOL editFlag;
