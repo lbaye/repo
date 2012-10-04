@@ -116,6 +116,11 @@ DDAnnotation *annotation;
     
     self.currentAddress = @"";
     selectedPlaceIndex = 0;
+    
+    NSArray *subviews = [friendSearchbar subviews];
+    UIButton *cancelButton = [subviews objectAtIndex:3];
+    cancelButton.tintColor = [UIColor darkGrayColor];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
