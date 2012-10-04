@@ -361,6 +361,7 @@ DDAnnotation *annotation;
         [cell.contentView addSubview:buttonSelectPlace];
         
         UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(14, 18 - 10, 263, 21)];
+        [labelPlaceName setFont:[UIFont fontWithName:kFontName size:kMediumLabelFontSize]];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
     } 
