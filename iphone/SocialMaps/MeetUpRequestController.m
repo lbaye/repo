@@ -58,10 +58,11 @@ DDAnnotation *annotation;
 //    radio.delegate = self;
 //    [self.view addSubview:radio];
     
+    
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
     NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
     
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:CGRectMake(180, 313, 140, 20) boxLocType:LabelPositionRight numBoxes:1 default:def labels:layers];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:CGRectMake(180, 314, 140, 20) boxLocType:LabelPositionRight numBoxes:1 default:def labels:layers];
     chkBox.tag = 1003;
     chkBox.backgroundColor = [UIColor clearColor];
     //chkBox.delegate = self;
@@ -161,7 +162,7 @@ DDAnnotation *annotation;
         
     }
     
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 93, self.view.frame.size.width - 35, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
     radio.delegate = self;
     [self.view addSubview:radio];
     
@@ -351,7 +352,7 @@ DDAnnotation *annotation;
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         
         UIButton *buttonSelectPlace = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonSelectPlace.frame = CGRectMake(320-21-20, 18-10, 21, 21);
+        buttonSelectPlace.frame = CGRectMake(320-37, 18-10, 21, 21);
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateSelected];
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
         [buttonSelectPlace addTarget:self action:@selector(actionSelectPlaceButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -359,7 +360,7 @@ DDAnnotation *annotation;
         
         [cell.contentView addSubview:buttonSelectPlace];
         
-        UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(10, 18 - 10, 265, 21)];
+        UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(14, 18 - 10, 263, 21)];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
     } 
