@@ -12,6 +12,11 @@ class SendPushNotification extends Base
      */
     protected $userRepository;
 
+    /**
+     * @var MessageRepository
+     */
+    protected $messageRepository;
+
     protected function setFunction()
     {
         $this->function = 'send_push_notification';
@@ -55,10 +60,14 @@ class SendPushNotification extends Base
     {
         $pushSettings = $user->getPushSettings();
 
-        $notificationCounts = $this->userRepository->getNotificationsCount();
-        $message = count($this->messageRepository->getByRecipient($user));
-        $counTotal = count($notificationCounts['friend_request'])+count($notificationCounts['notifications']);
-        $notificationData['badge'] = array_sum($notificationCounts);
+        $notificationCounts = $this->userRepository->getNotificationsCount($user->getId());
+//        $message = count($this->messageRepository->getByRecipient($user));
+        $message = 1;
+        $counTotal = count($notificationCounts['friend_request'])+count($notificationCounts['notifications'])+        $message = count($this->messageRepository->getByRecipient($user));
+$message;
+//      $notificationData['badge'] = array_sum($notificationCounts);
+//      $notificationData['tabCounts'] = implode(":", $notificationCounts);
+        $notificationData['badge'] = $counTotal;
         $notificationData['tabCounts'] = implode(":", $notificationCounts);
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);

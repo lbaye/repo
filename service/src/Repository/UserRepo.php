@@ -905,10 +905,12 @@ class UserRepo extends Base
 
     }
 
-    public function getNotificationsCount()
+    public function getNotificationsCount($id)
     {
-        $friendRequests = $this->currentUser->getFriendRequest();
-        $notifications  = $this->currentUser->getNotification();
+        $user = $this->find($id);
+        $friendRequests = $user->getFriendRequest();
+
+        $notifications  = $user->getNotification();
 
         $friendResult   = array();
         $notificationResult = array();
