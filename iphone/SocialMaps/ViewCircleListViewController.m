@@ -255,6 +255,7 @@ bool showSM=true;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
     controller.selectedIndex=0;
+//    controller.tabBar.frame=CGRectMake(0, -100, 32, 32);
     controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     
@@ -373,7 +374,6 @@ bool showSM=true;
     
     cell.showOnMapButton.tag=indexPath.row;
     //    NSLog(@"event.myResponse: %@",event.myResponse);
-    
     // Leave cells empty if there's no data yet
     if (nodeCount > 0)
 	{
@@ -418,6 +418,15 @@ bool showSM=true;
         [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [cell.footerView.layer setCornerRadius:6.0f];
+//        [cell.footerView.layer setMasksToBounds:YES];
+//        cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
+        
+        if (people.itemDistance > 99999)
+            cell.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
+        else
+            cell.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+
 
     }
     

@@ -7,6 +7,7 @@
 //
 
 #import "CircleListCheckBoxTableCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation CircleListCheckBoxTableCell
 
@@ -21,12 +22,16 @@
 @synthesize coverPicImgView;    
 @synthesize regStsImgView;
 @synthesize friendShipStatus;
+@synthesize footerView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        [footerView.layer setCornerRadius:6.0f];
+        [footerView.layer setMasksToBounds:YES];
+        footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
     }
     return self;
 }

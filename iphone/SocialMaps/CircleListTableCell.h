@@ -20,6 +20,7 @@
     IBOutlet UIImageView *coverPicImgView;
     IBOutlet UIImageView *regStsImgView;
     IBOutlet UIButton *friendShipStatus;
+    IBOutlet UIView *footerView;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *firstNameLabel;
@@ -32,4 +33,5 @@
 @property(nonatomic,retain) IBOutlet UIImageView *coverPicImgView;    
 @property(nonatomic,retain) IBOutlet UIImageView *regStsImgView;
 @property(nonatomic,retain) IBOutlet UIButton *friendShipStatus;
+@property(nonatomic,retain) IBOutlet UIView *footerView;
 @end

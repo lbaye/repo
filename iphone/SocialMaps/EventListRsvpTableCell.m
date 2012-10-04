@@ -7,6 +7,7 @@
 //
 
 #import "EventListRsvpTableCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation EventListRsvpTableCell
 
@@ -16,13 +17,16 @@
 @synthesize eventDistance;
 @synthesize eventDetail;
 @synthesize viewEventOnMap;
-@synthesize eventImage,yesButton,noButton,maybesButton;
+@synthesize eventImage,yesButton,noButton,maybesButton,footerView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        [footerView.layer setCornerRadius:6.0f];
+        [footerView.layer setMasksToBounds:YES];
+        footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
     }
     return self;
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G56" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -1147,7 +1147,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="circle_menu_bg.png" id="7Hl-ng-7y8">
+                                    <imageView userInteractionEnabled="NO" alpha="0.30000000000000016" contentMode="scaleToFill" image="circle_menu_bg.png" id="7Hl-ng-7y8">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
@@ -3844,6 +3844,11 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <view alpha="0.60000000000000009" contentMode="scaleToFill" id="R7y-lI-7VD">
+                                                    <rect key="frame" x="10" y="81" width="300" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NgB-pB-0cn">
                                                     <rect key="frame" x="20" y="4" width="292" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3859,21 +3864,21 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="oG9-Sm-9Zq">
-                                                    <rect key="frame" x="20" y="86" width="152" height="30"/>
+                                                    <rect key="frame" x="20" y="86" width="152" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
                                                     <color key="textColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="5ZX-Kw-eDw">
-                                                    <rect key="frame" x="211" y="87" width="101" height="21"/>
+                                                    <rect key="frame" x="211" y="86" width="101" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
                                                     <color key="textColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZHe-dE-gqm">
-                                                    <rect key="frame" x="180" y="87" width="23" height="23"/>
+                                                    <rect key="frame" x="180" y="85" width="23" height="23"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <state key="normal" title="loc" image="show_on_map.png">
@@ -3906,6 +3911,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                             <outlet property="eventDistance" destination="5ZX-Kw-eDw" id="0MA-z4-4tN"/>
                                             <outlet property="eventImage" destination="P2L-f2-twi" id="iar-2X-t4E"/>
                                             <outlet property="eventName" destination="NgB-pB-0cn" id="eEK-HH-7kW"/>
+                                            <outlet property="footerView" destination="R7y-lI-7VD" id="pc0-c3-9Xe"/>
                                             <outlet property="viewEventOnMap" destination="ZHe-dE-gqm" id="dkM-gO-ddn"/>
                                         </connections>
                                     </tableViewCell>
@@ -3924,6 +3930,11 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <rect key="frame" x="291" y="52" width="12" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <view alpha="0.60000002384185791" contentMode="scaleToFill" id="cg6-RC-t7K">
+                                                    <rect key="frame" x="10" y="82" width="300" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="rYt-OO-L4E">
                                                     <rect key="frame" x="20" y="4" width="292" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3939,7 +3950,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="XRR-AY-qSJ">
-                                                    <rect key="frame" x="20" y="86" width="152" height="30"/>
+                                                    <rect key="frame" x="20" y="87" width="152" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
                                                     <color key="textColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
@@ -3953,7 +3964,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="SKe-QL-tYc">
-                                                    <rect key="frame" x="180" y="87" width="23" height="22"/>
+                                                    <rect key="frame" x="180" y="87" width="23" height="23"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <state key="normal" title="loc" image="show_on_map.png">
@@ -4061,6 +4072,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                             <outlet property="eventDistance" destination="vf2-t4-oJD" id="Mtp-4A-WiB"/>
                                             <outlet property="eventImage" destination="EMe-Qi-46n" id="xSO-1J-f5A"/>
                                             <outlet property="eventName" destination="rYt-OO-L4E" id="6pi-Tu-JvW"/>
+                                            <outlet property="footerView" destination="cg6-RC-t7K" id="xje-Ec-AGv"/>
                                             <outlet property="maybesButton" destination="n74-Xc-urv" id="fqq-8z-LPE"/>
                                             <outlet property="noButton" destination="eki-N0-5jx" id="jvA-DR-WbV"/>
                                             <outlet property="viewEventOnMap" destination="SKe-QL-tYc" id="1aE-fu-zv4"/>
@@ -4074,8 +4086,9 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                 </connections>
                             </tableView>
                             <searchBar contentMode="redraw" barStyle="blackTranslucent" placeholder="Search with event name" id="vik-Wv-JnG">
-                                <rect key="frame" x="0.0" y="45" width="235" height="44"/>
+                                <rect key="frame" x="0.0" y="45" width="242" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="1" colorSpace="deviceRGB"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="x4f-Rr-4Qj" id="UHa-gD-StO"/>
@@ -4798,7 +4811,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="kWh-8P-X1J"/>
         <segue reference="qvJ-bu-e6k"/>
     </inferredMetricsTieBreakers>
 </document>

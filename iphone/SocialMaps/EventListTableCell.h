@@ -17,6 +17,7 @@
     IBOutlet UILabel *eventDetail;
     IBOutlet UIButton *viewEventOnMap;
     IBOutlet UIImageView *eventImage;
+    IBOutlet UIView *footerView;
 }
 
 @property(nonatomic,retain)IBOutlet UILabel *eventName;
@@ -26,5 +27,6 @@
 @property(nonatomic,retain)IBOutlet UILabel *eventDetail;
 @property(nonatomic,retain)IBOutlet UIButton *viewEventOnMap;
 @property(nonatomic,retain)IBOutlet UIImageView *eventImage;
+@property(nonatomic,retain)IBOutlet UIView *footerView;
 
 @end

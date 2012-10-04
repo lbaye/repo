@@ -7,6 +7,7 @@
 //
 
 #import "CircleListTableCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation CircleListTableCell
 @synthesize firstNameLabel;
@@ -19,6 +20,7 @@
 @synthesize coverPicImgView;    
 @synthesize regStsImgView;
 @synthesize friendShipStatus;
+@synthesize footerView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

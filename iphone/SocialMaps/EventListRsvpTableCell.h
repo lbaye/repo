@@ -20,8 +20,10 @@
     IBOutlet UIButton *yesButton;
     IBOutlet UIButton *noButton;
     IBOutlet UIButton *maybesButton;
+    IBOutlet UIView *footerView;
 }
 
+@property(nonatomic,retain)IBOutlet UIView *footerView;
 @property(nonatomic,retain)IBOutlet UILabel *eventName;
 @property(nonatomic,retain)IBOutlet UILabel *eventDate;
 @property(nonatomic,retain)IBOutlet UILabel *eventAddress;

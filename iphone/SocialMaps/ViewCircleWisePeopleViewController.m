@@ -282,6 +282,9 @@ NSString *userID;
         {
             cell.addressLabel.text=userFrnd.statusMsg;
         }
+        [cell.footerView.layer setCornerRadius:6.0f];
+        [cell.footerView.layer setMasksToBounds:YES];
+        cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
         cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",userFrnd.distance];
         [cell.inviteButton addTarget:self action:@selector(addToCircle:) forControlEvents:UIControlEventTouchUpInside];
 //        [cell.inviteButton addTarget:self action:@selector(removeFromCircle:) forControlEvents:UIControlEventTouchUpInside];
@@ -748,6 +751,8 @@ NSString *userID;
     [self.circleTableView endUpdates];
 //    [self.circleTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
     [self.circleTableView  performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
+    [self.circleTableView setNeedsDisplay];
+    [self.circleTableView reloadData];
 }
 
 

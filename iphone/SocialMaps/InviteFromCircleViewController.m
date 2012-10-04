@@ -73,6 +73,9 @@ bool searchFlag4=true;
     NSLog(@"smAppDelegate.peopleIndex %@",smAppDelegate.peopleIndex);
     
     [super viewDidLoad];
+    NSArray *subviews = [inviteSearchBar subviews];
+    UIButton *cancelButton = [subviews objectAtIndex:3];
+    cancelButton.tintColor = [UIColor darkGrayColor];
     //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
@@ -221,7 +224,10 @@ bool searchFlag4=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
-        cell1.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",people.itemDistance];
+        if (people.itemDistance > 99999)
+            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
+        else
+            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
         
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
@@ -244,6 +250,9 @@ bool searchFlag4=true;
             cell1.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
         }
         
+        [cell1.footerView.layer setCornerRadius:6.0f];
+        [cell1.footerView.layer setMasksToBounds:YES];
+        cell1.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
         cell1.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell1.regStsImgView.userInteractionEnabled=YES;
         cell1.regStsImgView.layer.borderWidth=1.0;

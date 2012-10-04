@@ -37,8 +37,8 @@
         CGRectInset(titleLabelFrame, 0.0, 5.0);
         UILabel *label = [[UILabel alloc] initWithFrame:titleLabelFrame];
         label.text = title;
-        label.font = [UIFont boldSystemFontOfSize:17.0];
-        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+        label.textColor = [UIColor darkGrayColor];
         label.backgroundColor = [UIColor clearColor];
         [self addSubview:label];
         _titleLabel = label;
@@ -66,8 +66,9 @@
             color = [UIColor colorWithRed:0.102 green:0.152 blue:0.033 alpha:1.0];
             [colors addObject:(id)[color CGColor]];
         }
-        [(CAGradientLayer *)self.layer setColors:colors];
-        [(CAGradientLayer *)self.layer setLocations:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:0.48], [NSNumber numberWithFloat:1.0], nil]];
+//        [(CAGradientLayer *)self.layer setColors:colors];
+//        [(CAGradientLayer *)self.layer setLocations:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:0.48], [NSNumber numberWithFloat:1.0], nil]];
+        [self setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_settings_list_bg.png"]]];
     }
     
     return self;

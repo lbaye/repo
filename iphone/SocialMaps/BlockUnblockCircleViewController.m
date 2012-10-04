@@ -70,6 +70,10 @@ bool searchFlag3=true;
     NSLog(@"smAppDelegate.peopleIndex %@",smAppDelegate.peopleIndex);
 
     [super viewDidLoad];
+    NSArray *subviews = [self.blockSearchBar subviews];
+    NSLog(@"%@",subviews);
+    UIButton *cancelButton = [subviews objectAtIndex:2];
+    cancelButton.tintColor = [UIColor darkGrayColor];
 //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
@@ -201,7 +205,10 @@ bool searchFlag3=true;
                      reuseIdentifier:CellIdentifier1];
     }
     
-    // Configure the cell...    
+    // Configure the cell... 
+    [cell1.footerView.layer setCornerRadius:6.0f];
+    [cell1.footerView.layer setMasksToBounds:YES];
+    cell1.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
     cell1.checkBoxButton.tag=indexPath.row;
     cell1.showOnMapButton.tag=indexPath.row;
     cell1.inviteButton.tag=indexPath.row ;
@@ -219,8 +226,11 @@ bool searchFlag3=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
-        cell1.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",people.itemDistance];
-        
+        if (people.itemDistance > 99999)
+            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
+        else
+            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
         if (!people.userInfo.coverImage)
