@@ -406,6 +406,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 
 -(IBAction)customButtonAction
 {
+    [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
@@ -440,6 +441,8 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 
 -(IBAction)cancelCustom:(id)sender
 {
+    [selectedCustomCircleCheckArr removeAllObjects];
+    [customSelectedFriendsIndex removeAllObjects];
     [customSelectionView removeFromSuperview];
 }
 
