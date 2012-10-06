@@ -675,7 +675,7 @@
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZP2-2P-qy8">
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZP2-2P-qy8">
                                                 <rect key="frame" x="133" y="3" width="62" height="37"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1063,11 +1063,11 @@
                                         <rect key="frame" x="224" y="30" width="34" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="list_view_icon.png">
+                                        <state key="normal" image="list_view_icon_black.png">
                                             <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="highlighted">
+                                        <state key="highlighted" image="list_view_icon.png">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -1592,11 +1592,11 @@
                                         <rect key="frame" x="64" y="30" width="34" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="map_view_icon.png">
+                                        <state key="normal" image="map_view_icon_black.png">
                                             <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="highlighted">
+                                        <state key="highlighted" image="map_view_icon.png">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -4766,6 +4766,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="list_filter_icon.png" width="34" height="35"/>
         <image name="list_uncheck.png" width="60" height="60"/>
         <image name="list_view_icon.png" width="44" height="32"/>
+        <image name="list_view_icon_black.png" width="41" height="30"/>
         <image name="location_bar_radio_cheked.png" width="42" height="42"/>
         <image name="location_bar_radio_none.png" width="42" height="42"/>
         <image name="login_txt.png" width="422" height="26"/>
@@ -4775,6 +4776,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="map_my_place_icon.png" width="28" height="35"/>
         <image name="map_view_bar.png" width="640" height="121"/>
         <image name="map_view_icon.png" width="44" height="36"/>
+        <image name="map_view_icon_black.png" width="37" height="30"/>
         <image name="mapix_mode_icon.png" width="34" height="34"/>
         <image name="meet_up_icon.png" width="37" height="43"/>
         <image name="message_notify_icon.png" width="108" height="66"/>
