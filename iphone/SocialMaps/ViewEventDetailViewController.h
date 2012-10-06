@@ -39,6 +39,13 @@
     IBOutlet UIButton *inviteEventButton;
     BOOL isBackgroundTaskRunning;
     IBOutlet UILabel *totalNotifCount;
+    
+    IBOutlet UIView *customSelectionView;
+    IBOutlet UISegmentedControl *segmentControl;
+    IBOutlet UIScrollView *customScrollView;
+    IBOutlet UISearchBar *customSearchBar;
+    IBOutlet UITableView *customTableView;
+
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;
@@ -68,6 +75,13 @@
 @property(nonatomic,retain) IBOutlet UIButton *inviteEventButton;     
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
+@property(nonatomic,retain) IBOutlet UIView *customSelectionView;
+@property(nonatomic,retain) IBOutlet UISegmentedControl *segmentControl;
+@property(nonatomic,retain) IBOutlet UIScrollView *customScrollView;
+@property(nonatomic,retain) IBOutlet UISearchBar *customSearchBar;
+@property(nonatomic,retain) IBOutlet UITableView *customTableView;
+
+
 -(void)DownLoad:(NSNumber *)path;
 -(void) reloadScrolview;
 
@@ -86,6 +100,10 @@
 -(IBAction)backButton:(id)sender;
 
 -(IBAction)gotoNotification:(id)sender;
+
+-(IBAction)saveCustom:(id)sender;
+-(IBAction)cancelCustom:(id)sender;
+-(IBAction)customSegment:(id)sende;
 
 -(void)resetButton:(int)index;
 -(void)loadScrollView;

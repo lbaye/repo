@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G56" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" defaultVersion="4200" identifier="xcode"/>
@@ -277,7 +277,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tl2-Uw-3dW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="mapViewController" id="wC3-So-nVM" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iiB-MM-eFF">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="vAv-Wy-i1h" userLabel="MapView">
@@ -1406,7 +1406,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2dn-ga-dT0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController title="List View Controller" id="fgr-fq-SqM" customClass="ListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2r9-Es-OgG">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Sh-3V-Ss1" userLabel="listPullDown">
@@ -1740,7 +1740,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GY2-DI-b1v" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="notificationViewController" id="xAh-9q-Sej" customClass="NotificationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jm0-Vq-vBY">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="QOl-IZ-Dve" userLabel="notifHeader">
@@ -2852,11 +2852,115 @@
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
+                            <view contentMode="scaleToFill" id="jzh-jw-5g1">
+                                <rect key="frame" x="29" y="115" width="261" height="230"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="KW2-sw-04u">
+                                        <rect key="frame" x="8" y="118" width="253" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="6Gy-3U-Un4"/>
+                                        </connections>
+                                    </scrollView>
+                                    <searchBar contentMode="redraw" id="WZo-60-DJR">
+                                        <rect key="frame" x="0.0" y="74" width="261" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="j2z-C1-tvn"/>
+                                        </connections>
+                                    </searchBar>
+                                    <navigationBar contentMode="scaleToFill" id="adO-SS-gbl">
+                                        <rect key="frame" x="0.0" y="0.0" width="261" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <items>
+                                            <navigationItem id="gez-ug-VmO">
+                                                <barButtonItem key="leftBarButtonItem" title="Cancel" id="TWx-cc-ISv">
+                                                    <color key="tintColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="cancelCustom:" destination="PnO-dp-Cvz" id="YKm-n2-G1L"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                                <barButtonItem key="rightBarButtonItem" title="Save" id="nap-KO-fmy">
+                                                    <color key="tintColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="saveCustom:" destination="PnO-dp-Cvz" id="QBH-mJ-e8u"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                            </navigationItem>
+                                        </items>
+                                    </navigationBar>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="amj-j8-hYD">
+                                        <rect key="frame" x="0.0" y="74" width="261" height="156"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="customCircleTableCell" id="v7C-Pr-p1Z" customClass="SelectCircleTableCell">
+                                                <rect key="frame" x="0.0" y="22" width="261" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="261" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="HtU-aq-Tyz">
+                                                            <rect key="frame" x="15" y="11" width="182" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RJx-gF-6p5">
+                                                            <rect key="frame" x="216" y="7" width="33" height="30"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                            <state key="normal" image="checkbox_unchecked.png">
+                                                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <state key="highlighted">
+                                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <connections>
+                                                    <outlet property="circrcleCheckbox" destination="RJx-gF-6p5" id="GiE-MR-NzG"/>
+                                                    <outlet property="circrcleName" destination="HtU-aq-Tyz" id="DPC-HQ-aUP"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="PnO-dp-Cvz" id="MeM-oh-l2I"/>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="anM-ji-dTm"/>
+                                        </connections>
+                                    </tableView>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="54m-jn-grT">
+                                        <rect key="frame" x="0.0" y="44" width="261" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="Friends"/>
+                                            <segment title="Circles"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="customSegment:" destination="iEq-R0-8Ox" eventType="valueChanged" id="5nu-Rd-qM6"/>
+                                            <action selector="customSegment:" destination="PnO-dp-Cvz" eventType="valueChanged" id="Eci-vs-Bcg"/>
+                                        </connections>
+                                    </segmentedControl>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="zK9-2t-0Hu"/>
                     <connections>
+                        <outlet property="customScrollView" destination="KW2-sw-04u" id="SJi-k2-6SU"/>
+                        <outlet property="customSearchBar" destination="WZo-60-DJR" id="vXM-Nz-u8P"/>
+                        <outlet property="customSelectionView" destination="jzh-jw-5g1" id="fhn-ys-BeT"/>
+                        <outlet property="customTableView" destination="amj-j8-hYD" id="rg6-qx-xKB"/>
                         <outlet property="deleteEventButton" destination="hmS-vl-M0B" id="fqr-cW-Wuf"/>
                         <outlet property="descriptionView" destination="E4A-wV-sft" id="39G-3i-TEP"/>
                         <outlet property="detailView" destination="ixc-V1-rJ0" id="hmy-tS-A8F"/>
@@ -2874,6 +2978,7 @@
                         <outlet property="maybeButton" destination="Xrf-RH-NEx" id="cAb-qN-yTR"/>
                         <outlet property="noButton" destination="x3k-yt-c8I" id="c29-On-gh0"/>
                         <outlet property="rsvpView" destination="ZMq-Sm-dBK" id="VxP-yW-skd"/>
+                        <outlet property="segmentControl" destination="54m-jn-grT" id="23P-eq-eFC"/>
                         <outlet property="totalNotifCount" destination="lww-xc-wM7" id="VdN-9t-WCi"/>
                         <outlet property="yesButton" destination="bhl-7b-dzW" id="wRM-tU-K0g"/>
                         <segue destination="iEq-R0-8Ox" kind="modal" identifier="updateEvent" modalTransitionStyle="crossDissolve" id="BET-LK-FoH"/>
@@ -5117,7 +5222,9 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewEventDetailViewController.h"/>
             <relationships>
                 <relationship kind="action" name="backButton:"/>
+                <relationship kind="action" name="cancelCustom:"/>
                 <relationship kind="action" name="closeMap:"/>
+                <relationship kind="action" name="customSegment:"/>
                 <relationship kind="action" name="deleteEvent:"/>
                 <relationship kind="action" name="editEvent:"/>
                 <relationship kind="action" name="gotoNotification:"/>
@@ -5126,8 +5233,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="maybeAttendAction:"/>
                 <relationship kind="action" name="menuTapped"/>
                 <relationship kind="action" name="noAttendAction:"/>
+                <relationship kind="action" name="saveCustom:"/>
                 <relationship kind="action" name="viewMapButton:"/>
                 <relationship kind="action" name="yesAttendAction:"/>
+                <relationship kind="outlet" name="customScrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="customSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="customSelectionView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="customTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="deleteEventButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="descriptionView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
@@ -5145,6 +5257,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="maybeButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="rsvpView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="yesButton" candidateClass="UIButton"/>
             </relationships>
@@ -5187,5 +5300,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qvJ-bu-e6k"/>
+        <segue reference="kWh-8P-X1J"/>
     </inferredMetricsTieBreakers>
 </document>
