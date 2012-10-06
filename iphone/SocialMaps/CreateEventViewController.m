@@ -765,11 +765,32 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
     {
         cell.circrcleName.text=@"Custom";
+        customCell.circrcleName.text=@"Custom";
     }
     else 
     {
         cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+        customCell.circrcleName.text=[circleList objectAtIndex:indexPath.row];        
     }
+    
+    if ([selectedCircleCheckArr containsObject:indexPath]) 
+    {
+        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    }
+
+    if ([selectedCustomCircleCheckArr containsObject:indexPath]) 
+    {
+        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    }
+    
     [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
 
     [customCell.circrcleCheckbox addTarget:self action:@selector(handleCustomTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
@@ -782,9 +803,8 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-    
-    
+{    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 -(void)handleTableViewCheckbox:(id)sender

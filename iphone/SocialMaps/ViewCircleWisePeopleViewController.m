@@ -128,7 +128,8 @@ NSString *userID;
     /*
      Check whether the section info array has been created, and if so whether the section count still matches the current section count. In general, you need to keep the section info synchronized with the rows and section. If you support editing in the table view, you need to appropriately update the section info during editing operations.
      */
-	if ((self.sectionInfoArray == nil) || ([self.sectionInfoArray count] != [self numberOfSectionsInTableView:self.circleTableView])) {
+//	if ((self.sectionInfoArray == nil) || ([self.sectionInfoArray count] != [self numberOfSectionsInTableView:self.circleTableView]))
+    {
 		
         // For each play, set up a corresponding SectionInfo object to contain the default height for each row.
 		NSMutableArray *infoArray = [[NSMutableArray alloc] init];
@@ -282,6 +283,10 @@ NSString *userID;
         {
             cell.addressLabel.text=userFrnd.statusMsg;
         }
+        else
+        {
+            cell.addressLabel.text=@"";
+        }
         [cell.footerView.layer setCornerRadius:6.0f];
         [cell.footerView.layer setMasksToBounds:YES];
         cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
@@ -412,7 +417,6 @@ NSString *userID;
 -(void)sectionHeaderView:(SectionHeaderView*)sectionHeaderView sectionOpened:(NSInteger)sectionOpened {
 	
 	SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:sectionOpened];
-	
 	sectionInfo.open = YES;
     
     /*
@@ -423,6 +427,8 @@ NSString *userID;
     for (NSInteger i = 0; i < countOfRowsToInsert; i++) {
         [indexPathsToInsert addObject:[NSIndexPath indexPathForRow:i inSection:sectionOpened]];
     }
+
+	NSLog(@"countOfRowsToInsert: %d",countOfRowsToInsert);
     
     /*
      Create an array containing the index paths of the rows to delete: These correspond to the rows for each quotation in the previously-open section, if there was one.
