@@ -87,6 +87,90 @@
     [self.view sendSubviewToBack:listView];
     
     copyListOfItems = [[NSMutableArray alloc] init];
+
+    [self initPullView];
+}
+
+-(void)initPullView
+{
+    //listPullupMenu.hidden = YES;
+    
+    CGFloat xOffset = 0;
+    PullableView *pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
+    pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
+    pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height);
+    pullUpView.center = pullUpView.closedCenter;
+    pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
+    pullUpView.delegate = self;
+    //pullUpView.backgroundColor = [UIColor blueColor];
+    
+    [pullUpView addSubview:listPullupMenu];
+    listPullupMenu.userInteractionEnabled = NO;
+    for (UIView *view in [listPullupMenu subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            [pullUpView addSubview:view];
+        }
+    }
+    
+    listPullupMenu.hidden = NO;
+    listPullupMenu.frame = CGRectMake(0, 0, listPullupMenu.frame.size.width, listPullupMenu.frame.size.height);
+    [self.view addSubview:pullUpView];
+    [self.view bringSubviewToFront:pullUpView];
+    
+    UIImageView *imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+    [pullUpView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullUpView bringSubviewToFront:pullUpView.handleView];
+    imageViewFooterSliderOpen.tag = 420;    
+    [imageViewFooterSliderOpen release];
+    
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 70)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 80);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, 35);
+    pullDownView.center = pullDownView.closedCenter;
+    
+    pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
+    pullDownView.delegate = self;
+    //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
+    
+    //pullDownView.backgroundColor = [UIColor redColor];
+    
+    [self.view addSubview:pullDownView];
+    [self.view bringSubviewToFront:viewSearch];
+    [pullDownView addSubview:listPulldownMenu];
+    [self.view bringSubviewToFront:viewNotification];
+    listPulldownMenu.userInteractionEnabled = NO;
+    for (UIView *view in [listPulldownMenu subviews]) {
+        //if ([view isKindOfClass:[UIButton class]]) {
+        [pullDownView addSubview:view];
+        //}
+    }
+    listPulldownMenu.hidden = NO;
+    listPulldownMenu.frame = CGRectMake(0, 0, listPulldownMenu.frame.size.width, listPulldownMenu.frame.size.height);
+    
+    imageViewFooterSliderOpen = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];
+    imageViewFooterSliderOpen.image = [UIImage imageNamed:@"slide_close_bar.png"];
+    [pullDownView.handleView addSubview:imageViewFooterSliderOpen];
+    [pullDownView bringSubviewToFront:pullDownView.handleView];
+    imageViewFooterSliderOpen.tag = 840;    
+    [imageViewFooterSliderOpen release];
+    
+}
+
+- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
+    if (opened)
+    {
+        NSLog(@"Now I'm open!");
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
+    }
+    else
+    {
+        ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
+        ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
+        
+        NSLog(@"Now I'm closed, pull me up again!");
+    }
 }
 
 - (void) getSortedDisplayList {
@@ -117,6 +201,8 @@
     searchBar = nil;
     [viewSearch release];
     viewSearch = nil;
+    [viewNotification release];
+    viewNotification = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -204,6 +290,7 @@
     [listNotifCount release];
     [searchBar release];
     [viewSearch release];
+    [viewNotification release];
     [super dealloc];
 }
 
@@ -434,16 +521,17 @@
     //itemList.contentOffset = CGPointZero;
     CGRect viewFrame = viewSearch.frame;
     viewFrame.origin.y += moveby;
-    CGRect listPullDownFrame = listPulldown.frame;
+    CGRect listPullDownFrame = pullDownView.frame;
     listPullDownFrame.origin.y += moveby;
-    CGRect listPullDownMenuFrame = listPulldownMenu.frame;
-    listPullDownMenuFrame.origin.y += moveby;
+    //CGRect listPullDownMenuFrame = listPulldownMenu.frame;
+    //listPullDownMenuFrame.origin.y += moveby;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:0.3];    
     [viewSearch setFrame:viewFrame];  
-    [listPulldown setFrame:listPullDownFrame]; 
-    [listPulldownMenu setFrame:listPullDownMenuFrame]; 
+    //[listPulldown setFrame:listPullDownFrame]; 
+    //[listPulldownMenu setFrame:listPullDownMenuFrame]; 
+    [pullDownView setFrame:listPullDownFrame];
     [UIView commitAnimations];    
 }
 
@@ -482,10 +570,14 @@
     if (viewSearch.frame.origin.y > 44) {
         [self moveSearchBarAnimation:-44];
         [self doneSearching_Clicked:nil];
+        pullDownView.openedCenter = CGPointMake(160, 80);
+        pullDownView.closedCenter = CGPointMake(160, 35);
     } else {
         [self moveSearchBarAnimation:44];
         //listPulldownMenu.hidden = TRUE;
         [searchBar becomeFirstResponder];
+        pullDownView.openedCenter = CGPointMake(160, 80 + 44);
+        pullDownView.closedCenter = CGPointMake(160, 80);
     }
     
 }
