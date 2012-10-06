@@ -62,7 +62,7 @@ DDAnnotation *annotation;
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
     NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
     
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:CGRectMake(180, 314, 140, 20) boxLocType:LabelPositionRight numBoxes:1 default:def labels:layers];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:CGRectMake(184, 314, 140, 20) boxLocType:LabelPositionRight numBoxes:1 default:def labels:layers];
     chkBox.tag = 1003;
     chkBox.backgroundColor = [UIColor clearColor];
     //chkBox.delegate = self;
@@ -120,7 +120,6 @@ DDAnnotation *annotation;
     NSArray *subviews = [friendSearchbar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:3];
     cancelButton.tintColor = [UIColor darkGrayColor];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -167,7 +166,7 @@ DDAnnotation *annotation;
         
     }
     
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 93, self.view.frame.size.width - 35, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(17, 93, self.view.frame.size.width - 28, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:selectedRadioButtonIndex sender:self tag:2000];
     radio.delegate = self;
     [self.view addSubview:radio];
     
@@ -357,7 +356,7 @@ DDAnnotation *annotation;
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         
         UIButton *buttonSelectPlace = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonSelectPlace.frame = CGRectMake(320-37, 18-10, 21, 21);
+        buttonSelectPlace.frame = CGRectMake(320-35, 18-10, 21, 21);
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateSelected];
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
         [buttonSelectPlace addTarget:self action:@selector(actionSelectPlaceButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -365,7 +364,7 @@ DDAnnotation *annotation;
         
         [cell.contentView addSubview:buttonSelectPlace];
         
-        UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(14, 18 - 10, 263, 21)];
+        UILabel *labelPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(12, 18 - 10, 263, 21)];
         [labelPlaceName setFont:[UIFont fontWithName:kFontName size:kMediumLabelFontSize]];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
@@ -703,7 +702,7 @@ DDAnnotation *annotation;
 
 -(void) reloadScrolview
 {
-    int x=0; //declared for imageview x-axis point    
+    int x=7; //declared for imageview x-axis point    
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     UIImageView *imgView;
     for (UIView* view in subviews) 
@@ -717,7 +716,7 @@ DDAnnotation *annotation;
             // [view removeFromSuperview];
         }
     }
-    frndListScrollView.contentSize=CGSizeMake([filteredList count] * 50, 45);
+    frndListScrollView.contentSize=CGSizeMake([filteredList count] * 51, 45);
     
     for(int i=0; i<[filteredList count];i++)               
     {
