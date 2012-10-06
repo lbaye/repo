@@ -1687,7 +1687,6 @@ ButtonClickCallbackData callBackData;
 - (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
     if (opened)
     {
-        NSLog(@"Now I'm open!");
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
     }
@@ -1695,8 +1694,6 @@ ButtonClickCallbackData callBackData;
     {
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
-        
-        NSLog(@"Now I'm closed, pull me up again!");
     }
 }
 
