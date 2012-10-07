@@ -49,9 +49,9 @@ friends:
   requirements: { _method: GET}
 
 
-block_multiple_user:
-  pattern: /me/users/block
-  defaults: { _controller: Controller\User::blockMultipleUsers}
+update_block_user:
+  pattern: /me/users/un-block
+  defaults: { _controller: Controller\User::unblockUsers}
   requirements: { _method: PUT}
 
 

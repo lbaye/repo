@@ -875,8 +875,8 @@ class UserRepo extends Base
 
                 if ($circle->getType() == 'system') {
 
-                throw new \InvalidArgumentException('Invalid request', 406);
-              }
+                    throw new \InvalidArgumentException('Invalid request', 406);
+                }
                 foreach ($data['circles'] AS $circleId) {
 
                     if ($circle->getId() == $circleId) {
@@ -910,23 +910,41 @@ class UserRepo extends Base
         $user = $this->find($id);
         $friendRequests = $user->getFriendRequest();
 
-        $notifications  = $user->getNotification();
+        $notifications = $user->getNotification();
 
-        $friendResult   = array();
+        $friendResult = array();
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
-                 $friendResult[] = $friendRequest->toArray();
+            $friendResult[] = $friendRequest->toArray();
         }
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
-               $notificationResult[] = $notification->toArray();
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
             }
 
         }
 
-       return $countTotal = count($notificationResult).":".count($friendResult);
+        return $countTotal = count($notificationResult) . ":" . count($friendResult);
+    }
+
+    public function unBlockUsers($id, array $data)
+    {
+
+        if (empty($data['users'])) {
+            throw new \InvalidArgumentException('Invalid request', 406);
+        }
+
+        $users = $this->_trimInvalidUsers($data['users']);
+        $user = $this->find($id);
+        $user->updateBlockedUser(array_diff($user->getBlockedUsers(), $users));
+
+
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
     }
 }

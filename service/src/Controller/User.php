@@ -95,9 +95,9 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         $friendRequests = $this->user->getFriendRequest();
-        $notifications  = $this->user->getNotification();
+        $notifications = $this->user->getNotification();
 
-        $friendResult   = array();
+        $friendResult = array();
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
@@ -106,9 +106,9 @@ class User extends Base
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
-                 $notificationResult[] = $notification->toArray();
-                 $this->updateNotification($notification->getId());
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
+                $this->updateNotification($notification->getId());
             }
 
         }
@@ -118,11 +118,11 @@ class User extends Base
         } else {
             $this->response->setContent(json_encode(array(
                 'friend request' => $friendResult,
-                'notifications'  => $notificationResult
+                'notifications' => $notificationResult
             )));
         }
 
-       return $this->response;
+        return $this->response;
     }
 
     /**
@@ -544,8 +544,8 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         $postData = $this->request->request->all();
-        if (!empty($postData['blockusers'])) {
-            foreach ($postData['blockusers'] as $userId) {
+        if (!empty($postData['users'])) {
+            foreach ($postData['users'] as $userId) {
                 $blockingUser = $this->userRepository->find($userId);
 
                 if ($blockingUser instanceof \Document\User) {
@@ -706,10 +706,10 @@ class User extends Base
      */
     public function deleteCustomCircle($id)
     {
-            $this->_ensureLoggedIn();
+        $this->_ensureLoggedIn();
 
-            try {
-                $circles = $this->user->getCircles();
+        try {
+            $circles = $this->user->getCircles();
 
             $result = array();
             foreach ($circles as $circle) {
@@ -722,14 +722,14 @@ class User extends Base
                 $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                 return $this->response;
             }
-                $this->userRepository->delete($id);
-                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
-                $this->response->setStatusCode(Status::OK);
-            } catch (\InvalidArgumentException $e) {
+            $this->userRepository->delete($id);
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
+            $this->response->setStatusCode(Status::OK);
+        } catch (\InvalidArgumentException $e) {
 
-                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
-                $this->response->setStatusCode(Status::NOT_FOUND);
-            }
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
 
 
         return $this->response;
@@ -744,10 +744,10 @@ class User extends Base
      */
     public function removeFriendFromCircle($id)
     {
-            $this->_ensureLoggedIn();
+        $this->_ensureLoggedIn();
 
-            try {
-             $circles = $this->user->getCircles();
+        try {
+            $circles = $this->user->getCircles();
 
             $result = array();
             foreach ($circles as $circle) {
@@ -776,11 +776,11 @@ class User extends Base
 
             $this->response->setContent(json_encode($updateResult));
             $this->response->setStatusCode(Status::OK);
-            } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
 
-                $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
-                $this->response->setStatusCode(Status::NOT_FOUND);
-            }
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
 
 
         return $this->response;
@@ -795,7 +795,7 @@ class User extends Base
      */
     public function addFriendToMultipleCircle($id)
     {
-         $this->_ensureLoggedIn();
+        $this->_ensureLoggedIn();
 
         try {
 
@@ -820,6 +820,39 @@ class User extends Base
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
         }
+
+        return $this->response;
+    }
+
+    /**
+     * PUT /me/users/un-block
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unblockUsers()
+    {
+        $this->_ensureLoggedIn();
+
+        try {
+
+            $postData = $this->request->request->all();
+
+            $unBlockUsers = $this->userRepository->unBlockUsers($this->user->getId(), $postData);
+            if ($unBlockUsers == true) {
+                $this->response->setContent(json_encode(array('message' => 'unblock users successfully')));
+                $this->response->setStatusCode(Status::OK);
+            }
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
 
         return $this->response;
     }
