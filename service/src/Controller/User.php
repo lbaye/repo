@@ -121,12 +121,6 @@ class User extends Base
                 'notifications'  => $notificationResult
             )));
         }
-//        $counTotal = count($notificationResult)+count($friendResult);
-//        var_dump($counTotal);
-//        var_dump($friendResult);
-//        var_dump($this->response);
-
-
 
        return $this->response;
     }
@@ -540,49 +534,54 @@ class User extends Base
     }
 
     /**
-     * PUT /user/block/:id
+     * PUT /users/block
      *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function blockUser($id)
+    public function blockUser()
     {
         $this->_ensureLoggedIn();
-        $blockingUser = $this->userRepository->find($id);
 
-        if ($blockingUser instanceof \Document\User) {
+        $postData = $this->request->request->all();
+        if (!empty($postData['blockusers'])) {
+            foreach ($postData['blockusers'] as $userId) {
+                $blockingUser = $this->userRepository->find($userId);
 
-            $blockedUsers = $this->user->getBlockedUsers();
+                if ($blockingUser instanceof \Document\User) {
 
-            if ($this->user != $blockingUser) {
+                    $blockedUsers = $this->user->getBlockedUsers();
 
-                if (!in_array($blockingUser->getId(), $blockedUsers)) {
+                    if ($this->user != $blockingUser) {
 
-                    $this->user->addBlockedUser($blockingUser);
-                    $this->dm->persist($this->user);
+                        if (!in_array($blockingUser->getId(), $blockedUsers)) {
 
-                    $blockingUser->addBlockedBy($this->user);
-                    $this->dm->persist($blockingUser);
+                            $this->user->addBlockedUser($blockingUser);
+                            $this->dm->persist($this->user);
 
-                    $this->dm->flush();
+                            $blockingUser->addBlockedBy($this->user);
+                            $this->dm->persist($blockingUser);
+
+                            $this->dm->flush();
+                        }
+
+                        $this->response->setContent(json_encode(array('result' => 'User blocked')));
+                        $this->response->setStatusCode(Status::OK);
+
+                    } else {
+
+                        $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
+                        $this->response->setStatusCode(Status::BAD_REQUEST);
+
+                    }
+
+                } else {
+
+                    $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
+                    $this->response->setStatusCode(Status::BAD_REQUEST);
+
                 }
-
-                $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                $this->response->setStatusCode(Status::OK);
-
-            } else {
-
-                $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
-                $this->response->setStatusCode(Status::BAD_REQUEST);
-
             }
-
-        } else {
-
-            $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
-            $this->response->setStatusCode(Status::BAD_REQUEST);
-
         }
 
         return $this->response;

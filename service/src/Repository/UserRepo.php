@@ -905,39 +905,28 @@ class UserRepo extends Base
 
     }
 
-    public function getNotificationsCount()
+    public function getNotificationsCount($id)
     {
-        $friendRequests = $this->currentUser->getFriendRequest();
-        $notifications  = $this->currentUser->getNotification();
+        $user = $this->find($id);
+        $friendRequests = $user->getFriendRequest();
+
+        $notifications  = $user->getNotification();
 
         $friendResult   = array();
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
-            $friendResult[] = $friendRequest->toArray();
+                 $friendResult[] = $friendRequest->toArray();
         }
 
         foreach ($notifications as $notification) {
 
             if($notification->getViewed() != true){
-                 $notificationResult[] = $notification->toArray();
+               $notificationResult[] = $notification->toArray();
             }
 
         }
 
-        if (empty($friendResult) AND (empty($notificationResult))) {
-            return array();
-        } else {
-
-            return json_encode(json_encode(array(
-                'friend request' => $friendResult,
-                'notifications'  => $notificationResult
-            )));
-        }
-//        $counTotal = count($notificationResult)+count($friendResult);
-//        var_dump($counTotal);
-//        var_dump($friendResult);
-//        var_dump($this->response);
-
+       return $countTotal = count($notificationResult).":".count($friendResult);
     }
 }

@@ -34,7 +34,7 @@ delete_user:
   requirements: { _method: DELETE }
 
 block_user:
-  pattern: /users/block/{id}
+  pattern: /me/users/block
   defaults: { _controller: Controller\User::blockUser}
   requirements: { _method: PUT}
 
