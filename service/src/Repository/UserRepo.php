@@ -2,6 +2,7 @@
 
 namespace Repository;
 
+use Symfony\Component\HttpFoundation\Response;
 use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
@@ -871,6 +872,8 @@ class UserRepo extends Base
 
             foreach ($circles as $circle) {
 
+                    throw new \InvalidArgumentException('Invalid request', 406);
+                }
 
                 foreach ($data['circles'] AS $circleId) {
 
@@ -901,5 +904,48 @@ class UserRepo extends Base
 
         return true;
 
+    }
+
+    public function getNotificationsCount($id)
+    {
+        $user = $this->find($id);
+        $friendRequests = $user->getFriendRequest();
+
+        $notifications = $user->getNotification();
+
+        $friendResult = array();
+        $notificationResult = array();
+
+        foreach ($friendRequests as $friendRequest) {
+            $friendResult[] = $friendRequest->toArray();
+        }
+
+        foreach ($notifications as $notification) {
+
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
+            }
+
+        }
+
+        return $countTotal = count($notificationResult) . ":" . count($friendResult);
+    }
+
+    public function unBlockUsers($id, array $data)
+    {
+
+        if (empty($data['users'])) {
+            throw new \InvalidArgumentException('Invalid request', 406);
+        }
+
+        $users = $this->_trimInvalidUsers($data['users']);
+        $user = $this->find($id);
+        $user->updateBlockedUser(array_diff($user->getBlockedUsers(), $users));
+
+
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
     }
 }

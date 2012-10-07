@@ -90,51 +90,6 @@ class User extends Base
     }
 
     /**
-     * GET /me/notificationscount
-     *`
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getNotificationsCount()
-    {
-        $this->_ensureLoggedIn();
-
-        $friendRequests = $this->user->getFriendRequest();
-        $notifications = $this->user->getNotification();
-
-        $friendResult = array();
-        $notificationResult = array();
-
-        foreach ($friendRequests as $friendRequest) {
-            $friendResult[] = $friendRequest->toArray();
-        }
-
-        foreach ($notifications as $notification) {
-
-            if ($notification->getViewed() != true) {
-                $notificationResult[] = $notification->toArray();
-                $this->updateNotification($notification->getId());
-            }
-
-        }
-
-        if (empty($friendResult) AND (empty($notificationResult))) {
-            $this->response->setContent(json_encode(array()));
-        } else {
-            $this->response->setContent(json_encode(array(
-                'friend request' => $friendResult,
-                'notifications' => $notificationResult
-            )));
-        }
-//        $counTotal = count($notificationResult)+count($friendResult);
-//        var_dump($counTotal);
-//        var_dump($friendResult);
-//        var_dump($this->response);
-
-
-        return $this->response;
-    }
-
-    /**
      * GET /request/friend
      *
      * @param string $status all | accepted | unaccepted
@@ -543,49 +498,54 @@ class User extends Base
     }
 
     /**
-     * PUT /user/block/:id
+     * PUT /users/block
      *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function blockUser($id)
+    public function blockUser()
     {
         $this->_ensureLoggedIn();
-        $blockingUser = $this->userRepository->find($id);
 
-        if ($blockingUser instanceof \Document\User) {
+        $postData = $this->request->request->all();
+        if (!empty($postData['users'])) {
+            foreach ($postData['users'] as $userId) {
+                $blockingUser = $this->userRepository->find($userId);
 
-            $blockedUsers = $this->user->getBlockedUsers();
+                if ($blockingUser instanceof \Document\User) {
 
-            if ($this->user != $blockingUser) {
+                    $blockedUsers = $this->user->getBlockedUsers();
 
-                if (!in_array($blockingUser->getId(), $blockedUsers)) {
+                    if ($this->user != $blockingUser) {
 
-                    $this->user->addBlockedUser($blockingUser);
-                    $this->dm->persist($this->user);
+                        if (!in_array($blockingUser->getId(), $blockedUsers)) {
 
-                    $blockingUser->addBlockedBy($this->user);
-                    $this->dm->persist($blockingUser);
+                            $this->user->addBlockedUser($blockingUser);
+                            $this->dm->persist($this->user);
 
-                    $this->dm->flush();
+                            $blockingUser->addBlockedBy($this->user);
+                            $this->dm->persist($blockingUser);
+
+                            $this->dm->flush();
+                        }
+
+                        $this->response->setContent(json_encode(array('result' => 'User blocked')));
+                        $this->response->setStatusCode(Status::OK);
+
+                    } else {
+
+                        $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
+                        $this->response->setStatusCode(Status::BAD_REQUEST);
+
+                    }
+
+                } else {
+
+                    $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
+                    $this->response->setStatusCode(Status::BAD_REQUEST);
+
                 }
-
-                $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                $this->response->setStatusCode(Status::OK);
-
-            } else {
-
-                $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
-                $this->response->setStatusCode(Status::BAD_REQUEST);
-
             }
-
-        } else {
-
-            $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
-            $this->response->setStatusCode(Status::BAD_REQUEST);
-
         }
 
         return $this->response;
@@ -828,54 +788,34 @@ class User extends Base
         return $this->response;
     }
 
-    /**
-     * PUT /user/block
-     *
+     /*
+     * PUT /me/users/un-block
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function blockMultipleUsers()
+    public function unblockUsers()
     {
         $this->_ensureLoggedIn();
 
-        $users = $this->request->request->all();
+        try {
 
-        if (!empty($users)) {
-            foreach ($users as $user) {
-                $blockingUser = $this->userRepository->find($user);
+            $postData = $this->request->request->all();
 
-                if ($blockingUser instanceof \Document\User) {
-
-                    $blockedUsers = $this->user->getBlockedUsers();
-
-                    if ($this->user != $blockingUser) {
-
-                        if (!in_array($blockingUser->getId(), $blockedUsers)) {
-
-                            $this->user->addBlockedUser($blockingUser);
-                            $this->dm->persist($this->user);
-
-                            $blockingUser->addBlockedBy($this->user);
-                            $this->dm->persist($blockingUser);
-
-                            $this->dm->flush();
-                        }
-
-                        $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                        $this->response->setStatusCode(Status::OK);
-
-                    } else {
-
-                        $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
-                        $this->response->setStatusCode(Status::BAD_REQUEST);
-
-                    }
-
-                }
+            $unBlockUsers = $this->userRepository->unBlockUsers($this->user->getId(), $postData);
+            if ($unBlockUsers == true) {
+                $this->response->setContent(json_encode(array('message' => 'unblock users successfully')));
+                $this->response->setStatusCode(Status::OK);
             }
-        } else {
-            $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
-            $this->response->setStatusCode(Status::BAD_REQUEST);
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
         }
 
 
