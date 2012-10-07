@@ -729,7 +729,7 @@ class UserRepo extends Base
         if ($avatarUrl !== false) {
             $user->setAvatar($avatarUrl);
         } else {
-            ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
+            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
 
