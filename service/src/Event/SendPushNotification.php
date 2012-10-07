@@ -65,7 +65,7 @@ class SendPushNotification extends Base
         $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
         $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
 
-        $message = count($this->messageRepository->getByRecipient($user));
+        $message = count($this->messageRepository->getByRecipientCount($user));
 
         $countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
 
