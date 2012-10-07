@@ -121,12 +121,6 @@ class User extends Base
                 'notifications'  => $notificationResult
             )));
         }
-//        $counTotal = count($notificationResult)+count($friendResult);
-//        var_dump($counTotal);
-//        var_dump($friendResult);
-//        var_dump($this->response);
-
-
 
        return $this->response;
     }
