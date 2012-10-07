@@ -1031,4 +1031,9 @@ class User
                         $this->lastName)));
     }
 
+    public function updateBlockedUser($user)
+    {
+        $this->blockedUsers = $user;
+    }
+
 }
