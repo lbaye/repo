@@ -916,30 +916,17 @@ class UserRepo extends Base
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
-            $friendResult[] = $friendRequest->toArray();
+                 $friendResult[] = $friendRequest->toArray();
         }
 
         foreach ($notifications as $notification) {
 
             if($notification->getViewed() != true){
-                 $notificationResult[] = $notification->toArray();
+               $notificationResult[] = $notification->toArray();
             }
 
         }
 
-        if (empty($friendResult) AND (empty($notificationResult))) {
-            return array();
-        } else {
-
-            return json_encode(json_encode(array(
-                'friend_request' => $friendResult,
-                'notifications'  => $notificationResult
-            )));
-        }
-//        $counTotal = count($notificationResult)+count($friendResult);
-//        var_dump($counTotal);
-//        var_dump($friendResult);
-//        var_dump($this->response);
-
+       return $countTotal = count($notificationResult).":".count($friendResult);
     }
 }

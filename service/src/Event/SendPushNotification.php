@@ -31,9 +31,9 @@ class SendPushNotification extends Base
 
             echo 'Running send_push_notification for '.$workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
             $this->userRepository = $this->services['dm']->getRepository('Document\User');
+            $this->messageRepository = $this->services['dm']->getRepository('Document\Message');
 
             $user = $this->userRepository->find($workload->user_id);
-
             $this->_sendPushNotification($user, get_object_vars($workload->notification));
 
             echo 'Done send_push_notification for '. $workload->user_id. " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
@@ -60,15 +60,15 @@ class SendPushNotification extends Base
     {
         $pushSettings = $user->getPushSettings();
 
-        $notificationCounts = $this->userRepository->getNotificationsCount($user->getId());
-//        $message = count($this->messageRepository->getByRecipient($user));
-        $message = 1;
-        $counTotal = count($notificationCounts['friend_request'])+count($notificationCounts['notifications'])+        $message = count($this->messageRepository->getByRecipient($user));
-$message;
-//      $notificationData['badge'] = array_sum($notificationCounts);
-//      $notificationData['tabCounts'] = implode(":", $notificationCounts);
-        $notificationData['badge'] = $counTotal;
-        $notificationData['tabCounts'] = implode(":", $notificationCounts);
+        $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+        $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+
+        $message = count($this->messageRepository->getByRecipient($user));
+
+        $countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
+
+        $notificationData['badge'] = $countTotal;
+        $notificationData['tabCounts'] = $notifications_friendrequest.":" . $message;
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
         if ($pushNotifier)
