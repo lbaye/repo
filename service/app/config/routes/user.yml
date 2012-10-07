@@ -54,5 +54,10 @@ update_block_user:
   defaults: { _controller: Controller\User::unblockUsers}
   requirements: { _method: PUT}
 
+blocked_users:
+  pattern: /me/blockes-users
+  defaults: { _controller: Controller\User::getBlockedUsers}
+  requirements: { _method: GET}
+
 
 

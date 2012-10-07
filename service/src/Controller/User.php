@@ -822,4 +822,28 @@ class User extends Base
         return $this->response;
     }
 
+    /*
+     * GET /me/blockes-users
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getBlockedUsers(){
+
+        if ($this->user instanceof \Document\User) {
+
+            $user = $this->user->getBlockedUsers();
+
+            $userDetail = $this->_getUserSummaryList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+
+            $this->response->setContent(json_encode($userDetail));
+            $this->response->setStatusCode(Status::OK);
+        } else {
+            $this->response->setContent(json_encode(array('message' => 'Unauthorized acecss. Auth-Token not found or invalid')));
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
+        }
+
+        return $this->response;
+    }
+
 }
