@@ -19,6 +19,9 @@
     int     selIndex;
     NSArray *labels;
     id<CustomRadioButtonDelegate> delegate;
+    UIImageView *imageViewDrag;
+    CGRect endDragRect;
+    CGRect startDragRect;
 }
 @property (nonatomic) int numRadio;
 @property (nonatomic) int selIndex;

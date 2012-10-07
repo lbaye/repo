@@ -11,12 +11,13 @@
 #import "LocationItem.h"
 #import "LocationItemPlace.h"
 #import "AppDelegate.h"
+#import "PullableView.h"
 
 @class OverlayViewController;
 
 #define SECTION_HEADER_HEIGHT   44
 
-@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate> {
+@interface ListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CustomCheckboxDelegate, LocationItemDelegate, PullableViewDelegate> {
     OBJECT_TYPES   selectedType;
     int             selectedItemIndex;
     AppDelegate     *smAppDelegate;
@@ -28,6 +29,8 @@
     IBOutlet UISearchBar *searchBar;
     IBOutlet UIView *viewSearch;
     
+    IBOutlet UIView *viewNotification;
+    PullableView *pullDownView;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
