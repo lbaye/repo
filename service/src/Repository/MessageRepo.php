@@ -193,4 +193,19 @@ class MessageRepo extends Base
         return $docsAsArr;
     }
 
+     public function getByRecipientCount(UserDocument $user)
+        {
+            $messages = $this->dm->createQueryBuilder()
+                    ->find('Document\Message')
+                    ->field('recipients')
+                    ->equals($user->getId())
+                    ->field('readBy')
+                    ->notIn($user->getId())
+                    ->sort('updateDate', 'desc')
+                    ->getQuery()
+                    ->execute();
+
+            return $messages;
+        }
+
 }
