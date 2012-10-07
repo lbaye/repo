@@ -49,4 +49,10 @@ friends:
   requirements: { _method: GET}
 
 
+block_multiple_user:
+  pattern: /me/users/block
+  defaults: { _controller: Controller\User::blockMultipleUsers}
+  requirements: { _method: PUT}
+
+
 
