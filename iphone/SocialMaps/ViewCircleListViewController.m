@@ -81,6 +81,10 @@ bool showSM=true;
     label.backgroundColor = [UIColor clearColor];
     [listViewfilter addSubview:label];
     
+    NSArray *subviews = [circleSearchBar subviews];
+    UIButton *cancelButton = [subviews objectAtIndex:2];
+    cancelButton.tintColor = [UIColor darkGrayColor];
+    
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
     //    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
     CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:showFB],[NSNumber numberWithInt:showSM], nil] labels:[NSArray arrayWithObjects:@"Facebook",@"Social Maps", nil]];
@@ -155,6 +159,32 @@ bool showSM=true;
     }
     [self getSortedDisplayList];
     [circleListTableView reloadData];
+    [circleSearchBar setText:@""];
+    [circleSearchBar resignFirstResponder];
+}
+
+-(void)moveSearchBarAnimation:(int)moveby
+{
+    if (moveby > 0) {
+        circleListTableView.contentInset = UIEdgeInsetsMake(43,0.0,0,0.0);
+    } else {
+        circleListTableView.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
+    }
+    NSLog(@"moveby %d",moveby);
+    //itemList.contentOffset = CGPointZero;
+    CGRect viewFrame = circleSearchBar.frame;
+    viewFrame.origin.y += moveby;
+    CGRect listPullDownFrame = listPulldown.frame;
+    listPullDownFrame.origin.y += moveby;
+    CGRect listPullDownMenuFrame = listPulldownMenu.frame;
+    listPullDownMenuFrame.origin.y += moveby;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3];    
+    [circleSearchBar setFrame:viewFrame];  
+    [listPulldown setFrame:listPullDownFrame]; 
+    [listPulldownMenu setFrame:listPullDownMenuFrame]; 
+    [UIView commitAnimations];    
 }
 
 - (void) getSortedDisplayList {
@@ -248,6 +278,18 @@ bool showSM=true;
     controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 
+}
+
+-(IBAction)showSearch:(id)sender
+{
+    if (circleSearchBar.frame.origin.y >= 44) {
+        [self moveSearchBarAnimation:-44];
+        [circleSearchBar resignFirstResponder];
+    } else {
+        [self moveSearchBarAnimation:44];
+        //listPulldownMenu.hidden = TRUE;
+        [circleSearchBar becomeFirstResponder];
+    }
 }
 
 -(IBAction)gotoInvites:(id)sender
@@ -478,8 +520,8 @@ bool showSM=true;
         searchText2=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
-        NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);
+        filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+        NSLog(@"eventListGlobalArray: %@",smAppDelegate.peopleList);
         [self.circleListTableView reloadData];
     }
     
@@ -516,7 +558,7 @@ bool showSM=true;
     searchText2=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
+    filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
     [self.circleListTableView reloadData];
     [circleSearchBar resignFirstResponder];
     NSLog(@"3");
@@ -550,13 +592,13 @@ bool showSM=true;
         filteredList = [[NSMutableArray alloc] initWithArray: friendListGlobalArray];
     }
     else
-        for (UserFriends *sTemp in friendListGlobalArray)
+        for (LocationItemPeople *sTemp in smAppDelegate.peopleList)
         {
-            NSRange titleResultsRange = [sTemp.userName rangeOfString:searchText2 options:NSCaseInsensitiveSearch];		
+            NSRange titleResultsRange = [sTemp.itemName rangeOfString:searchText2 options:NSCaseInsensitiveSearch];		
             if (titleResultsRange.length > 0)
             {
                 [filteredList addObject:sTemp];
-                NSLog(@"filtered friend: %@", sTemp.userName);            
+                NSLog(@"filtered friend: %@", sTemp.itemName);            
             }
             else
             {

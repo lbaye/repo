@@ -25,8 +25,6 @@
 @synthesize deleteEventButton;    
 @synthesize inviteEventButton,totalNotifCount;               
 
-@synthesize  customSelectionView, segmentControl, customScrollView, customSearchBar, customTableView;
-
 
 NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
@@ -181,36 +179,8 @@ BOOL isBackgroundTaskRunning=FALSE;
     }
 }
 
--(IBAction)customSegment:(id)sender
-{
-    NSLog(@"segmentControl.selectedSegmentIndex: %d",segmentControl.selectedSegmentIndex);
-    if (segmentControl.selectedSegmentIndex==0)
-    {
-        [customTableView setHidden:NO];
-        [customScrollView setHidden:YES];
-        [customSearchBar setHidden:YES];
-    }
-    else
-    {
-        [customTableView setHidden:YES];
-        [customScrollView setHidden:NO];
-        [customSearchBar setHidden:NO];
-    }
-}
-
--(IBAction)saveCustom:(id)sender
-{
-    [customSelectionView removeFromSuperview];    
-}
-
--(IBAction)cancelCustom:(id)sender
-{
-    [customSelectionView removeFromSuperview];
-}
-
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self.customSelectionView removeFromSuperview];
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
@@ -471,91 +441,93 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"event detail in scroll init %d",[ImgesName count]);
     if (isBackgroundTaskRunning==TRUE)  
     {
-        NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-        int x=0; //declared for imageview x-axis point    
-        
-        NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
-        for (UIView* view in subviews) 
+    NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+//    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+    int x=0; //declared for imageview x-axis point    
+    
+    NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
+    for (UIView* view in subviews) 
+    {
+        if([view isKindOfClass :[UIView class]])
         {
-            if([view isKindOfClass :[UIView class]])
-            {
-                [view removeFromSuperview];
-            }
-            else if([view isKindOfClass :[UIImageView class]])
-            {
-                // [view removeFromSuperview];
-            }
+            [view removeFromSuperview];
         }
-        guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
-        for(int i=0; i<[ImgesName count];i++)       
-            
+        else if([view isKindOfClass :[UIImageView class]])
         {
-            if(i< [ImgesName count]) 
+            // [view removeFromSuperview];
+        }
+    }
+    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
+    for(int i=0; i<[ImgesName count];i++)       
+        
+    {
+        if(i< [ImgesName count]) 
+        { 
+            UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+            if([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]) 
             { 
-                UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-                if([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]; 
-                } 
+                //If image available in dictionary, set it to imageview 
+                imgView.image = [dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]; 
+            } 
+            else 
+            { 
+                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
+                    
+                {
+                    NSLog(@"downloading called");
+                    //If scroll view moves set a placeholder image and start download image. 
+                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+//                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
+//                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
+                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                }
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
+                    // Image is not available, so set a placeholder image                    
+                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                }               
+            }
+            UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+            UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+            [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+            [name setNumberOfLines:0];
                         
-                    {
-                        NSLog(@"downloading called");
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        //                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
-                        //                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
-                        imgView.image = [UIImage imageNamed:@"thum.png"];
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image                    
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                    }               
-                }
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
-                [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
-                [name setNumberOfLines:0];
-                
-                [name setText:[nameArr objectAtIndex:i]];
-                
-                [name setBackgroundColor:[UIColor clearColor]];
-                imgView.userInteractionEnabled = YES;           
-                imgView.tag = i;           
-                imgView.exclusiveTouch = YES;           
-                imgView.clipsToBounds = NO;           
-                imgView.opaque = YES;   
-                imgView.exclusiveTouch = YES;
-                imgView.clipsToBounds = NO;
-                imgView.opaque = YES;
-                
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
-                if ([globalEvent.yesArr containsObject:[idArr objectAtIndex:i]] ||[[idArr objectAtIndex:i] isEqualToString:globalEvent.owner])
-                {
-                    imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                }
-                else if([globalEvent.noArr containsObject:[idArr objectAtIndex:i]]) 
-                {
-                    imgView.layer.borderColor=[[UIColor redColor] CGColor];
-                }
-                else
-                {
-                    imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
-                }
-                imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=1.5;
-                imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
-                [aView addSubview:imgView];
-                [aView addSubview:name];
-                [guestScrollView addSubview:aView];           
-            }       
+            [name setText:[nameArr objectAtIndex:i]];
+            
+            [name setBackgroundColor:[UIColor clearColor]];
+            imgView.userInteractionEnabled = YES;           
+            imgView.tag = i;           
+            imgView.exclusiveTouch = YES;           
+            imgView.clipsToBounds = NO;           
+            imgView.opaque = YES;   
+            imgView.exclusiveTouch = YES;
+            imgView.clipsToBounds = NO;
+            imgView.opaque = YES;
+
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            if ([globalEvent.yesArr containsObject:[idArr objectAtIndex:i]] ||[[idArr objectAtIndex:i] isEqualToString:globalEvent.owner])
+            {
+            imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+            }
+            else if([globalEvent.noArr containsObject:[idArr objectAtIndex:i]]) 
+            {
+            imgView.layer.borderColor=[[UIColor redColor] CGColor];
+            }
+            else
+            {
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            }
+            imgView.userInteractionEnabled=YES;
+            imgView.layer.borderWidth=1.5;
+            imgView.layer.masksToBounds = YES;
+            [imgView.layer setCornerRadius:7.0];
+            [aView addSubview:imgView];
+            [aView addSubview:name];
+            [guestScrollView addSubview:aView];           
+        }       
             x+=65;   
-        }
+    }
+//    [pl drain];
     }
 }
 

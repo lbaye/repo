@@ -51,6 +51,10 @@
 
 @synthesize totalNotifCount;
 
+@synthesize upperView;
+@synthesize lowerView;
+@synthesize viewContainerScrollView;
+
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
 __strong int checkCount;
@@ -72,6 +76,7 @@ int createNotf=0;
 int updateNotf=0;
 NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr, *selectedCustomCircleCheckArr;
 NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
+NSMutableArray *guestListIdArr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -91,7 +96,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     [circleList removeAllObjects];
     
     UserCircle *circle=[[UserCircle alloc]init];
-    
+    guestListIdArr=[[NSMutableArray alloc] init];
     
     
     for (int i=0; i<[circleListGlobalArray count]; i++)
@@ -120,7 +125,20 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     
     friendListArr=[[NSMutableArray alloc] init];
     
+    NSLog(@"event.guestList: %@",event.guestList);
     
+    if (editFlag==true)
+    {
+        
+        event=globalEditEvent;
+        for (int j=0; j<[event.guestList count]; j++) 
+        {
+            UserFriends *guest=[event.guestList objectAtIndex:j];
+            NSLog(@"guest.userId %@",guest.userId);
+            [guestListIdArr addObject:guest.userId];
+        }
+    }
+
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
         
@@ -148,11 +166,15 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
             
         }
         
-        
-        
-        [friendListArr addObject:frnds];
-        
-        [friendListArr replaceObjectAtIndex:i withObject:frnds];
+        NSLog(@"guestListIdArr %@  frnds.userId %@",guestListIdArr,frnds.userId);
+        if (![guestListIdArr containsObject:frnds.userId])
+        {
+            [friendListArr addObject:frnds];
+            NSLog(@"non invited added %@",frnds.userName);
+//        [friendListArr replaceObjectAtIndex:i withObject:frnds];
+//
+        }
+                
         
         NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
         
@@ -174,6 +196,19 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;	
+    [upperView removeFromSuperview];
+    [lowerView removeFromSuperview];
+
+    upperView.frame=CGRectMake(0, 0, upperView.frame.size.width, upperView.frame.size.height);
+
+    lowerView.frame=CGRectMake(0, upperView.frame.size.height, lowerView.frame.size.width, lowerView.frame.size.height);
+    viewContainerScrollView.contentSize=CGSizeMake(320, upperView.frame.size.height+lowerView.frame.size.height);    
+    [viewContainerScrollView addSubview:upperView];
+    [viewContainerScrollView addSubview:lowerView];
+    
+    NSArray *subviews = [friendSearchbar subviews];
+    UIButton *cancelButton = [subviews objectAtIndex:2];
+    cancelButton.tintColor = [UIColor darkGrayColor];
     
     frndListScrollView.delegate = self;
     customScrollView.delegate=self;
@@ -246,6 +281,13 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 	[circleView removeFromSuperview];
     if (editFlag==true)
     {
+        if (event.guestCanInvite) {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
+        }
         event=globalEditEvent;
     }
     else
@@ -451,15 +493,15 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     NSLog(@"segmentControl.selectedSegmentIndex: %d",segmentControl.selectedSegmentIndex);
     if (segmentControl.selectedSegmentIndex==0)
     {
-        [customTableView setHidden:NO];
-        [customScrollView setHidden:YES];
-        [customSearchBar setHidden:YES];
-    }
-    else
-    {
         [customTableView setHidden:YES];
         [customScrollView setHidden:NO];
         [customSearchBar setHidden:NO];
+    }
+    else
+    {
+        [customTableView setHidden:NO];
+        [customScrollView setHidden:YES];
+        [customSearchBar setHidden:YES];        
     }
 }
 
@@ -525,7 +567,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     checkCount++;
     if (checkCount%2!=0)
     {
-        [guestCanInviteButton setImage:[UIImage imageNamed:@"list_checked.png"] forState:UIControlStateNormal];
+        [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
         event.guestCanInvite=true;
     }
     else
@@ -619,6 +661,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
         event.circleList=userCircleArr;        
         if (editFlag==true)
         {
+            [event.guestList addObjectsFromArray:guestListIdArr];
             [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
         }
         else
@@ -778,20 +821,20 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     
     if ([selectedCircleCheckArr containsObject:indexPath]) 
     {
-        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     else
     {
-        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+        [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
     }
 
     if ([selectedCustomCircleCheckArr containsObject:indexPath]) 
     {
-        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     else
     {
-        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+        [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
     }
     
     [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
@@ -818,12 +861,12 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
-        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
     }
     else
     {
         [selectedCircleCheckArr addObject:clickedButtonPath];
-        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     NSLog(@"selectedCircleCheckArr: %@",selectedCircleCheckArr);    
 }
@@ -836,12 +879,12 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     if ([selectedCustomCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCustomCircleCheckArr removeObject:clickedButtonPath];
-        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
     }
     else
     {
         [selectedCustomCircleCheckArr addObject:clickedButtonPath];
-        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"checkbox_checked.png"] forState:UIControlStateNormal];
+        [clickedCell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     NSLog(@"selectedCircleCheckArr: %@",selectedCustomCircleCheckArr);    
 }
@@ -940,8 +983,8 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                 // [view removeFromSuperview];
             }
         }
-        subviews = [NSArray arrayWithArray: customScrollView.subviews];
-        for (UIView* view in subviews) 
+       NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+        for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
             {
@@ -953,7 +996,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
             }
         }   
         
-        frndListScrollView.contentSize=CGSizeMake([filteredList1 count]*65, 65);
+        frndListScrollView.contentSize=CGSizeMake([filteredList1 count]*80, 100);
         customScrollView.contentSize=CGSizeMake([filteredList2 count]*65, 65);
         
         NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
@@ -963,7 +1006,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
             { 
                 UserFriends *userFrnd=[[UserFriends alloc] init];
                 userFrnd=[filteredList1 objectAtIndex:i];
-                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
+                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
                 {
@@ -991,9 +1034,9 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
                 UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
                 [name setText:userFrnd.userName];
@@ -1029,7 +1072,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
                 [tapGesture release];           
                 [frndListScrollView addSubview:aView];
             }        
-            x+=65;
+            x+=80;
         }
         
         //handling custom scroller
@@ -1113,7 +1156,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 {
     if (isBackgroundTaskRunning==true)
     {
-    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+//    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
     userFrnd=[filteredList1 objectAtIndex:index];
@@ -1129,7 +1172,7 @@ NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
     }
     // Now, we need to reload scroll view to load downloaded image
 //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-    [pl release];
+//    [pl release];
     }
 }
 

@@ -66,6 +66,10 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UITableView *customTableView;
     
     IBOutlet UILabel *totalNotifCount;
+    
+    IBOutlet UIView *upperView;
+    IBOutlet UIView *lowerView;    
+    IBOutlet UIScrollView *viewContainerScrollView;    
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
@@ -116,6 +120,10 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UITableView *customTableView;
 
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+
+@property(nonatomic,retain) IBOutlet UIView *upperView;
+@property(nonatomic,retain) IBOutlet UIView *lowerView;    
+@property(nonatomic,retain) IBOutlet UIScrollView *viewContainerScrollView;    
 
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    

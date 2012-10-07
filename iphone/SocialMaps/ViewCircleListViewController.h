@@ -35,6 +35,6 @@
 -(IBAction)sendMsg:(id)sender;
 -(IBAction)cancelMsg:(id)sender;
 - (IBAction)actionNotificationButton:(id)sender;
-
+-(IBAction)showSearch:(id)sender;
 
 @end
