@@ -80,7 +80,7 @@ class Gathering extends Base
                 $data['guests'] = $guests;
 
                 if (!empty($data['eventImage'])) {
-                    $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
+                    $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
