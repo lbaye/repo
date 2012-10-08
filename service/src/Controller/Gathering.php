@@ -80,7 +80,7 @@ class Gathering extends Base
                 $data['guests'] = $guests;
 
                 if (!empty($data['eventImage'])) {
-                    $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+                    $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
@@ -158,7 +158,7 @@ class Gathering extends Base
             $this->gatheringRepository->insert($meetup);
 
             if (!empty($postData['eventImage'])) {
-                $this->gatheringRepository->saveEventImage($meetup->getId(), $postData['eventImage']);
+               $postData['eventImage'] = \Helper\Url::buildEventPhotoUrl($postData);
             }
 
             if (empty($postData['guestsCanInvite'])) {
@@ -185,7 +185,7 @@ class Gathering extends Base
         $data = $meetup->toArrayDetailed();
 
         if (!empty($data['eventImage'])) {
-            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+            $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
         }
 
         return $this->_generateResponse($data, Status::CREATED);
@@ -244,7 +244,7 @@ class Gathering extends Base
         $data['guests'] = $guests;
 
         if(!empty($data['eventImage'])) {
-            $data['eventImage'] = $this->config['web']['root'] . $data['eventImage'];
+            $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
         }
 
         return $this->_generateResponse($data);
@@ -377,7 +377,8 @@ class Gathering extends Base
             $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
 
             if (!empty($gatheringItem['eventImage'])){
-              $gatheringItem['eventImage'] = $this->config['web']['root'] . $place->getEventImage();
+
+              $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
             }
             $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
