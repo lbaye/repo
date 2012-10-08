@@ -528,9 +528,7 @@ class User extends Base
 
                             $this->dm->flush();
                         }
-
-                        $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                        $this->response->setStatusCode(Status::OK);
+                            $this->getBlockedUsers();
 
                     } else {
 
@@ -803,9 +801,8 @@ class User extends Base
 
             $unBlockUsers = $this->userRepository->unBlockUsers($this->user->getId(), $postData);
             if ($unBlockUsers == true) {
-                $this->response->setContent(json_encode(array('message' => 'unblock users successfully')));
-                $this->response->setStatusCode(Status::OK);
-            }
+                $this->getBlockedUsers();
+              }
         } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
