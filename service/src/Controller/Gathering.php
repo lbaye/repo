@@ -158,7 +158,7 @@ class Gathering extends Base
             $this->gatheringRepository->insert($meetup);
 
             if (!empty($postData['eventImage'])) {
-               $postData['eventImage'] = \Helper\Url::buildEventPhotoUrl($postData);
+               $this->gatheringRepository->saveEventImage($meetup->getId(), $postData['eventImage']);
             }
 
             if (empty($postData['guestsCanInvite'])) {
