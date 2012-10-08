@@ -200,7 +200,7 @@ class MessageRepo extends Base
                     ->field('recipients')
                     ->equals($user->getId())
                     ->field('readBy')
-                    ->notIn($user->getId())
+                    ->notEqual($user->getId())
                     ->sort('updateDate', 'desc')
                     ->getQuery()
                     ->execute();
