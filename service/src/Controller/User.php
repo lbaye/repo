@@ -168,8 +168,8 @@ class User extends Base
 
             $data = $this->user->toArrayDetailed();
 
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
@@ -196,8 +196,8 @@ class User extends Base
         if (null !== $user) {
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));
@@ -225,8 +225,8 @@ class User extends Base
         if (false !== $user) {
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
@@ -290,8 +290,8 @@ class User extends Base
             }
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);

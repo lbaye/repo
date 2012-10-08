@@ -61,8 +61,8 @@ class Auth extends Base
 
             $data = $user->toArrayDetailed();
 
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
 
             $this->response->setContent(json_encode($data));
@@ -107,8 +107,8 @@ class Auth extends Base
 
             $userData = $user->toArrayDetailed();
 
-            $userData['avatar'] = $this->_buildAvatarUrl($userData);
-            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
+            $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
+            $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
 
             $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
 
@@ -166,8 +166,8 @@ class Auth extends Base
 
             }
             $userData = $user->toArrayDetailed();
-            $userData['avatar'] = $this->_buildAvatarUrl($userData);
-            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
+            $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
+            $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
 
             $this->response->setContent(json_encode($userData));
