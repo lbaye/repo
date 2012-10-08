@@ -50,7 +50,8 @@ class IOS extends Notifier
         $load = array(
             'aps' => array(
                 'alert' => $data['title'],
-                'badge' => 1,
+                'badge' => $data['badge'],
+                'tabCounts' => $data['tabCounts'],
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
                     'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
