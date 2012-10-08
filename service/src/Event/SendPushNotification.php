@@ -52,14 +52,11 @@ class SendPushNotification extends Base
      *   - tabCounts
      *   - objectId
      *   - objectType
-     *
-     * @param \Document\User $user
      * @param array $notificationData
      */
     private function _sendPushNotification(\Document\User $user, array $notificationData)
     {
         $pushSettings = $user->getPushSettings();
-
         $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
         $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
 
@@ -69,6 +66,7 @@ class SendPushNotification extends Base
 
         $notificationData['badge'] = $countTotal;
         $notificationData['tabCounts'] = $notifications_friendrequest.":" . $message;
+
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
         if ($pushNotifier)

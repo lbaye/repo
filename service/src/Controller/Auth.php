@@ -21,6 +21,7 @@ class Auth extends Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository = $this->dm->getRepository('Document\User');
+        $this->messageRepository = $this->dm->getRepository('Document\Message');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
     }
@@ -63,7 +64,9 @@ class Auth extends Base
 
             $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
             $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
-
+            $data['notifications'] = 0;
+            $data['friendRequest'] = 0;
+            $data['messageCount']  = 0;
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
@@ -104,6 +107,9 @@ class Auth extends Base
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
             $this->user = $user;
+            $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+            $message = count($this->messageRepository->getByRecipientCount($user));
 
             $userData = $user->toArrayDetailed();
 
@@ -112,6 +118,9 @@ class Auth extends Base
 
             $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
 
+            $userData['notifications'] = (int) $notifications_friendrequest_extract[0];
+            $userData['friendRequest'] = (int) $notifications_friendrequest_extract[1];
+            $userData['messageCount']  = $message;
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -165,10 +174,19 @@ class Auth extends Base
                 $user = $this->userRepository->insert($data);
 
             }
+
+            $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+            $message = count($this->messageRepository->getByRecipientCount($user));
+
             $userData = $user->toArrayDetailed();
             $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
             $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
+
+            $userData['notifications'] = (int) $notifications_friendrequest_extract[0];
+            $userData['friendRequest'] = (int) $notifications_friendrequest_extract[1];
+            $userData['messageCount']  = $message;
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
