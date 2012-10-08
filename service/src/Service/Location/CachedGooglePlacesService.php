@@ -49,11 +49,13 @@ class CachedGooglePlacesService implements \Service\Location\IPlacesService
 
     private function updateDistance($location, $cachedData)
     {
-        foreach ($cachedData as &$place) {
-            $place->distance = \Helper\Location::distance(
-                $location['lat'], $location['lng'],
-                $place->geometry->location->lat,
-                $place->geometry->location->lng);
+        if (!empty($cachedData)) {
+            foreach ($cachedData as &$place) {
+                $place->distance = \Helper\Location::distance(
+                    $location['lat'], $location['lng'],
+                    $place->geometry->location->lat,
+                    $place->geometry->location->lng);
+            }
         }
         return $cachedData;
     }
