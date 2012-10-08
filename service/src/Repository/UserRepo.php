@@ -729,7 +729,7 @@ class UserRepo extends Base
         if ($avatarUrl !== false) {
             $user->setAvatar($avatarUrl);
         } else {
-            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
+            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR);
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
 
@@ -756,7 +756,7 @@ class UserRepo extends Base
         if ($coverPhotoUrl !== false) {
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
-            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
+            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR );
             $user->setCoverPhoto($filePath . "?" . $timeStamp);
         }
 
