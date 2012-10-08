@@ -239,7 +239,7 @@ class GatheringRepo extends Base
             $user->setEventImage($eventImageUrl);
         } else {
 
-            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR);
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR .$filePath);
             $user->setEventImage($filePath. "?". $timeStamp);
         }
 
