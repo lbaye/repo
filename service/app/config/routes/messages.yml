@@ -25,7 +25,7 @@ status_message:
     _method: POST|PUT
     status: read|unread
 
-add_recipient_to_message:
+update_recipient_to_message:
   pattern: /messages/{id}/recipients
   defaults: { _controller: Controller\Messages::updateRecipients }
   requirements:
@@ -46,3 +46,9 @@ read_message:
   pattern: /messages/{id}
   defaults: { _controller: Controller\Messages::getById }
   requirements: { _method: GET }
+
+add_recipient_to_message:
+  pattern: /messages/{id}/recipients/add
+  defaults: { _controller: Controller\Messages::addRecipients }
+  requirements:
+    _method: POST|PUT
