@@ -281,4 +281,42 @@ class Messages extends Base
     {
         return $this->user->getFirstName() .$msgText ;
     }
+
+    public function addRecipients($id)
+    {
+        # Find existing object
+        $message = $this->messageRepository->find($id);
+
+        # Return if object is not found
+        if (empty($message))
+            return $this->_generate404();
+
+        # Load recipients list
+        $recipients = $this->request->request->get('recipients');
+
+        if (empty($recipients))
+            return $this->_generate500('No recipients[] is set over parameter.');
+
+        try {
+            # Update recipients list
+            $messageArray = $message->toArray();
+
+            foreach($messageArray['recipients'] as $recipient){
+                $previousRecipients[] = $recipient['id'];
+            }
+
+            $mergedRecipients = array_unique(array_merge($previousRecipients, $recipients));
+
+            if ($this->messageRepository->updateRecipients($message, $mergedRecipients)) {
+
+                $this->_generateResponse($message->toArray(), Status::OK);
+            } else {
+                $this->_generate500();
+            }
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
 }
