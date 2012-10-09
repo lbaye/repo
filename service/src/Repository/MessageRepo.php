@@ -172,7 +172,7 @@ class MessageRepo extends Base
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
 
-            $message->setRecipients($recipientsObjects);
+            $message->setRecipients(array_filter($recipientsObjects));
         }
     }
 
