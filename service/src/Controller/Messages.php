@@ -205,7 +205,9 @@ class Messages extends Base
 
         try {
             # Update recipients list
+
             if ($this->messageRepository->updateRecipients($message, $recipients)) {
+
                 $this->_generateResponse($message->toArray(), Status::OK);
             } else {
                 $this->_generate500();
