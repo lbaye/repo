@@ -97,6 +97,7 @@ class Auth extends Base
     public function login()
     {
         $data = $this->request->request->all();
+
         if(!empty($data['email'])){
             $data['email'] = strtolower($data['email']);
         }
@@ -140,6 +141,7 @@ class Auth extends Base
     public function fbLogin()
     {
         $data = $this->request->request->all();
+
         if(!empty($data['email'])){
             $data['email'] = strtolower($data['email']);
         }
