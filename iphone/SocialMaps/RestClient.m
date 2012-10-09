@@ -4405,7 +4405,7 @@
 
 -(void)updateMessageRecipients:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId recipients:(NSMutableArray*)recipients
 {
-    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/recipients", WS_URL, messageId];
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/recipients/add", WS_URL, messageId];
     
     NSURL *url = [NSURL URLWithString:route];
     

@@ -2490,9 +2490,10 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="event_item_bg.png" id="9kN-BQ-KgE">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="event_item_bg.png" id="9kN-BQ-KgE">
                                 <rect key="frame" x="0.0" y="45" width="327" height="127"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="cLa-U0-BSY">
                                 <rect key="frame" x="27" y="72" width="273" height="16"/>
@@ -3023,7 +3024,7 @@
                                 <rect key="frame" x="0.0" y="45" width="320" height="258"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="event_item_bg.png" id="nhH-Dz-eoc" showNotesWithSelection="YES">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="event_item_bg.png" id="nhH-Dz-eoc" showNotesWithSelection="YES">
                                         <rect key="frame" x="121" y="210" width="105" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <accessibility key="accessibilityConfiguration" hint="hint" label="label">
@@ -3853,9 +3854,10 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="P2L-f2-twi">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="P2L-f2-twi">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <view alpha="0.60000000000000009" contentMode="scaleToFill" id="R7y-lI-7VD">
                                                     <rect key="frame" x="10" y="81" width="300" height="30"/>
@@ -3935,9 +3937,10 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="171"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="EMe-Qi-46n">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="EMe-Qi-46n">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_arrow_right.png" id="iw7-9m-EEK">
                                                     <rect key="frame" x="291" y="52" width="12" height="17"/>
@@ -5199,9 +5202,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
                 <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
             </relationships>
-        </class>
-        <class className="NSDictionary" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>

@@ -725,7 +725,7 @@ DDAnnotation *annotation;
             UserFriends *userFrnd=[[UserFriends alloc] init];
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            if([[dicImages_msg valueForKey:userFrnd.imageUrl] isKindOfClass:[UIImage class]]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
@@ -736,14 +736,16 @@ DDAnnotation *annotation;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    //[dicImages_msg setObject:[UIImage imageNamed:@"NO_IMAGE"] forKey:userFrnd.imageUrl]; 
+                    //[dicImages_msg setObject:[[UIImage alloc] init] forKey:userFrnd.imageUrl]; 
+                    [dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
                 }               
             }
             

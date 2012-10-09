@@ -530,7 +530,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         if (!iconDownloader)
         {
-            imageViewReply.image = [UIImage imageNamed:@"girl.png"];
+            //imageViewReply.image = [UIImage imageNamed:@"girl.png"];
+            imageViewReply.image = nil;
             if (tableView.dragging == NO && tableView.decelerating == NO) {
                 [self startReplyIconDownload:msgReply forIndexPath:indexPath];
             }            
@@ -639,7 +640,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     //if ([[profileImageList objectAtIndex:indexPath.row] isEqual:@""])
     //{
-        cell.imageView.image = [UIImage imageNamed:@"girl.png"];
+        //cell.imageView.image = [UIImage imageNamed:@"girl.png"];
+        cell.imageView.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
             //recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
@@ -966,7 +968,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (iconDownloader.userFriends.userProfileImage) {
                 [profileImageList replaceObjectAtIndex:i withObject:iconDownloader.userFriends.userProfileImage];
             } else {
-                [profileImageList replaceObjectAtIndex:i withObject:[UIImage imageNamed:@"girl.png"]];
+                //[profileImageList replaceObjectAtIndex:i withObject:[UIImage imageNamed:@"girl.png"]];
+                [profileImageList replaceObjectAtIndex:i withObject:[[UIImage alloc] init]];
             }
         }
     }
@@ -1407,9 +1410,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
             if (userFrnd.imageUrl == nil) {
-                imgView.image = [UIImage imageNamed:@"girl.png"];
+                //imgView.image = [UIImage imageNamed:@"girl.png"];
             }            
-            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            else if([[dicImages_msg valueForKey:userFrnd.imageUrl] isKindOfClass:[UIImage class]]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
@@ -1420,14 +1423,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    //[dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    [dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [[UIImage alloc] init];
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [[UIImage alloc] init];                   
                 }               
             }
 
