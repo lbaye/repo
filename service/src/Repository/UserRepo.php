@@ -800,14 +800,14 @@ class UserRepo extends Base
             ->field('visible')->equals(true)
             ->limit($limit);
 
-        if (!is_null($keyword)) {
-            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-        } else {
-            // @TODO : Changing to near temporarily for testing with more users
-            //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
-            $query->field('currentLocation')->near($location['lat'], $location['lng']);
-        }
+//        if (!is_null($keyword)) {
+//            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+//            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+//        } else {
+//            // @TODO : Changing to near temporarily for testing with more users
+//           // $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+//            $query->field('currentLocation')->near($location['lat'], $location['lng']);
+//        }
 
         $result = $query->getQuery()->execute();
 
