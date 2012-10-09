@@ -28,7 +28,6 @@
 #import "EventList.h"
 #import "Globals.h"
 #import "MessageReply.h"
-#import "UtilityClass.h"
 #import "MeetUpRequest.h"
 
 @implementation RestClient
@@ -4401,6 +4400,52 @@
     
     //[request setDelegate:self];
     NSLog(@"asyn srt set msg status");
+    [request startAsynchronous];
+}
+
+-(void)updateMessageRecipients:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId recipients:(NSMutableArray*)recipients
+{
+    NSString *route = [NSString stringWithFormat:@"%@/messages/%@/recipients", WS_URL, messageId];
+    
+    NSURL *url = [NSURL URLWithString:route];
+    
+    NSLog(@"route = %@", route);
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    for (int i=0; i<[recipients count]; i++) 
+        [request addPostValue:[recipients objectAtIndex:i] forKey:@"recipients[]"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) {
+            [UtilityClass showAlert:@"" :@"Saved recipients"];
+        } else {
+            [UtilityClass showAlert:@"" :@"Failed to save recipients"];
+        }
+        
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [UtilityClass showAlert:@"" :@"Failed to save recipients"];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt update message recipients");
     [request startAsynchronous];
 }
 

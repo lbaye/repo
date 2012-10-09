@@ -78,5 +78,6 @@
 -(void) getAllCircles:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) createCircle:(NSString *)authToken:(NSString *)authTokenValue:(UserCircle *)userCircle;
 -(void) updateCircle:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)friendId:(NSMutableArray *)userCircleArr;
+-(void)updateMessageRecipients:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId recipients:(NSMutableArray*)recipients;
 
 @end
