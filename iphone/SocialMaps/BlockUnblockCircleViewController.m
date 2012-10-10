@@ -92,15 +92,9 @@ bool searchFlag3=true;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockUsresDone:) name:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
 
     
-    [rc getBlockUserList:@"Auth-Token" :smAppDelegate.authToken];
-    [smAppDelegate  showActivityViewer:self.view];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
-
-//    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
-    // EventList *eventList=[[EventList alloc] init];
-    // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
+//    [rc getBlockUserList:@"Auth-Token" :smAppDelegate.authToken];
+//    [smAppDelegate  showActivityViewer:self.view];
+//    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     // Do any additional setup after loading the view.
     
@@ -179,38 +173,38 @@ bool searchFlag3=true;
     [blockedUser removeAllObjects];
     blockedUser=[notif object];
 //    [self removeBlockedUser];
-    for(int i=0; i<[blockedUser count];i++)
-    {
-        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
-        People *ppl=[[People alloc] init];
-        ppl=[blockedUser objectAtIndex:i];
-        locItem.itemAddress=ppl.city;
-        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
-        locItem.itemCategory=@"";
-        locItem.itemDistance=[ppl.distance doubleValue];
-        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
-        locItem.itemName=ppl.firstName;
-        locItem.itemType=0;
-        locItem.userInfo=ppl;
-        
-        [peopleListArray addObject:locItem];
-        NSLog(@"locItem %@ %@",locItem,ppl);
-        [blockedIdArr addObject:ppl.userId];
-        [blockedUser replaceObjectAtIndex:i withObject:locItem];
-    }
-    filteredList=[peopleListArray mutableCopy];
-    NSLog(@"blockedUser: %@ filteredList: %@",blockedUser,filteredList);
-    [allUserIdArr removeAllObjects];
-    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
-    for (int i=0; i<[peopleListArray count]; i++)
-    {
-        NSLog(@"index: %d",i);
-        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
-        {
-            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
-            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
-        }
-    }
+//    for(int i=0; i<[blockedUser count];i++)
+//    {
+//        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+//        People *ppl=[[People alloc] init];
+//        ppl=[blockedUser objectAtIndex:i];
+//        locItem.itemAddress=ppl.city;
+//        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+//        locItem.itemCategory=@"";
+//        locItem.itemDistance=[ppl.distance doubleValue];
+//        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+//        locItem.itemName=ppl.firstName;
+//        locItem.itemType=0;
+//        locItem.userInfo=ppl;
+//        
+//        [peopleListArray addObject:locItem];
+//        NSLog(@"locItem %@ %@",locItem,ppl);
+//        [blockedIdArr addObject:ppl.userId];
+//        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+//    }
+//    filteredList=[peopleListArray mutableCopy];
+//    NSLog(@"blockedUser: %@ filteredList: %@",blockedUser,filteredList);
+//    [allUserIdArr removeAllObjects];
+//    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+//    for (int i=0; i<[peopleListArray count]; i++)
+//    {
+//        NSLog(@"index: %d",i);
+//        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+//        {
+//            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
+//            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+//        }
+//    }
     
     [self.blockTableView reloadData];
     [smAppDelegate hideActivityViewer];
@@ -220,47 +214,47 @@ bool searchFlag3=true;
 - (void)blockUsresDone:(NSNotification *)notif
 {
     blockSearchBar.text=@"";
-    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSLog(@"[notif object]: %@",[notif object]);
-    blockedUser=[[NSMutableArray alloc] init];
-    blockedUser=[notif object];
-    peopleListArray=[[self loadDummyData] mutableCopy];
-    [self removeBlockedPeople];
-    //blocked people should remove from here
-    NSLog(@"blockedUserRemoveArr: %@",blockedUserRemoveArr);
-    NSLog(@"blockedUser %d",[blockedUser count]);
-//    [self removeBlockedUser];
-
-    for(int i=0; i<[blockedUser count];i++)
-    {
-        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
-        People *ppl=[[People alloc] init];
-        ppl=[blockedUser objectAtIndex:i];
-        locItem.itemAddress=ppl.city;
-        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
-        locItem.itemCategory=@"blocked";
-        locItem.itemDistance=[ppl.distance doubleValue];
-        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
-        locItem.itemName=ppl.firstName;
-        locItem.itemType=0;
-        locItem.userInfo=ppl;
-        [peopleListArray addObject:locItem];
-        NSLog(@"locItem %@ %@",locItem,ppl);
-        [blockedIdArr addObject:ppl.userId];
-        [blockedUser replaceObjectAtIndex:i withObject:locItem];
-    }
-    filteredList=[peopleListArray mutableCopy];
-    [allUserIdArr removeAllObjects];
-    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
-    for (int i=0; i<[peopleListArray count]; i++)
-    {
-        
-        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
-        {
-            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
-        }
-    }
-    NSLog(@"all user index: %d  %d",[allUserIdArr count],[peopleListArray count]);
+    [self searchResult];
+//    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    NSLog(@"[notif object]: %@",[notif object]);
+//    blockedUser=[[NSMutableArray alloc] init];
+//    blockedUser=[notif object];
+//    peopleListArray=[[self loadDummyData] mutableCopy];
+//    [self removeBlockedPeople];
+//    //blocked people should remove from here
+//    NSLog(@"blockedUserRemoveArr: %@",blockedUserRemoveArr);
+//    NSLog(@"blockedUser %d",[blockedUser count]);
+////    [self removeBlockedUser];
+//
+//    for(int i=0; i<[blockedUser count];i++)
+//    {
+//        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+//        People *ppl=[[People alloc] init];
+//        ppl=[blockedUser objectAtIndex:i];
+//        locItem.itemAddress=ppl.city;
+//        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+//        locItem.itemCategory=@"blocked";
+//        locItem.itemDistance=[ppl.distance doubleValue];
+//        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+//        locItem.itemName=ppl.firstName;
+//        locItem.itemType=0;
+//        locItem.userInfo=ppl;
+//        [peopleListArray addObject:locItem];
+//        NSLog(@"locItem %@ %@",locItem,ppl);
+//        [blockedIdArr addObject:ppl.userId];
+//        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+//    }
+//    filteredList=[peopleListArray mutableCopy];
+//    [allUserIdArr removeAllObjects];
+//    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+//    for (int i=0; i<[peopleListArray count]; i++)
+//    {        
+//        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+//        {
+//            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+//        }
+//    }
+//    NSLog(@"all user index: %d  %d",[allUserIdArr count],[peopleListArray count]);
     [self.blockTableView reloadData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
@@ -269,13 +263,14 @@ bool searchFlag3=true;
 - (void)unBlockUsresDone:(NSNotification *)notif
 {
     blockSearchBar.text=@"";    
-    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
-    NSLog(@"[notif object]: %@",[notif object]);
-    blockedUser=[[NSMutableArray alloc] init];
-    blockedUser=[notif object];
-    peopleListArray=[[self loadDummyData] mutableCopy];
-    [peopleListArray addObject:unblockedPeople];
-    NSLog(@"before unblocked: %d",[peopleListArray count]);
+    [self searchResult];
+//    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
+//    NSLog(@"[notif object]: %@",[notif object]);
+//    blockedUser=[[NSMutableArray alloc] init];
+//    blockedUser=[notif object];
+//    peopleListArray=[[self loadDummyData] mutableCopy];
+//    [peopleListArray addObject:unblockedPeople];
+//    NSLog(@"before unblocked: %d",[peopleListArray count]);
 //    //remove all blocked user
 //    for (int i=0; i<[peopleListArray count]; i++)
 //    {
@@ -288,40 +283,40 @@ bool searchFlag3=true;
 //        }
 //    }
 //    NSLog(@"after unblocked: %d",[peopleListArray count]);
-    for(int i=0; i<[blockedUser count];i++)
-    {
-        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
-        People *ppl=[[People alloc] init];
-        ppl=[blockedUser objectAtIndex:i];
-        locItem.itemAddress=ppl.city;
-        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
-        locItem.itemCategory=@"blocked";
-        locItem.itemDistance=[ppl.distance doubleValue];
-        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
-        locItem.itemName=ppl.firstName;
-        locItem.itemType=0;
-        locItem.userInfo=ppl;
-        
-//        if (![allUserIdArr containsObject:ppl.userId])
-        {
-            [peopleListArray addObject:locItem];
-            NSLog(@"locItem %@ %@",locItem,ppl);
-            [blockedIdArr addObject:ppl.userId];
-        }
-        [blockedUser replaceObjectAtIndex:i withObject:locItem];
-    }
-    filteredList=[peopleListArray mutableCopy];
-    [allUserIdArr removeAllObjects];
-    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
-    for (int i=0; i<[peopleListArray count]; i++)
-    {
-        NSLog(@"index: %d",i);
-        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
-        {
-            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
-            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
-        }
-    }
+//    for(int i=0; i<[blockedUser count];i++)
+//    {
+//        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+//        People *ppl=[[People alloc] init];
+//        ppl=[blockedUser objectAtIndex:i];
+//        locItem.itemAddress=ppl.city;
+//        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+//        locItem.itemCategory=@"blocked";
+//        locItem.itemDistance=[ppl.distance doubleValue];
+//        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+//        locItem.itemName=ppl.firstName;
+//        locItem.itemType=0;
+//        locItem.userInfo=ppl;
+//        
+////        if (![allUserIdArr containsObject:ppl.userId])
+//        {
+//            [peopleListArray addObject:locItem];
+//            NSLog(@"locItem %@ %@",locItem,ppl);
+//            [blockedIdArr addObject:ppl.userId];
+//        }
+//        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+//    }
+//    filteredList=[peopleListArray mutableCopy];
+//    [allUserIdArr removeAllObjects];
+//    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+//    for (int i=0; i<[peopleListArray count]; i++)
+//    {
+//        NSLog(@"index: %d",i);
+//        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+//        {
+//            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
+//            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+//        }
+//    }
     
     [self.blockTableView reloadData];
     [smAppDelegate hideActivityViewer];
@@ -406,14 +401,22 @@ bool searchFlag3=true;
     NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];
     
 //    [self removeBlockedUser];
-    [allUserIdArr removeObjectAtIndex:clickedButtonPath.row];
+//    [allUserIdArr removeObjectAtIndex:clickedButtonPath.row];
     
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];    
     
+    //Block user operation on people list starts here
+    LocationItemPeople *ppl=[filteredList objectAtIndex:clickedButtonPath.row];
+    ppl.userInfo.blockStatus=@"blocked";
+    
+    [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+//    [smAppDelegate.peopleList replaceObjectAtIndex:[smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] withObject:ppl];
+    //Block user operation on people list ends here
+    
     NSLog(@"block user %d",[allUserIdArr count]);
     [rc blockUserList:@"Auth-Token" :smAppDelegate.authToken :[NSMutableArray arrayWithObjects:((LocationItemPeople *)[filteredList objectAtIndex:clickedButtonPath.row]).userInfo.userId, nil]];
-    blockedUserRemoveArr=[[NSMutableArray arrayWithObjects:[filteredList objectAtIndex:clickedButtonPath.row], nil] mutableCopy];
+//    blockedUserRemoveArr=[[NSMutableArray arrayWithObjects:[filteredList objectAtIndex:clickedButtonPath.row], nil] mutableCopy];
 //    [selectedPeople removeAllObjects];
 }
 
@@ -422,11 +425,23 @@ bool searchFlag3=true;
     CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];    
     NSLog(@"unblock user");
+
+    //Un-Block user operation on people list starts here
+    LocationItemPeople *ppl=[filteredList objectAtIndex:clickedButtonPath.row];
+    ppl.userInfo.blockStatus=@"unblocked";
+    
+    [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+//    if ([smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] >0)
+//    {
+//        [smAppDelegate.peopleList replaceObjectAtIndex:[smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] withObject:ppl];
+//
+//    }
+    //Un-Block user operation on people list ends here
+
     
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];    
     
-    unblockedPeople=[filteredList objectAtIndex:clickedButtonPath.row];
     [rc unBlockUserList:@"Auth-Token":smAppDelegate.authToken :[NSMutableArray arrayWithObjects:[allUserIdArr objectAtIndex:clickedButtonPath.row], nil]];
 }
 
@@ -547,7 +562,8 @@ bool searchFlag3=true;
         
         if ([filteredList count]>indexPath.row)
         {
-            if ([blockedUser containsObject:[filteredList objectAtIndex:indexPath.row]])
+            NSLog(@"people.blockStatus %@",people.userInfo.blockStatus);
+            if ([people.userInfo.blockStatus isEqualToString:@"blocked"])
             {
                 NSLog(@"marked as unblocked");
                 [cell1.inviteButton setTitle:@"Unblock" forState:UIControlStateNormal];
@@ -688,14 +704,23 @@ bool searchFlag3=true;
     NSMutableArray *userIdArr=[[NSMutableArray alloc] init];
     for (int i=0; i<[selectedPeople count]; i++)
     {
-        [userIdArr addObject:((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId];
+//        [userIdArr addObject:((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId];
         NSLog(@"ids %@",((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId);
+        //Block user operation on people list starts here
+        LocationItemPeople *ppl=[selectedPeople objectAtIndex:i];
+        ppl.userInfo.blockStatus=@"blocked";
+        
+        [filteredList replaceObjectAtIndex:[filteredList indexOfObject:[selectedPeople objectAtIndex:i]] withObject:ppl];
+//        [smAppDelegate.peopleList replaceObjectAtIndex:[smAppDelegate.peopleList indexOfObject:[selectedPeople objectAtIndex:i]] withObject:ppl];
+        //Block user operation on people list ends here
+
     }
     
-    blockedUserRemoveArr=[selectedPeople mutableCopy];
+//    blockedUserRemoveArr=[selectedPeople mutableCopy];
     NSLog(@"userIdArr: %@ selectedPeople: %@",userIdArr,selectedPeople);
     [rc blockUserList:@"Auth-Token":smAppDelegate.authToken :userIdArr];
     [selectedPeople removeAllObjects];
+    [self.blockTableView reloadData];
 }
 
 -(IBAction)selectAllpeople:(id)sender
@@ -874,7 +899,7 @@ bool searchFlag3=true;
     searchText3 = blockSearchBar.text;
     NSLog(@"in search method.. %@",searchText3);
     NSLog(@"sTemp.itemName1 %d",[peopleListArray count]);
-    [peopleListArray retain];
+    peopleListArray = [[self loadDummyData] mutableCopy];
     [filteredList removeAllObjects];
     [allUserIdArr removeAllObjects];
     NSLog(@"sTemp.itemName2 %d",[peopleListArray count]);

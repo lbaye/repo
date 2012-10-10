@@ -38,5 +38,6 @@
 @synthesize avatarImage;
 @synthesize coverImage;
 @synthesize regMedia;
+@synthesize blockStatus;
 
 @end

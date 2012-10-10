@@ -47,6 +47,7 @@ typedef enum _FRIENDSHIP_STATUS {
     UIImage *avatarImage;
     UIImage *coverImage;
     NSString *regMedia;
+    NSString *blockStatus;
 }
 
 @property(nonatomic,retain) NSString *userId;
@@ -77,5 +78,6 @@ typedef enum _FRIENDSHIP_STATUS {
 @property(nonatomic,retain) UIImage *avatarImage;
 @property(nonatomic,retain) UIImage *coverImage;
 @property(nonatomic,retain) NSString *regMedia;
+@property(nonatomic,retain) NSString *blockStatus;
 
 @end

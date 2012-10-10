@@ -76,7 +76,7 @@ bool searchFlag4=true;
     NSArray *subviews = [inviteSearchBar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:3];
     cancelButton.tintColor = [UIColor darkGrayColor];
-    cancelButton.titleLabel.text=@"   OK";
+//    cancelButton.titleLabel.text=@"   OK";
     //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);

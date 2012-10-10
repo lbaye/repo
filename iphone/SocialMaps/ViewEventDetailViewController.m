@@ -386,7 +386,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     {
         UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(i*60, 0, 60, 65)];
         UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-        [imgView setImage:[UIImage imageNamed:@"thum.png"]];
+        [imgView setImage:[UIImage imageNamed:@""]];
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
         [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [name setNumberOfLines:0];
@@ -479,12 +479,12 @@ BOOL isBackgroundTaskRunning=FALSE;
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
 //                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
 //                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                    imgView.image = [UIImage imageNamed:@""];
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image                    
-                    imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                    imgView.image = [UIImage imageNamed:@""];                   
                 }               
             }
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
@@ -540,7 +540,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSString *Link = [ImgesName objectAtIndex:index];
     //Start download image from url
     UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if((img) && (![dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]))
+    if((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
@@ -549,10 +549,10 @@ BOOL isBackgroundTaskRunning=FALSE;
 //        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
         
     }
-    else
-    {
-        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:index]];
-    }
+//    else
+//    {
+//        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:index]];
+//    }
     // Now, we need to reload scroll view to load downloaded image
 //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
@@ -647,7 +647,7 @@ BOOL isBackgroundTaskRunning=FALSE;
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
         if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
         {
-            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+//            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
             NSLog(@"img url null %d",i);
         }
         else
