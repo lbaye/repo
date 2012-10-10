@@ -219,11 +219,13 @@ bool searchFlag3=true;
 
 - (void)blockUsresDone:(NSNotification *)notif
 {
+    blockSearchBar.text=@"";
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSLog(@"[notif object]: %@",[notif object]);
     blockedUser=[[NSMutableArray alloc] init];
     blockedUser=[notif object];
     peopleListArray=[[self loadDummyData] mutableCopy];
+    [self removeBlockedPeople];
     //blocked people should remove from here
     NSLog(@"blockedUserRemoveArr: %@",blockedUserRemoveArr);
     NSLog(@"blockedUser %d",[blockedUser count]);
@@ -266,11 +268,13 @@ bool searchFlag3=true;
 
 - (void)unBlockUsresDone:(NSNotification *)notif
 {
+    blockSearchBar.text=@"";    
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
     NSLog(@"[notif object]: %@",[notif object]);
     blockedUser=[[NSMutableArray alloc] init];
     blockedUser=[notif object];
     peopleListArray=[[self loadDummyData] mutableCopy];
+    [peopleListArray addObject:unblockedPeople];
     NSLog(@"before unblocked: %d",[peopleListArray count]);
 //    //remove all blocked user
 //    for (int i=0; i<[peopleListArray count]; i++)
@@ -322,6 +326,17 @@ bool searchFlag3=true;
     [self.blockTableView reloadData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+-(void)removeBlockedPeople
+{
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        if ([blockedUserRemoveArr containsObject:[peopleListArray objectAtIndex:i]])
+        {
+            [peopleListArray removeObject:[peopleListArray objectAtIndex:i]];
+        }
+    }
 }
 
 -(void)removeBlockedUser
