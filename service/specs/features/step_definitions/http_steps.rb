@@ -10,8 +10,9 @@ When /^I'm sending http "(.*?)" request to "(.*?)"$/ do |http_method, uri|
     @response.set_uri("#{@client.service_uri}#{uri}")
   end
 
-  if uri.match(/eval\((.*?)\)/)
-    uri.gsub!(/(eval\((.*?)\))/, "")
+  if (result = uri.match(/eval\((.*?)\)/))
+    uri.gsub!(/(eval\((.*?)\))/, eval("#{result[1]}"))
+    @response.set_uri("#{@client.service_uri}#{uri}")
   end
 end
 

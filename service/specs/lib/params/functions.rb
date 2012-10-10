@@ -49,9 +49,13 @@ module Util
         "user#{rand}@email.com"
       end
 
+      def since_two_day
+        (Time.now - 2.days).to_i.to_s
+      end
+
       module_function :rand, :authenticate, :rand_email,
                       :create_message, :create_user, :create_message_context,
-                      :get_user_by_email, :update_status
+                      :get_user_by_email, :update_status, :since_two_day
     end
   end
 end

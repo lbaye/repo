@@ -113,7 +113,7 @@ Feature: Messaging
     And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
     And I've added several message replies
 
-    When I'm sending http "GET" request to "/messages/{msg_last_id}/replies?since=eval(Time.now - 2.days)"
+    When I'm sending http "GET" request to "/messages/{msg_last_id}/replies?since=eval(Util::Params::Functions.since_two_day)"
 
     Then I should see http "200" status
     And Response is valid "application/json" formatted
