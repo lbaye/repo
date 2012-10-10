@@ -221,7 +221,8 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:mapAnnotationInfoUpdated");
     [_mapView removeAnnotation:anno];
     [_mapView addAnnotation:anno];
-    selectedAnno = anno;
+    //by Rishi
+    //selectedAnno = anno;
     
     [self.view setNeedsDisplay];
 }
@@ -320,6 +321,7 @@ ButtonClickCallbackData callBackData;
     }
     
     [self mapAnnotationInfoUpdated:anno];
+    selectedAnno = anno;
 }
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
@@ -603,15 +605,28 @@ ButtonClickCallbackData callBackData;
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
 
+        //by Rishi
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+        [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
     [self initPullView];
     pullDownView.hidden = YES;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
 
+    isDownloadingLocation = NO;
 }
+
+- (void)startGetLocation:(NSTimer*)timer
+{
+    if (!isDownloadingLocation) {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+        isDownloadingLocation = YES;
+    }
+}
+
 /*
 - (id)initWithCoder:(NSCoder *)decoder
 {
@@ -842,9 +857,12 @@ ButtonClickCallbackData callBackData;
         [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
         [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
         
+        
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+        
+        // by Rishi
+        ////[restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
 
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         //smAppDelegate.gotListing = TRUE;
@@ -1741,9 +1759,10 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"In gotListings");
     
-    if (viewSearch.frame.origin.y > 44) {
-        return;
-    }
+    //by Rishi
+    //if (viewSearch.frame.origin.y > 44) {
+      //  return;
+    //}
     
     //[smAppDelegate.peopleList removeAllObjects];
 
@@ -1849,12 +1868,24 @@ ButtonClickCallbackData callBackData;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
                         aPerson.coordinate = loc;
-                        aPerson.userInfo.friendshipStatus = item.friendshipStatus;
+
+                        //by Rishi
+                        //aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                         
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
-                        aPerson.itemDistance = distanceFromMe;
+                        //aPerson.itemDistance = distanceFromMe;
+
+                        /*
                         if (smAppDelegate.showPeople == TRUE)
                             [self mapAnnotationInfoUpdated:aPerson];
+                        */
+                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus])) {
+                            NSLog(@"update only %@", aPerson.userInfo.firstName);
+                            aPerson.userInfo.friendshipStatus = item.friendshipStatus;
+                            aPerson.itemDistance = distanceFromMe;
+                            aPerson.itemAddress = item.lastSeenAt;
+                            [self mapAnnotationInfoUpdated:aPerson];
+                        }
                     }
                 }
             }
@@ -1954,8 +1985,11 @@ ButtonClickCallbackData callBackData;
         [smAppDelegate hideActivityViewer];
     }
     [self getSortedDisplayList];
-    [self loadAnnotations:YES];
-    [self.view setNeedsDisplay];
+
+    //by Rishi
+    //[self loadAnnotations:YES];
+    //[self.view setNeedsDisplay];
+    isDownloadingLocation = NO;
 }
 
 // GCD async notifications

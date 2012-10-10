@@ -58,6 +58,7 @@ typedef enum _SHARING_TYPES {
     IBOutlet UISearchBar *searchBar;
     NSMutableArray		*copySearchAnnotationList;
     IBOutlet UIView *circleView;
+    BOOL isDownloadingLocation;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
