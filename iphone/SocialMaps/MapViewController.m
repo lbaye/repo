@@ -608,23 +608,23 @@ ButtonClickCallbackData callBackData;
         //by Rishi
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
+        [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
     [self initPullView];
     pullDownView.hidden = YES;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
 
-    isDownloadingLocation = NO;
+    isFirstTimeDownloading = NO;
 }
 
 - (void)startGetLocation:(NSTimer*)timer
 {
-    if (!isDownloadingLocation) {
+    //if (!isDownloadingLocation) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        isDownloadingLocation = YES;
-    }
+        //isDownloadingLocation = YES;
+    //}
 }
 
 /*
@@ -1987,9 +1987,14 @@ ButtonClickCallbackData callBackData;
     [self getSortedDisplayList];
 
     //by Rishi
-    //[self loadAnnotations:YES];
-    //[self.view setNeedsDisplay];
-    isDownloadingLocation = NO;
+    if (!isFirstTimeDownloading) { 
+        //for first time
+        [self loadAnnotations:YES];
+        [self.view setNeedsDisplay];
+        isFirstTimeDownloading = YES;
+    }
+    
+    //isDownloadingLocation = NO;
 }
 
 // GCD async notifications
