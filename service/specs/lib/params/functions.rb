@@ -8,7 +8,7 @@ module Util
       def create_user
         client   = ClientUtil.create_client
         response = client.send(:post, '/auth/registration')
-        response.set_params({ email: "user#{rand}@test.com", password: 'abcdef' })
+        response.set_params({ email: "user#{rand}@test.com", password: 'abcdef', firstName: "ab", lastName: "cd", avatar: "www.google.com/xxyz" })
         JSON.load(response.response.body)
       end
 
