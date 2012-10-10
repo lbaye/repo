@@ -867,13 +867,12 @@ class UserRepo extends Base
     {
         $circles = $this->currentUser->getCircles();
 
-
         $user = $this->_trimInvalidUsers(array($id));
         if (!empty($data['circles'])) {
 
             foreach ($circles as $circle) {
 
-                if ($circle->getType() == 'system') {
+                if ($circle->getType() == 'system' && in_array($circle->getId(), $data)) {
 
                     throw new \InvalidArgumentException('Invalid request', 406);
                 }
