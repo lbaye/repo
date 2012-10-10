@@ -789,6 +789,7 @@ class UserRepo extends Base
     public function search($keyword = null, $location = array(), $limit = 20)
     {
         $exclude = array();
+        $blockUserList = array();
         $exclude[] = $this->currentUser->getId();
 
         if ($this->currentUser->getBlockedBy()) {
@@ -816,8 +817,14 @@ class UserRepo extends Base
             $friends = $this->currentUser->getFriends();
             $users = $this->_toArrayAll($result, true);
 
+            $blockUserList = $this->currentUser->getBlockedUsers();
             foreach ($users as &$user) {
                 $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+                if (in_array($user['id'],$blockUserList)) {
+                    $user['blockStatus'] = "blocked";
+                } else {
+                    $user['blockStatus'] = "unblocked";
+                }
             }
 
             return $users;
