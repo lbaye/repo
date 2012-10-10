@@ -167,7 +167,8 @@
     
     if (!iconDownloader)
     {
-        imageViewSender.image = [UIImage imageNamed:@"thum.png"];
+        //imageViewSender.image = [UIImage imageNamed:@"thum.png"];
+        imageViewSender.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             [self startIconDownload:meetUpReq forIndexPath:indexPath];
         }            

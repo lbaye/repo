@@ -19,6 +19,7 @@
 #import "UtilityClass.h"
 #import "MeetUpRequestListView.h"
 #import "NotificationController.h"
+#import "SelectCircleTableCell.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -29,6 +30,7 @@
 #define     TAG_MEETUP_VIEW         1003
 
 @implementation MessageListViewController
+
 
 @synthesize msgParentID;
 @synthesize timeSinceLastUpdate;
@@ -102,6 +104,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [messageRepiesView addSubview:meetUpRequestListView];
     [meetUpRequestListView release];
     
+    NSArray *subviews = [friendSearchbar subviews];
+    UIButton *cancelButton = [subviews objectAtIndex:3];
+    cancelButton.tintColor = [UIColor darkGrayColor];
+    
+    selectedCircleCheckArr = [[NSMutableArray alloc] init];
+    selectedCircleCheckOriginalArr = [[NSMutableArray alloc] init];
+    tableViewCircle.dataSource = self;
+    tableViewCircle.delegate = self;
 }
 
 - (void) viewDidAppear:(BOOL)animated
@@ -167,6 +177,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     msgReplyCreationView = nil;
     [viewSearch release];
     viewSearch = nil;
+    [tableViewCircle release];
+    tableViewCircle = nil;
+    [viewCircleList release];
+    viewCircleList = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -212,7 +226,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (IBAction)actionNewMessageBtn:(id)sender {
     NSLog(@"actionNewMessageBtn");
     [selectedFriendsIndex removeAllObjects];
+    [selectedCircleCheckArr removeAllObjects];
+    [selectedCircleCheckOriginalArr removeAllObjects];
     [self reloadScrolview];
+    [tableViewCircle reloadData];
     [self doBottomViewAnimation:messageCreationView];
 }
 
@@ -239,7 +256,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [textViewNewMsg resignFirstResponder];
         [self setViewMovedDown:msgWritingView];
     }
-    if ([selectedFriendsIndex count] == 0) {
+    
+    BOOL isCircleContainsFriend = NO;
+    
+    for (UserCircle *userCircle in selectedCircleCheckOriginalArr) {
+        if ([userCircle.friends count] > 0) {
+            isCircleContainsFriend = YES;
+            break;
+        }
+    }
+    
+    if ([selectedFriendsIndex count] == 0 && !isCircleContainsFriend) {
         [UtilityClass showAlert:@"" :@"Please select recipient"];
     } else if ([textViewNewMsg.text isEqualToString:@""] || [textViewNewMsg.text isEqualToString:@"Your Message..."]) {
         [UtilityClass showAlert:@"" :@"Please enter your message"];
@@ -303,16 +330,29 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSString * subject = [NSString stringWithFormat:@"Message from %@ %@", smAppDelegate.userAccountPrefs.firstName,
                           smAppDelegate.userAccountPrefs.lastName];
     
-    NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+    NSMutableArray *userIDs = [self getUserIds];
+    
+    for (UserCircle *userCircle in selectedCircleCheckOriginalArr) 
+        [userIDs addObjectsFromArray:userCircle.friends];
+    
+    NSLog(@"userIDs = %@", userIDs);
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
+- (NSMutableArray*)getUserIds
+{
+    NSMutableArray *userIDs = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < [selectedFriendsIndex count]; i++) {
         NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;
         [userIDs addObject:userId];
     }
-    NSLog(@"user id %@", userIDs);
     
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    NSLog(@"user id %@", userIDs);
+
+    return userIDs;
 }
 
 - (void) getReplyMessages:(NSNotification *)notif {
@@ -374,6 +414,35 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (tableView == tableViewCircle) {
+        static NSString *CellIdentifier = @"circleTableCell";
+        SelectCircleTableCell *cell = [tableViewCircle
+                                       dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[SelectCircleTableCell alloc]
+                    initWithStyle:UITableViewCellStyleDefault 
+                    reuseIdentifier:CellIdentifier];
+        }
+        
+        if ([[[circleListGlobalArray objectAtIndex:indexPath.row] circleName] isEqual:[NSNull null]] ) {
+            cell.circrcleName.text=@"Custom";
+        } else {
+            NSLog(@"circle name %@", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName]);
+            cell.circrcleName.text = [[circleListGlobalArray objectAtIndex:indexPath.row] circleName];
+        }
+        
+        if ([selectedCircleCheckArr containsObject:[circleListGlobalArray objectAtIndex:indexPath.row]]) {
+            [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+        } else {
+            [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
+        }
+        
+        [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
+        
+        return cell;
+    }
+    
     if (tableView.tag == TAG_TABLEVIEW_REPLY) {
         
         MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
@@ -461,7 +530,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         if (!iconDownloader)
         {
-            imageViewReply.image = [UIImage imageNamed:@"girl.png"];
+            //imageViewReply.image = [UIImage imageNamed:@"girl.png"];
+            imageViewReply.image = nil;
             if (tableView.dragging == NO && tableView.decelerating == NO) {
                 [self startReplyIconDownload:msgReply forIndexPath:indexPath];
             }            
@@ -570,7 +640,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     //if ([[profileImageList objectAtIndex:indexPath.row] isEqual:@""])
     //{
-        cell.imageView.image = [UIImage imageNamed:@"girl.png"];
+        //cell.imageView.image = [UIImage imageNamed:@"girl.png"];
+        cell.imageView.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
             //recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
@@ -718,7 +789,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return (tableView.tag == TAG_TABLEVIEW_REPLY) ? [messageReplyList count] : [smAppDelegate.messages count];
+    return (tableView.tag == TAG_TABLEVIEW_REPLY) ? [messageReplyList count] : (tableViewCircle == tableView)? [circleListGlobalArray count] : [smAppDelegate.messages count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -726,6 +797,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (tableView.tag == TAG_TABLEVIEW_REPLY) {
         MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
         return [self getRowHeight:tableView :msgReply];
+    } else if (tableViewCircle == tableView) {
+        return 44;
     }
     
     return CELL_HEIGHT;
@@ -895,7 +968,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (iconDownloader.userFriends.userProfileImage) {
                 [profileImageList replaceObjectAtIndex:i withObject:iconDownloader.userFriends.userProfileImage];
             } else {
-                [profileImageList replaceObjectAtIndex:i withObject:[UIImage imageNamed:@"girl.png"]];
+                //[profileImageList replaceObjectAtIndex:i withObject:[UIImage imageNamed:@"girl.png"]];
+                [profileImageList replaceObjectAtIndex:i withObject:[[UIImage alloc] init]];
             }
         }
     }
@@ -1059,6 +1133,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [messageReplyTableView release];
     [msgReplyCreationView release];
     [viewSearch release];
+    [tableViewCircle release];
+    [viewCircleList release];
     [super dealloc];
 }
 
@@ -1161,9 +1237,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     // call our activate method so that we can do some 
     // additional things when the UISearchBar shows.
     searchTexts=friendSearchbar.text;
-    [UIView beginAnimations:@"FadeIn" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView commitAnimations];
+    //[UIView beginAnimations:@"FadeIn" context:nil];
+    //[UIView setAnimationDuration:0.5];
+    //[UIView commitAnimations];
     [self beganEditing];
 }
 
@@ -1280,7 +1356,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
 	CGRect viewFrame = self.view.frame;
     viewFrame.origin.y -= animatedDistance;
-    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
@@ -1335,9 +1410,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
             if (userFrnd.imageUrl == nil) {
-                imgView.image = [UIImage imageNamed:@"girl.png"];
+                //imgView.image = [UIImage imageNamed:@"girl.png"];
             }            
-            else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
+            else if([[dicImages_msg valueForKey:userFrnd.imageUrl] isKindOfClass:[UIImage class]]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
@@ -1348,14 +1423,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
-                    [dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    //[dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
+                    [dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [[UIImage alloc] init];
                 }
                 else 
                 { 
                     // Image is not available, so set a placeholder image
-                    imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
+                    imgView.image = [[UIImage alloc] init];                   
                 }               
             }
 
@@ -1405,6 +1483,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 -(IBAction)unSelectAll:(id)sender
 {
     [selectedFriendsIndex removeAllObjects];
+    [selectedCircleCheckArr removeAllObjects];
+    [selectedCircleCheckOriginalArr removeAllObjects];
+    [tableViewCircle reloadData];
     [self reloadScrolview];
 }
 
@@ -1465,8 +1546,85 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 }
 
 - (IBAction)actionAddMoreButton:(id)sender {
+    [selectedFriendsIndex removeAllObjects];
+    [selectedCircleCheckArr removeAllObjects];
+    [selectedCircleCheckOriginalArr removeAllObjects];
+    [self reloadScrolview];
+    [tableViewCircle reloadData];
+    viewSearchFrame = viewSearch.frame;
     [self.view addSubview:viewSearch];
-    messageRepiesView.userInteractionEnabled = NO;
+    viewSearch.frame = CGRectMake(0, self.view.frame.size.height - viewSearch.frame.size.height, viewSearch.frame.size.width, viewSearch.frame.size.height);
+    messageReplyTableView.userInteractionEnabled = NO;
+    buttonMeetUp.userInteractionEnabled = NO;
+    buttonMessage.userInteractionEnabled = NO;
+}
+
+- (IBAction)actionCancelAddPplButton:(id)sender {
+    [messageCreationView addSubview:viewSearch];
+    [messageCreationView sendSubviewToBack:viewSearch];
+    viewSearch.frame = viewSearchFrame;
+    messageReplyTableView.userInteractionEnabled = YES;
+    buttonMessage.selected = YES;
+    buttonMessage.userInteractionEnabled = YES;
+    buttonMeetUp.userInteractionEnabled = YES;
+}
+
+- (IBAction)actionSaveAddPplButton:(id)sender 
+{
+    NSMutableArray *userIDs = [self getUserIds];
+    for (UserCircle *userCircle in selectedCircleCheckOriginalArr) 
+        [userIDs addObjectsFromArray:userCircle.friends];
+    
+    NSLog(@"userIDs = %@", userIDs);
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient updateMessageRecipients:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID recipients:userIDs];
+    [self actionCancelAddPplButton:nil];
+}
+
+- (IBAction)actionCancelCircleButton:(id)sender {
+    [selectedCircleCheckArr removeAllObjects];
+    [selectedCircleCheckArr addObjectsFromArray:selectedCircleCheckOriginalArr];
+    viewCircleList.hidden = YES;
+    self.view.userInteractionEnabled = YES;
+}
+
+- (IBAction)actionSaveCircleButton:(id)sender {
+    viewCircleList.hidden = YES;
+    self.view.userInteractionEnabled = YES;
+    [selectedCircleCheckOriginalArr removeAllObjects];
+    [selectedCircleCheckOriginalArr addObjectsFromArray:selectedCircleCheckArr];
+}
+
+- (IBAction)actionShowCircleListButton:(id)sender {
+    viewCircleList.hidden = NO;
+    [selectedCircleCheckArr removeAllObjects];
+    [selectedCircleCheckArr addObjectsFromArray:selectedCircleCheckOriginalArr];
+    [tableViewCircle reloadData];
+    [smAppDelegate.window addSubview:viewCircleList];
+    self.view.userInteractionEnabled = NO;
+}
+
+-(void)handleTableViewCheckbox:(id)sender
+{
+    SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [tableViewCircle indexPathForCell:clickedCell];
+
+    if ([selectedCircleCheckArr containsObject:[circleListGlobalArray objectAtIndex:clickedButtonPath.row]]) {
+        
+        [selectedCircleCheckArr removeObject:[circleListGlobalArray objectAtIndex:clickedButtonPath.row]];
+        [sender setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
+        NSLog(@"removed");
+    
+    } else {
+        
+        [selectedCircleCheckArr addObject:[circleListGlobalArray objectAtIndex:clickedButtonPath.row]];
+        [sender setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+        NSLog(@"added");
+    }
+
+    NSMutableArray *testFriends =  ((UserCircle*)[circleListGlobalArray objectAtIndex:clickedButtonPath.row]).friends;
+    NSLog(@"friends %@", testFriends);
 }
 
 @end

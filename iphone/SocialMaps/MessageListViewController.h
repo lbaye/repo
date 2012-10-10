@@ -51,6 +51,14 @@
     NotifMessage *selectedMessage;
     IBOutlet UILabel *totalNotifCount;
     IBOutlet UIView *viewSearch;
+    
+    //circle list
+    CGRect  viewSearchFrame;
+    IBOutlet UITableView *tableViewCircle;
+    NSMutableArray *selectedCircleCheckArr;
+    IBOutlet UIView *viewCircleList;
+    
+    NSMutableArray *selectedCircleCheckOriginalArr;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
@@ -74,5 +82,10 @@
 
 -(IBAction)gotoNotification:(id)sender;
 - (IBAction)actionAddMoreButton:(id)sender;
+- (IBAction)actionCancelAddPplButton:(id)sender;
+- (IBAction)actionSaveAddPplButton:(id)sender;
+- (IBAction)actionCancelCircleButton:(id)sender;
+- (IBAction)actionSaveCircleButton:(id)sender;
+- (IBAction)actionShowCircleListButton:(id)sender;
 
 @end
