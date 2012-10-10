@@ -76,6 +76,7 @@ bool searchFlag4=true;
     NSArray *subviews = [inviteSearchBar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:3];
     cancelButton.tintColor = [UIColor darkGrayColor];
+    cancelButton.titleLabel.text=@"   OK";
     //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
@@ -308,6 +309,12 @@ bool searchFlag4=true;
         [cell1.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.checkBoxButton addTarget:self action:@selector(checkBoxButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell1.inviteButton.layer setCornerRadius:6.0f];
+        [cell1.inviteButton.layer setMasksToBounds:YES];
+        [cell1.messageButton.layer setCornerRadius:6.0f];
+        [cell1.messageButton.layer setMasksToBounds:YES];
+
         
     }
     

@@ -19,6 +19,7 @@
 #import "LocationItemPeople.h"
 #import "RestClient.h"
 #import "NotificationController.h"
+#import "UserFriends.h"
 
 @interface BlockUnblockCircleViewController ()
 - (void)startIconDownload:(LocationItemPeople *)people forIndexPath:(NSIndexPath *)indexPath;
@@ -32,11 +33,14 @@
 @synthesize blockTableView,blockSearchBar,downloadedImageDict;
 @synthesize msgView,textViewNewMsg;
 
-__strong NSMutableArray *filteredList, *peopleListArray, *selectedPeople;
+__strong NSMutableArray *filteredList, *peopleListArray, *selectedPeople, *blockedIdArr, *allUserIdArr;
 __strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
 NSString *searchText3=@"";
 AppDelegate *smAppDelegate;
+RestClient *rc;
+NSMutableArray *blockedUser,*blockedUserRemoveArr;
+LocationItemPeople *unblockedPeople;
 
 //rsvpFlag=
 bool searchFlag3=true;
@@ -53,14 +57,20 @@ bool searchFlag3=true;
 
 - (void)viewDidLoad
 {
+    rc=[[RestClient alloc] init];
     filteredList=[[NSMutableArray alloc] init];
     peopleListArray=[[NSMutableArray alloc] init];
     selectedPeople=[[NSMutableArray alloc] init];
+    blockedIdArr=[[NSMutableArray alloc] init]; 
+    allUserIdArr=[[NSMutableArray alloc] init];
+    blockedUser=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
+    blockedUserRemoveArr=[[NSMutableArray alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     imageDownloadsInProgress=[[NSMutableDictionary alloc] init];
     [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
+    unblockedPeople=[[LocationItemPeople alloc] init];
     
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
@@ -73,7 +83,19 @@ bool searchFlag3=true;
     NSArray *subviews = [self.blockSearchBar subviews];
     NSLog(@"%@",subviews);
     UIButton *cancelButton = [subviews objectAtIndex:2];
-    cancelButton.tintColor = [UIColor darkGrayColor];
+    cancelButton.tintColor = [UIColor grayColor];
+//    cancelButton.titleLabel.text=@"   OK";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBlockUserListDone:) name:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUsresDone:) name:NOTIF_SET_BLOCKED_USERS_DONE object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockUsresDone:) name:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
+
+    
+    [rc getBlockUserList:@"Auth-Token" :smAppDelegate.authToken];
+    [smAppDelegate  showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+
 //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
     // EventList *eventList=[[EventList alloc] init];
     // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
@@ -104,8 +126,8 @@ bool searchFlag3=true;
     // RestClient *rc=[[RestClient alloc] init];
     // [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    filteredList=[[self loadDummyData] mutableCopy];
-    peopleListArray=[[self loadDummyData] mutableCopy];
+//    filteredList=[[self loadDummyData] mutableCopy];
+//    peopleListArray=[[self loadDummyData] mutableCopy];
     [self.blockTableView reloadData];
     
 }
@@ -117,6 +139,7 @@ bool searchFlag3=true;
 
 -(NSMutableArray *)loadDummyData
 {
+    NSMutableArray *peopleList=[[NSMutableArray alloc] init];
 //    for (int i=0; i<[friendListGlobalArray count]; i++)
 //    {
 //        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
@@ -131,21 +154,199 @@ bool searchFlag3=true;
 //        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
 //        [pool drain];
 //    }
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        [allUserIdArr addObject:((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.userId];
+        [peopleList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
+    }
     return smAppDelegate.peopleList;
 }
 
-- (void)getAllEventsDone:(NSNotification *)notif
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
+{
+    [blockSearchBar setShowsCancelButton:YES animated:NO];
+    for (UIView *subView in blockSearchBar.subviews){
+        if([subView isKindOfClass:[UIButton class]]){
+            [(UIButton*)subView setTitle:@"   OK" forState:UIControlStateNormal];
+            [(UIButton*)subView setBackgroundImage:[UIImage imageNamed:@"search_ok_button.png"] forState:UIControlStateNormal];
+        }
+    }
+}
+
+- (void)getBlockUserListDone:(NSNotification *)notif
+{
+    NSLog(@"[notif object]: %@",[notif object]);
+    [blockedUser removeAllObjects];
+    blockedUser=[notif object];
+//    [self removeBlockedUser];
+    for(int i=0; i<[blockedUser count];i++)
+    {
+        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+        People *ppl=[[People alloc] init];
+        ppl=[blockedUser objectAtIndex:i];
+        locItem.itemAddress=ppl.city;
+        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+        locItem.itemCategory=@"";
+        locItem.itemDistance=[ppl.distance doubleValue];
+        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+        locItem.itemName=ppl.firstName;
+        locItem.itemType=0;
+        locItem.userInfo=ppl;
+        
+        [peopleListArray addObject:locItem];
+        NSLog(@"locItem %@ %@",locItem,ppl);
+        [blockedIdArr addObject:ppl.userId];
+        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+    }
+    filteredList=[peopleListArray mutableCopy];
+    NSLog(@"blockedUser: %@ filteredList: %@",blockedUser,filteredList);
+    [allUserIdArr removeAllObjects];
+    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        NSLog(@"index: %d",i);
+        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
+            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+        }
+    }
+    
+    [self.blockTableView reloadData];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+- (void)blockUsresDone:(NSNotification *)notif
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-    friendListGlobalArray=[[notif object] mutableCopy];
-    NSLog(@"GOT SERVICE DATA EVENT.. :D %@",[notif object]);
-    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [self viewDidLoad];
-    filteredList=[[self loadDummyData] mutableCopy];
+    NSLog(@"[notif object]: %@",[notif object]);
+    blockedUser=[[NSMutableArray alloc] init];
+    blockedUser=[notif object];
     peopleListArray=[[self loadDummyData] mutableCopy];
+    //blocked people should remove from here
+    NSLog(@"blockedUserRemoveArr: %@",blockedUserRemoveArr);
+    NSLog(@"blockedUser %d",[blockedUser count]);
+//    [self removeBlockedUser];
+
+    for(int i=0; i<[blockedUser count];i++)
+    {
+        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+        People *ppl=[[People alloc] init];
+        ppl=[blockedUser objectAtIndex:i];
+        locItem.itemAddress=ppl.city;
+        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+        locItem.itemCategory=@"blocked";
+        locItem.itemDistance=[ppl.distance doubleValue];
+        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+        locItem.itemName=ppl.firstName;
+        locItem.itemType=0;
+        locItem.userInfo=ppl;
+        [peopleListArray addObject:locItem];
+        NSLog(@"locItem %@ %@",locItem,ppl);
+        [blockedIdArr addObject:ppl.userId];
+        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+    }
+    filteredList=[peopleListArray mutableCopy];
+    [allUserIdArr removeAllObjects];
+    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        
+        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+        }
+    }
+    NSLog(@"all user index: %d  %d",[allUserIdArr count],[peopleListArray count]);
     [self.blockTableView reloadData];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+- (void)unBlockUsresDone:(NSNotification *)notif
+{
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
+    NSLog(@"[notif object]: %@",[notif object]);
+    blockedUser=[[NSMutableArray alloc] init];
+    blockedUser=[notif object];
+    peopleListArray=[[self loadDummyData] mutableCopy];
+    NSLog(@"before unblocked: %d",[peopleListArray count]);
+//    //remove all blocked user
+//    for (int i=0; i<[peopleListArray count]; i++)
+//    {
+//        NSLog(@"user id: %@",((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId);
+//        if ([blockedIdArr containsObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId])
+//        {
+//            NSLog(@"find matching");
+//            [peopleListArray removeObjectAtIndex:i];
+//            [blockedIdArr removeObject:[allUserIdArr objectAtIndex:i]];
+//        }
+//    }
+//    NSLog(@"after unblocked: %d",[peopleListArray count]);
+    for(int i=0; i<[blockedUser count];i++)
+    {
+        LocationItemPeople *locItem=[[LocationItemPeople alloc] init];
+        People *ppl=[[People alloc] init];
+        ppl=[blockedUser objectAtIndex:i];
+        locItem.itemAddress=ppl.city;
+        locItem.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+        locItem.itemCategory=@"blocked";
+        locItem.itemDistance=[ppl.distance doubleValue];
+        locItem.itemIcon=[UIImage imageNamed:@"thum.png"];
+        locItem.itemName=ppl.firstName;
+        locItem.itemType=0;
+        locItem.userInfo=ppl;
+        
+//        if (![allUserIdArr containsObject:ppl.userId])
+        {
+            [peopleListArray addObject:locItem];
+            NSLog(@"locItem %@ %@",locItem,ppl);
+            [blockedIdArr addObject:ppl.userId];
+        }
+        [blockedUser replaceObjectAtIndex:i withObject:locItem];
+    }
+    filteredList=[peopleListArray mutableCopy];
+    [allUserIdArr removeAllObjects];
+    NSLog(@"[peopleListArray count]: %d",[peopleListArray count]);
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        NSLog(@"index: %d",i);
+        if ([[peopleListArray objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            NSLog(@"((LocationItem *)[peopleListArray objectAtIndex:i]).itemName %@",((LocationItem *)[peopleListArray objectAtIndex:i]).itemName);
+            [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+        }
+    }
+    
+    [self.blockTableView reloadData];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+-(void)removeBlockedUser
+{
+    NSMutableArray *userIDArr=[[NSMutableArray alloc] init];
+    for (int i=0; i<[blockedUser count]; i++)
+    {
+        if ([[blockedUser objectAtIndex:i] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            [userIDArr addObject:((LocationItemPeople *)[blockedUser objectAtIndex:i]).userInfo.userId];
+        }
+        else if ([[blockedUser objectAtIndex:i] isKindOfClass:[People class]]) 
+        {
+            [userIDArr addObject:((People *)[blockedUser objectAtIndex:i]).userId];
+        }
+    }
+    
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        if ([userIDArr containsObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId])
+        {
+            NSLog(@"removed user from block list %@",((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.firstName);            
+            [peopleListArray removeObjectAtIndex:i];
+        }
+    }
 }
 
 -(void)hideActivity
@@ -184,7 +385,35 @@ bool searchFlag3=true;
     return [filteredList count];
 }
 
+-(IBAction)blockUser:(id)sender
+{
+    CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];
+    
+//    [self removeBlockedUser];
+    [allUserIdArr removeObjectAtIndex:clickedButtonPath.row];
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];    
+    
+    NSLog(@"block user %d",[allUserIdArr count]);
+    [rc blockUserList:@"Auth-Token" :smAppDelegate.authToken :[NSMutableArray arrayWithObjects:((LocationItemPeople *)[filteredList objectAtIndex:clickedButtonPath.row]).userInfo.userId, nil]];
+    blockedUserRemoveArr=[[NSMutableArray arrayWithObjects:[filteredList objectAtIndex:clickedButtonPath.row], nil] mutableCopy];
+//    [selectedPeople removeAllObjects];
+}
 
+-(IBAction)unBlockUser:(id)sender
+{
+    CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
+    NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];    
+    NSLog(@"unblock user");
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];    
+    
+    unblockedPeople=[filteredList objectAtIndex:clickedButtonPath.row];
+    [rc unBlockUserList:@"Auth-Token":smAppDelegate.authToken :[NSMutableArray arrayWithObjects:[allUserIdArr objectAtIndex:clickedButtonPath.row], nil]];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -214,6 +443,12 @@ bool searchFlag3=true;
     cell1.inviteButton.tag=indexPath.row ;
     cell1.messageButton.tag=indexPath.row ;
     cell1.checkBoxButton.tag=indexPath.row ;
+    [cell1.inviteButton.layer setCornerRadius:6.0f];
+    [cell1.inviteButton.layer setMasksToBounds:YES];
+    [cell1.messageButton.layer setCornerRadius:6.0f];
+    [cell1.messageButton.layer setMasksToBounds:YES];
+
+    
     // NSLog(@"event.myResponse: %@",event.myResponse);
     NSLog(@"event: %@",people);
     
@@ -295,6 +530,24 @@ bool searchFlag3=true;
             [cell1.checkBoxButton setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
         }
         
+        if ([filteredList count]>indexPath.row)
+        {
+            if ([blockedUser containsObject:[filteredList objectAtIndex:indexPath.row]])
+            {
+                NSLog(@"marked as unblocked");
+                [cell1.inviteButton setTitle:@"Unblock" forState:UIControlStateNormal];
+                [cell1.inviteButton removeTarget:self action:@selector(unBlockUser:) forControlEvents:UIControlEventTouchUpInside];            
+                [cell1.inviteButton addTarget:self action:@selector(unBlockUser:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            else
+            {
+                NSLog(@"marked as blocked %d %d",[blockedUser count],[filteredList count]);
+                [cell1.inviteButton setTitle:@"Block" forState:UIControlStateNormal];
+                [cell1.inviteButton removeTarget:self action:@selector(blockUser:) forControlEvents:UIControlEventTouchUpInside];
+                [cell1.inviteButton addTarget:self action:@selector(blockUser:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+        
         cell1.profilePicImgView.image=people.itemIcon;
         cell1.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell1.profilePicImgView.userInteractionEnabled=YES;
@@ -302,7 +555,6 @@ bool searchFlag3=true;
         cell1.profilePicImgView.layer.masksToBounds = YES;
         [cell1.profilePicImgView.layer setCornerRadius:5.0];
         [cell1.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
-        [cell1.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell1.checkBoxButton addTarget:self action:@selector(checkBoxButtonAction:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -362,7 +614,7 @@ bool searchFlag3=true;
         [imageDownloadsInProgress setObject:iconDownloader forKey:people.userInfo.userId];
         NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
         [iconDownloader startDownload];
-        //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
+        [downloadedImageDict setValue:iconDownloader.people.userInfo.coverImage forKey:people.userInfo.userId];
         NSLog(@"start downloads ... %@ %d",people.userInfo.userId, indexPath.row);
         [iconDownloader release];
     }
@@ -415,6 +667,20 @@ bool searchFlag3=true;
 
 -(IBAction)selectedUser:(id)sender
 {
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    
+    NSMutableArray *userIdArr=[[NSMutableArray alloc] init];
+    for (int i=0; i<[selectedPeople count]; i++)
+    {
+        [userIdArr addObject:((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId];
+        NSLog(@"ids %@",((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId);
+    }
+    
+    blockedUserRemoveArr=[selectedPeople mutableCopy];
+    NSLog(@"userIdArr: %@ selectedPeople: %@",userIdArr,selectedPeople);
+    [rc blockUserList:@"Auth-Token":smAppDelegate.authToken :userIdArr];
+    [selectedPeople removeAllObjects];
 }
 
 -(IBAction)selectAllpeople:(id)sender
@@ -525,8 +791,8 @@ bool searchFlag3=true;
         searchText3=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
-        NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);
+        filteredList = [[NSMutableArray alloc] initWithArray: peopleListArray];
+        NSLog(@"peopleListArray: %@",peopleListArray);
         [self.blockTableView reloadData];
     }
     
@@ -563,7 +829,11 @@ bool searchFlag3=true;
     searchText3=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+    filteredList = [[NSMutableArray alloc] initWithArray: peopleListArray];
+    for (int i=0; i<[peopleListArray count]; i++)
+    {
+        [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];
+    }
     [self.blockTableView reloadData];
     [blockSearchBar resignFirstResponder];
     NSLog(@"3");
@@ -587,31 +857,40 @@ bool searchFlag3=true;
 -(void)searchResult
 {
     searchText3 = blockSearchBar.text;
-    NSLog(@"in search method..");
+    NSLog(@"in search method.. %@",searchText3);
+    NSLog(@"sTemp.itemName1 %d",[peopleListArray count]);
+    [peopleListArray retain];
     [filteredList removeAllObjects];
-    
+    [allUserIdArr removeAllObjects];
+    NSLog(@"sTemp.itemName2 %d",[peopleListArray count]);
     if ([searchText3 isEqualToString:@""])
     {
         NSLog(@"null string");
         blockSearchBar.text=@"";
-        filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+        filteredList = [[NSMutableArray alloc] initWithArray: peopleListArray];
     }
     else
-        for (LocationItemPeople *sTemp in smAppDelegate.peopleList)
+    {
+        NSLog(@"sTemp.itemName3 %d",[peopleListArray count]);
+        for (LocationItemPeople *sTemp in peopleListArray)
         {
+            NSLog(@"sTemp.itemName %@ %d",sTemp.itemName,[peopleListArray count]);
             NSRange titleResultsRange = [sTemp.itemName rangeOfString:searchText3 options:NSCaseInsensitiveSearch];	
             if (titleResultsRange.length > 0)
             {
                 [filteredList addObject:sTemp];
+                [allUserIdArr addObject:((LocationItemPeople *)sTemp).userInfo.userId];
+
                 NSLog(@"filtered friend: %@", sTemp.itemName);
             }
             else
             {
             }
         }
+    }
     searchFlag3=false;
     
-    NSLog(@"filteredList %@ %d %d imageDownloadsInProgress: %@",filteredList,[filteredList count],[peopleListArray count], imageDownloadsInProgress);
+    NSLog(@"filteredListPeople %@ %d %d ",filteredList,[filteredList count],[peopleListArray count]);
     [self.blockTableView reloadData];
 }
 //searchbar delegate method end
@@ -664,6 +943,7 @@ bool searchFlag3=true;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
 }
+
 - (void)dealloc {
     [labelNotifCount release];
     [super dealloc];

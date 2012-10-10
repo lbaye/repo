@@ -43,6 +43,9 @@ extern NSString * const NOTIF_SEND_FRIEND_REQUEST_DONE;
 extern NSString * const NOTIF_GET_ALL_CIRCLES_DONE;
 extern NSString * const NOTIF_CREATE_CIRCLE_DONE;
 extern NSString * const NOTIF_UPDATE_CIRCLE_DONE;
+extern NSString * const NOTIF_GET_ALL_BLOCKED_USERS_DONE;
+extern NSString * const NOTIF_SET_BLOCKED_USERS_DONE;
+extern NSString * const NOTIF_SET_UNBLOCKED_USERS_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

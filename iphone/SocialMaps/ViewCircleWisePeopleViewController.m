@@ -302,7 +302,11 @@ NSString *userID;
         cell.profilePicImgView.layer.borderWidth=1.0;
         cell.profilePicImgView.layer.masksToBounds = YES;
         [cell.regStsImgView.layer setCornerRadius:5.0];
-        
+        [cell.inviteButton.layer setCornerRadius:6.0f];
+        [cell.inviteButton.layer setMasksToBounds:YES];
+        [cell.messageButton.layer setCornerRadius:6.0f];
+        [cell.messageButton.layer setMasksToBounds:YES];
+
         cell.coverPicImgView.image=[UIImage imageNamed:@"cover_pic_default.png"];
         if ([userFrnd.regMedia isEqualToString:@"fb"]) 
         {

@@ -5016,4 +5016,249 @@
     [request startAsynchronous];
 }
 
+-(void)getBlockUserList:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/blocked-users",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+     
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+
+                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+                for (NSDictionary *item in jsonObjects) 
+                {
+                    People *people=[[People alloc] init];
+                    people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                    people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                    people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                    people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                    people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+					people.friendshipStatus = friendship;
+                    people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                    people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                    people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                    [userFrnds addObject:people];
+                }
+                           
+            NSLog(@"getPlatforms response: %@",userFrnds);    
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:userFrnds];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getPlatForm");
+    [request startAsynchronous];
+
+}
+
+-(void)blockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/users/block",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    NSLog(@"friend ID: %@",userIdArr);
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    for (int i=0; i<[userIdArr count]; i++)
+    {
+        NSLog(@"in service circle.circleID: %@",[userIdArr objectAtIndex:i]);
+        [request addPostValue:[userIdArr objectAtIndex:i] forKey:@"users[]"];
+    }
+    
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                People *people=[[People alloc] init];
+                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                people.friendshipStatus = friendship;
+                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                [userFrnds addObject:people];
+            }
+            
+            NSLog(@"getPlatforms response: %@",userFrnds);    
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:userFrnds];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getPlatForm");
+    [request startAsynchronous];
+}
+
+-(void)unBlockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/users/un-block",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    NSLog(@"friend ID: %@",userIdArr);
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    for (int i=0; i<[userIdArr count]; i++)
+    {
+        NSLog(@"in service circle.circleID: %@",[userIdArr objectAtIndex:i]);
+        [request addPostValue:[userIdArr objectAtIndex:i] forKey:@"users[]"];
+    }
+    
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                People *people=[[People alloc] init];
+                people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
+                people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
+                people.friendshipStatus = friendship;
+                people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
+                people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
+                people.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];  
+                people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                [userFrnds addObject:people];
+            }
+            
+            NSLog(@"getPlatforms response: %@",userFrnds);    
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:userFrnds];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getPlatForm");
+    [request startAsynchronous];
+}
+
+
 @end

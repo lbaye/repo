@@ -51,6 +51,9 @@ NSString * const NOTIF_SEND_FRIEND_REQUEST_DONE= @"com.genweb2.socialmaps.sendfr
 NSString * const NOTIF_GET_ALL_CIRCLES_DONE= @"com.genweb2.socialmaps.getallcirclesdone";
 NSString * const NOTIF_CREATE_CIRCLE_DONE=@"com.genweb2.socialmaps.createcirclesdone";
 NSString * const NOTIF_UPDATE_CIRCLE_DONE=@"com.genweb2.socialmaps.updatecirclesdone";
+NSString * const NOTIF_GET_ALL_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.getallblockedusersdone";
+NSString * const NOTIF_SET_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setblockedusersdone";
+NSString * const NOTIF_SET_UNBLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setunblockedusersdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

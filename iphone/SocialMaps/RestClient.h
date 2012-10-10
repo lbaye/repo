@@ -78,5 +78,7 @@
 -(void) getAllCircles:(NSString *)authToken:(NSString *)authTokenValue;
 -(void) createCircle:(NSString *)authToken:(NSString *)authTokenValue:(UserCircle *)userCircle;
 -(void) updateCircle:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)friendId:(NSMutableArray *)userCircleArr;
-
+-(void)getBlockUserList:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)blockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
+-(void)unBlockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
 @end

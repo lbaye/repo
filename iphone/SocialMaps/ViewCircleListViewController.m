@@ -84,6 +84,7 @@ bool showSM=true;
     NSArray *subviews = [circleSearchBar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:2];
     cancelButton.tintColor = [UIColor darkGrayColor];
+    cancelButton.titleLabel.text=@"   OK";
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
     //    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
@@ -471,6 +472,11 @@ bool showSM=true;
 
 
     }
+    [cell.inviteButton.layer setCornerRadius:6.0f];
+    [cell.inviteButton.layer setMasksToBounds:YES];
+    [cell.messageButton.layer setCornerRadius:6.0f];
+    [cell.messageButton.layer setMasksToBounds:YES];
+
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     //    cell.eventImage.image = eventPhoto;
