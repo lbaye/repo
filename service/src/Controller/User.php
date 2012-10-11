@@ -671,28 +671,20 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         try {
-            $circles = $this->user->getCircles();
 
-            $result = array();
-            foreach ($circles as $circle) {
-                if ($circle->getId() == $id) {
-                    $result = $circle->toArray();
-                }
-            }
+            $this->userRepository->deleteCustomCircle($id);
 
-            if ($result['type'] == 'system') {
-                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-                return $this->response;
-            }
-            $this->userRepository->delete($id);
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
 
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(Status::NOT_FOUND);
         }
-
 
         return $this->response;
     }
