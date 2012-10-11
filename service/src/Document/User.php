@@ -11,9 +11,9 @@ use Document\Circle;
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  */
-class User
-{
+class User {
     const SALT = 'socialmaps';
+    const STATUS_OFF = 'off';
 
 
     /** @ODM\Id */
@@ -141,22 +141,45 @@ class User
     /** @ODM\Date */
     protected $updateDate;
 
+    # TODO: Set validation for location settings
+
     /** @ODM\Hash */
     protected $locationSettings = array(
 
         'status' => 'on',
 
-        'friends' => array(
-            'permitted_users' => array(),
-            'permitted_circles' => array(),
+        'friends_and_circles' => array(
+            'friends' => array(),
+            'circles' => array(),
             'duration' => 0,
             'radius' => 2
         ),
 
+        /*
+         * 'circles_only' => array(
+         *   '<circle_id>' => array(
+         *      'duration' => 0,
+         *      'radius' => 2 # meters
+         *   )
+         * )
+         */
+
+        'circles_only' => array(),
+
         'strangers' => array(
             'duration' => 0,
             'radius' => 2
-        )
+        ),
+
+        /*
+         * 'geo_fences' => array(
+         *  array(
+         *      'location' => array('lat' => .., 'lng' =>),
+         *      'radius' => 2
+         *  )
+         * )
+         */
+        'geo_fences' => array()
 
     );
 
@@ -250,8 +273,7 @@ class User
         'gender' => 'all'
     );
 
-    public function isValid()
-    {
+    public function isValid() {
         try {
             Validator::create()->email()->assert($this->getEmail());
             Validator::create()->notEmpty()->assert($this->getPassword());
@@ -262,8 +284,7 @@ class User
         }
     }
 
-    public function isValidForFb()
-    {
+    public function isValidForFb() {
         try {
             Validator::create()->notEmpty()->assert($this->getFacebookId());
             Validator::create()->notEmpty()->assert($this->getFacebookAuthToken());
@@ -273,8 +294,7 @@ class User
         }
     }
 
-    public function toArray($detail = true)
-    {
+    public function toArray($detail = true) {
         $shortFields = array(
             'id', 'email', 'firstName', 'lastName', 'avatar'
         );
@@ -314,7 +334,9 @@ class User
         }
 
         foreach ($targetFields as $field) {
-            $items[$field] = $this->{"get{$field}"}();
+            $items[$field] = $this->{
+            "get{$field}"
+            }();
         }
 
         if ($this->getAddress()) {
@@ -326,15 +348,14 @@ class User
         return $items;
     }
 
-    public function toArrayDetailed()
-    {
+    public function toArrayDetailed() {
         $data = array(
             'id' => $this->getId(),
             'email' => $this->getEmail(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
-            'avatar'   => $this->getAvatar(),
-            'coverPhoto'   => $this->getCoverPhoto(),
+            'avatar' => $this->getAvatar(),
+            'coverPhoto' => $this->getCoverPhoto(),
             'deactivated' => $this->getDeactivated(),
             'authToken' => $this->getAuthToken(),
             'settings' => $this->getSettings(),
@@ -379,120 +400,97 @@ class User
         return $data;
     }
 
-    public function setConfirmationToken($confirmationToken)
-    {
+    public function setConfirmationToken($confirmationToken) {
         $this->confirmationToken = $confirmationToken;
     }
 
-    public function getConfirmationToken()
-    {
+    public function getConfirmationToken() {
         return $this->confirmationToken;
     }
 
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
     }
 
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
-    public function setEnabled($enabled)
-    {
+    public function setEnabled($enabled) {
         $this->enabled = $enabled;
     }
 
-    public function getEnabled()
-    {
+    public function getEnabled() {
         return $this->enabled;
     }
 
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
     }
 
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
-    public function setLastLogin($lastLogin)
-    {
+    public function setLastLogin($lastLogin) {
         $this->lastLogin = $lastLogin;
     }
 
-    public function getLastLogin()
-    {
+    public function getLastLogin() {
         return $this->lastLogin;
     }
 
 
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = $password;
     }
 
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
     }
 
-    public function setSalt($salt)
-    {
+    public function setSalt($salt) {
         $this->salt = $salt;
     }
 
-    public function getSalt()
-    {
+    public function getSalt() {
         return $this->salt;
     }
 
-    public function setAvatar($avatar)
-    {
+    public function setAvatar($avatar) {
         $this->avatar = $avatar;
     }
 
-    public function getAvatar()
-    {
+    public function getAvatar() {
         return $this->avatar;
     }
 
 
-    public function setFirstName($firstName)
-    {
+    public function setFirstName($firstName) {
         $this->firstName = $firstName;
     }
 
-    public function getFirstName()
-    {
+    public function getFirstName() {
         return $this->firstName;
     }
 
-    public function setLastName($lastName)
-    {
+    public function setLastName($lastName) {
         $this->lastName = $lastName;
     }
 
-    public function getLastName()
-    {
+    public function getLastName() {
         return $this->lastName;
     }
 
-    public function setAuthToken($authToken)
-    {
+    public function setAuthToken($authToken) {
         $this->authToken = $authToken;
     }
 
-    public function getAuthToken()
-    {
+    public function getAuthToken() {
         return $this->authToken;
     }
 
-    public function setSettings($settings)
-    {
+    public function setSettings($settings) {
         if (empty($this->settings)) {
             $this->settings = $this->defaultSettings;
         } else {
@@ -500,249 +498,200 @@ class User
         }
     }
 
-    public function getSettings()
-    {
+    public function getSettings() {
         return $this->settings;
     }
 
-    public function setCreateDate($createDate)
-    {
+    public function setCreateDate($createDate) {
         $this->createDate = $createDate;
     }
 
-    public function getCreateDate()
-    {
+    public function getCreateDate() {
         return $this->createDate;
     }
 
-    public function setUpdateDate($modifyDate)
-    {
+    public function setUpdateDate($modifyDate) {
         $this->updateDate = $modifyDate;
     }
 
-    public function getUpdateDate()
-    {
+    public function getUpdateDate() {
         return $this->updateDate;
     }
 
-    public function setDeactivated($deactivated)
-    {
+    public function setDeactivated($deactivated) {
         $this->deactivated = $deactivated;
     }
 
-    public function getDeactivated()
-    {
+    public function getDeactivated() {
         return $this->deactivated;
     }
 
-    public function setSource($source)
-    {
+    public function setSource($source) {
         $this->source = $source;
     }
 
-    public function getSource()
-    {
+    public function getSource() {
         return $this->source;
     }
 
-    public function setDateOfBirth($dateOfBirth)
-    {
+    public function setDateOfBirth($dateOfBirth) {
         $this->dateOfBirth = new \DateTime($dateOfBirth);
     }
 
-    public function getDateOfBirth()
-    {
+    public function getDateOfBirth() {
 
         return $this->dateOfBirth;
     }
 
-    public function setBio($bio)
-    {
+    public function setBio($bio) {
         $this->bio = $bio;
     }
 
-    public function getBio()
-    {
+    public function getBio() {
         return $this->bio;
     }
 
-    public function setInterests($interests)
-    {
+    public function setInterests($interests) {
         $this->interests = $interests;
     }
 
-    public function getInterests()
-    {
+    public function getInterests() {
         return $this->interests;
     }
 
-    public function setWorkStatus($workStatus)
-    {
+    public function setWorkStatus($workStatus) {
         $this->workStatus = $workStatus;
     }
 
-    public function getWorkStatus()
-    {
+    public function getWorkStatus() {
         return $this->workStatus;
     }
 
-    public function setRelationshipStatus($relationshipStatus)
-    {
+    public function setRelationshipStatus($relationshipStatus) {
         $this->relationshipStatus = $relationshipStatus;
     }
 
-    public function getRelationshipStatus()
-    {
+    public function getRelationshipStatus() {
         return $this->relationshipStatus;
     }
 
-    public function setAddress($address)
-    {
+    public function setAddress($address) {
         $this->address = $address;
     }
 
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->address;
     }
 
-    public function setConnector($connector)
-    {
+    public function setConnector($connector) {
         $this->connector = $connector;
     }
 
-    public function getConnector()
-    {
+    public function getConnector() {
         return $this->connector;
     }
 
-    public function addNotification($notification)
-    {
+    public function addNotification($notification) {
         $this->notification[] = $notification;
     }
 
-    public function setNotification($notification)
-    {
+    public function setNotification($notification) {
         $this->notification = $notification;
     }
 
-    public function getNotification()
-    {
+    public function getNotification() {
         return $this->notification;
     }
 
-    public function setCircles($circles)
-    {
+    public function setCircles($circles) {
         $this->circles = $circles;
     }
 
-    public function addCircle(Circle $circle)
-    {
+    public function addCircle(Circle $circle) {
         $this->circles[] = $circle;
     }
 
-    public function getCircles()
-    {
+    public function getCircles() {
         return $this->circles;
     }
 
-    public function addFriendRequest($friendRequest)
-    {
+    public function addFriendRequest($friendRequest) {
         $this->friendRequest[] = $friendRequest;
     }
 
-    public function setFriendRequest($friendRequest)
-    {
+    public function setFriendRequest($friendRequest) {
         $this->friendRequest = $friendRequest;
     }
 
-    public function getFriendRequest()
-    {
+    public function getFriendRequest() {
         return $this->friendRequest;
     }
 
-    public function setGeoFence($geoFence)
-    {
+    public function setGeoFence($geoFence) {
         $this->geoFence = $geoFence;
     }
 
-    public function getGeoFence()
-    {
+    public function getGeoFence() {
         return $this->geoFence;
     }
 
-    public function setLocationSettings($locationSettings)
-    {
+    public function setLocationSettings($locationSettings) {
         $this->locationSettings = $locationSettings;
     }
 
-    public function getLocationSettings()
-    {
+    public function getLocationSettings() {
         return $this->locationSettings;
     }
 
-    public function setFacebookId($facebookId)
-    {
+    public function setFacebookId($facebookId) {
         $this->facebookId = $facebookId;
     }
 
-    public function getFacebookId()
-    {
+    public function getFacebookId() {
         return $this->facebookId;
     }
 
-    public function setFacebookAuthToken($facebookAuthToken)
-    {
+    public function setFacebookAuthToken($facebookAuthToken) {
         $this->facebookAuthToken = $facebookAuthToken;
     }
 
-    public function getFacebookAuthToken()
-    {
+    public function getFacebookAuthToken() {
         return $this->facebookAuthToken;
     }
 
-    public function setNotificationSettings(array $notificationSettings)
-    {
+    public function setNotificationSettings(array $notificationSettings) {
         $this->notificationSettings = $notificationSettings;
     }
 
-    public function getNotificationSettings()
-    {
+    public function getNotificationSettings() {
         return $this->notificationSettings;
     }
 
-    public function setPlatformSettings(array $platformSettings)
-    {
+    public function setPlatformSettings(array $platformSettings) {
         $this->platformSettings = $platformSettings;
     }
 
-    public function getPlatformSettings()
-    {
+    public function getPlatformSettings() {
         return $this->platformSettings;
     }
 
-    public function setLayersSettings($layerSettings)
-    {
+    public function setLayersSettings($layerSettings) {
         $this->layersSettings = $layerSettings;
     }
 
-    public function getLayersSettings()
-    {
+    public function getLayersSettings() {
         return $this->layersSettings;
     }
 
-    public function setSharingPreferenceSettings($sharingPreferenceSettings)
-    {
+    public function setSharingPreferenceSettings($sharingPreferenceSettings) {
         $this->sharingPreferenceSettings = $sharingPreferenceSettings;
     }
 
-    public function getSharingPreferenceSettings()
-    {
+    public function getSharingPreferenceSettings() {
         return $this->sharingPreferenceSettings;
     }
 
-    public function getAge()
-    {
+    public function getAge() {
         $dob = $this->getDateOfBirth();
 
         if ($dob) {
@@ -753,121 +702,99 @@ class User
         return 0;
     }
 
-    public function setForgetPasswordToken($forgetPasswordToken)
-    {
+    public function setForgetPasswordToken($forgetPasswordToken) {
         $this->forgetPasswordToken = $forgetPasswordToken;
     }
 
-    public function getForgetPasswordToken()
-    {
+    public function getForgetPasswordToken() {
         return $this->forgetPasswordToken;
     }
 
-    public function setCurrentLocation($currentLocation)
-    {
+    public function setCurrentLocation($currentLocation) {
         $this->currentLocation = $currentLocation;
     }
 
-    public function getCurrentLocation()
-    {
+    public function getCurrentLocation() {
         return $this->currentLocation;
     }
 
-    public function setVisible($visible)
-    {
+    public function setVisible($visible) {
         $this->visible = $visible;
     }
 
-    public function getVisible()
-    {
+    public function getVisible() {
         return $this->visible;
     }
 
-    public function setRegMedia($regMedia)
-    {
+    public function setRegMedia($regMedia) {
         $this->regMedia = $regMedia;
     }
 
-    public function getRegMedia()
-    {
+    public function getRegMedia() {
         return $this->regMedia;
     }
 
-    public function setGender($gender)
-    {
+    public function setGender($gender) {
         $this->gender = $gender;
     }
 
-    public function getGender()
-    {
+    public function getGender() {
         return $this->gender;
     }
 
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
     }
 
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
-    public function addBlockedUser($user)
-    {
+    public function addBlockedUser($user) {
         $this->blockedUsers[] = $user->getId();
     }
 
-    public function getBlockedUsers()
-    {
+    public function getBlockedUsers() {
         return $this->blockedUsers;
     }
 
-    public function addBlockedBy($userBy)
-    {
+    public function addBlockedBy($userBy) {
         $this->blockedBy[] = $userBy->getId();
     }
 
-    public function getBlockedBy()
-    {
+    public function getBlockedBy() {
         return $this->blockedBy;
     }
 
-    public function setLoginCount($loginCount)
-    {
+    public function setLoginCount($loginCount) {
         $this->loginCount = $loginCount;
     }
 
-    public function getLoginCount()
-    {
+    public function getLoginCount() {
         return $this->loginCount;
     }
 
-    public function setOldPassword($oldPassword)
-    {
+    public function setOldPassword($oldPassword) {
         $this->oldPassword = $oldPassword;
     }
 
-    public function getOldPassword()
-    {
+    public function getOldPassword() {
         return $this->oldPassword;
     }
 
-    public function getDistance()
-    {
+    public function getDistance() {
         if (isset($this->distance)) {
             return (floatval($this->distance) * 111120); // Convert to Meter
         } else {
             return 0;
         }
 
-//        $unitName = $this->getSettings();
-//        $this->distance = $this->unitConvert($metricValue, @$unitName['unit']);
+        //        $unitName = $this->getSettings();
+        //        $this->distance = $this->unitConvert($metricValue, @$unitName['unit']);
 
     }
 
-    private function unitConvert($value, $unitName = "metric")
-    {
+    private function unitConvert($value, $unitName = "metric") {
         if ($unitName != "") {
             if ($unitName == "imperial") {
                 if (isset($this->$value)) {
@@ -879,8 +806,7 @@ class User
         return $value;
     }
 
-    public function toArrayFiltered(User $viewer)
-    {
+    public function toArrayFiltered(User $viewer) {
         $info = $this->toArray();
         $shearing = $this->getSharingPreferenceSettings();
 
@@ -905,8 +831,7 @@ class User
         return $info;
     }
 
-    public function getFriends()
-    {
+    public function getFriends() {
         $circles = $this->getCircles();
 
         foreach ($circles as $circle) {
@@ -916,8 +841,7 @@ class User
         }
     }
 
-    public function getCircleFriends(array $inCircles = null)
-    {
+    public function getCircleFriends(array $inCircles = null) {
         $circles = $this->getCircles();
         $friends = array();
 
@@ -932,58 +856,47 @@ class User
         return $friends;
     }
 
-    public function setCompany($company)
-    {
+    public function setCompany($company) {
         $this->company = $company;
     }
 
-    public function getCompany()
-    {
+    public function getCompany() {
         return $this->company;
     }
 
-    public function setCoverPhoto($coverPhoto)
-    {
+    public function setCoverPhoto($coverPhoto) {
         $this->coverPhoto = $coverPhoto;
     }
 
-    public function getCoverPhoto()
-    {
+    public function getCoverPhoto() {
         return $this->coverPhoto;
     }
 
-    public function setStatus($status)
-    {
+    public function setStatus($status) {
         $this->status = $status;
     }
 
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
-    public function getDomainName()
-    {
+    public function getDomainName() {
         return $this->config['web']['root'];
     }
 
-    public function setLastSeenAt($nowAt)
-    {
+    public function setLastSeenAt($nowAt) {
         $this->lastSeenAt = $nowAt;
     }
 
-    public function getLastSeenAt()
-    {
+    public function getLastSeenAt() {
         return $this->lastSeenAt;
     }
 
-    public function setPushSettings($pushSettings)
-    {
+    public function setPushSettings($pushSettings) {
         $this->pushSettings = $pushSettings;
     }
 
-    public function getPushSettings()
-    {
+    public function getPushSettings() {
         return $this->pushSettings;
     }
 
@@ -992,14 +905,13 @@ class User
      * Additional wrapper/helper function
      ********************************************/
 
-    public function getFriendship(User $user)
-    {
-        if(in_array($user->getId(), $this->getFriends())) {
+    public function getFriendship(User $user) {
+        if (in_array($user->getId(), $this->getFriends())) {
             return 'friend';
-        } else if($requestedByMe = $this->_getFriendRequest($this, $user)) {
-            return ($requestedByMe->getAccepted() === false)? 'rejected_by_me' : 'requested';
-        } else if($requestedByHim = $this->_getFriendRequest($user, $this)) {
-            return ($requestedByHim->getAccepted() === false)? 'rejected_by_him' : 'pending';
+        } else if ($requestedByMe = $this->_getFriendRequest($this, $user)) {
+            return ($requestedByMe->getAccepted() === false) ? 'rejected_by_me' : 'requested';
+        } else if ($requestedByHim = $this->_getFriendRequest($user, $this)) {
+            return ($requestedByHim->getAccepted() === false) ? 'rejected_by_him' : 'pending';
         } else {
             return 'none';
         }
@@ -1010,8 +922,7 @@ class User
      * @param User $to
      * @return bool|FriendRequest
      */
-    private function _getFriendRequest(User $from, User $to)
-    {
+    private function _getFriendRequest(User $from, User $to) {
         $friendRequests = $to->getFriendRequest();
 
         foreach ($friendRequests as $friendRequest) {
@@ -1023,17 +934,74 @@ class User
         return false;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return implode(
             " ", array_filter(
-                   array($this->firstName, 
+                   array($this->firstName,
                         $this->lastName)));
     }
 
-    public function updateBlockedUser($user)
-    {
+    public function updateBlockedUser($user) {
         $this->blockedUsers = $user;
     }
 
+    public function isVisibleTo($app_user) {
+        $settings = $this->getLocationSettings();
+
+        // Check whether location sharing is turned on or off
+        if (@strtolower($settings[self::PREF_FIELD_STATUS]) == self::STATUS_OFF)
+            return false;
+
+        // Ensure user is not in within_restricted_fench?
+        if ($this->insideGeoFence($settings))
+            return false;
+        //
+        //type_of_relationship = determine_relationship_between target_user, app_user
+        //
+        //if type_of_relationship == "stranger"
+        //unless stranger_allowed? return false
+        //unless within_sharing_time_limit? return false
+        //
+        //else if type_of_relationship == "friend"
+        //list_of_friend_subgroup = determine_which_group_app_user_belongs_to
+        //
+        //if empty list_of_friend_subgroup return true
+        //else
+        //        foreach subgroup in list_of_friend_subgroup
+        //          unless subgroup.allowVisibility?(app_user) return false
+        //
+        //return true
+
+    }
+
+    private function insideGeoFence($settings) {
+        $geo_fences = @$settings[self::PREF_FIELD_GEO_FENCES];
+
+        if (!empty($geo_fences)) {
+            foreach ($geo_fences as $geo_fence) {
+                $radius = $geo_fence['radius'];
+                $distance = $this->checkDistance($this->getCurrentLocation(), $geo_fence);
+
+                if ($distance < float($radius)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function checkDistance($current_location, $geo_fence) {
+        $location = $geo_fence['location'];
+        $lat = $location['lat'];
+        $lng = $location['lng'];
+
+        $target_lat = $current_location['lat'];
+        $target_lng = $current_location['lng'];
+
+        return \Helper\Location::distance($lat, $lng, $target_lat, $target_lng);
+    }
+
+    const PREF_FIELD_STATUS = "status";
+    const PREF_FIELD_GEO_FENCES = "geo_fences";
 }
