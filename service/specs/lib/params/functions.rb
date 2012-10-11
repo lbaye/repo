@@ -45,8 +45,17 @@ module Util
         JSON.load(response.body)
       end
 
+      def create_event(auth_response, params)
+        client = ClientUtil.create_client
+        response = client.send(:post, '/messages')
+      end
+
       def rand_email
         "user#{rand}@email.com"
+      end
+
+      def rand_string(arg = '')
+        "#{arg}-#{rand}"
       end
 
       def since_two_day
@@ -55,7 +64,7 @@ module Util
 
       module_function :rand, :authenticate, :rand_email,
                       :create_message, :create_user, :create_message_context,
-                      :get_user_by_email, :update_status, :since_two_day
+                      :get_user_by_email, :update_status, :since_two_day, :rand_string
     end
   end
 end
