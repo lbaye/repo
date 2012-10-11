@@ -501,7 +501,8 @@ bool searchFlags=true;
 //            cell1.eventImage.image=event.eventImage;                
 //        }
     }
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
 //    cell.eventImage.image = eventPhoto;
     if (event.isInvited==false)
