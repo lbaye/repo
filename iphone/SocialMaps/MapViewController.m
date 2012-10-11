@@ -522,7 +522,7 @@ ButtonClickCallbackData callBackData;
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
-        
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     // Get Information
@@ -697,7 +697,8 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidDisappear:(BOOL)animated
 {
     //userFriendslistArray=[[NSMutableArray alloc] init];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    //by Rishi
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -709,6 +710,10 @@ ButtonClickCallbackData callBackData;
 - (void)viewDidUnload
 {
     NSLog(@"MapViewController:viewDidUnload" );
+    
+    //by Rishi
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
     [locationManager stopUpdatingLocation];
@@ -1837,6 +1842,7 @@ ButtonClickCallbackData callBackData;
                         LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
+                        
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
                         
@@ -1849,12 +1855,15 @@ ButtonClickCallbackData callBackData;
                                 [imageData release];
                                 
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
-                                    person.itemIcon = image;
-                                    //
-                                    //[image release];
-                                    if (smAppDelegate.showPeople == TRUE)
-                                        [self mapAnnotationInfoUpdated:person];
+                                    if ([smAppDelegate.peopleList count] > itemIndex) {
+                                        //it was crashing sometimes... errorlog trying to get objectAtIndex of an empty array... above if condition added - Rishi
+                                        LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
+                                        person.itemIcon = image;
+                                        //
+                                        //[image release];
+                                        if (smAppDelegate.showPeople == TRUE)
+                                            [self mapAnnotationInfoUpdated:person];
+                                    }
                                 });
                             });
                         }
@@ -1879,11 +1888,14 @@ ButtonClickCallbackData callBackData;
                         if (smAppDelegate.showPeople == TRUE)
                             [self mapAnnotationInfoUpdated:aPerson];
                         */
+                        aPerson.itemAddress = item.lastSeenAt;
+                        
                         if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus])) {
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
+                            NSLog(@"lastSeenAt %@", item.lastSeenAt);
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                             aPerson.itemDistance = distanceFromMe;
-                            aPerson.itemAddress = item.lastSeenAt;
+                            
                             [self mapAnnotationInfoUpdated:aPerson];
                         }
                     }
@@ -1954,10 +1966,13 @@ ButtonClickCallbackData callBackData;
                             [imageData release];
 
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
-                                place.itemIcon = image;
-                                if (smAppDelegate.showPlaces == TRUE)
-                                    [self mapAnnotationInfoUpdated:place];
+                                if ([smAppDelegate.placeList count] > itemIndex) {
+                                    //it was crashing sometimes... errorlog trying to get objectAtIndex of an empty array... above if condition added - Rishi
+                                    LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
+                                    place.itemIcon = image;
+                                    if (smAppDelegate.showPlaces == TRUE)
+                                        [self mapAnnotationInfoUpdated:place];
+                                }
                             });
                         });
                     } 

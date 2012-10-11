@@ -31,6 +31,7 @@
     
     IBOutlet UIView *viewNotification;
     PullableView *pullDownView;
+    NSMutableArray *copyDisplayListArray;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
