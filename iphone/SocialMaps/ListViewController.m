@@ -89,6 +89,31 @@
     copyListOfItems = [[NSMutableArray alloc] init];
 
     [self initPullView];
+    
+    CGSize labelSize = CGSizeMake(70, 20); 
+    UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
+    labelRefresh.text = @"Refresh...";
+    labelRefresh.textAlignment = UITextAlignmentCenter;
+    labelRefresh.textColor = [UIColor whiteColor];
+    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    labelRefresh.backgroundColor= [UIColor clearColor];
+    [itemList addSubview:labelRefresh];
+    [labelRefresh release];
+    
+    copyDisplayListArray = [[NSMutableArray alloc] init];
+    [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
+    
+    //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
+        NSLog(@"At the top");
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
+        [self getSortedDisplayList];
+        [itemList reloadData];
+    }
 }
 
 -(void)initPullView
@@ -174,6 +199,7 @@
 }
 
 - (void) getSortedDisplayList {
+    [copyDisplayListArray removeAllObjects];
     [smAppDelegate.displayList removeAllObjects];
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
     if (smAppDelegate.showPeople == TRUE) 
@@ -185,7 +211,10 @@
     
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
-    [smAppDelegate.displayList addObjectsFromArray:sortedArray];
+    [copyDisplayListArray addObjectsFromArray:sortedArray];
+    //copyListOfItems = [sortedArray mutableCopy];
+    [smAppDelegate.displayList addObjectsFromArray:copyDisplayListArray];
+    
 }
 
 - (void)viewDidUnload
@@ -298,7 +327,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
-    LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
+    LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     if(searching) 
 		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
     anItem.delegate = self;
@@ -317,12 +346,12 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return (searching) ? [copyListOfItems count] :[smAppDelegate.displayList count];
+    return (searching) ? [copyListOfItems count] :[copyDisplayListArray count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
-    LocationItem *anItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:indexPath.row];
+    LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     return [anItem getRowHeight:tableView];
 }
 
@@ -374,7 +403,7 @@
 
 // LocationItem delegate
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
-    LocationItem *anItem = (LocationItem*) [smAppDelegate.displayList objectAtIndex:row];
+    LocationItem *anItem = (LocationItem*) [copyDisplayListArray objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
     //ShowOnMapController *controller;
     switch (action) {
@@ -387,7 +416,7 @@
             //[self presentModalViewController:controller animated:YES];
             //[controller release];
             
-            LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:row];
+            LocationItem *locItem = (LocationItem*)[copyDisplayListArray objectAtIndex:row];
             if(searching)
                 locItem = (LocationItem*)[copyListOfItems objectAtIndex:row];
             
@@ -500,7 +529,7 @@
     }
     */
     [copyListOfItems removeAllObjects];
-	for (LocationItem *sTemp in smAppDelegate.displayList)
+	for (LocationItem *sTemp in copyDisplayListArray)
 	{
 		LocationItem *info = (LocationItem*)sTemp;
 		NSRange titleResultsRange = [info.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
