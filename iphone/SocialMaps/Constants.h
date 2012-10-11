@@ -11,6 +11,7 @@ extern NSString * const NOTIF_LOGIN_DONE;
 extern NSString * const NOTIF_REG_DONE;
 extern NSString * const NOTIF_FORGOT_PW_DONE;
 extern NSString * const NOTIF_FBLOGIN_DONE;
+extern NSString * const NOTIF_FB_REG_DONE;
 extern NSString * const FB_APPID;
 extern NSString * const NOTIF_GET_PLATFORM_DONE;
 extern NSString * const NOTIF_GET_LAYER_DONE;

@@ -78,7 +78,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDone:) name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forgotPWDone:) name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_REG_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_FB_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbFriendListDone:) name:NOTIF_FBFRIENDLIST_DONE object:nil];
     
     

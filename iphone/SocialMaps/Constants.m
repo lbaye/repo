@@ -19,6 +19,7 @@ NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
 NSString * const NOTIF_FBLOGIN_DONE = @"com.genweb2.socialmaps.fblogindone";
+NSString * const NOTIF_FB_REG_DONE= @"com.genweb2.socialmaps.fbregdone";
 NSString * const NOTIF_SETPROFILE_DONE = @"com.genweb2.socialmaps.setprofiledone";
 NSString * const NOTIF_GET_PLATFORM_DONE= @"com.genweb2.socialmaps.getplatformdone";
 NSString * const NOTIF_GET_LAYER_DONE= @"com.genweb2.socialmaps.getlayerdone";

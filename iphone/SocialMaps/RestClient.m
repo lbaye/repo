@@ -264,9 +264,9 @@
             [aUser setCircleList:circleList];
             circleListGlobalArray=circleList;
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FB_REG_DONE object:aUser];
         } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FB_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -274,7 +274,7 @@
     
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FB_REG_DONE object:nil];
     }];
     
     //[request setDelegate:self];

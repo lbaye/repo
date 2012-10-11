@@ -242,6 +242,7 @@
         
         [loginAlert show];
         [loginAlert autorelease];
+        NSLog(@"Please login using your email and password");
         
         [self performSegueWithIdentifier: @"regBackToLogin" sender: self];
     } else {

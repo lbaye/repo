@@ -100,14 +100,14 @@
     if ([userInfo.friendshipStatus isEqualToString:@"friend"]==TRUE)
     {
         frndButton.hidden=NO;
-        [frndButton setTitle:@"friends" forState:UIControlStateNormal];
+        [frndButton setTitle:@"friend" forState:UIControlStateNormal];
         NSLog(@"is hidden:NO userInfo.friendshipStatus %@",userInfo.friendshipStatus);
     }
     else
     {
         frndButton.hidden=YES;
         NSLog(@"is hidden:YES userInfo.friendshipStatus %@",userInfo.friendshipStatus);
-        [frndButton setTitle:@"Non-Friends" forState:UIControlStateNormal];
+        [frndButton setTitle:@"Non-Friend" forState:UIControlStateNormal];
     } 
 	// Message
     

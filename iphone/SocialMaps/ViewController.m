@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "UtilityClass.h"
 #import "UserDefault.h"
+#import "CustomAlert.h"
 
 @implementation ViewController
 @synthesize progressView;
@@ -103,7 +104,7 @@ UserDefault *userDef;
 
 -(IBAction)discoverApp:(id)sender
 {
-    if ([betaPassWord.text isEqualToString:@"beta2012"])
+    if ([betaPassWord.text isEqualToString:@"discover 2012"])
     {
         [self performSegueWithIdentifier: @"showLogin" sender: self];
         [userDef removeFromDefault:@"betaPassWord"];
@@ -111,7 +112,19 @@ UserDefault *userDef;
     }
     else
     {
-        [UtilityClass showAlert:@"Social Maps" :@"Enter valid password"];
+//        [UtilityClass showAlert:@"Social Maps" :@"Enter valid password"];
+        [CustomAlert setBackgroundColor:[UIColor redColor] 
+                        withStrokeColor:[UIColor redColor]];
+        CustomAlert *loginAlert = [[CustomAlert alloc]
+                                   initWithTitle:@"Cannot Discover"
+                                   message:@"Wrong beta password, please retry!"
+                                   delegate:nil
+                                   cancelButtonTitle:@"Done"
+                                   otherButtonTitles:nil];
+        
+        [loginAlert show];
+        [loginAlert autorelease];
+
     }
 }
 
