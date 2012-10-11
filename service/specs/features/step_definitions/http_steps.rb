@@ -20,8 +20,10 @@ When /^I'm posting "(.*?)"$/ do |str_params|
   @response.set_params(Util::Params.parse(str_params))
 end
 
+
+
 Then /^I should see http "(.*?)" status$/ do |code|
-#  p @response.body
+  p @response.body
   @response.code.should == code
 end
 

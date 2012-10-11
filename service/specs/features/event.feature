@@ -22,6 +22,17 @@ Feature: Events
     Then I should see http "201" status
     And Response is valid "application/json" formatted
 
+  Scenario: Create Event with authenticated user and Image
+    Given I have an image named "image.jpeg"
+    Given I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
+    And I'm logged in through "ahmed.tanvir@genweb2.com" and "121212"
+
+    When I'm sending http "POST" request to "/events"
+    And I'm posting with image "title={rand_string('title')}, description={rand_string('des')}, address={rand_string('address')}, lat=1234, lng=4321, time=14.30"
+
+    Then I should see http "201" status
+    And Response is valid "application/json" formatted
+
   Scenario: Get all public Events
     Given I've already setup user account with "test@example.com" and "abcd"
     And An event is created with "test@example.com" and "abcd" with "title={rand_string('title')}, description={rand_string('description')} ,address={rand_string('address')}, lat=1234, lng=4321, time=14.30, permission=public"

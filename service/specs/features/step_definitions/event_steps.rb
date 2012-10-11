@@ -2,9 +2,18 @@ Given /^An event is created with "([^"]*)" and "([^"]*)" with "([^"]*)"$/ do |em
   @authResponse = Util::Params::Functions.authenticate(email, password)
   @response = @client.send(:post, "/events")
   @response.set_headers('Auth-Token' => @authResponse['authToken'])
+  if @image
+    str_params << ",eventImage=#{@image}"
+  end
+
   @response.set_params(Util::Params.parse(str_params))
   @event =  @response.json
 
+end
+
+Given /^I have an image named "([^"]*)"$/ do |image_name|
+  @image = Base64.encode64(File.read(File.join(File.dirname(__FILE__), '..', '..','..', 'specs','fixtures', image_name)))
+  puts "populated image"
 end
 
 
@@ -44,3 +53,9 @@ Then /^Event "([^"]*)" should be equal to "([^"]*)"$/ do |attr, value|
   @event[attr].should == value
 end
 
+
+When /^I'm posting with image "([^"]*)"$/ do |str_params|
+
+    str_params << ",eventImage=#{@image}"
+  @response.set_params(Util::Params.parse(str_params))
+end
