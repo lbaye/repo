@@ -838,9 +838,10 @@ class UserRepo extends Base
         $visible_people = array();
 
         # TODO: How to fix less than $limit items
-        foreach ($people_around as $target_user) {
+        foreach ($people_around as $target_user_hash) {
+            $target_user = $this->find($target_user_hash['id']);
             if ($target_user->isVisibleTo($this->currentUser)) {
-                $visible_people[] = $target_user;
+                $visible_people[] = $target_user_hash;
             }
         }
 
