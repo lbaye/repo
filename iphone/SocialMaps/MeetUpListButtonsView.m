@@ -21,26 +21,31 @@
     if (self) {
         // Initialization code
         buttonAccept = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonAccept.frame = CGRectMake(10, 0, 70, 30);
-        [buttonAccept setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [buttonAccept setTitle:@"Accepted" forState:UIControlStateNormal];
-        [buttonAccept.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
+        buttonAccept.frame = CGRectMake(30, 0, 70, 30);
+        [buttonAccept setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [buttonAccept setTitleColor:[UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateSelected];
+        [buttonAccept setTitle:@"Accept" forState:UIControlStateNormal];
+        [buttonAccept setTitle:@"Accepted" forState:UIControlStateSelected];
+        [buttonAccept.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
         [buttonAccept addTarget:self action:@selector(actionAccetpButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:buttonAccept];
         
         buttonDecline = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonDecline.frame = CGRectMake(100, 0, 70, 30);
-        [buttonDecline setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [buttonDecline setTitle:@"Declined" forState:UIControlStateNormal];
-        [buttonDecline.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
+        buttonDecline.frame = CGRectMake(110, 0, 70, 30);
+        [buttonDecline setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [buttonDecline setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        [buttonDecline setTitle:@"Decline" forState:UIControlStateNormal];
+        [buttonDecline setTitle:@"Declined" forState:UIControlStateSelected];
+        [buttonDecline.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
         [buttonDecline addTarget:self action:@selector(actionDeclineButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:buttonDecline];
         
         buttonIgnore = [UIButton buttonWithType:UIButtonTypeCustom];
         buttonIgnore.frame = CGRectMake(190, 0, 70, 30);
-        [buttonIgnore setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [buttonIgnore setTitle:@"Ignored" forState:UIControlStateNormal];
-        [buttonIgnore.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
+        [buttonIgnore setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [buttonIgnore setTitle:@"Ignore" forState:UIControlStateNormal];
+        [buttonIgnore setTitle:@"Ignored" forState:UIControlStateSelected];
+        [buttonIgnore.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
         [buttonIgnore addTarget:self action:@selector(actionIgnoreButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:buttonIgnore];
         
@@ -105,19 +110,19 @@
 
 - (void)resetButtons:(id)sender
 {
-    [buttonAccept setImage:[UIImage imageNamed:@"accept_button_a.png"] forState:UIControlStateNormal];
-    [buttonAccept setImage:[UIImage imageNamed:@"accept_button_h.png"] forState:UIControlStateHighlighted];
-    [buttonDecline setImage:[UIImage imageNamed:@"decline_button_a.png"] forState:UIControlStateNormal];
-    [buttonDecline setImage:[UIImage imageNamed:@"decline_button_h.png"] forState:UIControlStateHighlighted];
-    [buttonIgnore setImage:[UIImage imageNamed:@"ignore_button_a.png"] forState:UIControlStateNormal];
-    [buttonIgnore setImage:[UIImage imageNamed:@"ignore_button_h.png"] forState:UIControlStateHighlighted];
+    [buttonAccept setBackgroundImage:[UIImage imageNamed:@"btn_bg_green_small"] forState:UIControlStateNormal];
+    buttonAccept.selected = NO;
+    [buttonDecline setBackgroundImage:[UIImage imageNamed:@"btn_bg_gray_small.png"] forState:UIControlStateNormal];
+    buttonDecline.selected = NO;
+    [buttonIgnore setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+    buttonIgnore.selected = NO;
     buttonIgnore.userInteractionEnabled = YES;
     buttonDecline.userInteractionEnabled = YES;
     buttonAccept.userInteractionEnabled = YES;
     
     if (sender) {
-        [sender setImage:nil forState:UIControlStateNormal];
-        [sender setImage:nil forState:UIControlStateHighlighted];
+        [sender setBackgroundImage:nil forState:UIControlStateNormal];
+        ((UIButton*)sender).selected = YES;
         ((UIButton*)sender).userInteractionEnabled = NO;
     }
 }

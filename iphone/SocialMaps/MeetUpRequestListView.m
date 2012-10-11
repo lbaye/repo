@@ -18,7 +18,7 @@
 #import "RestClient.h"
 #import "CustomAlert.h"
 
-#define     CELL_HEIGHT             90
+#define     CELL_HEIGHT             200//115
 
 //NSMutableDictionary *imageDownloadsInProgress;
 
@@ -75,35 +75,9 @@
         
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"meetUpList"] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        // MeetUp Title
-        UILabel *labelMeetUpTitle = [[[UILabel alloc] initWithFrame:CGRectMake(55, 10, 250, 30)] autorelease];
-        labelMeetUpTitle.tag = 3002;
-        labelMeetUpTitle.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
-        labelMeetUpTitle.textColor = [UIColor blackColor];
-        labelMeetUpTitle.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:labelMeetUpTitle];
-        NSLog(@"cell created. %d",indexPath.row);
-        
-        // Time
-        UILabel *lblTime = [[[UILabel alloc] initWithFrame:CGRectMake(220, 2, 70, 20)] autorelease];
-        lblTime.tag = 3004;
-        lblTime.textAlignment = UITextAlignmentRight;
-        lblTime.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kSmallLabelFontSize];
-        lblTime.textColor = [UIColor blackColor];
-        lblTime.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:lblTime];
-        
-        UILabel *lblMessage = [[[UILabel alloc] initWithFrame:CGRectMake(55, 60, 250, 20)] autorelease];
-        lblMessage.tag = 3005;
-        lblMessage.textAlignment = UITextAlignmentLeft;
-        lblMessage.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kSmallLabelFontSize];
-        lblMessage.textColor = [UIColor darkGrayColor];
-        lblMessage.backgroundColor = [UIColor clearColor];
-        lblMessage.numberOfLines=2;
-        [cell.contentView addSubview:lblMessage];
         
         //Thumb Image
-        UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 48, 48)];
+        UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(10, 2, 48, 48)];
         imageViewReply.tag = 3006;
         [imageViewReply.layer setCornerRadius:6.0f];
         [imageViewReply.layer setBorderWidth:2.0];
@@ -111,30 +85,75 @@
         [imageViewReply.layer setMasksToBounds:YES];
         [cell addSubview:imageViewReply];
         
+        UILabel *lblSenderName = [[[UILabel alloc] initWithFrame:CGRectMake(62, 50-kSmallLabelFontSize, 50, kSmallLabelFontSize)] autorelease];
+        lblSenderName.tag = 3014;
+        lblSenderName.textAlignment = UITextAlignmentLeft;
+        lblSenderName.font = [UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize];
+        lblSenderName.textColor = [UIColor blackColor];
+        lblSenderName.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:lblSenderName];
+        
+        // Time
+        UILabel *lblTime = [[[UILabel alloc] initWithFrame:CGRectMake(220, 50-kSmallLabelFontSize, 70, kSmallLabelFontSize)] autorelease];
+        lblTime.tag = 3004;
+        lblTime.textAlignment = UITextAlignmentRight;
+        lblTime.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kSmallLabelFontSize];
+        lblTime.textColor = [UIColor blackColor];
+        lblTime.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:lblTime];
+        
+        UIView *contentView = [[[UIView alloc] initWithFrame:CGRectMake(8, 55, 320-16, 125)] autorelease];
+        [contentView.layer setCornerRadius:6.0f];
+        [contentView.layer setBorderWidth:1.0];
+        [contentView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+        [contentView.layer setMasksToBounds:YES];
+        [cell.contentView addSubview:contentView];
+        contentView.tag = 3333;
+        
+        UILabel *lblMessage = [[[UILabel alloc] initWithFrame:CGRectMake(10, 50, 280, 20)] autorelease];
+        lblMessage.tag = 3005;
+        lblMessage.textAlignment = UITextAlignmentLeft;
+        lblMessage.font = [UIFont fontWithName:@"Helvetica-Oblique" size:kSmallLabelFontSize];
+        lblMessage.textColor = [UIColor darkGrayColor];
+        lblMessage.backgroundColor = [UIColor clearColor];
+        lblMessage.numberOfLines=2;
+        [contentView addSubview:lblMessage];
+        
+        // MeetUp Title
+        UILabel *labelMeetUpTitle = [[[UILabel alloc] initWithFrame:CGRectMake(10, 0, 280, 30)] autorelease];
+        labelMeetUpTitle.tag = 3002;
+        labelMeetUpTitle.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
+        labelMeetUpTitle.textColor = [UIColor blackColor];
+        labelMeetUpTitle.backgroundColor = [UIColor clearColor];
+        [contentView addSubview:labelMeetUpTitle];
+        NSLog(@"cell created. %d",indexPath.row);
+        
         UIButton *buttonAddress = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonAddress.frame = CGRectMake(55, 35, 250, 20);
-        buttonAddress.titleLabel.textAlignment = UITextAlignmentLeft;
-        [buttonAddress setTitleColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1] forState:UIControlStateNormal];
+        buttonAddress.frame = CGRectMake(10, 25, 280, 20);
+        [buttonAddress setTitleColor:[UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
         [buttonAddress.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
         [buttonAddress addTarget:self action:@selector(actionAddressButton:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.contentView addSubview:buttonAddress];
+        [contentView addSubview:buttonAddress];
         
-        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 82, 300, 50)];
+        MeetUpListButtonsView *meetUpListButtonView = [[MeetUpListButtonsView alloc] initWithFrame:CGRectMake(10, 82, 300, 40)];
         meetUpListButtonView.backgroundColor = [UIColor clearColor];
         meetUpListButtonView.delegate = self;
         meetUpListButtonView.tag = 3007;
-        [cell.contentView addSubview:meetUpListButtonView];
+        [contentView addSubview:meetUpListButtonView];
         [meetUpListButtonView release];
     }
     
-    MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3007];
+    //MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [cell viewWithTag:3007];
+    MeetUpListButtonsView  *meetUpListButtonView  = (MeetUpListButtonsView*) [[cell viewWithTag:3333] viewWithTag:3007];
     [meetUpListButtonView adjustButtons:meetUpReq];
     
-    UILabel     *labelMeetUpTitle  = (UILabel*) [cell viewWithTag:3002];
+    //UILabel     *labelMeetUpTitle  = (UILabel*) [cell viewWithTag:3002];
+    UILabel     *labelMeetUpTitle  = (UILabel*) [[cell viewWithTag:3333] viewWithTag:3002];
     
     UIButton *buttonAddress;
     
-    for (UIView *subView in [cell.contentView subviews]) {
+    //for (UIView *subView in [cell.contentView subviews]) {
+    for (UIView *subView in [[cell.contentView viewWithTag:3333] subviews]) {
         if ([subView isKindOfClass:[UIButton class]]) {
             buttonAddress = (UIButton*)subView;
             break;
@@ -144,8 +163,10 @@
     buttonAddress.tag=indexPath.row;
     
     UILabel *labelTime = (UILabel*)[cell.contentView viewWithTag:3004];
-    UILabel *labelMsg = (UILabel*)[cell.contentView viewWithTag:3005];
-
+    UILabel *labelSenderName = (UILabel*)[cell.contentView viewWithTag:3014];
+    //UILabel *labelMsg = (UILabel*)[cell.contentView viewWithTag:3005];
+    UILabel *labelMsg = (UILabel*)[[cell.contentView viewWithTag:3333] viewWithTag:3005];
+    
     UIImageView *imageViewSender = (UIImageView*) [cell viewWithTag:3006];
     
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -155,14 +176,15 @@
         labelMeetUpTitle.text = @"You have sent a request to meet-up at ";
         meetUpListButtonView.hidden = YES;
     } else {
-        labelMeetUpTitle.text = [NSString stringWithFormat:@"%@ has invited you to meet-up at", meetUpReq.meetUpSender];
+        labelMeetUpTitle.text = [NSString stringWithFormat:@"Hi %@,\n%@ has invited you to meet-up at", smAppDelegate.userAccountPrefs.firstName, meetUpReq.meetUpSender];
+        //labelMeetUpTitle.numberOfLines = 2;
         meetUpListButtonView.hidden = NO;
     }
     
     [buttonAddress setTitle:meetUpReq.meetUpAddress forState:UIControlStateNormal];
     labelTime.text =  [UtilityClass timeAsString:meetUpReq.meetUpTime];
     labelMsg.text=meetUpReq.meetUpDescription;
-    
+    labelSenderName.text = meetUpReq.meetUpSender;
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:meetUpReq.meetUpSenderId];
     
     if (!iconDownloader)
@@ -291,7 +313,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return CELL_HEIGHT + 25;
+    return CELL_HEIGHT;
 }
 
 - (void)gotMeetUpRequest:(NSNotification *)notif {
