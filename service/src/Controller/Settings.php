@@ -208,8 +208,8 @@ class Settings extends Base
 
         if ($this->request->getMethod() == 'GET') {
             $data = $this->user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
             return $this->_generateResponse(array('result' => $data));
         }
 
