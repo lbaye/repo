@@ -171,8 +171,7 @@ class MessageRepo extends Base
 
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
-
-            $message->setRecipients($recipientsObjects);
+                $message->setRecipients(array_filter($recipientsObjects) );
         }
     }
 
@@ -192,5 +191,20 @@ class MessageRepo extends Base
 
         return $docsAsArr;
     }
+
+     public function getByRecipientCount(UserDocument $user)
+        {
+            $messages = $this->dm->createQueryBuilder()
+                    ->find('Document\Message')
+                    ->field('recipients')
+                    ->equals($user->getId())
+                    ->field('readBy')
+                    ->notEqual($user->getId())
+                    ->sort('updateDate', 'desc')
+                    ->getQuery()
+                    ->execute();
+
+            return $messages;
+        }
 
 }

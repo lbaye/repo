@@ -34,7 +34,7 @@ delete_user:
   requirements: { _method: DELETE }
 
 block_user:
-  pattern: /users/block/{id}
+  pattern: /me/users/block
   defaults: { _controller: Controller\User::blockUser}
   requirements: { _method: PUT}
 
@@ -46,6 +46,17 @@ list:
 friends:
   pattern: /me/friends
   defaults: { _controller: Controller\User::getFriendList}
+  requirements: { _method: GET}
+
+
+update_block_user:
+  pattern: /me/users/un-block
+  defaults: { _controller: Controller\User::unblockUsers}
+  requirements: { _method: PUT}
+
+blocked_users:
+  pattern: /me/blocked-users
+  defaults: { _controller: Controller\User::getBlockedUsers}
   requirements: { _method: GET}
 
 

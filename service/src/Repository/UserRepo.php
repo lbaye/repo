@@ -2,6 +2,7 @@
 
 namespace Repository;
 
+use Symfony\Component\HttpFoundation\Response;
 use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
@@ -18,7 +19,7 @@ class UserRepo extends Base
         $user = $this->map($data);
 
         $user = $this->findOneBy(array(
-            'email'    => $data['email'],
+            'email' => $data['email'],
             'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
         ));
 
@@ -88,7 +89,7 @@ class UserRepo extends Base
     public function getAllByIds(array $ids, $asArray = true)
     {
         $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
-        return $asArray? $this->_toArrayAll($users) : $users;
+        return $asArray ? $this->_toArrayAll($users) : $users;
     }
 
     public function insert($data)
@@ -155,12 +156,12 @@ class UserRepo extends Base
             $result = $qb->field('facebookId')->equals($data['facebookId'])->getQuery()->execute();
         }
 
-        if(isset($data['email'])) {
+        if (isset($data['email'])) {
 
             $result = $qb->field('email')->equals($data['email'])->getQuery()->execute();
         }
 
-        if($result->count() >0) {
+        if ($result->count() > 0) {
             return true;
         }
 
@@ -213,12 +214,17 @@ class UserRepo extends Base
     {
         $circle = new \Document\Circle($data);
 
-        foreach ($data['friends'] as $friendId) {
-            $friend = $this->find($friendId);
-            if (!empty($friend)) {
-                $circle->addFriend($friend);
+        if (!empty($data['friends'])) {
+            $users = $this->_trimInvalidUsers($data['friends']);
+
+            foreach ($users as $friendId) {
+                $friend = $this->find($friendId);
+                if (!empty($friend)) {
+                    $circle->addFriend($friend);
+                }
             }
         }
+
 
         $this->currentUser->setUpdateDate(new \DateTime());
         $this->currentUser->addCircle($circle);
@@ -228,6 +234,42 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return $circle;
+    }
+
+    public function updateCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+
+        $users = $this->_trimInvalidUsers($data['friends']);
+
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id) {
+
+                if (!empty($data['name'])) {
+                    $circle->setName($data['name']);
+                }
+
+                if (!empty($data['friends'])) {
+
+                    $friends = (array_unique(array_merge($circle->getFriends(), $users)));
+
+                    foreach ($friends as $friend) {
+                        $friendId = $this->find($friend);
+                        $circle->addFriend($friendId);
+                    }
+
+                }
+
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+
     }
 
     public function sendFriendRequests($data, $friendId)
@@ -247,8 +289,8 @@ class UserRepo extends Base
             }
         }
 
-        $data['userId']      = $this->currentUser->getId();
-        $data['friendName']  = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
+        $data['userId'] = $this->currentUser->getId();
+        $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
         $data['recipientId'] = $friendId;
 
         $friendRequest = new FriendRequest($data);
@@ -262,10 +304,10 @@ class UserRepo extends Base
         $this->dm->flush();
 
         $data = array(
-            'userId'     => $friendId,
-            'objectId'   => $recipient->getId(),
+            'userId' => $friendId,
+            'objectId' => $recipient->getId(),
             'objectType' => 'FriendRequest',
-            'message'    => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
+            'message' => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
         );
 
         $this->addTask('new_friend_request', json_encode($data));
@@ -456,7 +498,7 @@ class UserRepo extends Base
 
         foreach ($notifications as &$notification) {
             if ($notification->getId() == $notificationId) {
-                $notification->setViewed(true);
+//                $notification->setViewed(true);
             }
         }
 
@@ -561,7 +603,7 @@ class UserRepo extends Base
     {
         $users = array();
         foreach ($results as $user) {
-            $userArr = ($filterFields)? $user->toArrayFiltered($this->currentUser) : $user->toArray();
+            $userArr = ($filterFields) ? $user->toArrayFiltered($this->currentUser) : $user->toArray();
             $userArr['friendship'] = $this->currentUser->getFriendship($user);
 
             $userArr['avatar'] = $this->_buildAvatarUrl($userArr);
@@ -681,16 +723,15 @@ class UserRepo extends Base
 
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
-        $filePath = "/images/avatar/" . $user->getId() . ".jpeg";
+        $filePath = "/images/avatar/" . $user->getId();
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
             $user->setAvatar($avatarUrl);
         } else {
-            ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
+            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
-
 
 
         $this->dm->persist($user);
@@ -699,7 +740,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function saveCoverPhoto($id , $coverPhoto)
+    public function saveCoverPhoto($id, $coverPhoto)
     {
         $user = $this->find($id);
 
@@ -709,16 +750,15 @@ class UserRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/cover-photo/" . $user->getId() . ".jpeg";
+        $filePath = "/images/cover-photo/" . $user->getId();
         $coverPhotoUrl = filter_var($coverPhoto, FILTER_VALIDATE_URL);
 
         if ($coverPhotoUrl !== false) {
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
-            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
-            $user->setCoverPhoto($filePath."?".$timeStamp);
+            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR .$filePath);
+            $user->setCoverPhoto($filePath . "?" . $timeStamp);
         }
-
 
 
         $this->dm->persist($user);
@@ -730,8 +770,8 @@ class UserRepo extends Base
     public function updateForgetPasswordToken($userId, $passwordToken)
     {
         $userDetail = $this->find($userId);
-        $data       = array();
-        $user       = $this->map($data, $userDetail);
+        $data = array();
+        $user = $this->map($data, $userDetail);
 
         $user->setForgetPasswordToken($passwordToken);
         $user->setUpdateDate(new \DateTime());
@@ -749,6 +789,7 @@ class UserRepo extends Base
     public function search($keyword = null, $location = array(), $limit = 20)
     {
         $exclude = array();
+        $blockUserList = array();
         $exclude[] = $this->currentUser->getId();
 
         if ($this->currentUser->getBlockedBy()) {
@@ -760,14 +801,14 @@ class UserRepo extends Base
             ->field('visible')->equals(true)
             ->limit($limit);
 
-        if (!is_null($keyword)) {
-            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-        } else {
-            // @TODO : Changing to near temporarily for testing with more users
-            //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
-            $query->field('currentLocation')->near($location['lat'], $location['lng']);
-        }
+//        if (!is_null($keyword)) {
+//            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+//            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
+//        } else {
+//            // @TODO : Changing to near temporarily for testing with more users
+//           // $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
+//            $query->field('currentLocation')->near($location['lat'], $location['lng']);
+//        }
 
         $result = $query->getQuery()->execute();
 
@@ -776,8 +817,14 @@ class UserRepo extends Base
             $friends = $this->currentUser->getFriends();
             $users = $this->_toArrayAll($result, true);
 
+            $blockUserList = $this->currentUser->getBlockedUsers();
             foreach ($users as &$user) {
                 $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+                if (in_array($user['id'],$blockUserList)) {
+                    $user['blockStatus'] = "blocked";
+                } else {
+                    $user['blockStatus'] = "unblocked";
+                }
             }
 
             return $users;
@@ -802,4 +849,108 @@ class UserRepo extends Base
         return (count($users)) ? $users : array();
     }
 
+    public function removeFriendFromCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+        $friends = $this->_trimInvalidUsers($data['friends']);
+
+        if (!empty($data['friends'])) {
+            foreach ($circles as $circle) {
+                if ($circle->getId() === $id) {
+                    $circleFriends = $circle->getFriends();
+                    $circle->setFriendIds(array_diff($circleFriends, $friends));
+                }
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
+
+    public function addFriendToMultipleCircle($id, array $data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+        $user = $this->_trimInvalidUsers(array($id));
+        if (!empty($data['circles'])) {
+
+            foreach ($circles as $circle) {
+
+                if ($circle->getType() == 'system' && in_array($circle->getId(), $data)) {
+
+                    throw new \InvalidArgumentException('Invalid request', 406);
+                }
+                foreach ($data['circles'] AS $circleId) {
+
+                    if ($circle->getId() == $circleId) {
+
+                        $friends = (array_unique(array_merge($circle->getFriends(), $user)));
+
+                        foreach ($friends as $friend) {
+                            $friendId = $this->find($friend);
+                            $circle->addFriend($friendId);
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+
+    }
+
+    public function getNotificationsCount($id)
+    {
+        $user = $this->find($id);
+        $friendRequests = $user->getFriendRequest();
+
+        $notifications = $user->getNotification();
+
+        $friendResult = array();
+        $notificationResult = array();
+
+        foreach ($friendRequests as $friendRequest) {
+            $friendResult[] = $friendRequest->toArray();
+        }
+
+        foreach ($notifications as $notification) {
+
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
+            }
+
+        }
+
+        return $countTotal = count($notificationResult) . ":" . count($friendResult);
+    }
+
+    public function unBlockUsers($id, array $data)
+    {
+
+        if (empty($data['users'])) {
+            throw new \InvalidArgumentException('Invalid request', 406);
+        }
+
+        $users = $this->_trimInvalidUsers($data['users']);
+        $user = $this->find($id);
+        $user->updateBlockedUser(array_diff($user->getBlockedUsers(), $users));
+
+
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
 }

@@ -5,20 +5,23 @@ namespace Service\Location;
 /**
  * Find search results from cached google places record.
  */
-class CachedGooglePlacesService implements \Service\Location\IPlacesService {
+class CachedGooglePlacesService implements \Service\Location\IPlacesService
+{
 
     private $mRepository;
     private $mService;
 
     public function __construct(
         \Repository\CachedPlacesDataRepo $repository,
-        \Service\Location\IPlacesService $placesService) {
+        \Service\Location\IPlacesService $placesService)
+    {
 
         $this->mRepository = $repository;
         $this->mService = $placesService;
     }
 
-    public function search(array $location, $keywords, $radius = 2000) {
+    public function search(array $location, $keywords, $radius = 2000)
+    {
         $this->ensureLocationIsSet($location);
 
         # Round lat and lng value
@@ -44,17 +47,21 @@ class CachedGooglePlacesService implements \Service\Location\IPlacesService {
         }
     }
 
-    private function updateDistance($location, $cachedData) {
-        foreach ($cachedData as &$place) {
-            $place->distance = \Helper\Location::distance(
-                $location['lat'], $location['lng'],
-                $place->geometry->location->lat,
-                $place->geometry->location->lng);
+    private function updateDistance($location, $cachedData)
+    {
+        if (!empty($cachedData)) {
+            foreach ($cachedData as &$place) {
+                $place->distance = \Helper\Location::distance(
+                    $location['lat'], $location['lng'],
+                    $place->geometry->location->lat,
+                    $place->geometry->location->lng);
+            }
         }
         return $cachedData;
     }
 
-    private function ensureLocationIsSet($location) {
+    private function ensureLocationIsSet($location)
+    {
         if (!isset($location['lat']) || !isset($location['lng'])) {
             throw new \Exception("Lat and Lng parameters are not set.");
         }

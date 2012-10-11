@@ -78,6 +78,10 @@ class Circle
         $this->friends[] = $user->getId();
     }
 
+    public function setFriendIds($ids) {
+        $this->friends = $ids;
+    }
+
     public function getFriends()
     {
         return $this->friends;

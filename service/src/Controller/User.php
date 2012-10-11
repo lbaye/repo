@@ -71,17 +71,19 @@ class User extends Base
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
-                $result[] = $notification->toArray();
+            if ($notification->getViewed() != true) {
+                $result[] = $notification;
                 $this->updateNotification($notification->getId());
             }
 
         }
 
         if (empty($result)) {
-            $this->_generateResponse(array(),STATUS::NO_CONTENT);
+            $this->response->setStatusCode(Status::NO_CONTENT);
         } else {
-            $this->_generateResponse($result,STATUS::OK);
+
+            $this->response->setContent(json_encode($this->_toArrayAll($result)));
+            $this->response->setStatusCode(Status::OK);
         }
 
         return $this->response;
@@ -97,7 +99,7 @@ class User extends Base
     public function getFriendRequest($status = 'all')
     {
         $friendRequests = $this->user->getFriendRequest();
-        $result         = array();
+        $result = array();
 
         foreach ($friendRequests as $friendRequest) {
             if ($status != 'all') {
@@ -166,8 +168,8 @@ class User extends Base
 
             $data = $this->user->toArrayDetailed();
 
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
@@ -194,8 +196,8 @@ class User extends Base
         if (null !== $user) {
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));
@@ -223,8 +225,8 @@ class User extends Base
         if (false !== $user) {
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
@@ -272,7 +274,7 @@ class User extends Base
     {
         $this->_ensureLoggedIn();
         $data = $this->request->request->all();
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
         }
 
@@ -288,8 +290,8 @@ class User extends Base
             }
 
             $data = $user->toArrayDetailed();
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
@@ -346,9 +348,19 @@ class User extends Base
     {
         $circleData = $this->request->request->all();
 
-        $circle = $this->userRepository->addCircle($circleData);
+        $this->userRepository->addCircle($circleData);
 
-        $this->response->setContent(json_encode($circle->toArray()));
+        $circles = $this->user->getCircles();
+
+        $result = array();
+        foreach ($circles as $circle) {
+
+            $friends = $circle->toArray();
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $result[] = $friends;
+        }
+
+        $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::CREATED);
 
         return $this->response;
@@ -361,12 +373,15 @@ class User extends Base
      */
     public function getCircles()
     {
-        $this->userRepository->setCurrentUser($this->user);
         $circles = $this->user->getCircles();
 
         $result = array();
         foreach ($circles as $circle) {
-            $result[] = $circle->toArray();
+
+            $friends = $circle->toArray();
+            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $result[] = $friends;
+
         }
 
         $this->response->setContent(json_encode($result));
@@ -451,9 +466,9 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         $friendRequests = $this->user->getFriendRequest();
-        $notifications  = $this->user->getNotification();
+        $notifications = $this->user->getNotification();
 
-        $friendResult   = array();
+        $friendResult = array();
         $notificationResult = array();
 
         foreach ($friendRequests as $friendRequest) {
@@ -462,9 +477,9 @@ class User extends Base
 
         foreach ($notifications as $notification) {
 
-            if($notification->getViewed() != true){
-                 $notificationResult[] = $notification->toArray();
-                 $this->updateNotification($notification->getId());
+            if ($notification->getViewed() != true) {
+                $notificationResult[] = $notification->toArray();
+                $this->updateNotification($notification->getId());
             }
 
         }
@@ -474,7 +489,7 @@ class User extends Base
         } else {
             $this->response->setContent(json_encode(array(
                 'friend request' => $friendResult,
-                'notifications'  => $notificationResult
+                'notifications' => $notificationResult
             )));
         }
 
@@ -483,49 +498,52 @@ class User extends Base
     }
 
     /**
-     * PUT /user/block/:id
+     * PUT /users/block
      *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function blockUser($id)
+    public function blockUser()
     {
         $this->_ensureLoggedIn();
-        $blockingUser = $this->userRepository->find($id);
 
-        if ($blockingUser instanceof \Document\User) {
+        $postData = $this->request->request->all();
+        if (!empty($postData['users'])) {
+            foreach ($postData['users'] as $userId) {
+                $blockingUser = $this->userRepository->find($userId);
 
-            $blockedUsers = $this->user->getBlockedUsers();
+                if ($blockingUser instanceof \Document\User) {
 
-            if ($this->user != $blockingUser) {
+                    $blockedUsers = $this->user->getBlockedUsers();
 
-                if (!in_array($blockingUser->getId(), $blockedUsers)) {
+                    if ($this->user != $blockingUser) {
 
-                    $this->user->addBlockedUser($blockingUser);
-                    $this->dm->persist($this->user);
+                        if (!in_array($blockingUser->getId(), $blockedUsers)) {
 
-                    $blockingUser->addBlockedBy($this->user);
-                    $this->dm->persist($blockingUser);
+                            $this->user->addBlockedUser($blockingUser);
+                            $this->dm->persist($this->user);
 
-                    $this->dm->flush();
+                            $blockingUser->addBlockedBy($this->user);
+                            $this->dm->persist($blockingUser);
+
+                            $this->dm->flush();
+                        }
+                            $this->getBlockedUsers();
+
+                    } else {
+
+                        $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
+                        $this->response->setStatusCode(Status::BAD_REQUEST);
+
+                    }
+
+                } else {
+
+                    $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
+                    $this->response->setStatusCode(Status::BAD_REQUEST);
+
                 }
-
-                $this->response->setContent(json_encode(array('result' => 'User blocked')));
-                $this->response->setStatusCode(Status::OK);
-
-            } else {
-
-                $this->response->setContent(json_encode(array('message' => 'You are trying to block yourself.')));
-                $this->response->setStatusCode(Status::BAD_REQUEST);
-
             }
-
-        } else {
-
-            $this->response->setContent(json_encode(array('message' => 'Invalid user Id')));
-            $this->response->setStatusCode(Status::BAD_REQUEST);
-
         }
 
         return $this->response;
@@ -540,17 +558,17 @@ class User extends Base
      */
     public function getCircleDetail($id)
     {
-        $this->userRepository->setCurrentUser($this->user);
         $circles = $this->user->getCircles();
 
         $result = array();
         foreach ($circles as $circle) {
-            if ($circle->getId() == $id){
-                $result= $circle->toArray();
+            if ($circle->getId() == $id) {
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $result[] = $friends;
             }
         }
 
-        $result['friends'] = $this->_getUserSummaryList($result['friends']);
         $this->response->setContent(json_encode($result));
         $this->response->setStatusCode(Status::OK);
 
@@ -565,9 +583,49 @@ class User extends Base
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function editCustomCircle($id)
+    public function updateCustomCircle($id)
     {
+        $this->_ensureLoggedIn();
 
+        try {
+
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
+            }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->updateCircle($id, $circleData);
+
+            $allCircles = $this->user->getCircles();
+
+            $updateResult = array();
+            foreach ($allCircles as $circle) {
+
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $updateResult[] = $friends;
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
+        return $this->response;
     }
 
     /**
@@ -584,7 +642,7 @@ class User extends Base
 
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance','address','regMedia'));
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -601,5 +659,188 @@ class User extends Base
         return $this->user->getFirstName() . " added you as a friend.";
     }
 
+    /**
+     * DELETE /me/circles/{id}
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteCustomCircle($id)
+    {
+        $this->_ensureLoggedIn();
+
+        try {
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
+            }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            $this->userRepository->delete($id);
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
+            $this->response->setStatusCode(Status::OK);
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
+
+
+        return $this->response;
+    }
+
+    /**
+     * PUT /circles/:id/remove
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeFriendFromCircle($id)
+    {
+        $this->_ensureLoggedIn();
+
+        try {
+            $circles = $this->user->getCircles();
+
+            $result = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $result = $circle->toArray();
+                }
+            }
+
+            if ($result['type'] == 'system') {
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->removeFriendFromCircle($id, $circleData);
+
+            $updateResult = array();
+            foreach ($circles as $circle) {
+                if ($circle->getId() == $id) {
+                    $updateFriends = $circle->toArray();
+                    $updateFriends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                    $updateResult[] = $updateFriends;
+                }
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
+
+
+        return $this->response;
+    }
+
+    /**
+     * PUT  /me/circles/friends/:id
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addFriendToMultipleCircle($id)
+    {
+        $this->_ensureLoggedIn();
+
+        try {
+
+            $circleData = $this->request->request->all();
+
+            $this->userRepository->addFriendToMultipleCircle($id, $circleData);
+
+            $allCircles = $this->user->getCircles();
+
+            $updateResult = array();
+            foreach ($allCircles as $circle) {
+
+                $friends = $circle->toArray();
+                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $updateResult[] = $friends;
+            }
+
+            $this->response->setContent(json_encode($updateResult));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+        }
+
+        return $this->response;
+    }
+
+     /*
+     * PUT /me/users/un-block
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unblockUsers()
+    {
+        $this->_ensureLoggedIn();
+
+        try {
+
+            $postData = $this->request->request->all();
+
+            $unBlockUsers = $this->userRepository->unBlockUsers($this->user->getId(), $postData);
+            if ($unBlockUsers == true) {
+                $this->getBlockedUsers();
+              }
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }
+
+
+        return $this->response;
+    }
+
+    /*
+     * GET /me/blockes-users
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getBlockedUsers(){
+
+        if ($this->user instanceof \Document\User) {
+
+            $user = $this->user->getBlockedUsers();
+
+            $userDetail = $this->_getUserSummaryList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+
+            $this->response->setContent(json_encode($userDetail));
+            $this->response->setStatusCode(Status::OK);
+        } else {
+            $this->response->setContent(json_encode(array('message' => 'Unauthorized acecss. Auth-Token not found or invalid')));
+            $this->response->setStatusCode(Status::UNAUTHORIZED);
+        }
+
+        return $this->response;
+    }
 
 }

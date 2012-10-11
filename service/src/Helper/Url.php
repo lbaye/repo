@@ -27,6 +27,7 @@ class Url
         } else if ($http_prefixed) {
             return $suffix;
         } else {
+
             return $prefix . $suffix;
         }
     }
@@ -37,5 +38,9 @@ class Url
 
     public static function buildAvatarUrl($data) {
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['avatar']);
+    }
+
+    public static function buildEventPhotoUrl($data) {
+        return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['eventImage']);
     }
 }

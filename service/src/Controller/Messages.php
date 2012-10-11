@@ -74,7 +74,8 @@ class Messages extends Base
 
             // Don't put it before insert operation. this is intentional
             $message->setStatus('read');
-
+            $this->_sendNotification($postData, $message);
+            
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
@@ -83,6 +84,36 @@ class Messages extends Base
         }
 
         return $this->response;
+    }
+
+    private function _sendNotification($postData, \Document\Message $message)
+    {
+        $replyRecipient = array();
+
+        if (isset($postData['recipients'])) {
+            $msgText = ' has sent you a new message.';
+            $usersToGetNotified = array_diff($postData['recipients'], array($this->user->getId()));
+
+            if (!empty($usersToGetNotified)) {
+                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new', $message->getId());
+            }
+        } else if (isset($postData['thread'])) {
+
+            $msgText = ' has replied on a thread.';
+            $msgInfo = $message->toArray(\Document\Message::DETAILS_ARRAY);
+            $replyRecipient[] = $msgInfo['thread']['sender']['id'];
+
+            foreach ($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
+                $replyRecipient[] = $extractRecipientMsgInfo['id'];
+            }
+
+            $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
+
+            if (!empty($replyRecipient)) {
+                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply', $message->getId());
+            }
+
+        }
     }
 
     public function getByCurrentUser()
@@ -174,7 +205,9 @@ class Messages extends Base
 
         try {
             # Update recipients list
+
             if ($this->messageRepository->updateRecipients($message, $recipients)) {
+
                 $this->_generateResponse($message->toArray(), Status::OK);
             } else {
                 $this->_generate500();
@@ -237,6 +270,49 @@ class Messages extends Base
                 array('message' => 'Removed successfully'), Status::OK
             );
 
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    private function _createPushMessage($msgText)
+    {
+        return $this->user->getFirstName() .$msgText ;
+    }
+
+    public function addRecipients($id)
+    {
+        # Find existing object
+        $message = $this->messageRepository->find($id);
+
+        # Return if object is not found
+        if (empty($message))
+            return $this->_generate404();
+
+        # Load recipients list
+        $recipients = $this->request->request->get('recipients');
+
+        if (empty($recipients))
+            return $this->_generate500('No recipients[] is set over parameter.');
+
+        try {
+            # Update recipients list
+            $messageArray = $message->toArray();
+
+            foreach($messageArray['recipients'] as $recipient){
+                $previousRecipients[] = $recipient['id'];
+            }
+
+            $mergedRecipients = array_unique(array_merge($previousRecipients, $recipients));
+
+            if ($this->messageRepository->updateRecipients($message, $mergedRecipients)) {
+
+                $this->_generateResponse($message->toArray(), Status::OK);
+            } else {
+                $this->_generate500();
+            }
         } catch (\Exception $e) {
             $this->_generate500($e->getMessage());
         }

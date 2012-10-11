@@ -21,6 +21,7 @@ class Auth extends Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository = $this->dm->getRepository('Document\User');
+        $this->messageRepository = $this->dm->getRepository('Document\Message');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
     }
@@ -61,9 +62,13 @@ class Auth extends Base
 
             $data = $user->toArrayDetailed();
 
-            $data['avatar'] = $this->_buildAvatarUrl($data);
-            $data['coverPhoto'] = $this->_buildCoverPhotoUrl($data);
+            $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
+            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
 
+            $notifications = 0;
+            $friendRequest = 0;
+            $messageCount  = 0;
+            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
@@ -94,6 +99,7 @@ class Auth extends Base
     public function login()
     {
         $data = $this->request->request->all();
+
         if(!empty($data['email'])){
             $data['email'] = strtolower($data['email']);
         }
@@ -103,13 +109,22 @@ class Auth extends Base
 
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
+            $this->user = $user;
+            $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+            $message = count($this->messageRepository->getByRecipientCount($user));
 
             $userData = $user->toArrayDetailed();
 
-            $userData['avatar'] = $this->_buildAvatarUrl($userData);
-            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
+            $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
+            $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
 
-            $userData['friends'] = $this->_getFriendList($user);
+            $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+
+            $notifications = (int) $notifications_friendrequest_extract[0];
+            $friendRequest = (int) $notifications_friendrequest_extract[1];
+            $messageCount  = $message;
+            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -129,6 +144,7 @@ class Auth extends Base
     public function fbLogin()
     {
         $data = $this->request->request->all();
+
         if(!empty($data['email'])){
             $data['email'] = strtolower($data['email']);
         }
@@ -163,10 +179,20 @@ class Auth extends Base
                 $user = $this->userRepository->insert($data);
 
             }
+
+            $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+            $message = count($this->messageRepository->getByRecipientCount($user));
+
             $userData = $user->toArrayDetailed();
-            $userData['avatar'] = $this->_buildAvatarUrl($userData);
-            $userData['coverPhoto'] = $this->_buildCoverPhotoUrl($userData);
+            $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
+            $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
+
+            $notifications = (int) $notifications_friendrequest_extract[0];
+            $friendRequest = (int) $notifications_friendrequest_extract[1];
+            $messageCount  = $message;
+            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
