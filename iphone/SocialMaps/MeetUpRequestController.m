@@ -732,8 +732,8 @@ DDAnnotation *annotation;
             } 
             else 
             { 
-                if(!isDragging_msg && !isDecliring_msg) 
-                    
+                //if(!isDragging_msg && !isDecliring_msg) 
+                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))    
                 {
                     //If scroll view moves set a placeholder image and start download image. 
                     //[dicImages_msg setObject:[UIImage imageNamed:@"NO_IMAGE"] forKey:userFrnd.imageUrl]; 

@@ -1546,6 +1546,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 }
 
 - (IBAction)actionAddMoreButton:(id)sender {
+    if ([textViewReplyMsg isFirstResponder]) {
+        [textViewReplyMsg resignFirstResponder];
+        [self setViewMovedDown:messageRepiesView];
+    }
     [selectedFriendsIndex removeAllObjects];
     [selectedCircleCheckArr removeAllObjects];
     [selectedCircleCheckOriginalArr removeAllObjects];
