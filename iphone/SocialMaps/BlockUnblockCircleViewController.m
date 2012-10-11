@@ -31,7 +31,7 @@
 
 @implementation BlockUnblockCircleViewController
 @synthesize blockTableView,blockSearchBar,downloadedImageDict;
-@synthesize msgView,textViewNewMsg;
+@synthesize msgView,textViewNewMsg,selectAllButton;
 
 __strong NSMutableArray *filteredList, *peopleListArray, *selectedPeople, *blockedIdArr, *allUserIdArr;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -41,6 +41,7 @@ AppDelegate *smAppDelegate;
 RestClient *rc;
 NSMutableArray *blockedUser,*blockedUserRemoveArr;
 LocationItemPeople *unblockedPeople;
+int blockCountSel=0;
 
 //rsvpFlag=
 bool searchFlag3=true;
@@ -213,6 +214,7 @@ bool searchFlag3=true;
 
 - (void)blockUsresDone:(NSNotification *)notif
 {
+    NSLog(@"block user done");
     blockSearchBar.text=@"";
     [self searchResult];
 //    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -262,6 +264,7 @@ bool searchFlag3=true;
 
 - (void)unBlockUsresDone:(NSNotification *)notif
 {
+    NSLog(@"unblock user done");    
     blockSearchBar.text=@"";    
     [self searchResult];
 //    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
@@ -407,10 +410,13 @@ bool searchFlag3=true;
     [smAppDelegate.window setUserInteractionEnabled:NO];    
     
     //Block user operation on people list starts here
-    LocationItemPeople *ppl=[filteredList objectAtIndex:clickedButtonPath.row];
-    ppl.userInfo.blockStatus=@"blocked";
-    
-    [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+    NSLog(@"[filteredList count] %d",[filteredList count]);
+    if ([filteredList count]>clickedButtonPath.row) 
+    {
+        LocationItemPeople *ppl=[filteredList objectAtIndex:clickedButtonPath.row];
+        ppl.userInfo.blockStatus=@"blocked";
+        [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+    }
 //    [smAppDelegate.peopleList replaceObjectAtIndex:[smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] withObject:ppl];
     //Block user operation on people list ends here
     
@@ -425,12 +431,15 @@ bool searchFlag3=true;
     CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];    
     NSLog(@"unblock user");
-
+    LocationItemPeople *ppl=[[LocationItemPeople alloc] init];
     //Un-Block user operation on people list starts here
-    LocationItemPeople *ppl=[filteredList objectAtIndex:clickedButtonPath.row];
-    ppl.userInfo.blockStatus=@"unblocked";
-    
-    [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+    NSLog(@"[filteredList count] %d",[filteredList count]);
+    if ([filteredList count]>clickedButtonPath.row) 
+    {
+        ppl=[filteredList objectAtIndex:clickedButtonPath.row];
+        ppl.userInfo.blockStatus=@"unblocked";
+        [filteredList replaceObjectAtIndex:clickedButtonPath.row withObject:ppl];
+    }
 //    if ([smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] >0)
 //    {
 //        [smAppDelegate.peopleList replaceObjectAtIndex:[smAppDelegate.peopleList indexOfObject:[filteredList objectAtIndex:clickedButtonPath.row]] withObject:ppl];
@@ -442,7 +451,7 @@ bool searchFlag3=true;
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];    
     
-    [rc unBlockUserList:@"Auth-Token":smAppDelegate.authToken :[NSMutableArray arrayWithObjects:[allUserIdArr objectAtIndex:clickedButtonPath.row], nil]];
+    [rc unBlockUserList:@"Auth-Token":smAppDelegate.authToken :[NSMutableArray arrayWithObjects:((LocationItemPeople *)[filteredList objectAtIndex:clickedButtonPath.row]).userInfo.userId, nil]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -725,8 +734,19 @@ bool searchFlag3=true;
 
 -(IBAction)selectAllpeople:(id)sender
 {
-    selectedPeople =[filteredList mutableCopy];
-    [self.blockTableView reloadData];
+    if (blockCountSel%2==0)
+    {
+        [selectAllButton setTitle:@"Unselect all users" forState:UIControlStateNormal];
+        selectedPeople =[filteredList mutableCopy];
+        [self.blockTableView reloadData];
+    }
+    else
+    {
+        [selectAllButton setTitle:@"Select all users" forState:UIControlStateNormal];
+        [selectedPeople removeAllObjects];
+        [self.blockTableView reloadData];
+    }
+    blockCountSel++;
 }
 
 - (IBAction)actionNotificationButton:(id)sender {
@@ -831,7 +851,7 @@ bool searchFlag3=true;
         searchText3=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: peopleListArray];
+        filteredList = [[NSMutableArray alloc] initWithArray: [peopleListArray mutableCopy]];
         NSLog(@"peopleListArray: %@",peopleListArray);
         [self.blockTableView reloadData];
     }
@@ -869,7 +889,7 @@ bool searchFlag3=true;
     searchText3=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: peopleListArray];
+    filteredList = [[NSMutableArray alloc] initWithArray: [peopleListArray mutableCopy]];
     for (int i=0; i<[peopleListArray count]; i++)
     {
         [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];

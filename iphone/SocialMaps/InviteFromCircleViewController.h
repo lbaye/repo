@@ -17,6 +17,7 @@
     IBOutlet UITextView *textViewNewMsg;
 
     IBOutlet UILabel *labelNotifCount;
+    IBOutlet UIButton *selectAllButton;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *inviteTableView;
@@ -24,6 +25,7 @@
 @property(nonatomic,retain) NSDictionary *downloadedImageDict;
 @property (nonatomic,retain)  IBOutlet UIView *msgView;
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
+@property (nonatomic,retain) IBOutlet UIButton *selectAllButton;
 
 -(IBAction)cancel:(id)sender;
 -(IBAction)selectedUser:(id)sender;

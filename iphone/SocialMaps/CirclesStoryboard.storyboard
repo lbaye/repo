@@ -859,7 +859,7 @@
                                 <rect key="frame" x="92" y="374" width="97" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="All users">
+                                <state key="normal" title="Select all users">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -871,10 +871,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="acu-8J-KU1">
-                                <rect key="frame" x="212" y="374" width="93" height="37"/>
+                                <rect key="frame" x="195" y="374" width="124" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="Selected User(s)">
+                                <state key="normal" title="Block selected user(s)">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -970,6 +970,7 @@
                         <outlet property="blockTableView" destination="UbJ-to-inp" id="3ov-9G-KDH"/>
                         <outlet property="labelNotifCount" destination="dTy-Vl-cAj" id="bdE-pR-Exi"/>
                         <outlet property="msgView" destination="lqD-2R-r9b" id="jyA-Kt-6K9"/>
+                        <outlet property="selectAllButton" destination="ixG-T7-bb2" id="uOy-pL-2Bb"/>
                         <outlet property="textViewNewMsg" destination="g3G-09-fGL" id="QZG-ld-k7h"/>
                     </connections>
                 </viewController>
@@ -1454,10 +1455,10 @@
                                 </connections>
                             </searchBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="R3J-Cg-PZf">
-                                <rect key="frame" x="212" y="374" width="93" height="37"/>
+                                <rect key="frame" x="196" y="374" width="121" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="Selected User(s)">
+                                <state key="normal" title="Invite selected user(s)">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1489,7 +1490,7 @@
                                 <rect key="frame" x="92" y="374" width="97" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="All users">
+                                <state key="normal" title="Select all users">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1818,6 +1819,7 @@
                         <outlet property="inviteTableView" destination="fnG-ZA-HIJ" id="U85-qI-JzJ"/>
                         <outlet property="labelNotifCount" destination="wRa-Dn-Plw" id="kuE-Tn-PiL"/>
                         <outlet property="msgView" destination="NiE-dJ-1QN" id="Zjr-fd-8cA"/>
+                        <outlet property="selectAllButton" destination="3fN-3a-VEz" id="43e-Qg-vsc"/>
                         <outlet property="textViewNewMsg" destination="iiI-EO-5gj" id="Xvv-am-57z"/>
                     </connections>
                 </viewController>

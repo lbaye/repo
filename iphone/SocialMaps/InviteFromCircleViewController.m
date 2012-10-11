@@ -32,7 +32,7 @@
 @implementation InviteFromCircleViewController
 @synthesize inviteTableView,inviteSearchBar,downloadedImageDict;
 @synthesize msgView;
-@synthesize textViewNewMsg;
+@synthesize textViewNewMsg,selectAllButton;
 
 
 __strong NSMutableArray *filteredList, *peopleListArray, *selectedPeople;
@@ -40,6 +40,7 @@ __strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
 NSString *searchText4=@"";
 AppDelegate *smAppDelegate;
+int inviteCountSel=0;
 
 //rsvpFlag=
 bool searchFlag4=true;
@@ -429,8 +430,19 @@ bool searchFlag4=true;
 
 -(IBAction)selectAllpeople:(id)sender
 {
-    selectedPeople =[filteredList mutableCopy];
-    [self.inviteTableView reloadData];
+    if (inviteCountSel%2==0)
+    {
+        [selectAllButton setTitle:@"Unselect all users" forState:UIControlStateNormal];
+        selectedPeople =[filteredList mutableCopy];
+        [self.inviteTableView reloadData];
+    }
+    else
+    {
+        [selectAllButton setTitle:@"Select all users" forState:UIControlStateNormal];
+        [selectedPeople removeAllObjects];
+        [self.inviteTableView reloadData];
+    }
+    inviteCountSel++;
 }
 
 -(IBAction)sendMsg:(id)sender

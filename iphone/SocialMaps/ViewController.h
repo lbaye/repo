@@ -11,6 +11,12 @@
 
 @interface ViewController : UIViewController
 @property (retain, nonatomic) IBOutlet UIProgressView *progressView;
- 
+@property (nonatomic,retain) IBOutlet UIView *privateBetaView; 
+@property (nonatomic,retain) IBOutlet UITextField *betaPassWord;
+
+-(IBAction)discoverApp:(id)sender;
+-(IBAction)requestPassword:(id)sender;
+
+-(IBAction)textFieldEntryDone:(id)sender;
 
 @end

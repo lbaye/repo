@@ -1,12 +1,12 @@
 //
-//  CreateEventViewController.m
-//  Event
+//  GeotagViewController.m
+//  SocialMaps
 //
-//  Created by Abdullah Md. Zubair on 8/28/12.
-//  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
+//  Created by Abdullah Md. Zubair on 10/11/12.
+//  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
-#import "CreateEventViewController.h"
+#import "GeotagViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ActionSheetPicker.h"
 #import "DDAnnotationView.h"
@@ -22,12 +22,12 @@
 #import <Foundation/Foundation.h> 
 #import "NotificationController.h"
 
-@interface CreateEventViewController ()
+@interface GeotagViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
 -(void)DownLoad:(NSNumber *)path;
 @end
 
-@implementation CreateEventViewController
+@implementation GeotagViewController
 
 @synthesize curLoc;
 @synthesize myPlace;    
@@ -59,7 +59,7 @@ __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filtere
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
-int locationFlag=0;
+int geoLocationFlag=0;
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -69,11 +69,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 AppDelegate *smAppDelegate;
 Event *event;
-int entityFlag=0;
+int geoEntityFlag=0;
 DDAnnotation *annotation;
 bool isBackgroundTaskRunning;
-int createNotf=0;
-int updateNotf=0;
+int geoCreateNotf=0;
+int geoUpdateNotf=0;
 NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr, *selectedCustomCircleCheckArr;
 NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 NSMutableArray *guestListIdArr;
@@ -138,7 +138,7 @@ NSMutableArray *guestListIdArr;
             [guestListIdArr addObject:guest.userId];
         }
     }
-
+    
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
         
@@ -171,10 +171,10 @@ NSMutableArray *guestListIdArr;
         {
             [friendListArr addObject:frnds];
             NSLog(@"non invited added %@",frnds.userName);
-//        [friendListArr replaceObjectAtIndex:i withObject:frnds];
-//
+            //        [friendListArr replaceObjectAtIndex:i withObject:frnds];
+            //
         }
-                
+        
         
         NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
         
@@ -198,9 +198,9 @@ NSMutableArray *guestListIdArr;
 	self.picSel.delegate = self;	
     [upperView removeFromSuperview];
     [lowerView removeFromSuperview];
-    [segmentControl setSelectedSegmentIndex:1];
+    
     upperView.frame=CGRectMake(0, 0, upperView.frame.size.width, upperView.frame.size.height);
-
+    
     lowerView.frame=CGRectMake(0, upperView.frame.size.height, lowerView.frame.size.width, lowerView.frame.size.height);
     viewContainerScrollView.contentSize=CGSizeMake(320, upperView.frame.size.height+lowerView.frame.size.height);    
     [viewContainerScrollView addSubview:upperView];
@@ -231,7 +231,7 @@ NSMutableArray *guestListIdArr;
         [neearMeAddressArr addObject:aPlaceItem.placeInfo.name];
         NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
     }
-
+    
     //set scroll view content size.
     [self loadDummydata];
     
@@ -249,14 +249,14 @@ NSMutableArray *guestListIdArr;
     
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
-
+    
     event.permission=@"private";
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
     
-//    [self.mapView setRegion:newRegion animated:YES];
-
+    //    [self.mapView setRegion:newRegion animated:YES];
+    
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
 	[self.mapView addAnnotation:annotation];
@@ -266,14 +266,14 @@ NSMutableArray *guestListIdArr;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
-//    [self.mapView setCenter:annotation.region];
+    //    [self.mapView setCenter:annotation.region];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
 {
-     createNotf=0;
-     updateNotf=0;
-
+    geoCreateNotf=0;
+    geoUpdateNotf=0;
+    
     [self displayNotificationCount];
 	isBackgroundTaskRunning=true;
 	[super viewWillAppear:animated];
@@ -299,7 +299,7 @@ NSMutableArray *guestListIdArr;
     {
         [createButton setTitle:@"Update" forState:UIControlStateNormal];
         [createLabel setText:@"Update Event"];
-
+        
     }
     else
     {
@@ -342,8 +342,8 @@ NSMutableArray *guestListIdArr;
     dicImages_msg=nil;
     ImgesName=nil;
     frndListScrollView=nil;
-
-//    [self viewDidUnload];
+    
+    //    [self viewDidUnload];
 }
 
 
@@ -366,7 +366,7 @@ NSMutableArray *guestListIdArr;
 -(IBAction)nameButtonAction
 {
     [createView setHidden:NO];
-    entityFlag=0;
+    geoEntityFlag=0;
     entryTextField.text=event.eventName;
     entryTextField.placeholder=@"Name...";
 }
@@ -374,7 +374,7 @@ NSMutableArray *guestListIdArr;
 -(IBAction)summaryButtonAction
 {
     [createView setHidden:NO];    
-    entityFlag=1;
+    geoEntityFlag=1;
     entryTextField.text=event.eventShortSummary;
     entryTextField.placeholder=@"Summary...";
 }    
@@ -382,7 +382,7 @@ NSMutableArray *guestListIdArr;
 -(IBAction)descriptionButtonAction
 {
     [createView setHidden:NO];    
-    entityFlag=2;
+    geoEntityFlag=2;
     entryTextField.text=event.eventDescription;
     entryTextField.placeholder=@"Description...";
 }
@@ -464,7 +464,7 @@ NSMutableArray *guestListIdArr;
     [permittedCircleArr removeAllObjects]; 
     for (int i=0; i<[selectedCustomCircleCheckArr count]; i++) 
     {
-       NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleName) ;
+        NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleName) ;
         NSLog(@"selectedCustomCircleCheckArr %@ circleList %@",selectedCustomCircleCheckArr,circleListGlobalArray);
         
         [permittedCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleID];
@@ -472,7 +472,7 @@ NSMutableArray *guestListIdArr;
     
     for (int i=0; i<[customSelectedFriendsIndex count]; i++)
     {
-//        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
+        //        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
         [permittedUserArr addObject:((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId];
     }
     NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
@@ -513,7 +513,7 @@ NSMutableArray *guestListIdArr;
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
-
+    
 }
 
 -(IBAction)myPlaceButtonAction
@@ -548,7 +548,7 @@ NSMutableArray *guestListIdArr;
 //show circle
 -(IBAction)showCircle:(id)sender
 {
-//    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
+    //    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
     [self.view addSubview:circleView];
 }
 
@@ -609,18 +609,18 @@ NSMutableArray *guestListIdArr;
     if (event.eventDescription==NULL)
     {
         [msg appendString:@"description, "];
-            validationFlag=true;
+        validationFlag=true;
     }
     if (event.eventShortSummary==NULL)
     {
         [msg appendString:@"short summary, "];
-                validationFlag=true;
+        validationFlag=true;
     }
-//    if (event.eventLocation.longitude==NULL)
-//    {
-//        [msg appendString:@"event location, "];
-//                validationFlag=true;
-//    }
+    //    if (event.eventLocation.longitude==NULL)
+    //    {
+    //        [msg appendString:@"event location, "];
+    //                validationFlag=true;
+    //    }
     if (event.eventDate.date==NULL)
     {
         [msg appendString:@"date"];
@@ -645,7 +645,7 @@ NSMutableArray *guestListIdArr;
             event.guestList=userIDs;
             
         }
-        if (locationFlag!=1) 
+        if (geoLocationFlag!=1) 
         {
             event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
             event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
@@ -669,7 +669,7 @@ NSMutableArray *guestListIdArr;
             [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
         }
         NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
-
+        
     }
     
 }
@@ -683,15 +683,15 @@ NSMutableArray *guestListIdArr;
 {
     [createView setHidden:YES];
     [entryTextField resignFirstResponder];
-    if (entityFlag==0)
+    if (geoEntityFlag==0)
     {
         event.eventName=entryTextField.text;
     }
-    else if (entityFlag==1)
+    else if (geoEntityFlag==1)
     {
         event.eventShortSummary=entryTextField.text;
     }
-    else if (entityFlag==2)
+    else if (geoEntityFlag==2)
     {
         event.eventDescription=entryTextField.text;
     }
@@ -716,7 +716,7 @@ NSMutableArray *guestListIdArr;
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
-    locationFlag=1;
+    geoLocationFlag=1;
     int selectedLocation=[selectedIndex intValue];
     NSLog(@"selectedLocation %d",selectedLocation);
     LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
@@ -789,35 +789,34 @@ NSMutableArray *guestListIdArr;
     static NSString *CustomCellIdentifier = @"customCircleTableCell";
     
     int nodeCount = [filteredList1 count];
-        
+    
     SelectCircleTableCell *cell = [circleTableView
-                                dequeueReusableCellWithIdentifier:CellIdentifier];
+                                   dequeueReusableCellWithIdentifier:CellIdentifier];
     
     SelectCircleTableCell *customCell = [customTableView
-                                   dequeueReusableCellWithIdentifier:CustomCellIdentifier];
-
+                                         dequeueReusableCellWithIdentifier:CustomCellIdentifier];
+    
     if (cell == nil)
     {
-            cell = [[SelectCircleTableCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault 
-                    reuseIdentifier:CellIdentifier];
+        cell = [[SelectCircleTableCell alloc]
+                initWithStyle:UITableViewCellStyleDefault 
+                reuseIdentifier:CellIdentifier];
         
         customCell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CustomCellIdentifier];
+                      initWithStyle:UITableViewCellStyleDefault 
+                      reuseIdentifier:CustomCellIdentifier];
     }
     
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
     {
-        cell.circrcleName.text=[NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
-        customCell.circrcleName.text=[NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
+        cell.circrcleName.text=@"Custom";
+        customCell.circrcleName.text=@"Custom";
     }
     else 
     {
-        [((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count];
-        cell.circrcleName.text=[NSString stringWithFormat:@"%@ (%d)",[circleList objectAtIndex:indexPath.row],[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
-        customCell.circrcleName.text=[NSString stringWithFormat:@"%@ (%d)",[circleList objectAtIndex:indexPath.row],[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;        
+        cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
+        customCell.circrcleName.text=[circleList objectAtIndex:indexPath.row];        
     }
     
     if ([selectedCircleCheckArr containsObject:indexPath]) 
@@ -828,7 +827,7 @@ NSMutableArray *guestListIdArr;
     {
         [cell.circrcleCheckbox setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
     }
-
+    
     if ([selectedCustomCircleCheckArr containsObject:indexPath]) 
     {
         [customCell.circrcleCheckbox setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
@@ -839,7 +838,7 @@ NSMutableArray *guestListIdArr;
     }
     
     [cell.circrcleCheckbox addTarget:self action:@selector(handleTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [customCell.circrcleCheckbox addTarget:self action:@selector(handleCustomTableViewCheckbox:) forControlEvents:UIControlEventTouchUpInside];
     
     if (tableView==customTableView)
@@ -858,7 +857,7 @@ NSMutableArray *guestListIdArr;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-//    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -899,8 +898,8 @@ NSMutableArray *guestListIdArr;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
-//        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
-//        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
+        //        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
+        //        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
         
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
@@ -942,7 +941,7 @@ NSMutableArray *guestListIdArr;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-//    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    //    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
     [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
@@ -984,7 +983,7 @@ NSMutableArray *guestListIdArr;
                 // [view removeFromSuperview];
             }
         }
-       NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+        NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
         for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
@@ -1157,23 +1156,23 @@ NSMutableArray *guestListIdArr;
 {
     if (isBackgroundTaskRunning==true)
     {
-//    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-    int index = [path intValue];
-    UserFriends *userFrnd=[[UserFriends alloc] init];
-    userFrnd=[filteredList1 objectAtIndex:index];
-
-    NSString *Link = userFrnd.imageUrl;
-    //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if(img)
-    {
-        //If download complete, set that image to dictionary
-        [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-        [self reloadScrolview];
-    }
-    // Now, we need to reload scroll view to load downloaded image
-//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-//    [pl release];
+        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+        int index = [path intValue];
+        UserFriends *userFrnd=[[UserFriends alloc] init];
+        userFrnd=[filteredList1 objectAtIndex:index];
+        
+        NSString *Link = userFrnd.imageUrl;
+        //Start download image from url
+        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        if(img)
+        {
+            //If download complete, set that image to dictionary
+            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+            [self reloadScrolview];
+        }
+        // Now, we need to reload scroll view to load downloaded image
+        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        //    [pl release];
     }
 }
 
@@ -1198,7 +1197,7 @@ NSMutableArray *guestListIdArr;
         UIView *im=[subviews objectAtIndex:l];
         NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
         UIImageView *im1=[subviews1 objectAtIndex:0];
-
+        
         if ([im1.image isEqual:frnds.userProfileImage])
         {
             [im1 setAlpha:1.0];
@@ -1207,15 +1206,15 @@ NSMutableArray *guestListIdArr;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-//        else
-//        {
-//            UIView *im1=[subviews objectAtIndex:l];
-//            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-//            UIImageView *im2=[subviews2 objectAtIndex:0];
-//            [im2 setAlpha:0.4];
-//            im2.layer.borderWidth=2.0;
-//            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-//        }
+        //        else
+        //        {
+        //            UIView *im1=[subviews objectAtIndex:l];
+        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
+        //            UIImageView *im2=[subviews2 objectAtIndex:0];
+        //            [im2 setAlpha:0.4];
+        //            im2.layer.borderWidth=2.0;
+        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
+        //        }
     }
     [self reloadScrolview];
 }
@@ -1302,7 +1301,7 @@ NSMutableArray *guestListIdArr;
             [self reloadScrolview];
         }
         
-
+        
     }
     else
     {
@@ -1340,9 +1339,9 @@ NSMutableArray *guestListIdArr;
     }
     else
     {
-    searchTexts=friendSearchbar.text;
-    [self beganEditing:friendSearchbar];
-
+        searchTexts=friendSearchbar.text;
+        [self beganEditing:friendSearchbar];
+        
     }
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
@@ -1355,7 +1354,7 @@ NSMutableArray *guestListIdArr;
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
-//    [self.eventListTableView reloadData];
+    //    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
     [customSearchBar resignFirstResponder];
@@ -1377,13 +1376,13 @@ NSMutableArray *guestListIdArr;
     }
     else
     {
-    friendSearchbar.text=@"";
-    searchTexts=@"";    
-    [filteredList1 removeAllObjects];
-    filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
-    [self reloadScrolview];
-    [friendSearchbar resignFirstResponder];
-    NSLog(@"3");
+        friendSearchbar.text=@"";
+        searchTexts=@"";    
+        [filteredList1 removeAllObjects];
+        filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
+        [self reloadScrolview];
+        [friendSearchbar resignFirstResponder];
+        NSLog(@"3");
     }
 }
 
@@ -1401,7 +1400,7 @@ NSMutableArray *guestListIdArr;
         searchFlag=false;
         [self searchResultCustom];
         [customSearchBar resignFirstResponder];    
-
+        
     }
     else
     {
@@ -1410,7 +1409,7 @@ NSMutableArray *guestListIdArr;
         searchFlag=false;
         [self searchResult];
         [friendSearchbar resignFirstResponder];    
-
+        
     }
 }
 
@@ -1420,7 +1419,7 @@ NSMutableArray *guestListIdArr;
     searchTexts = friendSearchbar.text;
     NSLog(@"in search method..");
     NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
-
+    
     [filteredList1 removeAllObjects];
     
     if ([searchTexts isEqualToString:@""])
@@ -1432,7 +1431,7 @@ NSMutableArray *guestListIdArr;
     else
     {
         NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
-
+        
         for (UserFriends *sTemp in friendListArr)
         {
             NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
@@ -1542,7 +1541,7 @@ NSMutableArray *guestListIdArr;
     [self.view setFrame:viewFrame];
     
     [UIView commitAnimations];
-
+    
 }
 
 -(void)endEditing
@@ -1566,43 +1565,43 @@ NSMutableArray *guestListIdArr;
 
 - (void)createEventDone:(NSNotification *)notif
 {
-    createNotf++;
-    if (createNotf==1)
+    geoCreateNotf++;
+    if (geoCreateNotf==1)
     {
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
+        ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+        //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+        //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+        //    NSLog(@"GOT SERVICE DATA.. :D");
+        
+        //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+        //    [self presentModalViewController:controller animated:YES];
+        [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
     }
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
-
+    
     [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateEventDone:(NSNotification *)notif
 {
-    updateNotf++;
-    if (updateNotf==1) 
+    geoUpdateNotf++;
+    if (geoUpdateNotf==1) 
     {
-    NSLog(@"dele %@",[notif object]);
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    //    [self presentModalViewController:controller animated:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
+        NSLog(@"dele %@",[notif object]);
+        ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
+        //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
+        ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        //    [self presentModalViewController:modalViewControllerTwo animated:YES];
+        //    NSLog(@"GOT SERVICE DATA.. :D");
+        
+        //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+        //    [self presentModalViewController:controller animated:YES];
+        [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
     }
     globalEvent=[notif object];
     [smAppDelegate hideActivityViewer];
@@ -1616,7 +1615,7 @@ NSMutableArray *guestListIdArr;
     NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
 	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-
+    
 }
 
 -(void) displayNotificationCount {

@@ -18,6 +18,7 @@
     IBOutlet UITextView *textViewNewMsg;
 
     IBOutlet UILabel *labelNotifCount;
+    IBOutlet UIButton *selectAllButton;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *blockTableView;
@@ -26,6 +27,7 @@
 
 @property (nonatomic,retain)  IBOutlet UIView *msgView;
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
+@property (nonatomic,retain) IBOutlet UIButton *selectAllButton;
 
 -(IBAction)sendMsg:(id)sender;
 -(IBAction)cancelMsg:(id)sender;

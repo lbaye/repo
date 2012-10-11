@@ -37,6 +37,11 @@
 		20B0E7EC15D7BC55009A500A /* Layer.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EB15D7BC54009A500A /* Layer.m */; };
 		20B0E7EF15D7BEAC009A500A /* InformationPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */; };
 		20B2902016197A810056D5E2 /* cover_pic_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B2901F16197A810056D5E2 /* cover_pic_default.png */; };
+		20B3CB1716269E000099D49E /* GeoTagStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */; };
+		20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B3CB1A16269E540099D49E /* GeotagViewController.m */; };
+		20B3CB1F1626C19C0099D49E /* beta_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B3CB1C1626C19C0099D49E /* beta_bg.png */; };
+		20B3CB201626C19C0099D49E /* beta_text_website.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B3CB1D1626C19C0099D49E /* beta_text_website.png */; };
+		20B3CB211626C19C0099D49E /* btn_discover.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B3CB1E1626C19C0099D49E /* btn_discover.png */; };
 		20B5D56B1612EE27001105AF /* icon_event.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56A1612EE27001105AF /* icon_event.png */; };
 		20B5D56E16131975001105AF /* friends_rqst_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56D16131975001105AF /* friends_rqst_icon.png */; };
 		20B5D570161319A6001105AF /* message_notify_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20B5D56F161319A5001105AF /* message_notify_icon.png */; };
@@ -472,6 +477,12 @@
 		20B0E7ED15D7BEAB009A500A /* InformationPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationPrefs.h; sourceTree = "<group>"; };
 		20B0E7EE15D7BEAC009A500A /* InformationPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationPrefs.m; sourceTree = "<group>"; };
 		20B2901F16197A810056D5E2 /* cover_pic_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_pic_default.png; sourceTree = "<group>"; };
+		20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GeoTagStoryboard.storyboard; sourceTree = "<group>"; };
+		20B3CB1916269E540099D49E /* GeotagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeotagViewController.h; sourceTree = "<group>"; };
+		20B3CB1A16269E540099D49E /* GeotagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeotagViewController.m; sourceTree = "<group>"; };
+		20B3CB1C1626C19C0099D49E /* beta_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beta_bg.png; sourceTree = "<group>"; };
+		20B3CB1D1626C19C0099D49E /* beta_text_website.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beta_text_website.png; sourceTree = "<group>"; };
+		20B3CB1E1626C19C0099D49E /* btn_discover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_discover.png; sourceTree = "<group>"; };
 		20B5D56A1612EE27001105AF /* icon_event.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_event.png; path = Images/icon_event.png; sourceTree = SOURCE_ROOT; };
 		20B5D56D16131975001105AF /* friends_rqst_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_rqst_icon.png; sourceTree = "<group>"; };
 		20B5D56F161319A5001105AF /* message_notify_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message_notify_icon.png; sourceTree = "<group>"; };
@@ -1326,12 +1337,15 @@
 				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
 				20B656C515EF580600A441E9 /* EventListTableCell.h */,
 				20B656C615EF580600A441E9 /* EventListTableCell.m */,
+				20B3CB1916269E540099D49E /* GeotagViewController.h */,
+				20B3CB1A16269E540099D49E /* GeotagViewController.m */,
 				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */,
 				20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
+				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
 				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				4FE9606D15BC8FE60007327A /* MapViewController.h */,
@@ -1408,6 +1422,8 @@
 				4FE4260E15C06FAD00A6B6A3 /* bar_more_info.png */,
 				4FE4260F15C06FAD00A6B6A3 /* bar_more_info2.png */,
 				4FE4261015C06FAD00A6B6A3 /* bar_top_ar_bg.png */,
+				20B3CB1C1626C19C0099D49E /* beta_bg.png */,
+				20B3CB1D1626C19C0099D49E /* beta_text_website.png */,
 				4FE4261115C06FAD00A6B6A3 /* bg.png */,
 				4F4CA52415C45351004234E5 /* breadcrumbs_icon.png */,
 				4FB7A04515D124E2001EB905 /* btn_bg_dark.png */,
@@ -1416,6 +1432,7 @@
 				4FB7A04315D124E2001EB905 /* btn_cancel_dark.png */,
 				4FB7A04215D124E2001EB905 /* btn_cancel_gray.png */,
 				4FB7A04115D124E2001EB905 /* btn_cancel_light.png */,
+				20B3CB1E1626C19C0099D49E /* btn_discover.png */,
 				4F78E4E315CD29830055B319 /* btn_footer_slider_close.png */,
 				4F1B99B115CC377D0066BF16 /* btn_footer_slider_open.png */,
 				B01DFC4B15F5E74300020D49 /* btn_new_message.png */,
@@ -2055,6 +2072,10 @@
 				B028A4D9161C8C0900D99D3E /* circle.png in Resources */,
 				B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */,
 				B08997F716203E2E003A9FA9 /* map_view_icon_black.png in Resources */,
+				20B3CB1716269E000099D49E /* GeoTagStoryboard.storyboard in Resources */,
+				20B3CB1F1626C19C0099D49E /* beta_bg.png in Resources */,
+				20B3CB201626C19C0099D49E /* beta_text_website.png in Resources */,
+				20B3CB211626C19C0099D49E /* btn_discover.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2222,6 +2243,7 @@
 				20C92B821618022B000B3D58 /* SectionInfo.m in Sources */,
 				20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */,
 				B08845691619584C00676EFA /* OverlayViewController.m in Sources */,
+				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
