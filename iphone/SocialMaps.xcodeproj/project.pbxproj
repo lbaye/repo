@@ -415,6 +415,9 @@
 		B028A4D6161C8B0B00D99D3E /* icon_world.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C4161C8B0B00D99D3E /* icon_world.png */; };
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
+		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
+		B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819451627174500FBCB1A /* btn_bg_green_small.png */; };
+		B08819491627174500FBCB1A /* btn_bg_light_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819461627174500FBCB1A /* btn_bg_light_small.png */; };
 		B08845681619584C00676EFA /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08845651619584C00676EFA /* OverlayView.xib */; };
 		B08845691619584C00676EFA /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08845671619584C00676EFA /* OverlayViewController.m */; };
 		B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F316203E1F003A9FA9 /* list_view_icon_black.png */; };
@@ -1017,6 +1020,9 @@
 		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
+		B08819441627174500FBCB1A /* btn_bg_gray_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_gray_small.png; path = Images/btn_bg_gray_small.png; sourceTree = SOURCE_ROOT; };
+		B08819451627174500FBCB1A /* btn_bg_green_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_green_small.png; path = Images/btn_bg_green_small.png; sourceTree = SOURCE_ROOT; };
+		B08819461627174500FBCB1A /* btn_bg_light_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_light_small.png; path = Images/btn_bg_light_small.png; sourceTree = SOURCE_ROOT; };
 		B08845651619584C00676EFA /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 		B08845661619584C00676EFA /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
 		B08845671619584C00676EFA /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
@@ -1408,6 +1414,9 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B08819441627174500FBCB1A /* btn_bg_gray_small.png */,
+				B08819451627174500FBCB1A /* btn_bg_green_small.png */,
+				B08819461627174500FBCB1A /* btn_bg_light_small.png */,
 				4F4CA53415C45351004234E5 /* add_friend_button.png */,
 				4F4CA53915C45351004234E5 /* accept_button_a.png */,
 				4F4CA53815C45351004234E5 /* accept_button_h.png */,
@@ -2080,6 +2089,9 @@
 				20B3CB201626C19C0099D49E /* beta_text_website.png in Resources */,
 				20B3CB211626C19C0099D49E /* btn_discover.png in Resources */,
 				20B3CB231626ED1A0099D49E /* icon_lock_green.png in Resources */,
+				B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */,
+				B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */,
+				B08819491627174500FBCB1A /* btn_bg_light_small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
