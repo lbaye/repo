@@ -955,23 +955,27 @@ class User {
         // Ensure user is not in within_restricted_fench?
         if ($this->insideGeoFence($settings))
             return false;
-        //
+
         //type_of_relationship = determine_relationship_between target_user, app_user
+        $stranger = $this->isStranger($app_user);
+
         //
         //if type_of_relationship == "stranger"
-        //unless stranger_allowed? return false
-        //unless within_sharing_time_limit? return false
-        //
-        //else if type_of_relationship == "friend"
-        //list_of_friend_subgroup = determine_which_group_app_user_belongs_to
-        //
-        //if empty list_of_friend_subgroup return true
-        //else
-        //        foreach subgroup in list_of_friend_subgroup
-        //          unless subgroup.allowVisibility?(app_user) return false
-        //
-        //return true
+        if ($stranger) {
+            //unless stranger_allowed? return false
+            //unless within_sharing_time_limit? return false
+            //
+            //else if type_of_relationship == "friend"
+            //list_of_friend_subgroup = determine_which_group_app_user_belongs_to
+            //
+            //if empty list_of_friend_subgroup return true
+            //else
+            //        foreach subgroup in list_of_friend_subgroup
+            //          unless subgroup.allowVisibility?(app_user) return false
+            //
+        }
 
+        return true;
     }
 
     private function insideGeoFence($settings) {
@@ -982,13 +986,13 @@ class User {
                 $radius = $geo_fence['radius'];
                 $distance = $this->checkDistance($this->getCurrentLocation(), $geo_fence);
 
-                if ($distance < float($radius)) {
-                    return false;
+                if ($distance < (float)($radius)) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
     private function checkDistance($current_location, $geo_fence) {
@@ -1000,6 +1004,16 @@ class User {
         $target_lng = $current_location['lng'];
 
         return \Helper\Location::distance($lat, $lng, $target_lat, $target_lng);
+    }
+
+    private function isStranger($app_user) {
+        $friend_ids = @$this->getFriends();
+        if (!empty($friend_ids)) {
+            if (!in_array($app_user->getId(), $friend_ids))
+                return false;
+        }
+
+        return true;
     }
 
     const PREF_FIELD_STATUS = "status";
