@@ -134,4 +134,7 @@ typedef enum _SHARING_TYPES {
 - (IBAction)actionShowHideSearchBtn:(id)sender;
 -(IBAction)addCircleView:(id)sender;
 -(IBAction)removeCircleView:(id)sender;
+-(IBAction)gotoBasicProfile:(id)sender;
+-(IBAction)gotoSettings:(id)sender;
+
 @end

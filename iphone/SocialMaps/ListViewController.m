@@ -14,6 +14,9 @@
 #import "UtilityClass.h"
 #import "UserBasicProfileViewController.h"
 #import "OverlayViewController.h"
+#import "MessageListViewController.h"
+#import "MeetUpRequestController.h"
+#import "ViewEventListViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -27,6 +30,7 @@
 @synthesize selectedItemIndex;
 @synthesize smAppDelegate;
 @synthesize totalNotifCount;
+@synthesize circleView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,9 +59,17 @@
 }*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [circleView removeFromSuperview];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [circleView removeFromSuperview];
     [self displayNotificationCount];
     listPulldownMenu.backgroundColor = [UIColor clearColor];
     listPullupMenu.backgroundColor   = [UIColor clearColor];
@@ -262,9 +274,10 @@
 
 -(IBAction)gotoProfile:(id)sender
 {
-    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
+//    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+    [self.view addSubview:circleView];
 }
 
 - (IBAction)backToMapview:(id)sender {
@@ -306,6 +319,74 @@
         totalNotifCount.text = @"";
     else
         totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
+
+- (IBAction)gotoEvents:(id)sender 
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [smAppDelegate showActivityViewer:self.view];
+}
+
+- (IBAction)gotoMessages:(id)sender
+{
+    NSLog(@"actionTestMessageBtn");
+    
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    
+}
+
+- (IBAction)gotoUserBasicProfile:(id)sender
+{
+    UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
+    prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:prof animated:YES];
+}
+
+-(IBAction)gotoSettings:(id)sender
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];   
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+}
+
+- (IBAction)gotoMeetupReq:(id)sender
+{
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
+}
+
+- (IBAction)gotoCircles:(id)sender
+{
+    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    //    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    //    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //    [self presentModalViewController:controller animated:YES];
+    
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+    
+    
+}
+
+-(IBAction)removeCircleView:(id)sender
+{
+    [circleView removeFromSuperview];
 }
 
 - (void)dealloc {

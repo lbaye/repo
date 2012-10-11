@@ -318,7 +318,7 @@
                         <outlet property="txtEmail" destination="D35-7U-IjJ" id="Rzj-ET-IMn"/>
                         <outlet property="txtForgotPWEmail" destination="Ylw-GR-GUd" id="IAl-rC-f2M"/>
                         <outlet property="txtPassword" destination="9JO-hG-uxg" id="a28-1d-Weh"/>
-                        <segue destination="wC3-So-nVM" kind="modal" identifier="showMapView" id="muZ-DO-Isb"/>
+                        <segue destination="wC3-So-nVM" kind="modal" identifier="showMapView" modalTransitionStyle="crossDissolve" id="muZ-DO-Isb"/>
                         <segue destination="W0I-Zl-uMx" kind="modal" identifier="showLocSharingConsent" modalTransitionStyle="crossDissolve" id="GFp-dd-HWZ"/>
                     </connections>
                 </viewController>
@@ -1141,10 +1141,10 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="02H-vz-IEA">
-                                        <rect key="frame" x="151" y="30" width="24" height="24"/>
+                                        <rect key="frame" x="144" y="28" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="icon_profile.png">
+                                        <state key="normal" image="icon_world.png">
                                             <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1172,7 +1172,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="4ox-jG-EDo">
-                                        <rect key="frame" x="205" y="27" width="1" height="30"/>
+                                        <rect key="frame" x="203" y="27" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="x1Y-eD-LNq">
@@ -1182,7 +1182,7 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.92156869173049927" green="0.92156869173049927" blue="0.92156869173049927" alpha="0.0" colorSpace="deviceRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mly-AE-tk2" userLabel="circleMenu">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mly-AE-tk2" userLabel="circleMenu">
                                 <rect key="frame" x="0.5" y="345" width="45" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1260,7 +1260,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="gotoProfile:" destination="wC3-So-nVM" eventType="touchUpInside" id="q3a-lV-mFQ"/>
+                                            <action selector="gotoBasicProfile:" destination="wC3-So-nVM" eventType="touchUpInside" id="L7B-mV-nsG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Qe6-dZ-PWT">
@@ -1275,7 +1275,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="gotoSettings:" destination="wC3-So-nVM" eventType="touchUpInside" id="Vis-Wc-72s"/>
+                                            <action selector="gotoSettings:" destination="wC3-So-nVM" eventType="touchUpInside" id="0Ey-EN-squ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TvH-kX-DoM">
@@ -1626,9 +1626,6 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <connections>
-                                            <action selector="closePullupMenu:" destination="wC3-So-nVM" eventType="touchUpInside" id="3JE-6V-4ts"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="SXG-iS-nea" userLabel="listView">
                                         <rect key="frame" x="224" y="30" width="34" height="24"/>
@@ -1675,10 +1672,10 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hbi-zK-EWm">
-                                        <rect key="frame" x="151" y="30" width="24" height="24"/>
+                                        <rect key="frame" x="144" y="29" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="icon_profile.png">
+                                        <state key="normal" image="icon_world.png">
                                             <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1687,7 +1684,6 @@
                                         </state>
                                         <connections>
                                             <action selector="gotoProfile:" destination="fgr-fq-SqM" eventType="touchUpInside" id="esZ-rj-AhO"/>
-                                            <action selector="gotoProfile:" destination="wC3-So-nVM" eventType="touchUpInside" id="sKP-YQ-Tc2"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="nm2-jo-c86">
@@ -1769,10 +1765,149 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.98863636363636365" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                             </view>
+                            <view contentMode="scaleToFill" id="b2F-au-gcu">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="scaleToFill" image="circle_menu_bg.png" id="uk9-n1-v1R">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_world.png" id="tqq-Nt-44G">
+                                        <rect key="frame" x="92.5" y="156" width="135" height="133"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ObH-sh-bvp">
+                                        <rect key="frame" x="40" y="97" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_places.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hlz-am-YhQ">
+                                        <rect key="frame" x="125" y="57" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_people.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="gotoCircles:" destination="fgr-fq-SqM" eventType="touchUpInside" id="89E-Zj-JQD"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="DT8-WX-dRK">
+                                        <rect key="frame" x="210" y="97" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_deals.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tOp-Kx-OPh">
+                                        <rect key="frame" x="240" y="187" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_profile.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="gotoUserBasicProfile:" destination="fgr-fq-SqM" eventType="touchUpInside" id="s0X-PI-EmK"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1Sc-RG-sqV">
+                                        <rect key="frame" x="210" y="278" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_settings.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="gotoSettings:" destination="fgr-fq-SqM" eventType="touchUpInside" id="iLD-xz-c3G"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jr5-ih-9iz">
+                                        <rect key="frame" x="10" y="187" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_friends.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xVm-8B-Iqt">
+                                        <rect key="frame" x="124.5" y="322" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_messages.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="gotoMessages:" destination="fgr-fq-SqM" eventType="touchUpInside" id="tDK-if-PRo"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7h6-Ro-137">
+                                        <rect key="frame" x="40" y="278" width="71" height="71"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="circle_menu_item_newsfeed.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Ern-Kl-YYS">
+                                        <rect key="frame" x="141" y="418" width="36" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="xlose_icon.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="removeCircleView:" destination="fgr-fq-SqM" eventType="touchUpInside" id="383-NV-CCj"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                     </view>
                     <connections>
+                        <outlet property="circleView" destination="b2F-au-gcu" id="J95-oc-Lgf"/>
                         <outlet property="itemList" destination="Rqr-AF-JMb" id="77D-ax-col"/>
                         <outlet property="listNotifCount" destination="UR8-b2-4pm" id="9rV-Ep-1Bt"/>
                         <outlet property="listPulldown" destination="0Sh-3V-Ss1" id="Ga3-v0-w1G"/>
@@ -2453,7 +2588,7 @@
                                         </state>
                                         <connections>
                                             <action selector="goBack:" destination="i7v-82-K9c" eventType="touchUpInside" id="ezz-Kv-0lS"/>
-                                            <segue destination="wC3-So-nVM" kind="modal" identifier="backToMap" id="kWh-8P-X1J"/>
+                                            <segue destination="wC3-So-nVM" kind="modal" identifier="backToMap" modalTransitionStyle="crossDissolve" id="kWh-8P-X1J"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Trc-vc-Uw5" userLabel="settingZoom">
@@ -4959,7 +5094,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="icon_facebook.png" width="108" height="108"/>
         <image name="icon_filter.png" width="52" height="53"/>
         <image name="icon_lock_green.png" width="56" height="66"/>
-        <image name="icon_profile.png" width="32" height="32"/>
         <image name="icon_settings.png" width="43" height="45"/>
         <image name="icon_world.png" width="274" height="274"/>
         <image name="img_settings_header_bg.png" width="640" height="110"/>
@@ -5123,10 +5257,18 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="closePulldown:"/>
                 <relationship kind="action" name="closePullup:"/>
                 <relationship kind="action" name="goToNotifications:"/>
+                <relationship kind="action" name="gotoCircles:"/>
+                <relationship kind="action" name="gotoEvents:"/>
+                <relationship kind="action" name="gotoMeetupReq:"/>
+                <relationship kind="action" name="gotoMessages:"/>
                 <relationship kind="action" name="gotoNotification:"/>
                 <relationship kind="action" name="gotoProfile:"/>
+                <relationship kind="action" name="gotoSettings:"/>
+                <relationship kind="action" name="gotoUserBasicProfile:"/>
+                <relationship kind="action" name="removeCircleView:"/>
                 <relationship kind="action" name="showPullUpMenu:"/>
                 <relationship kind="action" name="showPulldownMenu:"/>
+                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="itemList" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="listNotifCount" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
@@ -5170,6 +5312,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="closeInviteFrnds:"/>
                 <relationship kind="action" name="closePullupMenu:"/>
                 <relationship kind="action" name="dealsClicked:"/>
+                <relationship kind="action" name="gotoBasicProfile:"/>
                 <relationship kind="action" name="gotoBreadcrumbs:"/>
                 <relationship kind="action" name="gotoCheckins:"/>
                 <relationship kind="action" name="gotoCircle:"/>
@@ -5406,6 +5549,5 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qvJ-bu-e6k"/>
-        <segue reference="muZ-DO-Isb"/>
     </inferredMetricsTieBreakers>
 </document>

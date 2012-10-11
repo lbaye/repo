@@ -37,6 +37,7 @@
 @property (nonatomic) int selectedItemIndex;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
 
+@property (nonatomic,retain)  IBOutlet UIView  *circleView;
 @property (retain, nonatomic) IBOutlet UIView *listPullupMenu;
 @property (retain, nonatomic) IBOutlet UIView *listPulldownMenu;
 @property (retain, nonatomic) IBOutlet UIView *listViewfilter;
@@ -60,5 +61,13 @@
 - (void) doneSearching_Clicked:(id)sender;
 - (IBAction)actionSearchButton:(id)sender;
 - (IBAction)actionSearchOkButton:(id)sender;
+
+- (IBAction)gotoEvents:(id)sender;
+- (IBAction)gotoMessages:(id)sender;
+- (IBAction)gotoUserBasicProfile:(id)sender;
+- (IBAction)gotoSettings:(id)sender;
+- (IBAction)gotoMeetupReq:(id)sender;
+- (IBAction)gotoCircles:(id)sender;
+-(IBAction)removeCircleView:(id)sender;
 
 @end

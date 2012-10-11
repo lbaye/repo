@@ -963,9 +963,27 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoProfile:(id)sender
 {
+//    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+        [self.view addSubview:circleView];
+}
+
+-(IBAction)gotoBasicProfile:(id)sender
+{
     UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+//    [self.view addSubview:circleView];
+}
+
+-(IBAction)gotoSettings:(id)sender
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];   
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 -(IBAction)gotoCircle:(id)sender
@@ -1454,15 +1472,6 @@ ButtonClickCallbackData callBackData;
     UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
     prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:prof animated:YES];
-}
-
--(IBAction)gotoSettings:(id)sender
-{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];   
-    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
-    
-    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 - (IBAction)gotoMeetupReq:(id)sender
