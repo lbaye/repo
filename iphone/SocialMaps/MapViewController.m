@@ -608,7 +608,7 @@ ButtonClickCallbackData callBackData;
         //by Rishi
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
+        //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
     [self initPullView];
@@ -697,7 +697,11 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidDisappear:(BOOL)animated
 {
     //userFriendslistArray=[[NSMutableArray alloc] init];
-    [timerGotListing invalidate];
+    if (timerGotListing) {
+        [timerGotListing invalidate];
+        timerGotListing = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
@@ -818,6 +822,7 @@ ButtonClickCallbackData callBackData;
 {
     [super viewDidAppear:animated];
     //[self initPullView];
+    timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     pullDownView.hidden = NO;
     //[self.view bringSubviewToFront:viewSearch];
     
