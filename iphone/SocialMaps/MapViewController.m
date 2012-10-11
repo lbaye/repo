@@ -608,7 +608,7 @@ ButtonClickCallbackData callBackData;
         //by Rishi
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
     [self initPullView];
@@ -697,8 +697,8 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidDisappear:(BOOL)animated
 {
     //userFriendslistArray=[[NSMutableArray alloc] init];
-    //by Rishi
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    [timerGotListing invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -712,7 +712,7 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:viewDidUnload" );
     
     //by Rishi
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];

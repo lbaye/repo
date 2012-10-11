@@ -59,6 +59,7 @@ typedef enum _SHARING_TYPES {
     NSMutableArray		*copySearchAnnotationList;
     IBOutlet UIView *circleView;
     BOOL isFirstTimeDownloading;
+    NSTimer *timerGotListing;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
