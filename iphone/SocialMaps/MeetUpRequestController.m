@@ -733,7 +733,7 @@ DDAnnotation *annotation;
             else 
             { 
                 //if(!isDragging_msg && !isDecliring_msg) 
-                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))    
+                if((!isDragging_msg && !isDecliring_msg) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))    
                 {
                     //If scroll view moves set a placeholder image and start download image. 
                     //[dicImages_msg setObject:[UIImage imageNamed:@"NO_IMAGE"] forKey:userFrnd.imageUrl]; 
@@ -810,7 +810,8 @@ DDAnnotation *annotation;
 
 -(void)DownLoad:(NSNumber *)path
 {
-    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+    NSLog(@"in Download");
+    //NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
     userFrnd=[filteredList objectAtIndex:index];
@@ -818,14 +819,15 @@ DDAnnotation *annotation;
     NSString *Link = userFrnd.imageUrl;
     //Start download image from url
     UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if(img)
+    if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+        [self reloadScrolview];
     }
     // Now, we need to reload scroll view to load downloaded image
-    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-    [pl release];
+    //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+    //[pl release];
 }
 
 -(void)loadDummydata
