@@ -477,20 +477,22 @@ BOOL coverImgFlag;
 
 -(void)DownLoad:(NSNumber *)path
 {
+    NSLog(@"in download");
     if (isBackgroundTaskRunning==TRUE) {
-        NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+        //NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         NSString *Link = [ImgesName objectAtIndex:index];
         //Start download image from url
         UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-        if(img)
+        if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
         {
             //If download complete, set that image to dictionary
             [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+            [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        [pl release];
+        //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        //[pl release];
     }
 }
 

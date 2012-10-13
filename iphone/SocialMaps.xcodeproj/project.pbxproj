@@ -415,6 +415,9 @@
 		B028A4D6161C8B0B00D99D3E /* icon_world.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C4161C8B0B00D99D3E /* icon_world.png */; };
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
+		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
+		B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819451627174500FBCB1A /* btn_bg_green_small.png */; };
+		B08819491627174500FBCB1A /* btn_bg_light_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819461627174500FBCB1A /* btn_bg_light_small.png */; };
 		B08845681619584C00676EFA /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08845651619584C00676EFA /* OverlayView.xib */; };
 		B08845691619584C00676EFA /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08845671619584C00676EFA /* OverlayViewController.m */; };
 		B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F316203E1F003A9FA9 /* list_view_icon_black.png */; };
@@ -1017,6 +1020,9 @@
 		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
+		B08819441627174500FBCB1A /* btn_bg_gray_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_gray_small.png; path = Images/btn_bg_gray_small.png; sourceTree = SOURCE_ROOT; };
+		B08819451627174500FBCB1A /* btn_bg_green_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_green_small.png; path = Images/btn_bg_green_small.png; sourceTree = SOURCE_ROOT; };
+		B08819461627174500FBCB1A /* btn_bg_light_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_light_small.png; path = Images/btn_bg_light_small.png; sourceTree = SOURCE_ROOT; };
 		B08845651619584C00676EFA /* OverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 		B08845661619584C00676EFA /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayViewController.h; sourceTree = "<group>"; };
 		B08845671619584C00676EFA /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
@@ -1408,6 +1414,9 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B08819441627174500FBCB1A /* btn_bg_gray_small.png */,
+				B08819451627174500FBCB1A /* btn_bg_green_small.png */,
+				B08819461627174500FBCB1A /* btn_bg_light_small.png */,
 				4F4CA53415C45351004234E5 /* add_friend_button.png */,
 				4F4CA53915C45351004234E5 /* accept_button_a.png */,
 				4F4CA53815C45351004234E5 /* accept_button_h.png */,
@@ -2080,6 +2089,9 @@
 				20B3CB201626C19C0099D49E /* beta_text_website.png in Resources */,
 				20B3CB211626C19C0099D49E /* btn_discover.png in Resources */,
 				20B3CB231626ED1A0099D49E /* icon_lock_green.png in Resources */,
+				B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */,
+				B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */,
+				B08819491627174500FBCB1A /* btn_bg_light_small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2278,8 +2290,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2294,8 +2306,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2305,8 +2317,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2315,8 +2327,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2325,8 +2337,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2337,8 +2349,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2347,8 +2359,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2359,8 +2371,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
