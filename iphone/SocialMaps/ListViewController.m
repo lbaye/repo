@@ -520,7 +520,7 @@
             LocationItem *locItem = (LocationItem*)[copyDisplayListArray objectAtIndex:row];
             if(searching)
                 locItem = (LocationItem*)[copyListOfItems objectAtIndex:row];
-            
+            smAppDelegate.needToCenterMap = FALSE;
             [self performSegueWithIdentifier:@"segueShowDetailAnno" sender:locItem];
             
             break;
