@@ -57,17 +57,20 @@ class SendPushNotification extends Base
     private function _sendPushNotification(\Document\User $user, array $notificationData)
     {
         $pushSettings = $user->getPushSettings();
-        $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
-        $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
 
-        $message = count($this->messageRepository->getByRecipientCount($user));
+        # TODO: Badge count is intentionally disabled.
+        #$notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
+        #$notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
 
-        $countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
+        #$message = count($this->messageRepository->getByRecipientCount($user));
 
-        $notificationData['badge'] = $countTotal;
-        $notificationData['tabCounts'] = $notifications_friendrequest.":" . $message;
+        #$countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
+
+        $notificationData['badge'] = 0;
+        $notificationData['tabCounts'] = "0:0"; #$notifications_friendrequest.":" . $message;
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+
         if ($pushNotifier)
             echo $pushNotifier->send($notificationData, array($pushSettings['device_id']));
     }
