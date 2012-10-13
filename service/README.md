@@ -72,3 +72,13 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     2. Enable `mod_rewrite`
     3. Enable `php extension curl`
     4. Enable `php extension mongo`
+
+10. New deployment steps:
+    
+    1. Get code from git repository
+    2. Set writable permission for <ROOT>/app
+    3. Set writable permission for <ROOT>/web
+    4. Run worker from bin/worker.php
+    5. Run cron task from bin/cron.php
+
+
