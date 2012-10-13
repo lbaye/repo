@@ -104,7 +104,7 @@ UserDefault *userDef;
 
 -(IBAction)discoverApp:(id)sender
 {
-    if ([betaPassWord.text isEqualToString:@"discover 2012"])
+    if ([betaPassWord.text isEqualToString:@"discover2012"])
     {
         [self performSegueWithIdentifier: @"showLogin" sender: self];
         [userDef removeFromDefault:@"betaPassWord"];
