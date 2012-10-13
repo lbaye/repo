@@ -63,7 +63,7 @@
     CGRect addressFrame = CGRectMake(2, (scrollFrame.size.height-addressStringSize.height)/2, 
                                     addressStringSize.width, addressStringSize.height);
     CGRect mapFrame = CGRectMake(footerFrame.size.width-72-25, (footerFrame.size.height-25)/2, 25, 25);
-	CGRect distFrame = CGRectMake(footerFrame.size.width-72, (footerFrame.size.height-addressStringSize.height)/2, 70, addressStringSize.height);
+	CGRect distFrame = CGRectMake(footerFrame.size.width-72, (footerFrame.size.height-15)/2, 70, 15);
 
     CGRect iconFrame = CGRectMake(10, (CellFrame.size.height/2-addressFrame.size.height-10)/2, CellFrame.size.height/2, CellFrame.size.height/2);
 
