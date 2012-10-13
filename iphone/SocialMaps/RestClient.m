@@ -1338,6 +1338,8 @@
             [shareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
             [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
             
+            // New code
+            
             NSLog(@"shareLocation.status: %@  shareLocation.permittedCircles: %@ %@",shareLocation.status,shareLocation.permittedCircles,shareLocation.friendRadius);  
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
             

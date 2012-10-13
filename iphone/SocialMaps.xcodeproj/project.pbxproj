@@ -1323,44 +1323,46 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
-				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
-				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
-				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
-				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
-				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
-				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
-				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
-				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
 				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
-				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
-				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
+				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
 				2018C29D1604672700457BB6 /* CircleListCheckBoxTableCell.h */,
 				2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */,
+				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
+				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
 				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
 				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
 				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
 				20B656C515EF580600A441E9 /* EventListTableCell.h */,
 				20B656C615EF580600A441E9 /* EventListTableCell.m */,
+				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
+				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
+				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
+				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				20B3CB1916269E540099D49E /* GeotagViewController.h */,
 				20B3CB1A16269E540099D49E /* GeotagViewController.m */,
-				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */,
 				20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */,
+				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
-				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
-				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				4FE9606D15BC8FE60007327A /* MapViewController.h */,
 				4FE9606E15BC8FE60007327A /* MapViewController.m */,
+				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
+				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
 				B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */,
 				B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */,
+				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
+				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
+				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
 				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
@@ -1378,21 +1380,19 @@
 				B0C206AF15FB26C900177132 /* ShowOnMapController.xib */,
 				4FAC301715C583540014030C /* UserAnnotationView.h */,
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
-				4F98A2E015BB387D000B3124 /* ViewController.h */,
-				4F98A2E115BB387D000B3124 /* ViewController.m */,
-				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
-				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
+				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
+				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
+				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
 				200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */,
 				200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */,
+				4F98A2E015BB387D000B3124 /* ViewController.h */,
+				4F98A2E115BB387D000B3124 /* ViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
-				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
-				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
-				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -2290,8 +2290,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2306,8 +2306,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2317,8 +2317,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2327,8 +2327,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2337,8 +2337,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2349,8 +2349,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2359,8 +2359,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2371,8 +2371,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

@@ -17,5 +17,9 @@
 @synthesize friendRadius;
 @synthesize strangersDuration;
 @synthesize strangersRadius;
-
+// New
+@synthesize circles;
+@synthesize geoFences;
+@synthesize strangers;
+@synthesize custom;
 @end
