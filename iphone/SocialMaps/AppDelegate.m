@@ -83,7 +83,7 @@
     // Override point for customization after application launch.
     // Let the device know we want to receive push notifications
 	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     if (launchOptions != nil)
 	{
@@ -93,7 +93,7 @@
             PushNotification *newNotif = [PushNotification parsePayload:dictionary];
             NSLog(@"Launched from push notification: count:%d, data:%@", newNotif.badgeCount, dictionary);
             // Temporary - set badge count to zero
-            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
 		}
 	}
     
@@ -225,7 +225,7 @@
     NSLog(@"Received notification: count:%d, data:%@", newNotif.badgeCount, userInfo);
 
     // Temporary - set count to zero
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
     if (gotListing == TRUE) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:currPosition :@"Auth-Token" :authToken];
