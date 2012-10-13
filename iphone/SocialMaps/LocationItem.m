@@ -176,8 +176,8 @@
     lblAddress.text  = itemAddress;
 	
     // Distance
-    if (itemDistance > 99999)
-        lblDist.text = [NSString stringWithFormat:@"%dkm", (int)itemDistance/1000];
+    if (itemDistance > 999)
+        lblDist.text = [NSString stringWithFormat:@"%.1fkm", itemDistance/1000.0];
     else
         lblDist.text = [NSString stringWithFormat:@"%dm", (int)itemDistance];
                     
