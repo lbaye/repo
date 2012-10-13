@@ -1220,6 +1220,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotoPlace:" destination="wC3-So-nVM" eventType="touchUpInside" id="wZn-eF-RxT"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rf3-uZ-E6h">
                                         <rect key="frame" x="125" y="57" width="71" height="71"/>
@@ -1247,6 +1250,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotonDeals:" destination="wC3-So-nVM" eventType="touchUpInside" id="u49-AL-O1j"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ozI-cs-YHS">
                                         <rect key="frame" x="240" y="187" width="71" height="71"/>
@@ -1289,6 +1295,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotoFriends:" destination="wC3-So-nVM" eventType="touchUpInside" id="SoG-jv-Pap"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Dph-Xi-gNn">
                                         <rect key="frame" x="124.5" y="322" width="71" height="71"/>
@@ -1316,6 +1325,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotonNewsFeed:" destination="wC3-So-nVM" eventType="touchUpInside" id="isB-nP-M1X"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="LRi-gd-k65">
                                         <rect key="frame" x="141" y="418" width="36" height="36"/>
@@ -1788,6 +1800,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotoPlace:" destination="fgr-fq-SqM" eventType="touchUpInside" id="58L-3Y-RYO"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hlz-am-YhQ">
                                         <rect key="frame" x="125" y="57" width="71" height="71"/>
@@ -1815,6 +1830,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotonDeals:" destination="fgr-fq-SqM" eventType="touchUpInside" id="4Uc-Zn-qFQ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tOp-Kx-OPh">
                                         <rect key="frame" x="240" y="187" width="71" height="71"/>
@@ -1857,6 +1875,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotoFriends:" destination="fgr-fq-SqM" eventType="touchUpInside" id="NkC-YZ-Q1X"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xVm-8B-Iqt">
                                         <rect key="frame" x="124.5" y="322" width="71" height="71"/>
@@ -1884,6 +1905,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="gotonNewsFeed:" destination="fgr-fq-SqM" eventType="touchUpInside" id="eKj-aL-x3j"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Ern-Kl-YYS">
                                         <rect key="frame" x="141" y="418" width="36" height="36"/>
@@ -5259,12 +5283,16 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="goToNotifications:"/>
                 <relationship kind="action" name="gotoCircles:"/>
                 <relationship kind="action" name="gotoEvents:"/>
+                <relationship kind="action" name="gotoFriends:"/>
                 <relationship kind="action" name="gotoMeetupReq:"/>
                 <relationship kind="action" name="gotoMessages:"/>
                 <relationship kind="action" name="gotoNotification:"/>
+                <relationship kind="action" name="gotoPlace:"/>
                 <relationship kind="action" name="gotoProfile:"/>
                 <relationship kind="action" name="gotoSettings:"/>
                 <relationship kind="action" name="gotoUserBasicProfile:"/>
+                <relationship kind="action" name="gotonDeals:"/>
+                <relationship kind="action" name="gotonNewsFeed:"/>
                 <relationship kind="action" name="removeCircleView:"/>
                 <relationship kind="action" name="showPullUpMenu:"/>
                 <relationship kind="action" name="showPulldownMenu:"/>
@@ -5318,11 +5346,15 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="action" name="gotoCircle:"/>
                 <relationship kind="action" name="gotoDirections:"/>
                 <relationship kind="action" name="gotoEditFilters:"/>
+                <relationship kind="action" name="gotoFriends:"/>
                 <relationship kind="action" name="gotoMapix:"/>
                 <relationship kind="action" name="gotoMeetupReq:"/>
                 <relationship kind="action" name="gotoMyPlaces:"/>
+                <relationship kind="action" name="gotoPlace:"/>
                 <relationship kind="action" name="gotoProfile:"/>
                 <relationship kind="action" name="gotoSettings:"/>
+                <relationship kind="action" name="gotonDeals:"/>
+                <relationship kind="action" name="gotonNewsFeed:"/>
                 <relationship kind="action" name="hidePulldown:"/>
                 <relationship kind="action" name="inviteAllUsers:"/>
                 <relationship kind="action" name="inviteSelectedUsers:"/>

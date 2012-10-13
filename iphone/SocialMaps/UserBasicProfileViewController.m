@@ -133,6 +133,11 @@ BOOL coverImgFlag;
 
 -(IBAction)geotagButton:(id)sender
 {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"createGeotag"];
+    
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 -(IBAction)uploadPhotoButton:(id)sender

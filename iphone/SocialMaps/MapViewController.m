@@ -1574,6 +1574,26 @@ ButtonClickCallbackData callBackData;
     [userFriendslistArray removeAllObjects];
 }
 
+-(IBAction)gotoPlace:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+}
+
+-(IBAction)gotoFriends:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+-(IBAction)gotonNewsFeed:(id)sende
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+-(IBAction)gotonDeals:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
 - (void) resetShareButton:(SHARING_TYPES)newSel {
     switch (selSharingType) {
         case All: 
