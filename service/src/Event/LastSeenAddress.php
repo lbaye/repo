@@ -27,6 +27,7 @@ class LastSeenAddress extends Base
         try {
             $address = $this->_getAddress($user);
             $this->_updateUserAddress($user, $address);
+            echo "Found address - $address for {$user->getName()}\n";
         } catch (\Exception $e) {
             echo 'Exception from google API in update_last_seen_address: '. $e->getMessage() . PHP_EOL;
         }
