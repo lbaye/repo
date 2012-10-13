@@ -30,6 +30,6 @@ googlePlace:
 
 iOSPushNotification:
   pemFile: SM_Prod_Push_Cert_Key.pem
-  endPoint: ssl://gateway.sandbox.push.apple.com:2195
+  endPoint: ssl://gateway.push.apple.com:2195
   passphrase: sm2012
 
