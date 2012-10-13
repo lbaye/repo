@@ -93,7 +93,7 @@
             PushNotification *newNotif = [PushNotification parsePayload:dictionary];
             NSLog(@"Launched from push notification: count:%d, data:%@", newNotif.badgeCount, dictionary);
             // Temporary - set badge count to zero
-            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
+            [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 		}
 	}
     
@@ -225,7 +225,7 @@
     NSLog(@"Received notification: count:%d, data:%@", newNotif.badgeCount, userInfo);
 
     // Temporary - set count to zero
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:newNotif.badgeCount];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:currPosition :@"Auth-Token" :authToken];
