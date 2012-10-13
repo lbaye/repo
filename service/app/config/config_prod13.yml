@@ -26,3 +26,10 @@ facebook:
 
 googlePlace:
   apiKey: AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw
+
+
+iOSPushNotification:
+  pemFile: SM_Prod_Push_Cert_Key.pem
+  endPoint: ssl://gateway.sandbox.push.apple.com:2195
+  passphrase: sm2012
+
