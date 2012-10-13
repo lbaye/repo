@@ -37,7 +37,7 @@
         catImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"category_dining.png"]];
         catImage.frame = catImgFrame;
         catImage.tag   = 2007;
-		
+		catImage.hidden = TRUE; // Temporary - until we get proper icon image
 		[cell.contentView addSubview:catImage];
     }
     

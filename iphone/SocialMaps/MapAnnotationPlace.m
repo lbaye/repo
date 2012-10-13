@@ -36,6 +36,7 @@
     UIImageView *imgCatIcon = [[UIImageView alloc] initWithFrame:catIconFrame];
     
     [imgCatIcon setImage:[LocationItemPlace getIconForCategory:locItemPlace.placeInfo.reference]];
+    imgCatIcon.hidden = TRUE; // Temporary - until we get proper icons
     [infoView addSubview:imgCatIcon];
     [imgCatIcon release];
     
