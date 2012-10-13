@@ -78,7 +78,8 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     1. Get code from git repository
     2. Set writable permission for <ROOT>/app
     3. Set writable permission for <ROOT>/web
-    4. Run worker from bin/worker.php
-    5. Run cron task from bin/cron.php
+    5. Create <ROOT>/web/images/avatar, cover-photo, event-photo directories
+    6. Run worker from bin/worker.php
+    7. Run cron task from bin/cron.php
 
 
