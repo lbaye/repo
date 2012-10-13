@@ -9,7 +9,7 @@ class JSONSerializable implements Serializable
         if (array_key_exists('except', $options))
             $this->applyExcept($options['except'], $hash);
 
-        return json_encode($hash);
+        return @json_encode($hash);
     }
 
     private function applyExcept(array $exceptFields, array &$hash)
