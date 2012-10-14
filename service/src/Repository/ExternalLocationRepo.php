@@ -6,9 +6,9 @@ use Document\ExternalLocation as ExternalLocationDocument;
 
 class ExternalLocationRepo extends Base
 {
-    public function exists($refId)
+    public function exists($authId)
     {
-        $externalLocation = $this->findOneBy(array('refId' => $refId));
+        $externalLocation = $this->findOneBy(array('authId' => $authId));
         return is_null($externalLocation) ? false : true;
     }
 
@@ -35,7 +35,6 @@ class ExternalLocationRepo extends Base
         $result = $query->getQuery()->execute();
 
         if (count($result)) {
-
             $friends = $this->currentUser->getFriends();
             $externalUsers = $this->_toArrayAll($result);
 
@@ -56,16 +55,23 @@ class ExternalLocationRepo extends Base
             $externalLocation = new ExternalLocationDocument();
         }
 
-        $setIfExistFields = array(
-            'id'          => 'refId',
-            'author_uid'  => 'refUserId',
-            'page_id'     => 'refLocationId',
-            'type'        => 'refType',
-            'coords'      => 'coords',
-            'timestamp'   => 'refTimestamp',
-            'tagged_uids' => 'refTaggedUserIds',
-            'source'      => 'source',
-            'profile'     => 'refProfile'
+         $setIfExistFields = array(
+            'userId'             => 'userId',
+            'uid'                => 'authId',
+            'refUserId'          => 'refUserId',
+            'ownerFacebookId'    => 'refFacebookId',
+            'name'               => 'name',
+            'gender'               => 'gender',
+            'email'               => 'email',
+            'location'           => 'location',
+            'picSquare'          => 'picSquare',
+            'refType'            => 'refType',
+            'refLocationId'      => 'refLocationId',
+            'coords'             => 'coords',
+            'refTimestamp'       => 'refTimestamp',
+            'refProfile'         => 'refProfile',
+            'source'             => 'source',
+            'refTaggedUserIds'   => 'refTaggedUserIds'
         );
 
         foreach ($setIfExistFields as $externalField => $field) {
@@ -76,10 +82,10 @@ class ExternalLocationRepo extends Base
         }
 
         $userRepo = $this->dm->getRepository('Document\User');
-        $user = $userRepo->findOneBy(array('facebookId' => $data['author_uid']));
+        $user = $userRepo->findOneBy(array('facebookId' => $data['ownerFacebookId']));
 
         if ($user instanceof \Document\User) {
-            $externalLocation->setUserId($user->getId());
+            $externalLocation->setRefUserId($user->getId());
         }
 
         return $externalLocation;
@@ -93,5 +99,31 @@ class ExternalLocationRepo extends Base
         }
 
         return $users;
+    }
+
+    protected function _toArraySecondDegreeAll($results)
+    {
+        $users = array();
+        foreach ($results as $user) {
+            $users[] = $user->toArraySecondDegree();
+        }
+
+        return $users;
+    }
+
+    public function getExternalUsers($userId, $limit = 200)
+    {
+            $query = $this->createQueryBuilder()
+            ->field('refUserId')->equals($userId)
+            ->limit($limit);
+
+        $result = $query->getQuery()->execute();
+
+        if (count($result)) {
+
+            $facebookFriends = $this->_toArraySecondDegreeAll($result);
+            return $facebookFriends;
+        }
+        return array();
     }
 }

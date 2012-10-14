@@ -52,6 +52,7 @@ class Search extends Base
             $results = array();
             $results['people'] = $this->people($data);
             $results['places'] = $this->places($data);
+            $results['facebookFriends'] = $this->secondDegreeFriends($data);
 
             return $this->_generateResponse($results);
         } else {
@@ -122,5 +123,13 @@ class Search extends Base
         $results = $this->people($data);
 
         return $this->_generateResponse($results);
+    }
+
+    protected function secondDegreeFriends($data)
+    {
+        $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
+        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
+
+        return $this->externalLocationRepository->getExternalUsers($this->user->getId(), $limit = 200);
     }
 }
