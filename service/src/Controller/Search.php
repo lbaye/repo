@@ -65,7 +65,7 @@ class Search extends Base
         $location = array('lat' => (float) $data['lat'], 'lng' => (float) $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        $people = $this->userRepository->search($keywords, $location, self::PEOPLE_THRESHOLD);
+        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD);
         $friends = $this->user->getFriends();
 
         array_walk($people, function(&$person) use ($friends, $data) {

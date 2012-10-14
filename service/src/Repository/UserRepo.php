@@ -833,6 +833,21 @@ class UserRepo extends Base
         return array();
     }
 
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20) {
+        $people_around = $this->search($keyword, $location, $limit);
+        $visible_people = array();
+
+        # TODO: How to fix less than $limit items
+        foreach ($people_around as $target_user_hash) {
+            $target_user = $this->find($target_user_hash['id']);
+            if ($target_user->isVisibleTo($this->currentUser)) {
+                $visible_people[] = $target_user_hash;
+            }
+        }
+
+        return $visible_people;
+    }
+
     public function getFacebookUsers($start = null, $limit = null)
     {
         $query = $this->createQueryBuilder()->field('facebookAuthToken')->exists(true);
