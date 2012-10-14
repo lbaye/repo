@@ -974,11 +974,11 @@ class UserRepo extends Base
         $circles = $this->currentUser->getCircles();
 
         $result = array();
-            foreach ($circles as $circle) {
-                if ($circle->getId() == $id) {
-                    $result = $circle->toArray();
-                }
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id) {
+                $result = $circle->toArray();
             }
+        }
 
         if ($result['type'] == 'system') {
             throw new \InvalidArgumentException('Invalid request', 406);
@@ -987,10 +987,10 @@ class UserRepo extends Base
         $counter = 0;
         foreach ($circles as $circle) {
 
-           if($circle->getId() === $id){
-              unset($circles[$counter]);
-           }
-        $counter++;
+            if ($circle->getId() === $id) {
+                unset($circles[$counter]);
+            }
+            $counter++;
         }
 
         $this->currentUser->setCircles($circles);
@@ -1006,9 +1006,9 @@ class UserRepo extends Base
         $circles = $this->currentUser->getCircles();
 
         foreach ($circles as $circle) {
-           if ($circle->getId() == $id) {
-               if (!empty($data['name'])) {
-                   $circle->setName($data['name']);
+            if ($circle->getId() == $id) {
+                if (!empty($data['name'])) {
+                    $circle->setName($data['name']);
                 }
             }
         }
