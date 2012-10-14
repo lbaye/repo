@@ -981,18 +981,17 @@ class UserRepo extends Base
             }
 
         if ($result['type'] == 'system') {
-
             throw new \InvalidArgumentException('Invalid request', 406);
         }
 
         $counter = 0;
-            foreach ($circles as $circle) {
+        foreach ($circles as $circle) {
 
-               if($circle->getId() === $id){
-                   unset($circles[$counter]);
-               }
-            $counter++;
-            }
+           if($circle->getId() === $id){
+              unset($circles[$counter]);
+           }
+        $counter++;
+        }
 
         $this->currentUser->setCircles($circles);
         $this->dm->persist($this->currentUser);
