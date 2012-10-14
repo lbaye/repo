@@ -12,11 +12,10 @@ class Facebook extends Base
         return ($results) ? $results : array();
     }
 
-    public function getFriendCheckin($userId, $authToken)
+    public function getFriendCheckIns($userId, $authToken)
     {
         $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
-//        $resultsCheckin= $this->fetchFqlResult($fql, 'AAACEdEose0cBAAaupYAIcgZCGOAzZAlexAgYHxC9s0IEHZADzps9sl581NorH22kI8YCmCwZBZC6JdLZA6JZB9PJryMx2Q8q955Sqx9Yj0nowZDZD');
-         $resultsCheckin= $this->fetchFqlResult($fql, $authToken);
+        $resultsCheckin = $this->fetchFqlResult($fql, $authToken);
 
         return ($resultsCheckin) ? $resultsCheckin : array();
     }
@@ -29,9 +28,9 @@ class Facebook extends Base
         return ($results) ? $results : array();
     }
 
-    public function getCheckinByAuth($userId, $authToken)
+    public function getCheckInByAuth($userId, $authToken)
     {
-    $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid = 500059546 AND author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER by timestamp desc';
+        $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid = $userId  AND author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER by timestamp desc';
         $results = $this->fetchFqlResult($fql, $authToken);
         return ($results) ? $results : array();
     }

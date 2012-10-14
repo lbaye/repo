@@ -61,8 +61,8 @@ class ExternalLocationRepo extends Base
             'refUserId'          => 'refUserId',
             'ownerFacebookId'    => 'refFacebookId',
             'name'               => 'name',
-            'gender'               => 'gender',
-            'email'               => 'email',
+            'gender'             => 'gender',
+            'email'              => 'email',
             'location'           => 'location',
             'picSquare'          => 'picSquare',
             'refType'            => 'refType',
@@ -113,13 +113,13 @@ class ExternalLocationRepo extends Base
 
     public function getExternalUsers($userId, $limit = 200)
     {
-            $query = $this->createQueryBuilder()
+        $query = $this->createQueryBuilder()
             ->field('refUserId')->equals($userId)
             ->limit($limit);
 
         $result = $query->getQuery()->execute();
 
-        if (count($result)) {
+        if (!empty($result)) {
 
             $facebookFriends = $this->_toArraySecondDegreeAll($result);
             return $facebookFriends;

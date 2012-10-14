@@ -24,45 +24,42 @@ class FetchFacebookLocation extends Base
         echo "Fetching friend location information for facebook user: ", $workload->facebookId, PHP_EOL;
 
         $facebook = new \Service\Location\Facebook();
-//        $getCheckinByAuth = $facebook->getCheckinByAuth($workload->facebookId, $workload->facebookAuthToken);
-        $locationsCheckin = $facebook->getFriendCheckin($workload->facebookId, $workload->facebookAuthToken);
+        $fbCheckIns = $facebook->getFriendCheckIns($workload->facebookId, $workload->facebookAuthToken);
 
-       if (count($locationsCheckin) > 0) {
+        if (!empty($fbCheckIns) > 0) {
+            foreach ($fbCheckIns['data'] as $fbCheckIn) {
+                $authIdReindex = (int)$fbCheckIn['author_uid'];
+                $checkInReindex[$authIdReindex]['coords'] = array('longitude' => $fbCheckIn['coords']['longitude'], 'latitude' => $checkin['coords']['latitude']);
+                $checkInReindex[$authIdReindex]['timestamp'] = $fbCheckIn['timestamp'];
 
-           foreach ($locationsCheckin['data'] as $checkin) {
-               $authIdReindex = (int) $checkin['author_uid'];
-               $checkinReindex[$authIdReindex]['coords'] = array('longitude' => $checkin['coords']['longitude'], 'latitude' => $checkin['coords']['latitude']);
-               $checkinReindex[$authIdReindex]['timestamp'] = $checkin['timestamp'];
+            }
+        }
+        $locations = $facebook->getFriendInfo($workload->facebookId, $workload->facebookAuthToken);
+        $ownerFacebookId = $workload->facebookId;
 
-           }
-       }
-       $locations = $facebook->getFriendInfo($workload->facebookId, $workload->facebookAuthToken);
-       $ownerFacebookId = $workload->facebookId;
-
-        if (count($locations) > 0) {
-            $i = 0;
+        if (!empty($locations) > 0) {
 
             foreach ($locations['data'] as $location) {
 
-                    if (!$this->externalLocationRepository->exists($location['uid'])) {
-                         $uidReindex = (int) $location['uid'];
-                         $locationFinal['source'] = 'fb-public';
-                         $locationFinal['uid'] = $location['uid'];
-                         $locationFinal['name'] = $location['name'];
-                         $locationFinal['gender'] = $location['gender'];
-                         $locationFinal['location'] = $location['location'];
-                         $locationFinal['email'] = $location['email'];
-                         $locationFinal['picSquare'] = $location['pic_square'];
-                         $locationFinal['ownerFacebookId'] = $ownerFacebookId;
+                if (!$this->externalLocationRepository->exists($location['uid'])) {
+                    $uidReindex = (int)$location['uid'];
+                    $locationFinal['source'] = 'fb-public';
+                    $locationFinal['uid'] = $location['uid'];
+                    $locationFinal['name'] = $location['name'];
+                    $locationFinal['gender'] = $location['gender'];
+                    $locationFinal['location'] = $location['location'];
+                    $locationFinal['email'] = $location['email'];
+                    $locationFinal['picSquare'] = $location['pic_square'];
+                    $locationFinal['ownerFacebookId'] = $ownerFacebookId;
 
-                         if(!empty($checkinReindex[$uidReindex]['coords'])) {
-                            $locationFinal['coords'] = $checkinReindex[$uidReindex]['coords'];
-                            $locationFinal['refTimestamp'] = $checkinReindex[$uidReindex]['timestamp'];
-                         }
-                         $savedLocation = $this->externalLocationRepository->insertFromFacebook($locationFinal);
-                    } else {
-                         $savedLocation = false;
+                    if (!empty($checkInReindex[$uidReindex]['coords'])) {
+                        $locationFinal['coords'] = $checkInReindex[$uidReindex]['coords'];
+                        $locationFinal['refTimestamp'] = $checkInReindex[$uidReindex]['timestamp'];
                     }
+                    $savedLocation = $this->externalLocationRepository->insertFromFacebook($locationFinal);
+                } else {
+                    $savedLocation = false;
+                }
 
                 if ($savedLocation) {
                     echo "Added location with ID: ", $savedLocation->getAuthId(), PHP_EOL;
