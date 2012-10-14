@@ -16,6 +16,13 @@
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
     
+    UIView *imageView = [annoView viewWithTag:11000];
+    
+    imageView.frame = CGRectMake(imageView.frame.origin.x * 1.15, imageView.frame.origin.y * 1.15, imageView.frame.size.width * .85 , imageView.frame.size.height * .85);
+    
+    UIView *buttonView = [annoView viewWithTag:11001];
+    buttonView.frame = CGRectMake(buttonView.frame.origin.x * .85 , buttonView.frame.origin.y * .85, buttonView.frame.size.width, buttonView.frame.size.height);
+    
     return annoView;
 }
 
