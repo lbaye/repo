@@ -1339,6 +1339,9 @@
             [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
             
             // New code
+            shareLocation.strangers = [[LocationPrivacySettings alloc] init];
+            shareLocation.strangers.duration = [[NSString alloc] initWithString:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"duration"]];
+            shareLocation.strangers.radius = [[NSString alloc] initWithString:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"radius"]];
             
             NSLog(@"shareLocation.status: %@  shareLocation.permittedCircles: %@ %@",shareLocation.status,shareLocation.permittedCircles,shareLocation.friendRadius);  
             NSLog(@"Is Kind of NSString: %@",jsonObjects);

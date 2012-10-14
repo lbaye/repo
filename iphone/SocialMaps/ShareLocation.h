@@ -9,21 +9,34 @@
 #import <Foundation/Foundation.h>
 #import "UserCircle.h"
 
-typedef struct _LOC_PRIVACY_SETTINGS {
+@interface LocationPrivacySettings : NSObject {
+//@public
     NSString    *duration;
     NSString    *radius;
-} LocationPrivacySettings;
+}
+@property(nonatomic,retain) NSString    *duration;
+@property(nonatomic,retain) NSString    *radius;
+@end
 
-typedef struct _LOC_CIRCLE_SETTINGS {
+@interface LocationCircleSettings : NSObject {
+//@public
     UserCircle  *circleInfo;
-    LocationPrivacySettings privacy;
-} LocationCircleSettings;
+    LocationPrivacySettings *privacy;
+}
+@property(nonatomic,retain) UserCircle  *circleInfo;
+@property(nonatomic,retain) LocationPrivacySettings *privacy;
+@end
 
-typedef struct _LOC_CUSTOM_SETTINGS {
+@interface LocationCustomSettings : NSObject {
+//@public
     NSMutableArray  *circles;
     NSMutableArray  *friends;
-    LocationPrivacySettings privacy;
-} LocationCustomSettings;
+    LocationPrivacySettings *privacy;
+}
+@property(nonatomic,retain) NSMutableArray  *circles;
+@property(nonatomic,retain) NSMutableArray  *friends;
+@property(nonatomic,retain) LocationPrivacySettings *privacy;
+@end
 
 @interface ShareLocation : NSObject
 {
@@ -37,9 +50,9 @@ typedef struct _LOC_CUSTOM_SETTINGS {
     
     // New design
     NSMutableArray          *circles;  // Array of LocationCircleSettings
-    LocationCustomSettings  custom;
+    LocationCustomSettings  *custom;
     NSMutableArray          *geoFences; // Array of GeoFence
-    LocationPrivacySettings strangers;
+    LocationPrivacySettings *strangers;
 }
 
 @property(nonatomic,retain) NSString *status;
@@ -51,7 +64,7 @@ typedef struct _LOC_CUSTOM_SETTINGS {
 @property(nonatomic,retain) NSString *strangersRadius;
 // New code
 @property(nonatomic,retain) NSMutableArray *circles;
-@property(nonatomic) LocationCustomSettings custom;
+@property(nonatomic,retain) LocationCustomSettings *custom;
 @property(nonatomic,retain) NSMutableArray *geoFences;
-@property(nonatomic) LocationPrivacySettings strangers;
+@property(nonatomic,retain) LocationPrivacySettings *strangers;
 @end

@@ -7,6 +7,21 @@
 //
 
 #import "ShareLocation.h"
+@implementation LocationPrivacySettings
+@synthesize duration;
+@synthesize radius;
+@end
+
+@implementation LocationCircleSettings
+@synthesize circleInfo;
+@synthesize privacy;
+@end
+
+@implementation LocationCustomSettings
+@synthesize circles;
+@synthesize friends;
+@synthesize privacy;
+@end
 
 @implementation ShareLocation
 
