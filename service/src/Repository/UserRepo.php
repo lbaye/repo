@@ -994,15 +994,33 @@ class UserRepo extends Base
             $counter++;
             }
 
-
-
-
         $this->currentUser->setCircles($circles);
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
         return true;
 
+
+    }
+
+    public function renameCustomCircle($id,$data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+            foreach ($circles as $circle) {
+            if ($circle->getId() == $id) {
+
+                if (!empty($data['name'])) {
+                    $circle->setName($data['name']);
+                }
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
 
     }
 }

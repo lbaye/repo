@@ -835,4 +835,36 @@ class User extends Base
         return $this->response;
     }
 
+     /**
+     * RENAME /me/circles/{id}/rename
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameCustomCircle($id)
+    {
+        $this->_ensureLoggedIn();
+        $postData = $this->request->request->all();
+
+        try {
+
+            $this->userRepository->renameCustomCircle($id,$postData);
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
+            $this->response->setStatusCode(Status::OK);
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
+
+        return $this->response;
+    }
+
+
 }
