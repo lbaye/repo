@@ -29,7 +29,7 @@ delete_circle:
   defaults: { _controller: Controller\User::deleteCustomCircle}
   requirements: { _method: DELETE}
 
-remove_friend:
+rename_circle:
   pattern: /me/circles/{id}/rename
   defaults: { _controller: Controller\User::renameCustomCircle}
   requirements: { _method: PUT}

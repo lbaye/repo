@@ -1000,18 +1000,16 @@ class UserRepo extends Base
 
         return true;
 
-
     }
 
     public function renameCustomCircle($id,$data)
     {
         $circles = $this->currentUser->getCircles();
 
-            foreach ($circles as $circle) {
-            if ($circle->getId() == $id) {
-
-                if (!empty($data['name'])) {
-                    $circle->setName($data['name']);
+        foreach ($circles as $circle) {
+           if ($circle->getId() == $id) {
+               if (!empty($data['name'])) {
+                   $circle->setName($data['name']);
                 }
             }
         }
@@ -1021,6 +1019,5 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return true;
-
     }
 }
