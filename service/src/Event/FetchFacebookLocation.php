@@ -29,7 +29,7 @@ class FetchFacebookLocation extends Base
         if (!empty($fbCheckIns) > 0) {
             foreach ($fbCheckIns['data'] as $fbCheckIn) {
                 $authIdReindex = (int)$fbCheckIn['author_uid'];
-                $checkInReindex[$authIdReindex]['coords'] = array('longitude' => $fbCheckIn['coords']['longitude'], 'latitude' => $checkin['coords']['latitude']);
+                $checkInReindex[$authIdReindex]['coords'] = array('longitude' => $fbCheckIn['coords']['longitude'], 'latitude' => $fbCheckIn['coords']['latitude']);
                 $checkInReindex[$authIdReindex]['timestamp'] = $fbCheckIn['timestamp'];
 
             }
