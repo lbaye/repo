@@ -498,7 +498,7 @@ class UserRepo extends Base
 
         foreach ($notifications as &$notification) {
             if ($notification->getId() == $notificationId) {
-//                $notification->setViewed(true);
+                $notification->setViewed(true);
             }
         }
 

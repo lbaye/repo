@@ -58,13 +58,20 @@ class FetchFacebookLocation extends Base
                     }
                     $savedLocation = $this->externalLocationRepository->insertFromFacebook($locationFinal);
                 } else {
+                    $uidReindex = (int)$location['uid'];
+                    if (!empty($checkInReindex[$uidReindex]['coords'])) {
+                        $locationFinal['coords'] = $checkInReindex[$uidReindex]['coords'];
+                        $locationFinal['refTimestamp'] = $checkInReindex[$uidReindex]['timestamp'];
+                        $savedLocation = $this->externalLocationRepository->updateFromFacebook($locationFinal,$location['uid']);
+                    }
+
                     $savedLocation = false;
                 }
 
                 if ($savedLocation) {
                     echo "Added location with ID: ", $savedLocation->getAuthId(), PHP_EOL;
                 } else {
-                    echo "Duplicate location not added.", PHP_EOL;
+                    echo "Duplicate location updating .", PHP_EOL;
                 }
 
             }
