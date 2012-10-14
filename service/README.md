@@ -66,3 +66,9 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     db.getCollection("external_locations").ensureIndex({"coords":"2d"});
     db.getCollection("external_locations").ensureIndex({"refId":1, "source":1},{"unique": true});
     ```
+9. Additional requirements:
+
+    1. Change `AllowOverride` from `none` to `All`
+    2. Enable `mod_rewrite`
+    3. Enable `php extension curl`
+    4. Enable `php extension mongo`
