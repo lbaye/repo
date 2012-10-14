@@ -138,4 +138,9 @@ typedef enum _SHARING_TYPES {
 -(IBAction)gotoBasicProfile:(id)sender;
 -(IBAction)gotoSettings:(id)sender;
 
+-(IBAction)gotoPlace:(id)sender;
+-(IBAction)gotoFriends:(id)sender;
+-(IBAction)gotonNewsFeed:(id)sender;
+-(IBAction)gotonDeals:(id)sender;
+
 @end

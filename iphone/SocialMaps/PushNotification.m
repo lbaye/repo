@@ -44,7 +44,9 @@
 {
     PushNotification *newNotif = [[PushNotification alloc] init];
     newNotif.message = [[payload objectForKey:@"aps"] objectForKey:@"alert"];
-    newNotif.badgeCount = [[[payload objectForKey:@"aps"] objectForKey:@"badge"] intValue];
+    newNotif.badgeCount = 0;
+    if ([[payload objectForKey:@"aps"] objectForKey:@"badge"] != [NSNull null])
+        newNotif.badgeCount = [[[payload objectForKey:@"aps"] objectForKey:@"badge"] intValue];
     NSString *type = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectType"];
     
     // Keep provision for comma separated list

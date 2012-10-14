@@ -389,6 +389,26 @@
     [circleView removeFromSuperview];
 }
 
+-(IBAction)gotoPlace:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+}
+
+-(IBAction)gotoFriends:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+-(IBAction)gotonNewsFeed:(id)sende
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+-(IBAction)gotonDeals:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
 - (void)dealloc {
     [listPullupMenu release];
     [listPulldownMenu release];
@@ -500,7 +520,7 @@
             LocationItem *locItem = (LocationItem*)[copyDisplayListArray objectAtIndex:row];
             if(searching)
                 locItem = (LocationItem*)[copyListOfItems objectAtIndex:row];
-            
+            smAppDelegate.needToCenterMap = FALSE;
             [self performSegueWithIdentifier:@"segueShowDetailAnno" sender:locItem];
             
             break;

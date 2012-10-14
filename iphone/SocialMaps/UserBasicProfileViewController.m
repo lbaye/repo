@@ -133,6 +133,11 @@ BOOL coverImgFlag;
 
 -(IBAction)geotagButton:(id)sender
 {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"createGeotag"];
+    
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 -(IBAction)uploadPhotoButton:(id)sender
@@ -287,12 +292,12 @@ BOOL coverImgFlag;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
 
-    userInfo=[notif object];
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
-    
+//    userInfo=[notif object];
+//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+//    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+//	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self presentModalViewController:controller animated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)hideKeyboard:(id)sender

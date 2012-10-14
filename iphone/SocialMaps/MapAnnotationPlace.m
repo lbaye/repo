@@ -16,6 +16,13 @@
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
     
+    UIView *imageView = [annoView viewWithTag:11000];
+    
+    imageView.frame = CGRectMake(imageView.frame.origin.x * 1.15, imageView.frame.origin.y * 1.15, imageView.frame.size.width * .85 , imageView.frame.size.height * .85);
+    
+    UIView *buttonView = [annoView viewWithTag:11001];
+    buttonView.frame = CGRectMake(buttonView.frame.origin.x * .85 , buttonView.frame.origin.y * .85, buttonView.frame.size.width, buttonView.frame.size.height);
+    
     return annoView;
 }
 
@@ -36,6 +43,7 @@
     UIImageView *imgCatIcon = [[UIImageView alloc] initWithFrame:catIconFrame];
     
     [imgCatIcon setImage:[LocationItemPlace getIconForCategory:locItemPlace.placeInfo.reference]];
+    imgCatIcon.hidden = TRUE; // Temporary - until we get proper icons
     [infoView addSubview:imgCatIcon];
     [imgCatIcon release];
     
@@ -65,7 +73,11 @@
     [lblAddress release];
         
     // 119, 184, 0 - green
-    NSString *distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPlace.itemDistance];
+    NSString *distStr;
+    if (locItemPlace.itemDistance >= 1000)
+        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPlace.itemDistance/1000.0];
+    else
+        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPlace.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1+addrFrame.size.height+1, 

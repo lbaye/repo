@@ -238,11 +238,9 @@
         smAppDelegate.userId = userInfo.id;
         [smAppDelegate getPreferenceSettings:userInfo.authToken];
     
-        // Register device token if new
-        if (smAppDelegate.deviceTokenChanged == TRUE) {
-            RestClient *restClient = [[RestClient alloc] init];
-            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:userInfo.authToken];
-        }
+        // Always Register device token. This takes care of multiple user using same device
+        RestClient *restClient = [[RestClient alloc] init];
+        [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:userInfo.authToken];
         
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
@@ -383,11 +381,9 @@
         [smAppDelegate getPreferenceSettings:regInfo.authToken];
         [smAppDelegate getUserInformation:regInfo.authToken];
         
-        // Register device token if new
-        if (smAppDelegate.deviceTokenChanged == TRUE) {
-            RestClient *restClient = [[RestClient alloc] init];
-            [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
-        }
+        // Always Register device token. This takes care of multiple user using same device
+        RestClient *restClient = [[RestClient alloc] init];
+        [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
         
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];

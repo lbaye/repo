@@ -60,7 +60,11 @@
     [msgView release];
     
     // 119, 184, 0 - green
-    NSString *distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
+    NSString *distStr;
+    if (locItemPeople.itemDistance >= 1000)
+        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPeople.itemDistance/1000.0];
+    else
+        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+lblStringSize.height+1+msgFrame.size.height+1, 

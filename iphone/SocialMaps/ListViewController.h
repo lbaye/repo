@@ -70,4 +70,9 @@
 - (IBAction)gotoCircles:(id)sender;
 -(IBAction)removeCircleView:(id)sender;
 
+-(IBAction)gotoPlace:(id)sender;
+-(IBAction)gotoFriends:(id)sender;
+-(IBAction)gotonNewsFeed:(id)sender;
+-(IBAction)gotonDeals:(id)sender;
+
 @end
