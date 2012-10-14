@@ -26,6 +26,25 @@ class ExternalLocationRepo extends Base
 
     }
 
+    public function updateFromFacebook($data,$locationId)
+    {
+       $externalLocation = $this->find($locationId);
+
+        if (false === $externalLocation) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+        $externalLocation = $this->map($data,$externalLocation);
+
+        try {
+            $this->dm->persist($externalLocation);
+            $this->dm->flush();
+            return $externalLocation;
+        } catch (\MongoCursorException $e) {
+            return false;
+        }
+
+    }
+
     public function getNearBy($location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
@@ -113,13 +132,13 @@ class ExternalLocationRepo extends Base
 
     public function getExternalUsers($userId, $limit = 200)
     {
-        $query = $this->createQueryBuilder()
+            $query = $this->createQueryBuilder()
             ->field('refUserId')->equals($userId)
             ->limit($limit);
 
         $result = $query->getQuery()->execute();
 
-        if (!empty($result)) {
+        if (!em($result)) {
 
             $facebookFriends = $this->_toArraySecondDegreeAll($result);
             return $facebookFriends;
