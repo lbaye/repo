@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>
+#import "IconDownloader.h"
 
 @class AppDelegate;
 @class LocationItemPlace;
 
-@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate, IconDownloaderDelegate> {
     
     IBOutlet UILabel *labelAddress;
     //friends list code

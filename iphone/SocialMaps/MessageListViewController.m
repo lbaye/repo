@@ -90,13 +90,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
      selectedFriendsIndex=[[NSMutableArray alloc] init];
      filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    dicImages_msg = [[NSMutableDictionary alloc] init];
+    //dicImages_msg = [[NSMutableDictionary alloc] init];
     
     //set scroll view content size.
     [self loadDummydata];
     
     //reloading scrollview to start asynchronous download.
-    [self reloadScrolview]; 
+    //[self reloadScrolview]; 
     
     MeetUpRequestListView *meetUpRequestListView = [[MeetUpRequestListView alloc] initWithFrame:CGRectMake(0, 0, messageRepiesView.frame.size.width, messageRepiesView.frame.size.height) andParentControllder:self];
     meetUpRequestListView.tag = TAG_MEETUP_VIEW;
@@ -950,10 +950,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 
                 [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
                 
-                
-                
-                
-                
                 //[self startIconDownload:msg forIndexPath:indexPath];
             }
         }
@@ -977,10 +973,49 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSLog(@"profileImageList = %@", profileImageList);
 }
 
+- (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
+{
+    NSLog(@"appImageDidLoadForScrollView");
+
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
+    if (iconDownloader) {
+        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
+    } else {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.userFriends = userFriends;
+        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
+        [iconDownloader release];
+    }
+    
+    //[dicImages_msg setObject:image forKey:userFriends.imageUrl];
+    
+    int tag = scrollSubViewTag - 420;
+    
+    if (tag == 0) {
+        for (UIView *view in [frndListScrollView subviews]) {
+            if (view.tag == 0) {
+                for (UIImageView *imageView in [view subviews]) {
+                    if ([imageView isKindOfClass:[UIImageView class]]) {
+                        imageView.image = image;
+                        break;
+                    }
+                }
+            }
+        }
+    } else {
+        for (UIImageView *imageView in [[frndListScrollView viewWithTag:tag] subviews]) {
+            if ([imageView isKindOfClass:[UIImageView class]]) {
+                imageView.image = image;
+                break;
+            }
+        }
+    }
+}
 
 // called by our ImageDownloader when an icon is ready to be displayed
 - (void)appImageDidLoad:(NSString *)userId
 {
+    //[dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
     if (iconDownloader != nil)
     {
@@ -1406,35 +1441,52 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     {
         if(i< [filteredList count]) 
         { 
-            UserFriends *userFrnd=[[UserFriends alloc] init];
-            userFrnd=[filteredList objectAtIndex:i];
+            //UserFriends *userFrnd=[[UserFriends alloc] init];
+            UserFriends *userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if (userFrnd.imageUrl == nil) {
-                //imgView.image = [UIImage imageNamed:@"girl.png"];
-            }            
+            
+            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFrnd.userId];
+            
+            if (iconDownloader && iconDownloader.userFriends.userProfileImage.size.height > 5){
+                imgView.image = iconDownloader.userFriends.userProfileImage; 
+            } 
+            /*
             else if([[dicImages_msg valueForKey:userFrnd.imageUrl] isKindOfClass:[UIImage class]]) 
             { 
                 //If image available in dictionary, set it to imageview 
                 imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
             } 
+             */
             else 
             { 
-                if ((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
+                if (!isDragging_msg && !isDecliring_msg) //&&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
                     
                 {
                     //If scroll view moves set a placeholder image and start download image. 
                     //[dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
-                    [dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
-                    [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                    //[dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
+                    if (!iconDownloader) {
+                        iconDownloader = [[IconDownloader alloc] init];
+                    }
+                    //
+                    iconDownloader.userFriends = userFrnd;
+                    iconDownloader.delegate = self;
+                    //imgView.image = [[UIImage alloc] init];
+                    iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
+                    [iconDownloader startDownload];
+                    //  [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                     //imgView.image = [UIImage imageNamed:@"girl.png"];                   
-                    imgView.image = [[UIImage alloc] init];
+                    
+                    
                 }
+                /*
                 else 
                 { 
                     // Image is not available, so set a placeholder image
                     //imgView.image = [UIImage imageNamed:@"girl.png"];                   
                     imgView.image = [[UIImage alloc] init];                   
-                }               
+                } 
+                 */
             }
 
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
@@ -1473,7 +1525,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             tapGesture.numberOfTapsRequired = 1;
             [aView addGestureRecognizer:tapGesture];
             [tapGesture release];
-            
             [frndListScrollView addSubview:aView];
         }
         x+=65;
@@ -1497,7 +1548,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     [self reloadScrolview];
 }
-
+/*
 -(void)DownLoad:(NSNumber *)path
 {
     NSLog(@"in Download");
@@ -1519,7 +1570,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     //[pl release];
 }
-
+*/
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];
@@ -1628,9 +1679,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [sender setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
         NSLog(@"added");
     }
-
+/*
     NSMutableArray *testFriends =  ((UserCircle*)[circleListGlobalArray objectAtIndex:clickedButtonPath.row]).friends;
     NSLog(@"friends %@", testFriends);
+ */
 }
 
 @end
