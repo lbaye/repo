@@ -287,6 +287,16 @@ ButtonClickCallbackData callBackData;
                 [copySearchAnnotationList addObject:sTemp];
         }
         
+/*        //adding event list on searchong
+        for (LocationItem *sTemp in smAppDelegate.eventList) {
+            LocationItem *info = (LocationItem*)sTemp;
+            NSRange titleResultsRange = [info.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            if (titleResultsRange.length > 0)
+                [copySearchAnnotationList addObject:sTemp];
+        }
+        //ending add event list on searching
+*/        
         for (int i=0; i < copySearchAnnotationList.count; i++) {
             LocationItem *anno = (LocationItem*) [copySearchAnnotationList objectAtIndex:i];
             [_mapView addAnnotation:anno];
@@ -808,8 +818,8 @@ ButtonClickCallbackData callBackData;
     }
     [_mapView removeAnnotations:_mapView.annotations];
     for (int i=0; i < smAppDelegate.displayList.count; i++) {
-        LocationItem *anno = [(LocationItem*) [smAppDelegate.displayList objectAtIndex:i] autorelease];
-        NSLog(@"[smAppDelegate.displayList count] %d  %@",[smAppDelegate.displayList count],anno);
+        LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
+//        NSLog(@"[smAppDelegate.displayList count] %d  %@",[smAppDelegate.displayList count],anno);
         if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
         {
             [_mapView addAnnotation:anno];
@@ -1599,14 +1609,14 @@ ButtonClickCallbackData callBackData;
 }
 
 - (IBAction)dealsClicked:(id)sender {
-    if (smAppDelegate.showDeals == true) {
-        smAppDelegate.showDeals = false;
+    if (smAppDelegate.showEvents == true) {
+        smAppDelegate.showEvents = false;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     } else {
-        smAppDelegate.showDeals = true;
+        smAppDelegate.showEvents = true;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
-    [self getSortedDisplayList];
+//    [self getSortedDisplayList];
     [self loadAnnotations:YES];
     [self loadAnnotationForEvents];
     [self.view setNeedsDisplay];
@@ -1821,8 +1831,8 @@ ButtonClickCallbackData callBackData;
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
     if (smAppDelegate.showPlaces == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.placeList];
-    if (smAppDelegate.showDeals == TRUE) 
-        [tempList addObjectsFromArray:smAppDelegate.dealList];
+    if (smAppDelegate.showEvents == TRUE) 
+        [tempList addObjectsFromArray:smAppDelegate.eventList];
         // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [smAppDelegate.displayList addObjectsFromArray:sortedArray];
@@ -1952,7 +1962,10 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-                        aPerson.coordinate = loc;
+                        if (CLLocationCoordinate2DIsValid(aPerson.coordinate))
+                        {
+                            aPerson.coordinate = loc;
+                        }
 
                         //by Rishi
                         //aPerson.userInfo.friendshipStatus = item.friendshipStatus;
@@ -2147,22 +2160,22 @@ ButtonClickCallbackData callBackData;
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
         }
-    }
-    
-    //adding annotations  
-    if ([smAppDelegate.eventList count]>0) 
-    {
-        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        
+        //adding annotations  
+        if ([smAppDelegate.eventList count]>0) 
         {
-            if([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[LocationItem class]])
+            for (int i=0; i<[smAppDelegate.eventList count]; i++)
             {
-                NSLog(@"event annotation added ");
-                LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
-//                LocationItem *ietm=(LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
-//                [smAppDelegate.displayList addObject:anno];
-                if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                if([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[LocationItem class]])
                 {
-                    [_mapView addAnnotation:anno];
+                    NSLog(@"event annotation added ");
+                    LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
+                    if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                    {
+//                    [_mapView addAnnotation:anno];
+                        [smAppDelegate.displayList addObject:anno];
+                        
+                    }
                 }
             }
         }

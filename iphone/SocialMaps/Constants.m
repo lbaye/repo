@@ -58,6 +58,7 @@ NSString * const NOTIF_GET_ALL_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.getal
 NSString * const NOTIF_SET_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setblockedusersdone";
 NSString * const NOTIF_SET_UNBLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setunblockedusersdone";
 NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE= @"com.genweb2.socialmaps.getalleventsformapdone";
+NSString * const NOTIF_GET_OTHER_USER_PROFILE_DONE= @"com.genweb2.socialmaps.getotheruserprofiledone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
