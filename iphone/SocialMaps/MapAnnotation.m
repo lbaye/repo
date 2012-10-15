@@ -59,9 +59,32 @@
     [[annoView viewWithTag:11001] removeFromSuperview];
     [[annoView viewWithTag:11002] removeFromSuperview];
     
-    CGRect imgFrame = CGRectMake(5, 5, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
-    UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    CGRect imgFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
+    //UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    
+    UIImageView *locImage = [[UIImageView alloc] initWithFrame:imgFrame];
+    locImage.image = [UIImage imageNamed:@"user_thumb_only.png"];
     locImage.tag = 11000;
+    
+    UIImageView *locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
+    [locImage addSubview:locImageSquare];
+    locImageSquare.image = locItem.itemIcon;
+    [locImageSquare.layer setCornerRadius:3.0f];
+    [locImageSquare.layer setMasksToBounds:YES];
+    locImageSquare.tag = 110001;
+    
+    //[locImageSquare.layer setBorderWidth:1.0f];
+    //[locImageSquare.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    
+    [locImageSquare release];
+    
+    
+    
+    
+    
+    
+    
+    
     CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
     annoView.frame = annoFrame;
     annoView.backgroundColor = [UIColor clearColor];
