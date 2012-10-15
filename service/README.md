@@ -66,3 +66,20 @@ This is the service layer of SocialMaps.com. Please follow the below steps to in
     db.getCollection("external_locations").ensureIndex({"coords":"2d"});
     db.getCollection("external_locations").ensureIndex({"refId":1, "source":1},{"unique": true});
     ```
+9. Additional requirements:
+
+    1. Change `AllowOverride` from `none` to `All`
+    2. Enable `mod_rewrite`
+    3. Enable `php extension curl`
+    4. Enable `php extension mongo`
+
+10. New deployment steps:
+    
+    1. Get code from git repository
+    2. Set writable permission for <ROOT>/app
+    3. Set writable permission for <ROOT>/web
+    5. Create <ROOT>/web/images/avatar, cover-photo, event-photo directories
+    6. Run worker from bin/worker.php
+    7. Run cron task from bin/cron.php
+
+

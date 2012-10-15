@@ -16,19 +16,29 @@ class LastSeenAddress extends Base
         $this->function = 'update_last_seen_address';
     }
 
+    public function __construct($conf, $services) {
+        parent::__construct($conf, $services);
+        $this->userRepository = $this->services['dm']->getRepository('Document\User');
+    }
+
     public function run(\GearmanJob $job)
     {
+        $this->debug("Executing Event::LastSeenAddress with job - {$job->unique()}");
+        
         $workload = json_decode($job->workload());
 
-        $this->userRepository = $this->services['dm']->getRepository('Document\User');
         $user = $this->userRepository->find($workload->user_id);
+        $this->userRepository->refresh($user);
 
-        echo 'Running update_last_seen_address for '.$user->getId().' ('. $user->getName() .') '. PHP_EOL;
         try {
-            $address = $this->_getAddress($user);
+            $current_location = $user->getCurrentLocation();
+            $this->debug("Requesting for reverse geo location at position ({$current_location['lat']}, {$current_location['lng']}) for {$user->getFirstName()} ({$user->getId()})");
+
+            $address = $this->_getAddress($current_location);
             $this->_updateUserAddress($user, $address);
         } catch (\Exception $e) {
-            echo 'Exception from google API in update_last_seen_address: '. $e->getMessage() . PHP_EOL;
+            $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
+            $this->error($e);
         }
 
         $this->runTasks();
@@ -40,11 +50,15 @@ class LastSeenAddress extends Base
 
         $this->services['dm']->persist($user);
         $this->services['dm']->flush();
+        $this->debug("Updating address - $address to {$user->getFirstName()}");
     }
 
-    public function _getAddress(\Document\User $user)
+    public function _getAddress($current_location)
     {
         $reverseGeo = new \Service\Geolocation\Reverse($this->serviceConf['googlePlace']['apiKey']);
-        return $reverseGeo->getAddress($user->getCurrentLocation());
+        $address = $reverseGeo->getAddress($current_location);
+        $this->debug("Found reversed geo location - $address ({$current_location['lat']}, {$current_location['lng']})");
+
+        return $address;
     }
 }

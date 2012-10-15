@@ -47,8 +47,8 @@
     </div>
 
     <div class="container">
-	
-   <form class="form-horizontal" action="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/auth/reset_pass" method="POST">
+
+   <form class="form-horizontal" action="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v13/auth/reset_pass" method="POST">
   <fieldset>
     <legend>Change Password</legend>
     <div class="control-group">

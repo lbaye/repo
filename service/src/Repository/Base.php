@@ -121,5 +121,9 @@ class Base extends DocumentRepository {
         return $users;
     }
 
+    public function refresh($document) {
+        $this->dm->refresh($document);
+    }
+
 
 }

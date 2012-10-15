@@ -95,7 +95,7 @@ class ProximityAlert extends Base
     {
         $notificationSettings = $user->getNotificationSettings();
 
-        return self::DEFAULT_RADIUS >= $distance &&
+        return $distance <= self::DEFAULT_RADIUS &&
                $friend->getVisible() &&
                $notificationSettings['proximity_alerts']['sm'];
     }

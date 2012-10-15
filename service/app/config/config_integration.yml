@@ -1,0 +1,7 @@
+web:
+  root: http://203.76.126.69/integration_social_maps/web
+
+mongodb:
+  host: 'localhost'
+  port: 27017
+  database: 'integration_socialmaps'
