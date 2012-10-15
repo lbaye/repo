@@ -861,6 +861,14 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.gotListing == TRUE)
         [self loadAnnotations:animated];
     
+    if (smAppDelegate.showEvents == TRUE)
+    {
+        [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+    } 
+    else if (smAppDelegate.showEvents == FALSE)
+    {
+        [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
+    }
     [self loadAnnotationForEvents];
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
@@ -1617,8 +1625,8 @@ ButtonClickCallbackData callBackData;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
 //    [self getSortedDisplayList];
-    [self loadAnnotations:YES];
     [self loadAnnotationForEvents];
+    [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
 }
 
@@ -2156,6 +2164,7 @@ ButtonClickCallbackData callBackData;
                 item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
                 item.itemDistance=[aEvent.eventDistance floatValue];
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
+                item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
                 item.currDisplayState=0;
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
@@ -2176,6 +2185,23 @@ ButtonClickCallbackData callBackData;
                         [smAppDelegate.displayList addObject:anno];
                         
                     }
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        {
+            if([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"event annotation added ");
+                LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
+                if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                {
+                    //                    [_mapView addAnnotation:anno];
+                    [smAppDelegate.displayList removeObject:anno];
+                    
                 }
             }
         }

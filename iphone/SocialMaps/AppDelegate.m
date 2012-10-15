@@ -153,7 +153,7 @@
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
-    showEvents = TRUE;
+    showEvents = FALSE;
     
     msgRead = FALSE;
     notifRead = FALSE;
