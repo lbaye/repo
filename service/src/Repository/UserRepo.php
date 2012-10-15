@@ -168,6 +168,15 @@ class UserRepo extends Base
         return false;
     }
 
+    public function checkFbUser($data)
+    {
+        if (isset($data['facebookId'])) {
+            $existFacebookId = $this->findOneBy(array('facebookId' => $data['facebookId']));
+            return is_null($existFacebookId) ? false : true;
+        }
+
+    }
+
     public function update($data, $id)
     {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
@@ -702,6 +711,24 @@ class UserRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
+        $user->setFacebookAuthToken($facebookAuthToken);
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
+    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken)
+    {
+        $user = $this->find($id);
+
+        if (is_null($user)) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $user->setFacebookId($facebookAuthId);
         $user->setFacebookAuthToken($facebookAuthToken);
         $user->setUpdateDate(new \DateTime());
 

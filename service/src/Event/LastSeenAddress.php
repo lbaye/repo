@@ -28,20 +28,22 @@ class LastSeenAddress extends Base
         $workload = json_decode($job->workload());
 
         $user = $this->userRepository->find($workload->user_id);
-        $this->userRepository->refresh($user);
+        if ($user) {
+            $this->userRepository->refresh($user);
 
-        try {
-            $current_location = $user->getCurrentLocation();
-            $this->debug("Requesting for reverse geo location at position ({$current_location['lat']}, {$current_location['lng']}) for {$user->getFirstName()} ({$user->getId()})");
+            try {
+                $current_location = $user->getCurrentLocation();
+                $this->debug("Requesting for reverse geo location at position ({$current_location['lat']}, {$current_location['lng']}) for {$user->getFirstName()} ({$user->getId()})");
 
-            $address = $this->_getAddress($current_location);
-            $this->_updateUserAddress($user, $address);
-        } catch (\Exception $e) {
-            $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
-            $this->error($e);
+                $address = $this->_getAddress($current_location);
+                $this->_updateUserAddress($user, $address);
+            } catch (\Exception $e) {
+                $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
+                $this->error($e);
+            }
+
+            $this->runTasks();
         }
-
-        $this->runTasks();
     }
 
     public function _updateUserAddress(\Document\User $user, $address)

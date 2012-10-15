@@ -311,6 +311,8 @@ class User {
         $detailFields = array(
             'id',
             'email',
+            'facebookId',
+            'facebookAuthToken',
             'firstName',
             'lastName',
             'avatar',
@@ -361,6 +363,8 @@ class User {
         $data = array(
             'id' => $this->getId(),
             'email' => $this->getEmail(),
+            'facebookId' => $this->getFacebookId(),
+            'facebookAuthToken' => $this->getFacebookAuthToken(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
             'avatar' => $this->getAvatar(),
