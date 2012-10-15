@@ -37,7 +37,7 @@ UserDefault *userDef;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     progressView.progress = 0.0;
-    [self performSelectorOnMainThread:@selector(makeMyProgressBarMoving) withObject:nil waitUntilDone:NO];
+    //[self performSelectorOnMainThread:@selector(makeMyProgressBarMoving) withObject:nil waitUntilDone:NO];
     userDef=[[UserDefault alloc] init];
 }
 
@@ -58,6 +58,7 @@ UserDefault *userDef;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self makeMyProgressBarMoving];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

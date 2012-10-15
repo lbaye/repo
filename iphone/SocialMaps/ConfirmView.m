@@ -79,9 +79,11 @@
 
 - (void) noButtonClicked:(id)sender {
     NSLog(@"ConfirmView:noButtonClicked");
+    [parent noButtonClicked:sender];
 }
 
 - (void) yesButtonClicked:(id)sender {
     NSLog(@"ConfirmView:yesButtonClicked");
+    [parent yesButtonClicked:sender];
 }
 @end
