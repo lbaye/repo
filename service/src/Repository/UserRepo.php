@@ -711,6 +711,24 @@ class UserRepo extends Base
         return $user;
     }
 
+    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken)
+    {
+        $user = $this->find($id);
+
+        if (is_null($user)) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $user->setFacebookId($facebookAuthId);
+        $user->setFacebookAuthToken($facebookAuthToken);
+        $user->setUpdateDate(new \DateTime());
+
+        $this->dm->persist($user);
+        $this->dm->flush();
+
+        return $user;
+    }
+
     public function saveAvatarImage($id, $avatar)
     {
         $user = $this->find($id);

@@ -214,6 +214,51 @@ class Auth extends Base
     }
 
     /**
+     * POST /auth/fb_connect
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fbConnect()
+    {
+        $this->_ensureLoggedIn();
+        $data = $this->request->request->all();
+
+        if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
+            $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+            return $this->response;
+        }
+
+        if ($this->userRepository->exists($data['facebookId'])) {
+            $this->response->setContent(json_encode(array('message' => "Your 'facebookId' is already exist.")));
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+            return $this->response;
+        }
+
+        try {
+
+            $this->userRepository->insertFacebookAuthInfo($this->user->getId(), $data['facebookId'], $data['facebookAuthToken']);
+
+            $this->response->setContent(json_encode(array('message' => 'Facebook Connected Successfully.')));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception\ResourceAlreadyExistsException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }
+
+        return $this->response;
+
+    }
+
+    /**
      * GET /auth/forgot_pass/:email
      *
      * @param $email
