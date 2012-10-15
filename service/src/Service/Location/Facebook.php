@@ -12,6 +12,30 @@ class Facebook extends Base
         return ($results) ? $results : array();
     }
 
+    public function getFriendCheckIns($userId, $authToken)
+    {
+        $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
+        $resultsCheckin = $this->fetchFqlResult($fql, $authToken);
+
+        return ($resultsCheckin) ? $resultsCheckin : array();
+    }
+
+    public function getFriendInfo($userId, $authToken)
+    {
+        $fql = 'SELECT uid,name,pic_square,gender,location,email FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
+        $results = $this->fetchFqlResult($fql, $authToken);
+
+        return ($results) ? $results : array();
+    }
+
+    public function getCheckInByAuth($userId, $authToken)
+    {
+        $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid = $userId  AND author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER by timestamp desc';
+        $results = $this->fetchFqlResult($fql, $authToken);
+        return ($results) ? $results : array();
+    }
+
+
     public function getPublicProfile($facebookId)
     {
         echo 'Fetching profile information for facebook user: ', $facebookId, PHP_EOL;

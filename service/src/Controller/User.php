@@ -671,28 +671,20 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         try {
-            $circles = $this->user->getCircles();
 
-            $result = array();
-            foreach ($circles as $circle) {
-                if ($circle->getId() == $id) {
-                    $result = $circle->toArray();
-                }
-            }
+            $this->userRepository->deleteCustomCircle($id);
 
-            if ($result['type'] == 'system') {
-                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-                return $this->response;
-            }
-            $this->userRepository->delete($id);
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
 
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(Status::NOT_FOUND);
         }
-
 
         return $this->response;
     }
@@ -842,5 +834,37 @@ class User extends Base
 
         return $this->response;
     }
+
+     /**
+     * RENAME /me/circles/{id}/rename
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameCustomCircle($id)
+    {
+        $this->_ensureLoggedIn();
+        $postData = $this->request->request->all();
+
+        try {
+
+            $this->userRepository->renameCustomCircle($id,$postData);
+
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
+            $this->response->setStatusCode(Status::OK);
+        } catch (\InvalidArgumentException $e) {
+
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
+
+        }catch (\Exception $e) {
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+        }
+
+        return $this->response;
+    }
+
 
 }

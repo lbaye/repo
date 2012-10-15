@@ -19,16 +19,28 @@ class ExternalLocation
     protected $userId = null;
 
     /** @ODM\String */
-    protected $refId;
+    protected $authId;
 
     /** @ODM\String */
     protected $refUserId;
 
     /** @ODM\String */
-    protected $refLocationId;
+    protected $refFacebookId;
 
     /** @ODM\String */
-    protected $refType;
+    protected $name;
+
+    /** @ODM\String */
+    protected $gender;
+
+    /** @ODM\String */
+    protected $email;
+
+    /** @ODM\String */
+    protected $location;
+
+    /** @ODM\String */
+    protected $picSquare;
 
     /** @ODM\Hash */
     protected $coords = array(
@@ -48,13 +60,25 @@ class ExternalLocation
     /** @ODM\String */
     protected $source;
 
+    /** @ODM\String */
+    protected $refLocationId;
+
+    /** @ODM\String */
+    protected $refType;
+
     public function toArray()
     {
         $data = array(
             'id' => $this->getId(),
             'userId' => $this->getUserId(),
-            'refId' => $this->getRefId(),
+            'authId' => $this->getAuthId(),
             'refUserId' => $this->getRefUserId(),
+            'refFacebookId' => $this->getRefFacebookId(),
+            'name' => $this->getName(),
+            'gender' => $this->getGender(),
+            'email' => $this->getEmail(),
+            'location' => $this->getLocation(),
+            'picSquare' => $this->getPicSquare(),
             'refLocationId' => $this->getRefLocationId(),
             'refType' => $this->getRefType(),
             'coords' => $this->getCoords(),
@@ -120,14 +144,34 @@ class ExternalLocation
         return $this->id;
     }
 
-    public function setRefId($refId)
+    public function setAuthId($authId)
     {
-        $this->refId = $refId;
+        $this->authId = $authId;
     }
 
-    public function getRefId()
+    public function getAuthId()
     {
-        return $this->refId;
+        return $this->authId;
+    }
+
+    public function setRefUserId($refUserId)
+    {
+       $this->refUserId = $refUserId;
+    }
+
+    public function getRefUserId()
+    {
+        return $this->refUserId;
+    }
+
+    public function setRefFacebookId($refFacebookId)
+    {
+       $this->refFacebookId = $refFacebookId;
+    }
+
+    public function getRefFacebookId()
+    {
+        return $this->refFacebookId;
     }
 
     public function setRefLocationId($refLocationId)
@@ -170,16 +214,6 @@ class ExternalLocation
         return $this->refType;
     }
 
-    public function setRefUserId($refUserId)
-    {
-        $this->refUserId = $refUserId;
-    }
-
-    public function getRefUserId()
-    {
-        return $this->refUserId;
-    }
-
     public function setSource($source)
     {
         $this->source = $source;
@@ -209,5 +243,90 @@ class ExternalLocation
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    public function setName($name)
+    {
+       return $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setGender($gender)
+    {
+       return $this->gender = $gender;
+    }
+
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    public function setEmail($email)
+    {
+       return $this->email = $email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setLocation($location)
+    {
+       return $this->location = $location;
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    public function setPicSquare($picSquare)
+    {
+       return $this->picSquare = $picSquare;
+    }
+
+    public function getPicSquare()
+    {
+        return $this->picSquare;
+    }
+
+
+    public function toArraySecondDegree()
+    {
+        $data = array(
+            'id' => $this->getId(),
+            'userId' => $this->getUserId(),
+            'email' => '',
+            'facebookAuthId' => $this->getAuthId(),
+            'refFacebookId' => $this->getRefFacebookId(),
+            'refUserId' => $this->getRefUserId(),
+            'name' => $this->getName(),
+            'avatar' => $this->getPicSquare(),
+            'coords' => $this->getCoords(),
+            'distance' => 0,
+            'checkinTime' => $this->getRefTimestamp(),
+            'source' => $this->getSource()
+        );
+
+        $profile = $this->getRefProfile();
+
+        if (isset($profile['first_name'])) {
+            $data['firstName'] = $profile['first_name'];
+        }
+
+        if (isset($profile['last_name'])) {
+            $data['lastName'] = $profile['last_name'];
+        }
+
+        if (isset($profile['gender'])) {
+            $data['gender'] = $profile['gender'];
+        }
+
+        return $data;
     }
 }

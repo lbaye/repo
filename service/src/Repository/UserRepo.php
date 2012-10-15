@@ -498,7 +498,7 @@ class UserRepo extends Base
 
         foreach ($notifications as &$notification) {
             if ($notification->getId() == $notificationId) {
-//                $notification->setViewed(true);
+                $notification->setViewed(true);
             }
         }
 
@@ -963,6 +963,57 @@ class UserRepo extends Base
         $user->updateBlockedUser(array_diff($user->getBlockedUsers(), $users));
 
 
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
+
+    public function deleteCustomCircle($id)
+    {
+        $circles = $this->currentUser->getCircles();
+
+        $result = array();
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id) {
+                $result = $circle->toArray();
+            }
+        }
+
+        if ($result['type'] == 'system') {
+            throw new \InvalidArgumentException('Invalid request', 406);
+        }
+
+        $counter = 0;
+        foreach ($circles as $circle) {
+
+            if ($circle->getId() === $id) {
+                unset($circles[$counter]);
+            }
+            $counter++;
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+
+    }
+
+    public function renameCustomCircle($id,$data)
+    {
+        $circles = $this->currentUser->getCircles();
+
+        foreach ($circles as $circle) {
+            if ($circle->getId() == $id) {
+                if (!empty($data['name'])) {
+                    $circle->setName($data['name']);
+                }
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
