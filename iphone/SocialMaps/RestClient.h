@@ -83,4 +83,7 @@
 -(void)getBlockUserList:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)blockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
 -(void)unBlockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
+-(void)getAllEventsForMap:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getOtherUserProfile:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+
 @end

@@ -14,6 +14,7 @@
 #import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
+#import "MapAnnotationEvent.h"
 #import "PullableView.h"
 
 #define METERS_PER_MILE 1609.344
@@ -60,6 +61,7 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *circleView;
     BOOL isFirstTimeDownloading;
     NSTimer *timerGotListing;
+    MapAnnotationEvent *mapAnnoEvent;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -71,6 +73,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPlace;
+@property (nonatomic, retain) MapAnnotationEvent *mapAnnoEvent;
 @property (nonatomic, retain) NSMutableArray *filteredList;
 @property (nonatomic, retain) MapAnnotation *selectedAnno;
 
@@ -142,5 +145,6 @@ typedef enum _SHARING_TYPES {
 -(IBAction)gotoFriends:(id)sender;
 -(IBAction)gotonNewsFeed:(id)sender;
 -(IBAction)gotonDeals:(id)sender;
+-(void)loadAnnotationForEvents;
 
 @end

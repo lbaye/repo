@@ -11,6 +11,7 @@
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
 #import "AppDelegate.h"
+#import "MapAnnotationEvent.h"
 
 @implementation MapAnnotation
 @synthesize currState;
@@ -24,6 +25,8 @@
     if ([locItem isKindOfClass:[LocationItemPeople class]]) 
         reuseIdent = @"locAnnoPeople";
     else if ([locItem isKindOfClass:[LocationItemPlace class]]) 
+        reuseIdent = @"locAnnoPlace";
+    else if([locItem isKindOfClass:[LocationItem class]]) 
         reuseIdent = @"locAnnoPlace";
     else
         reuseIdent = @"loggedInUser";
@@ -139,7 +142,10 @@
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         // TODO: for appstore submission do not show detailed annotation
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
-    }else {
+    } else if ([locItem isKindOfClass:[LocationItem class]]) {
+            // TODO: for appstore submission do not show detailed annotation
+            [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+        }else{
         //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     }
@@ -207,6 +213,7 @@
     switch (locItem.currDisplayState) {
         case MapAnnotationStateNormal:
             locItem.currDisplayState = MapAnnotationStateSummary;
+            NSLog(@"goto summary state");
             break;
         case MapAnnotationStateSummary:
             // Don't show details for non-SM users
@@ -219,7 +226,13 @@
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
                 // TODO: for appstore submission do not show detailed annotation
                 locItem.currDisplayState = MapAnnotationStateNormal;
-            } else {
+            }
+            else if ([locItem isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"event annotation");
+                locItem.currDisplayState = MapAnnotationStateNormal;
+            }
+            else {
                 locItem.currDisplayState = MapAnnotationStateNormal;
             }
             break;    
@@ -230,11 +243,12 @@
             break;
     }
     selAnno.selected=TRUE;
-
+    
+    NSLog(@"self.delegate %@",self.delegate);
     [selAnno setNeedsDisplay];
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:)]) {
         [self.delegate mapAnnotationChanged:[selAnno annotation]];
-    }
+    }    
 }
 
 - (void) changeStateToDetails:(id) anno {
@@ -252,7 +266,10 @@
             locItem.currDisplayState = MapAnnotationStateSummary;
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         locItem.currDisplayState = MapAnnotationStateSummary;
-    } 
+    }
+    else if ([locItem isKindOfClass:[LocationItem class]]) {
+        locItem.currDisplayState = MapAnnotationStateSummary;
+    }
 }
 
 - (void) changeStateToSummary:(id) anno 

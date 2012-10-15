@@ -1,86 +1,84 @@
 //
-//  MapAnnotationPlace.m
+//  MapAnnotationEvent.m
 //  SocialMaps
 //
-//  Created by Arif Shakoor on 8/24/12.
+//  Created by Abdullah Md. Zubair on 10/14/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
-#import "MapAnnotationPlace.h"
-#import "LocationItemPlace.h"
+#import "MapAnnotationEvent.h"
+//#import "LocationItemPlace.h"
+#import "Globals.h"
+#import "Event.h"
+#import "LocationItem.h"
+#import "ViewEventDetailViewController.h"
 
 #define BUTTON_WIDTH 57
 #define BUTTON_HEIGHT 27
-@implementation MapAnnotationPlace
+@implementation MapAnnotationEvent
+
+LocationItem *locationItem;
 
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
-    
-    UIView *imageView = [annoView viewWithTag:11000];
-    
-    imageView.frame = CGRectMake(imageView.frame.origin.x * 1.15, imageView.frame.origin.y * 1.15, imageView.frame.size.width * .85 , imageView.frame.size.height * .85);
-    
-    UIView *buttonView = [annoView viewWithTag:11001];
-    buttonView.frame = CGRectMake(buttonView.frame.origin.x * .85 , buttonView.frame.origin.y * .85, buttonView.frame.size.width, buttonView.frame.size.height);
-    
-    UIView *imageView2 = [annoView viewWithTag:110001];
-    imageView2.frame = CGRectMake(imageView2.frame.origin.x * 1.15, imageView2.frame.origin.y * 1.15, imageView2.frame.size.width * .85 , imageView2.frame.size.height * .85);
     
     return annoView;
 }
 
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem {
+    NSLog(@"loading summary detail.");
     annoView = [super getViewForStateSummary:locItem];
-    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
+//    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     UIView *infoView = [annoView viewWithTag:11002];
     
     CGRect sumFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
-                                 annoView.frame.size.width, annoView.frame.size.height);
+                                 annoView.frame.size.width, annoView.frame.size.height+25);
     annoView.frame = sumFrame;
     CGRect infoFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
-                                 annoView.frame.size.width-12, annoView.frame.size.height);
+                                  annoView.frame.size.width-12, annoView.frame.size.height);
     infoView.frame = infoFrame;
     
     // Category icon
     CGRect catIconFrame = CGRectMake(infoView.frame.size.width-33-2, 2, 33, 25);
     UIImageView *imgCatIcon = [[UIImageView alloc] initWithFrame:catIconFrame];
     
-    [imgCatIcon setImage:[LocationItemPlace getIconForCategory:locItemPlace.placeInfo.reference]];
+//    [imgCatIcon setImage:[LocationItemPlace getIconForCategory:locItemPlace.placeInfo.reference]];
+    [imgCatIcon setImage:locItem.itemBg];
     imgCatIcon.hidden = TRUE; // Temporary - until we get proper icons
     [infoView addSubview:imgCatIcon];
     [imgCatIcon release];
     
-
+    
     // Name
-    CGSize lblStringSize = [locItemPlace.itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+    CGSize lblStringSize = [locItem.itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
     CGRect lblNameFrame = CGRectMake(ANNO_IMG_WIDTH+2, (2+catIconFrame.size.height-lblStringSize.height)/2, 
                                      infoView.frame.size.width-4-ANNO_IMG_WIDTH, lblStringSize.height);
     UILabel *lblName = [[UILabel alloc] initWithFrame:lblNameFrame];
-        
-    lblName.text = [NSString stringWithFormat:@"%@", locItemPlace.itemName];
+    
+    lblName.text = [NSString stringWithFormat:@"%@", locItem.itemName];
     lblName.backgroundColor = [UIColor clearColor];
     lblName.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     [infoView addSubview:lblName];
     [lblName release];
     
     // Address
-    lblStringSize = [locItemPlace.placeInfo.vicinity sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+    lblStringSize = [locItem.itemAddress sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
     CGRect addrFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1, 
-                                 lblStringSize.width,
-                                 lblStringSize.height+2);
+                                  lblStringSize.width,
+                                  lblStringSize.height+2);
     UILabel *lblAddress = [[UILabel alloc] initWithFrame:addrFrame];
-    lblAddress.text = [NSString stringWithFormat:@"%@", locItemPlace.placeInfo.vicinity];
+    lblAddress.text = [NSString stringWithFormat:@"%@", locItem.itemAddress];
     lblAddress.backgroundColor = [UIColor clearColor];
     lblAddress.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     [infoView addSubview:lblAddress];
     [lblAddress release];
-        
+    
     // 119, 184, 0 - green
     NSString *distStr;
-    if (locItemPlace.itemDistance >= 1000)
-        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPlace.itemDistance/1000.0];
+    if (locItem.itemDistance >= 1000)
+        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItem.itemDistance/1000.0];
     else
-        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPlace.itemDistance];
+        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItem.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1+addrFrame.size.height+1, 
@@ -94,13 +92,28 @@
     [infoView addSubview:lblDist];
     [lblDist release];
     
+    // Event
+    UIImage *eventImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
+    UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    eventBtn.frame = CGRectMake(25, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, 
+                                distSize.width+70, distSize.height+5);
+    NSLog(@"eventBtn.frame %lf %lf %lf %lf",eventBtn.frame.origin.x,eventBtn.frame.origin.y,eventBtn.frame.size.width,eventBtn.frame.size.height);
+    [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+    [eventBtn setBackgroundImage:eventImg forState:UIControlStateNormal];
+    [eventBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [eventBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    [eventBtn setTitle:@"View event detail" forState:UIControlStateNormal];
+    eventBtn.backgroundColor = [UIColor clearColor];
+    eventBtn.tag = 11003;
+    [infoView addSubview:eventBtn];
+    locationItem = locItem;
     return annoView;
 }
 
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [self getViewForStateSummary:locItem];
+    locationItem=[[LocationItem alloc] init];
     UIView *infoView = [annoView viewWithTag:11002];
-    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     
     CGRect detFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                  (BUTTON_WIDTH+2)*4+20, annoView.frame.size.height+64);
@@ -116,12 +129,13 @@
     // Event
     UIImage *eventImg = [UIImage imageNamed:@"place_event.png"];
     UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(5, 45, 30, 40);
+    eventBtn.frame = CGRectMake(5, infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow)-2, eventImg.size.width, BUTTON_HEIGHT);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [eventBtn setImage:eventImg forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
     eventBtn.tag = 11003;
     [infoView addSubview:eventBtn];
+    NSLog(@"eventBtn.frame %@",eventBtn.frame);
     
     // Plan
     UIImage *planImg = [UIImage imageNamed:@"place_plan.png"];
@@ -158,7 +172,7 @@
     
     //
     numRow++;
-
+    
     // Review
     UIImage *reviewImg = [UIImage imageNamed:@"place_review.png"];
     UIButton *reviewBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -184,7 +198,7 @@
     UIImage *meetupImg = [UIImage imageNamed:@"place_meetup.png"];
     UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     meetupBtn.frame = CGRectMake(saveBtn.frame.origin.x+saveBtn.frame.size.width+1, 
-                              infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow), meetupImg.size.width, BUTTON_HEIGHT);
+                                 infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow), meetupImg.size.width, BUTTON_HEIGHT);
     [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [meetupBtn setImage:meetupImg forState:UIControlStateNormal];
     meetupBtn.backgroundColor = [UIColor clearColor];
@@ -195,7 +209,7 @@
     UIImage *checkinImg = [UIImage imageNamed:@"place_checkin.png"];
     UIButton *checkinBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     checkinBtn.frame = CGRectMake(meetupBtn.frame.origin.x+meetupBtn.frame.size.width+1, 
-                                    infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow), checkinImg.size.width, BUTTON_HEIGHT);
+                                  infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow), checkinImg.size.width, BUTTON_HEIGHT);
     [checkinBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [checkinBtn setImage:checkinImg forState:UIControlStateNormal];
     checkinBtn.backgroundColor = [UIColor clearColor];
@@ -211,13 +225,18 @@
 }
 
 - (MKAnnotationView*) getViewForState:(MAP_ANNOTATION_STATE)state loc:(LocationItem*) locItem{
-    if (locItem.currDisplayState == MapAnnotationStateNormal) {
-        
+    if (locItem.currDisplayState == MapAnnotationStateNormal) 
+    {
+        NSLog(@"normal state");
         return [self getViewForStateNormal:locItem];
-    } else if (locItem.currDisplayState == MapAnnotationStateSummary){
+    } else if (locItem.currDisplayState == MapAnnotationStateSummary)
+    {
+        NSLog(@"summary state");
         return [self getViewForStateSummary:locItem];
     }
-    else {
+    else
+    {
+        NSLog(@"detail state");
         return [self getViewForStateDetailed:locItem];
     }
 }
@@ -227,8 +246,8 @@
     UIButton *btn = (UIButton*)sender ;
     int tag = btn.tag;
     MAP_USER_ACTION actionType;
-    NSLog(@"MapAnnotationPlace: performUserAction, tag=%d", tag);
-
+    NSLog(@"MapAnnotationEvent: performUserAction, tag=%d", tag);
+    
     switch (tag) {
         case 11003:
             actionType = MapAnnoUserActionEvent;
@@ -260,7 +279,7 @@
     }
     
     MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPlace *locItem = (LocationItemPlace*) [selAnno annotation];
+    LocationItem *locItem = (LocationItem*) [selAnno annotation];
     NSLog(@"Name=%@", locItem.itemName);
     
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(performUserAction:type:)]) {
