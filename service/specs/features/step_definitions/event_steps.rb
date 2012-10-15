@@ -7,13 +7,13 @@ Given /^An event is created with "([^"]*)" and "([^"]*)" with "([^"]*)"$/ do |em
   end
 
   @response.set_params(Util::Params.parse(str_params))
-  @event =  @response.json
+  @event = @response.json
 
 end
 
 Given /^I have an image named "([^"]*)"$/ do |image_name|
-  @image = Base64.encode64(File.read(File.join(File.dirname(__FILE__), '..', '..','..', 'specs','fixtures', image_name)))
-  puts "populated image"
+  @image = Base64.encode64(File.read(File.join(File.dirname(__FILE__), '..', '..', '..', 'specs', 'fixtures', image_name)))
+#  puts "populated image"
 end
 
 
@@ -38,8 +38,6 @@ Then /^Retrieved Event id should be equal to the created Events id$/ do
 end
 
 
-
-
 When /^I change the attribute "([^"]*)"$/ do |str_params|
 
   @response = @client.send(:put, "/events/#{@event["id"]}")
@@ -56,6 +54,6 @@ end
 
 When /^I'm posting with image "([^"]*)"$/ do |str_params|
 
-    str_params << ",eventImage=#{@image}"
+  str_params << ",eventImage=#{@image}"
   @response.set_params(Util::Params.parse(str_params))
 end

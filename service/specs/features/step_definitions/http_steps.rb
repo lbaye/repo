@@ -23,7 +23,7 @@ end
 
 
 Then /^I should see http "(.*?)" status$/ do |code|
-  p @response.body
+  #p @response.body
   @response.code.should == code
 end
 

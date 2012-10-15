@@ -1,6 +1,7 @@
 Given /^I've already setup user account with "([^"]*)" and "([^"]*)"$/ do |email, password|
   response = @client.send(:post, '/auth/registration')
-  response.set_params({email: email, password: password})
+  response.set_params({email: email, password: password, firstName: "ab", lastName: "cd", avatar: "www.google.com/xxyza" })
+  response.code
 end
 
 

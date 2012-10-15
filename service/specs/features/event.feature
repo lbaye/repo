@@ -4,7 +4,7 @@ Feature: Events
   I want to create, update, delete, share and get list of events
 
   Scenario: Create Event with unauthenticated user
-    Given I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
+    Given I've already setup user account with "xyz@test.com" and "121212"
 
     When I'm sending http "POST" request to "/events"
     And I'm posting "title={rand_string('title')}, description={rand_string('description')}, address={rand_string('address')}, lat=1234, lng=4321, time=14.30"
@@ -13,8 +13,8 @@ Feature: Events
 
 
   Scenario: Create Event with authenticated user
-    Given I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
-    And I'm logged in through "ahmed.tanvir@genweb2.com" and "121212"
+    Given I've already setup user account with "xyz@test.com" and "121212"
+    And I'm logged in through "xyz@test.com" and "121212"
 
     When I'm sending http "POST" request to "/events"
     And I'm posting "title={rand_string('title')}, description={rand_string('des')}, address={rand_string('address')}, lat=1234, lng=4321, time=14.30"
@@ -24,8 +24,8 @@ Feature: Events
 
   Scenario: Create Event with authenticated user and Image
     Given I have an image named "image.jpeg"
-    Given I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
-    And I'm logged in through "ahmed.tanvir@genweb2.com" and "121212"
+    And I've already setup user account with "xyz@test.com" and "121212"
+    And I'm logged in through "xyz@test.com" and "121212"
 
     When I'm sending http "POST" request to "/events"
     And I'm posting with image "title={rand_string('title')}, description={rand_string('des')}, address={rand_string('address')}, lat=1234, lng=4321, time=14.30"
@@ -37,8 +37,8 @@ Feature: Events
     Given I've already setup user account with "test@example.com" and "abcd"
     And An event is created with "test@example.com" and "abcd" with "title={rand_string('title')}, description={rand_string('description')} ,address={rand_string('address')}, lat=1234, lng=4321, time=14.30, permission=public"
     And An event is created with "test@example.com" and "abcd" with "title={rand_string('private-title')}, description={rand_string('description')} ,address={rand_string('address')}, lat=1234, lng=4321, time=14.30, permission=private"
-    And I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
-    And I'm logged in through "ahmed.tanvir@genweb2.com" and "121212"
+    And I've already setup user account with "xyz@test.com" and "121212"
+    And I'm logged in through "xyz@test.com" and "121212"
 
     When I'm sending http "GET" request to "/events"
 
@@ -49,8 +49,8 @@ Feature: Events
   Scenario: Get error message while trying to retrieve unauthorized Event
     Given I've already setup user account with "test@example.com" and "abcd"
     And An event is created with "test@example.com" and "abcd" with "title={rand_string('title')}, description={rand_string('description')} ,address={rand_string('address')}, lat=1234, lng=4321, time=14.30, permission=private"
-    And I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
-    And I'm logged in through "ahmed.tanvir@genweb2.com" and "121212"
+    And I've already setup user account with "xyz@test.com" and "121212"
+    And I'm logged in through "xyz@test.com" and "121212"
 
     When I am retrieving the created event
 

@@ -70,10 +70,10 @@ Feature: User Registration
     And Response is valid "application/json" formatted
 
   Scenario: Registration with an existing email
-    Given I've already setup user account with "ahmed.tanvir@genweb2.com" and "121212"
+    Given I've already setup user account with "xyz@test.com" and "121212"
     When I'm sending http "POST" request to "/auth/registration"
-    And I'm posting "email=ahmed.tanvir@genweb2.com, firstName=abcd, lastName=adss, password=abcdef, avatar=www.google.com/dkd"
-    Then I should be warned "ahmed.tanvir@genweb2.com" account is already occupied.
+    And I'm posting "email=xyz@test.com, firstName=abcd, lastName=adss, password=abcdef, avatar=www.google.com/dkd"
+    Then I should be warned "xyz@test.com" account is already occupied.
 
   Scenario: Registration with facebook when an account exists with same email
     pending
