@@ -84,16 +84,16 @@ Feature: Messaging
     And Response is valid "application/json" formatted
     And Two recipients are added in the list
 
-  Scenario: Mark message as read
-    Given I've already setup user account with "xyz@test.com" and "121212"
-    And I'm logged in through "xyz@test.com" and "121212"
-    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
-
-    When I'm sending http "POST" request to "/messages/{msg_last_id}/status/read"
-
-    Then I should see http "200" status
-    And Response is valid "application/json" formatted
-    And Response should match "\"status\":\"read\""
+#  Scenario: Mark message as read
+#    Given I've already setup user account with "xyz@test.com" and "121212"
+#    And I'm logged in through "xyz@test.com" and "121212"
+#    And I've created a message with "subject=Hello Hi, content=Hello world" and recipients as "me"
+#
+#    When I'm sending http "POST" request to "/messages/{msg_last_id}/status/read"
+#
+#    Then I should see http "200" status
+#    And Response is valid "application/json" formatted
+#    And Response should match "\"status\":\"read\""
 
   Scenario: Mark message as unread
     Given I've already setup user account with "xyz@test.com" and "121212"
