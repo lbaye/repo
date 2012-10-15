@@ -22,145 +22,7 @@
                 "psr-0": {
                     "Respect\\Validation": "library/"
                 }
-            },
-            "license": [
-                "BSD Style"
-            ],
-            "authors": [
-                {
-                    "name": "Henrique Moody",
-                    "email": "henriquemoody@gmail.com",
-                    "homepage": "http://henriquemoody.com/",
-                    "role": null
-                },
-                {
-                    "name": "Alexandre Gomes Gaigalas",
-                    "email": "alexandre@gaigalas.net",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Augusto Pascutti",
-                    "email": "contato@augustopascutti.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Alexandre (@alganet)",
-                    "email": "alganet@alganet-laptop.(none)",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Alexandre Gaigalas",
-                    "email": "alganet@alganet-workstation.(none)",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Carlos André Ferrari",
-                    "email": "andre@andre.(none)",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Carlos André Ferrari",
-                    "email": "caferrari@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Devin Torres",
-                    "email": "devin@devintorres.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Emerson Carvalho",
-                    "email": "emerson.broga@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Fábio da Silva Ribeiro",
-                    "email": "fabiorphp@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Jair Henrique",
-                    "email": "jair.henrique@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Jayson Reis",
-                    "email": "jayson.reis@sabbre.com.br",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Jayson Reis",
-                    "email": "santosdosreis@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Jean Pimentel",
-                    "email": "jeanfap@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "kleberhs007",
-                    "email": "kleberhs007@yahoo.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Leandro",
-                    "email": "lleitep3@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Marcelo Araujo",
-                    "email": "msaraujo@php.net",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Michael Klishin",
-                    "email": "michaelklishin@me.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Morf",
-                    "email": "i@morfi.ru",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Rogerio Prado de Jesus",
-                    "email": "rogeriopradoj@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "Torben Brodt",
-                    "email": "t.brodt@gmail.com",
-                    "homepage": null,
-                    "role": null
-                },
-                {
-                    "name": "unknown",
-                    "email": "kolyshkin@.sqlmaze.local",
-                    "homepage": null,
-                    "role": null
-                }
-            ],
-            "description": "The most awesome validation engine ever created for PHP"
+            }
         },
         {
             "name": "doctrine/common",
@@ -252,40 +114,14 @@
                 "symfony/console": ">=2.0",
                 "doctrine/common": ">=2.1.0"
             },
-            "time": "2012-07-29 06:00:59",
+            "time": "2012-08-02 18:00:59",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\MongoDB": "lib/"
                 }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bulat Shakirzyanov",
-                    "email": "mallluhuct@gmail.com",
-                    "homepage": "http://avalanche123.com"
-                },
-                {
-                    "name": "Jonathan H. Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
-                },
-                {
-                    "name": "Kris Wallsmith",
-                    "email": "kris.wallsmith@gmail.com",
-                    "homepage": "http://kriswallsmith.net/"
-                }
-            ],
-            "description": "Doctrine MongoDB Abstraction Layer",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "persistence",
-                "mongodb"
-            ]
+            }
         },
         {
             "name": "doctrine/mongodb-odm",
@@ -308,39 +144,14 @@
                 "doctrine/common": ">=2.2.0,<2.5-dev",
                 "doctrine/mongodb": "1.0.0-BETA1"
             },
-            "time": "2012-08-03 13:39:04",
+            "time": "2012-08-07 19:39:04",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\ODM\\MongoDB": "lib/"
                 }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bulat Shakirzyanov",
-                    "email": "mallluhuct@gmail.com",
-                    "homepage": "http://avalanche123.com"
-                },
-                {
-                    "name": "Jonathan H. Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
-                },
-                {
-                    "name": "Kris Wallsmith",
-                    "email": "kris@symfony.com"
-                }
-            ],
-            "description": "Doctrine MongoDB Object Document Mapper",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "persistence",
-                "mongodb"
-            ]
+            }
         },
         {
             "name": "emran/php-solr-helper",
@@ -360,31 +171,14 @@
                 "php": ">=5.3.0",
                 "room13/phpsolrclient": "dev-master"
             },
+            "time": "1343361607",
             "type": "library",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Emran": "src"
                 }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Emran Hasan",
-                    "email": "phpfour@gmail.com",
-                    "homepage": "http://phpfour.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Solr Helper",
-            "homepage": "https://github.com/phpfour/php-solr-helper",
-            "keywords": [
-                "solr",
-                "helper"
-            ],
-            "time": "1343361607"
+            }
         },
         {
             "name": "facebook/php-sdk",
@@ -405,29 +199,14 @@
                 "ext-curl": "*",
                 "ext-json": "*"
             },
+            "time": "1344965300",
             "type": "library",
             "installation-source": "source",
             "autoload": {
                 "classmap": [
                     "src"
                 ]
-            },
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Facebook",
-                    "homepage": "https://github.com/facebook/facebook-php-sdk/contributors"
-                }
-            ],
-            "description": "Facebook PHP SDK",
-            "homepage": "https://github.com/facebook/facebook-php-sdk",
-            "keywords": [
-                "facebook",
-                "sdk"
-            ],
-            "time": "1344965300"
+            }
         },
         {
             "name": "knplabs/gaufrette",
@@ -435,7 +214,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/Gaufrette",
-                "reference": "76b830c119432e08eb8fb723f5d148531f2d84c9"
+                "reference": "0628ac151f6326e8a1c97f531a5bb891d9a0ab6f"
             },
             "dist": {
                 "type": "zip",
@@ -447,22 +226,28 @@
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "pear-aws/sdk": "*",
                 "rackspace/php-cloudfiles": "*",
                 "doctrine/dbal": ">=2.3",
-                "pear-dropbox-php/dropbox": "*"
+                "amazonwebservices/aws-sdk-for-php": "1.5.*",
+                "dropbox-php/dropbox-php": "*"
             },
             "suggest": {
                 "knplabs/knp-gaufrette-bundle": "*",
                 "ext-curl": "*",
                 "ext-mbstring": "*",
                 "ext-mongo": "*",
-                "pear-aws/sdk": ">=1.4.5",
-                "rackspace/php-cloudfiles": "*",
-                "doctrine/dbal": ">=2.3"
+                "dropbox-php/dropbox-php": "to use the Dropbox adapter",
+                "amazonwebservices/aws-sdk-for-php": "to use the Amazon S3 adapter",
+                "doctrine/dbal": "to use the Doctrine DBAL adapter",
+                "ext-zip": "to use the Zip adapter"
             },
-            "time": "1348651230",
+            "time": "1350290998",
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2.x-dev"
+                }
+            },
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
@@ -564,27 +349,14 @@
             "require": {
                 "php": ">=5.2"
             },
+            "time": "1347054121",
             "type": "library",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "PHPParser": "lib/"
                 }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nikita Popov"
-                }
-            ],
-            "description": "A PHP parser written in PHP",
-            "keywords": [
-                "php",
-                "parser"
-            ],
-            "time": "1347054121"
+            }
         },
         {
             "name": "pimple/pimple",
@@ -603,7 +375,7 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-05-08 07:57:24",
+            "time": "2012-05-08 13:57:24",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -615,24 +387,7 @@
                 "psr-0": {
                     "Pimple": "lib/"
                 }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": null,
-                    "role": null
-                }
-            ],
-            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
-            "homepage": "http://pimple.sensiolabs.org",
-            "keywords": [
-                "dependency injection",
-                "container"
-            ]
+            }
         },
         {
             "name": "room13/PhpSolrClient",
@@ -655,16 +410,7 @@
                 "psr-0": {
                     "Apache_Solr": "."
                 }
-            },
-            "authors": [
-                {
-                    "name": "Benjamin Seibert",
-                    "email": "benjamin.seibert@gmx.de",
-                    "homepage": null,
-                    "role": null
-                }
-            ],
-            "description": "A github fork of the solr-php-client from google code at http://code.google.com/p/solr-php-client/"
+            }
         },
         {
             "name": "sami/sami",
@@ -1284,18 +1030,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "82334f876f06b76b28d60ef547ff0ccee8bc1de8"
+                "reference": "f48f23a34da75d11b26f250a3e491e7d6bab7981"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/zipball/82334f876f06b76b28d60ef547ff0ccee8bc1de8",
-                "reference": "82334f876f06b76b28d60ef547ff0ccee8bc1de8",
+                "url": "https://github.com/fabpot/Twig/zipball/f48f23a34da75d11b26f250a3e491e7d6bab7981",
+                "reference": "f48f23a34da75d11b26f250a3e491e7d6bab7981",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1350154884",
+            "time": "1350286697",
             "type": "library",
             "extra": {
                 "branch-alias": {

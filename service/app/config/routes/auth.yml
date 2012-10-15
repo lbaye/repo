@@ -16,7 +16,7 @@ fb_login:
 fb_connect:
   pattern: /auth/fb_connect
   defaults: { _controller: Controller\Auth::fbConnect }
-  requirements: { _method: PUT  }
+  requirements: { _method: POST }
 
 forget_password:
   pattern: /auth/forgot_pass/{email}
