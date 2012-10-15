@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Repository\UserRepo as UserRepository;
 use Helper\Location;
 use Helper\Status;
+use Helper\ShareConstant;
 
 class Settings extends Base
 {
@@ -266,6 +267,45 @@ class Settings extends Base
     }
 
     /**
+     * PUT /settings/sharing_privacy_mode
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sharingPrivacyMode()
+    {
+        $data = $this->request->request->all();
+        try {
+            if (!empty($data['shareLocation']) && ($data['shareLocation'] == ShareConstant::SHARING_ALL_USERS || $data['shareLocation'] == ShareConstant::SHARING_FRIENDS || $data['shareLocation'] == ShareConstant::SHARING_NO_ONE || $data['shareLocation'] == ShareConstant::SHARING_CIRCLES || $data['shareLocation'] == ShareConstant::SHARING_CUSTOM)) {
+                $this->user->setShareLocation($data['shareLocation']);
+                return $this->persistAndReturn($this->user->getShareLocation());
+            } elseif (!empty($data['shareProfilePicture']) && ($data['shareProfilePicture'] == ShareConstant::SHARING_ALL_USERS || $data['shareProfilePicture'] == ShareConstant::SHARING_FRIENDS || $data['shareProfilePicture'] == ShareConstant::SHARING_NO_ONE || $data['shareProfilePicture'] == ShareConstant::SHARING_CIRCLES || $data['shareProfilePicture'] == ShareConstant::SHARING_CUSTOM)) {
+                $this->user->setShareProfilePicture($data['shareProfilePicture']);
+                return $this->persistAndReturn($this->user->getShareProfilePicture());
+            } elseif (!empty($data['shareNewsFeed']) && ($data['shareNewsFeed'] == ShareConstant::SHARING_ALL_USERS || $data['shareNewsFeed'] == ShareConstant::SHARING_FRIENDS || $data['shareNewsFeed'] == ShareConstant::SHARING_NO_ONE || $data['shareNewsFeed'] == ShareConstant::SHARING_CIRCLES || $data['shareNewsFeed'] == ShareConstant::SHARING_CUSTOM)) {
+                $this->user->setShareNewsFeed($data['shareNewsFeed']);
+                return $this->persistAndReturn($this->user->getShareNewsFeed());
+            } else {
+                $this->response->setContent(json_encode(array('message' => 'Invalid parameter')));
+                $this->response->setStatusCode(Status::NOT_FOUND);
+
+                return $this->response;
+            }
+
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            return $this->_generate404();
+
+        } catch (\Exception\UnauthorizedException $e) {
+
+            return $this->_generateUnauthorized($e->getMessage());
+
+        } catch (\Exception $e) {
+
+            return $this->_generateException($e);
+        }
+    }
+
+    /**
      * PUT /current-location
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -386,17 +426,23 @@ class Settings extends Base
         $layers            = $this->user->getLayersSettings();
         $account           = $this->user->toArrayDetailed();
         $sharingPreference = $this->user->getSharingPreferenceSettings();
+        $shareLocation     = $this->user->getShareLocation();
+        $shareProfilePicture     = $this->user->getShareProfilePicture();
+        $shareNewsFeed     = $this->user->getShareNewsFeed();
         $currentLocation   = $this->user->getCurrentLocation();
 
         $this->response->setContent(json_encode(array(
-                                                    'location'          => $location,
-                                                    'geoFence'          => $geoFence,
-                                                    'notification'      => $notification,
-                                                    'platform'          => $platform,
-                                                    'layers'            => $layers,
-                                                    'account'           => $account,
-                                                    'sharingPreference' => $sharingPreference,
-                                                    'currentLocation'   => $currentLocation
+                                                    'location'               => $location,
+                                                    'geoFence'               => $geoFence,
+                                                    'notification'           => $notification,
+                                                    'platform'               => $platform,
+                                                    'layers'                 => $layers,
+                                                    'account'                => $account,
+                                                    'sharingPreference'      => $sharingPreference,
+                                                    'shareLocation'          => $shareLocation,
+                                                    'shareProfilePicture'    => $shareProfilePicture,
+                                                    'shareNewsFeed'          => $shareNewsFeed,
+                                                    'currentLocation'        => $currentLocation
                                                 )));
         $this->response->setStatusCode(Status::OK);
 
