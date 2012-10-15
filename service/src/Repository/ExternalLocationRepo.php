@@ -138,7 +138,7 @@ class ExternalLocationRepo extends Base
 
         $result = $query->getQuery()->execute();
 
-        if (!em($result)) {
+        if (!empty($result)) {
 
             $facebookFriends = $this->_toArraySecondDegreeAll($result);
             return $facebookFriends;
