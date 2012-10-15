@@ -23,6 +23,8 @@ end
 
 
 Then /^I should see http "(.*?)" status$/ do |code|
+  #puts "user id of random user #{@user_id}"
+
   p @response.body
   @response.code.should == code
 end

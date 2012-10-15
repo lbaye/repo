@@ -35,7 +35,7 @@ Scenario: Accept friend request
   And I'm logged in through "test@example.com" and "abcd"
   And I receive a friend request from "{get_rand_email}" and "121212" with "message=Accept request"
 
-  And I'm fetching the user id from "{get_rand_email}" and "121212"
+  When I'm fetching the user id from "{get_rand_email}" and "121212"
   And I'm accepting the friend request
   
   Then I should see http "200" status

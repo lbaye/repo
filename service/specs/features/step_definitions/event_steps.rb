@@ -57,3 +57,15 @@ When /^I'm posting with image "([^"]*)"$/ do |str_params|
   str_params << ",eventImage=#{@image}"
   @response.set_params(Util::Params.parse(str_params))
 end
+
+Given /^I've accepted a friend request with "([^"]*)" and "([^"]*)"$/ do |email, password|
+  steps %{
+      Given I've already setup user account with "{set_rand_email}" and "121212"
+      And I've already setup user account with "#{email}" and "#{password}"
+      And I'm logged in through "#{email}" and "#{password}"
+      And I receive a friend request from "{get_rand_email}" and "121212" with "message=Accept request"
+
+      When I'm fetching the user id from "{get_rand_email}" and "121212"
+      And I'm accepting the friend request
+  }
+end

@@ -52,5 +52,7 @@ When /^I'm accepting the friend request$/ do
     @response.set_headers('Auth-Token' => @authResponse['authToken'])
   end
 
+  @response.code
+
 end
 

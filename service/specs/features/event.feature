@@ -86,5 +86,13 @@ Feature: Events
     Then I should see http "200" status
     And Event "title" should be equal to "abcd"
 
+  Scenario: Create Event user list
+    Given I've already setup user account with "test@example.com" and "abcd"
+    And I've accepted a friend request with "test@example.com" and "abcd"
+    And An event is created with "test@example.com" and "abcd" with "title={rand_string('title')}, description={rand_string('description')} ,address={rand_string('address')}, lat=1234, lng=4321, time=14.30, permission=private"
+
+
+
+
 
 
