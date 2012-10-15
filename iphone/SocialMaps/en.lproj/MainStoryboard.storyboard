@@ -1198,7 +1198,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="JgJ-J6-J8e">
-                                <rect key="frame" x="1000" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" alpha="0.70000000000000007" contentMode="scaleToFill" image="circle_menu_bg.png" id="7Hl-ng-7y8">
@@ -5434,9 +5434,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
                 <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
             </relationships>
-        </class>
-        <class className="NSDictionary" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
