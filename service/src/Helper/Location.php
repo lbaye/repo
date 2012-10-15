@@ -22,10 +22,21 @@ class Location
      */
     public static function distance($lat1, $lon1, $lat2, $lon2, $unit = 'k')
     {
-        $theta = $lon1 - $lon2;
-        $dist  = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        $dist  = acos($dist);
-        $dist  = rad2deg($dist);
+        if (!empty($lat1) && !empty($lat2) && !empty($lon1) && !empty($lon2)) {
+            if ($lat1 == $lat2 && $lon1 == $lon2) {
+                $dist = 0.0;
+
+            } else {
+                $theta = $lon1 - $lon2;
+                $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+                $dist = acos($dist);
+                $dist = rad2deg($dist);
+
+            }
+        } else {
+            return 0;
+        }
+
         $miles = $dist * 60 * 1.1515;
         $unit  = strtoupper($unit);
 
