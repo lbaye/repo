@@ -29,8 +29,10 @@
 #import "Globals.h"
 #import "MessageReply.h"
 #import "MeetUpRequest.h"
+#import "AppDelegate.h"
 
 @implementation RestClient
+AppDelegate *smAppDelegate;
 
 - (void) login:(NSString*) email password:(NSString*)pass 
 {
@@ -1563,7 +1565,7 @@
         // Use when fetching binary data
         // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
-        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+//        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
@@ -1619,10 +1621,10 @@
                     people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
                     people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
                     people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
-                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
+//                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
-                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
+//                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
                 }
                 
                 //get all places
@@ -1633,7 +1635,7 @@
                     place.location = [[Geolocation alloc] init];
                     place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
                     place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
+//                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
                     place.northeast = [[Geolocation alloc] init];
                     place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
                     place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
@@ -1669,7 +1671,7 @@
     }];
     
     //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+//    NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -5306,5 +5308,112 @@
     [request startAsynchronous];
 }
 
+-(void)getAllEventsForMap:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/events",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    Event *aEvent = [[Event alloc] init];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        EventList *eventList=[[EventList alloc] init];
+        eventList.eventListArr=[[NSMutableArray alloc] init];
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            for (NSDictionary *item in jsonObjects)
+            {
+                Event *aEvent=[[Event alloc] init];
+                [aEvent setEventID:[item objectForKey:@"id"]];
+                [aEvent setEventName:[item objectForKey:@"title"]];
+                
+                Date *date=[[Date alloc] init];
+                date.date=[self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                
+                date.timezone=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                date.timezoneType=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                
+                [aEvent setEventCreateDate:date];
+                
+                date=[[Date alloc] init];
+                date.date=[self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
+                date.timezone=[self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];            
+                date.timezoneType=[self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];           
+                [aEvent setEventDate:date];
+                
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+                [aEvent setEventLocation:loc];
+                [aEvent setEventAddress:[self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil]];
+                [aEvent setEventDistance:[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil]];
+                [aEvent setEventImageUrl:[self getNestedKeyVal:item key1:@"eventImage" key2:nil key3:nil]];
+                [aEvent setEventShortSummary:[self getNestedKeyVal:item key1:@"eventShortSummary" key2:nil key3:nil]];
+                [aEvent setEventDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
+                
+                [aEvent setMyResponse:[self getNestedKeyVal:item key1:@"my_response" key2:nil key3:nil]];
+                
+                [aEvent setIsInvited:[[self getNestedKeyVal:item key1:@"is_invited" key2:nil key3:nil] boolValue]];
+                [aEvent setGuestCanInvite:[[self getNestedKeyVal:item key1:@"guestsCanInvite" key2:nil key3:nil] boolValue]];
+                [aEvent setOwner:[self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil]];           
+                [aEvent setEventType:[self getNestedKeyVal:item key1:@"event_type" key2:nil key3:nil]];
+                [aEvent setPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
+                
+                NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
+                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+                
+                if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
+                {
+                    NSLog(@"Date comapre %@",date.date);
+                } 
+                [aEvent.eventList addObject:aEvent];
+                [eventList.eventListArr addObject:aEvent];
+            }
+            eventListGlobalArray=[eventList.eventListArr mutableCopy];
+            smAppDelegate.eventList=[eventList.eventListArr mutableCopy];
+            NSLog(@"client eventList.eventListArr :%@",eventList.eventListArr);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:eventList.eventListArr];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn start get all events for map");
+    [request startAsynchronous];
+}
 
 @end

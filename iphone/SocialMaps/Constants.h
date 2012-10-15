@@ -47,6 +47,7 @@ extern NSString * const NOTIF_UPDATE_CIRCLE_DONE;
 extern NSString * const NOTIF_GET_ALL_BLOCKED_USERS_DONE;
 extern NSString * const NOTIF_SET_BLOCKED_USERS_DONE;
 extern NSString * const NOTIF_SET_UNBLOCKED_USERS_DONE;
+extern NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

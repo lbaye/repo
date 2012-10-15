@@ -55,6 +55,7 @@
 		20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D715EF59E000A441E9 /* CreateEventViewController.m */; };
 		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
+		20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
 		20C92B811618022B000B3D58 /* SectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B7E1618022B000B3D58 /* SectionHeaderView.m */; };
 		20C92B821618022B000B3D58 /* SectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B801618022B000B3D58 /* SectionInfo.m */; };
@@ -508,6 +509,8 @@
 		20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetPicker.m; sourceTree = "<group>"; };
 		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
 		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
+		20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationEvent.h; sourceTree = "<group>"; };
+		20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationEvent.m; sourceTree = "<group>"; };
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
 		20C92B7D1618022B000B3D58 /* SectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderView.h; sourceTree = "<group>"; };
 		20C92B7E1618022B000B3D58 /* SectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderView.m; sourceTree = "<group>"; };
@@ -1142,6 +1145,8 @@
 				4FC0820315DBD54A00203C21 /* MapAnnotationPeople.m */,
 				4F59C33D15E7EB060060C8D9 /* MapAnnotationPlace.h */,
 				4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */,
+				20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */,
+				20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */,
 				B01DFC4415F5E61000020D49 /* MessageReply.h */,
 				B01DFC4515F5E61000020D49 /* MessageReply.m */,
 				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
@@ -2260,6 +2265,7 @@
 				20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */,
 				B08845691619584C00676EFA /* OverlayViewController.m in Sources */,
 				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
+				20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -49,6 +49,7 @@
     NSMutableArray *placeList;
     NSMutableDictionary *placeIndex;
     NSMutableArray *dealList;
+    NSMutableArray *eventList;
     NSMutableArray *displayList;
     NSMutableArray *friendList;
     NSMutableArray *meetUpRequests;
@@ -65,6 +66,7 @@
     bool            showPeople;
     bool            showPlaces;
     bool            showDeals;
+    bool            showEvents;
     bool            gotListing;
     bool needToCenterMap;
     NSString        *deviceTokenId;   // For PUSH notification
@@ -100,6 +102,7 @@
 @property (nonatomic, retain)NSMutableArray *dealList;
 @property (nonatomic, retain)NSMutableArray *displayList;
 @property (nonatomic, retain)NSMutableArray *friendList;
+@property (nonatomic,retain)NSMutableArray *eventList;
 @property (nonatomic, retain)Platform        *platformPrefs;
 @property (nonatomic, retain)Layer           *layerPrefs;
 @property (nonatomic, retain)InformationPrefs    *informationPrefs;
@@ -113,6 +116,7 @@
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;
+@property (atomic) bool showEvents;
 @property (atomic) bool gotListing;
 @property (atomic) bool needToCenterMap;
 @property (atomic, copy) NSString *deviceTokenId;

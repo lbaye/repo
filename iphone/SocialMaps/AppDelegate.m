@@ -49,6 +49,7 @@
 @synthesize peopleList;
 @synthesize placeList;
 @synthesize dealList;
+@synthesize eventList;
 @synthesize displayList;
 @synthesize friendList;
 @synthesize platformPrefs;
@@ -63,6 +64,7 @@
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
+@synthesize showEvents;
 @synthesize peopleIndex;
 @synthesize gotListing;
 @synthesize placeIndex;
@@ -136,6 +138,7 @@
     placeList  = [[NSMutableArray alloc] init];
     placeIndex = [[NSMutableDictionary alloc] init];
     dealList   = [[NSMutableArray alloc] init];
+    eventList  =[[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];
 
     // Location coordinates
@@ -150,6 +153,7 @@
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
+    showEvents = TRUE;
     
     msgRead = FALSE;
     notifRead = FALSE;

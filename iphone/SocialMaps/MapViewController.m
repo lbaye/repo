@@ -35,6 +35,8 @@
 #import "ViewCircleListViewController.h"
 #import "ViewEventListViewController.h"
 #import "UserBasicProfileViewController.h"
+#import "MapAnnotationEvent.h"
+#import "ViewEventDetailViewController.h"
 
 @interface MapViewController ()
 
@@ -72,6 +74,7 @@
 @synthesize filteredList;
 @synthesize selectedAnno;
 @synthesize circleView;
+@synthesize mapAnnoEvent;
 
 UserFriends *afriend;
 NSMutableDictionary *imageDownloadsInProgress;
@@ -111,7 +114,13 @@ ButtonClickCallbackData callBackData;
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
         pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
-    } else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
+    }
+    else if ([locItem isKindOfClass:[LocationItem class]])
+    {
+        pin = [mapAnnoEvent mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    }
+    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
         //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
         pin = nil;
     }
@@ -324,6 +333,20 @@ ButtonClickCallbackData callBackData;
     selectedAnno = anno;
 }
 
+- (void) viewEventDetail:(id <MKAnnotation>)anno {
+    NSLog(@"view event detail");
+     LocationItem *locationItem = (LocationItem*) anno;
+     Event *aEvent=[[Event alloc] init];
+     int i= [smAppDelegate.eventList indexOfObject:locationItem];
+     aEvent = [eventListGlobalArray objectAtIndex:i];
+     NSLog(@"match found %d",i);
+     globalEvent=aEvent;
+     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
+     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+     [self presentModalViewController:controller animated:YES];
+}
+
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
     LocationItemPlace *locItem = (LocationItemPlace*) anno;
     
@@ -447,6 +470,10 @@ ButtonClickCallbackData callBackData;
         case MapAnnoUserActionMeetupPlace:
             [self meetupRequestPlaceSelected:locItem];
             break;
+        case MapAnnoUserActionEvent:
+            [self viewEventDetail:locItem];
+            break;
+
         default:
             break;
     }
@@ -506,6 +533,8 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequests:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentFriendRequest:) name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsForMapView:) name:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
+
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
@@ -540,6 +569,9 @@ ButtonClickCallbackData callBackData;
     mapAnnoPlace.currState = MapAnnotationStateNormal;
     mapAnnoPlace.delegate = self;
     
+    mapAnnoEvent = [[MapAnnotationEvent alloc] init];
+    mapAnnoEvent.currState = MapAnnotationStateNormal;
+    mapAnnoEvent.delegate = self;
     // Location update button
     UIButton *locUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     locUpdateBtn.frame = CGRectMake(self.view.frame.size.width-20-25, 
@@ -608,6 +640,7 @@ ButtonClickCallbackData callBackData;
         //by Rishi
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+        [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
         //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
@@ -755,6 +788,7 @@ ButtonClickCallbackData callBackData;
     // e.g. self.myOutlet = nil;
 }
 
+//annotation data source
 - (void)loadAnnotations:(BOOL)animated
 {
     // 1
@@ -776,7 +810,7 @@ ButtonClickCallbackData callBackData;
         LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
         [_mapView addAnnotation:anno];
     }
-
+    
     // 4
     if (smAppDelegate.needToCenterMap == TRUE) {
         NSLog(@"MapViewController:loadAnnotations centering map");
@@ -812,6 +846,7 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.gotListing == TRUE)
         [self loadAnnotations:animated];
     
+    [self loadAnnotationForEvents];
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
@@ -1780,8 +1815,7 @@ ButtonClickCallbackData callBackData;
         [tempList addObjectsFromArray:smAppDelegate.placeList];
     if (smAppDelegate.showDeals == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.dealList];
-    
-    // Sort by distance
+        // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [smAppDelegate.displayList addObjectsFromArray:sortedArray];
 }
@@ -1796,7 +1830,7 @@ ButtonClickCallbackData callBackData;
 }
 - (void)gotListings:(NSNotification *)notif
 {
-    NSLog(@"In gotListings");
+//    NSLog(@"In gotListings");
     
     //by Rishi
     //if (viewSearch.frame.origin.y > 44) {
@@ -1867,7 +1901,7 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
+//                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
 //                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
@@ -2022,7 +2056,7 @@ ButtonClickCallbackData callBackData;
                     
                     CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                     aPlace.itemDistance = distanceFromMe;
-                    NSLog(@"Distance: service=%@, calculated=%f", item.distance, distanceFromMe);
+//                    NSLog(@"Distance: service=%@, calculated=%f", item.distance, distanceFromMe);
                 }
             }
 
@@ -2072,6 +2106,58 @@ ButtonClickCallbackData callBackData;
     callBackData.locItem.userInfo.friendshipStatus = @"requested";
     [self mapAnnotationChanged:callBackData.locItem];
     [mapAnno changeStateToDetails:callBackData.locItem];
+}
+
+-(void)getAllEventsForMapView:(NSNotification *)notif 
+{
+    NSLog(@"got all events for map %@",smAppDelegate.eventList);
+    [self loadAnnotations:NO];
+    
+    [self loadAnnotationForEvents];
+}
+
+-(void)loadAnnotationForEvents
+{
+    if (smAppDelegate.showEvents == TRUE)
+    {
+        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        {
+            if ([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[Event class]])
+            {
+                Event *aEvent=[[Event alloc] init];
+                aEvent=[smAppDelegate.eventList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aEvent.eventName;
+                item.itemAddress=aEvent.eventAddress;
+                item.itemType=0;
+                item.itemCategory=0;
+                item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
+                item.itemDistance=[aEvent.eventDistance floatValue];
+                item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
+                item.itemBg;
+                //                item.cellIdent;
+                item.currDisplayState=0;
+                [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+//        [tempList addObjectsFromArray:smAppDelegate.eventList];
+    }
+    
+    //adding annotations  
+    if ([smAppDelegate.eventList count]>0) 
+    {
+        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        {
+            if([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"event annotation added ");
+                LocationItem *ietm=(LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
+                [smAppDelegate.displayList addObject:ietm];
+//                [_mapView addAnnotation:ietm];                
+            }
+        }
+        [self loadAnnotations:NO];
+    }
 }
 
 @end
