@@ -18,7 +18,7 @@ $bootstrap = new Bootstrap(APPLICATION_ENV);
 
 # Initiate logger
 $logger = new Logger('Worker');
-$logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+$logger->pushHandler(new StreamHandler(__DIR__ . '/../logs/worker.log', Logger::DEBUG));
 
 # Initiate system kernel
 $kernel = new GearmanKernel($bootstrap->dm, $bootstrap->conf, $logger);

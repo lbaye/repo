@@ -4,4 +4,4 @@ web:
 mongodb:
   host: 'localhost'
   port: 27017
-  database: 'socialmaps'
+  database: 'socialmaps_staged'
