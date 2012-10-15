@@ -27,6 +27,7 @@ class ProximityAlert extends Base
             $this->userRepository = $this->services['dm']->getRepository('Document\User');
 
             $user = $this->userRepository->find($workload->user_id);
+            $this->userRepository->refresh($user);
             $this->sendNotificationToNearbyFriends($user);
         } else {
             echo 'Skipping proximity alert push for '. $workload->user_id .' because of outdated'. PHP_EOL;
@@ -52,6 +53,8 @@ class ProximityAlert extends Base
         $friendsNotificationData = $this->_createNotificationData($user);
 
         foreach($friends as $friend) {
+            $this->userRepository->refresh($friend);
+
             // Retrieve friend's current location
             $to = $friend->getCurrentLocation();
 
