@@ -69,10 +69,10 @@
     locImage.image = [UIImage imageNamed:@"user_thumb_only.png"];
     locImage.tag = 11000;
     
-    UIImageView *locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
+    UIImageView *locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
     [locImage addSubview:locImageSquare];
     locImageSquare.image = locItem.itemIcon;
-    [locImageSquare.layer setCornerRadius:3.0f];
+    [locImageSquare.layer setCornerRadius:4.0f];
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;
     
@@ -80,13 +80,6 @@
     //[locImageSquare.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     
     [locImageSquare release];
-    
-    
-    
-    
-    
-    
-    
     
     CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
     annoView.frame = annoFrame;

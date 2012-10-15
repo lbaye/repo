@@ -23,7 +23,6 @@
 #import "Geofence.h"
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
-#import "RestClient.h"
 #import "SearchLocation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
@@ -34,7 +33,6 @@
 #import "Globals.h"
 #import "ViewCircleListViewController.h"
 #import "ViewEventListViewController.h"
-#import "UserBasicProfileViewController.h"
 #import "MapAnnotationEvent.h"
 #import "ViewEventDetailViewController.h"
 
@@ -103,7 +101,41 @@ ButtonClickCallbackData callBackData;
 
 // End UITextView delegate
 
+- (void)didTapCurrentLocaiton
+{
+    NSLog(@"didTapCurrentLocaiton");
+    [self gotoBasicProfile:nil];
+}
+
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation {
+    
+    //test change blue dot
+    if ([newAnnotation isKindOfClass:[MKUserLocation class]]) {
+        static NSString* AnnotationIdentifier = @"Annotation";
+        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[newMapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
+        
+        if (!pinView) {
+            MKPinAnnotationView *customPinView = [[[MKPinAnnotationView alloc] initWithAnnotation:newAnnotation reuseIdentifier:AnnotationIdentifier] autorelease];
+            customPinView.image = [UIImage imageNamed:@"icon_48x48.png"];
+            customPinView.animatesDrop = NO;
+            customPinView.canShowCallout = NO;
+            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
+                                              initWithTarget:self action:@selector(didTapCurrentLocaiton)];
+            [customPinView addGestureRecognizer:tapRec];
+            [tapRec release];
+            
+            return customPinView;
+            
+        } else {
+            
+            pinView.annotation = newAnnotation;
+        }
+        
+        return pinView;
+    }
+    
+    
+    
     LocationItem * locItem = (LocationItem*) newAnnotation;
     
     MKAnnotationView *pin = nil;
@@ -124,7 +156,37 @@ ButtonClickCallbackData callBackData;
         //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
         pin = nil;
     }
+    
     return pin;
+    
+    
+    
+    
+    
+    /*
+    LocationItem * locItem = (LocationItem*) newAnnotation;
+    
+    MKAnnotationView *pin = nil;
+    
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
+        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    }
+    else if ([locItem isKindOfClass:[LocationItem class]])
+    {
+        pin = [mapAnnoEvent mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
+    }
+    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
+        //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+        pin = nil;
+    }
+     
+    return pin;
+     */
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -245,13 +307,13 @@ ButtonClickCallbackData callBackData;
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
         [self searchAnnotations];
-        pullDownView.openedCenter = CGPointMake(160, 120);
-        pullDownView.closedCenter = CGPointMake(160, -5);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 / 2);
+        pullDownView.closedCenter = CGPointMake(160, -5 - 69 / 2);
     } else {
         [self moveSearchBarAnimation:44];
         [searchBar becomeFirstResponder];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 44);
-        pullDownView.closedCenter = CGPointMake(160, -5 + 44);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 44 + 69 / 2);
+        pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 69 / 2);
     }
 }
 
@@ -659,6 +721,13 @@ ButtonClickCallbackData callBackData;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
 
     isFirstTimeDownloading = NO;
+    
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:0 sender:self tag:2000];
+    radio.delegate = self;
+    [viewSharingPrefMapPullDown addSubview:radio];
+    [radio release];
+    
+    [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
 }
 
 - (void)startGetLocation:(NSTimer*)timer
@@ -668,6 +737,29 @@ ButtonClickCallbackData callBackData;
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         //isDownloadingLocation = YES;
     //}
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d", indx);
+    switch (indx) {
+        case 0:
+            //All users
+            break;
+        case 1:
+            //Friends only
+            break;
+        case 2:
+            //No one
+            break;
+        case 3:
+            //Circles only
+            break;
+        case 4:
+            //Custom...
+            break;
+        default:
+            break;
+    }
 }
 
 /*
@@ -793,6 +885,8 @@ ButtonClickCallbackData callBackData;
     viewSearch = nil;
     [searchBar release];
     searchBar = nil;
+    [viewSharingPrefMapPullDown release];
+    viewSharingPrefMapPullDown = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -969,6 +1063,10 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [mapView bringSubviewToFront:view];
+    //if ([view isKindOfClass:[MKPinAnnotationView class]]) {
+        //NSLog(@"current location tapped %@", view);
+        //[self gotoBasicProfile:nil];
+    //}
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -1005,6 +1103,7 @@ ButtonClickCallbackData callBackData;
     [viewNotification release];
     [viewSearch release];
     [searchBar release];
+    [viewSharingPrefMapPullDown release];
     [super dealloc];
 }
 
@@ -1768,9 +1867,9 @@ ButtonClickCallbackData callBackData;
     [imageViewFooterSliderOpen release];
     
     
-    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 150)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5);
+    pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 219)];
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 / 2);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 / 2);
     pullDownView.center = pullDownView.closedCenter;
     
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
