@@ -806,9 +806,14 @@ ButtonClickCallbackData callBackData;
     for (id<MKAnnotation> annotation in _mapView.annotations) {
         [_mapView removeAnnotation:annotation];
     }
+    [_mapView removeAnnotations:_mapView.annotations];
     for (int i=0; i < smAppDelegate.displayList.count; i++) {
-        LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
-        [_mapView addAnnotation:anno];
+        LocationItem *anno = [(LocationItem*) [smAppDelegate.displayList objectAtIndex:i] autorelease];
+        NSLog(@"[smAppDelegate.displayList count] %d  %@",[smAppDelegate.displayList count],anno);
+        if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+        {
+            [_mapView addAnnotation:anno];
+        }
     }
     
     // 4
@@ -1571,6 +1576,7 @@ ButtonClickCallbackData callBackData;
     }
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    [self loadAnnotationForEvents];
     [self.view setNeedsDisplay];
 }
 
@@ -1588,6 +1594,7 @@ ButtonClickCallbackData callBackData;
     }
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    [self loadAnnotationForEvents];
     [self.view setNeedsDisplay];
 }
 
@@ -1601,6 +1608,7 @@ ButtonClickCallbackData callBackData;
     }
     [self getSortedDisplayList];
     [self loadAnnotations:YES];
+    [self loadAnnotationForEvents];
     [self.view setNeedsDisplay];
 }
 
@@ -2073,6 +2081,7 @@ ButtonClickCallbackData callBackData;
     if (!isFirstTimeDownloading) { 
         //for first time
         [self loadAnnotations:YES];
+        [self loadAnnotationForEvents];
         [self.view setNeedsDisplay];
         isFirstTimeDownloading = YES;
     }
@@ -2128,19 +2137,16 @@ ButtonClickCallbackData callBackData;
                 aEvent=[smAppDelegate.eventList objectAtIndex:i];
                 LocationItem *item=[[LocationItem alloc] init];
                 item.itemName=aEvent.eventName;
-                item.itemAddress=aEvent.eventAddress;
+                item.itemAddress=aEvent.eventDate.date;
                 item.itemType=0;
                 item.itemCategory=0;
                 item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
                 item.itemDistance=[aEvent.eventDistance floatValue];
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
-                item.itemBg;
-                //                item.cellIdent;
                 item.currDisplayState=0;
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
         }
-//        [tempList addObjectsFromArray:smAppDelegate.eventList];
     }
     
     //adding annotations  
@@ -2151,12 +2157,15 @@ ButtonClickCallbackData callBackData;
             if([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[LocationItem class]])
             {
                 NSLog(@"event annotation added ");
-                LocationItem *ietm=(LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
-                [smAppDelegate.displayList addObject:ietm];
-//                [_mapView addAnnotation:ietm];                
+                LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
+//                LocationItem *ietm=(LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
+//                [smAppDelegate.displayList addObject:anno];
+                if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                {
+                    [_mapView addAnnotation:anno];
+                }
             }
         }
-        [self loadAnnotations:NO];
     }
 }
 

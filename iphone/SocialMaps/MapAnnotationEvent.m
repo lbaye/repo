@@ -32,7 +32,7 @@ LocationItem *locationItem;
     UIView *infoView = [annoView viewWithTag:11002];
     
     CGRect sumFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
-                                 annoView.frame.size.width, annoView.frame.size.height);
+                                 annoView.frame.size.width, annoView.frame.size.height+25);
     annoView.frame = sumFrame;
     CGRect infoFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                   annoView.frame.size.width-12, annoView.frame.size.height);
@@ -93,13 +93,16 @@ LocationItem *locationItem;
     [lblDist release];
     
     // Event
-    UIImage *eventImg = [UIImage imageNamed:@"place_event.png"];
+    UIImage *eventImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
     UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, 
-                                distSize.width, distSize.height);
+    eventBtn.frame = CGRectMake(25, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, 
+                                distSize.width+70, distSize.height+5);
     NSLog(@"eventBtn.frame %lf %lf %lf %lf",eventBtn.frame.origin.x,eventBtn.frame.origin.y,eventBtn.frame.size.width,eventBtn.frame.size.height);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [eventBtn setImage:eventImg forState:UIControlStateNormal];
+    [eventBtn setBackgroundImage:eventImg forState:UIControlStateNormal];
+    [eventBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [eventBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    [eventBtn setTitle:@"View event detail" forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
     eventBtn.tag = 11003;
     [infoView addSubview:eventBtn];
