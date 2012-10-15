@@ -18,6 +18,11 @@ account_settings:
   defaults: { _controller: Controller\Settings::accountSettings }
   requirements: { _method: PUT|GET}
 
+sharing_privacy_mode:
+  pattern: /settings/sharing_privacy_mode
+  defaults: { _controller: Controller\Settings::sharingPrivacyMode }
+  requirements: { _method: PUT}
+
 sharing_preference_settings:
   pattern: /settings/sharing_preference_settings
   defaults: { _controller: Controller\Settings::sharingPreference }

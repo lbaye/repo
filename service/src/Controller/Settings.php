@@ -266,6 +266,39 @@ class Settings extends Base
     }
 
     /**
+     * PUT /settings/sharing_privacy_mode
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sharingPrivacyMode()
+    {
+        $data = $this->request->request->all();
+        try {
+            if (!empty($data['sharingPrivacyMode']) && ($data['sharingPrivacyMode'] == 1 || $data['sharingPrivacyMode'] == 2 || $data['sharingPrivacyMode'] == 3)) {
+                $this->user->setSharingPrivacyMode($data['sharingPrivacyMode']);
+                return $this->persistAndReturn($this->user->getSharingPrivacyMode());
+            } else {
+                $this->response->setContent(json_encode(array('message' => 'Invalid parameter')));
+                $this->response->setStatusCode(417);
+
+                return $this->response;
+            }
+
+        } catch (\Exception\ResourceNotFoundException $e) {
+
+            return $this->_generate404();
+
+        } catch (\Exception\UnauthorizedException $e) {
+
+            return $this->_generateUnauthorized($e->getMessage());
+
+        } catch (\Exception $e) {
+
+            return $this->_generateException($e);
+        }
+    }
+
+    /**
      * PUT /current-location
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -377,17 +410,19 @@ class Settings extends Base
         $layers            = $this->user->getLayersSettings();
         $account           = $this->user->toArrayDetailed();
         $sharingPreference = $this->user->getSharingPreferenceSettings();
+        $sharingPrivacyMode = $this->user->getSharingPrivacyMode();
         $currentLocation   = $this->user->getCurrentLocation();
 
         $this->response->setContent(json_encode(array(
-                                                    'location'          => $location,
-                                                    'geoFence'          => $geoFence,
-                                                    'notification'      => $notification,
-                                                    'platform'          => $platform,
-                                                    'layers'            => $layers,
-                                                    'account'           => $account,
-                                                    'sharingPreference' => $sharingPreference,
-                                                    'currentLocation'   => $currentLocation
+                                                    'location'           => $location,
+                                                    'geoFence'           => $geoFence,
+                                                    'notification'       => $notification,
+                                                    'platform'           => $platform,
+                                                    'layers'             => $layers,
+                                                    'account'            => $account,
+                                                    'sharingPreference'  => $sharingPreference,
+                                                    'sharingPrivacyMode' => $sharingPrivacyMode,
+                                                    'currentLocation'    => $currentLocation
                                                 )));
         $this->response->setStatusCode(Status::OK);
 

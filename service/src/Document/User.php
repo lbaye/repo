@@ -14,7 +14,9 @@ use Document\Circle;
 class User {
     const SALT = 'socialmaps';
     const STATUS_OFF = 'off';
-
+    const SHARING_PRIVACY_PUBLIC  = 1;
+    const SHARING_PRIVACY_PRIVATE = 2;
+    const SHARING_PRIVACY_CUSTOM  = 3;
 
     /** @ODM\Id */
     protected $id;
@@ -249,6 +251,9 @@ class User {
         'visible' => true
     );
 
+    /** @ODM\String */
+    protected $sharingPrivacyMode = self::SHARING_PRIVACY_PUBLIC;
+
     /**
      * @ODM\Hash
      *
@@ -378,6 +383,7 @@ class User {
             'blockedUsers' => $this->getBlockedUsers(),
             'blockedBy' => $this->getBlockedBy(),
             'distance' => $this->getDistance(),
+            'sharingPrivacyMode' => $this->getSharingPrivacyMode(),
             'age' => $this->getAge(),
             'status' => $this->getStatus(),
             'company' => $this->getCompany()
@@ -780,6 +786,14 @@ class User {
 
     public function getOldPassword() {
         return $this->oldPassword;
+    }
+
+    public function setSharingPrivacyMode($sharingPrivacyMode) {
+        $this->sharingPrivacyMode = $sharingPrivacyMode;
+    }
+
+    public function getSharingPrivacyMode() {
+        return $this->sharingPrivacyMode;
     }
 
     public function getDistance() {
