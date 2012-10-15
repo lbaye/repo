@@ -286,8 +286,8 @@ class Settings extends Base
             $location['lng'] = floatval($data['lng']);
 
             $this->user->setCurrentLocation($location);
-
             $this->_updateVisibility($this->user);
+            $this->persistOnly();
 
             // Update additional information
             try {
@@ -299,7 +299,7 @@ class Settings extends Base
 
             //$this->_sendPushNotification($this->user->getId(), 'TEst generic push', 'example_push_event');
 
-            return $this->persistAndReturn($location);
+            return $this->persistAndReturn($location, true);
 
         } else {
 
@@ -340,13 +340,22 @@ class Settings extends Base
         $this->addTask('update_last_seen_address', json_encode(array('user_id' => $user->getId())));
     }
 
-    private function persistAndReturn($result)
+    private function persistAndReturn($result, $already_persisted = false)
+    {
+        if ($already_persisted == false) {
+            $this->user->setUpdateDate(new \DateTime());
+            $this->dm->persist($this->user);
+            $this->dm->flush();
+        }
+        
+        return $this->_generateResponse(array('result' => $result));
+    }
+
+    private function persistOnly()
     {
         $this->user->setUpdateDate(new \DateTime());
         $this->dm->persist($this->user);
         $this->dm->flush();
-
-        return $this->_generateResponse(array('result' => $result));
     }
 
     private function _sendProximityAlerts(\Document\User $user)

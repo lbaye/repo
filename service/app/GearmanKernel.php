@@ -15,15 +15,18 @@ class GearmanKernel
      */
     protected $worker;
 
+    private $logger;
+
     /**
      * @var array
      */
     protected $services;
 
-    public function __construct(DocumentManager $dm, $conf = array())
+    public function __construct(DocumentManager $dm, $conf = array(), $pLogger = null)
     {
         $this->conf = $conf;
         $this->services['dm'] = $dm;
+        $this->logger = $pLogger;
 
         $this->prepare();
 
@@ -67,6 +70,7 @@ class GearmanKernel
                 $eventClass = 'Event\\' . $file->getBasename('.php');
                 if ($eventClass != 'Event\Base') {
                     $workerObject = new $eventClass($this->conf, $this->services);
+                    $workerObject->setLogger($this->getLogger());
                     $this->worker->addFunction($workerObject->getFunction(), array($workerObject, 'run'));
                 }
             }
@@ -92,6 +96,14 @@ class GearmanKernel
         $transport->setPassword($password);
 
         $this->services['mailer'] = Swift_Mailer::newInstance($transport);
+    }
+
+    public function setLogger($logger) {
+        $this->logger = $logger;
+    }
+
+    public function getLogger() {
+        return $this->logger;
     }
 
 }

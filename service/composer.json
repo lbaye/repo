@@ -10,7 +10,8 @@
         "emran/php-solr-helper": "dev-master",
         "swiftmailer/swiftmailer": ">=4.2.0,<4.3-dev",
         "facebook/php-sdk": "dev-master",
-        "knplabs/gaufrette": "dev-master"
+        "knplabs/gaufrette": "dev-master",
+        "monolog/monolog": "1.2.1"
     },
     "minimum-stability": "dev"
 }
