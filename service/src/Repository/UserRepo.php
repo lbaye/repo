@@ -168,6 +168,15 @@ class UserRepo extends Base
         return false;
     }
 
+    public function checkFbUser($data)
+    {
+        if (isset($data['facebookId'])) {
+            $existFacebookId = $this->findOneBy(array('facebookId' => $data['facebookId']));
+            return is_null($existFacebookId) ? false : true;
+        }
+
+    }
+
     public function update($data, $id)
     {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {

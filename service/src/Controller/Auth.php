@@ -229,7 +229,7 @@ class Auth extends Base
             return $this->response;
         }
 
-        if ($this->userRepository->exists($data['facebookId'])) {
+        if ($this->userRepository->checkFbUser($data)) {
             $this->response->setContent(json_encode(array('message' => "Your 'facebookId' is already exist.")));
             $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
             return $this->response;
