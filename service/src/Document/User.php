@@ -6,6 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 use Document\Circle;
+use Helper\ShareConstant;
 
 /**
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
@@ -14,9 +15,6 @@ use Document\Circle;
 class User {
     const SALT = 'socialmaps';
     const STATUS_OFF = 'off';
-    const SHARING_PRIVACY_PUBLIC  = 1;
-    const SHARING_PRIVACY_PRIVATE = 2;
-    const SHARING_PRIVACY_CUSTOM  = 3;
 
     /** @ODM\Id */
     protected $id;
@@ -252,7 +250,13 @@ class User {
     );
 
     /** @ODM\String */
-    protected $sharingPrivacyMode = self::SHARING_PRIVACY_PUBLIC;
+    protected $shareLocation = ShareConstant::SHARING_ALL_USERS;
+
+    /** @ODM\String */
+    protected $shareProfilePicture = ShareConstant::SHARING_ALL_USERS;
+
+    /** @ODM\String */
+    protected $shareNewsFeed = ShareConstant::SHARING_ALL_USERS;
 
     /**
      * @ODM\Hash
@@ -383,7 +387,9 @@ class User {
             'blockedUsers' => $this->getBlockedUsers(),
             'blockedBy' => $this->getBlockedBy(),
             'distance' => $this->getDistance(),
-            'sharingPrivacyMode' => $this->getSharingPrivacyMode(),
+            'shareLocation' => $this->getShareLocation(),
+            'shareProfilePicture' => $this->getShareProfilePicture(),
+            'shareNewsFeed' => $this->getShareNewsFeed(),
             'age' => $this->getAge(),
             'status' => $this->getStatus(),
             'company' => $this->getCompany()
@@ -788,12 +794,28 @@ class User {
         return $this->oldPassword;
     }
 
-    public function setSharingPrivacyMode($sharingPrivacyMode) {
-        $this->sharingPrivacyMode = $sharingPrivacyMode;
+    public function setShareLocation($shareLocation) {
+        $this->shareLocation = $shareLocation;
     }
 
-    public function getSharingPrivacyMode() {
-        return $this->sharingPrivacyMode;
+    public function getShareLocation() {
+        return $this->shareLocation;
+    }
+
+    public function setShareProfilePicture($shareProfilePicture) {
+        $this->shareProfilePicture = $shareProfilePicture;
+    }
+
+    public function getShareProfilePicture() {
+        return $this->shareProfilePicture;
+    }
+
+    public function setShareNewsFeed($shareNewsFeed) {
+        $this->shareNewsFeed = $shareNewsFeed;
+    }
+
+    public function getShareNewsFeed() {
+        return $this->shareNewsFeed;
     }
 
     public function getDistance() {
