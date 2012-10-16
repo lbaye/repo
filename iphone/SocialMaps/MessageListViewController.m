@@ -426,10 +426,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
         
         if ([[[circleListGlobalArray objectAtIndex:indexPath.row] circleName] isEqual:[NSNull null]] ) {
-            cell.circrcleName.text=@"Custom";
+            //cell.circrcleName.text=@"Custom";
+            cell.circrcleName.text = [NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]];
         } else {
             NSLog(@"circle name %@", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName]);
-            cell.circrcleName.text = [[circleListGlobalArray objectAtIndex:indexPath.row] circleName];
+            //cell.circrcleName.text = [[circleListGlobalArray objectAtIndex:indexPath.row] circleName];
+            cell.circrcleName.text=[NSString stringWithFormat:@"%@ (%d)", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName],[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
         }
         
         if ([selectedCircleCheckArr containsObject:[circleListGlobalArray objectAtIndex:indexPath.row]]) {

@@ -934,6 +934,7 @@ AppDelegate *smAppDelegate;
     aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"age" key2:nil key3:nil] integerValue];
     aUserInfo.coverPhoto = [self getNestedKeyVal:jsonObjects key1:@"coverPhoto" key2:nil key3:nil];
     aUserInfo.status = [self getNestedKeyVal:jsonObjects key1:@"status" key2:nil key3:nil];
+    aUserInfo.shareLocationOption = [self getNestedKeyVal:jsonObjects key1:@"shareLocation" key2:nil key3:nil];
         
     aUserInfo.circles = [[NSMutableArray alloc] init];
     for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
@@ -4797,6 +4798,52 @@ AppDelegate *smAppDelegate;
         {
             NSLog(@"Failed to register device: status=%d", responseStatus);
         }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^
+     {
+         NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+     }];
+    
+    //[request setDelegate:self];
+    [request startAsynchronous];
+}
+
+//Sharing Privacy update
+- (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption {
+    
+    NSLog(@"setSharingPrivacySettings:");
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/sharing_privacy_mode",WS_URL]];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:sharingOption forKey:privacyType];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200) {
+            NSLog(@"SharingPrivacySettings status: %@", responseString);
+        } else {
+            NSLog(@"Failed SharingPrivacySettings: status=%d", responseStatus);
+        }
+        
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
     }];
