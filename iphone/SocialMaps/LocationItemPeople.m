@@ -25,6 +25,7 @@
     UITextView   *txtMsg = (UITextView*) [cell viewWithTag:2006];  
     UIImageView *regMedia = (UIImageView*) [cell viewWithTag:20012];
     UIButton *frndButton = (UIButton*) [cell viewWithTag:20016];
+    UIButton *refButton = (UIButton*) [cell viewWithTag:20017];
     
     if (txtMsg == nil) {
         CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
@@ -108,7 +109,38 @@
         frndButton.hidden=YES;
         NSLog(@"is hidden:YES userInfo.friendshipStatus %@",userInfo.friendshipStatus);
         [frndButton setTitle:@"Non-Friend" forState:UIControlStateNormal];
-    } 
+    }
+    
+    if (refButton==nil) 
+    {
+        refButton=[UIButton buttonWithType:UIButtonTypeCustom];
+        refButton.frame= CGRectMake(40,66,45,20);
+        refButton.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        refButton.userInteractionEnabled=NO;
+        refButton.layer.borderWidth=1.0;
+        refButton.layer.masksToBounds = YES;
+        [refButton.layer setCornerRadius:5.0];
+        [refButton setBackgroundImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
+        [refButton.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+        [refButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        refButton.tag=20017;
+        
+        
+        [cell.contentView addSubview:refButton];
+    }
+    if ([userInfo.source isEqualToString:@"fb-public"]==TRUE)
+    {
+        refButton.hidden=NO;
+        [refButton setTitle:@"FB friend" forState:UIControlStateNormal];
+        NSLog(@"is hidden:NO userInfo.friendshipStatus %@",userInfo.source);
+    }
+    else
+    {
+        refButton.hidden=YES;
+        NSLog(@"is hidden:YES userInfo.friendshipStatus %@",userInfo.source);
+        [refButton setTitle:@"Non-Friend" forState:UIControlStateNormal];
+    }     
+    
 	// Message
     
     // Debug

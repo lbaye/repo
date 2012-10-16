@@ -723,11 +723,17 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
 
+    if ((![smAppDelegate.fbId isEqualToString:@""]) && (![userDefault readFromUserDefaults:@"fbinvite"]))
+    {
+        NSLog(@"show fb invite");
+        [fbHelper inviteFriends:nil];
+        [userDefault writeToUserDefaults:@"fbinvite" withString:@"fbinvite"];
+    }
+
+    
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
     if (smAppDelegate.gotListing == FALSE) {
-        if (smAppDelegate.facebookLogin == TRUE && smAppDelegate.loginCount == 1)
-            [fbHelper inviteFriends:nil];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
 
@@ -1182,6 +1188,7 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"close connect fb");
     [connectToFBView removeFromSuperview];
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
 }
 
 - (IBAction)showPullDown:(id)sender {

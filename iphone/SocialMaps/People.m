@@ -39,5 +39,6 @@
 @synthesize coverImage;
 @synthesize regMedia;
 @synthesize blockStatus;
+@synthesize source;
 
 @end
