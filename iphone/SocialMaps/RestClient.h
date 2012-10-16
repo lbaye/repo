@@ -87,4 +87,6 @@
 -(void)getOtherUserProfile:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
 -(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
 
+- (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
+
 @end
