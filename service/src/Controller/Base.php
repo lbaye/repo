@@ -8,6 +8,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Repository\UserRepo as userRepository;
 
 use Helper\Status;
+use Helper\ShareConstant;
 
 abstract class Base
 {
@@ -137,6 +138,29 @@ abstract class Base
         foreach($documents as $doc) {
             if($doc->isPermittedFor($this->user)) {
                 $permittedDocs[] = $doc;
+            }
+        }
+
+        return $permittedDocs;
+    }
+
+    protected function _filterByExpire($documents)
+    {
+        $permittedDocs = array();
+
+        foreach ($documents as $doc) {
+            if ($doc->isPermittedFor($this->user)) {
+                $flag = 0;
+                $timeFilter = (array)$doc->getTime();
+
+                $difference = $this->timeDiff(date('Y-m-d H:i:s', time()), $timeFilter['date']);
+                if ((int)$difference < (int)ShareConstant::EVENT_EXPIRE) {
+                    $flag = 1;
+                }
+
+                if ($flag == 1) {
+                    $permittedDocs[] = $doc;
+                }
             }
         }
 
@@ -280,5 +304,16 @@ abstract class Base
         $is_or_are = (count($this->missingFields) > 1 ? 'are' : 'is');
 
         return $this->_generate500($fields_comma_joined . ' ' . $is_or_are . " required parameters.");
+    }
+
+    public function timeDiff($currentTime, $targetTime)
+    {
+        // convert to unix timestamps
+        $toDate = strtotime($currentTime);
+        $fromDate = strtotime($targetTime);
+        $difference = round(abs($toDate - $fromDate) / 60, 2);
+
+        // return the difference
+        return $difference;
     }
 }
