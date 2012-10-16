@@ -23,7 +23,7 @@ class LastSeenAddress extends Base
 
     public function run(\GearmanJob $job)
     {
-        $this->debug("Executing Event::LastSeenAddress with job - {$job->unique()}");
+        $this->info("Executing Event::LastSeenAddress with job - {$job->unique()}");
         
         $workload = json_decode($job->workload());
 

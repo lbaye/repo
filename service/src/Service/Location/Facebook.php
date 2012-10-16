@@ -7,23 +7,31 @@ class Facebook extends Base
     public function getFriendLocation($userId, $authToken)
     {
         $fql = 'SELECT id, author_uid, page_id, type, coords, timestamp, tagged_uids FROM location_post WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
-        $results = $this->fetchFqlResult($fql, $authToken);
+        $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
     }
 
-    public function getFriendCheckIns($userId, $authToken)
+    /**
+     * Retrieve checkins from all facebook friends.
+     *
+     * @param  $authToken string
+     * @return array of checkins
+     */
+    public function getFbFriendsCheckins()
     {
-        $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
-        $resultsCheckin = $this->fetchFqlResult($fql, $authToken);
+        $fql = 'SELECT author_uid, coords,timestamp FROM checkin WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
+        $fbCheckins = $this->fetchFqlResult($fql);
 
-        return ($resultsCheckin) ? $resultsCheckin : array();
+        return (!empty($fbCheckins)) ? $fbCheckins : array();
     }
 
-    public function getFriendInfo($userId, $authToken)
+    public function getFbFriendsInfo(array $friendIds)
     {
-        $fql = 'SELECT uid,name,pic_square,gender,location,email FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
-        $results = $this->fetchFqlResult($fql, $authToken);
+        $fql = 'SELECT uid, first_name, last_name, pic_square, email FROM user WHERE uid IN (' . implode(', ', $friendIds) . ')';
+        echo "FQL: $fql" . PHP_EOL;
+        
+        $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
     }
@@ -31,7 +39,7 @@ class Facebook extends Base
     public function getCheckInByAuth($userId, $authToken)
     {
         $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid = $userId  AND author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER by timestamp desc';
-        $results = $this->fetchFqlResult($fql, $authToken);
+        $results = $this->fetchFqlResult($fql);
         return ($results) ? $results : array();
     }
 
@@ -50,13 +58,14 @@ class Facebook extends Base
         return $avatar;
     }
 
-    private function fetchFqlResult($q, $accessToken)
+    private function fetchFqlResult($q)
     {
         $fql_query_url = 'https://graph.facebook.com' . '/fql?q='
                        . urlencode($q)
                        . '&access_token='
-                       . urlencode($accessToken);
+                       . urlencode($this->getFacebookAuthToken());
 
+        echo 'FB-REQUEST: ' . $fql_query_url . PHP_EOL;
         $fql_query_result = @file_get_contents($fql_query_url);
 
         if ($fql_query_result !== false) {
@@ -68,14 +77,15 @@ class Facebook extends Base
         }
     }
 
-    private function fetchGraphResult($path, $accessToken = null)
+    private function fetchGraphResult($path, array $params = array())
     {
-        $graphUrl = 'https://graph.facebook.com' . '/' . $path;
-
-        if ($accessToken) {
-            $graphUrl .= '?access_token=' . urlencode($accessToken);
+        $graphUrl = 'https://graph.facebook.com' . '/' . $path .
+                    '?access_token=' . urlencode($this->getFacebookAuthToken());
+        foreach ($params as $key => $value) {
+            $graphUrl .= '&' . urlencode($key) . '=' . urlencode($value);
         }
 
+        echo "FB-GRAPH: $graphUrl" . PHP_EOL;
         $graphResult = @file_get_contents($graphUrl);
 
         if ($graphResult !== false) {

@@ -875,20 +875,16 @@ class UserRepo extends Base
         return $visible_people;
     }
 
-    public function getFacebookUsers($start = null, $limit = null)
+    public function getFbConnectedUsers($start = 0, $limit = 50)
     {
-        $query = $this->createQueryBuilder()->field('facebookAuthToken')->exists(true);
-
-        if ($start != null) {
-            $query->skip($start);
-        }
-
-        if ($limit != null) {
-            $query->limit($limit);
-        }
+        $query = $this->createQueryBuilder()
+                      ->field('facebookAuthToken')->exists(true)
+                      ->hydrate(false)
+                      ->skip($start)
+                      ->limit($limit);
 
         $users = $query->getQuery()->execute();
-        return (count($users)) ? $users : array();
+        return (!empty($users)) ? $users : array();
     }
 
     public function removeFriendFromCircle($id, array $data)

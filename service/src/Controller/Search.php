@@ -5,12 +5,11 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Repository\UserRepo as UserRepository;
-use Repository\ExternalLocationRepo as ExternalLocationRepository;
+use Repository\ExternalUserRepo as ExtUserRepo;
 use Helper\Location;
 use Helper\Status;
 
-class Search extends Base
-{
+class Search extends Base {
     /**
      * Total number of users to return
      */
@@ -21,31 +20,24 @@ class Search extends Base
      */
     const DEFAULT_RADIUS = .017985612;
 
-    /**
-     * @var ExternalLocationRepository
-     */
-    private $externalLocationRepository;
+    private $extUserRepo;
 
     /**
      * Initialize the controller.
      */
-    public function init()
-    {
+    public function init() {
         parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
-        $this->externalLocationRepository = $this->dm->getRepository('Document\ExternalLocation');
-        $this->externalLocationRepository->setCurrentUser($this->user);
-        $this->externalLocationRepository->setConfig($this->config);
+        $this->extUserRepo = $this->dm->getRepository('Document\ExternalUser');
 
         $this->_ensureLoggedIn();
     }
 
-    public function all()
-    {
+    public function all() {
         $data = $this->request->request->all();
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
@@ -60,39 +52,22 @@ class Search extends Base
         }
     }
 
-    protected function people($data)
-    {
-        $location = array('lat' => (float) $data['lat'], 'lng' => (float) $data['lng']);
+    protected function people($data) {
+        $location = array('lat' => (float)$data['lat'], 'lng' => (float)$data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
         $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD);
         $friends = $this->user->getFriends();
 
         array_walk($people, function(&$person) use ($friends, $data) {
-            $person['external'] = false;
+                $person['external'] = false;
 
-        });
-
-        if (is_null($keywords) && count($people) < self::PEOPLE_THRESHOLD) {
-
-            $difference = self::PEOPLE_THRESHOLD - count($people);
-            $externalPeople = $this->externalLocationRepository->getNearBy($location, $difference);
-
-            array_walk($externalPeople, function(&$person) use ($friends) {
-                $person['external'] = true;
             });
-
-            if ($externalPeople) {
-                $people = array_merge($people, $externalPeople);
-            }
-
-        }
 
         return $people;
     }
 
-    protected function places($data)
-    {
+    protected function places($data) {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
@@ -110,26 +85,28 @@ class Search extends Base
     }
 
     /** TODO: Finalize deals search */
-    protected function deals($data)
-    {
+    protected function deals($data) {
         return array();
     }
 
-    
 
-    public function allPeopleList()
-    {
+    public function allPeopleList() {
         $data = $this->request->request->all();
         $results = $this->people($data);
 
         return $this->_generateResponse($results);
     }
 
-    protected function secondDegreeFriends($data)
-    {
+    protected function secondDegreeFriends($data) {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        return $this->externalLocationRepository->getExternalUsers($this->user->getId(), $limit = 200);
+        return array_values(
+            $this->dm->createQueryBuilder('Document\ExternalUser')
+                    ->field('smFriends')->equals($this->user->getId())
+                    ->hydrate(false)
+                    ->skip(0)
+                    ->limit(200)
+                    ->getQuery()->execute()->toArray());
     }
 }
