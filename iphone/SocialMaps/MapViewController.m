@@ -37,6 +37,7 @@
 #import "UserBasicProfileViewController.h"
 #import "MapAnnotationEvent.h"
 #import "ViewEventDetailViewController.h"
+#import "CustomAlert.h"
 
 @interface MapViewController ()
 
@@ -74,7 +75,7 @@
 @synthesize filteredList;
 @synthesize selectedAnno;
 @synthesize circleView;
-@synthesize mapAnnoEvent;
+@synthesize mapAnnoEvent,connectToFBView;
 
 UserFriends *afriend;
 NSMutableDictionary *imageDownloadsInProgress;
@@ -151,7 +152,7 @@ ButtonClickCallbackData callBackData;
 
 -(void)saveFBProfileImage
 {
-    if (smAppDelegate.fbId) 
+    if ((smAppDelegate.fbId) && (![smAppDelegate.fbId isEqualToString:@""]))
     {
     NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",smAppDelegate.fbId];
     UIImage *profileImage=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:profileImageUrl]]];
@@ -161,6 +162,21 @@ ButtonClickCallbackData callBackData;
     [prefs setObject:[NSKeyedArchiver archivedDataWithRootObject:profileImage] forKey:@"FBProfilePic"];
     [prefs synchronize];
     }
+}
+
+-(void)showConnectFBAlert
+{
+    [CustomAlert setBackgroundColor:[UIColor grayColor] 
+                    withStrokeColor:[UIColor grayColor]];
+    CustomAlert *fbConnect = [[CustomAlert alloc]
+                               initWithTitle:@"Connect With Facebook"
+                               message:@"This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends"
+                               delegate:nil
+                               cancelButtonTitle:@"Done"
+                               otherButtonTitles:nil];
+    
+    [fbConnect show];
+    [fbConnect autorelease];
 }
 
 // Send the friend request out
@@ -227,7 +243,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno {
-    NSLog(@"MapViewController:mapAnnotationInfoUpdated");
+//    NSLog(@"MapViewController:mapAnnotationInfoUpdated");
     [_mapView removeAnnotation:anno];
     [_mapView addAnnotation:anno];
     //by Rishi
@@ -544,7 +560,9 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequests:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentFriendRequest:) name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsForMapView:) name:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 //
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
@@ -842,6 +860,7 @@ ButtonClickCallbackData callBackData;
 - (void)viewWillAppear:(BOOL)animated
 {
     [circleView removeFromSuperview];
+    [connectToFBView removeFromSuperview];
     if ([CLLocationManager locationServicesEnabled])
         _mapView.showsUserLocation=YES;
     else
@@ -883,6 +902,11 @@ ButtonClickCallbackData callBackData;
     timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     pullDownView.hidden = NO;
     //[self.view bringSubviewToFront:viewSearch];
+    userDefault=[[UserDefault alloc] init];
+    if ((![userDefault readFromUserDefaults:@"connectWithFB"]) && (smAppDelegate.smLogin==TRUE))
+    {
+        [self.view addSubview:connectToFBView];
+    }
     
 }
 
@@ -1013,6 +1037,35 @@ ButtonClickCallbackData callBackData;
     NSLog(@"In prepareForSegue:MapViewController");
     LocationItem *selLocation = (LocationItem*) selectedAnno;
     selLocation.currDisplayState = MapAnnotationStateNormal;
+}
+
+-(IBAction)connectWithFB:(id)sender
+{
+    NSLog(@"do connect fb");
+    Facebook *facebook = [[FacebookHelper sharedInstance] facebook];
+//    [smAppDelegate showActivityViewer:self.view];
+    NSArray *permissions = [[NSArray alloc] initWithObjects:
+                            @"email",
+                            @"user_likes", 
+                            @"user_photos", 
+                            @"publish_checkins", 
+                            @"photo_upload", 
+                            @"user_location",
+                            @"user_birthday",
+                            @"user_about_me",
+                            @"publish_stream",
+                            @"read_stream",
+                            nil];
+    [facebook authorize:permissions];
+//    smAppDelegate.facebookLogin=TRUE;
+    [permissions release];
+    [connectToFBView removeFromSuperview];
+}
+
+-(IBAction)closeConnectWithFB:(id)sender
+{
+    NSLog(@"close connect fb");
+    [connectToFBView removeFromSuperview];
 }
 
 - (IBAction)showPullDown:(id)sender {
@@ -1507,15 +1560,51 @@ ButtonClickCallbackData callBackData;
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];    
 }
 
-//- (void)getAllEventsDone:(NSNotification *)notif
-//{
-//    [smAppDelegate hideActivityViewer];
-//    [smAppDelegate.window setUserInteractionEnabled:YES];
-//    eventListGlobalArray=[notif object];
-//    
-//   
-//    NSLog(@"GOT SERVICE DATA.. :D");
-//}
+- (void)connectFBDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+    NSLog(@"Connected with fb :D %@",[notif object]);
+    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+}
+
+- (void)getConnectwithFB:(NSNotification *)notif
+{
+    NSLog(@"(smAppDelegate.facebookLogin: %i smAppDelegate.smLogin: %i",smAppDelegate.facebookLogin,smAppDelegate.smLogin);
+    if ((smAppDelegate.smLogin==TRUE))
+    {
+        userDefault=[[UserDefault alloc] init];
+        NSLog(@"");
+        RestClient *rc=[[RestClient alloc] init];
+        [connectToFBView removeFromSuperview];
+        [smAppDelegate showActivityViewer:self.view];
+        NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
+        
+        if ([smAppDelegate.fbId isEqualToString:@""])
+        {
+            smAppDelegate.fbId=[userDefault readFromUserDefaults:@"FBUserId"];
+        }
+        
+        if (smAppDelegate.fbAccessToken) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :smAppDelegate.fbAccessToken];
+            NSLog(@"got access token");
+        }
+        else if ([userDefault readFromUserDefaults:@"FBAccessTokenKey"]) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :[userDefault readFromUserDefaults:@"FBAccessTokenKey"]];
+            NSLog(@"got accees token from user default");
+        }
+        else
+        {
+            [smAppDelegate hideActivityViewer];
+            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
+        }
+    }
+}
+
 
 - (IBAction)gotoBreadcrumbs:(id)sender
 {

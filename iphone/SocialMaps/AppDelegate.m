@@ -73,6 +73,7 @@
 @synthesize deviceTokenId;
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
+@synthesize smLogin;
 
 - (void)dealloc
 {
@@ -101,6 +102,7 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     facebookLogin = FALSE;
+    smLogin = FALSE;
     gotListing = FALSE;
     needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];

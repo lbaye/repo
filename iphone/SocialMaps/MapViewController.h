@@ -62,6 +62,7 @@ typedef enum _SHARING_TYPES {
     BOOL isFirstTimeDownloading;
     NSTimer *timerGotListing;
     MapAnnotationEvent *mapAnnoEvent;
+    IBOutlet UIView *connectToFBView;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -95,6 +96,7 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UITableView *inviteFrndTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
 @property(nonatomic,retain) IBOutlet UIView *circleView;
+@property(nonatomic,retain) IBOutlet UIView *connectToFBView;
 //@property(nonatomic,retain) NSMutableDictionary *imageDownloadsInProgress; 
 
 - (IBAction)showPullDown:(id)sender;
@@ -146,5 +148,7 @@ typedef enum _SHARING_TYPES {
 -(IBAction)gotonNewsFeed:(id)sender;
 -(IBAction)gotonDeals:(id)sender;
 -(void)loadAnnotationForEvents;
+-(IBAction)connectWithFB:(id)sender;
+-(IBAction)closeConnectWithFB:(id)sender;
 
 @end

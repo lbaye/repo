@@ -72,6 +72,7 @@
     NSString        *deviceTokenId;   // For PUSH notification
     bool            deviceTokenChanged;
     bool            facebookLogin;
+    bool            smLogin;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -122,6 +123,7 @@
 @property (atomic, copy) NSString *deviceTokenId;
 @property (atomic) bool deviceTokenChanged;
 @property (atomic) bool facebookLogin;
+@property (atomic) bool smLogin;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

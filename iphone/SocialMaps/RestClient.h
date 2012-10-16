@@ -85,5 +85,6 @@
 -(void)unBlockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
 -(void)getAllEventsForMap:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getOtherUserProfile:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+-(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
 
 @end

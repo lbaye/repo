@@ -245,8 +245,10 @@
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
+        {
             [self performSegueWithIdentifier: @"showMapView" sender: self];
-        
+        }
+        smAppDelegate.smLogin=TRUE;
         smAppDelegate.fbId = @"";
         
     } else {

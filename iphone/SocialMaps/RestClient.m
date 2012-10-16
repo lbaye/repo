@@ -946,7 +946,7 @@ AppDelegate *smAppDelegate;
             UserInfo *afriend = [[UserInfo alloc] init];
             afriend.userId = id;
             [aCircle.friends addObject:afriend];
-            NSLog(@"In getAccountSettings: Circle=%@, friend=%@", aCircle.circleName, afriend.userId);
+//            NSLog(@"In getAccountSettings: Circle=%@, friend=%@", aCircle.circleName, afriend.userId);
         }
         if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
             aCircle.type = CircleTypeSystem;
@@ -1073,7 +1073,7 @@ AppDelegate *smAppDelegate;
             
             aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
             
-            NSLog(@"getAccountSettings: %@",jsonObjects);
+//            NSLog(@"getAccountSettings: %@",jsonObjects);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
         } 
@@ -5474,6 +5474,68 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getBasicProfile");
+    [request startAsynchronous];
+    
+}
+
+-(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken
+{
+    NSString *route = [NSString stringWithFormat:@"%@/auth/fb_connect",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    __block UserInfo *aUserInfo = nil;
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:FBid forKey:@"facebookId"];
+    [request addPostValue:fbAuthToken forKey:@"facebookAuthToken"];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"request FBid,fbAuthToken %@ %@",FBid,fbAuthToken);
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204|| responseStatus == 406) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSLog(@"fb response: %@",jsonObjects);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_FB_DONE object:[jsonObjects objectForKey:@"message"]];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_FB_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt do connect fb");
     [request startAsynchronous];
     
 }
