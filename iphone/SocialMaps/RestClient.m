@@ -1552,7 +1552,7 @@ AppDelegate *smAppDelegate;
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"POST"];
-    [request addRequestHeader:authToken value:@"ada9369b801c733bfdf75bc2c6aa14c83e4a43bf"];
+    [request addRequestHeader:authToken value:authTokenValue];
     [request addPostValue:geolocation.latitude forKey:@"lat"];
     [request addPostValue:geolocation.longitude forKey:@"lng"];
     
