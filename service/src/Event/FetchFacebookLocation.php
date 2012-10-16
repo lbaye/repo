@@ -59,7 +59,7 @@ class FetchFacebookLocation extends Base {
                                      $checkinWithMeta['refId']);
 
                         $extUser = $extUserRepo->map($checkinWithMeta);
-                        $extUser->setSmFriends(array($smUser->getId()));
+                        $extUser->setSmFriends(array($userId));
                         $changed = true;
                     } else {
 
@@ -79,7 +79,7 @@ class FetchFacebookLocation extends Base {
                             $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
                             $extUser->setSmFriends(
                                 array_merge($extUser->getSmFriends(),
-                                            array($smUser->getId())));
+                                            array($userId)));
                         }
                     }
 

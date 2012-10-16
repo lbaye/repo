@@ -101,12 +101,20 @@ class Search extends Base {
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
-        return array_values(
+        $users = array_values(
             $this->dm->createQueryBuilder('Document\ExternalUser')
                     ->field('smFriends')->equals($this->user->getId())
                     ->hydrate(false)
                     ->skip(0)
                     ->limit(200)
                     ->getQuery()->execute()->toArray());
+        
+        foreach ($users as &$user) {
+            $user['distance'] = \Helper\Location::distance(
+                $location['lat'], $location['lng'],
+                $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+        }
+
+        return $users;
     }
 }
