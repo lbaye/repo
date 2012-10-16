@@ -15,5 +15,7 @@ When /^I'm logged in through "([^"]*)" and "([^"]*)"$/ do |email, password|
     @rand_email = email = Util::Params::Functions.rand_email
   end
   @authResponse = Util::Params::Functions.authenticate(email, password)
+  #puts "user token of logged in user #{@authResponse['authToken']}"
   #puts "user id of logged in user #{@authResponse['id']}"
+
 end

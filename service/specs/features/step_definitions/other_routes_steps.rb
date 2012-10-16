@@ -12,7 +12,7 @@ end
 Then /^Response's "(.*?)" attribute should be equal to "(.*?)"$/ do |attr, value|
   res = @response.json
   res[attr].should == value
-  res['userId'].should ==  @authResponse['id']
+  #res['userId'].should ==  @authResponse['id']
 end
 
 

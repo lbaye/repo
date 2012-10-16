@@ -1,4 +1,10 @@
 When /^I'm sending http "(.*?)" request to "(.*?)"$/ do |http_method, uri|
+
+  if uri.match(/\{last_meetup_id\}/)
+    #puts "matched"
+    uri.gsub!(/\{last_meetup_id\}/, @meetup_id)
+  end
+
   @response = @client.send(http_method.downcase.to_sym, uri)
 
   if @authResponse
@@ -14,6 +20,7 @@ When /^I'm sending http "(.*?)" request to "(.*?)"$/ do |http_method, uri|
     uri.gsub!(/(eval\((.*?)\))/, eval("#{result[1]}"))
     @response.set_uri("#{@client.service_uri}#{uri}")
   end
+
 end
 
 When /^I'm posting "(.*?)"$/ do |str_params|
@@ -21,11 +28,10 @@ When /^I'm posting "(.*?)"$/ do |str_params|
 end
 
 
-
 Then /^I should see http "(.*?)" status$/ do |code|
   #puts "user id of random user #{@user_id}"
 
-  p @response.body
+  #p @response.json
   @response.code.should == code
 end
 

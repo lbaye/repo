@@ -16,7 +16,7 @@ Scenario: Sending friend request
   Then I should see http "200" status
   And Response's "message" attribute should be equal to "Test message"
 
-Scenario: Get friend request
+Scenario: Receive friend request
   Given I've already setup user account with "{set_rand_email}" and "121212"
   And I've already setup user account with "test@example.com" and "abcd"
   And I'm logged in through "test@example.com" and "abcd"

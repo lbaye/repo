@@ -4,8 +4,8 @@ Feature: Messaging
   I want to send message with single or multiple recipients.
 
   Scenario: Create new message
-    Given I've already setup user account with "xyz@test.com" and "121212"
-    And I'm logged in through "xyz@test.com" and "121212"
+    Given I've already setup user account with "test@example.com" and "abcd"
+    And I'm logged in through "test@example.com" and "abcd"
 
     When I'm sending http "POST" request to "/messages"
     And I'm posting "subject=Hi, content=Hello world, recipients[]={create_user['id']}"
