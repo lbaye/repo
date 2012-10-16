@@ -16,6 +16,7 @@
 #import "MapAnnotationPlace.h"
 #import "MapAnnotationEvent.h"
 #import "PullableView.h"
+#import "CustomRadioButton.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -31,7 +32,7 @@ typedef enum _SHARING_TYPES {
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
                                 MapAnnotationDelegate, IconDownloaderDelegate,
-                                UIGestureRecognizerDelegate,PullableViewDelegate> {
+                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -63,6 +64,8 @@ typedef enum _SHARING_TYPES {
     NSTimer *timerGotListing;
     MapAnnotationEvent *mapAnnoEvent;
     IBOutlet UIView *connectToFBView;
+    IBOutlet UIView *viewSharingPrefMapPullDown;
+                                    
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
