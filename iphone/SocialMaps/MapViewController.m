@@ -310,8 +310,11 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:mapAnnotationInfoUpdated");
     if (_mapView && anno) {
         //Crashing fix Rishi
-        [_mapView removeAnnotation:anno];
-        [_mapView addAnnotation:anno];
+        if (CLLocationCoordinate2DIsValid(anno.coordinate))
+        {
+            [_mapView removeAnnotation:anno];
+            [_mapView addAnnotation:anno];  
+        }
     }
     
     //by Rishi

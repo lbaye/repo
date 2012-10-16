@@ -52,6 +52,10 @@
         [annoView.layer setMasksToBounds:YES];
         [annoView addSubview:locImage];
         [locImage release];
+        
+        
+
+        
         return annoView;
     }
     return nil;
@@ -99,7 +103,9 @@
     changeState.tag = 11001;
     [annoView addSubview:changeState]; 
     annoView.centerOffset = CGPointMake(0.0, 0.0);
-     
+    
+    
+    
     return annoView;
 }
 

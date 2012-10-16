@@ -16,7 +16,20 @@
 
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
-    
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    {
+        LocationItemPeople *locItemPeople=(LocationItemPeople *)locItem;
+        if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+        {
+            UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(38,3,12,12)];
+            sourceIcon.tag=12002;
+            sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+            [annoView addSubview:sourceIcon];
+            NSLog(@"fb subview added");
+            [sourceIcon release];
+        }
+        
+    }
     return annoView;
 }
 
@@ -56,10 +69,11 @@
     lblMsg.textColor = [UIColor blackColor];
     [msgView addSubview:lblMsg];
     
-    if ([locItemPeople.userInfo.source isEqualToString:@"fb-public"]) {
-        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
-        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
-        [msgView addSubview:sourceIcon];
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
+        [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
+//        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
+//        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+//        [msgView addSubview:sourceIcon];
 
     }
     
@@ -193,9 +207,10 @@
     [infoView addSubview:directionBtn];
     // TODO: hiding for appstore submission. revert back once feature is implemenetd
     directionBtn.hidden = TRUE;
-    
+
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
     // Message request
-    if ([locItemPeople.userInfo.source isEqualToString:@"fb-public"])
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
         UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,35,20,20)];
         sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];

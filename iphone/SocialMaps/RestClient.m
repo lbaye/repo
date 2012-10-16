@@ -1657,10 +1657,10 @@ AppDelegate *smAppDelegate;
                 {
                     People *people=[[People alloc] init];
                     
-                    people.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                    people.userId = [self getNestedKeyVal:item key1:@"_id" key2:@"$id" key3:nil];
                     people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
-                    people.firstName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
-                    people.lastName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+                    people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                    people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
                     people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
                     people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
                     people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
@@ -1673,8 +1673,8 @@ AppDelegate *smAppDelegate;
                     people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
                     people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                     people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
-                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"coords" key2:@"lng" key3:nil];
-                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"coords" key2:@"lat" key3:nil];
+                    people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
+                    people.currentLocationLat = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lat" key3:nil];
                     
                     people.lastLogin = [self getDateFromJsonStruct:item name:@"lastLogin"];
                     [people setSettingUnit:[self getNestedKeyVal:item key1:@"settings" key2:@"unit" key3:nil]];
@@ -1688,7 +1688,7 @@ AppDelegate *smAppDelegate;
                     people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
                     people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
                     people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
-                    people.source=[self getNestedKeyVal:item key1:@"source" key2:nil key3:nil];
+                    people.source=[self getNestedKeyVal:item key1:@"refType" key2:nil key3:nil];
 //                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     

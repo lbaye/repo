@@ -128,7 +128,7 @@
         
         [cell.contentView addSubview:refButton];
     }
-    if ([userInfo.source isEqualToString:@"fb-public"]==TRUE)
+    if ([userInfo.source isEqualToString:@"facebook"]==TRUE)
     {
         refButton.hidden=NO;
         [refButton setTitle:@"FB friend" forState:UIControlStateNormal];
