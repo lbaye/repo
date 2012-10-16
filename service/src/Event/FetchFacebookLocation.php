@@ -49,37 +49,38 @@ class FetchFacebookLocation extends Base {
             # Iterate through each check in
             foreach ($checkinsWithMetaData as $checkinWithMeta) {
                 try {
+                    if (isset($checkinWithMeta['refId'])) {
+                        # Retrieve or create new external user
+                        $extUser = $extUserRepo->findOneBy(
+                            array('refId' => $checkinWithMeta['refId'] . ''));
 
-                    # Retrieve or create new external user
-                    $extUser = $extUserRepo->findOneBy(
-                        array('refId' => $checkinWithMeta['refId'] . ''));
+                        if ($extUser == null) {
+                            $this->debug("Not an existing facebook user - " .
+                                         $checkinWithMeta['refId']);
 
-                    if ($extUser == null) {
-                        $this->debug("Not an existing facebook user - " .
-                                     $checkinWithMeta['refId']);
-
-                        $extUser = $extUserRepo->map($checkinWithMeta);
-                        $extUser->setSmFriends(array($userId));
-                        $changed = true;
-                    } else {
-
-                        # If current location is changed update!
-                        $location = $extUser->getCurrentLocation();
-
-                        if ((float)$location['lat'] != (float)$checkinWithMeta['currentLocation']['lat'] ||
-                            (float)$location['lng'] != (float)$checkinWithMeta['currentLocation']['lng']
-                        ) {
-                            $this->debug("Location changed for user - {$extUser->getFirstName()}");
-                            $extUser = $extUserRepo->map($checkinWithMeta, $extUser);
+                            $extUser = $extUserRepo->map($checkinWithMeta);
+                            $extUser->setSmFriends(array($userId));
                             $changed = true;
-                        }
+                        } else {
 
-                        # If current user is not in smUsers list add him
-                        if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
-                            $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
-                            $extUser->setSmFriends(
-                                array_merge($extUser->getSmFriends(),
-                                            array($userId)));
+                            # If current location is changed update!
+                            $location = $extUser->getCurrentLocation();
+
+                            if ((float)$location['lat'] != (float)$checkinWithMeta['currentLocation']['lat'] ||
+                                (float)$location['lng'] != (float)$checkinWithMeta['currentLocation']['lng']
+                            ) {
+                                $this->debug("Location changed for user - {$extUser->getFirstName()}");
+                                $extUser = $extUserRepo->map($checkinWithMeta, $extUser);
+                                $changed = true;
+                            }
+
+                            # If current user is not in smUsers list add him
+                            if (!in_array($smUser->getId(), $extUser->getSmFriends())) {
+                                $this->debug("Adding to {$extUser->getFirstName()} SM friends list");
+                                $extUser->setSmFriends(
+                                    array_merge($extUser->getSmFriends(),
+                                                array($userId)));
+                            }
                         }
                     }
 
