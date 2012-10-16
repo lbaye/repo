@@ -89,13 +89,14 @@ class FetchFacebookLocation extends Base {
                 } catch (\Exception $e) {
                     $this->error("Failed to handle checkin data - " . json_encode($checkinWithMeta));
                 }
+
+                # TODO: Bring it out of this loop
+                if ($changed)
+                    $dm->flush();
+
+                # Clear from cached memory
+                $dm->detach($extUser);
             }
-
-            if ($changed)
-                $dm->flush();
-
-            # Clear from cached memory
-            $dm->detach($extUser);
 
         } else {
             $this->debug("No facebook checkins found");
