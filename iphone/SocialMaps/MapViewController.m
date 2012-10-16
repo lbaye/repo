@@ -290,8 +290,12 @@ ButtonClickCallbackData callBackData;
 
 - (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno {
     NSLog(@"MapViewController:mapAnnotationInfoUpdated");
-    [_mapView removeAnnotation:anno];
-    [_mapView addAnnotation:anno];
+    if (_mapView) {
+        //Crashing fix Rishi
+        [_mapView removeAnnotation:anno];
+        [_mapView addAnnotation:anno];
+    }
+    
     //by Rishi
     //selectedAnno = anno;
     
@@ -832,12 +836,14 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidDisappear:(BOOL)animated
 {
     //userFriendslistArray=[[NSMutableArray alloc] init];
+    /*
     if (timerGotListing) {
         [timerGotListing invalidate];
         timerGotListing = nil;
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+     */
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -974,7 +980,10 @@ ButtonClickCallbackData callBackData;
 {
     [super viewDidAppear:animated];
     //[self initPullView];
-    timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+    if (!timerGotListing) {
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+    }
+    
     pullDownView.hidden = NO;
     //[self.view bringSubviewToFront:viewSearch];
     
@@ -1079,6 +1088,14 @@ ButtonClickCallbackData callBackData;
 {
 //.   [imageDownloadsInProgress release];
 //    [imageDownloadsInProgressCopy release];
+    
+    if (timerGotListing) {
+        [timerGotListing invalidate];
+        timerGotListing = nil;
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+    
     [copySearchAnnotationList release];
     [_mapView release];
     [_mapView release];
