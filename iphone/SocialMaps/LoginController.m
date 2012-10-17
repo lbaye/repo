@@ -467,6 +467,9 @@
                                 @"user_about_me",
                                 @"publish_stream",
                                 @"read_stream",
+                                @"friends_status",
+                                @"user_checkins",
+                                @"friends_checkins",
                                 nil];
         [facebook authorize:permissions];
         [permissions release];
