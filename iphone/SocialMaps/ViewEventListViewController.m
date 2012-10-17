@@ -128,7 +128,7 @@ bool searchFlags=true;
         aEvent=[eventListGlobalArray objectAtIndex:i];
         if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
         {
-            aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
+            aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
         }
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
         [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
@@ -474,8 +474,8 @@ bool searchFlags=true;
            
             NSLog(@"userFriends %@   %@",event.eventImage,event.eventImageUrl);
             // if a download is deferred or in progress, return a placeholder image
-            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
+            cell.eventImage.image=[UIImage imageNamed:@"blank.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];                
         }
         
         if ([downloadedImageDict objectForKey:event.eventID])
@@ -485,8 +485,8 @@ bool searchFlags=true;
         }
         else
         {
-            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];      
+            cell.eventImage.image=[UIImage imageNamed:@"blank.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];      
         }
         
 //        else if ([[imageDownloadsInProgress objectForKey:event.eventID]isEqual:event.eventID]&&([imageDownloadsInProgress objectForKey:event.eventImage]!=NULL) ) 

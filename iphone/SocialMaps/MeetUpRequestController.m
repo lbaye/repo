@@ -797,7 +797,7 @@ DDAnnotation *annotation;
             [name setNumberOfLines:1];
             [name setTextColor:[UIColor whiteColor]];
             [name setText:userFrnd.userName];
-            [name setBackgroundColor:[UIColor clearColor]];
+            [name setBackgroundColor:[UIColor colorWithWhite:0 alpha:.3]];
             imgView.userInteractionEnabled = YES;
             imgView.tag = i;
             aView.tag=i;
@@ -983,7 +983,8 @@ DDAnnotation *annotation;
 	
 	return draggablePinView;
 }
-
+- (void)appImageDidLoad:(NSString *)userId {
+}
 - (void)dealloc {
     [tableViewPlaces release];
     [textViewPersonalMsg release];
