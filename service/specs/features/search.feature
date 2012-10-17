@@ -12,14 +12,19 @@ Feature: Search
     And I'm posting "lat=23.0,lng=23.0"
 
     Then I should see http "200" status
-
+    And Response is valid "application/json" formatted
+    And Response should have "people" attribute
+    And Response should have "places" attribute
+    And Response should have "facebookFriends" attribute
 
   Scenario: People search
-    Given I've already setup user account with "test@example.com" and "abcd"
-    And I'm logged in through "test@example.com" and "abcd"
+    Given I've already setup user account with "rgb@example.com" and "abcd"
+    And I'm logged in through "rgb@example.com" and "abcd"
 
 
     When I'm sending http "POST" request to "/search/people"
-    And I'm posting "keword=ab,lat=23.0,lng=23.0"
+    And I'm posting "lat=23.0,lng=23.0"
 
     Then I should see http "200" status
+    And Response is valid "application/json" formatted
+    And Response should have "id" attribute
