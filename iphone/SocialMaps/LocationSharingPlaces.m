@@ -19,6 +19,7 @@
 #import "CounterItem.h"
 #import "RadioButtonItem.h"
 #import "LocationSharingPref.h"
+#import "NewLocationItem.h"
 
 #define ROW_HEIGHT 62
 
@@ -41,11 +42,15 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    self.backgroundColor = [UIColor clearColor];
-    int startTag = 9000;
+    self.backgroundColor = [UIColor lightGrayColor];
+    int startTag = 8999;
     int rowNum = 0;
     //Erase history
     // Location sharing information
+    SettingsMaster *newLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"New location" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
+    // Remove default background image
+    [[newLoc viewWithTag:99999] removeFromSuperview];
+    
     SettingsMaster *locOne = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location 1" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
     // Remove default background image
     [[locOne viewWithTag:99999] removeFromSuperview];
@@ -70,6 +75,7 @@
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*rowNum);
     self.frame = newFrame;
     
+    [self addSubview:newLoc];
     [self addSubview:locOne];
     [self addSubview:locTwo];
     [self addSubview:locThree];
@@ -104,12 +110,31 @@
         }
     }
 }
+- (void) addNewPlaceSharingView:(int)tag {
+    SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
+    aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
+    
+    NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
+    
+    // Create the line with image line_arrow_down_left.png
+    CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
+    UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
+    lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
+    lineImage.tag   = tag+1001;  
+    [aview addSubview:lineImage];
+    
+    locSharing.backgroundColor = [UIColor clearColor];
+    [aview addSubview:locSharing];
+    
+    [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [self setNeedsLayout];
+}
 
 - (void) addPlaceSharingView:(int)tag prefs:(int)prefs{
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs sender:self tag:tag+1000];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
@@ -148,13 +173,17 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingPlaces accSettingButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 9000 && btnParent.tag <= 9003) {
+    if (btnParent.tag >= 8999 && btnParent.tag <= 9003) {
         [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
             [self.parent accSettingButtonClicked:self];
         }
         switch (btnParent.tag) {
+            case 8999:
+                // New Location
+                [self addNewPlaceSharingView:btnParent.tag];
+                break;
             case 9000:
                 // Location 0
                 //break;
@@ -219,6 +248,7 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     [self animateTextField: textField up: YES];
+    [self bringSubviewToFront:[textField superview]];
 }
 
 

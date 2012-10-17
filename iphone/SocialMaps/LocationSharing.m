@@ -56,9 +56,11 @@
 
     SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:@"Currently 7 friends in subgroup" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
     
-    SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
+    SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
+    circleSharingView.backgroundColor = [UIColor clearColor];
    
-    SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+//    SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+    startTag++;
     
     SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
 
@@ -72,7 +74,7 @@
     [self addSubview:enableSharing];
     [self addSubview:friendSharingView];
     [self addSubview:circleSharingView];
-    [self addSubview:platformSharingView];
+//    [self addSubview:platformSharingView];
     [self addSubview:strangersSharingView];
     [self addSubview:locSharingView];
 }
@@ -179,7 +181,8 @@
     
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                 aview.frame.size.height+7+selFrame.size.height, 
-                                                aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs sender:self tag:tag+1000];
+                                                aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
+                                                defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -235,21 +238,24 @@
                 break;
             case 2001:
                 // Friend prefs
-                [self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                //[self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                [self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             case 2002:
                 // Circle prefs
                 if (newView == TRUE)
-                    [self addLocSharingCircleView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    //[self addLocSharingCircleView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    [self addLocSharingCircleView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 else
-                    [self cascadeHeightChange:parent.tag incr:3*(ROW_HEIGHT)+7];
+                    [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
                 break;
             case 2003:
                 // Platform prefs
                 if (newView == TRUE)
-                    [self addLocSharingPlatformView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    //[self addLocSharingPlatformView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    [self addLocSharingPlatformView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 else
-                    [self cascadeHeightChange:parent.tag incr:3*(ROW_HEIGHT)+7];
+                    [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
                 break;
                 break;
             case 2004:
@@ -259,7 +265,8 @@
             case 2005:
                 // Location prefs
                 if (newView == TRUE)
-                    [self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    //[self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                    [self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 else
                     [self cascadeHeightChange:parent.tag incr:1*(ROW_HEIGHT)+7];
                 break;
@@ -312,7 +319,7 @@
                 if (newView == TRUE)
                     [self removeLocSharingView:parent.tag];
                 else
-                    [self cascadeHeightChange:parent.tag incr:-(3*(ROW_HEIGHT)+7)];
+                    [self cascadeHeightChange:parent.tag incr:-(2*(ROW_HEIGHT)+7)];
                 break;
             case 2003:
                 // Platform prefs
@@ -320,7 +327,7 @@
                 if (newView == TRUE)
                     [self removeLocSharingView:parent.tag];
                 else
-                    [self cascadeHeightChange:parent.tag incr:-(3*(ROW_HEIGHT)+7)];
+                    [self cascadeHeightChange:parent.tag incr:-(2*(ROW_HEIGHT)+7)];
                 break;
                 break;
             case 2004:

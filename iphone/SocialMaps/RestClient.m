@@ -55,7 +55,7 @@
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
-        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204)
+        if (jsonObjects != nil && (responseStatus == 200 || responseStatus == 201 || responseStatus == 204))
         {
             User *aUser = [[User alloc] init];
             
@@ -95,7 +95,13 @@
                 UserCircle *circle=[[UserCircle alloc] init];
                 circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
                 circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
-//                circle.type=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                NSString *type =[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                if ([type caseInsensitiveCompare:@"custom"] == NSOrderedSame)
+                    circle.type = CircleTypeCustom;
+                else if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                    circle.type = CircleTypeSystem;
+                else
+                    circle.type = CircleTypeSecondDegree;
                 circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
                 [circleList addObject:circle];
                 NSLog(@"circle.circleID: %@",circle.circleID);
@@ -223,7 +229,7 @@
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
         
-        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) {
+        if (jsonObjects != nil && (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400)) {
             User *aUser = [[User alloc] init];
             
             [aUser setFirstName:[jsonObjects objectForKey:@"firstName"]];
@@ -256,7 +262,14 @@
                 UserCircle *circle=[[UserCircle alloc] init];
                 circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
                 circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
-                //                circle.type=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                NSString *type =[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                if ([type caseInsensitiveCompare:@"custom"] == NSOrderedSame)
+                    circle.type = CircleTypeCustom;
+                else if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                    circle.type = CircleTypeSystem;
+                else
+                    circle.type = CircleTypeSecondDegree;
+                
                 circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
                 [circleList addObject:circle];
                 NSLog(@"circle.circleID: %@",circle.circleID);
@@ -1293,12 +1306,75 @@
     NSLog(@"asyn srt getGeofence");
     [request startAsynchronous];
 }
+-(ShareLocation*) parseLocationSharingSettings:(NSDictionary*) jsonObjects {
+    ShareLocation *shareLocation = [[ShareLocation alloc] init];
+
+    // On/Off setting
+    shareLocation.status    = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"status" key3:nil];
+    // Strangers settings
+    shareLocation.strangers = [[LocationPrivacySettings alloc] init];
+    shareLocation.strangers.duration = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"duration"] intValue];
+    shareLocation.strangers.radius = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"radius"] intValue];
+    
+    // Friends and circles (Custom)
+    shareLocation.custom = [[LocationCustomSettings alloc] init];
+    shareLocation.custom.circles = [[NSMutableArray alloc] init];
+    shareLocation.custom.friends = [[NSMutableArray alloc] init];
+    shareLocation.custom.privacy = [[LocationPrivacySettings alloc] init];
+    
+    //if ([self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"circles"] != nil) {
+    for (NSString *item in [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"circles"]) {
+        NSLog(@"Friends and Circle:circle:%@", item);
+        [shareLocation.custom.circles addObject:item];
+    }
+    //}
+    
+    //if ([self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"friends"] != nil) {
+    for (NSString *item in [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"friends"]) {
+        NSLog(@"Friends and Circle:friend:%@", item);
+        [shareLocation.custom.friends addObject:item];
+    }
+    //}
+    
+    shareLocation.custom.privacy.duration = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"duration"] intValue];
+    shareLocation.custom.privacy.radius = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"radius"] intValue];
+    
+    // Circles only (circles - array of LocationCircleSettings)
+    shareLocation.circles = [[NSMutableArray alloc] init];
+    NSDictionary *circleArray = [[jsonObjects objectForKey:@"result"] objectForKey:@"circles_only"];
+    NSEnumerator *enumerator = [circleArray keyEnumerator];
+    id aKey = nil;
+    while ( (aKey = [enumerator nextObject]) != nil) {
+        LocationCircleSettings *circleSetting = [[LocationCircleSettings alloc] init];
+        circleSetting.circleInfo = [[UserCircle alloc] init];
+        
+        circleSetting.circleInfo.circleID = aKey;
+        NSLog(@"Circles only:circle:%@", circleSetting.circleInfo.circleID);
+        circleSetting.privacy.duration = [[[circleArray objectForKey:aKey] objectForKey:@"duration"] intValue];
+        circleSetting.privacy.radius   = [[[circleArray objectForKey:aKey] objectForKey:@"radius"] intValue];
+        [shareLocation.circles addObject:circleSetting];
+    }
+    
+    // Geofences
+    shareLocation.geoFences = [[NSMutableArray alloc] init];
+    for (NSDictionary *item in [[jsonObjects objectForKey:@"result"] objectForKey:@"geo_fences"]) {
+        Geofence *fence = [[Geofence alloc] init];
+        fence.name = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+        fence.radius = [self getNestedKeyVal:item key1:@"radius" key2:nil key3:nil];
+        fence.lat = [self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+        fence.lng = [self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+        
+        NSLog(@"Geofence:name:%@, radius:%@, lat:%@, lng:%@", fence.name, fence.radius, fence.lat, fence.lng);
+        [shareLocation.geoFences addObject:fence];
+    }
+
+    return shareLocation;
+}
 
 -(void)getShareLocation:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/settings/share/location",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
-    ShareLocation *shareLocation = [[ShareLocation alloc] init];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"GET"];
@@ -1312,7 +1388,7 @@
         // Use when fetching binary data
         // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
-        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        NSLog(@"getShareLocation : Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
@@ -1329,22 +1405,10 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            [shareLocation setStatus:[[jsonObjects objectForKey:@"result"] valueForKey:@"status"]];
-            [shareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
-            [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
-            shareLocation.permittedUsers=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_users"];
-            shareLocation.permittedCircles=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_circles"];
-
-            [shareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
-            [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
             
-            // New code
-            shareLocation.strangers = [[LocationPrivacySettings alloc] init];
-            shareLocation.strangers.duration = [[NSString alloc] initWithString:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"duration"]];
-            shareLocation.strangers.radius = [[NSString alloc] initWithString:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"strangers" key3:@"radius"]];
+            ShareLocation *shareLocation = [self parseLocationSharingSettings:jsonObjects];
             
-            NSLog(@"shareLocation.status: %@  shareLocation.permittedCircles: %@ %@",shareLocation.status,shareLocation.permittedCircles,shareLocation.friendRadius);  
-            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            NSLog(@"getShareLocation= %@",jsonObjects);
             
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:shareLocation];
@@ -1462,20 +1526,7 @@
                 // treat as an array or reassign to an array ivar.
                 NSLog(@"Arr");
             }
-            
-//            [notificationPref setFriend_requests_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"friend_requests"] objectForKey:@"sm"]];
-//            [notificationPref setPosts_by_friends_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"posts_by_friends"] objectForKey:@"sm"]];
-//            [notificationPref setComments_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"comments"] objectForKey:@"sm"]];
-//            [notificationPref setMessages_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"messages"] objectForKey:@"sm"]];
-//            [notificationPref setProximity_alerts_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"proximity_alerts"] objectForKey:@"sm"]];
-//            [notificationPref setRecommendations_sm:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"recommendations"] objectForKey:@"sm"]];
-//            [notificationPref setFriend_requests_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"friend_requests"] objectForKey:@"mail"]];
-//            [notificationPref setPosts_by_friends_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"posts_by_friends"] objectForKey:@"mail"]];
-//            [notificationPref setComments_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"comments"] objectForKey:@"mail"]];
-//            [notificationPref setMessages_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"messages"] objectForKey:@"mail"]];
-//            [notificationPref setProximity_alerts_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"proximity_alerts"] objectForKey:@"mail"]];
-//            [notificationPref setRecommendations_mail:[[[jsonObjects  objectForKey:@"result"]  objectForKey:@"recommendations"] objectForKey:@"mail"]];
-            
+                        
             NotificationPref *notificationPref=[[NotificationPref alloc] init];
             [notificationPref setFriend_requests_sm: [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friend_requests" key3:@"sm"] boolValue]];
             [notificationPref setPosts_by_friends_sm:[[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"posts_by_friends" key3:@"sm"] boolValue]];            
@@ -3630,20 +3681,37 @@
     [request addRequestHeader:authToken value:authTokenValue];
     
     [request addPostValue:shareLocation.status forKey:@"status"];
-    for (int i=0; i<[shareLocation.permittedUsers count]; i++)
+    [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.strangers.radius] forKey:@"strangers[radius]"];
+    [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.strangers.duration] forKey:@"strangers[duration]"];
+
+    for (int i=0; i<[shareLocation.geoFences count]; i++)
     {
-        [request addPostValue:[shareLocation.permittedUsers objectAtIndex:i] forKey:@"friends[permitted_users][]"];
+        Geofence *fence = [shareLocation.geoFences objectAtIndex:i];
+        [request addPostValue:fence.name forKey:@"geo_fences[name][]"];
+        [request addPostValue:fence.radius forKey:@"geo_fences[radius][]"];
+        [request addPostValue:fence.lat forKey:@"geo_fences[location][lat][]"];
+        [request addPostValue:fence.lng forKey:@"geo_fences[location][lng][]"];
     }
     
-    for (int i=0; i<[shareLocation.permittedCircles count]; i++)
+    for (int i=0; i<[shareLocation.circles count]; i++)
     {
-        [request addPostValue:[shareLocation.permittedCircles objectAtIndex:i] forKey:@"friends[permitted_circles][]"];
+        LocationCircleSettings *circleSetting = [shareLocation.circles objectAtIndex:i];
+        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.duration] forKey:[NSString stringWithFormat:@"circles_only[%@][duration][]",circleSetting.circleInfo.circleID]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.radius] forKey:[NSString stringWithFormat:@"circles_only[%@][radius][]",circleSetting.circleInfo.circleID]];
     }
     
-    [request addPostValue:shareLocation.friendDuration forKey:@"friends[duration]"];
-    [request addPostValue:shareLocation.friendRadius forKey:@"friends[radius]"];
-    [request addPostValue:shareLocation.strangersDuration forKey:@"strangers[duration]"];
-    [request addPostValue:shareLocation.strangersRadius forKey:@"strangers[radius]"];
+    [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.custom.privacy.radius] forKey:@"friends_and_circles[radius]"];
+    [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.custom.privacy.duration] forKey:@"friends_and_circles[duration]"];
+    for (int i=0; i<[shareLocation.custom.friends count]; i++)
+    {
+        NSString *friend = [shareLocation.custom.friends objectAtIndex:i];
+        [request addPostValue:friend forKey:@"friends_and_circles[friends][]"];
+    }
+    for (int i=0; i<[shareLocation.custom.circles count]; i++)
+    {
+        NSString *circle = [shareLocation.custom.circles objectAtIndex:i];
+        [request addPostValue:circle forKey:@"friends_and_circles[circles][]"];
+    }
     
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -3672,18 +3740,9 @@
                 NSLog(@"Arr");
             }
             
-            ShareLocation *aShareLocation=[[ShareLocation alloc] init];
-            [aShareLocation setStatus:[[jsonObjects objectForKey:@"result"] valueForKey:@"status"]];
-            [aShareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
-            [aShareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
-            aShareLocation.permittedUsers=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_users"];
-            aShareLocation.permittedCircles=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_circles"];
-            
-            [aShareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"strangers"]valueForKey:@"duration"]];
-            [aShareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"strangers"]valueForKey:@"radius"]];            
-            
-            NSLog(@"shareLocation.status: %@ %@ %@",aShareLocation.status,aShareLocation.permittedUsers,[[[jsonObjects objectForKey:@"result"] objectForKey:@"strangers"]valueForKey:@"radius"]);  
-            NSLog(@"Is Kind of NSString: %@",jsonObjects);
+            ShareLocation *setShareLocation = [self parseLocationSharingSettings:jsonObjects];
+            NSLog(@"setShareLocation: Status=%@", setShareLocation.status);
+            NSLog(@"setShareLocation= %@",jsonObjects);
             
             //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
         } 

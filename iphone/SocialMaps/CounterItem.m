@@ -19,12 +19,14 @@
 @synthesize titleString;
 @synthesize subtitleString;
 @synthesize parent;
+@synthesize defVal;
 
-- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr sender:(id) sender tag:(int)tag
+- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr defVal:(int)def sender:(id) sender tag:(int)tag
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        defVal = def;
         btnTag = tag;
         titleString = [NSString stringWithString:titleStr];
         subtitleString = [NSString stringWithString:subTitleStr];
@@ -78,9 +80,10 @@
     // Button
     CGRect counterFrame = CGRectMake(self.frame.size.width-COUNTER_WIDTH-5, 
                                  (self.frame.size.height-COUNTER_HEIGHT)/2, COUNTER_WIDTH, COUNTER_HEIGHT);
-    CustomCounter *counter = [[CustomCounter alloc] initWithFrame:counterFrame allowNeg:FALSE default:0 sender:self tag:9000];
+    CustomCounter *counter = [[CustomCounter alloc] initWithFrame:counterFrame allowNeg:FALSE default:defVal sender:self tag:btnTag];
     //btn.tag = btnTag;
     self.tag = btnTag;
+    counter.delegate = parent;
     
     [self addSubview:counter];
 

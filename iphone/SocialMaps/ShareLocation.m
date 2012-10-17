@@ -26,13 +26,6 @@
 @implementation ShareLocation
 
 @synthesize status;
-@synthesize permittedUsers;
-@synthesize permittedCircles;
-@synthesize friendDuration;
-@synthesize friendRadius;
-@synthesize strangersDuration;
-@synthesize strangersRadius;
-// New
 @synthesize circles;
 @synthesize geoFences;
 @synthesize strangers;

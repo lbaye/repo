@@ -15,7 +15,7 @@
 @synthesize radius;
 @synthesize permission;
 
-- (id)initWithFrame:(CGRect)frame prefs:(int)prefs sender:(id) sender tag:(int)tag
+- (id)initWithFrame:(CGRect)frame prefs:(int)prefs defRadius:(int) rad defDuration:(int) dur defPerm:(bool)perm sender:(id) sender tag:(int)tag
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -31,7 +31,7 @@
         if ((prefs & LocationSharingPrefTypeTime) != 0) {
             // 
             rowFrame = CGRectMake(self.frame.origin.x, ROW_HEIGHT*prefCount++, self.frame.size.width, ROW_HEIGHT);
-            timeLimit = [[CounterItem alloc] initWithFrame:rowFrame title:@"Time limit of the sharing (in min):" subTitle:@"For unlimited time set to 0" sender:self tag:self.tag+1000];
+            timeLimit = [[CounterItem alloc] initWithFrame:rowFrame title:@"Time limit of the sharing (in min):" subTitle:@"For unlimited time set to 0" defVal:dur sender:sender tag:self.tag+100];
             timeLimit.backgroundColor = [UIColor clearColor];
             [self addSubview:timeLimit];
         }
@@ -39,7 +39,7 @@
         if ((prefs & LocationSharingPrefTypeRadius) != 0) {
             //
             rowFrame = CGRectMake(self.frame.origin.x, ROW_HEIGHT*prefCount++, self.frame.size.width, ROW_HEIGHT);
-            radius = [[CounterItem alloc] initWithFrame:rowFrame title:@"Radius for location sharing (in km):" subTitle:@"" sender:self tag:self.tag+1001];
+            radius = [[CounterItem alloc] initWithFrame:rowFrame title:@"Radius for location sharing (in km):" subTitle:@"" defVal:rad sender:sender tag:self.tag+200];
             radius.backgroundColor = [UIColor clearColor];
             [self addSubview:radius];
         }
@@ -47,7 +47,7 @@
         if ((prefs & LocationSharingPrefTypePermission) != 0) {
             //
             rowFrame = CGRectMake(self.frame.origin.x, ROW_HEIGHT*prefCount++, self.frame.size.width, ROW_HEIGHT);
-            permission = [[RadioButtonItem alloc] initWithFrame:rowFrame title:@"Permission needed for sharing:" subTitle:@"" labels:[NSArray arrayWithObjects:@"No", @"Yes", nil] sender:self tag:self.tag+1002];
+            permission = [[RadioButtonItem alloc] initWithFrame:rowFrame title:@"Permission needed for sharing:" subTitle:@"" labels:[NSArray arrayWithObjects:@"No", @"Yes", nil] sender:self tag:self.tag+300];
             permission.backgroundColor = [UIColor clearColor];
             [self addSubview:permission];
         }

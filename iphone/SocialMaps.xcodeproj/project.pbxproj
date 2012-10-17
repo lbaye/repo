@@ -83,6 +83,7 @@
 		4F1D96B515DCC93B00511624 /* NotificationPref.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1D96AF15DCC93B00511624 /* NotificationPref.m */; };
 		4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F1FE46615BF327C00D2484F /* libsqlite3.dylib */; };
 		4F29A6CA15CB231200305523 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F29A6C815CB231200305523 /* NSData+Base64.m */; };
+		4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F2F464E162B945700B6D0AE /* NewLocationItem.m */; };
 		4F39151515BBCC9400BF6B25 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F39151415BBCC9400BF6B25 /* LoginController.m */; };
 		4F3A4EED15D227230033AC9E /* ResetPassword.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EEC15D227230033AC9E /* ResetPassword.m */; };
 		4F3A4EF115D244910033AC9E /* PersonalInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EF015D244900033AC9E /* PersonalInformation.m */; };
@@ -552,6 +553,8 @@
 		4F24A3D515BF643300DC66B7 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
 		4F29A6C815CB231200305523 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		4F29A6C915CB231200305523 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		4F2F464D162B945700B6D0AE /* NewLocationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLocationItem.h; sourceTree = "<group>"; };
+		4F2F464E162B945700B6D0AE /* NewLocationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewLocationItem.m; sourceTree = "<group>"; };
 		4F39151315BBCC9400BF6B25 /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
 		4F39151415BBCC9400BF6B25 /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
 		4F3A4EEB15D227230033AC9E /* ResetPassword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPassword.h; sourceTree = "<group>"; };
@@ -1211,6 +1214,8 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
+				4F2F464D162B945700B6D0AE /* NewLocationItem.h */,
+				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2260,6 +2265,7 @@
 				20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */,
 				B08845691619584C00676EFA /* OverlayViewController.m in Sources */,
 				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
+				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

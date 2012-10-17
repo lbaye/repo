@@ -14,17 +14,22 @@
 
 @end
 
-@interface CustomCounter : UIView {
+@interface CustomCounter : UIView <UITextFieldDelegate> {
     bool        allowNegative;
     int         currVal;
-    UILabel     *countDisp;
+    UITextField     *countDisp;
     id<CustomCounterDelegate> delegate;
+    id          parent;
+    int         movementDistance;
 }
 @property (nonatomic) bool allowNegative;
 @property (nonatomic) int currVal;
-@property (nonatomic, retain) UILabel *countDisp;
+@property (nonatomic, retain) UITextField *countDisp;
 @property (nonatomic, retain) id<CustomCounterDelegate> delegate;
+@property (nonatomic, retain) id parent;
+@property (nonatomic) int movementDistance;
 
 - (void) notifyDelegate:(id)sender;
 - (id)initWithFrame:(CGRect)frame allowNeg:(bool)neg default:(int)def sender:(id)sender tag:(int)tag;
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 @end

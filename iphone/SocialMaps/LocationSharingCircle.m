@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "LocationSharingCircle.h"
 #import "LocationSharing.h"
 #import "AccountSettings.h"
@@ -17,17 +18,25 @@
 #import "CounterItem.h"
 #import "RadioButtonItem.h"
 #import "LocationSharingPref.h"
+#import "Globals.h"
 
 #define ROW_HEIGHT 62
 
 @implementation LocationSharingCircle
 @synthesize parent;
+@synthesize numSections;
 
 - (LocationSharingCircle*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag {
     self = [super initWithFrame:scrollFrame];
     if (self) {
+        numSections = 0;
         //self.frame = scrollFrame;
-        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*3);
+        for (id item in circleListGlobalArray) {
+            UserCircle *aCircle = (UserCircle*) item;
+            if (aCircle.type == CircleTypeCustom)
+                numSections++;
+        }
+        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
         self.tag = tag;
         self.parent = sender;
@@ -44,14 +53,31 @@
     int rowNum = 0;
     //Erase history
     // Location sharing information
-    SettingsMaster *circleOne = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Circlename 1" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
-    circleOne.backgroundColor = [UIColor clearColor];
+    AppDelegate *smAppDelegate = [AppDelegate sharedInstance];
     
-    SettingsMaster *circleTwo = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Circlename 2" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
-    circleTwo.backgroundColor = [UIColor clearColor];
-    
-    SettingsMaster *circleThree = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Circlename 3" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];   
-    circleThree.backgroundColor = [UIColor clearColor];
+    for (id item in circleListGlobalArray) {
+        UserCircle *aCircle = (UserCircle*) item;
+        if (aCircle.type == CircleTypeCustom) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"circleInfo.circleID MATCHES %@", aCircle.circleID];
+            NSArray *filteredArray = [smAppDelegate.locSharingPrefs.circles filteredArrayUsingPredicate:predicate];
+            LocationCircleSettings *locCircle;
+            if (filteredArray.count == 0) {
+                locCircle = [[LocationCircleSettings alloc] init];
+                locCircle.privacy.radius   = 2;
+                locCircle.privacy.duration = 0;
+                                
+            } else 
+                locCircle = (LocationCircleSettings*) [filteredArray objectAtIndex:0];
+            
+            locCircle.circleInfo.circleID = aCircle.circleID;
+            locCircle.circleInfo.circleName = aCircle.circleName;
+            NSLog(@"LocationSharingCircle: %@ --> %@", locCircle.circleInfo.circleID, aCircle.circleName);
+
+            SettingsMaster *circleGroup = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:aCircle.circleName subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
+            circleGroup.backgroundColor = [UIColor clearColor];
+            [self addSubview:circleGroup];
+        }
+    }
     
     // Set the scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
@@ -59,13 +85,10 @@
     [self setContentSize:contentSize];
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*rowNum);
     self.frame = newFrame;
-    
-    [self addSubview:circleOne];
-    [self addSubview:circleTwo];
-    [self addSubview:circleThree];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
+    NSLog(@"LocationSharingCircle: cascadeHeightChange: incr=%d", incr);
     NSArray* myViews = [self subviews];
     for (int i=0; i<[myViews count]; i++) {
         UIView *aview = (UIView*) [myViews objectAtIndex:i];
@@ -98,7 +121,7 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs sender:self tag:tag+1000];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
@@ -137,7 +160,7 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingCircle accSettingButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 7000 && btnParent.tag <= 7002) {
+    if (btnParent.tag >= 7000 && btnParent.tag <= (7000+numSections)) {
         [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
@@ -152,7 +175,8 @@
                 //break;
             case 7002:
                 // Permission pref
-                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                //[self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             default:
                 break;
@@ -226,4 +250,8 @@
     [UIView commitAnimations];
 }
 
+- (void) counterValueChanged:(int)indx sender:(id)sender {
+    
+    NSLog(@"counterValueChanged new value=%d, sender tag = %d", indx, (int) sender);
+}
 @end

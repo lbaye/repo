@@ -10,16 +10,14 @@
 #import "UserCircle.h"
 
 @interface LocationPrivacySettings : NSObject {
-//@public
-    NSString    *duration;
-    NSString    *radius;
+    int    duration;
+    int    radius;
 }
-@property(nonatomic,retain) NSString    *duration;
-@property(nonatomic,retain) NSString    *radius;
+@property(nonatomic) int duration;
+@property(nonatomic) int radius;
 @end
 
 @interface LocationCircleSettings : NSObject {
-//@public
     UserCircle  *circleInfo;
     LocationPrivacySettings *privacy;
 }
@@ -28,7 +26,6 @@
 @end
 
 @interface LocationCustomSettings : NSObject {
-//@public
     NSMutableArray  *circles;
     NSMutableArray  *friends;
     LocationPrivacySettings *privacy;
@@ -41,14 +38,6 @@
 @interface ShareLocation : NSObject
 {
     NSString *status;
-    NSMutableArray *permittedUsers;
-    NSMutableArray *permittedCircles;
-    NSString *friendDuration;
-    NSString *friendRadius;
-    NSString *strangersDuration;
-    NSString *strangersRadius;
-    
-    // New design
     NSMutableArray          *circles;  // Array of LocationCircleSettings
     LocationCustomSettings  *custom;
     NSMutableArray          *geoFences; // Array of GeoFence
@@ -56,13 +45,6 @@
 }
 
 @property(nonatomic,retain) NSString *status;
-@property(nonatomic,retain) NSMutableArray *permittedUsers;
-@property(nonatomic,retain) NSMutableArray *permittedCircles;
-@property(nonatomic,retain) NSString *friendDuration;
-@property(nonatomic,retain) NSString *friendRadius;
-@property(nonatomic,retain) NSString *strangersDuration;
-@property(nonatomic,retain) NSString *strangersRadius;
-// New code
 @property(nonatomic,retain) NSMutableArray *circles;
 @property(nonatomic,retain) LocationCustomSettings *custom;
 @property(nonatomic,retain) NSMutableArray *geoFences;

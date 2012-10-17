@@ -27,5 +27,5 @@ typedef enum _LOC_SHARING_PREFS_TYPES {
 @property (nonatomic, retain) CounterItem *radius;
 @property (nonatomic, retain) RadioButtonItem *permission;
 
-- (id)initWithFrame:(CGRect)frame prefs:(int)prefs sender:(id) sender tag:(int)tag;
+- (id)initWithFrame:(CGRect)frame prefs:(int)prefs defRadius:(int) rad defDuration:(int) dur defPerm:(bool)perm sender:(id) sender tag:(int)tag;
 @end

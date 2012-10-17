@@ -72,6 +72,14 @@
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
 
+static AppDelegate *sharedInstance=nil;
+
+// Get the shared instance and create it if necessary.
++ (AppDelegate *)sharedInstance {
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+
 - (void)dealloc
 {
     [_window release];

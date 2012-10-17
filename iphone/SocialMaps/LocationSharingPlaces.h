@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LocationSharingPlaces : UIScrollView {
+@interface LocationSharingPlaces : UIScrollView <UITextFieldDelegate> {
     id  parent;
 }
 @property (nonatomic, retain) id parent;

@@ -81,7 +81,7 @@
     CGRect buttonFrame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-5, 
                                      (self.frame.size.height-BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
     //- (id)initWithFrame:(CGRect)frame labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag
-    RadioButton *radio = [[RadioButton alloc] initWithFrame:buttonFrame labels:labels default:0 sender:self tag:9000];
+    RadioButton *radio = [[RadioButton alloc] initWithFrame:buttonFrame labels:labels default:0 sender:self tag:btnTag];
     //btn.tag = btnTag;
     self.tag = btnTag;
     
