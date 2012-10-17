@@ -60,6 +60,7 @@ module Client
           _delete(uri, http)
 
         when :put
+          _put(uri, http)
       end
     end
 
