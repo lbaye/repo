@@ -1,6 +1,6 @@
 all_events:
   pattern: /events
-  defaults: { _controller: Controller\Gathering::index, type: event }
+  defaults: { _controller: Controller\Gathering::getActiveEvent, type: event }
   requirements: { _method: GET }
 
 a_event:

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Document\User;
 use Repository\GatheringRepo as gatheringRepository;
 use Helper\Status;
+use Helper\ShareConstant;
 
 class Gathering extends Base
 {
@@ -47,10 +48,31 @@ class Gathering extends Base
 
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
-
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
+        }
+    }
+
+    /**
+     * GET /meetups
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getActiveEvent($type)
+    {
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getAllActiveEvent($limit, $start);
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No active meetups found'), Status::NO_CONTENT);
         }
     }
 
@@ -178,7 +200,7 @@ class Gathering extends Base
                 'objectType' => $type,
             );
 
-            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
+//            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
             \Helper\Notification::send($notificationData, $users);
         }
 
@@ -416,9 +438,11 @@ class Gathering extends Base
         $gatheringIMNotOwner = array();
 
         if (!empty($gatheringObjs)) {
-            foreach($gatheringObjs as $gathering){
-                if($gathering->getOwner()->getId() != $this->user->getId())
+            foreach ($gatheringObjs as $gathering) {
+
+                if ($gathering->getOwner()->getId() != $this->user->getId()) {
                     $gatheringIMNotOwner[] = $gathering;
+                }
             }
 
             return $this->_generateResponse($this->_toArrayAll($gatheringIMNotOwner));
@@ -483,4 +507,5 @@ class Gathering extends Base
 
         return $this->_generateResponse($data);
     }
+
 }
