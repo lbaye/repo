@@ -144,7 +144,7 @@ abstract class Base
         return $permittedDocs;
     }
 
-    protected function _filterByExpire($documents)
+    protected function _filterByExpiration($documents)
     {
         $permittedDocs = array();
 

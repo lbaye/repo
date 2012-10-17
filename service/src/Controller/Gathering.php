@@ -47,16 +47,32 @@ class Gathering extends Base
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
 
         if (!empty($gatheringObjs)) {
-            if ($type == "event") {
-                $permittedDocs = $this->_filterByExpire($gatheringObjs);
-            } else {
-                $permittedDocs = $this->_filterByPermission($gatheringObjs);
-            }
-
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
-
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
+        }
+    }
+
+    /**
+     * GET /meetups
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getActiveEvent($type)
+    {
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByExpiration($gatheringObjs);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No active meetups found'), Status::NO_CONTENT);
         }
     }
 
