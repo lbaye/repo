@@ -25,6 +25,19 @@ class GatheringRepo extends Base
         return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
 
+    public function getAllActiveEvent($limit = 20, $offset = 0)
+    {
+        $_dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        $eventLIst = $this->createQueryBuilder()
+            ->field('time')->gte($_dateTime)
+            ->sort(array('createDate' => 'DESC'))
+            ->limit($limit)
+            ->getQuery()
+            ->execute();
+
+        return $eventLIst;
+    }
+
     public function insert($gatheringObj)
     {
         $valid  = $gatheringObj->isValid();
@@ -251,7 +264,16 @@ class GatheringRepo extends Base
 
     public function getInvitedMeetups($userId)
     {
-        return $this->findBy(array('guests' => $userId), array('createDate' => 'DESC'));
+        $_dateTime = new \DateTime('now-2 hours', new \DateTimeZone('UTC'));
+
+        $meetUpLIst = $this->createQueryBuilder()
+            ->field('rsvp.no')->notIn($userId)
+            ->field('time')->gte($_dateTime)
+            ->sort(array('createDate' => 'DESC'))
+            ->getQuery()
+            ->execute();
+
+        return $meetUpLIst;
     }
 
 }

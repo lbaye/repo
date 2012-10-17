@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Document\User;
 use Repository\GatheringRepo as gatheringRepository;
 use Helper\Status;
+use Helper\ShareConstant;
 
 class Gathering extends Base
 {
@@ -47,10 +48,31 @@ class Gathering extends Base
 
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
-
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
+        }
+    }
+
+    /**
+     * GET /meetups
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function getActiveEvent($type)
+    {
+        $start = (int)$this->request->get('start', 0);
+        $limit = (int)$this->request->get('limit', 20);
+        $this->_initRepository($type);
+        $gatheringObjs = $this->gatheringRepository->getAllActiveEvent($limit, $start);
+
+        if (!empty($gatheringObjs)) {
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
+            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+        } else {
+            return $this->_generateResponse(array('message' => 'No active meetups found'), Status::NO_CONTENT);
         }
     }
 
@@ -416,9 +438,22 @@ class Gathering extends Base
         $gatheringIMNotOwner = array();
 
         if (!empty($gatheringObjs)) {
-            foreach($gatheringObjs as $gathering){
-                if($gathering->getOwner()->getId() != $this->user->getId())
-                    $gatheringIMNotOwner[] = $gathering;
+            foreach ($gatheringObjs as $gathering) {
+                $rsvpFiltering = $gathering->getRsvp();
+
+                if ($gathering->getOwner()->getId() != $this->user->getId()) {
+                    $flag = 0;
+                    $timeFilter = (array)$gathering->getTime();
+
+                    $difference = $this->timeDiff(date('Y-m-d H:i:s', time()), $timeFilter['date']);
+                    if ((int)$difference > (int)ShareConstant::MEETUP_EXPIRE) {
+                        $flag = 1;
+                    }
+
+                        if ($flag == 0) {
+                            $gatheringIMNotOwner[] = $gathering;
+                        }
+                }
             }
 
             return $this->_generateResponse($this->_toArrayAll($gatheringIMNotOwner));
@@ -482,5 +517,16 @@ class Gathering extends Base
         }
 
         return $this->_generateResponse($data);
+    }
+
+    public function timeDiff($currentTime, $targetTime)
+    {
+        // convert to unix timestamps
+        $toDate = strtotime($currentTime);
+        $fromDate = strtotime($targetTime);
+        $difference = round(abs($toDate - $fromDate) / 60, 2);
+
+        // return the difference
+        return $difference;
     }
 }
