@@ -33,14 +33,16 @@ $client->setCompleteCallback(function($task) {
     flush();
 });
 
-if (count($argv) > 3) {
+if (count($argv) == 5) {
+    $userId = $argv[2];
+    $fbId = $argv[3];
+    $fbAuthToken = $argv[4];
+} else if (count($argv) == 4) {
     $userId = $argv[1];
     $fbId = $argv[2];
     $fbAuthToken = $argv[3];
 } else {
-    $userId = $argv[0];
-    $fbId = $argv[1];
-    $fbAuthToken = $argv[2];
+    die("Invalid arguments");
 }
 
 $client->addTaskBackground(

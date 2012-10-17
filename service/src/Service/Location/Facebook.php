@@ -29,8 +29,6 @@ class Facebook extends Base
     public function getFbFriendsInfo(array $friendIds)
     {
         $fql = 'SELECT uid, first_name, last_name, pic_square, email FROM user WHERE uid IN (' . implode(', ', $friendIds) . ')';
-        echo "FQL: $fql" . PHP_EOL;
-        
         $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
@@ -46,14 +44,12 @@ class Facebook extends Base
 
     public function getPublicProfile($facebookId)
     {
-        echo 'Fetching profile information for facebook user: ', $facebookId, PHP_EOL;
         $profile = $this->fetchGraphResult($facebookId);
         return $profile;
     }
 
     public function getPublicAvatar($facebookId)
     {
-        echo 'Fetching avatar for facebook user: ', $facebookId, PHP_EOL;
         $avatar = $this->getProfilePicture($facebookId);
         return $avatar;
     }
@@ -65,7 +61,6 @@ class Facebook extends Base
                        . '&access_token='
                        . urlencode($this->getFacebookAuthToken());
 
-        echo 'FB-REQUEST: ' . $fql_query_url . PHP_EOL;
         $fql_query_result = @file_get_contents($fql_query_url);
 
         if ($fql_query_result !== false) {
@@ -85,7 +80,6 @@ class Facebook extends Base
             $graphUrl .= '&' . urlencode($key) . '=' . urlencode($value);
         }
 
-        echo "FB-GRAPH: $graphUrl" . PHP_EOL;
         $graphResult = @file_get_contents($graphUrl);
 
         if ($graphResult !== false) {
