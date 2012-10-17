@@ -728,9 +728,9 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
 
-    if ((![smAppDelegate.fbId isEqualToString:@""]) && (![userDefault readFromUserDefaults:@"fbinvite"]))
+    if ((smAppDelegate.facebookLogin==TRUE) && (![smAppDelegate.fbId isEqualToString:@""]) && ([userDefault readFromUserDefaults:@"fbinvite"]==NULL))
     {
-        NSLog(@"show fb invite");
+        NSLog(@"show fb invite  %@  %@",smAppDelegate.fbId,[userDefault readFromUserDefaults:@"fbinvite"]);
         [fbHelper inviteFriends:nil];
         [userDefault writeToUserDefaults:@"fbinvite" withString:@"fbinvite"];
     }
@@ -754,15 +754,15 @@ ButtonClickCallbackData callBackData;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
 
     isFirstTimeDownloading = NO;
-    /*
+    
     //NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:1 sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:0 sender:self tag:2000];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
-    [radio release];
     
-    [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
-    */
+    
+    //[viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
+    
 }
 
 - (void)startGetLocation:(NSTimer*)timer
@@ -1019,7 +1019,7 @@ ButtonClickCallbackData callBackData;
     [super viewDidAppear:animated];
     //[self initPullView];
     if (!timerGotListing) {
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
     pullDownView.hidden = NO;
@@ -1027,6 +1027,10 @@ ButtonClickCallbackData callBackData;
     userDefault=[[UserDefault alloc] init];
     if ((![userDefault readFromUserDefaults:@"connectWithFB"]) && (smAppDelegate.smLogin==TRUE))
     {
+        connectToFBView.layer.borderWidth=2.0;
+        connectToFBView.layer.masksToBounds = YES;
+        [connectToFBView.layer setCornerRadius:7.0];
+        connectToFBView.layer.borderColor=[[UIColor lightTextColor]CGColor];
         [self.view addSubview:connectToFBView];
     }
     
@@ -1132,6 +1136,8 @@ ButtonClickCallbackData callBackData;
 //.   [imageDownloadsInProgress release];
 //    [imageDownloadsInProgressCopy release];
     
+    [radio release];
+    
     if (timerGotListing) {
         [timerGotListing invalidate];
         timerGotListing = nil;
@@ -1179,21 +1185,32 @@ ButtonClickCallbackData callBackData;
     NSLog(@"do connect fb");
     Facebook *facebook = [[FacebookHelper sharedInstance] facebook];
 //    [smAppDelegate showActivityViewer:self.view];
-    NSArray *permissions = [[NSArray alloc] initWithObjects:
-                            @"email",
-                            @"user_likes", 
-                            @"user_photos", 
-                            @"publish_checkins", 
-                            @"photo_upload", 
-                            @"user_location",
-                            @"user_birthday",
-                            @"user_about_me",
-                            @"publish_stream",
-                            @"read_stream",
-                            nil];
-    [facebook authorize:permissions];
-//    smAppDelegate.facebookLogin=TRUE;
-    [permissions release];
+    if ([facebook isSessionValid])
+    {
+        [fbHelper inviteFriends:nil];        
+    }
+    else
+    {
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"email",
+                                @"user_likes", 
+                                @"user_photos", 
+                                @"publish_checkins", 
+                                @"photo_upload", 
+                                @"user_location",
+                                @"user_birthday",
+                                @"user_about_me",
+                                @"publish_stream",
+                                @"read_stream",
+                                @"friends_status",
+                                @"user_checkins",
+                                @"friends_checkins",
+                                nil];
+        [facebook authorize:permissions];
+        //    smAppDelegate.facebookLogin=TRUE;
+        [permissions release];
+    }
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     [connectToFBView removeFromSuperview];
 }
 
@@ -1703,7 +1720,7 @@ ButtonClickCallbackData callBackData;
     
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     NSLog(@"Connected with fb :D %@",[notif object]);
-    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+//    [UtilityClass showAlert:@"Social Maps" :[notif object]];
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif
@@ -1717,7 +1734,7 @@ ButtonClickCallbackData callBackData;
         [connectToFBView removeFromSuperview];
         [smAppDelegate showActivityViewer:self.view];
         NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
-        
+        [fbHelper inviteFriends:nil];
         if ([smAppDelegate.fbId isEqualToString:@""])
         {
             smAppDelegate.fbId=[userDefault readFromUserDefaults:@"FBUserId"];
@@ -1736,7 +1753,7 @@ ButtonClickCallbackData callBackData;
         else
         {
             [smAppDelegate hideActivityViewer];
-            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
+//            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
         }
     }
 }
@@ -2356,16 +2373,19 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     
+    [radio gotoButton:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1];
+    /*
     if (![viewSharingPrefMapPullDown viewWithTag:421]) {
         NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-        CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1 sender:self tag:2000];
+        radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1 sender:self tag:2000];
         radio.tag = 421;
         radio.delegate = self;
         [viewSharingPrefMapPullDown addSubview:radio];
-        [radio release];
+        
         [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
     }
-    
+    */
+     
     [self displayNotificationCount];
 }
 - (void)sentFriendRequest:(NSNotification *)notif {

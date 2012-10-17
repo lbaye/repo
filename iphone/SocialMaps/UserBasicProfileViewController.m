@@ -402,7 +402,7 @@ BOOL coverImgFlag;
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"event_item_bg.png"];
+        coverImageView.image=[UIImage imageNamed:@"blank.png"];
     }
 
     NSLog(@"image setted after download1. %@",img);

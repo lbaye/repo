@@ -225,7 +225,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     }
     else
     {
-        eventImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
+        eventImgView.image=[UIImage imageNamed:@"blank.png"];
     }
     NSLog(@"image setted after download. %@",img);
 }
