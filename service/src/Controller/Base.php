@@ -144,29 +144,6 @@ abstract class Base
         return $permittedDocs;
     }
 
-    protected function _filterByExpiration($documents)
-    {
-        $permittedDocs = array();
-
-        foreach ($documents as $doc) {
-            if ($doc->isPermittedFor($this->user)) {
-                $flag = 0;
-                $timeFilter = (array)$doc->getTime();
-
-                $difference = $this->timeDiff(date('Y-m-d H:i:s', time()), $timeFilter['date']);
-                if ((int)$difference < (int)ShareConstant::EVENT_EXPIRE) {
-                    $flag = 1;
-                }
-
-                if ($flag == 1) {
-                    $permittedDocs[] = $doc;
-                }
-            }
-        }
-
-        return $permittedDocs;
-    }
-
     protected function _toArrayAll(array $results)
     {
         $arrayItems = array();
@@ -306,14 +283,4 @@ abstract class Base
         return $this->_generate500($fields_comma_joined . ' ' . $is_or_are . " required parameters.");
     }
 
-    public function timeDiff($currentTime, $targetTime)
-    {
-        // convert to unix timestamps
-        $toDate = strtotime($currentTime);
-        $fromDate = strtotime($targetTime);
-        $difference = round(abs($toDate - $fromDate) / 60, 2);
-
-        // return the difference
-        return $difference;
-    }
 }
