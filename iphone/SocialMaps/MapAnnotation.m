@@ -34,7 +34,9 @@
     if ( annoView == nil ) {
         NSLog(@"MapAnnotation:New MKAnnotationView");
         annoView = [ [ MKAnnotationView alloc ] initWithAnnotation:newAnnotation reuseIdentifier: reuseIdent ];
-    }
+    } else 
+        [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
+    
     if ([newAnnotation isKindOfClass:[LocationItem class]]) {
         LocationItem *locItem = (LocationItem*) newAnnotation;
         return [self getViewForState:locItem.currDisplayState loc:locItem];
