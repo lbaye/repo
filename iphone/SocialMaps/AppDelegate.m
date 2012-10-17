@@ -49,6 +49,7 @@
 @synthesize peopleList;
 @synthesize placeList;
 @synthesize dealList;
+@synthesize eventList;
 @synthesize displayList;
 @synthesize friendList;
 @synthesize platformPrefs;
@@ -63,6 +64,7 @@
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
+@synthesize showEvents;
 @synthesize peopleIndex;
 @synthesize gotListing;
 @synthesize placeIndex;
@@ -71,6 +73,7 @@
 @synthesize deviceTokenId;
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
+@synthesize smLogin;
 
 static AppDelegate *sharedInstance=nil;
 
@@ -107,6 +110,7 @@ static AppDelegate *sharedInstance=nil;
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     facebookLogin = FALSE;
+    smLogin = FALSE;
     gotListing = FALSE;
     needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
@@ -144,6 +148,7 @@ static AppDelegate *sharedInstance=nil;
     placeList  = [[NSMutableArray alloc] init];
     placeIndex = [[NSMutableDictionary alloc] init];
     dealList   = [[NSMutableArray alloc] init];
+    eventList  =[[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];
 
     // Location coordinates
@@ -158,6 +163,7 @@ static AppDelegate *sharedInstance=nil;
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
+    showEvents = FALSE;
     
     msgRead = FALSE;
     notifRead = FALSE;

@@ -16,7 +16,20 @@
 
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
-    
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    {
+        LocationItemPeople *locItemPeople=(LocationItemPeople *)locItem;
+        if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+        {
+            UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(38,3,12,12)];
+            sourceIcon.tag=12002;
+            sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+            [annoView addSubview:sourceIcon];
+            NSLog(@"fb subview added");
+            [sourceIcon release];
+        }
+        
+    }
     return annoView;
 }
 
@@ -55,6 +68,16 @@
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
     [msgView addSubview:lblMsg];
+
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
+//        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
+//        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+//        [msgView addSubview:sourceIcon];
+
+    }
+    
     [lblMsg release];
     [infoView addSubview:msgView];
     [msgView release];
@@ -185,8 +208,19 @@
     [infoView addSubview:directionBtn];
     // TODO: hiding for appstore submission. revert back once feature is implemenetd
     directionBtn.hidden = TRUE;
-    
+
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+
     // Message request
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,35,20,20)];
+        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+        [infoView addSubview:sourceIcon];
+
+    }
+    else {
     UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     // TODO: repositioning message button for appstore submission. SInce we are hiding
     // meetup/direction we are putting this under friend request button
@@ -197,6 +231,7 @@
     messageBtn.backgroundColor = [UIColor clearColor];
     messageBtn.tag = 11006;
     [infoView addSubview:messageBtn];
+    }
     return annoView;
 }
 

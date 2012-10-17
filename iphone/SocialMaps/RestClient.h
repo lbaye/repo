@@ -83,4 +83,10 @@
 -(void)getBlockUserList:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)blockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
 -(void)unBlockUserList:(NSString *)authToken:(NSString *)authTokenValue:(NSMutableArray *)userIdArr;
+-(void)getAllEventsForMap:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getOtherUserProfile:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+-(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
+
+- (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
+
 @end

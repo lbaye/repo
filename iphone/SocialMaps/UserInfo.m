@@ -44,5 +44,6 @@
 @synthesize age;
 @synthesize coverPhoto;
 @synthesize status;
+@synthesize shareLocationOption;
 
 @end

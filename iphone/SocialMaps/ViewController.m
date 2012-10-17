@@ -72,9 +72,9 @@ UserDefault *userDef;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
 
 - (void)dealloc {
     [progressView release];

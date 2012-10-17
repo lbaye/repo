@@ -17,6 +17,7 @@
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
+#import "Event.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -88,8 +89,8 @@
     [listViewfilter addSubview:label];
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces], nil] labels:[NSArray arrayWithObjects:@"People",@"Places", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
+//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -218,9 +219,31 @@
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
     if (smAppDelegate.showPlaces == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.placeList];
-    if (smAppDelegate.showDeals == TRUE) 
-        [tempList addObjectsFromArray:smAppDelegate.dealList];
-    
+    if (smAppDelegate.showEvents == TRUE) 
+    {
+        NSLog(@"smAppDelegate.eventList %@",smAppDelegate.eventList);
+        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        {
+            if ([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[Event class]])
+            {
+                Event *aEvent=[[Event alloc] init];
+                aEvent=[smAppDelegate.eventList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aEvent.eventName;
+                item.itemAddress=aEvent.eventDate.date;
+                item.itemType=0;
+                item.itemCategory=0;
+                item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
+                item.itemDistance=[aEvent.eventDistance floatValue];
+                item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
+                item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
+                item.currDisplayState=0;
+                [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+
+        [tempList addObjectsFromArray:smAppDelegate.eventList];
+    }
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [copyDisplayListArray addObjectsFromArray:sortedArray];
@@ -488,9 +511,9 @@
             break;
         case 2:
             if (newState == 0)
-                smAppDelegate.showDeals = FALSE;
+                smAppDelegate.showEvents = FALSE;
             else
-                smAppDelegate.showDeals = TRUE;
+                smAppDelegate.showEvents = TRUE;
             break;
         default:
             break;

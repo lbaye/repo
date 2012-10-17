@@ -11,6 +11,7 @@
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
 #import "AppDelegate.h"
+#import "MapAnnotationEvent.h"
 
 @implementation MapAnnotation
 @synthesize currState;
@@ -25,13 +26,17 @@
         reuseIdent = @"locAnnoPeople";
     else if ([locItem isKindOfClass:[LocationItemPlace class]]) 
         reuseIdent = @"locAnnoPlace";
+    else if([locItem isKindOfClass:[LocationItem class]]) 
+        reuseIdent = @"locAnnoPlace";
     else
         reuseIdent = @"loggedInUser";
     annoView = [newMapView dequeueReusableAnnotationViewWithIdentifier:reuseIdent];
     if ( annoView == nil ) {
         NSLog(@"MapAnnotation:New MKAnnotationView");
         annoView = [ [ MKAnnotationView alloc ] initWithAnnotation:newAnnotation reuseIdentifier: reuseIdent ];
-    }
+    } else 
+        [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
+    
     if ([newAnnotation isKindOfClass:[LocationItem class]]) {
         LocationItem *locItem = (LocationItem*) newAnnotation;
         return [self getViewForState:locItem.currDisplayState loc:locItem];
@@ -49,6 +54,10 @@
         [annoView.layer setMasksToBounds:YES];
         [annoView addSubview:locImage];
         [locImage release];
+        
+        
+
+        
         return annoView;
     }
     return nil;
@@ -59,9 +68,25 @@
     [[annoView viewWithTag:11001] removeFromSuperview];
     [[annoView viewWithTag:11002] removeFromSuperview];
     
-    CGRect imgFrame = CGRectMake(5, 5, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
-    UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    CGRect imgFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
+    //UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    
+    UIImageView *locImage = [[UIImageView alloc] initWithFrame:imgFrame];
+    locImage.image = [UIImage imageNamed:@"user_thumb_only.png"];
     locImage.tag = 11000;
+    
+    UIImageView *locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
+    [locImage addSubview:locImageSquare];
+    locImageSquare.image = locItem.itemIcon;
+    [locImageSquare.layer setCornerRadius:4.0f];
+    [locImageSquare.layer setMasksToBounds:YES];
+    locImageSquare.tag = 110001;
+    
+    //[locImageSquare.layer setBorderWidth:1.0f];
+    //[locImageSquare.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    
+    [locImageSquare release];
+    
     CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
     annoView.frame = annoFrame;
     annoView.backgroundColor = [UIColor clearColor];
@@ -80,7 +105,9 @@
     changeState.tag = 11001;
     [annoView addSubview:changeState]; 
     annoView.centerOffset = CGPointMake(0.0, 0.0);
-     
+    
+    
+    
     return annoView;
 }
 
@@ -116,7 +143,10 @@
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         // TODO: for appstore submission do not show detailed annotation
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
-    }else {
+    } else if ([locItem isKindOfClass:[LocationItem class]]) {
+            // TODO: for appstore submission do not show detailed annotation
+            [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+        }else{
         //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     }
@@ -184,6 +214,7 @@
     switch (locItem.currDisplayState) {
         case MapAnnotationStateNormal:
             locItem.currDisplayState = MapAnnotationStateSummary;
+            NSLog(@"goto summary state");
             break;
         case MapAnnotationStateSummary:
             // Don't show details for non-SM users
@@ -196,7 +227,13 @@
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
                 // TODO: for appstore submission do not show detailed annotation
                 locItem.currDisplayState = MapAnnotationStateNormal;
-            } else {
+            }
+            else if ([locItem isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"event annotation");
+                locItem.currDisplayState = MapAnnotationStateNormal;
+            }
+            else {
                 locItem.currDisplayState = MapAnnotationStateNormal;
             }
             break;    
@@ -207,11 +244,12 @@
             break;
     }
     selAnno.selected=TRUE;
-
+    
+    NSLog(@"self.delegate %@",self.delegate);
     [selAnno setNeedsDisplay];
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:)]) {
         [self.delegate mapAnnotationChanged:[selAnno annotation]];
-    }
+    }    
 }
 
 - (void) changeStateToDetails:(id) anno {
@@ -229,7 +267,10 @@
             locItem.currDisplayState = MapAnnotationStateSummary;
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         locItem.currDisplayState = MapAnnotationStateSummary;
-    } 
+    }
+    else if ([locItem isKindOfClass:[LocationItem class]]) {
+        locItem.currDisplayState = MapAnnotationStateSummary;
+    }
 }
 
 - (void) changeStateToSummary:(id) anno 

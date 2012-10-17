@@ -152,7 +152,7 @@ NSMutableArray *guestListIdArr;
             
         {
             
-            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
             
             NSLog(@"img url null %d",i);
             
@@ -399,7 +399,7 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)deleteButtonAction
 {
-    self.eventImagview.image=[UIImage imageNamed:@"event_item_bg.png"];
+    self.eventImagview.image=[UIImage imageNamed:@"blank.png"];
 }
 
 //event info entry ends
@@ -1011,7 +1011,7 @@ NSMutableArray *guestListIdArr;
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
                 {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
                 else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
                 { 
@@ -1024,14 +1024,14 @@ NSMutableArray *guestListIdArr;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
@@ -1086,7 +1086,7 @@ NSMutableArray *guestListIdArr;
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
                 if (userFrnd.imageUrl == nil) 
                 {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
                 else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
                 { 
@@ -1099,14 +1099,14 @@ NSMutableArray *guestListIdArr;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);

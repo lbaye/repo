@@ -99,12 +99,21 @@ UserDefault *userDefault;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSLog(@"Access Token is %@", facebook.accessToken );
     NSLog(@"Expiration Date is %@", facebook.expirationDate );
-    [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
+    if ([facebook accessToken]) 
+    {
+        [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];        
+    }
     [prefs setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [prefs synchronize];
+    NSLog(@"did log in");
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.fbAccessToken = [facebook accessToken];
-                          
+    if (smAppDelegate.smLogin==TRUE)
+    {
+        NSLog(@"do connect fb with invite");
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
+    }
+
     [self getUserInfo:self];
 }
 
@@ -190,7 +199,7 @@ UserDefault *userDefault;
  */
 - (void)request:(FBRequest *)request didLoad:(id)result {
     NSLog(@"Inside didLoad");
-    if (frndListFlag==FALSE) 
+//    if (frndListFlag==FALSE) 
     {
         NSString *name;
         NSString *firstName;
@@ -236,25 +245,33 @@ UserDefault *userDefault;
         [aUser setFacebookId:fbId];
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
-        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture", userName]]; 
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture&type=normal", userName]]; 
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
         
         // Save the FB id
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSLog(@"FB Id is %@", fbId );
+        NSLog(@"FB Id is %@  sm:%i fb:%i", fbId,smAppDelegate.smLogin,smAppDelegate.facebookLogin);
         [prefs setObject:fbId forKey:@"FBUserId"];
-        [prefs synchronize];
+//        if (smAppDelegate.smLogin==TRUE)
+//        {
+//            NSLog(@"callin get connect fb");
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
+//        }
 
+        [prefs synchronize];
+        }
         frndListFlag=TRUE;
         //[self getUserFriendListRequest:self];
     }
     
-    else
-    {
-        //Getting friend list from user by zubair
-        [self getUserFriendListFromFB:result];
-       
-    }
+//    else
+//    {
+//        //Getting friend list from user by zubair
+//        [self getUserFriendListFromFB:result];
+//       
+//    }
 };
                                                                       
 /**
@@ -266,15 +283,32 @@ UserDefault *userDefault;
 {
     facebook = [[FacebookHelper sharedInstance] facebook];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-   NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary* params;
+    
+    if (smAppDelegate.fbAccessToken) 
+    {
         NSString * stringOfFriends = [frndList componentsJoinedByString:@","];
-        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       @"Invite your Facebook friends", @"title",
+                                       @"Come check out Social Maps.",  @"message",
+                                       stringOfFriends, @"to",smAppDelegate.fbAccessToken, @"access_token",
+                                       nil]; 
+        //        [params setObject:stringOfFriends forKey:@"to"];
+
+    }
+    else if ([userDefault readFromUserDefaults:@"FBAccessTokenKey"]) 
+    {
+        NSString * stringOfFriends = [frndList componentsJoinedByString:@","];
+        params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                        @"Invite your Facebook friends", @"title",
                                        @"Come check out Social Maps.",  @"message",
                                        stringOfFriends, @"to",[prefs stringForKey:@"FBAccessTokenKey"], @"access_token",
                                        nil]; 
-//        [params setObject:stringOfFriends forKey:@"to"];
+        //        [params setObject:stringOfFriends forKey:@"to"];
+
+    }
+    
         
     NSLog(@"facebook params: %@", params);
     NSLog(@"delegate %@  userdef %@ fb %@", smAppDelegate.fbAccessToken,[prefs stringForKey:@"FBAccessTokenKey"],[facebook accessToken]);

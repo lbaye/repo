@@ -74,6 +74,8 @@ BOOL coverImgFlag;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];    
     
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
@@ -215,6 +217,73 @@ BOOL coverImgFlag;
     [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
 }
 
+- (void)getOtherUserProfileDone:(NSNotification *)notif
+{
+    NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
+    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    //     coverImageView.image;
+    //     profileImageView.image;
+    userInfo=[notif object];
+    nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
+    statusMsgLabel.text=@"";
+    addressOrvenueLabel.text=userInfo.address.street;
+    distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
+    ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
+    relStsLabel.text=userInfo.relationshipStatus;
+    livingPlace.text=userInfo.address.city;
+    worksLabel.text=userInfo.workStatus;
+    if (userInfo.status) 
+    {
+        statusMsgLabel.text=userInfo.status;
+    }
+    
+    if ([userInfo.regMedia isEqualToString:@"fb"]) 
+    {
+        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+    }
+    regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    regStatus.userInteractionEnabled=YES;
+    regStatus.layer.borderWidth=1.0;
+    regStatus.layer.masksToBounds = YES;
+    [regStatus.layer setCornerRadius:5.0];
+    
+    //    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+    //    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    
+    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+    
+    //add annotation to map
+    [mapView removeAnnotations:[self.mapView annotations]];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
+    theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES]; 
+    
+    NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
+	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
+    if (!userInfo.address.city)
+    {
+        annotation.title =[NSString stringWithFormat:@"Address not found"];
+    }
+    else 
+    {
+        annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+    }
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    [self.mapView addAnnotation:annotation];
+}
+
 - (void)getBasicProfileDone:(NSNotification *)notif
 {
     NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
@@ -333,7 +402,7 @@ BOOL coverImgFlag;
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"event_item_bg.png"];
+        coverImageView.image=[UIImage imageNamed:@"blank.png"];
     }
 
     NSLog(@"image setted after download1. %@",img);
