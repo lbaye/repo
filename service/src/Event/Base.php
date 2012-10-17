@@ -119,4 +119,16 @@ abstract class Base {
     public function notice($msg) {
         $this->log('notice', $msg);
     }
+
+    public function checkMemoryBefore() {
+        $this->debug("Memory usage before: " . (memory_get_usage() / 1024) . " KB");
+    }
+
+    public function checkMemoryAfter() {
+        $this->debug("Memory usage after: " . (memory_get_usage() / 1024) . " KB");
+    }
+
+    public function logJob($name, $job) {
+        $this->info("Executing Event::$name with job - {$job->unique()}");
+    }
 }
