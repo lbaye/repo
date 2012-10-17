@@ -66,10 +66,10 @@ class Gathering extends Base
         $start = (int)$this->request->get('start', 0);
         $limit = (int)$this->request->get('limit', 20);
         $this->_initRepository($type);
-        $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
+        $gatheringObjs = $this->gatheringRepository->getAllActiveEvent($limit, $start);
 
         if (!empty($gatheringObjs)) {
-            $permittedDocs = $this->_filterByExpiration($gatheringObjs);
+            $permittedDocs = $this->_filterByPermission($gatheringObjs);
             return $this->_generateResponse($this->_toArrayAll($permittedDocs));
         } else {
             return $this->_generateResponse(array('message' => 'No active meetups found'), Status::NO_CONTENT);
@@ -449,16 +449,10 @@ class Gathering extends Base
                     if ((int)$difference > (int)ShareConstant::MEETUP_EXPIRE) {
                         $flag = 1;
                     }
-                    if ($flag != 1) {
-                        foreach ($rsvpFiltering['no'] as $rsvpNo) {
-                            if ($rsvpNo == $this->user->getId()) {
-                                $flag = 1;
-                            }
-                        }
+
                         if ($flag == 0) {
                             $gatheringIMNotOwner[] = $gathering;
                         }
-                    }
                 }
             }
 
