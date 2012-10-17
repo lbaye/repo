@@ -728,9 +728,9 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
 
-    if ((smAppDelegate.fbId) && (![smAppDelegate.fbId isEqualToString:@""]) && (![userDefault readFromUserDefaults:@"fbinvite"]))
+    if ((smAppDelegate.facebookLogin==TRUE) && (![smAppDelegate.fbId isEqualToString:@""]) && ([userDefault readFromUserDefaults:@"fbinvite"]==NULL))
     {
-        NSLog(@"show fb invite");
+        NSLog(@"show fb invite  %@  %@",smAppDelegate.fbId,[userDefault readFromUserDefaults:@"fbinvite"]);
         [fbHelper inviteFriends:nil];
         [userDefault writeToUserDefaults:@"fbinvite" withString:@"fbinvite"];
     }
@@ -1183,21 +1183,29 @@ ButtonClickCallbackData callBackData;
     NSLog(@"do connect fb");
     Facebook *facebook = [[FacebookHelper sharedInstance] facebook];
 //    [smAppDelegate showActivityViewer:self.view];
-    NSArray *permissions = [[NSArray alloc] initWithObjects:
-                            @"email",
-                            @"user_likes", 
-                            @"user_photos", 
-                            @"publish_checkins", 
-                            @"photo_upload", 
-                            @"user_location",
-                            @"user_birthday",
-                            @"user_about_me",
-                            @"publish_stream",
-                            @"read_stream",
-                            nil];
-    [facebook authorize:permissions];
-//    smAppDelegate.facebookLogin=TRUE;
-    [permissions release];
+    if ([facebook isSessionValid])
+    {
+        [fbHelper inviteFriends:nil];        
+    }
+    else
+    {
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"email",
+                                @"user_likes", 
+                                @"user_photos", 
+                                @"publish_checkins", 
+                                @"photo_upload", 
+                                @"user_location",
+                                @"user_birthday",
+                                @"user_about_me",
+                                @"publish_stream",
+                                @"read_stream",
+                                nil];
+        [facebook authorize:permissions];
+        //    smAppDelegate.facebookLogin=TRUE;
+        [permissions release];
+    }
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     [connectToFBView removeFromSuperview];
 }
 
@@ -1707,7 +1715,7 @@ ButtonClickCallbackData callBackData;
     
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     NSLog(@"Connected with fb :D %@",[notif object]);
-    [UtilityClass showAlert:@"Social Maps" :[notif object]];
+//    [UtilityClass showAlert:@"Social Maps" :[notif object]];
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif
@@ -1721,7 +1729,7 @@ ButtonClickCallbackData callBackData;
         [connectToFBView removeFromSuperview];
         [smAppDelegate showActivityViewer:self.view];
         NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
-        
+        [fbHelper inviteFriends:nil];
         if ([smAppDelegate.fbId isEqualToString:@""])
         {
             smAppDelegate.fbId=[userDefault readFromUserDefaults:@"FBUserId"];
@@ -1740,7 +1748,7 @@ ButtonClickCallbackData callBackData;
         else
         {
             [smAppDelegate hideActivityViewer];
-            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
+//            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
         }
     }
 }

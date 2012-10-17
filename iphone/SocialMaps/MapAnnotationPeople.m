@@ -68,9 +68,10 @@
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
     [msgView addSubview:lblMsg];
-    
+
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
-        [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
 //        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
 //        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
 //        [msgView addSubview:sourceIcon];
@@ -208,7 +209,9 @@
     // TODO: hiding for appstore submission. revert back once feature is implemenetd
     directionBtn.hidden = TRUE;
 
-    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+
     // Message request
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
