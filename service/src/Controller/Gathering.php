@@ -200,7 +200,7 @@ class Gathering extends Base
                 'objectType' => $type,
             );
 
-            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
+//            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
             \Helper\Notification::send($notificationData, $users);
         }
 
@@ -439,20 +439,9 @@ class Gathering extends Base
 
         if (!empty($gatheringObjs)) {
             foreach ($gatheringObjs as $gathering) {
-                $rsvpFiltering = $gathering->getRsvp();
 
                 if ($gathering->getOwner()->getId() != $this->user->getId()) {
-                    $flag = 0;
-                    $timeFilter = (array)$gathering->getTime();
-
-                    $difference = $this->timeDiff(date('Y-m-d H:i:s', time()), $timeFilter['date']);
-                    if ((int)$difference > (int)ShareConstant::MEETUP_EXPIRE) {
-                        $flag = 1;
-                    }
-
-                        if ($flag == 0) {
-                            $gatheringIMNotOwner[] = $gathering;
-                        }
+                    $gatheringIMNotOwner[] = $gathering;
                 }
             }
 
@@ -519,14 +508,4 @@ class Gathering extends Base
         return $this->_generateResponse($data);
     }
 
-    public function timeDiff($currentTime, $targetTime)
-    {
-        // convert to unix timestamps
-        $toDate = strtotime($currentTime);
-        $fromDate = strtotime($targetTime);
-        $difference = round(abs($toDate - $fromDate) / 60, 2);
-
-        // return the difference
-        return $difference;
-    }
 }
