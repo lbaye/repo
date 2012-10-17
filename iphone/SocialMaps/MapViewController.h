@@ -65,7 +65,7 @@ typedef enum _SHARING_TYPES {
     MapAnnotationEvent *mapAnnoEvent;
     IBOutlet UIView *connectToFBView;
     IBOutlet UIView *viewSharingPrefMapPullDown;
-                                    
+    CustomRadioButton *radio;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
