@@ -728,7 +728,7 @@ ButtonClickCallbackData callBackData;
     [savedFilters addObject:@"Show my deals"];
     [savedFilters addObject:@"Show 2nd degree"];
 
-    if ((![smAppDelegate.fbId isEqualToString:@""]) && (![userDefault readFromUserDefaults:@"fbinvite"]))
+    if ((smAppDelegate.fbId) && (![smAppDelegate.fbId isEqualToString:@""]) && (![userDefault readFromUserDefaults:@"fbinvite"]))
     {
         NSLog(@"show fb invite");
         [fbHelper inviteFriends:nil];
@@ -1027,6 +1027,10 @@ ButtonClickCallbackData callBackData;
     userDefault=[[UserDefault alloc] init];
     if ((![userDefault readFromUserDefaults:@"connectWithFB"]) && (smAppDelegate.smLogin==TRUE))
     {
+        connectToFBView.layer.borderWidth=2.0;
+        connectToFBView.layer.masksToBounds = YES;
+        [connectToFBView.layer setCornerRadius:7.0];
+        connectToFBView.layer.borderColor=[[UIColor lightTextColor]CGColor];
         [self.view addSubview:connectToFBView];
     }
     

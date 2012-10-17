@@ -1197,20 +1197,20 @@
                                     <action selector="addCircleView:" destination="wC3-So-nVM" eventType="touchUpInside" id="oX6-S0-TEX"/>
                                 </connections>
                             </button>
-                            <view alpha="0.90000000000000002" contentMode="scaleToFill" id="P93-3v-dP4">
-                                <rect key="frame" x="45" y="135" width="230" height="190"/>
+                            <view alpha="0.97999999999999998" contentMode="scaleToFill" id="P93-3v-dP4">
+                                <rect key="frame" x="25" y="135" width="275" height="195"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends" id="xUW-2v-7ia">
-                                        <rect key="frame" x="5" y="45" width="225" height="85"/>
+                                        <rect key="frame" x="10" y="33" width="265" height="102"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="elV-gJ-1AY">
-                                        <rect key="frame" x="105" y="15" width="21" height="21"/>
+                                        <rect key="frame" x="128" y="15" width="10" height="10"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="xlose_icon.png">
@@ -1225,7 +1225,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fuy-9h-eBA">
-                                        <rect key="frame" x="30" y="134" width="171" height="36"/>
+                                        <rect key="frame" x="50" y="137" width="171" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                         <state key="normal" title="Connect with Facebook" backgroundImage="btn_bg_light.png">
@@ -1243,7 +1243,7 @@
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
                             <view contentMode="scaleToFill" id="JgJ-J6-J8e">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="10000" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" alpha="0.70000000000000007" contentMode="scaleToFill" image="circle_menu_bg.png" id="7Hl-ng-7y8">
