@@ -754,15 +754,15 @@ ButtonClickCallbackData callBackData;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
 
     isFirstTimeDownloading = NO;
-    /*
+    
     //NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:1 sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:0 sender:self tag:2000];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
-    [radio release];
     
-    [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
-    */
+    
+    //[viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
+    
 }
 
 - (void)startGetLocation:(NSTimer*)timer
@@ -1019,7 +1019,7 @@ ButtonClickCallbackData callBackData;
     [super viewDidAppear:animated];
     //[self initPullView];
     if (!timerGotListing) {
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
     pullDownView.hidden = NO;
@@ -1135,6 +1135,8 @@ ButtonClickCallbackData callBackData;
 {
 //.   [imageDownloadsInProgress release];
 //    [imageDownloadsInProgressCopy release];
+    
+    [radio release];
     
     if (timerGotListing) {
         [timerGotListing invalidate];
@@ -2360,16 +2362,19 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     
+    [radio gotoButton:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1];
+    /*
     if (![viewSharingPrefMapPullDown viewWithTag:421]) {
         NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-        CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1 sender:self tag:2000];
+        radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1 sender:self tag:2000];
         radio.tag = 421;
         radio.delegate = self;
         [viewSharingPrefMapPullDown addSubview:radio];
-        [radio release];
+        
         [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
     }
-    
+    */
+     
     [self displayNotificationCount];
 }
 - (void)sentFriendRequest:(NSNotification *)notif {
