@@ -1,0 +1,54 @@
+create_breadcrumbs:
+  pattern: /breadcrumbs
+  defaults: { _controller: Controller\TrailController::create, type: breadcrumb }
+  requirements: { _method: POST }
+
+all_breadcrumbs:
+  pattern: /breadcrumbs
+  defaults: { _controller: Controller\TrailController::index, type: breadcrumb }
+  requirements: { _method: GET }
+
+a_breadcrumb:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\TrailController::getById, type: breadcrumb }
+  requirements: { _method: GET }
+
+my_breadcrumbs:
+  pattern:  /me/breadcrumbs
+  defaults: { _controller: Controller\TrailController::getByCurrentUser, type: breadcrumb }
+  requirements: { _method: GET }
+
+edit_breadcrumbs:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\TrailController::update, type: breadcrumb }
+  requirements: { _method: PUT }
+
+delete_breadcrumb:
+  pattern:  /breadcrumbs/{id}
+  defaults: { _controller: Controller\TrailController::delete, type: breadcrumb }
+  requirements: { _method: DELETE }
+
+add_marker_to_breadcrumb:
+  pattern:  /breadcrumbs/marker/{id}
+  defaults: { _controller: Controller\TrailController::addMarker, type: breadcrumb }
+  requirements: { _method: PUT }
+
+delete_marker_from_breadcrumb:
+  pattern:  /breadcrumbs/marker/delete/{id}
+  defaults: { _controller: Controller\TrailController::deleteMarker, type: breadcrumb }
+  requirements: { _method: PUT }
+
+add_photo_to_marker:
+  pattern:  /breadcrumbs/photo/{id}
+  defaults: { _controller: Controller\TrailController::addPhotoToMarker, type: breadcrumb }
+  requirements: { _method: PUT }
+
+delete_photo_from_marker:
+  pattern:  /breadcrumbs/photo/delete/{id}
+  defaults: { _controller: Controller\TrailController::deletePhotoFromMarker, type: breadcrumb }
+  requirements: { _method: PUT }
+
+share_breadcrumb:
+  pattern: /breadcrumbs/share/{id}
+  defaults: { _controller: Controller\TrailController::share, type: breadcrumb }
+  requirements: { _method: POST}
