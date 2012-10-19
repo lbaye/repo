@@ -131,7 +131,9 @@ class TrailController extends \Controller\Base
         $trail = $this->trailRepository->find($id);
 
         if ($trail === null) {
-            return $this->_generate404();
+            $this->response->setContent(json_encode(array('message' => $type . 'Trail not found')));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+            return $this->response;
         }
 
         if ($trail->getOwner() != $this->user) {
