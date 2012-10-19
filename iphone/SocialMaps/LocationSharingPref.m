@@ -47,7 +47,7 @@
         if ((prefs & LocationSharingPrefTypePermission) != 0) {
             //
             rowFrame = CGRectMake(self.frame.origin.x, ROW_HEIGHT*prefCount++, self.frame.size.width, ROW_HEIGHT);
-            permission = [[RadioButtonItem alloc] initWithFrame:rowFrame title:@"Permission needed for sharing:" subTitle:@"" labels:[NSArray arrayWithObjects:@"No", @"Yes", nil] sender:self tag:self.tag+300];
+            permission = [[RadioButtonItem alloc] initWithFrame:rowFrame title:@"Permission needed for sharing:" subTitle:@"" labels:[NSArray arrayWithObjects:@"No", @"Yes", nil] defBtn:0 sender:self tag:self.tag+300];
             permission.backgroundColor = [UIColor clearColor];
             [self addSubview:permission];
         }

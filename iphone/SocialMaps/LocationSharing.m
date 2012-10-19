@@ -52,7 +52,7 @@
     int rowNum = 0;
     //Erase history
     // Location sharing information
-    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] sender:self tag:startTag++];
+    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:0 sender:self tag:startTag++];
 
     SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:@"Currently 7 friends in subgroup" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
     
@@ -173,10 +173,6 @@
     removedViewHeight += child.frame.size.height;
     [child removeFromSuperview];
     
-//    child = (UIView*) [aview viewWithTag:tag+1002];
-//    removedViewHeight += child.frame.size.height;
-//    [child removeFromSuperview];
-//    
     child = (UIView*) [aview viewWithTag:tag+1001];
     removedViewHeight += child.frame.size.height;
     [child removeFromSuperview];
@@ -189,12 +185,6 @@
 - (void) addStrangerSharingView:(int)tag prefs:(int)prefs{
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
-    
-    // Draw a line
-    UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+ROW_HEIGHT-1, 
-                                                             aview.frame.size.width, 1)];
-    aline.backgroundColor = [UIColor lightGrayColor];
-    [aview addSubview:aline];
     
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                     aview.frame.size.height+7, 
@@ -225,10 +215,6 @@
     removedViewHeight += child.frame.size.height;
     [child removeFromSuperview];
     
-    child = (UIView*) [aview viewWithTag:tag+1002];
-    removedViewHeight += child.frame.size.height;
-    [child removeFromSuperview];
-    
     child = (UIView*) [aview viewWithTag:tag+1001];
     removedViewHeight += child.frame.size.height;
     [child removeFromSuperview];
@@ -249,6 +235,7 @@
     UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+ROW_HEIGHT-1, 
                                                                        aview.frame.size.width, 1)];
     aline.backgroundColor = [UIColor lightGrayColor];
+    aline.tag   = tag+1003;
     [aview addSubview:aline];
     
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
@@ -279,25 +266,24 @@
     removedViewHeight += child.frame.size.height;
     [child removeFromSuperview];
     
-    child = (UIView*) [aview viewWithTag:tag+1002];
-    removedViewHeight += child.frame.size.height;
-    [child removeFromSuperview];
-    
-    child = (UIView*) [aview viewWithTag:tag+1001];
-    removedViewHeight += child.frame.size.height;
-    [child removeFromSuperview];
+    for (int i= 1001; i <= 1003; i++) {
+        child = (UIView*) [aview viewWithTag:tag+i];
+        removedViewHeight += child.frame.size.height;
+        [child removeFromSuperview];
+    }
     
     [self cascadeHeightChange:tag incr:-(removedViewHeight)];
     [self setNeedsLayout];
 }
 
 - (void) accSettingButtonClicked:(id) sender {
+    UIView *senderView = (UIView*) sender;
     SettingsMaster *parent = (SettingsMaster*)[sender superview];
-    NSLog(@"LocationSharing accSettingButtonClicked: tag=%d", parent.tag);
+    NSLog(@"LocationSharing accSettingButtonClicked: tag=%d, parent tag=%d", senderView.tag, parent.tag);
     if (parent.tag >= 2000 && parent.tag <= 2005) {
         bool newView = FALSE;
-        NSObject* senderView = (NSObject*)sender;
-        if ([senderView isKindOfClass:[UIButton class]]) {
+        NSObject* senderObj = (NSObject*)sender;
+        if ([senderObj isKindOfClass:[UIButton class]]) {
             // Change button image
             [sender setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:UIControlStateNormal];
             [sender removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -329,16 +315,19 @@
                 else
                     [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
                 break;
-                break;
             case 2004:
                 // Stranger prefs
-                [self addStrangerSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
+                 if (newView == TRUE)
+                     [self addStrangerSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
+                 else
+                     [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
                 break;
             case 2005:
                 // Location prefs
                 if (newView == TRUE)
-                    //[self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
                     [self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
+                else if (senderView.tag == 8999)
+                    [self cascadeHeightChange:parent.tag incr:220];
                 else
                     [self cascadeHeightChange:parent.tag incr:1*(ROW_HEIGHT)+7];
                 break;
@@ -367,12 +356,14 @@
 }
 
 - (void) accSettingResetButtonClicked:(id) sender {
+    UIView *senderView = (UIView*) sender;
+    
     SettingsMaster *parent = (SettingsMaster*)[sender superview];
-    NSLog(@"accSettingResetButtonClicked: tag=%d", parent.tag);
+    NSLog(@"accSettingResetButtonClicked: tag=%d, parent tag=%d", senderView.tag, parent.tag);
     if (parent.tag >= 2000 && parent.tag <= 2005) {
         bool newView = FALSE;
-        NSObject* senderView = (NSObject*)sender;
-        if ([senderView isKindOfClass:[UIButton class]]) {
+        NSObject* senderObj = (NSObject*)sender;
+        if ([senderObj isKindOfClass:[UIButton class]]) {
             [sender setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
             [sender removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             [sender addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -404,12 +395,17 @@
                 break;
             case 2004:
                 // Stranger prefs
-                [self removeStrangerSharingView:parent.tag];
+                if (newView == TRUE)
+                    [self removeStrangerSharingView:parent.tag];
+                else
+                    [self cascadeHeightChange:parent.tag incr:-(2*(ROW_HEIGHT)+7)];
                 break;
             case 2005:
                 // Location prefs
                 if (newView == TRUE)
                     [self removeLocSharingPlaceView:parent.tag];
+                else if (senderView.tag == 8999)
+                    [self cascadeHeightChange:parent.tag incr:-220];
                 else
                     [self cascadeHeightChange:parent.tag incr:-(1*(ROW_HEIGHT)+7)];
                 break;
@@ -470,4 +466,8 @@
     NSLog(@"LocationSharing:selectFriendsCancelled");
 }
 
+// RadioButtonDelegate method
+- (void) buttonSelected:(int)indx sender:(id)sender {
+    NSLog(@"LocationSharing: buttonSelected index=%d", indx);
+}
 @end

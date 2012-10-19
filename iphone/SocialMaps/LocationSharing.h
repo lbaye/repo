@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SelectFriends.h"
+#import "RadioButton.h"
 
-@interface LocationSharing : UIScrollView<SelectFriendsDelegate>
+@interface LocationSharing : UIScrollView<SelectFriendsDelegate, RadioButtonDelegate>
 
 - (UIScrollView*) initWithFrame:(CGRect)scrollFrame;
 - (void) accSettingButtonClicked:(id) sender;

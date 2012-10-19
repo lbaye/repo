@@ -10,8 +10,10 @@
 
 @interface LocationSharingPlaces : UIScrollView {
     id  parent;
+    int numSections;
 }
 @property (nonatomic, retain) id parent;
+@property (nonatomic) int numSections;
 
 - (LocationSharingPlaces*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag;
 - (void) accSettingButtonClicked:(id) sender;

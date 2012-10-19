@@ -20,17 +20,20 @@
 #import "RadioButtonItem.h"
 #import "LocationSharingPref.h"
 #import "NewLocationItem.h"
+#import "Globals.h"
 
 #define ROW_HEIGHT 62
 
 @implementation LocationSharingPlaces
 @synthesize parent;
+@synthesize numSections;
 
 - (LocationSharingPlaces*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag {
     self = [super initWithFrame:scrollFrame];
     if (self) {
-        //self.frame = scrollFrame;
-        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*5);
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        numSections = smAppDelegate.locSharingPrefs.geoFences.count;
+        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*(numSections+1));
         self.frame = newFrame;
         self.tag = tag;
         self.parent = sender;
@@ -50,23 +53,18 @@
     SettingsMaster *newLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"New location" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
     // Remove default background image
     [[newLoc viewWithTag:99999] removeFromSuperview];
+    [self addSubview:newLoc];
+    [newLoc release];
     
-    SettingsMaster *locOne = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location 1" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
-    // Remove default background image
-    [[locOne viewWithTag:99999] removeFromSuperview];
-    
-    SettingsMaster *locTwo = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location 2" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
-    // Remove default background image
-    [[locTwo viewWithTag:99999] removeFromSuperview];
-    
-    SettingsMaster *locThree = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location 3" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];   
-    // Remove default background image
-    [[locThree viewWithTag:99999] removeFromSuperview];
-    
-    SettingsMaster *locFour = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location 4" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];   
-    // Remove default background image
-    [[locFour viewWithTag:99999] removeFromSuperview];
-
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    for (int i=0; i < numSections; i++ ) {
+        Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:i];
+        SettingsMaster *aLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:geoFence.name subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
+        // Remove default background image
+        [[aLoc viewWithTag:99999] removeFromSuperview];
+        [self addSubview:aLoc];
+        [aLoc release];
+    }
     
     // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
@@ -74,12 +72,6 @@
     [self setContentSize:contentSize];
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*rowNum);
     self.frame = newFrame;
-    
-    [self addSubview:newLoc];
-    [self addSubview:locOne];
-    [self addSubview:locTwo];
-    [self addSubview:locThree];
-    [self addSubview:locFour];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -114,7 +106,6 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    //NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
     NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, 220) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
@@ -197,17 +188,16 @@
             [sender setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:UIControlStateNormal];
             [sender removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             [sender addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
+                [self.parent accSettingButtonClicked:self];
+            }
             newView = TRUE;
-        }
-//        [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
-            [self.parent accSettingButtonClicked:self];
         }
         switch (btnParent.tag) {
             case 8999:
                 // New Location
-                [self addNewPlaceSharingView:btnParent.tag];
+                if (newView)
+                    [self addNewPlaceSharingView:btnParent.tag];
                 break;
             case 9000:
                 // Location 0
@@ -220,7 +210,8 @@
                 //break;
             case 9003:
                 // Location 3
-                [self addPlaceSharingView:btnParent.tag prefs:LocationSharingPrefTypeRadius];
+                if (newView)
+                    [self addPlaceSharingView:btnParent.tag prefs:LocationSharingPrefTypeRadius];
                 break;
             default:
                 break;
@@ -241,13 +232,12 @@
         if ([senderView isKindOfClass:[UIButton class]]) {
             [sender setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
             [sender removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [sender addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
                 [self.parent accSettingResetButtonClicked:self];
             }
             newView = TRUE;
         }
-//        [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         switch (btnParent.tag) {
             case 8999:
                 // New Location
@@ -271,9 +261,6 @@
             default:
                 break;
         }
-//        if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
-//            [self.parent accSettingResetButtonClicked:self];
-//        }
     }
     
 }

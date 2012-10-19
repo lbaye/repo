@@ -12,7 +12,7 @@
 @implementation RadioButton
 @synthesize selIndex;
 @synthesize labels;
-//@synthesize def;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag
 {
@@ -132,6 +132,11 @@
                           forState:UIControlStateNormal];
         [lastSel setBackgroundImage:lastSelImg
                            forState:UIControlStateNormal];
+        
+        if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(buttonSelected:sender:)]) {
+            [self.delegate buttonSelected:selIndex sender:(id)self.tag];
+        }
+
     }
     [self setNeedsDisplay];
 }

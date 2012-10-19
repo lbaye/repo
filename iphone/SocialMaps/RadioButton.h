@@ -8,15 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol RadioButtonDelegate <NSObject>
+
+- (void) buttonSelected:(int)indx sender:(id)sender;
+
+@end
+
 @interface RadioButton : UIView {
     int     selIndex;
     NSArray *labels;
-//    int      def;
+    id<RadioButtonDelegate> delegate;
 }
 
 @property (nonatomic) int selIndex;
 @property (nonatomic, retain) NSArray *labels;
-//@property (nonatomic) int def;
+@property (nonatomic, retain) id<RadioButtonDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag;
 

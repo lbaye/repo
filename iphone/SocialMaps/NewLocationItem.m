@@ -76,7 +76,7 @@
     [self addSubview:lblTitle];
     
     // Mapview
-    CGRect mapFrame = CGRectMake(0, TEXTAREA_HEIGHT+4, 320, self.frame.size.height-TEXTAREA_HEIGHT-4);
+    CGRect mapFrame = CGRectMake(0, TEXTAREA_HEIGHT+4, self.frame.size.width, self.frame.size.height-TEXTAREA_HEIGHT-4);
     locMap = [[MKMapView alloc] initWithFrame:mapFrame];
     locMap.showsUserLocation=YES;
     locMap.delegate = (id) self;
