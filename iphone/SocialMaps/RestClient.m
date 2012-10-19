@@ -1325,19 +1325,15 @@ AppDelegate *smAppDelegate;
     shareLocation.custom.friends = [[NSMutableArray alloc] init];
     shareLocation.custom.privacy = [[LocationPrivacySettings alloc] init];
     
-    //if ([self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"circles"] != nil) {
     for (NSString *item in [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"circles"]) {
         NSLog(@"Friends and Circle:circle:%@", item);
         [shareLocation.custom.circles addObject:item];
     }
-    //}
     
-    //if ([self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"friends"] != nil) {
     for (NSString *item in [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"friends"]) {
         NSLog(@"Friends and Circle:friend:%@", item);
         [shareLocation.custom.friends addObject:item];
     }
-    //}
     
     shareLocation.custom.privacy.duration = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"duration"] intValue];
     shareLocation.custom.privacy.radius = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends_and_circles" key3:@"radius"] intValue];

@@ -245,6 +245,7 @@
 		4F98A2DF15BB387D000B3124 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */; };
 		4F98A2E215BB387D000B3124 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F98A2E115BB387D000B3124 /* ViewController.m */; };
 		4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F9B281315BF53BC00CBA657 /* CoreLocation.framework */; };
+		4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */; };
 		4FAC301915C583540014030C /* UserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC301815C583540014030C /* UserAnnotationView.m */; };
 		4FAC302615C5C5DC0014030C /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC302515C5C5DC0014030C /* NotificationController.m */; };
 		4FB1342A15D82391004890A3 /* line_arrow_up_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FB1342915D82391004890A3 /* line_arrow_up_left.png */; };
@@ -782,6 +783,8 @@
 		4F98A2E015BB387D000B3124 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F98A2E115BB387D000B3124 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4F9B281315BF53BC00CBA657 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Scrolling.h"; sourceTree = "<group>"; };
+		4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Scrolling.m"; sourceTree = "<group>"; };
 		4FAC301715C583540014030C /* UserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAnnotationView.h; sourceTree = "<group>"; };
 		4FAC301815C583540014030C /* UserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAnnotationView.m; sourceTree = "<group>"; };
 		4FAC302415C5C5DC0014030C /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
@@ -1227,6 +1230,8 @@
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
 				4F2F464D162B945700B6D0AE /* NewLocationItem.h */,
 				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
+				4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */,
+				4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2284,6 +2289,7 @@
 				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
 				20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */,
 				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
+				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

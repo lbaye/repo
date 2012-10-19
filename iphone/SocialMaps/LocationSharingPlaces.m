@@ -30,7 +30,7 @@
     self = [super initWithFrame:scrollFrame];
     if (self) {
         //self.frame = scrollFrame;
-        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*4);
+        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*5);
         self.frame = newFrame;
         self.tag = tag;
         self.parent = sender;
@@ -114,7 +114,8 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
+    //NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
+    NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, 220) title:(NSString*)@"Location Name" sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
@@ -165,6 +166,21 @@
     [self setNeedsLayout];
 }
 
+- (void) removeNewPlaceSharingView:(int)tag {
+    SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
+    aview.title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+    
+    UIView *child = (UIView*) [aview viewWithTag:tag+1000];
+    CGRect removedFrame = child.frame;
+    [child removeFromSuperview];
+    
+    child = (UIView*) [aview viewWithTag:tag+1001];
+    [child removeFromSuperview];
+    
+    [self cascadeHeightChange:tag incr:-(removedFrame.size.height+7)];
+    [self setNeedsLayout];
+}
+
 - (void) accSettingButtonClicked:(id) sender {
     UIButton *btn = (UIButton*) sender;
     
@@ -174,8 +190,17 @@
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingPlaces accSettingButtonClicked: tag=%d", btnParent.tag);
     if (btnParent.tag >= 8999 && btnParent.tag <= 9003) {
-        [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        bool newView = FALSE;
+        NSObject* senderView = (NSObject*)sender;
+        if ([senderView isKindOfClass:[UIButton class]]) {
+            // Change button image
+            [sender setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:UIControlStateNormal];
+            [sender removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [sender addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            newView = TRUE;
+        }
+//        [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
             [self.parent accSettingButtonClicked:self];
         }
@@ -209,11 +234,26 @@
     [btn setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
-    NSLog(@"accSettingResetButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 9000 && btnParent.tag <= 9003)  {
-        [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    NSLog(@"LocationSharingPlaces accSettingResetButtonClicked: tag=%d", btnParent.tag);
+    if (btnParent.tag >= 8999 && btnParent.tag <= 9003)  {
+        bool newView = FALSE;
+        NSObject* senderView = (NSObject*)sender;
+        if ([senderView isKindOfClass:[UIButton class]]) {
+            [sender setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
+            [sender removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
+                [self.parent accSettingResetButtonClicked:self];
+            }
+            newView = TRUE;
+        }
+//        [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         switch (btnParent.tag) {
+            case 8999:
+                // New Location
+                if (newView)
+                    [self removeNewPlaceSharingView:btnParent.tag];
+                break;
             case 9000:
                 // Location 0
                 //break;
@@ -225,50 +265,17 @@
                 //break;
             case 9003:
                 // Location 3
-                [self removePlaceSharingView:btnParent.tag];
+                if (newView)
+                    [self removePlaceSharingView:btnParent.tag];
                 break;
             default:
                 break;
         }
-        if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
-            [self.parent accSettingResetButtonClicked:self];
-        }
+//        if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
+//            [self.parent accSettingResetButtonClicked:self];
+//        }
     }
     
 }
 
-// UITextFieldDelegate
-- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
-	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
-    [self endEditing:YES];
-    
-	return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    [self animateTextField: textField up: YES];
-    [self bringSubviewToFront:[textField superview]];
-}
-
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [self animateTextField: textField up: NO];
-    // Store the userid and password
-}
-
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up
-{
-    int movementDistance = 200; // tweak as needed
-    const float movementDuration = 0.3f; // tweak as needed
-    
-    int movement = (up ? -movementDistance : movementDistance);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.frame = CGRectOffset(self.frame, 0, movement);
-    [UIView commitAnimations];
-}
 @end

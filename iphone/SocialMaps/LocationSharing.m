@@ -164,6 +164,78 @@
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
 }
+- (void) removeLocSharingPlaceView:(int)tag {
+    SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
+    aview.title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+    
+    int removedViewHeight = 0;
+    UIView *child = (UIView*) [aview viewWithTag:tag+1000];
+    removedViewHeight += child.frame.size.height;
+    [child removeFromSuperview];
+    
+//    child = (UIView*) [aview viewWithTag:tag+1002];
+//    removedViewHeight += child.frame.size.height;
+//    [child removeFromSuperview];
+//    
+    child = (UIView*) [aview viewWithTag:tag+1001];
+    removedViewHeight += child.frame.size.height;
+    [child removeFromSuperview];
+    
+    [self cascadeHeightChange:tag incr:-(removedViewHeight)];
+    [self setNeedsLayout];
+}
+
+
+- (void) addStrangerSharingView:(int)tag prefs:(int)prefs{
+    SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
+    aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
+    
+    // Draw a line
+    UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+ROW_HEIGHT-1, 
+                                                             aview.frame.size.width, 1)];
+    aline.backgroundColor = [UIColor lightGrayColor];
+    [aview addSubview:aline];
+    
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
+                                                    aview.frame.size.height+7, 
+                                                    aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
+                                                    defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+    
+    // Create the line with image line_arrow_down_left.png
+    CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
+    UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
+    lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
+    lineImage.tag   = tag+1001;  
+    [aview addSubview:lineImage];
+    
+    locSharing.backgroundColor = [UIColor clearColor];
+    [aview addSubview:locSharing];
+    
+    [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [self setNeedsLayout];
+}
+
+
+- (void) removeStrangerSharingView:(int)tag {
+    SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
+    aview.title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+    
+    int removedViewHeight = 0;
+    UIView *child = (UIView*) [aview viewWithTag:tag+1000];
+    removedViewHeight += child.frame.size.height;
+    [child removeFromSuperview];
+    
+    child = (UIView*) [aview viewWithTag:tag+1002];
+    removedViewHeight += child.frame.size.height;
+    [child removeFromSuperview];
+    
+    child = (UIView*) [aview viewWithTag:tag+1001];
+    removedViewHeight += child.frame.size.height;
+    [child removeFromSuperview];
+    
+    [self cascadeHeightChange:tag incr:-(removedViewHeight)];
+    [self setNeedsLayout];
+}
 
 - (void) addLocSharingView:(int)tag prefs:(int)prefs{
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
@@ -260,7 +332,7 @@
                 break;
             case 2004:
                 // Stranger prefs
-                [self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
+                [self addStrangerSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             case 2005:
                 // Location prefs
@@ -332,12 +404,12 @@
                 break;
             case 2004:
                 // Stranger prefs
-                [self removeLocSharingView:parent.tag];
+                [self removeStrangerSharingView:parent.tag];
                 break;
             case 2005:
                 // Location prefs
                 if (newView == TRUE)
-                    [self removeLocSharingView:parent.tag];
+                    [self removeLocSharingPlaceView:parent.tag];
                 else
                     [self cascadeHeightChange:parent.tag incr:-(1*(ROW_HEIGHT)+7)];
                 break;

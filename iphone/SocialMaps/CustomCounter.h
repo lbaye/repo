@@ -31,5 +31,5 @@
 
 - (void) notifyDelegate:(id)sender;
 - (id)initWithFrame:(CGRect)frame allowNeg:(bool)neg default:(int)def sender:(id)sender tag:(int)tag;
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
+
 @end

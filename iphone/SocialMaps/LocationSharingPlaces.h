@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LocationSharingPlaces : UIScrollView <UITextFieldDelegate> {
+@interface LocationSharingPlaces : UIScrollView {
     id  parent;
 }
 @property (nonatomic, retain) id parent;
@@ -16,7 +16,5 @@
 - (LocationSharingPlaces*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag;
 - (void) accSettingButtonClicked:(id) sender;
 - (void) accSettingResetButtonClicked:(id) sender;
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
-
 
 @end

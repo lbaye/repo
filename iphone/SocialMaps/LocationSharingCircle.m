@@ -161,8 +161,15 @@
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingCircle accSettingButtonClicked: tag=%d", btnParent.tag);
     if (btnParent.tag >= 7000 && btnParent.tag <= (7000+numSections)) {
-        [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        bool newView = FALSE;
+        NSObject* senderView = (NSObject*)sender;
+        if ([senderView isKindOfClass:[UIButton class]]) {
+            // Change button image
+            [sender setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:UIControlStateNormal];
+            [sender removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [sender addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            newView = TRUE;
+        }
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
             [self.parent accSettingButtonClicked:self];
         }
@@ -176,7 +183,8 @@
             case 7002:
                 // Permission pref
                 //[self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
-                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
+                if (newView)
+                    [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             default:
                 break;
@@ -190,7 +198,7 @@
     [btn setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
-    NSLog(@"accSettingResetButtonClicked: tag=%d", btnParent.tag);
+    NSLog(@"LocationSharingCircle accSettingResetButtonClicked: tag=%d", btnParent.tag);
     if (btnParent.tag >= 7000 && btnParent.tag <= 7002) {
         [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];

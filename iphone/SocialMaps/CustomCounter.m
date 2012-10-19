@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "CustomCounter.h"
+#import "UITextField+Scrolling.h"
 
 @implementation CustomCounter
 @synthesize allowNegative;
@@ -60,7 +61,6 @@
         countDisp.text = [NSString stringWithFormat:@"%d",currVal];
         countDisp.backgroundColor = [UIColor clearColor];
         countDisp.borderStyle = UITextBorderStyleNone;
-        //countDisp.clearButtonMode = UITextFieldViewModeWhileEditing;
         countDisp.returnKeyType = UIReturnKeyDone;
         countDisp.textAlignment = UITextAlignmentCenter;
         countDisp.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -81,39 +81,16 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self animateTextField: parent up: YES];
+    [textField animateTextField: parent up: YES];
 }
 
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    [self animateTextField: parent up: NO];
+    [textField animateTextField: parent up: NO];
     // Store the userid and password
 }
 
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up
-{
-    CGRect newFrame = [textField convertRect:textField.bounds toView:nil];
-    if (up) {
-        movementDistance = 216 - newFrame.origin.y;// - newFrame.size.height;
-        if (movementDistance > 0)
-            movementDistance = 0;
-    } else
-        movementDistance = -movementDistance;
-    
-    const float movementDuration = 0.3f; // tweak as needed
-    
-    int movement = (up ?    movementDistance : movementDistance);
-    NSLog(@"animateTextField : movementDistance = %d, movement = %d", movementDistance, movement);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[appDelegate window] setFrame: CGRectOffset([[appDelegate window] frame], 0, movement)];
-    [UIView commitAnimations];
-}
 // UITextField Delegate end
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
