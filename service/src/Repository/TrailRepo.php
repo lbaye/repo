@@ -154,6 +154,8 @@ class TrailRepo extends Base
      */
     public function mapMarker(array $data, UserDocument $owner, TrailDocument $trail = null)
     {
+        # TODO: Does not check for duplicate markers
+
 
         if (is_null($trail)) {
             $trail = new TrailDocument();
