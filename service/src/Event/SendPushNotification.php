@@ -35,9 +35,9 @@ class SendPushNotification extends Base
             $this->messageRepository = $this->services['dm']->getRepository('Document\Message');
 
             $user = $this->userRepository->find($workload->user_id);
-            $this->userRepository->refresh($user);
 
             if (!empty($user)) {
+                $this->userRepository->refresh($user);
                 $this->_sendPushNotification($user, get_object_vars($workload->notification));
                 $this->debug("Push notification sent to user - {$user->getFirstName()}");
             } else {
