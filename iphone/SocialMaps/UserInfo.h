@@ -48,6 +48,7 @@
     NSString *coverPhoto;
     NSString *status;
     NSString *shareLocationOption;
+    NSString *friendshipStatus; 
 }
 @property(nonatomic,retain) NSString *userId;
 @property(nonatomic,retain) NSString *email;
@@ -85,5 +86,6 @@
 @property(nonatomic,retain) NSString *coverPhoto;
 @property(nonatomic,retain) NSString *status;
 @property(nonatomic,retain) NSString *shareLocationOption;
+@property(nonatomic,retain) NSString *friendshipStatus; 
 
 @end

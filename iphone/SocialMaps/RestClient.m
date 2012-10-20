@@ -935,6 +935,7 @@ AppDelegate *smAppDelegate;
     aUserInfo.coverPhoto = [self getNestedKeyVal:jsonObjects key1:@"coverPhoto" key2:nil key3:nil];
     aUserInfo.status = [self getNestedKeyVal:jsonObjects key1:@"status" key2:nil key3:nil];
     aUserInfo.shareLocationOption = [self getNestedKeyVal:jsonObjects key1:@"shareLocation" key2:nil key3:nil];
+    aUserInfo.friendshipStatus = [self getNestedKeyVal:jsonObjects key1:@"friendship" key2:nil key3:nil];
         
     aUserInfo.circles = [[NSMutableArray alloc] init];
     for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
@@ -5508,7 +5509,7 @@ AppDelegate *smAppDelegate;
     NSString *route = [NSString stringWithFormat:@"%@/users/%@",WS_URL,userId];
     NSURL *url = [NSURL URLWithString:route];
     __block UserInfo *aUserInfo = nil;
-    
+    NSLog(@"route: %@",route);
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"GET"];
     [request addRequestHeader:authToken value:authTokenValue];
@@ -5539,10 +5540,10 @@ AppDelegate *smAppDelegate;
                 NSLog(@"Arr");
             }
             
-            aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
             
             NSLog(@"getAccountSettings: %@",jsonObjects);
-            NSLog(@"aUserInfo.avatar %@",aUserInfo.avatar);
+            NSLog(@"aUserInfo.friendshipStatus %@",aUserInfo.friendshipStatus);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_OTHER_USER_PROFILE_DONE object:aUserInfo];
         } 

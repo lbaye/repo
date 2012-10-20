@@ -36,6 +36,7 @@
 #import "MapAnnotationEvent.h"
 #import "ViewEventDetailViewController.h"
 #import "CustomAlert.h"
+#import "FriendsProfileViewController.h"
 
 @interface MapViewController ()
 
@@ -444,6 +445,14 @@ ButtonClickCallbackData callBackData;
      [self presentModalViewController:controller animated:YES];
 }
 
+- (void) viewPeopleProfile:(id <MKAnnotation>)anno {
+    LocationItemPeople *locItem = (LocationItemPeople*) anno;
+    FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+    controller.friendsId=locItem.userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+}
+
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
     LocationItemPlace *locItem = (LocationItemPlace*) anno;
     
@@ -570,7 +579,9 @@ ButtonClickCallbackData callBackData;
         case MapAnnoUserActionEvent:
             [self viewEventDetail:locItem];
             break;
-
+        case MapAnnoUserActionProfile:
+            [self viewPeopleProfile:locItem];
+            break;
         default:
             break;
     }

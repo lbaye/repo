@@ -45,7 +45,6 @@
 		txtMsg.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
 		txtMsg.backgroundColor = [UIColor clearColor];
 		[txtMsg setTextAlignment:UITextAlignmentLeft];
-        NSLog(@"people.statusMsg %@ %lf  %lf",userInfo.statusMsg, msgFrame.origin.x, msgFrame.origin.y);
         txtMsg.userInteractionEnabled = FALSE;
         [cell.contentView addSubview:txtMsg];
                 
@@ -73,7 +72,6 @@
     }
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
         regMedia.image=[UIImage imageNamed:@"icon_facebook.png"];
     }
     else
@@ -102,12 +100,10 @@
     {
         frndButton.hidden=NO;
         [frndButton setTitle:@"friend" forState:UIControlStateNormal];
-        NSLog(@"is hidden:NO userInfo.friendshipStatus %@",userInfo.friendshipStatus);
     }
     else
     {
         frndButton.hidden=YES;
-        NSLog(@"is hidden:YES userInfo.friendshipStatus %@",userInfo.friendshipStatus);
         [frndButton setTitle:@"Non-Friend" forState:UIControlStateNormal];
     }
     
@@ -132,12 +128,10 @@
     {
         refButton.hidden=NO;
         [refButton setTitle:@"FB friend" forState:UIControlStateNormal];
-        NSLog(@"is hidden:NO userInfo.friendshipStatus %@",userInfo.source);
     }
     else
     {
         refButton.hidden=YES;
-        NSLog(@"is hidden:YES userInfo.friendshipStatus %@",userInfo.source);
         [refButton setTitle:@"Non-Friend" forState:UIControlStateNormal];
     }     
     

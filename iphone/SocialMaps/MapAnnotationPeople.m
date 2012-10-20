@@ -153,7 +153,7 @@
     // Buttons
     // Add friend
     UIButton *addFriendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+20, 53, 32);
+    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+5, 53, 32);
     [addFriendBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [addFriendBtn setImage:[UIImage imageNamed:@"map_add_friend.png"] forState:UIControlStateNormal];
     addFriendBtn.backgroundColor = [UIColor clearColor];
@@ -224,13 +224,24 @@
     UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     // TODO: repositioning message button for appstore submission. SInce we are hiding
     // meetup/direction we are putting this under friend request button
-//    messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
-    messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+20+42, 57, 27);
+    // messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
+    messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
     [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
     messageBtn.backgroundColor = [UIColor clearColor];
     messageBtn.tag = 11006;
     [infoView addSubview:messageBtn];
+        
+    UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    profileBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35+30, 55, 27);
+    [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+    [profileBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light.png"] forState:UIControlStateNormal];
+    [profileBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [profileBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    [profileBtn setTitle:@"Profile" forState:UIControlStateNormal];
+    profileBtn.backgroundColor = [UIColor clearColor];
+    profileBtn.tag = 11008;
+    [infoView addSubview:profileBtn];    
     }
     return annoView;
 }
@@ -266,6 +277,9 @@
             break;
         case 11006:
             actionType = MapAnnoUserActionMessage;
+            break;
+        case 11008:
+            actionType = MapAnnoUserActionProfile;
             break;
         default:
             return;

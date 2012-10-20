@@ -100,7 +100,6 @@
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [self getViewForStateSummary:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
-    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     
     CGRect detFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                  (BUTTON_WIDTH+2)*4+20, annoView.frame.size.height+64);

@@ -1,16 +1,18 @@
 //
-//  UserBasicProfileViewController.h
+//  FriendsProfileViewController.h
 //  SocialMaps
 //
-//  Created by Abdullah Md. Zubair on 9/11/12.
+//  Created by Abdullah Md. Zubair on 10/18/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
+
+#import <UIKit/UIKit.h>
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"
 
-@interface UserBasicProfileViewController : UIViewController<UIPickerViewDataSource, 
+@interface FriendsProfileViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
 UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
 {
@@ -31,7 +33,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *statusContainer;
     IBOutlet UITextField *entityTextField;
     PhotoPicker *photoPicker;
-
+    
     
     BOOL isDragging_msg,isDecliring_msg;
     NSMutableDictionary *dicImages_msg;
@@ -41,6 +43,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     UIImage *profileImage;
     IBOutlet UILabel *totalNotifCount;
     int entityFlag;
+    NSString *friendsId;
+    IBOutlet UIView *msgView;
+    IBOutlet UITextView *textViewNewMsg;
+    IBOutlet UIButton *frndStatusButton;
+    IBOutlet UIButton *addFrndButton;
 }
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
@@ -62,9 +69,14 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) PhotoPicker *photoPicker;
 @property(nonatomic,retain) UIImage *coverImage;
 @property(nonatomic,retain) UIImage *profileImage;
-@property (nonatomic, retain) UIImagePickerController *picSel;
-
+@property(nonatomic, retain) UIImagePickerController *picSel;
+@property(nonatomic,retain) NSString *friendsId;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+
+@property(nonatomic,retain) IBOutlet UIView *msgView;
+@property(nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
+@property(nonatomic,retain) IBOutlet UIButton *frndStatusButton;
+@property(nonatomic,retain) IBOutlet UIButton *addFrndButton;
 
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
@@ -82,5 +94,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)realstsButtonAction:(id)sender;
 -(IBAction)liveatButtonAction:(id)sender;
 -(IBAction)workatButtonAction:(id)sender;
+-(IBAction)sendMsg:(id)sender;
+-(IBAction)cancelMsg:(id)sender;
+-(IBAction)showMsgView:(id)sender;
+-(IBAction)getDirection:(id)sender;
 
 @end

@@ -1,13 +1,13 @@
 //
-//  UserBasicProfileViewController.m
+//  FriendsProfileViewController.m
 //  SocialMaps
 //
-//  Created by Abdullah Md. Zubair on 9/11/12.
+//  Created by Abdullah Md. Zubair on 10/18/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import "UserBasicProfileViewController.h"
+#import "FriendsProfileViewController.h"
 #import "Constants.h"
 #import "AppDelegate.h"
 #import "RestClient.h"
@@ -22,11 +22,11 @@
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
 
-@interface UserBasicProfileViewController ()
+@interface FriendsProfileViewController ()
 
 @end
 
-@implementation UserBasicProfileViewController
+@implementation FriendsProfileViewController
 
 @synthesize coverImageView;
 @synthesize profileImageView;
@@ -43,13 +43,17 @@
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
 @synthesize totalNotifCount;
+@synthesize friendsId;
+@synthesize msgView,textViewNewMsg;
+@synthesize frndStatusButton;
+@synthesize addFrndButton;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
 UserInfo *userInfo;
 NSMutableArray *nameArr;
 BOOL coverImgFlag;
-BOOL isDirty=FALSE;
+BOOL isDirtyFrnd=FALSE;
 NSMutableArray *selectedScrollIndex;
 
 
@@ -82,13 +86,11 @@ NSMutableArray *selectedScrollIndex;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];    
-    
-    [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
+    NSLog(@"friendsId: %@",friendsId);
+    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
@@ -99,7 +101,6 @@ NSMutableArray *selectedScrollIndex;
     [ImgesName addObject:@"places_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
     
-//            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
     [self reloadScrolview];
@@ -111,18 +112,19 @@ NSMutableArray *selectedScrollIndex;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [msgView removeFromSuperview];
     
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
-
+    
 }
 
 -(IBAction)editCoverButton:(id)sender
 {
-    isDirty=TRUE;
+    isDirtyFrnd=TRUE;
     coverImgFlag=TRUE;
     [self.photoPicker getPhoto:self];
     [self.entityTextField resignFirstResponder];
@@ -130,7 +132,7 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)editProfilePicButton:(id)sender
 {
-    isDirty=TRUE;
+    isDirtyFrnd=TRUE;
     coverImgFlag=FALSE;
     [self.photoPicker getPhoto:self];
     [self.entityTextField resignFirstResponder];    
@@ -151,15 +153,33 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)geotagButton:(id)sender
 {
-    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
+/*    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"createGeotag"];
     
     initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
+ */
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [frndStatusButton setTitle:@"requested" forState:UIControlStateNormal];
+    [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
+    [addFrndButton setUserInteractionEnabled:NO];
+    [frndStatusButton setHidden:NO];
 }
 
 -(IBAction)uploadPhotoButton:(id)sender
 {
+    NSLog(@"meet up request");
+    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
+}
+
+-(IBAction)getDirection:(id)sender
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+    NSLog(@"get directions..");
 }
 
 -(IBAction)closeMap:(id)sender
@@ -169,7 +189,7 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)saveEntity:(id)sender
 {
-    isDirty=TRUE;
+    isDirtyFrnd=TRUE;
     NSLog(@"save");
     [statusContainer removeFromSuperview];
     [entityTextField resignFirstResponder];
@@ -216,6 +236,11 @@ NSMutableArray *selectedScrollIndex;
     
 }
 
+-(IBAction)showMsgView:(id)sender
+{
+    [self.view addSubview:msgView];
+}
+
 -(void) displayNotificationCount {
     int totalNotif= [UtilityClass getNotificationCount];
     if (totalNotif == 0)
@@ -251,11 +276,11 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)backButton:(id)sender
 {
-    if (isDirty==FALSE) 
+    if (isDirtyFrnd==FALSE) 
     {
         [self dismissModalViewControllerAnimated:YES];
     }
-    else if(isDirty==TRUE)
+    else if(isDirtyFrnd==TRUE)
     {
         [self.entityTextField resignFirstResponder];
         [smAppDelegate showActivityViewer:self.view];
@@ -264,23 +289,22 @@ NSMutableArray *selectedScrollIndex;
     }
 }
 
-- (void)getBasicProfileDone:(NSNotification *)notif
+- (void)getOtherUserProfileDone:(NSNotification *)notif
 {
-    NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
+    NSLog(@"GOT SERVICE DATA FRIENDS Profile.. :D  %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
-    [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-//     coverImageView.image;
-//     profileImageView.image;
+    //     coverImageView.image;
+    //     profileImageView.image;
     userInfo=[notif object];
-     nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
-     statusMsgLabel.text=@"";
-     addressOrvenueLabel.text=userInfo.address.street;
-     distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
-     ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
-     relStsLabel.text=userInfo.relationshipStatus;
-     livingPlace.text=userInfo.address.city;
-     worksLabel.text=userInfo.workStatus;
+    nameLabl.text=[NSString stringWithFormat:@" %@ %@",userInfo.firstName,userInfo.lastName];
+    statusMsgLabel.text=@"";
+    addressOrvenueLabel.text=userInfo.address.street;
+    distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
+    ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
+    relStsLabel.text=userInfo.relationshipStatus;
+    livingPlace.text=userInfo.address.city;
+    worksLabel.text=userInfo.workStatus;
     if (userInfo.status) 
     {
         statusMsgLabel.text=userInfo.status;
@@ -288,7 +312,7 @@ NSMutableArray *selectedScrollIndex;
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
     }
     else
     {
@@ -300,12 +324,12 @@ NSMutableArray *selectedScrollIndex;
     regStatus.layer.masksToBounds = YES;
     [regStatus.layer setCornerRadius:5.0];
     
-//    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
-//    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
     
-    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
-    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
-
+    //    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+    //    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+    
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
@@ -330,31 +354,94 @@ NSMutableArray *selectedScrollIndex;
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
-
+    if ([userInfo.friendshipStatus isEqualToString:@"none"]) 
+    {
+        [frndStatusButton setHidden:YES];
+    }
+    else
+    {
+        [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
+        [addFrndButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
+        [addFrndButton setUserInteractionEnabled:NO];
+    }
 
 }
 
-- (void)updateBasicProfileDone:(NSNotification *)notif
+- (void)getBasicProfileDone:(NSNotification *)notif
 {
-    NSLog(@"profile update complete.");
     NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
-
-//    userInfo=[notif object];
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-//	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
-    [self dismissModalViewControllerAnimated:YES];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    //     coverImageView.image;
+    //     profileImageView.image;
+    userInfo=[notif object];
+    nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
+    statusMsgLabel.text=@"";
+    addressOrvenueLabel.text=userInfo.address.street;
+    distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
+    ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
+    relStsLabel.text=userInfo.relationshipStatus;
+    livingPlace.text=userInfo.address.city;
+    worksLabel.text=userInfo.workStatus;
+    if (userInfo.status) 
+    {
+        statusMsgLabel.text=userInfo.status;
+    }
+    
+    if ([userInfo.regMedia isEqualToString:@"fb"]) 
+    {
+        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+    }
+    regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    regStatus.userInteractionEnabled=YES;
+    regStatus.layer.borderWidth=1.0;
+    regStatus.layer.masksToBounds = YES;
+    [regStatus.layer setCornerRadius:5.0];
+    
+    //    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+    //    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    
+    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+    
+    //add annotation to map
+    [mapView removeAnnotations:[self.mapView annotations]];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
+    theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES]; 
+    
+    NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
+	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    
+    if (!userInfo.address.city)
+    {
+        annotation.title =[NSString stringWithFormat:@"Address not found"];
+    }
+    else 
+    {
+        annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+    }
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    [self.mapView addAnnotation:annotation];
+    
+    
 }
 
 -(IBAction)ageButtonAction:(id)sender
 {
     NSLog(@"age button");
     entityFlag=1;
-//    [self.view addSubview:statusContainer];
+    //    [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"My age...";
     entityTextField.text=[NSString stringWithFormat:@"%d",userInfo.age];
     if (userInfo.dateOfBirth) {
@@ -364,7 +451,6 @@ NSMutableArray *selectedScrollIndex;
     {
         [ActionSheetPicker displayActionPickerWithView:sender dateOfBirthPickerMode:UIDatePickerModeDate selectedDate:[NSDate date] target:self action:@selector(dateWasSelected::) title:@"Select date of birth"];
     }
-
 }
 
 -(IBAction)realstsButtonAction:(id)sender
@@ -428,7 +514,7 @@ NSMutableArray *selectedScrollIndex;
     {
         coverImageView.image=[UIImage imageNamed:@"blank.png"];
     }
-
+    
     NSLog(@"image setted after download1. %@",img);
     [pl drain];
 }
@@ -515,7 +601,7 @@ NSMutableArray *selectedScrollIndex;
             if(i< [ImgesName count]) 
             { 
                 UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
-
+                
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 75)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 60, 60, 20)];
                 name.textAlignment=UITextAlignmentCenter;
@@ -594,7 +680,7 @@ NSMutableArray *selectedScrollIndex;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -658,7 +744,7 @@ NSMutableArray *selectedScrollIndex;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
         [controller release];
-
+        
     }
 }
 
@@ -669,9 +755,56 @@ NSMutableArray *selectedScrollIndex;
 
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
-    isDirty=TRUE;
+    isDirtyFrnd=TRUE;
     userInfo.dateOfBirth=selectedDate;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
+}
+
+-(IBAction)sendMsg:(id)sender
+{
+    if (([textViewNewMsg.text isEqualToString:@""]) ||([textViewNewMsg.text isEqualToString:@"Your message..."]))
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"Enter message"];
+    }
+    else {
+        
+        NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+        NSString *userId = userInfo.userId;
+        [userIDs addObject:userId];
+        NSLog(@"user id %@", userInfo.userId);
+        [userIDs addObject:userId];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient sendMessage:[NSString stringWithFormat:@"Message from %@ %@",userInfo.lastName,userInfo.firstName] content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [textViewNewMsg resignFirstResponder];
+        [msgView resignFirstResponder];
+        [textViewNewMsg resignFirstResponder];
+        [msgView removeFromSuperview];
+    }
+}
+
+-(IBAction)cancelMsg:(id)sender
+{
+    [textViewNewMsg resignFirstResponder];
+    [msgView removeFromSuperview];
+}
+
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    if (!(textView.textColor == [UIColor blackColor])) {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor];
+    }
+    return YES;
+}
+
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (!(textView.textColor == [UIColor lightGrayColor])) {
+        textView.text = @"Your message...";
+        textView.textColor = [UIColor lightGrayColor];
+    }
 }
 
 @end
