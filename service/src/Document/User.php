@@ -11,6 +11,7 @@ use Helper\ShareConstant;
 /**
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
+ * @ODM\Index(keys={"notification"="desc"})
  */
 class User {
     const SALT = 'socialmaps';

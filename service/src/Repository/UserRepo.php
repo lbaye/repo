@@ -10,6 +10,8 @@ use Helper\Image as ImageHelper;
 
 class UserRepo extends Base
 {
+    const MAX_NOTIFICATIONS = 20;
+
     public function validateLogin($data)
     {
         if (empty($data)) {
@@ -1040,6 +1042,18 @@ class UserRepo extends Base
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
+        return true;
+    }
+
+    public function removeOldNotifications(UserDocument $user) {
+        $notifications = $user->getNotification();
+
+        if (count($notifications) > 0) {
+            $user->setNotification(array_slice($notifications, 0, self::MAX_NOTIFICATIONS));
+            $this->dm->persist($user);
+            $this->dm->flush();
+        }
+        
         return true;
     }
 }

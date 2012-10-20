@@ -200,7 +200,7 @@ class Gathering extends Base
                 'objectType' => $type,
             );
 
-//            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
+            $this->_sendPushNotification($postData['guests'], $this->_createInvitePushMessage($postData, $type), $type.'_invite');
             \Helper\Notification::send($notificationData, $users);
         }
 

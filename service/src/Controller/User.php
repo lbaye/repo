@@ -70,20 +70,18 @@ class User extends Base
         $result = array();
 
         foreach ($notifications as $notification) {
-
             if ($notification->getViewed() != true) {
                 $result[] = $notification;
                 $this->updateNotification($notification->getId());
             }
-
         }
 
-        if (empty($result)) {
-            $this->response->setStatusCode(Status::NO_CONTENT);
-        } else {
+        $this->userRepository->removeOldNotifications($this->user);
 
-            $this->response->setContent(json_encode($this->_toArrayAll($result)));
-            $this->response->setStatusCode(Status::OK);
+        if (empty($result)) {
+            $this->_generateResponse(array(), Status::OK    );
+        } else {
+            $this->_generateResponse($this->_toArrayAll($result));
         }
 
         return $this->response;
