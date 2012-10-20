@@ -20,6 +20,15 @@ class Landmark extends Content
     /** @ODM\String */
     protected $title;
 
+    /** @ODM\String */
+    protected $category;
+
+    /** @ODM\String */
+    protected $description;
+
+    /** @ODM\String */
+    protected $photo;
+
     /**
      * @ODM\EmbedOne(targetDocument="Location")
      * @var Location
@@ -54,6 +63,37 @@ class Landmark extends Content
         return $this->title;
     }
 
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
     public function getType()
     {
         return $this->type;
@@ -70,7 +110,7 @@ class Landmark extends Content
 
     public function toArray()
     {
-        $fieldsToExpose = array('id', 'title', 'createDate');
+        $fieldsToExpose = array('id', 'title','category', 'description', 'photo', 'createDate');
         $result = array();
 
         foreach($fieldsToExpose as $field) {

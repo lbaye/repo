@@ -7,6 +7,7 @@ use Document\Place as PlaceDocument;
 use Document\Geotag as GeotagDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
+use Helper\Image as ImageHelper;
 
 class PlaceRepo extends Base
 {
@@ -45,7 +46,7 @@ class PlaceRepo extends Base
             $placeTypeDoc->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title');
+        $setIfExistFields = array('title','category', 'description', 'photo');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -63,5 +64,35 @@ class PlaceRepo extends Base
         }
 
         return $placeTypeDoc;
+    }
+
+
+    public function savePlacePhoto($id, $placePhoto)
+    {
+        $place = $this->find($id);
+
+        if (false === $place) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $place->setUpdateDate(new \DateTime());
+
+        $timeStamp = $place->getUpdateDate()->getTimestamp();
+
+        $filePath = "/images/place-photo/" . $place->getId();
+        $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
+
+        if ($photoUrl !== false) {
+            $place->setPhoto($photoUrl);
+        } else {
+            @ImageHelper::saveImageFromBase64($placePhoto, ROOTDIR . $filePath);
+            $place->setPhoto($filePath . "?" . $timeStamp);
+        }
+
+
+        $this->dm->persist($place);
+        $this->dm->flush();
+
+        return $place;
     }
 }

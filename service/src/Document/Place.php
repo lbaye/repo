@@ -13,6 +13,7 @@ use Document\Location as Location;
  */
 class Place extends Landmark
 {
+
     function __construct() {
         $this->setType('place');
     }
@@ -24,4 +25,5 @@ class Place extends Landmark
 
         return $result;
     }
+
 }
