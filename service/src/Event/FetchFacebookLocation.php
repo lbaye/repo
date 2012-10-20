@@ -9,6 +9,12 @@ use Document\ExternalUser as ExtUser;
 use Service\Location\Facebook as FB;
 
 class FetchFacebookLocation extends Base {
+
+    /**
+     * Maximum number of users's checkins to show on map
+     */
+    const MAX_CHECKINS = 50;
+
     protected function setFunction() {
         $this->function = 'fetch_facebook_location';
     }
@@ -47,13 +53,32 @@ class FetchFacebookLocation extends Base {
 
         # Retrieve checkins with meta data
         if (!empty($fbCheckIns)) {
-            $fbCheckIns = $this->orderCheckinsByTimestamp($fbCheckIns['data']);
+            $fbCheckIns = $this->orderCheckinsByTimestamp($this->keepSingleCheckinPerUser($fbCheckIns['data']));
             $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
         } else {
             $this->debug("No facebook checkins found");
         }
 
         $this->checkMemoryAfter();
+    }
+
+    private function keepSingleCheckinPerUser($fbCheckIns) {
+        $userCheckinMap = array();
+
+        # Iterate through each checkin
+        for ($i = 0; $i < count($fbCheckIns); $i++) {
+            $checkin = $fbCheckIns[$i];
+            $authorId = $checkin['author_uid'];
+
+            # Map hash with user id and checkin object
+            if (!array_key_exists($authorId, $userCheckinMap))
+                $userCheckinMap[$authorId] = $checkin;
+
+            # if user is already exists in hash don't add to the hash
+        }
+
+        # Keep maximum only 50 users
+        return array_values(array_slice($userCheckinMap, 0, self::MAX_CHECKINS));
     }
 
     private function orderCheckinsByTimestamp(array $fbCheckIns) {
@@ -76,9 +101,10 @@ class FetchFacebookLocation extends Base {
         array $fbCheckIns,
         FB $facebook) {
 
-        $this->info("Importing external users from {$smUser->getFirstName()} facebook checkins");
+        $this->info('Importing external users (' . count($fbCheckIns) .
+                    ') from ' . $smUser->getFirstName() . ' facebook checkins');
 
-        $checkinsWithMetaData = array_values($this->getCheckinsWithMetaData($facebook, $fbCheckIns));
+        $checkinsWithMetaData = $this->getCheckinsWithMetaData($facebook, $fbCheckIns);
         $changed = false;
 
         # Iterate through each check in
@@ -96,6 +122,9 @@ class FetchFacebookLocation extends Base {
                         $this->debug("There are unsaved changes, Now performing persist operation");
                         $dm->persist($extUser);
                     }
+
+                    if ($i % 10)
+                        $dm->flush();
                 } else {
                     $this->warn("Found inconsistent data - " . json_encode($checkinWithMeta));
                 }
@@ -173,7 +202,8 @@ class FetchFacebookLocation extends Base {
         $checkinsInfo = array();
 
         # Iterate through each checkin data and map into a hash map
-        foreach ($fbCheckIns as $fbCheckIn) {
+        for ($i = 0; $i < count($fbCheckIns); $i++) {
+            $fbCheckIn = $fbCheckIns[$i];
             $fbFriendId = $fbCheckIn['author_uid'];
             $fbCoords = $fbCheckIn['coords'];
             $fbTimestamp = $fbCheckIn['timestamp'];
@@ -189,6 +219,8 @@ class FetchFacebookLocation extends Base {
         $this->debug("Retrieving checkin associated friends detail information");
         $users = $facebook->getFbFriendsInfo(array_keys($checkinsInfo));
 
+        $fullCheckinsInfo = array();
+
         # Map users info with user id
         foreach ($users['data'] as $user) {
             $this->debug('Building checkin information for user - ' . $user['first_name']);
@@ -198,7 +230,7 @@ class FetchFacebookLocation extends Base {
             $created_at = new \DateTime();
             $created_at->setTimestamp((int)$info['timestamp']);
 
-            $checkinsInfo[$uid] = array(
+            $fullCheckinsInfo[$uid] = array(
                 'refId' => $uid,
                 'refType' => \Document\ExternalUser::SOURCE_FB,
                 'firstName' => $user['first_name'],
@@ -215,7 +247,7 @@ class FetchFacebookLocation extends Base {
 
         $this->debug("Found and constructed checkins with meta data");
 
-        return $checkinsInfo;
+        return array_values($fullCheckinsInfo);
     }
 
     private function _getAddress($current_location) {

@@ -2,7 +2,7 @@
 <?php
 
 if (count($argv) < 2) {
-    die("Usages: <script>.php <ENV> <*FB_ID> <*FB_AUTH_TOKEN>");
+    die("Usages: <script>.php <ENV> <*UID> <*FB_ID> <*FB_AUTH_TOKEN>");
 }
 
 require_once __DIR__ . '/../../app/autoload.php';
