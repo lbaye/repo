@@ -116,8 +116,13 @@ class ProximityAlert extends Base {
         else
             $notificationSettings = $user->getNotificationSettings();
 
+        if (is_array($friend))
+            $visible = isset($friend['visible']) ? $friend['visible'] : false;
+        else
+            $visible = $friend->getVisible();
+
         return $distance <= self::DEFAULT_RADIUS &&
-               $friend->getVisible() &&
+               $visible &&
                $notificationSettings['proximity_alerts']['sm'];
     }
 
