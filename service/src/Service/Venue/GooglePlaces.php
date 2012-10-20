@@ -40,7 +40,8 @@ class GooglePlaces extends Base
 
             foreach ($content->results as &$result) {
                 $result->distance = \Helper\Location::distance($location['lat'], $location['lng'], $result->geometry->location->lat, $result->geometry->location->lng);
-                $result->streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=450x200&location={$result->geometry->location->lat},%20{$result->geometry->location->lng}&sensor=false&key=$this->apiKey";
+                //$result->streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=450x200&location={$result->geometry->location->lat},%20{$result->geometry->location->lng}&sensor=false&key=$this->apiKey";
+                $result->streetViewImage = $this->get_street_view_image($result->geometry->location->lat,$result->geometry->location->lng, $this->apiKey );
                 $sorted[] = $result;
             }
 
@@ -60,6 +61,54 @@ class GooglePlaces extends Base
             throw new \Exception("Service Unavailable (Google Places API said: '{$content->status}')", 503);
 
         }
+    }
+
+    private function get_street_view_image($lat, $lng, $key) {
+
+        $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng . "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
+
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_HEADER, 0);
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($handler, CURLOPT_URL, $endpoint);
+        $data = curl_exec($handler);
+
+        $http_status = curl_getinfo($handler, CURLINFO_HTTP_CODE);
+
+        curl_close($handler);
+
+        // if data value is an empty json document ('{}') , the panorama is not available for that point
+        if ($data === '{}' || $http_status != 200) {
+
+            // setting the range for lat, lng
+            $lat_min = $lat - 1;
+            $lat_max = $lat + 1;
+            $lng_min = $lng - 1;
+            $lng_max = $lng + 1;
+
+            $url = "http://www.panoramio.com/map/get_panoramas.php?set=full&from=0&to=2&minx={$lng_min}&miny={$lat_min}&maxx={$lng_max}&maxy={$lat_max}&size=medium&mapfilter=true";
+            
+            $handler = curl_init($url);
+            curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+            
+            $response = curl_exec($handler);
+            $http_status = curl_getinfo($handler,CURLINFO_HTTP_CODE);
+            curl_close($handler);
+            
+            $response = json_decode($response);
+            $result = $response->photos[0];
+            $image_url = $result->photo_file_url;
+            
+            if (is_null($image_url) || $http_status != 200) {
+                    return "";
+                } else {
+                    return $image_url;
+                }
+        }
+        else {
+             return "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+        }
+
     }
 
 }
