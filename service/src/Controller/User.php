@@ -198,7 +198,7 @@ class User extends Base
             $data = $user->toArrayDetailed();
             $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
             $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
-
+            $data['friendship'] = $this->user->getFriendship($user);
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
