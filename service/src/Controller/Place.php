@@ -162,7 +162,7 @@ class Place extends Base
             $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
 
             if($place) {
-                return $this->_generateResponse(array($postData));
+                return $this->_generateResponse($postData);
             } else {
                 return $this->_generateErrorResponse('Invalid request params');
             }
