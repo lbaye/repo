@@ -118,14 +118,21 @@ class Place extends Base
         $this->_initRepository($type);
 
         try {
+
             $place = $this->LocationMarkRepository->map($postData, $this->user);
             $this->LocationMarkRepository->insert($place);
+
+            if (!empty($postData['photo'])) {
+                $this->LocationMarkRepository->savePlacePhoto($place->getId(), $postData['photo']);
+            }
+            $postData = $place->toArray();
+            $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
 
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($place->toArray(), Status::CREATED);
+        return $this->_generateResponse($postData, Status::CREATED);
     }
 
     /**
@@ -142,15 +149,21 @@ class Place extends Base
 
         $place = $this->LocationMarkRepository->find($id);
 
-        if(empty($place) || $place->getOwner() != $this->user){
+        if (empty($place) || $place->getOwner() != $this->user) {
             return $this->_generateUnauthorized();
         }
 
         try {
             $place = $this->LocationMarkRepository->update($postData, $id);
+            if (!empty($postData['photo'])) {
+                $this->LocationMarkRepository->savePlacePhoto($place->getId(), $postData['photo']);
+            }
 
-            if($place) {
-                return $this->_generateResponse(json_encode($place->toArray()));
+            $postData = $place->toArray();
+            $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
+
+            if ($place) {
+                return $this->_generateResponse($postData);
             } else {
                 return $this->_generateErrorResponse('Invalid request params');
             }
