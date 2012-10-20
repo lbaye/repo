@@ -195,6 +195,17 @@ class User {
     );
 
     /** @ODM\Hash */
+    protected $platformSharing = array(
+        'fb' => true,
+        '4sq' => true,
+        'googlePlus' => true,
+        'gmail' => true,
+        'twitter' => true,
+        'yahoo' => true,
+        'badoo' => true,
+    );
+
+    /** @ODM\Hash */
     protected $layersSettings = array(
         'wikipedia' => true, 'tripadvisor' => true, 'foodspotting' => true
     );
@@ -1052,6 +1063,16 @@ class User {
         }
 
         return true;
+    }
+
+    public function setPlatformSharing(array $platformSharing)
+    {
+        $this->platformSharing = $platformSharing;
+    }
+
+    public function getPlatformSharing()
+    {
+        return $this->platformSharing;
     }
 
     const PREF_FIELD_STATUS = "status";
