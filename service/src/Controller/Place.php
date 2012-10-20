@@ -118,7 +118,6 @@ class Place extends Base
         $this->_initRepository($type);
 
         try {
-
             $place = $this->LocationMarkRepository->map($postData, $this->user);
             $this->LocationMarkRepository->insert($place);
 
@@ -149,7 +148,7 @@ class Place extends Base
 
         $place = $this->LocationMarkRepository->find($id);
 
-        if (empty($place) || $place->getOwner() != $this->user) {
+        if(empty($place) || $place->getOwner() != $this->user){
             return $this->_generateUnauthorized();
         }
 
@@ -162,8 +161,8 @@ class Place extends Base
             $postData = $place->toArray();
             $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
 
-            if ($place) {
-                return $this->_generateResponse($postData);
+            if($place) {
+                return $this->_generateResponse(array($postData));
             } else {
                 return $this->_generateErrorResponse('Invalid request params');
             }
