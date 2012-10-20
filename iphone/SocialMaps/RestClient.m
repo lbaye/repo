@@ -1334,13 +1334,13 @@ AppDelegate *smAppDelegate;
                 NSLog(@"Arr");
             }
             [shareLocation setStatus:[[jsonObjects objectForKey:@"result"] valueForKey:@"status"]];
-            [shareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
-            [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
-            shareLocation.permittedUsers=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_users"];
-            shareLocation.permittedCircles=[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"permitted_circles"];
+            [shareLocation setFriendDuration:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"duration"]];
+            [shareLocation setFriendRadius:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"radius"]];            
+            shareLocation.permittedUsers=[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"permitted_users"];
+            shareLocation.permittedCircles=[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"permitted_classes"];
 
-            [shareLocation setFriendDuration:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"duration"]];
-            [shareLocation setFriendRadius:[[[jsonObjects objectForKey:@"result"] objectForKey:@"friends"]valueForKey:@"radius"]];            
+            [shareLocation setFriendDuration:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"duration"]];
+            [shareLocation setFriendRadius:[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"friends" key3:@"radius"]];            
             
             NSLog(@"shareLocation.status: %@  shareLocation.permittedCircles: %@ %@",shareLocation.status,shareLocation.permittedCircles,shareLocation.friendRadius);  
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
