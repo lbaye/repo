@@ -25,15 +25,19 @@ class NewFriendRequest extends Base
         $user = $this->userRepository->find($workload->userId);
         $friend = $this->userRepository->find($workload->objectId);
 
-        $this->debug($user->getFirstName() . " sent friend request to `" . $friend->getFirstName() . '`');
+        if (!empty($user)) {
+            $this->debug($user->getFirstName() . " sent friend request to `" . $friend->getFirstName() . '`');
 
-        $friendRequestData = array(
-            'objectId' => $workload->objectId,
-            'objectType' => $workload->objectType,
-            'message' => $workload->message
-        );
+            $friendRequestData = array(
+                'objectId' => $workload->objectId,
+                'objectType' => $workload->objectType,
+                'message' => $workload->message
+            );
 
-        $this->userRepository->addNotification($workload->userId, $friendRequestData);
-        $this->debug("New notification added.");
+            $this->userRepository->addNotification($workload->userId, $friendRequestData);
+            $this->debug("New notification added.");
+        } else {
+            $this->warn("Could not retrieve valid user for id - {$workload->userId}");
+        }
     }
 }
