@@ -27,15 +27,18 @@ class GatheringRepo extends Base
 
     public function getAllActiveEvent($limit = 20, $offset = 0)
     {
-        $_dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
-        $eventLIst = $this->createQueryBuilder()
+        $hour = date('H');
+        $minute = date('i');
+        $_dateTime = new \DateTime($hour . 'hours ' . $minute . ' minutes ago');
+
+        $events = $this->createQueryBuilder()
             ->field('time')->gte($_dateTime)
             ->sort(array('createDate' => 'DESC'))
             ->limit($limit)
             ->getQuery()
             ->execute();
 
-        return $eventLIst;
+        return $events;
     }
 
     public function insert($gatheringObj)
