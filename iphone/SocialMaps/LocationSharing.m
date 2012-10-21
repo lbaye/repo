@@ -351,7 +351,7 @@
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             NSMutableArray *circles = [[NSMutableArray alloc] init];
             for (UserCircle *aCircle in appDelegate.userAccountPrefs.circles) {
-                [circles addObject:aCircle.circleName];
+                [circles addObject:aCircle];
             }
             //SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList circles:circles];
             SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:appDelegate.friendList circles:circles];
@@ -475,8 +475,12 @@
 - (void) selectFriendsDone:(CustomSelection) selection {
     NSLog(@"LocationSharing:selectFriendsDone");
     NSLog(@"Selected friends:");
-    for (int i=0; i < selection.friends.count; i++)
-        NSLog(@"id=%@", [selection.friends objectAtIndex:i]);
+    [smAppDelegate.locSharingPrefs.custom.friends removeAllObjects];
+    for (int i=0; i < selection.friends.count; i++) {
+        NSString *userId = [selection.friends objectAtIndex:i];
+        NSLog(@"id=%@", userId);
+        [smAppDelegate.locSharingPrefs.custom.friends addObject:userId];
+    }
     NSLog(@"Selected circles:");
     for (int i=0; i < selection.circles.count; i++)
         NSLog(@"id=%@", [selection.circles objectAtIndex:i]);

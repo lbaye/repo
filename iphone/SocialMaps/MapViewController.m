@@ -768,8 +768,8 @@ ButtonClickCallbackData callBackData;
 - (void)startGetLocation:(NSTimer*)timer
 {
     //if (!isDownloadingLocation) {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+//        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+//        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         //isDownloadingLocation = YES;
     //}
 }

@@ -26,8 +26,8 @@
 @end
 
 @interface LocationCustomSettings : NSObject {
-    NSMutableArray  *circles;
-    NSMutableArray  *friends;
+    NSMutableArray  *circles;   // Array of Circle id
+    NSMutableArray  *friends;   // Array of User id
     LocationPrivacySettings *privacy;
 }
 @property(nonatomic,retain) NSMutableArray  *circles;

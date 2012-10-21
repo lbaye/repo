@@ -16,6 +16,7 @@
 @synthesize friendList;
 @synthesize circleList;
 @synthesize selectedFriends;
+@synthesize selectedCircles;
 @synthesize photoScrollView;
 @synthesize circleScrollView;
 @synthesize selectedScrollView;
@@ -23,21 +24,31 @@
 @synthesize filteredFriends;
 @synthesize customSelection;
 @synthesize delegate;
+@synthesize smAppDelegate;
+@synthesize searchBar;
 
 - (id) initWithFrame:(CGRect)frame friends:(NSMutableArray*)friends circles:(NSMutableArray*)circles
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         friendList = [[NSMutableArray alloc] initWithArray:friends];
         circleList = [[NSMutableArray alloc] initWithArray:circles];
         filteredFriends = [[NSMutableArray alloc] initWithArray:friends];
         self.backgroundColor = [UIColor colorWithRed:244.0/255.0 green:244.0/255.0 blue:244.0/255.0 alpha:1.0];
         selectedFriends = [[NSMutableArray alloc] init];
+        selectedCircles = [[NSMutableArray alloc] init];
         customSelection.friends = [[NSMutableArray alloc] init];
         customSelection.circles = [[NSMutableArray alloc] init];
         for (int i=0; i < filteredFriends.count; i++) {
-            [selectedFriends addObject:[NSNumber numberWithInt:0]];
+            UserInfo *aUser = [filteredFriends objectAtIndex:i];
+            NSLog(@"SelectFriends:filtered friend:%@", aUser.userId);
+            if ([smAppDelegate.locSharingPrefs.custom.friends containsObject:aUser.userId]) {
+                [selectedFriends addObject:[NSNumber numberWithInt:1]];
+                [customSelection.friends addObject:aUser.userId];
+            } else
+                [selectedFriends addObject:[NSNumber numberWithInt:0]];
         }
         photoScrollView = [[UIScrollView alloc] init];
         circleScrollView= [[UIScrollView alloc] init];
@@ -55,6 +66,9 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    [[self subviews]
+     makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     int buttonWidth = self.frame.size.width/4*3/2;
     
     NSString *lblText = [NSString stringWithString:@"Choose a subgroup of friends"];
@@ -89,9 +103,9 @@
     
     // Search field
     CGRect searchFrame = CGRectMake(5+selFrame.size.width+2, lineFrame.origin.y+2+7, buttonWidth, 35);
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:searchFrame];
+    searchBar = [[UISearchBar alloc] initWithFrame:searchFrame];
     searchBar.delegate = self;
-    searchBar.barStyle = UIBarStyleBlack;
+    searchBar.barStyle = UIBarStyleBlackOpaque;
     searchBar.translucent = YES;
     [self addSubview:searchBar];
 
@@ -138,17 +152,23 @@
     }
     photoScrollView.frame = photoFrame;
     photoScrollView.backgroundColor = [UIColor clearColor];
-    CGSize photeSelContentsize = CGSizeMake((photoFrame.size.width)*ceil(filteredFriends.count/8.0), photoFrame.size.height);
+    CGSize photeSelContentsize = CGSizeMake((photoFrame.size.width)*ceil(filteredFriends.count/4.0), photoFrame.size.height);
     photoScrollView.contentSize = photeSelContentsize;
     float imgWidth = (photoFrame.size.width-35)/4;
     for (int i=0; i<filteredFriends.count; i++) {
         UserInfo *aFriend = (UserInfo*) [filteredFriends objectAtIndex:i];
-        CGRect imgFrame = CGRectMake((i%8)*(imgWidth+10), (i/8)*(imgWidth+35)+5, imgWidth, imgWidth);
+        CGRect imgFrame = CGRectMake((i%4)*(imgWidth+10), (i/4)*(imgWidth+35)+5, imgWidth, imgWidth);
+        NSLog(@"friend:%@, x=%f,y=%f,width=%f,height=%f", aFriend.userId, imgFrame.origin.x, imgFrame.origin.y,
+              imgFrame.size.width, imgFrame.size.height);
+        
         //NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
         UIImageView *friendImg = [UIImageView imageViewWithRectImage:imgFrame andImage:aFriend.icon withCornerradius:10.0f];
         friendImg.tag = 20000+i;
         friendImg.userInteractionEnabled = YES;
-        
+        int currState = [(NSNumber*)[selectedFriends objectAtIndex:i] intValue] ;
+        if (currState == 1)
+            [friendImg setBorderColor:[UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:28.0/255.0 alpha:1.0]];
+            
         // First name
         UILabel *firstName = [[UILabel alloc] initWithFrame:CGRectMake(imgFrame.origin.x, 
                                                                        imgFrame.origin.y+imgFrame.size.height, 
@@ -187,11 +207,12 @@
     circleScrollView.contentSize = circleSelContentsize;
     
     for (int i=0;i<circleList.count;i++) {
+        UserCircle *aCircle = (UserCircle*) [circleList objectAtIndex:i];
         CustomCheckbox *circle = [[CustomCheckbox alloc] initWithFrame:CGRectMake(0, i*(5+45), circleScrollFrame.size.width, 45) 
                                                             boxLocType:LabelPositionLeft 
                                                               numBoxes:1 
                                                                default:[NSArray arrayWithObject:[NSNumber numberWithInt:0]] 
-                                                                labels:[NSArray arrayWithObject:[circleList objectAtIndex:i]]];
+                                                                labels:[NSArray arrayWithObject:aCircle.circleName]];
         circle.delegate = self;
         circle.tag = 13000+i;
         [circleScrollView addSubview:circle];
@@ -272,27 +293,33 @@
 }
 
 - (void) selButtonClicked:(id) sender {
+    NSLog(@"SelectFriends: selButtonClicked");
     line2Image.image = [UIImage imageNamed:@"line_arrow_up_left.png"];
     photoScrollView.hidden = FALSE;
     circleScrollView.hidden = TRUE;
 }
 
 - (void) circleButtonClicked:(id) sender {
+    NSLog(@"SelectFriends: circleButtonClicked");
     line2Image.image = [UIImage imageNamed:@"line_arrow_up_right.png"];
     photoScrollView.hidden = TRUE;
     circleScrollView.hidden = FALSE;
 }
 
 - (void) unselectAll:(id) sender {
-    for (int i=0; i < selectedFriends.count; i++) {
-        UIImageView *imgView = (UIImageView*) [photoScrollView viewWithTag:20000+i];
-        
-        [imgView setBorderColor:[UIColor clearColor]];
-        [selectedFriends replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:0]];
-    }
+    NSLog(@"SelectFriends: unselectAll called");
+    if (photoScrollView.isHidden == FALSE) {  // In friend selection tab
+        for (int i=0; i < selectedFriends.count; i++) {
+            UIImageView *imgView = (UIImageView*) [photoScrollView viewWithTag:20000+i];
+            
+            [imgView setBorderColor:[UIColor clearColor]];
+            [selectedFriends replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:0]];
+        }
+    } 
 }
 
 - (void) selectAll:(id) sender {
+    NSLog(@"SelectFriends: selectAll called");
     for (int i=0; i < selectedFriends.count; i++) {
         UIImageView *imgView = (UIImageView*) [photoScrollView viewWithTag:20000+i];
         
@@ -346,25 +373,11 @@
 
 }
 
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up
-{
-    int movementDistance = 80; // tweak as needed
-    const float movementDuration = 0.3f; // tweak as needed
-    
-    int movement = (up ? -movementDistance : movementDistance);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.frame = CGRectOffset(self.frame, 0, movement);
-    [UIView commitAnimations];
-}
-
 // Custom Checkbox delegate methods
 - (void) checkboxClicked:(int)indx withState:(int)clicked sender:(id)sender {
     CustomCheckbox *chkBox = (CustomCheckbox*) sender;
     int circleIndx = chkBox.tag - 13000;
-    NSString * circleName = [circleList objectAtIndex:circleIndx];
+    NSString * circleName = [[circleList objectAtIndex:circleIndx] circleName];
     NSLog(@"SelectFriend:CustomCheckbox indx:%d state:%d tag:%d name:%@", indx, clicked, chkBox.tag, circleName);
     if (clicked == 1)
         [customSelection.circles addObject:circleName];
@@ -373,8 +386,10 @@
 }
 
 //search bar delegate method starts
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText 
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText 
 {   
+    //searchBar.text = searchText;
+    
     [filteredFriends removeAllObjects];
     for (int i=0; i<friendList.count; i++)
     {
@@ -384,16 +399,22 @@
             [searchText isEqualToString:@""])
             [filteredFriends addObject:item];
     }
-    [self setNeedsDisplay];
+    //[self setNeedsDisplay];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
 
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
+- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar 
 {
-    [searchBar resignFirstResponder];
+    NSLog(@"SelectFriends searchBarTextDidEndEditing: text =%@", theSearchBar.text);
+    if (theSearchBar.text == nil || [theSearchBar.text isEqualToString:@""]) {
+        [filteredFriends removeAllObjects];
+        [filteredFriends addObjectsFromArray:friendList];
+    }
+    [self setNeedsDisplay];
+    [theSearchBar resignFirstResponder];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
