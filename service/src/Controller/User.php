@@ -70,20 +70,18 @@ class User extends Base
         $result = array();
 
         foreach ($notifications as $notification) {
-
             if ($notification->getViewed() != true) {
                 $result[] = $notification;
                 $this->updateNotification($notification->getId());
             }
-
         }
 
-        if (empty($result)) {
-            $this->response->setStatusCode(Status::NO_CONTENT);
-        } else {
+        $this->userRepository->removeOldNotifications($this->user);
 
-            $this->response->setContent(json_encode($this->_toArrayAll($result)));
-            $this->response->setStatusCode(Status::OK);
+        if (empty($result)) {
+            $this->_generateResponse(array(), Status::OK    );
+        } else {
+            $this->_generateResponse($this->_toArrayAll($result));
         }
 
         return $this->response;
@@ -198,7 +196,7 @@ class User extends Base
             $data = $user->toArrayDetailed();
             $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
             $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
-
+            $data['friendship'] = $this->user->getFriendship($user);
             $data['friends'] = $this->_getFriendList($user);
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);

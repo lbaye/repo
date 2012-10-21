@@ -18,16 +18,26 @@ class NewFriendRequest extends Base
 
     public function run(\GearmanJob $job)
     {
+        $this->logJob('Event::NewFriendRequest', $job);
+
         $workload = json_decode($job->workload());
         $this->userRepository = $this->services['dm']->getRepository('Document\User');
+        $user = $this->userRepository->find($workload->userId);
+        $friend = $this->userRepository->find($workload->objectId);
 
-        $friendRequestData = array(
-            'objectId' => $workload->objectId,
-            'objectType' => $workload->objectType,
-            'message' => $workload->message
-        );
+        if (!empty($user)) {
+            $this->debug($user->getFirstName() . " sent friend request to `" . $friend->getFirstName() . '`');
 
-        $this->userRepository->addNotification($workload->userId, $friendRequestData);
-        echo 'Added notification for friend request.', PHP_EOL;
+            $friendRequestData = array(
+                'objectId' => $workload->objectId,
+                'objectType' => $workload->objectType,
+                'message' => $workload->message
+            );
+
+            $this->userRepository->addNotification($workload->userId, $friendRequestData);
+            $this->debug("New notification added.");
+        } else {
+            $this->warn("Could not retrieve valid user for id - {$workload->userId}");
+        }
     }
 }

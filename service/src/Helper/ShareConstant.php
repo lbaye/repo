@@ -9,4 +9,10 @@ class ShareConstant {
     const SHARING_NO_ONE     = 3;
     const SHARING_CIRCLES    = 4;
     const SHARING_CUSTOM     = 5;
+
+    //Meetup expire unit minutes
+    const MEETUP_EXPIRE     = 120;
+
+    //Event expire unit minutes
+    const EVENT_EXPIRE     = 1440;
 }

@@ -11,6 +11,7 @@ use Helper\ShareConstant;
 /**
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
+ * @ODM\Index(keys={"notification"="desc"})
  */
 class User {
     const SALT = 'socialmaps';
@@ -185,6 +186,17 @@ class User {
 
     /** @ODM\Hash */
     protected $platformSettings = array(
+        'fb' => true,
+        '4sq' => true,
+        'googlePlus' => true,
+        'gmail' => true,
+        'twitter' => true,
+        'yahoo' => true,
+        'badoo' => true,
+    );
+
+    /** @ODM\Hash */
+    protected $platformSharing = array(
         'fb' => true,
         '4sq' => true,
         'googlePlus' => true,
@@ -390,6 +402,7 @@ class User {
             'blockedBy' => $this->getBlockedBy(),
             'distance' => $this->getDistance(),
             'shareLocation' => $this->getShareLocation(),
+            'lastSeenAt' => $this->getLastSeenAt(),
             'shareProfilePicture' => $this->getShareProfilePicture(),
             'shareNewsFeed' => $this->getShareNewsFeed(),
             'age' => $this->getAge(),
@@ -1052,6 +1065,16 @@ class User {
         }
 
         return true;
+    }
+
+    public function setPlatformSharing(array $platformSharing)
+    {
+        $this->platformSharing = $platformSharing;
+    }
+
+    public function getPlatformSharing()
+    {
+        return $this->platformSharing;
     }
 
     const PREF_FIELD_STATUS = "status";

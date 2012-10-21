@@ -43,4 +43,8 @@ class Url
     public static function buildEventPhotoUrl($data) {
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['eventImage']);
     }
+
+    public static function buildPlacePhotoUrl($data) {
+        return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['photo']);
+    }
 }

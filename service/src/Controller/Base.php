@@ -8,6 +8,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Repository\UserRepo as userRepository;
 
 use Helper\Status;
+use Helper\ShareConstant;
 
 abstract class Base
 {
@@ -281,4 +282,5 @@ abstract class Base
 
         return $this->_generate500($fields_comma_joined . ' ' . $is_or_are . " required parameters.");
     }
+
 }

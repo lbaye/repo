@@ -24,22 +24,29 @@ class SendPushNotification extends Base
 
     public function run(\GearmanJob $job)
     {
-        //file_put_contents('/tmp/workload.txt', json_encode(count($friends)));
+        $this->logJob('Event::SendPushNotification', $job);
         $workload = json_decode($job->workload());
+        $this->debug('Workload - ' . $job->workload());
 
         if ($this->_stillValid($workload)) {
+            $this->debug('Is still valid request.');
 
-            echo 'Running send_push_notification for ' . $workload->user_id . " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
             $this->userRepository = $this->services['dm']->getRepository('Document\User');
             $this->messageRepository = $this->services['dm']->getRepository('Document\Message');
 
             $user = $this->userRepository->find($workload->user_id);
-            $this->_sendPushNotification($user, get_object_vars($workload->notification));
 
-            echo 'Done send_push_notification for ' . $workload->user_id . " [{$workload->notification->objectType} : {$workload->notification->title}] " . PHP_EOL;
+            if (!empty($user)) {
+                $this->userRepository->refresh($user);
+                $this->_sendPushNotification($user, get_object_vars($workload->notification));
+                $this->debug("Push notification sent to user - {$user->getFirstName()}");
+            } else {
+                $this->debug("No valid user for id - {$workload->user_id} found");
+            }
+            $this->services['dm']->clear();
 
         } else {
-            echo 'Skipping proximity alert push for ' . $workload->user_id . ' because of outdated' . PHP_EOL;
+            $this->debug("Invalid request, it has expired it's valid time boundary.");
         }
 
         $this->runTasks();
@@ -56,6 +63,7 @@ class SendPushNotification extends Base
      */
     private function _sendPushNotification(\Document\User $user, array $notificationData)
     {
+        $this->debug("Sending push notification for user - {$user->getFirstName()} ({$user->getId()})");
         $pushSettings = $user->getPushSettings();
 
         # TODO: Badge count is intentionally disabled.
@@ -71,7 +79,9 @@ class SendPushNotification extends Base
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 
-        if ($pushNotifier)
-            echo $pushNotifier->send($notificationData, array($pushSettings['device_id']));
+        if ($pushNotifier) {
+            $this->info("Sending push notification for {$pushSettings['device_type']}");
+            echo $pushNotifier->send($notificationData, array($pushSettings['device_id'])) . PHP_EOL;
+        }
     }
 }

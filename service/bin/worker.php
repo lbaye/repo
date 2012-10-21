@@ -18,9 +18,15 @@ $bootstrap = new Bootstrap(APPLICATION_ENV);
 
 # Initiate logger
 $logger = new Logger('Worker');
-$logger->pushHandler(new StreamHandler(__DIR__ . '/../logs/worker.log', Logger::DEBUG));
+$logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
 # Initiate system kernel
-$kernel = new GearmanKernel($bootstrap->dm, $bootstrap->conf, $logger);
+$eventType = null;
+
+if (count($argv) > 2) {
+    $eventType = $argv[2];
+}
+
+$kernel = new GearmanKernel($bootstrap->dm, $bootstrap->conf, $logger, $eventType);
 
 $kernel->handle();

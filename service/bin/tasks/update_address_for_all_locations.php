@@ -59,7 +59,7 @@ for ($i = 1; $i <= $total_items; $i += $items_per_page) {
         echo "---------------------------------------------------\n";
 
         if (!empty($location)) {
-            $client->addTask('update_last_seen_address', json_encode(array('user_id' => $user['_id']->{'$id'})));
+            $client->addTaskBackground('update_last_seen_address', json_encode(array('user_id' => $user['_id']->{'$id'})));
         }
     }
 

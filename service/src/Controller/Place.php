@@ -121,11 +121,17 @@ class Place extends Base
             $place = $this->LocationMarkRepository->map($postData, $this->user);
             $this->LocationMarkRepository->insert($place);
 
+            if (!empty($postData['photo'])) {
+                $this->LocationMarkRepository->savePlacePhoto($place->getId(), $postData['photo']);
+            }
+            $postData = $place->toArray();
+            $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
+
         } catch (\Exception $e) {
             return $this->_generateException($e);
         }
 
-        return $this->_generateResponse($place->toArray(), Status::CREATED);
+        return $this->_generateResponse($postData, Status::CREATED);
     }
 
     /**
@@ -148,9 +154,15 @@ class Place extends Base
 
         try {
             $place = $this->LocationMarkRepository->update($postData, $id);
+            if (!empty($postData['photo'])) {
+                $this->LocationMarkRepository->savePlacePhoto($place->getId(), $postData['photo']);
+            }
+
+            $postData = $place->toArray();
+            $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
 
             if($place) {
-                return $this->_generateResponse(json_encode($place->toArray()));
+                return $this->_generateResponse($postData);
             } else {
                 return $this->_generateErrorResponse('Invalid request params');
             }
