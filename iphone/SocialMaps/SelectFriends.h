@@ -37,6 +37,7 @@ typedef struct _CustomSelection {
     id<SelectFriendsDelegate>   delegate;
     AppDelegate     *smAppDelegate;
     UISearchBar     *searchBar;
+    UIView          *photoSel;
 }
 @property (nonatomic, retain) NSMutableArray *friendList;
 @property (nonatomic, retain) NSMutableArray *circleList;
@@ -51,6 +52,7 @@ typedef struct _CustomSelection {
 @property (nonatomic, retain) id<SelectFriendsDelegate>   delegate;
 @property (nonatomic, retain) AppDelegate     *smAppDelegate;
 @property (nonatomic, retain) UISearchBar *searchBar;
+@property (nonatomic, retain) UIView *photoSel;
 
 - (id) initWithFrame:(CGRect)frame friends:(NSMutableArray*)friendList circles:(NSMutableArray*)circleList;
 @end

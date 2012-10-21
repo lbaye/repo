@@ -954,6 +954,7 @@ AppDelegate *smAppDelegate;
         UserCircle *aCircle = [[UserCircle alloc] init];
         NSString *type = [self getNestedKeyVal:item key1:@"type" key2:nil key3:nil];
         aCircle.circleName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+        aCircle.circleID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
         aCircle.friends = [[NSMutableArray alloc] init];
         // Get friends for the circle
         for (NSString *id in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) {
