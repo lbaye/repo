@@ -8,6 +8,10 @@
 
 #import "NewLocationItem.h"
 #import "UITextField+Scrolling.h"
+#import "UtilityClass.h"
+#import "AppDelegate.h"
+#import "UtilityClass.h"
+
 #define METERS_PER_MILE 1609.344
 
 @implementation NewLocationItem
@@ -19,6 +23,8 @@
 @synthesize parent;
 @synthesize locCoord;
 @synthesize locationName;
+@synthesize lblAddress;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr sender:(id) sender tag:(int)tag {
     self = [super initWithFrame:frame];
@@ -76,7 +82,7 @@
     [self addSubview:lblTitle];
     
     // Mapview
-    CGRect mapFrame = CGRectMake(0, TEXTAREA_HEIGHT+4, self.frame.size.width, self.frame.size.height-TEXTAREA_HEIGHT-4);
+    CGRect mapFrame = CGRectMake(0, TEXTAREA_HEIGHT+4, self.frame.size.width, self.frame.size.height-2*(TEXTAREA_HEIGHT+4));
     locMap = [[MKMapView alloc] initWithFrame:mapFrame];
     locMap.showsUserLocation=YES;
     locMap.delegate = (id) self;
@@ -107,6 +113,45 @@
     // Set initial location coordinate
     locCoord = [locMap centerCoordinate];
     locationName = @"";
+    
+    // Address view
+    CGRect addressFrame = CGRectMake(0, self.frame.size.height-2*(TEXTAREA_HEIGHT+4), self.frame.size.width, TEXTAREA_HEIGHT);
+    lblAddress = [[UILabel alloc] initWithFrame:addressFrame];
+    lblAddress.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.7];
+    lblAddress.textColor = [UIColor whiteColor];
+    lblAddress.textAlignment = UITextAlignmentCenter;
+    lblAddress.font = [UIFont fontWithName:@"Helvetica" size:13.0];
+    [self addSubview:lblAddress];
+    
+    // Cancel button
+    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelBtn.backgroundColor = [UIColor clearColor];
+    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [cancelBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [cancelBtn addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect cancelFrame = CGRectMake((self.frame.size.width/2-60)/2, self.frame.size.height-2-30, 60, 30);
+    cancelBtn.frame = cancelFrame;
+    [self addSubview:cancelBtn];
+    
+    // Separator
+    CGRect sepFrame = CGRectMake(self.frame.size.width/2, self.frame.size.height-35, 1, 35);
+    UIImageView *sepImageView = [[UIImageView alloc] initWithFrame:sepFrame];
+    sepImageView.image = [UIImage imageNamed:@"sp.png"];
+    [self addSubview:sepImageView];
+
+    // Save button
+    UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    saveBtn.backgroundColor = [UIColor clearColor];
+    [saveBtn setTitle:@"Ok" forState:UIControlStateNormal];
+    [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [saveBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [saveBtn addTarget:self action:@selector(saveRequest:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect saveFrame = CGRectMake((self.frame.size.width/2-60)/2+self.frame.size.width/2, self.frame.size.height-2-30, 60, 30);
+    saveBtn.frame = saveFrame;
+    [self addSubview:saveBtn];
+    
+    [self getAddress];
 }
 
 - (void) centerMap:(id) sender {
@@ -117,6 +162,8 @@
     
     [locMap setRegion:mapRegion animated: YES];
     [locMap setCenterCoordinate:locMap.userLocation.location.coordinate animated:YES];
+    locCoord = [locMap centerCoordinate];
+    [self getAddress];
     [locMap setNeedsDisplay];
 }
 
@@ -129,7 +176,7 @@
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         locCoord = [locMap centerCoordinate];
         NSLog(@"Map drag ended, lat=%f, lng=%f", locCoord.latitude, locCoord.longitude);
-        txtName.text = [NSString stringWithFormat:@"lat=%f, lng=%f", locCoord.latitude, locCoord.longitude];
+        [self getAddress];
     }
 }
 
@@ -154,4 +201,51 @@
     // Store the new location name
     locationName = textField.text;
 }
+
+// Get address
+- (void) getAddress {
+    CGRect frame = CGRectMake((lblAddress.frame.size.width-24) / 2, (lblAddress.frame.size.height-24) / 2, 24, 24);
+    
+    lblAddress.text = @"Retrieving address ...";
+	UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
+	[activityView startAnimating];
+    [activityView hidesWhenStopped];
+	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+	[lblAddress addSubview: activityView];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        lblAddress.text=[UtilityClass getAddressFromLatLon:locCoord.latitude withLongitude:locCoord.longitude];
+        [activityView stopAnimating];
+        [activityView removeFromSuperview];
+        [activityView release];
+    });
+}
+
+// Cancel button
+- (void) cancelRequest:(id) sender {
+    NSLog(@"NewLocationItem: cancelRequest");
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(newLocationCreated:sender:)]) {
+        [self.delegate  newLocationCreated:nil sender:self];
+    }
+    [self removeFromSuperview];
+}
+
+// Save button
+- (void) saveRequest:(id) sender {
+    NSLog(@"NewLocationItem: saveRequest");
+    if (txtName.text == @"" || txtName.text == nil) {
+        [UtilityClass showAlert:@"SocialMaps" :@"Please enter location name"];
+        return;
+    }
+    Geofence * newLoc = [[Geofence alloc] init];
+    newLoc.name = txtName.text;
+    newLoc.lat  = [NSString stringWithFormat:@"%f", locCoord.latitude];
+    newLoc.lng  = [NSString stringWithFormat:@"%f", locCoord.longitude];
+    
+    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(newLocationCreated:sender:)]) {
+        [self.delegate  newLocationCreated:newLoc sender:self];
+    }
+    [self removeFromSuperview];
+}
+
 @end

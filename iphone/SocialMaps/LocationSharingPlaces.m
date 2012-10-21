@@ -33,7 +33,7 @@
     if (self) {
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         numSections = smAppDelegate.locSharingPrefs.geoFences.count;
-        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*(numSections+1));
+        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
         self.tag = tag;
         self.parent = sender;
@@ -45,18 +45,16 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    [[self subviews]
+     makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    numSections = smAppDelegate.locSharingPrefs.geoFences.count;
+    
     self.backgroundColor = [UIColor lightGrayColor];
-    int startTag = 8999;
+    int startTag = 9000;
     int rowNum = 0;
     //Erase history
     // Location sharing information
-    SettingsMaster *newLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"New location" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
-    // Remove default background image
-    [[newLoc viewWithTag:99999] removeFromSuperview];
-    [self addSubview:newLoc];
-    [newLoc release];
-    
-    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     for (int i=0; i < numSections; i++ ) {
         Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:i];
         SettingsMaster *aLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:geoFence.name subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
@@ -180,7 +178,7 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingPlaces accSettingButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 8999 && btnParent.tag <= 9003) {
+    if (btnParent.tag >= 9000 && btnParent.tag <= (9000+numSections)) {
         bool newView = FALSE;
         NSObject* senderView = (NSObject*)sender;
         if ([senderView isKindOfClass:[UIButton class]]) {
@@ -193,29 +191,8 @@
             }
             newView = TRUE;
         }
-        switch (btnParent.tag) {
-            case 8999:
-                // New Location
-                if (newView)
-                    [self addNewPlaceSharingView:btnParent.tag];
-                break;
-            case 9000:
-                // Location 0
-                //break;
-            case 9001:
-                // Location 1
-                //break;
-            case 9002:
-                // Location 2
-                //break;
-            case 9003:
-                // Location 3
-                if (newView)
-                    [self addPlaceSharingView:btnParent.tag prefs:LocationSharingPrefTypeRadius];
-                break;
-            default:
-                break;
-        }
+        if (newView)
+            [self addPlaceSharingView:btnParent.tag prefs:LocationSharingPrefTypeRadius];
     }
 }
 
@@ -226,7 +203,7 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingPlaces accSettingResetButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 8999 && btnParent.tag <= 9003)  {
+    if (btnParent.tag >= 9000 && btnParent.tag <= (9000+numSections))  {
         bool newView = FALSE;
         NSObject* senderView = (NSObject*)sender;
         if ([senderView isKindOfClass:[UIButton class]]) {
@@ -238,29 +215,9 @@
             }
             newView = TRUE;
         }
-        switch (btnParent.tag) {
-            case 8999:
-                // New Location
-                if (newView)
-                    [self removeNewPlaceSharingView:btnParent.tag];
-                break;
-            case 9000:
-                // Location 0
-                //break;
-            case 9001:
-                // Location 1
-                //break;
-            case 9002:
-                // Location 2
-                //break;
-            case 9003:
-                // Location 3
-                if (newView)
-                    [self removePlaceSharingView:btnParent.tag];
-                break;
-            default:
-                break;
-        }
+        if (newView)
+            [self removePlaceSharingView:btnParent.tag];
+
     }
     
 }

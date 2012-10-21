@@ -158,7 +158,7 @@
                 //break;
             case 11002:
                 // Permission pref
-                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
+                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             default:
                 break;

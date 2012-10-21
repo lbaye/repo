@@ -13,6 +13,12 @@ typedef enum _SETTINGS_DISPLAY_TYPE {
     SettingsDisplayTypeDetail
 } SETTINGS_DISPLAY_TYPE;
 
+typedef enum _SETTINGS_DISPLAY_STATE {
+    SettingsDisplayStateOpen = 0,
+    SettingsDisplayStateClosed
+} SETTINGS_DISPLAY_STATE;
+
+
 @interface SettingsMaster : UIView {
     NSString       *subtitleString;
     NSString       *titleString;
@@ -35,4 +41,5 @@ typedef enum _SETTINGS_DISPLAY_TYPE {
 @property (nonatomic) int settingsType;
 
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImageName type:(int) dispType sender:(id) sender tag:(int)tag;
+- (void) setState:(SETTINGS_DISPLAY_STATE)state;
 @end

@@ -22,10 +22,13 @@
 #import "SelectFriends.h"
 #import "AppDelegate.h"
 #import "UserCircle.h"
+#import "NewLocationItem.h"
 
 #define ROW_HEIGHT 62
 
 @implementation LocationSharing
+@synthesize rowNum;
+
 - (LocationSharing*) initWithFrame:(CGRect)scrollFrame {
     self = [super initWithFrame:scrollFrame];
     if (self) {
@@ -49,7 +52,7 @@
                                             blue:247.0/255.0 
                                            alpha:1.0];
     int startTag = 2000;
-    int rowNum = 0;
+    rowNum = 0;
     //Erase history
     // Location sharing information
     RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:0 sender:self tag:startTag++];
@@ -59,8 +62,7 @@
     SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
     circleSharingView.backgroundColor = [UIColor clearColor];
    
-//    SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    startTag++;
+    SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
     
     SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
 
@@ -74,7 +76,7 @@
     [self addSubview:enableSharing];
     [self addSubview:friendSharingView];
     [self addSubview:circleSharingView];
-//    [self addSubview:platformSharingView];
+    [self addSubview:platformSharingView];
     [self addSubview:strangersSharingView];
     [self addSubview:locSharingView];
 }
@@ -149,7 +151,11 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    LocationSharingPlaces *locSharing = [[LocationSharingPlaces alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) sender:self tag:tag+1000];
+    CGRect selFrame = CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT);
+    SettingsMaster * newLocation = [[SettingsMaster alloc] initWithFrame:selFrame title:@"New Location" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002];
+    [aview addSubview:newLocation];
+    
+    LocationSharingPlaces *locSharing = [[LocationSharingPlaces alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+selFrame.size.height, aview.frame.size.width, ROW_HEIGHT-7) sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -161,7 +167,7 @@
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
-    [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
     [self setNeedsLayout];
 }
 - (void) removeLocSharingPlaceView:(int)tag {
@@ -169,13 +175,11 @@
     aview.title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
     
     int removedViewHeight = 0;
-    UIView *child = (UIView*) [aview viewWithTag:tag+1000];
-    removedViewHeight += child.frame.size.height;
-    [child removeFromSuperview];
-    
-    child = (UIView*) [aview viewWithTag:tag+1001];
-    removedViewHeight += child.frame.size.height;
-    [child removeFromSuperview];
+    for (int i= 1000; i <= 1002; i++) {
+        UIView *child = (UIView*) [aview viewWithTag:tag+i];
+        removedViewHeight += child.frame.size.height;
+        [child removeFromSuperview];
+    }
     
     [self cascadeHeightChange:tag incr:-(removedViewHeight)];
     [self setNeedsLayout];
@@ -280,7 +284,7 @@
     UIView *senderView = (UIView*) sender;
     SettingsMaster *parent = (SettingsMaster*)[sender superview];
     NSLog(@"LocationSharing accSettingButtonClicked: tag=%d, parent tag=%d", senderView.tag, parent.tag);
-    if (parent.tag >= 2000 && parent.tag <= 2005) {
+    if (parent.tag >= 2000 && parent.tag <= (2000+rowNum)) {
         bool newView = FALSE;
         NSObject* senderObj = (NSObject*)sender;
         if ([senderObj isKindOfClass:[UIButton class]]) {
@@ -326,8 +330,6 @@
                 // Location prefs
                 if (newView == TRUE)
                     [self addLocSharingPlaceView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
-                else if (senderView.tag == 8999)
-                    [self cascadeHeightChange:parent.tag incr:220];
                 else
                     [self cascadeHeightChange:parent.tag incr:1*(ROW_HEIGHT)+7];
                 break;
@@ -342,7 +344,8 @@
             for (UserCircle *aCircle in appDelegate.userAccountPrefs.circles) {
                 [circles addObject:aCircle.circleName];
             }
-            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList circles:circles];
+            //SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList circles:circles];
+            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:appDelegate.friendList circles:circles];
             selFriends.delegate = self;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                          green:247.0/255.0 
@@ -351,6 +354,16 @@
             [[self superview]  addSubview:selFriends];
             [selFriends release];
             
+        } else if (parent.tag == 3007) {
+            // Show New Location view
+            NewLocationItem *locSharing = [[NewLocationItem alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) title:(NSString*)@"Location Name" sender:self tag:parent.tag+1000];
+            locSharing.backgroundColor = [UIColor colorWithRed:247.0/255.0 
+                                                         green:247.0/255.0 
+                                                          blue:247.0/255.0 
+                                                         alpha:1.0];
+            locSharing.delegate = self;
+            [[self superview]  addSubview:locSharing];
+            [locSharing release];
         }
     }
 }
@@ -360,7 +373,7 @@
     
     SettingsMaster *parent = (SettingsMaster*)[sender superview];
     NSLog(@"accSettingResetButtonClicked: tag=%d, parent tag=%d", senderView.tag, parent.tag);
-    if (parent.tag >= 2000 && parent.tag <= 2005) {
+    if (parent.tag >= 2000 && parent.tag <= (2000+rowNum)) {
         bool newView = FALSE;
         NSObject* senderObj = (NSObject*)sender;
         if ([senderObj isKindOfClass:[UIButton class]]) {
@@ -404,8 +417,6 @@
                 // Location prefs
                 if (newView == TRUE)
                     [self removeLocSharingPlaceView:parent.tag];
-                else if (senderView.tag == 8999)
-                    [self cascadeHeightChange:parent.tag incr:-220];
                 else
                     [self cascadeHeightChange:parent.tag incr:-(1*(ROW_HEIGHT)+7)];
                 break;
@@ -469,5 +480,23 @@
 // RadioButtonDelegate method
 - (void) buttonSelected:(int)indx sender:(id)sender {
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
+}
+
+// NewLocationItemDelegate method
+- (void) newLocationCreated:(Geofence*)loc sender:(id)sender {
+    if (loc != nil) {
+        NSLog(@"New location created: name=%@, lat=%@, lng=%@", loc.name, loc.lat, loc.lng);
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        loc.radius = @"2";
+        [smAppDelegate.locSharingPrefs.geoFences addObject:loc];
+        [self cascadeHeightChange:2005 incr:1*(ROW_HEIGHT)+7];
+        
+        // Refresh the location sharing setting for geofences view
+        SettingsMaster *locSetting = (SettingsMaster*) [self viewWithTag:2005];
+        LocationSharingPlaces *placeSettings = (LocationSharingPlaces*) [locSetting viewWithTag:3005];
+        [placeSettings setNeedsDisplay];
+        [placeSettings setBackgroundColor:[UIColor clearColor]];        
+    } else
+        NSLog(@"Location creation cancelled");
 }
 @end

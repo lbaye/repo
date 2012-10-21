@@ -310,7 +310,7 @@ static AppDelegate *sharedInstance=nil;
 
 -(void)showActivityViewer:(UIView*) sender
 {
-	CGRect frame = CGRectMake(sender.frame.size.width / 2 - 12, sender.frame.size.height / 2 - 12, 24, 24);
+	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
     
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
     [activityView.layer setCornerRadius:4.0f];
@@ -326,7 +326,6 @@ static AppDelegate *sharedInstance=nil;
                                      UIViewAutoresizingFlexibleTopMargin |
                                      UIViewAutoresizingFlexibleBottomMargin);
 	[sender addSubview: activityView];
-	[activityView release];
 }
 
 // Get User information
