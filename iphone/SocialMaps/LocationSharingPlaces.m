@@ -45,8 +45,7 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    [[self subviews]
-     makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     numSections = smAppDelegate.locSharingPrefs.geoFences.count;
     

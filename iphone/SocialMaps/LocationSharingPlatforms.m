@@ -23,12 +23,15 @@
 
 @implementation LocationSharingPlatforms
 @synthesize parent;
+@synthesize numSections;
 
 - (LocationSharingPlatforms*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag {
     self = [super initWithFrame:scrollFrame];
     if (self) {
         //self.frame = scrollFrame;
-        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*3);
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        numSections = smAppDelegate.locSharingPrefs.platforms.count;
+        CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
         self.tag = tag;
         self.parent = sender;
@@ -40,24 +43,23 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     self.backgroundColor = [UIColor clearColor];
     int startTag = 11000;
     int rowNum = 0;
     //Erase history
     // Location sharing information
-    SettingsMaster *circleOne = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Facebook" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
-    // Remove default background image
-    [[circleOne viewWithTag:99999] removeFromSuperview];
-    
-    SettingsMaster *circleTwo = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Twitter" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
-    // Remove default background image
-    [[circleTwo viewWithTag:99999] removeFromSuperview];
-    
-    SettingsMaster *circleThree = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Foursquare" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];   
-    // Remove default background image
-    [[circleThree viewWithTag:99999] removeFromSuperview];
-    
-    
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    for (int i=0; i < numSections; i++ ) {
+        LocationPlatformSettings *platformLoc = (LocationPlatformSettings*) [smAppDelegate.locSharingPrefs.platforms objectAtIndex:i];
+        SettingsMaster *aPlatform = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:platformLoc.platformName subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+
+        // Remove default background image
+        [[aPlatform viewWithTag:99999] removeFromSuperview];
+        [self addSubview:aPlatform];
+        [aPlatform release];
+    }
     
     // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
@@ -65,10 +67,6 @@
     [self setContentSize:contentSize];
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*rowNum);
     self.frame = newFrame;
-    
-    [self addSubview:circleOne];
-    [self addSubview:circleTwo];
-    [self addSubview:circleThree];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -143,26 +141,13 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"LocationSharingPlatforms accSettingButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 11000 && btnParent.tag <= 11002) {
+    if (btnParent.tag >= 11000 && btnParent.tag <= (11000+numSections)) {
         [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingButtonClicked:)]) {
             [self.parent accSettingButtonClicked:self];
         }
-        switch (btnParent.tag) {
-            case 11000:
-                // Time pref
-                //break;
-            case 11001:
-                // Radius pref
-                //break;
-            case 11002:
-                // Permission pref
-                [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
-                break;
-            default:
-                break;
-        }
+        [self addLocSharingView:btnParent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
     }
 }
 
@@ -173,24 +158,12 @@
     
     SettingsMaster *btnParent = (SettingsMaster*)[btn superview];
     NSLog(@"accSettingResetButtonClicked: tag=%d", btnParent.tag);
-    if (btnParent.tag >= 11000 && btnParent.tag <= 11002) {
+    if (btnParent.tag >= 11000 && btnParent.tag <= (11000+numSections)) {
         [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        switch (btnParent.tag) {
-            case 11000:
-                // Time pref
-                //break;
-            case 11001:
-                // Radius pref
-                //break;
-            case 11002:
-                // Permission pref
-                [self removeLocSharingView:btnParent.tag];
-                break;
-                
-            default:
-                break;
-        }
+        
+        [self removeLocSharingView:btnParent.tag];
+
         if (self.parent != NULL && [self.parent respondsToSelector:@selector (accSettingResetButtonClicked:)]) {
             [self.parent accSettingResetButtonClicked:self];
         }

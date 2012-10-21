@@ -1349,6 +1349,7 @@ AppDelegate *smAppDelegate;
         
         circleSetting.circleInfo.circleID = aKey;
         NSLog(@"Circles only:circle:%@", circleSetting.circleInfo.circleID);
+        circleSetting.privacy = [[LocationPrivacySettings alloc] init];
         circleSetting.privacy.duration = [[[circleArray objectForKey:aKey] objectForKey:@"duration"] intValue];
         circleSetting.privacy.radius   = [[[circleArray objectForKey:aKey] objectForKey:@"radius"] intValue];
         [shareLocation.circles addObject:circleSetting];
@@ -1367,6 +1368,40 @@ AppDelegate *smAppDelegate;
         [shareLocation.geoFences addObject:fence];
     }
 
+    // Platforms - array of LocationPlatformSettings)
+    shareLocation.platforms = [[NSMutableArray alloc] init];
+    NSDictionary *platformArray = [[jsonObjects objectForKey:@"result"] objectForKey:@"platforms"];
+    enumerator = [platformArray keyEnumerator];
+    aKey = nil;
+    while ( (aKey = [enumerator nextObject]) != nil) {
+        LocationPlatformSettings *platformSetting = [[LocationPlatformSettings alloc] init];
+        
+        if ([aKey caseInsensitiveCompare:@"fb"] == NSOrderedSame) {
+            platformSetting.platformName = @"Facebook";
+        } else if ([aKey caseInsensitiveCompare:@"twitter"] == NSOrderedSame) {
+            platformSetting.platformName = @"Twitter";
+        } else if ([aKey caseInsensitiveCompare:@"googleplus"] == NSOrderedSame) {
+            platformSetting.platformName = @"Google+";
+        } else if ([aKey caseInsensitiveCompare:@"gmail"] == NSOrderedSame) {
+            platformSetting.platformName = @"Gmail";
+        } else if ([aKey caseInsensitiveCompare:@"yahoo"] == NSOrderedSame) {
+            platformSetting.platformName = @"Yahoo";
+        } else if ([aKey caseInsensitiveCompare:@"badoo"] == NSOrderedSame) {
+            platformSetting.platformName = @"Badoo";
+        } else if ([aKey caseInsensitiveCompare:@"4sq"] == NSOrderedSame) {
+            platformSetting.platformName = @"Foursquare";
+        } else {
+            platformSetting.platformName = aKey;
+        }
+        
+        platformSetting.privacy = [[LocationPrivacySettings alloc] init];
+        platformSetting.privacy.duration = [[[platformArray objectForKey:aKey] objectForKey:@"duration"] intValue];
+        platformSetting.privacy.radius   = [[[platformArray objectForKey:aKey] objectForKey:@"radius"] intValue];
+        [shareLocation.platforms addObject:platformSetting];
+        NSLog(@"Platform:name:%@, duration:%d, radius:%d", platformSetting.platformName,platformSetting.privacy.duration,
+              platformSetting.privacy.radius);
+    }
+    
     return shareLocation;
 }
 
@@ -3723,6 +3758,7 @@ AppDelegate *smAppDelegate;
     [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.strangers.radius] forKey:@"strangers[radius]"];
     [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.strangers.duration] forKey:@"strangers[duration]"];
 
+    // Geofences
     for (int i=0; i<[shareLocation.geoFences count]; i++)
     {
         Geofence *fence = [shareLocation.geoFences objectAtIndex:i];
@@ -3732,6 +3768,7 @@ AppDelegate *smAppDelegate;
         [request addPostValue:fence.lng forKey:@"geo_fences[location][lng][]"];
     }
     
+    // Circles
     for (int i=0; i<[shareLocation.circles count]; i++)
     {
         LocationCircleSettings *circleSetting = [shareLocation.circles objectAtIndex:i];
@@ -3739,6 +3776,23 @@ AppDelegate *smAppDelegate;
         [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.radius] forKey:[NSString stringWithFormat:@"circles_only[%@][radius][]",circleSetting.circleInfo.circleID]];
     }
     
+    // Platforms
+    for (int i=0; i<[shareLocation.platforms count]; i++)
+    {
+        LocationPlatformSettings *platformSetting = [shareLocation.platforms objectAtIndex:i];
+        NSString *platformName = platformSetting.platformName;
+        if ([platformSetting.platformName caseInsensitiveCompare:@"facebook"] == NSOrderedSame) {
+            platformName = @"fb";
+        } else if ([platformSetting.platformName caseInsensitiveCompare:@"Google+"] == NSOrderedSame) {
+            platformName = @"googleplus";
+        } else if ([platformSetting.platformName caseInsensitiveCompare:@"foursquare"] == NSOrderedSame) {
+            platformName = @"4sq";
+        }
+        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.duration] forKey:[NSString stringWithFormat:@"platforms[%@][duration][]",platformName]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.radius] forKey:[NSString stringWithFormat:@"platforms[%@][radius][]",platformName]];
+    }
+
+    // Custom
     [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.custom.privacy.radius] forKey:@"friends_and_circles[radius]"];
     [request addPostValue:[NSString stringWithFormat:@"%d",shareLocation.custom.privacy.duration] forKey:@"friends_and_circles[duration]"];
     for (int i=0; i<[shareLocation.custom.friends count]; i++)

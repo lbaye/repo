@@ -35,13 +35,22 @@
 @property(nonatomic,retain) LocationPrivacySettings *privacy;
 @end
 
+@interface LocationPlatformSettings : NSObject {
+    NSString                *platformName;
+    LocationPrivacySettings *privacy;
+}
+@property(nonatomic,retain) NSString  *platformName;
+@property(nonatomic,retain) LocationPrivacySettings *privacy;
+@end
+
 @interface ShareLocation : NSObject
 {
     NSString *status;
-    NSMutableArray          *circles;  // Array of LocationCircleSettings
+    NSMutableArray          *circles;   // Array of LocationCircleSettings
     LocationCustomSettings  *custom;
     NSMutableArray          *geoFences; // Array of GeoFence
     LocationPrivacySettings *strangers;
+    NSMutableArray          *platforms; // Array of LocationPlatformSettings
 }
 
 @property(nonatomic,retain) NSString *status;
@@ -49,4 +58,5 @@
 @property(nonatomic,retain) LocationCustomSettings *custom;
 @property(nonatomic,retain) NSMutableArray *geoFences;
 @property(nonatomic,retain) LocationPrivacySettings *strangers;
+@property(nonatomic,retain) NSMutableArray *platforms;
 @end

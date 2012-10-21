@@ -23,6 +23,11 @@
 @synthesize privacy;
 @end
 
+@implementation LocationPlatformSettings
+@synthesize platformName;
+@synthesize privacy;
+@end
+
 @implementation ShareLocation
 
 @synthesize status;
@@ -30,4 +35,5 @@
 @synthesize geoFences;
 @synthesize strangers;
 @synthesize custom;
+@synthesize platforms;
 @end

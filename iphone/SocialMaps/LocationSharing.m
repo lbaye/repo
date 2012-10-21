@@ -28,12 +28,14 @@
 
 @implementation LocationSharing
 @synthesize rowNum;
+@synthesize smAppDelegate;
 
 - (LocationSharing*) initWithFrame:(CGRect)scrollFrame {
     self = [super initWithFrame:scrollFrame];
     if (self) {
         self.frame = scrollFrame;
         [self setScrollEnabled:TRUE];
+        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     }
     return self;
 }
@@ -46,7 +48,13 @@
      self.frame = myFrame;*/
     
     //self.backgroundColor = [UIColor clearColor];
+    [[self subviews]
+     makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
+    int sharingEnabled = 0;
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"on"] == NSOrderedSame)
+        sharingEnabled = 1;
+
     self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                            green:247.0/255.0 
                                             blue:247.0/255.0 
@@ -55,30 +63,31 @@
     rowNum = 0;
     //Erase history
     // Location sharing information
-    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:0 sender:self tag:startTag++];
+    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
+    [self addSubview:enableSharing];
 
-    SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:@"Currently 7 friends in subgroup" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
+    if (sharingEnabled == 1) {
+        SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:@"Currently 7 friends in subgroup" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
+        [self addSubview:friendSharingView];
+        
+        SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
+        circleSharingView.backgroundColor = [UIColor clearColor];
+        [self addSubview:circleSharingView];
+        
+        SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        [self addSubview:platformSharingView];
+        
+        SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        [self addSubview:strangersSharingView];
+        
+        SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        [self addSubview:locSharingView];
+    }
     
-    SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
-    circleSharingView.backgroundColor = [UIColor clearColor];
-   
-    SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    
-    SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-
-    SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-
     // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
                                     (ROW_HEIGHT+2)*rowNum);
-    [self setContentSize:contentSize];
-    
-    [self addSubview:enableSharing];
-    [self addSubview:friendSharingView];
-    [self addSubview:circleSharingView];
-    [self addSubview:platformSharingView];
-    [self addSubview:strangersSharingView];
-    [self addSubview:locSharingView];
+    [self setContentSize:contentSize];   
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -480,13 +489,17 @@
 // RadioButtonDelegate method
 - (void) buttonSelected:(int)indx sender:(id)sender {
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
+    if (indx == 1)
+        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"On"];
+    else
+        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"Off"];
+    [self setNeedsDisplay];
 }
 
 // NewLocationItemDelegate method
 - (void) newLocationCreated:(Geofence*)loc sender:(id)sender {
     if (loc != nil) {
         NSLog(@"New location created: name=%@, lat=%@, lng=%@", loc.name, loc.lat, loc.lng);
-        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         loc.radius = @"2";
         [smAppDelegate.locSharingPrefs.geoFences addObject:loc];
         [self cascadeHeightChange:2005 incr:1*(ROW_HEIGHT)+7];

@@ -10,11 +10,14 @@
 #import "SelectFriends.h"
 #import "RadioButton.h"
 #import "NewLocationItem.h"
+#import "AppDelegate.h"
 
 @interface LocationSharing : UIScrollView<SelectFriendsDelegate, RadioButtonDelegate, NewLocationItemDelegate> {
     int     rowNum;
+    AppDelegate *smAppDelegate;
 }
 @property (nonatomic) int rowNum;
+@property (nonatomic, retain) AppDelegate *smAppDelegate;
 
 - (UIScrollView*) initWithFrame:(CGRect)scrollFrame;
 - (void) accSettingButtonClicked:(id) sender;
