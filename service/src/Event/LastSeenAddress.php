@@ -55,12 +55,4 @@ class LastSeenAddress extends Base
         $this->debug("Updating address - $address to {$user->getFirstName()}");
     }
 
-    public function _getAddress($current_location)
-    {
-        $reverseGeo = new \Service\Geolocation\Reverse($this->serviceConf['googlePlace']['apiKey']);
-        $address = $reverseGeo->getAddress($current_location);
-        $this->debug("Found reversed geo location - $address ({$current_location['lat']}, {$current_location['lng']})");
-
-        return $address;
-    }
 }

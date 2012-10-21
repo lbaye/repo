@@ -284,6 +284,5 @@ class FetchFacebookLocation extends Base {
         }
 
         return array();
-
     }
 }

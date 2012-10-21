@@ -131,4 +131,17 @@ abstract class Base {
     public function logJob($name, $job) {
         $this->info("Executing Event::$name with job - {$job->unique()}");
     }
+
+    protected function _getAddress($current_location) {
+        $reverseGeo = new \Service\Geolocation\Reverse(
+            $this->serviceConf['googlePlace']['apiKey'],
+            $this->services['dm']);
+
+        $address = $reverseGeo->getAddress($current_location);
+        $this->debug('Found reversed geo location - ' .
+            "$address ({$current_location['lat']}" . ', ' .
+            "{$current_location['lng']})");
+
+        return $address;
+    }
 }
