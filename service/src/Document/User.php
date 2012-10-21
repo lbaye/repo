@@ -402,6 +402,7 @@ class User {
             'blockedBy' => $this->getBlockedBy(),
             'distance' => $this->getDistance(),
             'shareLocation' => $this->getShareLocation(),
+            'lastSeenAt' => $this->getLastSeenAt(),
             'shareProfilePicture' => $this->getShareProfilePicture(),
             'shareNewsFeed' => $this->getShareNewsFeed(),
             'age' => $this->getAge(),
