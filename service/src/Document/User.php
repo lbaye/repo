@@ -196,7 +196,7 @@ class User {
     );
 
     /** @ODM\Hash */
-    protected $platformSharing = array(
+    protected $platforms = array(
         'fb' => true,
         '4sq' => true,
         'googlePlus' => true,
@@ -1067,14 +1067,14 @@ class User {
         return true;
     }
 
-    public function setPlatformSharing(array $platformSharing)
+    public function setPlatformSharing(array $platforms)
     {
-        $this->platformSharing = $platformSharing;
+        $this->platforms = $platforms;
     }
 
     public function getPlatformSharing()
     {
-        return $this->platformSharing;
+        return $this->platforms;
     }
 
     const PREF_FIELD_STATUS = "status";
