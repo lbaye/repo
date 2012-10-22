@@ -19,12 +19,13 @@ class Reverse extends Base
         $params['sensor'] = 'false';
         $params['key'] = urlencode($this->apiKey);
 
-        $cache = new CacheAPI($this->dm);
+        $cache = new CacheAPI($this->dm);   // Empty Cache object (:id, :data, :type)
 
         $response = $cache->get($id);
 
-        if ($response) {                         // Found in Cache(db)
-            $content = json_decode($response);
+        if ($response) {    // Found in Cache(db)
+            $data = $response->getData();
+            $content = json_decode($data);
             return $content->Placemark[0]->address;
         }
 
@@ -45,10 +46,7 @@ class Reverse extends Base
             $cache_object->setId($id);
             $cache_object->setData($responseBody);
             $cache_object->setType($type);
-
-
-            $cache->put($cache_object);
-
+            $cache->put($cache_object);       // put in cache
 
             return $content->Placemark[0]->address;
         } else {
