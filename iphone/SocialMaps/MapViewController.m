@@ -110,6 +110,11 @@ ButtonClickCallbackData callBackData;
     [self gotoBasicProfile:nil];
 }
 
+- (void)doNothing:(id)sender
+{
+    NSLog(@"doNothing");
+}
+
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation {
     
     //test change blue dot
@@ -118,16 +123,16 @@ ButtonClickCallbackData callBackData;
         MKPinAnnotationView *pinView = (MKPinAnnotationView *)[newMapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
         
         if (!pinView) {
-            MKPinAnnotationView *customPinView = [[[MKPinAnnotationView alloc] initWithAnnotation:newAnnotation reuseIdentifier:AnnotationIdentifier] autorelease];
+            MKAnnotationView *customPinView = [[[MKAnnotationView alloc] initWithAnnotation:newAnnotation reuseIdentifier:AnnotationIdentifier] autorelease];
             //customPinView.image = [UIImage imageNamed:@"icon_48x48.png"];
             customPinView.image = [UIImage imageNamed:@"map_location_direction.png"];
-            
-            customPinView.animatesDrop = NO;
-            customPinView.canShowCallout = NO;
+
             UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
                                               initWithTarget:self action:@selector(didTapCurrentLocaiton)];
             [customPinView addGestureRecognizer:tapRec];
             [tapRec release];
+            
+            annotationCurrentLocation = newAnnotation;
             
             return customPinView;
             
@@ -1138,6 +1143,17 @@ ButtonClickCallbackData callBackData;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
+    
+    if (annotationCurrentLocation) {
+        [_mapView removeAnnotation:annotationCurrentLocation];
+        
+        CLLocationCoordinate2D theCoordinate;
+        theCoordinate.latitude = newLocation.coordinate.latitude;
+        theCoordinate.longitude = newLocation.coordinate.longitude;
+        
+        [annotationCurrentLocation setCoordinate:theCoordinate];
+        [_mapView addAnnotation:annotationCurrentLocation];
+    }
     
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
