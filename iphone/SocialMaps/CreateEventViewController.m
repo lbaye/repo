@@ -782,7 +782,7 @@ NSMutableArray *guestListIdArr;
     dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
     dateString = [dateFormatter stringFromDate:date];
     event.eventDate.date=[[NSString alloc] initWithString:dateString];
     dateButton.titleLabel.text=dateString;

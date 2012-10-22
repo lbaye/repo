@@ -390,8 +390,10 @@ NSMutableArray *selectedScrollIndex;
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2fm",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance];
-	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-    [self.mapView addAnnotation:annotation];
+    if (CLLocationCoordinate2DIsValid(annotation.coordinate)) {
+        [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+        [self.mapView addAnnotation:annotation];
+    }
     if ([userInfo.friendshipStatus isEqualToString:@"none"]) 
     {
         [frndStatusButton setHidden:YES];

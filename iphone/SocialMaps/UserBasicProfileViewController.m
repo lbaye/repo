@@ -335,9 +335,11 @@ NSMutableArray *selectedScrollIndex;
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
-	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-    [self.mapView addAnnotation:annotation];
-
+    if (CLLocationCoordinate2DIsValid(annotation.coordinate))
+    {
+        [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+        [self.mapView addAnnotation:annotation];        
+    }
 
 }
 
