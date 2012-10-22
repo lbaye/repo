@@ -19,10 +19,12 @@
 + (NSDate*) convertDate:(NSString*) date tz_type:(NSString*)tz_type tz:(NSString*) tz;
 + (NSDate*) convertDateFromDisplay:(NSString*) date;
 + (NSString*) convertDateToDisplayFormat:(NSDate*)adate ;
-+(NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
-+(NSString *)convertNSDateToUnix:(NSDate *)date;
++ (NSString *)getAddressFromLatLon:(double)pdblLatitude withLongitude:(double)pdblLongitude;
++ (NSString *)convertNSDateToUnix:(NSDate *)date;
 + (NSString*) timeAsString:(NSDate*)notifTime;
-+(BOOL)hasConnectivity;
-+(int) getNotificationCount;
-+(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList;
++ (NSString*) convertDateToUTC:(NSDate *)date;
++ (NSString*) convertFromUTCDate:(NSDate *)date;
++ (BOOL) hasConnectivity;
++ (int) getNotificationCount;
++ (NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList;
 @end

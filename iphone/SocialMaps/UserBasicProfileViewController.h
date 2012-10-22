@@ -41,6 +41,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     UIImage *profileImage;
     IBOutlet UILabel *totalNotifCount;
     int entityFlag;
+    IBOutlet UILabel *lastSeenat;
+    IBOutlet UIButton *nameButton;
 }
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
@@ -62,10 +64,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) PhotoPicker *photoPicker;
 @property(nonatomic,retain) UIImage *coverImage;
 @property(nonatomic,retain) UIImage *profileImage;
-@property (nonatomic, retain) UIImagePickerController *picSel;
+@property(nonatomic, retain) UIImagePickerController *picSel;
+@property(nonatomic,retain) IBOutlet UIButton *nameButton;
 
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
-
+@property(nonatomic,retain) IBOutlet UILabel *lastSeenat;
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
 -(IBAction)editStatusButton:(id)sender;
@@ -82,5 +85,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)realstsButtonAction:(id)sender;
 -(IBAction)liveatButtonAction:(id)sender;
 -(IBAction)workatButtonAction:(id)sender;
+-(IBAction)nameButtonAction:(id)sender;
 
 @end

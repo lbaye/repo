@@ -142,7 +142,7 @@
 
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         // TODO: for appstore submission do not show detailed annotation
-        [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
     } else if ([locItem isKindOfClass:[LocationItem class]]) {
             // TODO: for appstore submission do not show detailed annotation
             [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
@@ -226,7 +226,7 @@
                     locItem.currDisplayState = MapAnnotationStateNormal;
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
                 // TODO: for appstore submission do not show detailed annotation
-                locItem.currDisplayState = MapAnnotationStateNormal;
+                locItem.currDisplayState = MapAnnotationStateDetailed;
             }
             else if ([locItem isKindOfClass:[LocationItem class]])
             {

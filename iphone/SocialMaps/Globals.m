@@ -20,6 +20,7 @@ NSMutableArray *circleListDetailGlobalArray;
 Event *globalEvent;
 Event *globalEditEvent;
 BOOL editFlag;
-
+BOOL isFromVenue;
+BOOL useLocalData;
 
 @end

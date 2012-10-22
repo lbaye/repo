@@ -21,6 +21,7 @@
 #import "UtilityClass.h"
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
+#import "LocationItemPeople.h"
 
 @interface FriendsProfileViewController ()
 
@@ -46,7 +47,7 @@
 @synthesize friendsId;
 @synthesize msgView,textViewNewMsg;
 @synthesize frndStatusButton;
-@synthesize addFrndButton;
+@synthesize addFrndButton,lastSeenat,meetUpButton;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -220,6 +221,19 @@ NSMutableArray *selectedScrollIndex;
     }    
 }
 
+-(People *)getPeopleById:(NSString *)userId
+{
+    NSLog(@"[smAppDelegate.peopleList count] %d",[smAppDelegate.peopleList count]);
+    for(int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        if ([((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.userId isEqualToString:userId])
+        {
+            return [smAppDelegate.peopleList objectAtIndex:i];
+        }
+    }
+    return nil;
+}
+
 -(IBAction)cancelEntity:(id)sender
 {
     NSLog(@"cancel");
@@ -300,10 +314,34 @@ NSMutableArray *selectedScrollIndex;
     nameLabl.text=[NSString stringWithFormat:@" %@ %@",userInfo.firstName,userInfo.lastName];
     statusMsgLabel.text=@"";
     addressOrvenueLabel.text=userInfo.address.street;
-    distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
-    ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
-    relStsLabel.text=userInfo.relationshipStatus;
-    livingPlace.text=userInfo.address.city;
+    if (userInfo.distance>0)
+    {
+        distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
+    }
+    else
+    {
+        NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
+        distanceLabel.text=[NSString stringWithFormat:@"%.2fm",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance];
+        userInfo.distance=(int)((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
+    }
+    if (userInfo.age>0) {
+        ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
+    }
+    else {
+        ageLabel.text=@"Not found";
+    }
+    if (![userInfo.relationshipStatus isEqualToString:@"Select..."]) 
+    {
+        relStsLabel.text=userInfo.relationshipStatus;
+    }
+    if (userInfo.address.city) {
+        livingPlace.text=userInfo.address.city;
+    }
+    else
+    {
+        if([self getPeopleById:userInfo.userId])
+        livingPlace.text=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).userInfo.lastSeenAt;
+    }
     worksLabel.text=userInfo.workStatus;
     if (userInfo.status) 
     {
@@ -342,16 +380,16 @@ NSMutableArray *selectedScrollIndex;
     NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
     
-    if (!userInfo.address.city)
+    if ((!userInfo.address.city) || ([userInfo.address.city isEqualToString:@""]))
     {
         annotation.title =[NSString stringWithFormat:@"Address not found"];
     }
     else 
     {
-        annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+        annotation.title =[NSString stringWithFormat:@" %@",userInfo.address.city];
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2fm",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     if ([userInfo.friendshipStatus isEqualToString:@"none"]) 
@@ -363,6 +401,11 @@ NSMutableArray *selectedScrollIndex;
         [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setUserInteractionEnabled:NO];
+    }
+    
+    if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+    {
+        [meetUpButton setEnabled:NO];
     }
 
 }

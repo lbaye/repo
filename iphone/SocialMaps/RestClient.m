@@ -1798,6 +1798,7 @@ AppDelegate *smAppDelegate;
                 [eventList.eventListArr addObject:aEvent];
             }
             NSLog(@"client eventList.eventListArr :%@",eventList.eventListArr);
+            eventListGlobalArray=eventList.eventListArr;
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_DONE object:eventList.eventListArr];
         } 
         else 

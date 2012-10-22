@@ -47,6 +47,7 @@ BOOL isBackgroundTaskRunning=FALSE;
 {
     [super viewDidAppear:animated];
     RestClient *rc=[[RestClient alloc] init];
+    NSLog(@"globalEvent %@ %@",globalEvent,globalEvent.eventID);
     [rc getEventDetailById:globalEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 
 
@@ -332,6 +333,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"invite people");    
     globalEditEvent=globalEvent;
     editFlag=true;
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -360,6 +362,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"edit event");
     globalEditEvent=globalEvent;
     editFlag=true;
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

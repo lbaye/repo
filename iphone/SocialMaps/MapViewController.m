@@ -37,6 +37,7 @@
 #import "ViewEventDetailViewController.h"
 #import "CustomAlert.h"
 #import "FriendsProfileViewController.h"
+#import "CreateEventViewController.h"
 
 @interface MapViewController ()
 
@@ -420,6 +421,7 @@ ButtonClickCallbackData callBackData;
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
     NSLog(@"MapViewController:mapAnnotationChanged");
+//    [_mapView setCenterCoordinate:anno.coordinate animated:YES];
     if (selectedAnno != nil && selectedAnno != anno) {
         LocationItem *selLocation = (LocationItem*) selectedAnno;
         selLocation.currDisplayState = MapAnnotationStateNormal;
@@ -432,12 +434,23 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) viewEventDetail:(id <MKAnnotation>)anno {
-    NSLog(@"view event detail");
      LocationItem *locationItem = (LocationItem*) anno;
      Event *aEvent=[[Event alloc] init];
      int i= [smAppDelegate.eventList indexOfObject:locationItem];
-     aEvent = [eventListGlobalArray objectAtIndex:i];
-     NSLog(@"match found %d",i);
+    for (int j=0; j<[smAppDelegate.eventList count]; j++)
+    {
+        LocationItem *locItem = (LocationItem *)[smAppDelegate.eventList objectAtIndex:j];
+        if (([locationItem.itemAddress isEqualToString:locItem.itemAddress]) && ([locationItem.itemName isEqualToString:locItem.itemName]))
+        {
+            i=j;
+        }
+    }
+    NSLog(@"view event detail %d",i);
+    if ([eventListGlobalArray count]>i)
+    {
+        aEvent = [eventListGlobalArray objectAtIndex:i];
+    }
+     NSLog(@"match found %d, %@",i,aEvent.eventID);
      globalEvent=aEvent;
      UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
      ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
@@ -452,6 +465,22 @@ ButtonClickCallbackData callBackData;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 }
+
+- (void) createEventWithAddress:(id <MKAnnotation>)anno {
+    LocationItemPlace *locItem = (LocationItemPlace*) anno;
+    isFromVenue=TRUE;
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    controller.venueAddress=locItem.itemAddress;
+    Geolocation *geo=[[Geolocation alloc] init];
+    geo.latitude=[NSString stringWithFormat:@"%lf",locItem.coordinate.latitude];
+    geo.longitude=[NSString stringWithFormat:@"%lf",locItem.coordinate.longitude];
+    controller.geolocation=geo;
+    [self presentModalViewController:controller animated:YES];
+
+}
+
 
 - (void) meetupRequestPlaceSelected:(id <MKAnnotation>)anno {
     LocationItemPlace *locItem = (LocationItemPlace*) anno;
@@ -496,7 +525,9 @@ ButtonClickCallbackData callBackData;
 
 - (void) directionSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:directionSelected");
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
 }
+
 - (void) messageSelected:(id <MKAnnotation>)anno {
     NSLog(@"MapViewController:messageSelected");
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
@@ -551,6 +582,28 @@ ButtonClickCallbackData callBackData;
 
 }
 
+- (void)planselected:(id <MKAnnotation>)anno
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+- (void)recommendSelected:(id <MKAnnotation>)anno
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+- (void)reviewSelected:(id <MKAnnotation>)anno
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+- (void)saveSelected:(id <MKAnnotation>)anno
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+- (void)checkinSelected:(id <MKAnnotation>)anno
+{
+    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
 - (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
     LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
 
@@ -582,6 +635,25 @@ ButtonClickCallbackData callBackData;
         case MapAnnoUserActionProfile:
             [self viewPeopleProfile:locItem];
             break;
+        case MapAnnoUserActionCreateEvent:
+            [self createEventWithAddress:locItem];
+            break;
+        case MapAnnoUserActionPlan:
+            [self planselected:locItem];
+            break;
+        case MapAnnoUserActionRecommend:
+            [self recommendSelected:locItem];
+            break;
+        case MapAnnoUserActionReview:
+            [self reviewSelected:locItem];
+            break;
+        case MapAnnoUserActionSave:
+            [self saveSelected:locItem];
+            break;
+        case MapAnnoUserActionCheckin:
+            [self checkinSelected:locItem];
+            break;
+            
         default:
             break;
     }
@@ -682,6 +754,7 @@ ButtonClickCallbackData callBackData;
     mapAnnoEvent = [[MapAnnotationEvent alloc] init];
     mapAnnoEvent.currState = MapAnnotationStateNormal;
     mapAnnoEvent.delegate = self;
+    useLocalData=TRUE;
     // Location update button
     UIButton *locUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     locUpdateBtn.frame = CGRectMake(self.view.frame.size.width-20-25, 
@@ -1018,7 +1091,16 @@ ButtonClickCallbackData callBackData;
     {
         [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     }
+    if (useLocalData==false)
+    {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+    }
+    
     [self loadAnnotationForEvents];
+    [self loadAnnotations:YES];
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
@@ -2411,12 +2493,18 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotations:NO];
     
     [self loadAnnotationForEvents];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
 }
 
 -(void)loadAnnotationForEvents
 {
     if (smAppDelegate.showEvents == TRUE)
     {
+        if ([eventListGlobalArray count]>0)
+        {
+            smAppDelegate.eventList=[eventListGlobalArray mutableCopy];
+        }
         for (int i=0; i<[smAppDelegate.eventList count]; i++)
         {
             if ([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[Event class]])
@@ -2449,8 +2537,11 @@ ButtonClickCallbackData callBackData;
                     if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                     {
 //                    [_mapView addAnnotation:anno];
-                        [smAppDelegate.displayList addObject:anno];
-                        
+                        if (![smAppDelegate.displayList containsObject:anno]) 
+                        {
+                            [smAppDelegate.displayList addObject:anno];
+                        }
+                         
                     }
                 }
             }

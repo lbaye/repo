@@ -18,6 +18,8 @@ extern NSMutableArray *circleListDetailGlobalArray;
 extern Event *globalEvent;
 extern Event *globalEditEvent;
 extern BOOL editFlag;
+extern BOOL isFromVenue;
+extern BOOL useLocalData;
 
 @interface Globals : NSObject 
 

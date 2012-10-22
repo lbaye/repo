@@ -48,6 +48,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UITextView *textViewNewMsg;
     IBOutlet UIButton *frndStatusButton;
     IBOutlet UIButton *addFrndButton;
+    IBOutlet UILabel *lastSeenat;
+    IBOutlet UIButton *meetUpButton;
 }
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
@@ -77,6 +79,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
 @property(nonatomic,retain) IBOutlet UIButton *frndStatusButton;
 @property(nonatomic,retain) IBOutlet UIButton *addFrndButton;
+@property(nonatomic,retain) IBOutlet UILabel *lastSeenat;
+@property(nonatomic,retain) IBOutlet UIButton *meetUpButton;
 
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;

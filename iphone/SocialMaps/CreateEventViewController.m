@@ -54,6 +54,7 @@
 @synthesize upperView;
 @synthesize lowerView;
 @synthesize viewContainerScrollView;
+@synthesize venueAddress,geolocation;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
@@ -186,6 +187,12 @@ NSMutableArray *guestListIdArr;
     
 }
 
+- (id)init
+{
+    self.geolocation=[[Geolocation alloc] init];
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -310,13 +317,21 @@ NSMutableArray *guestListIdArr;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     
-    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+    if (isFromVenue==TRUE) 
+    {
+        event.eventLocation=self.geolocation;
+        event.eventAddress=venueAddress;
+        NSLog(@"geolocation: %@",self.geolocation);
+        NSLog(@"globalEvent.eventName %@ globalEvent.eventLocation.latitude %@,globalEvent.eventLocation.longitude %@",event.eventAddress,event.eventLocation.latitude,event.eventLocation.longitude);
+//        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+        [self eventFromVenue];
+    }
 }
 
 -(void)getCurrentAddress
 {
-    addressLabel.text = @"";
-    annotation.subtitle=addressLabel.text;
+//    addressLabel.text = @"";
+//    annotation.subtitle=addressLabel.text;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -530,8 +545,14 @@ NSMutableArray *guestListIdArr;
     [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    if (isFromVenue==TRUE) 
+    {
+        [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:[self eventFromVenue] target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    }
+    else {
+        [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    }
     NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
 }
 
@@ -599,7 +620,7 @@ NSMutableArray *guestListIdArr;
     [msg appendString:@"Please enter "];
     bool validationFlag=false;
     NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@ event.permission %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date,event.permission);
-    
+    NSLog(@"event.eventAddress %@ ,event.eventLocation.latitude %@",event.eventAddress,event.eventLocation.latitude);
     if (event.eventName==NULL)
     {
         [msg appendString:@"name, "];
@@ -645,20 +666,23 @@ NSMutableArray *guestListIdArr;
             event.guestList=userIDs;
             
         }
-        if (locationFlag!=1) 
+        if ((locationFlag!=1) && (isFromVenue==false))
         {
             event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
             event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
             event.eventAddress=annotation.subtitle;
         }
-        
         [userCircleArr removeAllObjects];
         for (int i=0; i<[selectedCircleCheckArr count]; i++) 
         {
             NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleName) ;            
             [userCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
         }
-        event.circleList=userCircleArr;        
+        event.circleList=userCircleArr;
+        if (isFromVenue==TRUE)
+        {
+            useLocalData=FALSE;
+        }
         if (editFlag==true)
         {
             [event.guestList addObjectsFromArray:guestListIdArr];
@@ -725,6 +749,29 @@ NSMutableArray *guestListIdArr;
     event.eventLocation.longitude=aPlaceItem.placeInfo.location.longitude;
     event.eventAddress=aPlaceItem.placeInfo.name;
     addressLabel.text=aPlaceItem.placeInfo.name;
+}
+
+-(int)eventFromVenue
+{
+    if (isFromVenue==TRUE) 
+    {
+        NSLog(@"venueAddress: %@",venueAddress);
+        addressLabel.text=venueAddress;
+        LocationItemPlace *locItemPlace;
+        for (int i=0; i<[smAppDelegate.placeList count]; i++)
+        {
+            if ([((LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i]).itemAddress isEqualToString:venueAddress])
+            {
+                locItemPlace = (LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i];
+                [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+                [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                return i;
+            }
+        }
+    }
+    return 0;
 }
 
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
@@ -1581,7 +1628,10 @@ NSMutableArray *guestListIdArr;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
-
+//    if (isFromVenue==TRUE)
+//    {
+//        [eventListGlobalArray addObject:event];
+//    }
     [self dismissModalViewControllerAnimated:YES];
 }
 

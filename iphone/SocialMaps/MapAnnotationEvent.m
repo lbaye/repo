@@ -95,17 +95,27 @@ LocationItem *locationItem;
     // Event
     UIImage *eventImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
     UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(25, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, 
-                                distSize.width+70, distSize.height+5);
+    eventBtn.frame = CGRectMake(25, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, distSize.width+5, distSize.height+5);
     NSLog(@"eventBtn.frame %lf %lf %lf %lf",eventBtn.frame.origin.x,eventBtn.frame.origin.y,eventBtn.frame.size.width,eventBtn.frame.size.height);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [eventBtn setBackgroundImage:eventImg forState:UIControlStateNormal];
     [eventBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     [eventBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
-    [eventBtn setTitle:@"View event detail" forState:UIControlStateNormal];
+    [eventBtn setTitle:@"Event detail" forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
     eventBtn.tag = 11003;
     [infoView addSubview:eventBtn];
+    
+    //direction
+    UIImage *dirImg = [UIImage imageNamed:@"place_direction.png"];
+    UIButton *dirBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    dirBtn.frame = CGRectMake(25+eventBtn.frame.size.width, eventBtn.frame.origin.y,eventBtn.frame.size.width+5,eventBtn.frame.size.height);
+    [dirBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+    [dirBtn setImage:dirImg forState:UIControlStateNormal];
+    dirBtn.backgroundColor = [UIColor clearColor];
+    dirBtn.tag = 11005;
+    [infoView addSubview:dirBtn];
+    
     locationItem = locItem;
     return annoView;
 }
@@ -256,7 +266,7 @@ LocationItem *locationItem;
             actionType = MapAnnoUserActionPlan;
             break;    
         case 11005:
-            actionType = MapAnnoUserActionDirectionPlace;
+            actionType = MapAnnoUserActionDirection;
             break;
         case 11006:
             actionType = MapAnnoUserActionRecommend;

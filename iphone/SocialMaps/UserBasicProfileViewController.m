@@ -42,7 +42,7 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount;
+@synthesize totalNotifCount,lastSeenat,nameButton;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -198,6 +198,12 @@ NSMutableArray *selectedScrollIndex;
         worksLabel.text=entityTextField.text;
         userInfo.workStatus=entityTextField.text;                
     }    
+    if (entityFlag==5)
+    {
+        [nameButton setTitle:entityTextField.text forState:UIControlStateNormal];
+        userInfo.firstName=entityTextField.text;                
+    }    
+
 }
 
 -(IBAction)cancelEntity:(id)sender
@@ -274,6 +280,7 @@ NSMutableArray *selectedScrollIndex;
 //     profileImageView.image;
     userInfo=[notif object];
      nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
+    [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
      statusMsgLabel.text=@"";
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
@@ -394,6 +401,13 @@ NSMutableArray *selectedScrollIndex;
     entityTextField.text=userInfo.workStatus;
 }
 
+-(IBAction)nameButtonAction:(id)sender
+{
+    entityFlag=5;
+    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"Enter first name...";
+    entityTextField.text=userInfo.firstName;    
+}
 
 -(IBAction)hideKeyboard:(id)sender
 {

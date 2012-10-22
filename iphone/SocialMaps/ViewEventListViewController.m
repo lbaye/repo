@@ -305,6 +305,7 @@ bool searchFlags=true;
 //    [self.eventListTableView reloadData];
     [self.eventSearchBar resignFirstResponder];
     NSLog(@"new event");
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

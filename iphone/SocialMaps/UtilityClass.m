@@ -255,4 +255,26 @@
     return unReadMessage;
 }
 
++ (NSString *) convertDateToUTC:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
+    NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    [dateFormatter setTimeZone:gmt];
+    NSString *timeStamp = [dateFormatter stringFromDate:date];
+    [dateFormatter release];
+    return timeStamp;
+}
+
++ (NSString *) convertFromUTCDate:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    dateFormatter1.dateFormat = @"yyyy-MM-dd HH:mm";    
+    NSTimeZone *gmt1 = [NSTimeZone systemTimeZone];
+    [dateFormatter1 setTimeZone:gmt1];
+    NSString *timeStamp1 = [dateFormatter1 stringFromDate:date];
+    [dateFormatter1 release];
+    return timeStamp1;
+}
+
 @end

@@ -115,7 +115,7 @@
     // Event
     UIImage *eventImg = [UIImage imageNamed:@"place_event.png"];
     UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(5, 45, 30, 40);
+    eventBtn.frame = CGRectMake(5, infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow)-2, 40, BUTTON_HEIGHT);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [eventBtn setImage:eventImg forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
@@ -230,13 +230,13 @@
 
     switch (tag) {
         case 11003:
-            actionType = MapAnnoUserActionEvent;
+            actionType = MapAnnoUserActionCreateEvent;
             break;
         case 11004:
             actionType = MapAnnoUserActionPlan;
             break;    
         case 11005:
-            actionType = MapAnnoUserActionDirectionPlace;
+            actionType = MapAnnoUserActionDirection;
             break;
         case 11006:
             actionType = MapAnnoUserActionRecommend;

@@ -355,7 +355,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">15h30</string>
+						<string key="IBUIText"/>
 						<reference key="IBUITextColor" ref="853897878"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
@@ -367,7 +367,7 @@
 					<object class="IBUILabel" id="163911553">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{263, 178}, {45, 21}}</string>
+						<string key="NSFrame">{{254, 178}, {54, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="741067611"/>
@@ -494,7 +494,7 @@
 					<object class="IBUILabel" id="654053263">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{41, 212}, {45, 21}}</string>
+						<string key="NSFrame">{{41, 212}, {89, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="361682761"/>
@@ -522,7 +522,7 @@
 					<object class="IBUILabel" id="718905434">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{120, 236}, {45, 21}}</string>
+						<string key="NSFrame">{{120, 236}, {154, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1042283280"/>
@@ -544,7 +544,7 @@
 					<object class="IBUILabel" id="776337871">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{61, 261}, {45, 21}}</string>
+						<string key="NSFrame">{{61, 261}, {213, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="85503955"/>
@@ -566,7 +566,7 @@
 					<object class="IBUILabel" id="839469529">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{61, 287}, {191, 21}}</string>
+						<string key="NSFrame">{{61, 287}, {223, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="705647431"/>
@@ -1309,6 +1309,22 @@
 					<int key="connectionID">94</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">lastSeenat</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="765651412"/>
+					</object>
+					<int key="connectionID">95</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">meetUpButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="857869802"/>
+					</object>
+					<int key="connectionID">96</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">viewOnMapButton:</string>
 						<reference key="source" ref="753592166"/>
@@ -1924,7 +1940,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">94</int>
+			<int key="maxID">96</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2043,9 +2059,11 @@
 						<string key="distanceLabel">UILabel</string>
 						<string key="entityTextField">UITextField</string>
 						<string key="frndStatusButton">UIButton</string>
+						<string key="lastSeenat">UILabel</string>
 						<string key="livingPlace">UILabel</string>
 						<string key="mapContainer">UIView</string>
 						<string key="mapView">MKMapView</string>
+						<string key="meetUpButton">UIButton</string>
 						<string key="msgView">UIView</string>
 						<string key="nameLabl">UILabel</string>
 						<string key="profileImageView">UIImageView</string>
@@ -2087,6 +2105,10 @@
 							<string key="name">frndStatusButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="lastSeenat">
+							<string key="name">lastSeenat</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="livingPlace">
 							<string key="name">livingPlace</string>
 							<string key="candidateClassName">UILabel</string>
@@ -2098,6 +2120,10 @@
 						<object class="IBToOneOutletInfo" key="mapView">
 							<string key="name">mapView</string>
 							<string key="candidateClassName">MKMapView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="meetUpButton">
+							<string key="name">meetUpButton</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="msgView">
 							<string key="name">msgView</string>
