@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CounterItem.h"
 #import "RadioButtonItem.h"
+#import "CustomCounter.h"
 
 typedef enum _LOC_SHARING_PREFS_TYPES {
     LocationSharingPrefTypeTime = 0x0001,
@@ -16,7 +17,7 @@ typedef enum _LOC_SHARING_PREFS_TYPES {
     LocationSharingPrefTypePermission = 0x0100
 } LOC_SHARING_PREFS_TYPES;
 
-@interface LocationSharingPref : UIView {
+@interface LocationSharingPref : UIView<CustomCounterDelegate> {
     id          parent;
     CounterItem *timeLimit;
     CounterItem *radius;
@@ -28,4 +29,5 @@ typedef enum _LOC_SHARING_PREFS_TYPES {
 @property (nonatomic, retain) RadioButtonItem *permission;
 
 - (id)initWithFrame:(CGRect)frame prefs:(int)prefs defRadius:(int) rad defDuration:(int) dur defPerm:(bool)perm sender:(id) sender tag:(int)tag;
+- (void) counterValueChanged:(int)newVal sender:(id)sender;
 @end

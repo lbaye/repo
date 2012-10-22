@@ -10,7 +10,7 @@
 
 @protocol CustomCounterDelegate <NSObject>
 
-- (void) counterValueChanged:(int)indx sender:(id)sender;
+- (void) counterValueChanged:(int)newVal sender:(id)sender;
 
 @end
 

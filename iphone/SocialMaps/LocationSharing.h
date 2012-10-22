@@ -11,8 +11,10 @@
 #import "RadioButton.h"
 #import "NewLocationItem.h"
 #import "AppDelegate.h"
+#import "CustomCounter.h"
 
-@interface LocationSharing : UIScrollView<SelectFriendsDelegate, RadioButtonDelegate, NewLocationItemDelegate> {
+@interface LocationSharing : UIScrollView<SelectFriendsDelegate, RadioButtonDelegate, NewLocationItemDelegate,
+                                        CustomCounterDelegate> {
     int     rowNum;
     AppDelegate *smAppDelegate;
 }
@@ -24,4 +26,5 @@
 - (void) accSettingResetButtonClicked:(id) sender;
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 - (void) newLocationCreated:(Geofence*)loc sender:(id)sender;
+- (void) counterValueChanged:(int)newVal sender:(id)sender;
 @end

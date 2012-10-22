@@ -91,7 +91,9 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField animateTextField: parent up: NO];
-    // Store the userid and password
+    // Store the entered value and notify delegate
+    currVal  = [countDisp.text intValue];
+    [self notifyDelegate:self];
 }
 
 // UITextField Delegate end
@@ -101,7 +103,6 @@
 {
     // Drawing code
     countDisp.text = [NSString stringWithFormat:@"%d",currVal];
-    
 }
 
 - (void) notifyDelegate:(id)sender {

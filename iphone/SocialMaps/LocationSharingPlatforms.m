@@ -31,6 +31,16 @@
         //self.frame = scrollFrame;
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         numSections = smAppDelegate.locSharingPrefs.platforms.count;
+        // Ass facebook if empty
+        if (numSections == 0) {
+            LocationPlatformSettings *locPlatform = [[LocationPlatformSettings alloc] init];
+            locPlatform.privacy = [[LocationPrivacySettings alloc] init];
+            locPlatform.platformName = @"Facebook";
+            locPlatform.privacy.radius = 2;
+            locPlatform.privacy.duration = 0;
+            numSections++;
+            [smAppDelegate.locSharingPrefs.platforms addObject:locPlatform];
+        }
         CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
         self.tag = tag;
@@ -102,7 +112,10 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+    int indx = tag - 11000;
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    LocationPlatformSettings *platformLoc = (LocationPlatformSettings*) [smAppDelegate.locSharingPrefs.platforms objectAtIndex:indx];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:platformLoc.privacy.radius defDuration:platformLoc.privacy.duration defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
@@ -203,6 +216,23 @@
     [UIView setAnimationDuration: movementDuration];
     self.frame = CGRectOffset(self.frame, 0, movement);
     [UIView commitAnimations];
+}
+
+// CustomCounterDelegate method
+- (void) counterValueChanged:(int)newVal sender:(id)sender {
+    
+    NSLog(@"LocationSharingPlatforms counterValueChanged new value=%d, sender tag = %d", newVal, (int) sender);
+    int offset = (int)sender - 12100;
+    int itemIndex = offset / 100;
+    int platformIndex  = offset % 100;
+    NSLog(@"LocationSharingCircle platformIndex = %d, itemIndex = %d", platformIndex, itemIndex);
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    LocationPlatformSettings *platformLoc = (LocationPlatformSettings*) [smAppDelegate.locSharingPrefs.platforms objectAtIndex:platformIndex];
+    if (itemIndex == 0)
+        platformLoc.privacy.duration = newVal;
+    else
+        platformLoc.privacy.radius = newVal;
+
 }
 
 @end

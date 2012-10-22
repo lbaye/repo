@@ -7,17 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomCounter.h"
 
-@interface LocationSharingCircle : UIScrollView {
+@interface LocationSharingCircle : UIScrollView<CustomCounterDelegate> {
     id  parent;
     int numSections;
+    NSMutableArray *circleList;
 }
 @property (nonatomic, retain) id parent;
 @property (nonatomic) int numSections;
+@property (nonatomic, retain) NSMutableArray *circleList;
 
 - (LocationSharingCircle*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag;
 - (void) accSettingButtonClicked:(id) sender;
 - (void) accSettingResetButtonClicked:(id) sender;
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up;
-
+- (void) counterValueChanged:(int)newVal sender:(id)sender;
 @end

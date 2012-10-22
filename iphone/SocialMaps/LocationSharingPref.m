@@ -65,6 +65,11 @@
     return self;
 }
 
+// CustomCounterDelegate method
+- (void) counterValueChanged:(int)newVal sender:(id)sender {
+    
+    NSLog(@"LocationSharingPref counterValueChanged new value=%d, sender tag = %d", newVal, (int) sender);
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

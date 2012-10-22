@@ -27,11 +27,12 @@
 @implementation LocationSharingPlaces
 @synthesize parent;
 @synthesize numSections;
+@synthesize smAppDelegate;
 
 - (LocationSharingPlaces*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag {
     self = [super initWithFrame:scrollFrame];
     if (self) {
-        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         numSections = smAppDelegate.locSharingPrefs.geoFences.count;
         CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
@@ -46,7 +47,6 @@
 {
     // Drawing code
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     numSections = smAppDelegate.locSharingPrefs.geoFences.count;
     
     self.backgroundColor = [UIColor lightGrayColor];
@@ -123,7 +123,9 @@
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+    int indx = tag - 9000;
+    Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:indx];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:[geoFence.radius intValue] defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
@@ -220,5 +222,15 @@
     }
     
 }
+
+// CustomCounterDelegate method
+- (void) counterValueChanged:(int)newVal sender:(id)sender {
+    
+    NSLog(@"LocationSharingPlaces counterValueChanged new value=%d, sender tag = %d", newVal, (int) sender);
+    int indx = (int)sender - 10200;
+    Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:indx];
+    geoFence.radius = [NSString stringWithFormat:@"%d", newVal];
+}
+
 
 @end

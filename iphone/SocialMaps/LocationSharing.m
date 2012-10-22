@@ -175,6 +175,7 @@
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
+    NSLog(@"LocationSharing:addLocSharingPlaceView locSharing=%f", locSharing.frame.size.height);
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
     [self setNeedsLayout];
@@ -202,7 +203,8 @@
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                     aview.frame.size.height+7, 
                                                     aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
-                                                    defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+                                                    defRadius:smAppDelegate.locSharingPrefs.strangers.radius 
+                                                    defDuration:smAppDelegate.locSharingPrefs.strangers.duration defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -254,7 +256,9 @@
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                 aview.frame.size.height+7+selFrame.size.height, 
                                                 aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
-                                                defRadius:2 defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+                                                defRadius:smAppDelegate.locSharingPrefs.custom.privacy.radius 
+                                                defDuration:smAppDelegate.locSharingPrefs.custom.privacy.duration 
+                                                defPerm:TRUE sender:self tag:tag+1000];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -309,13 +313,11 @@
                 break;
             case 2001:
                 // Friend prefs
-                //[self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
                 [self addLocSharingView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 break;
             case 2002:
                 // Circle prefs
                 if (newView == TRUE)
-                    //[self addLocSharingCircleView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
                     [self addLocSharingCircleView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 else
                     [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
@@ -323,7 +325,6 @@
             case 2003:
                 // Platform prefs
                 if (newView == TRUE)
-                    //[self addLocSharingPlatformView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius|LocationSharingPrefTypePermission];
                     [self addLocSharingPlatformView:parent.tag prefs:LocationSharingPrefTypeTime|LocationSharingPrefTypeRadius];
                 else
                     [self cascadeHeightChange:parent.tag incr:2*(ROW_HEIGHT)+7];
@@ -348,13 +349,12 @@
     } else {
         if (parent.tag == 3003) {
             // Show select friends view
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             NSMutableArray *circles = [[NSMutableArray alloc] init];
-            for (UserCircle *aCircle in appDelegate.userAccountPrefs.circles) {
-                [circles addObject:aCircle];
+            for (UserCircle *aCircle in smAppDelegate.userAccountPrefs.circles) {
+                if (aCircle.type != CircleTypeSystem)
+                    [circles addObject:aCircle];
             }
-            //SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 80, 310, 380) friends:appDelegate.friendList circles:circles];
-            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:appDelegate.friendList circles:circles];
+            SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:smAppDelegate.friendList circles:circles];
             selFriends.delegate = self;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                          green:247.0/255.0 
@@ -476,15 +476,19 @@
     NSLog(@"LocationSharing:selectFriendsDone");
     NSLog(@"Selected friends:");
     [smAppDelegate.locSharingPrefs.custom.friends removeAllObjects];
+    [smAppDelegate.locSharingPrefs.custom.circles removeAllObjects];
+    
     for (int i=0; i < selection.friends.count; i++) {
         NSString *userId = [selection.friends objectAtIndex:i];
         NSLog(@"id=%@", userId);
         [smAppDelegate.locSharingPrefs.custom.friends addObject:userId];
     }
     NSLog(@"Selected circles:");
-    for (int i=0; i < selection.circles.count; i++)
+    for (int i=0; i < selection.circles.count; i++) {
+        NSString *circleId = [selection.circles objectAtIndex:i];
         NSLog(@"id=%@", [selection.circles objectAtIndex:i]);
-    
+        [smAppDelegate.locSharingPrefs.custom.circles addObject:circleId];
+    }
 }
 - (void) selectFriendsCancelled {
     NSLog(@"LocationSharing:selectFriendsCancelled");
@@ -511,9 +515,25 @@
         // Refresh the location sharing setting for geofences view
         SettingsMaster *locSetting = (SettingsMaster*) [self viewWithTag:2005];
         LocationSharingPlaces *placeSettings = (LocationSharingPlaces*) [locSetting viewWithTag:3005];
-        [placeSettings setNeedsDisplay];
-        [placeSettings setBackgroundColor:[UIColor clearColor]];        
+        [placeSettings setBackgroundColor:[UIColor clearColor]];
+        [self accSettingButtonClicked:placeSettings];
+        [self setNeedsDisplay];
     } else
         NSLog(@"Location creation cancelled");
 }
+
+// CustomCounterDelegate method
+- (void) counterValueChanged:(int)newVal sender:(id)sender {
+    
+    NSLog(@"LocationSharing counterValueChanged new value=%d, sender tag = %d", newVal, (int) sender);
+    if ((int)sender == 3101)
+        smAppDelegate.locSharingPrefs.custom.privacy.duration = newVal;
+    else if ((int)sender == 3201)
+        smAppDelegate.locSharingPrefs.custom.privacy.radius   = newVal;
+    else if ((int)sender == 3104)
+        smAppDelegate.locSharingPrefs.strangers.duration   = newVal;
+    else if ((int)sender == 3204)
+        smAppDelegate.locSharingPrefs.strangers.radius   = newVal;
+}
+
 @end

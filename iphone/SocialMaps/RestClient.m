@@ -3763,18 +3763,18 @@ AppDelegate *smAppDelegate;
     for (int i=0; i<[shareLocation.geoFences count]; i++)
     {
         Geofence *fence = [shareLocation.geoFences objectAtIndex:i];
-        [request addPostValue:fence.name forKey:@"geo_fences[name][]"];
-        [request addPostValue:fence.radius forKey:@"geo_fences[radius][]"];
-        [request addPostValue:fence.lat forKey:@"geo_fences[location][lat][]"];
-        [request addPostValue:fence.lng forKey:@"geo_fences[location][lng][]"];
+        [request addPostValue:fence.name forKey:[NSString stringWithFormat:@"geo_fences[%d][name]",i]];
+        [request addPostValue:fence.radius forKey:[NSString stringWithFormat:@"geo_fences[%d][radius]",i]];
+        [request addPostValue:fence.lat forKey:[NSString stringWithFormat:@"geo_fences[%d][location][lat]",i]];
+        [request addPostValue:fence.lng forKey:[NSString stringWithFormat:@"geo_fences[%d][location][lng]",i]];
     }
     
     // Circles
     for (int i=0; i<[shareLocation.circles count]; i++)
     {
         LocationCircleSettings *circleSetting = [shareLocation.circles objectAtIndex:i];
-        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.duration] forKey:[NSString stringWithFormat:@"circles_only[%@][duration][]",circleSetting.circleInfo.circleID]];
-        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.radius] forKey:[NSString stringWithFormat:@"circles_only[%@][radius][]",circleSetting.circleInfo.circleID]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.duration] forKey:[NSString stringWithFormat:@"circles_only[%@][duration]",circleSetting.circleInfo.circleID]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",circleSetting.privacy.radius] forKey:[NSString stringWithFormat:@"circles_only[%@][radius]",circleSetting.circleInfo.circleID]];
     }
     
     // Platforms
@@ -3789,8 +3789,8 @@ AppDelegate *smAppDelegate;
         } else if ([platformSetting.platformName caseInsensitiveCompare:@"foursquare"] == NSOrderedSame) {
             platformName = @"4sq";
         }
-        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.duration] forKey:[NSString stringWithFormat:@"platforms[%@][duration][]",platformName]];
-        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.radius] forKey:[NSString stringWithFormat:@"platforms[%@][radius][]",platformName]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.duration] forKey:[NSString stringWithFormat:@"platforms[%@][duration]",platformName]];
+        [request addPostValue:[NSString stringWithFormat:@"%d",platformSetting.privacy.radius] forKey:[NSString stringWithFormat:@"platforms[%@][radius]",platformName]];
     }
 
     // Custom
