@@ -6,84 +6,69 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
- * @ODM\Document(collection="photos",repositoryClass="Repository\PhotoRepo")
+ * @ODM\Document(collection="photos",repositoryClass="Repository\PhotosRepo")
  */
-/**
- * @ODM\Document
- */
-class Photo extends User
+class Photo extends Content
 {
     /** @ODM\Id */
     protected $id;
 
-    /** @ODM\File */
-    protected $file;
+    /** @ODM\Hash */
+    protected $metadata = array(
+        'original_file' => null,
+        'mime_type' => null,
+        'length' => 0
+    );
 
     /** @ODM\String */
-    protected $fileName;
+    protected $uri;
 
     /** @ODM\String */
-    protected $mimeType;
-
-    /** @ODM\Date */
-    protected $uploadDate;
-
-    /** @ODM\Int */
-    protected $length;
-
-    /** @ODM\Int */
-    protected $chunkSize;
+    protected $title;
 
     /** @ODM\String */
-    protected $md5;
+    protected $description;
 
-    public function getFile()
-    {
-        return $this->file;
+    public function setDescription($description) {
+        $this->description = $description;
     }
 
-    public function setFile($file)
-    {
-        $this->file = $file;
+    public function getDescription() {
+        return $this->description;
     }
 
-    public function getFileName()
-    {
-        return $this->filename;
+    public function setMetadata($metadata) {
+        $this->metadata = $metadata;
     }
 
-    public function setFileName($fileName)
-    {
-        $this->fileName = $fileName;
+    public function getMetadata() {
+        return $this->metadata;
     }
 
-    public function getMimeType()
-    {
-        return $this->mimeType;
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
+    public function getTitle() {
+        return $this->title;
     }
 
-    public function getChunkSize()
-    {
-        return $this->chunkSize;
+    public function setUri($uri) {
+        $this->uri = $uri;
     }
 
-    public function getLength()
-    {
-        return $this->length;
+    public function getUri() {
+        return $this->uri;
     }
 
-    public function getMd5()
-    {
-        return $this->md5;
-    }
+    public function isValid() {
+        try {
+            Validator::create()->notEmpty()->assert($this->getTitle());
+            Validator::create()->notEmpty()->assert($this->getDescription());
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
 
-    public function getUploadDate()
-    {
-        return $this->uploadDate;
+        return true;
     }
 }
