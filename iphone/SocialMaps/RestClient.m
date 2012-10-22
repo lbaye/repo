@@ -1629,30 +1629,33 @@ AppDelegate *smAppDelegate;
 //                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
                 }
                 
-                //get all places
-                for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                if ([jsonObjects  objectForKey:@"places"]) 
                 {
-                    Places *place=[[Places alloc] init];
-                    
-                    place.location = [[Geolocation alloc] init];
-                    place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
-                    place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-//                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
-                    place.northeast = [[Geolocation alloc] init];
-                    place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
-                    place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
-                    
-                    place.southwest = [[Geolocation alloc] init];
-                    place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
-                    place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
-                    place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
-                    [place setIcon:[item objectForKey:@"icon"] ];
-                    [place setID:[item objectForKey:@"id"] ];
-                    [place setName:[item objectForKey:@"name"] ];
-                    [place setReference:[item objectForKey:@"reference"]];
-                    [place setTypeArr:[item objectForKey:@"types"]];
-                    [place setVicinity:[item objectForKey:@"vicinity"] ];
-                    [searchLocation.placeArr addObject:place];
+                    //get all places
+                    for (NSDictionary *item in [jsonObjects  objectForKey:@"places"])
+                    {
+                        Places *place=[[Places alloc] init];
+                        
+                        place.location = [[Geolocation alloc] init];
+                        place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
+                        place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
+                        //                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
+                        place.northeast = [[Geolocation alloc] init];
+                        place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
+                        place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
+                        
+                        place.southwest = [[Geolocation alloc] init];
+                        place.southwest.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lat"] stringValue];
+                        place.southwest.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"southwest" key3:@"lng"] stringValue];
+                        place.distance = [self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil];
+                        [place setIcon:[item objectForKey:@"icon"] ];
+                        [place setID:[item objectForKey:@"id"] ];
+                        [place setName:[item objectForKey:@"name"] ];
+                        [place setReference:[item objectForKey:@"reference"]];
+                        [place setTypeArr:[item objectForKey:@"types"]];
+                        [place setVicinity:[item objectForKey:@"vicinity"] ];
+                        [searchLocation.placeArr addObject:place];
+                    }
                 }
                 for (NSDictionary *item in [jsonObjects  objectForKey:@"facebookFriends"])
                 {
