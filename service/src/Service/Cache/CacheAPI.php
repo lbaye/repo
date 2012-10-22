@@ -23,8 +23,15 @@ class CacheAPI
     }
 
 
-    public function put(\Document\CachedData $instance) {
-        $this->mRepository->insert($instance);
+    public function put($id, $data, $lat, $lng, $type) {
+
+        $instance = new \Document\CachedData;
+        $instance->setId($id);
+        $instance->setData($data);
+        $instance->setType($type);
+        $instance->setLat($lat);
+        $instance->setLng($lng);
+        $this->mRepository->put($instance);
         return true;
     }
 

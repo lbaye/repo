@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: azhar
- * Date: 10/20/12
- * Time: 6:58 PM
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Document;
 
@@ -13,7 +6,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="cached_data",repositoryClass="Repository\CachedDataRepo")
- * @ODM\Index(keys={"currentLocation"="2d"})
  */
 class CachedData
 {
@@ -32,6 +24,36 @@ class CachedData
      * @ODM\String
      */
     private $type;
+
+    /**
+     * @ODM\String
+     */
+    private $lat;
+
+    /**
+     * @ODM\String
+     */
+    private $lng;
+
+    public function setLat($lat)
+    {
+        $this->lat = $lat;
+    }
+
+    public function getLat()
+    {
+        return $this->lat;
+    }
+
+    public function setLng($lng)
+    {
+        $this->lng = $lng;
+    }
+
+    public function getLng()
+    {
+        return $this->lng;
+    }
 
 
     public function setData($data)

@@ -7,30 +7,49 @@ use Service\Cache\CacheAPI as CacheAPI;
 class Reverse extends Base
 {
 
+
+
+    const GEO_ACCURACY_LEVEL = 3;   // This saves up to N decimal places of a geocode. FOr example if lat = 72.111456 then for N=3 it will save 72.111
+
+
     public function getAddress(array $location)
     {
         $lat = $location['lat'];
         $lng = $location['lng'];
         $type = "geocode";
-        $id = $type . ':' . round($lat, 3) . ":" . round($lng, 3);
+        $cacheKey = $type . ':' . round($lat, self::GEO_ACCURACY_LEVEL) . ":" . round($lng, self::GEO_ACCURACY_LEVEL);
 
         $params['q'] = $lat . ',' . $lng;
         $params['output'] = 'json';
         $params['sensor'] = 'false';
         $params['key'] = urlencode($this->apiKey);
 
-        $cache = new CacheAPI($this->dm);   // Empty Cache object (:id, :data, :type)
+        return $this->getFreshOrCachedAddress($cacheKey, $params, $lat, $lng, $type);
+    }
 
-        $response = $cache->get($id);
+    private function getFreshOrCachedAddress($cacheKey, $params, $lat, $lng, $type) {
+        $cacheApi = new CacheAPI($this->dm);
 
-        if ($response) {    // Found in Cache(db)
-            $data = $response->getData();
-            $content = json_decode($data);
-            return $content->Placemark[0]->address;
+        $data = $cacheApi->get($cacheKey);
+
+        if ($data) {    // Found in Cache(db)
+            return $data->getData();
+        } else {
+            $address = $this->getFreshAddress($params);
+            $this->cacheAddress($cacheKey, $address, $lat, $lng, $type);
+            return $address;
+
         }
+    }
 
-        else {                                   // Not in Cache, have to fetch from google
+    private function cacheAddress($cacheKey, $address, $lat, $lng, $type) {
 
+        $cacheApi = new CacheAPI($this->dm);
+        return $cacheApi->put($cacheKey, $address, $lat, $lng, $type);
+
+    }
+
+    private function getFreshAddress($params) {
         $target = $this->endpoint . "?" . http_build_query($params);
         list($responseCode, $responseBody) = \Helper\Remote::sendGetRequest($target);
 
@@ -41,17 +60,9 @@ class Reverse extends Base
         $content = json_decode($responseBody);
 
         if ($content->Status->code == 200) {    // Save in Cache for future use
-
-            $cache_object = new \Document\CachedData();
-            $cache_object->setId($id);
-            $cache_object->setData($responseBody);
-            $cache_object->setType($type);
-            $cache->put($cache_object);       // put in cache
-
             return $content->Placemark[0]->address;
         } else {
             throw new \Exception("Service Unavailable (Google Maps API said: '{$content->Status->code}')", 503);
         }
-    }
     }
 }
