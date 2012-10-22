@@ -177,7 +177,8 @@ class Gathering extends Base
             }
 
             if ($type === 'event' && isset($postData['time'])) {
-                $checkTimeZone = explode(" ", $postData['time']);
+                $checkTimeZoneSpace = preg_replace("/(\s\s+|\t)/"," ",$postData['time']);
+                $checkTimeZone = explode(" ", $checkTimeZoneSpace);
 
                 if (count($checkTimeZone) < 3) {
                     $this->response->setContent(json_encode(array('message' => 'Date format must be in GMT format!')));
