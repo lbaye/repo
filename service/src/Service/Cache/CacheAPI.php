@@ -7,7 +7,7 @@ namespace Service\Cache;
  */
 
 
-class CacheAPI
+class CacheAPI implements \Service\Cache\ICacheService
 {
 
     private $mRepository;
