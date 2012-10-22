@@ -48,13 +48,19 @@ class FetchFacebookLocation extends Base {
 
         # Retrieve all facebook friend's checkins
         $fbCheckIns = $facebook->getFbFriendsCheckins();
-        $this->debug('Found ' . @count($fbCheckIns['data']) .
-                                 ' facebook checkins from ' . $smUser->getFirstName() . ' checkins');
+        $totalCheckins = @count($fbCheckIns['data']);
+        $this->debug('Found ' . $totalCheckins . ' facebook checkins from ' .
+                     $smUser->getFirstName() . ' checkins');
 
         # Retrieve checkins with meta data
         if (!empty($fbCheckIns)) {
-            $fbCheckIns = $this->orderCheckinsByTimestamp($this->keepSingleCheckinPerUser($fbCheckIns['data']));
-            $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
+            $fbCheckIns = $this->keepSingleCheckinPerUser($this->orderCheckinsByTimestamp($fbCheckIns['data']));
+
+            $this->debug('Out of ' . $totalCheckins . ' only ' . count($fbCheckIns) . ' none expired checkins found.');
+
+            if (count($fbCheckIns) > 0) {
+                $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
+            }
         } else {
             $this->debug("No facebook checkins found");
         }
@@ -81,6 +87,9 @@ class FetchFacebookLocation extends Base {
         return array_values(array_slice($userCheckinMap, 0, self::MAX_CHECKINS));
     }
 
+    /*
+     * Order checkins by their creation date.
+     */
     private function orderCheckinsByTimestamp(array $fbCheckIns) {
         $this->debug('Ordering ' . count($fbCheckIns) . ' by timestamp');
         $orderedCheckins = array();
@@ -237,6 +246,7 @@ class FetchFacebookLocation extends Base {
                 'lastName' => $user['last_name'],
                 'email' => $user['email'],
                 'avatar' => $user['pic_square'],
+                'gender' => $user['sex'],
                 'createdAt' => $created_at,
                 'currentLocation' => array(
                     'lat' => $info['coords']['latitude'],
