@@ -23,12 +23,12 @@ class Reverse extends Base
 
         $response = $cache->get($id);
 
-        if ($response) {
+        if ($response) {                         // Found in Cache(db)
             $content = json_decode($response);
             return $content->Placemark[0]->address;
         }
 
-        else {
+        else {                                   // Not in Cache, have to fetch from google
 
         $target = $this->endpoint . "?" . http_build_query($params);
         list($responseCode, $responseBody) = \Helper\Remote::sendGetRequest($target);
@@ -39,14 +39,15 @@ class Reverse extends Base
 
         $content = json_decode($responseBody);
 
-        if ($content->Status->code == 200) {
+        if ($content->Status->code == 200) {    // Save in Cache for future use
 
-            $instance = new \Document\CachedData();
-            $instance->setId($id);
-            $instance->setData($responseBody);
-            $instance->setType($type);
+            $cache_object = new \Document\CachedData();
+            $cache_object->setId($id);
+            $cache_object->setData($responseBody);
+            $cache_object->setType($type);
 
-            $cache->put($instance);
+
+            $cache->put($cache_object);
 
 
             return $content->Placemark[0]->address;
