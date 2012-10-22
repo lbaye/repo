@@ -1,0 +1,4 @@
+photo_upload:
+  pattern: /photos
+  defaults: { _controller: Controller\Photo::index }
+  requirements: { _method: POST }
