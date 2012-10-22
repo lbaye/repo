@@ -22,7 +22,7 @@ define('ROOTDIR', __DIR__);
 $bootstrap = new Bootstrap(APPLICATION_ENV);
 
 # Initiate logger
-$logger = new Logger('UpdateAddressForAllLocations');
+$logger = new Logger('FetchFbUserCheckins');
 $logger->pushHandler(new StreamHandler("php://stdout", Logger::DEBUG));
 
 # Configure gearman client
@@ -41,13 +41,33 @@ if (count($argv) == 5) {
     $userId = $argv[1];
     $fbId = $argv[2];
     $fbAuthToken = $argv[3];
+} else if (count($argv) == 3) {
+    $userId = $argv[2];
 } else {
     die("Invalid arguments");
+}
+
+if (!isset($fbId)) {
+    $repo = $bootstrap->dm->getRepository('Document\User');
+    $user = $repo->find($userId);
+
+    if (!$user)
+        die("No user found for id - $userId" . PHP_EOL);
+    
+    $repo->refresh($user);
+    $fbId = $user->getFacebookId();
+
+    if (empty($fbId))
+        die("No facebook reference found");
+
+    $fbAuthToken = $user->getFacebookAuthToken();
 }
 
 $client->addTaskBackground(
     'fetch_facebook_location',
     json_encode(array('userId' => $userId, 'facebookId' => $fbId, 'facebookAuthToken' => $fbAuthToken))
 );
+
+$logger->info("Request sent for fetching facebook checkins");
 
 $client->runTasks();

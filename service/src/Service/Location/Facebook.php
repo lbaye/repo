@@ -28,7 +28,7 @@ class Facebook extends Base
 
     public function getFbFriendsInfo(array $friendIds)
     {
-        $fql = 'SELECT uid, first_name, last_name, pic_square, email FROM user WHERE uid IN (' . implode(', ', $friendIds) . ')';
+        $fql = 'SELECT uid, first_name, last_name, pic_square, sex, email FROM user WHERE uid IN (' . implode(', ', $friendIds) . ')';
         $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
