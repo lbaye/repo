@@ -5,3 +5,16 @@ mongodb:
   host: 'localhost'
   port: 27017
   database: 'socialmaps_staged'
+
+imagetype:
+  thumb:
+    width: 50
+    height: 50
+
+  medium:
+    width: 150
+    height: 150
+
+  large:
+    width: 250
+    height: 250
