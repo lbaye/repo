@@ -176,6 +176,16 @@ class Gathering extends Base
                 $postData['time'] = date('Y-m-d h:i:s a', time());
             }
 
+            if ($type === 'event' && isset($postData['time'])) {
+                $checkTimeZone = explode(" ", $postData['time']);
+
+                if (count($checkTimeZone) < 3) {
+                    $this->response->setContent(json_encode(array('message' => 'Date format must be in GMT format!')));
+                    $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                    return $this->response;
+                }
+            }
+
             $meetup = $this->gatheringRepository->map($postData, $this->user);
             $this->gatheringRepository->insert($meetup);
 
