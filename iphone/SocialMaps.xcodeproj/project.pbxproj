@@ -55,6 +55,7 @@
 		20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D715EF59E000A441E9 /* CreateEventViewController.m */; };
 		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
+		20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD93F1635115000538777 /* user_thumb_only_gray.png */; };
 		20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
 		20C5F27A162FCE60005E5E56 /* events_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F272162FCE60005E5E56 /* events_icon_small.png */; };
@@ -522,6 +523,7 @@
 		20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetPicker.m; sourceTree = "<group>"; };
 		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
 		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
+		20BBD93F1635115000538777 /* user_thumb_only_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_thumb_only_gray.png; sourceTree = "<group>"; };
 		20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationEvent.h; sourceTree = "<group>"; };
 		20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationEvent.m; sourceTree = "<group>"; };
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
@@ -1689,6 +1691,7 @@
 				4F4CA51B15C45351004234E5 /* user_thumb.png */,
 				4F4CA51A15C45351004234E5 /* user_thumb_only.png */,
 				4FC081F215DAFC7200203C21 /* user_thumb_only2.png */,
+				20BBD93F1635115000538777 /* user_thumb_only_gray.png */,
 				4F5151D31607417B00271EAC /* venueimg.png */,
 				B01DFC5215F5E74300020D49 /* whitle_blend.png */,
 				4F4CA53F15C45351004234E5 /* xlose_icon.png */,
@@ -2150,6 +2153,7 @@
 				20C5F280162FCE60005E5E56 /* photos_icon.png in Resources */,
 				20C5F281162FCE60005E5E56 /* places_icon.png in Resources */,
 				20C5F286163006C6005E5E56 /* FriendsProfileViewController.xib in Resources */,
+				20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

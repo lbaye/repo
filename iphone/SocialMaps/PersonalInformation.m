@@ -358,7 +358,7 @@
     itemFrame = CGRectMake(10, heightOffset, LABEL_WIDTH, LABEL_HEIGHT);
     lbl = [[UILabel alloc] initWithFrame:itemFrame];
     lbl.backgroundColor = [UIColor clearColor];
-    lbl.text = @"Service";
+    lbl.text = @"Work";
     lbl.font = [UIFont fontWithName:@"Helvetica" size:11.0];
     [self addSubview:lbl];
     [lbl release];
