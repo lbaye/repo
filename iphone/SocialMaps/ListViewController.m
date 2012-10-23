@@ -451,7 +451,6 @@
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     if(searching) 
 		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
@@ -498,7 +497,6 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     return [anItem getRowHeight:tableView];
 }
@@ -520,20 +518,21 @@
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
 {
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
+    NSLog(@"states %i %i %i",smAppDelegate.showPeople,smAppDelegate.showPlaces,smAppDelegate.showEvents);
     switch (btnNum) {
-        case 0:
+        case 7000:
             if (newState == 0)
                 smAppDelegate.showPeople = FALSE;
             else
                 smAppDelegate.showPeople = TRUE;
             break;
-        case 1:
+        case 7001:
             if (newState == 0)
                 smAppDelegate.showPlaces = FALSE;
             else
                 smAppDelegate.showPlaces = TRUE;
             break;
-        case 2:
+        case 7002:
             if (newState == 0)
                 smAppDelegate.showEvents = FALSE;
             else
