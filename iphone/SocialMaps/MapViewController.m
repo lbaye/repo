@@ -1159,6 +1159,10 @@ ButtonClickCallbackData callBackData;
         
         [annotationCurrentLocation setCoordinate:theCoordinate];
         [_mapView addAnnotation:annotationCurrentLocation];
+        
+        if (smAppDelegate.needToCenterMap == TRUE) 
+            [_mapView setCenterCoordinate:theCoordinate animated:YES];
+        
     }
     
     // Calculate move from last position
