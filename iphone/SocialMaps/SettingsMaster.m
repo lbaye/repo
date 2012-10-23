@@ -105,5 +105,18 @@
     
 }
 
-
+- (void) setState:(SETTINGS_DISPLAY_STATE)state {
+    
+    if (state == SettingsDisplayStateClosed) {
+        [btn setImage:[UIImage imageNamed:@"icon_arrow_down.png"]
+             forState:UIControlStateNormal];
+        [btn removeTarget:parent action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn addTarget:parent action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [btn setImage:[UIImage imageNamed:@"icon_arrow_up.png"]
+             forState:UIControlStateNormal];
+        [btn removeTarget:parent action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn addTarget:parent action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
 @end

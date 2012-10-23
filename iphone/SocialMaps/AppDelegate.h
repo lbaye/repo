@@ -128,6 +128,7 @@
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
++ (id) sharedInstance;
 - (void) hideActivityViewer;
 - (void) showActivityViewer:(UIView*)sender;
 - (void) getPreferenceSettings:(NSString*) authToken;

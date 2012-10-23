@@ -19,9 +19,9 @@
 @synthesize subtitleString;
 @synthesize parent;
 @synthesize labels;
+@synthesize selectedBtn;
 
-
-- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr labels:(NSArray*)lbls sender:(id) sender tag:(int)tag
+- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr labels:(NSArray*)lbls defBtn:(int) def sender:(id) sender tag:(int)tag
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -32,6 +32,7 @@
         parent = sender;
         self.backgroundColor = [UIColor clearColor];
         labels = lbls;
+        selectedBtn = def;
     }
     return self;
 }
@@ -81,8 +82,8 @@
     CGRect buttonFrame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-5, 
                                      (self.frame.size.height-BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
     //- (id)initWithFrame:(CGRect)frame labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag
-    RadioButton *radio = [[RadioButton alloc] initWithFrame:buttonFrame labels:labels default:0 sender:self tag:9000];
-    //btn.tag = btnTag;
+    RadioButton *radio = [[RadioButton alloc] initWithFrame:buttonFrame labels:labels default:selectedBtn sender:self tag:btnTag];
+    radio.delegate = parent;
     self.tag = btnTag;
     
     [self addSubview:radio];

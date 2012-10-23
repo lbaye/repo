@@ -10,6 +10,7 @@
 
 @implementation Geofence
 
+@synthesize name;
 @synthesize lat;
 @synthesize lng;
 @synthesize radius;

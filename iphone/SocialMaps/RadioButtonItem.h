@@ -16,6 +16,7 @@
     int            btnTag;
     id              parent;
     NSArray         *labels;
+    int             selectedBtn;
 }
 @property (nonatomic, retain) NSString *titleString;
 @property (nonatomic, retain) NSString *subtitleString;
@@ -24,8 +25,10 @@
 @property (nonatomic) int btnTag;
 @property (nonatomic, retain) id parent;
 @property (nonatomic, retain) NSArray *labels;
+@property (nonatomic) int selectedBtn;
 
-- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr labels:(NSArray*)lbls sender:(id) sender tag:(int)tag;
+
+- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr labels:(NSArray*)lbls defBtn:(int)def sender:(id) sender tag:(int)tag;
 
 
 
