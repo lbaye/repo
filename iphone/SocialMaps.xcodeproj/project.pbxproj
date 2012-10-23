@@ -97,6 +97,7 @@
 		4F1D96B515DCC93B00511624 /* NotificationPref.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1D96AF15DCC93B00511624 /* NotificationPref.m */; };
 		4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F1FE46615BF327C00D2484F /* libsqlite3.dylib */; };
 		4F29A6CA15CB231200305523 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F29A6C815CB231200305523 /* NSData+Base64.m */; };
+		4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F2F464E162B945700B6D0AE /* NewLocationItem.m */; };
 		4F39151515BBCC9400BF6B25 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F39151415BBCC9400BF6B25 /* LoginController.m */; };
 		4F3A4EED15D227230033AC9E /* ResetPassword.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EEC15D227230033AC9E /* ResetPassword.m */; };
 		4F3A4EF115D244910033AC9E /* PersonalInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EF015D244900033AC9E /* PersonalInformation.m */; };
@@ -257,6 +258,7 @@
 		4F98A2DF15BB387D000B3124 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */; };
 		4F98A2E215BB387D000B3124 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F98A2E115BB387D000B3124 /* ViewController.m */; };
 		4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F9B281315BF53BC00CBA657 /* CoreLocation.framework */; };
+		4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */; };
 		4FAC301915C583540014030C /* UserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC301815C583540014030C /* UserAnnotationView.m */; };
 		4FAC302615C5C5DC0014030C /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC302515C5C5DC0014030C /* NotificationController.m */; };
 		4FB1342A15D82391004890A3 /* line_arrow_up_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FB1342915D82391004890A3 /* line_arrow_up_left.png */; };
@@ -585,6 +587,8 @@
 		4F24A3D515BF643300DC66B7 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
 		4F29A6C815CB231200305523 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		4F29A6C915CB231200305523 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		4F2F464D162B945700B6D0AE /* NewLocationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLocationItem.h; sourceTree = "<group>"; };
+		4F2F464E162B945700B6D0AE /* NewLocationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewLocationItem.m; sourceTree = "<group>"; };
 		4F39151315BBCC9400BF6B25 /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
 		4F39151415BBCC9400BF6B25 /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
 		4F3A4EEB15D227230033AC9E /* ResetPassword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPassword.h; sourceTree = "<group>"; };
@@ -806,6 +810,8 @@
 		4F98A2E015BB387D000B3124 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F98A2E115BB387D000B3124 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4F9B281315BF53BC00CBA657 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Scrolling.h"; sourceTree = "<group>"; };
+		4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Scrolling.m"; sourceTree = "<group>"; };
 		4FAC301715C583540014030C /* UserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAnnotationView.h; sourceTree = "<group>"; };
 		4FAC301815C583540014030C /* UserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAnnotationView.m; sourceTree = "<group>"; };
 		4FAC302415C5C5DC0014030C /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
@@ -1249,6 +1255,10 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
+				4F2F464D162B945700B6D0AE /* NewLocationItem.h */,
+				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
+				4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */,
+				4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1361,22 +1371,17 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
-				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
-				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
-				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
-				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
-				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
-				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
-				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
-				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
 				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
-				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
-				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
+				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
 				2018C29D1604672700457BB6 /* CircleListCheckBoxTableCell.h */,
 				2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */,
+				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
+				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
 				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
 				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
@@ -1386,22 +1391,29 @@
 				20C5F282163006C5005E5E56 /* FriendsProfileViewController.h */,
 				20C5F283163006C5005E5E56 /* FriendsProfileViewController.m */,
 				20C5F284163006C6005E5E56 /* FriendsProfileViewController.xib */,
+				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
+				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
+				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
+				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				20B3CB1916269E540099D49E /* GeotagViewController.h */,
 				20B3CB1A16269E540099D49E /* GeotagViewController.m */,
-				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */,
 				20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */,
+				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
-				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
-				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				4FE9606D15BC8FE60007327A /* MapViewController.h */,
 				4FE9606E15BC8FE60007327A /* MapViewController.m */,
+				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
+				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
 				B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */,
 				B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */,
+				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
+				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
+				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
 				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
@@ -1419,21 +1431,19 @@
 				B0C206AF15FB26C900177132 /* ShowOnMapController.xib */,
 				4FAC301715C583540014030C /* UserAnnotationView.h */,
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
-				4F98A2E015BB387D000B3124 /* ViewController.h */,
-				4F98A2E115BB387D000B3124 /* ViewController.m */,
-				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
-				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
+				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
+				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
+				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
 				200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */,
 				200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */,
+				4F98A2E015BB387D000B3124 /* ViewController.h */,
+				4F98A2E115BB387D000B3124 /* ViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
-				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
-				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
-				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -2332,6 +2342,8 @@
 				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
 				20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */,
 				20C5F285163006C6005E5E56 /* FriendsProfileViewController.m in Sources */,
+				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
+				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2362,8 +2374,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2378,8 +2390,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2389,8 +2401,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2399,8 +2411,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F9124387-C58B-4B2A-B9A6-F99CCC8E1176";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2409,8 +2421,8 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2421,8 +2433,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2431,8 +2443,8 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2443,8 +2455,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "35D57419-7F1D-444D-B7B4-26729B5227DA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35D57419-7F1D-444D-B7B4-26729B5227DA";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

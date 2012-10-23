@@ -82,7 +82,7 @@
         else
             [btnCheckbox setBackgroundImage:[UIImage imageNamed:@"people_checked.png"]
                                    forState:UIControlStateNormal];
-        btnCheckbox.tag = i;
+        btnCheckbox.tag = 7000+i;
         // Label
         UILabel *lblCheckbox = [[UILabel alloc] initWithFrame:lblFrame];
         lblCheckbox.backgroundColor = [UIColor clearColor];
@@ -103,20 +103,33 @@
     int btnNum = btn.tag;
     int newState;
     
-    NSNumber *btnState = (NSNumber*)[checkboxState objectAtIndex:btnNum];
+    NSNumber *btnState = (NSNumber*)[checkboxState objectAtIndex:btnNum-7000];
     if ([btnState intValue] == 1) {
         newState = 0;
-        [checkboxState replaceObjectAtIndex:btnNum withObject:[NSNumber numberWithInt:0]];
+        [checkboxState replaceObjectAtIndex:btnNum-7000 withObject:[NSNumber numberWithInt:0]];
         [btn setBackgroundImage:[UIImage imageNamed:@"people_unchecked.png"]
                                forState:UIControlStateNormal];
     } else {
         newState = 1;
-        [checkboxState replaceObjectAtIndex:btnNum withObject:[NSNumber numberWithInt:1]];
+        [checkboxState replaceObjectAtIndex:btnNum-7000 withObject:[NSNumber numberWithInt:1]];
         [btn setBackgroundImage:[UIImage imageNamed:@"people_checked.png"]
                                forState:UIControlStateNormal];
     }
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(checkboxClicked:withState:sender:)]) {
         [self.delegate checkboxClicked:btnNum withState:newState sender:[sender superview]];
+    }
+}
+
+- (void) setState:(int)state btnNum:(int)num{
+    UIButton *btn = (UIButton*) [self viewWithTag:7000+num];
+    if (state == 1) {
+        [checkboxState replaceObjectAtIndex:num withObject:[NSNumber numberWithInt:1]];
+        [btn setBackgroundImage:[UIImage imageNamed:@"people_unchecked.png"]
+                       forState:UIControlStateNormal];
+    } else {
+        [checkboxState replaceObjectAtIndex:num withObject:[NSNumber numberWithInt:0]];
+        [btn setBackgroundImage:[UIImage imageNamed:@"people_checked.png"]
+                       forState:UIControlStateNormal];
     }
 }
 @end

@@ -95,6 +95,8 @@
     RestClient *restClient = [[RestClient alloc] init];
     [restClient setLayer:smAppDelegate.layerPrefs :@"Auth-Token" :smAppDelegate.authToken];
     [restClient setPlatForm:smAppDelegate.platformPrefs :@"Auth-Token" :smAppDelegate.authToken];
+    // Save location sharing settings
+    [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
 }
 
 - (void)viewDidUnload
@@ -336,17 +338,6 @@
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
-//    CGRect topRow = CGRectMake(5, 80, 310, 62);
-//    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:topRow title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] sender:self tag:5003];
-//    UIImageView *bgImageView = [[UIImageView alloc] 
-//                                initWithFrame:CGRectMake(0, 0, enableSharing.frame.size.width, enableSharing.frame.size.height) ];
-//    [bgImageView setContentMode:UIViewContentModeScaleToFill];
-//    
-//    bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
-//    [enableSharing addSubview:bgImageView];
-//    [enableSharing sendSubviewToBack:bgImageView];
-//    [self.view addSubview:enableSharing];
-
     CGRect scrollFrame = CGRectMake(05, 80, 310, 380);
     LocationSharing *scrollView = [[LocationSharing alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 

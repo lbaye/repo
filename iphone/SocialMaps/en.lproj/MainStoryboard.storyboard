@@ -2469,22 +2469,22 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" id="CDt-6O-qsO" userLabel="informationSharing">
+                                    <view contentMode="scaleToFill" id="LAb-nB-va5" userLabel="locationSettings">
                                         <rect key="frame" x="0.0" y="65" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="l9h-1e-xtC">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="UyK-me-ikF">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Information sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="b3E-UO-6jR">
-                                                <rect key="frame" x="20" y="10" width="210" height="41"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Location sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="wxB-cl-jF3">
+                                                <rect key="frame" x="20" y="10" width="206" height="41"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="02A-Y3-Aa8">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="UZD-ju-eG4">
                                                 <rect key="frame" x="277" y="14" width="43" height="37"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2496,7 +2496,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="setInfoSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="OfR-mu-2m1"/>
+                                                    <action selector="setLocationSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="Jjb-aC-l90"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -2568,22 +2568,22 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" id="LAb-nB-va5" userLabel="locationSettings">
+                                    <view hidden="YES" contentMode="scaleToFill" id="CDt-6O-qsO" userLabel="informationSharing">
                                         <rect key="frame" x="0.0" y="255" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="UyK-me-ikF">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="l9h-1e-xtC">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Location sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="wxB-cl-jF3">
-                                                <rect key="frame" x="20" y="10" width="206" height="41"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Information sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="b3E-UO-6jR">
+                                                <rect key="frame" x="20" y="10" width="210" height="41"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="UZD-ju-eG4">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="02A-Y3-Aa8">
                                                 <rect key="frame" x="277" y="14" width="43" height="37"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -2595,7 +2595,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="setLocationSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="Jjb-aC-l90"/>
+                                                    <action selector="setInfoSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="OfR-mu-2m1"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -5229,5 +5229,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="kWh-8P-X1J"/>
+        <segue reference="qvJ-bu-e6k"/>
+        <segue reference="muZ-DO-Isb"/>
     </inferredMetricsTieBreakers>
 </document>
