@@ -2505,6 +2505,7 @@ ButtonClickCallbackData callBackData;
 
 -(void)getAllEventsForMapView:(NSNotification *)notif 
 {
+    useLocalData=TRUE;
     NSLog(@"got all events for map %@",smAppDelegate.eventList);
     [self loadAnnotations:NO];
     

@@ -173,13 +173,20 @@
     imgView.frame = CGRectMake(8, 8, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
     
     // TODO: temporary change for appstore submission
-    //CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
-    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);
+    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
+//    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);
     annoView.frame = annoFrame;
     
     // TODO: temporary change for appstore submission
-    //CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
-    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
+    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+        {
+            infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
+        }
+    }
     infoView = [[UIView alloc] initWithFrame:infoFrame];
     infoView.backgroundColor = [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0]; 
     infoView.tag = 11002;

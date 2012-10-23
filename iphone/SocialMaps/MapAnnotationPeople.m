@@ -153,7 +153,7 @@
     // Buttons
     // Add friend
     UIButton *addFriendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+5, 53, 32);
+    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+15, 53, 32);
     [addFriendBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [addFriendBtn setImage:[UIImage imageNamed:@"map_add_friend.png"] forState:UIControlStateNormal];
     addFriendBtn.backgroundColor = [UIColor clearColor];
@@ -173,41 +173,24 @@
     if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
         [addFriendBtn setTitle:@"Rejected" forState:UIControlStateNormal];
         [addFriendBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     } else if ([friendShipStatus isEqualToString:@"requested"]) {
         [addFriendBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize-2]];
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         [addFriendBtn setTitle:@"Requested" forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     } else if ([friendShipStatus isEqualToString:@"pending"]) {
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
         [addFriendBtn setTitle:@"Pending" forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     }
     
     
-    // Meet-up request
-    UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    meetupBtn.frame = CGRectMake(15, infoView.frame.size.height-15-27, 57, 27);
-    [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
-    meetupBtn.backgroundColor = [UIColor clearColor];
-    meetupBtn.tag = 11004;
-    [infoView addSubview:meetupBtn];
-    // TODO: hiding for appstore submission. revert back once feature is implemenetd
-    meetupBtn.hidden = TRUE;
-
-    // Directions request
-    UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-15-27, 57, 27);
-    [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
-    directionBtn.backgroundColor = [UIColor clearColor];
-    directionBtn.tag = 11005;
-    [infoView addSubview:directionBtn];
-    // TODO: hiding for appstore submission. revert back once feature is implemenetd
-    directionBtn.hidden = TRUE;
+   
 
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
     [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
@@ -221,27 +204,51 @@
 
     }
     else {
-    UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    // TODO: repositioning message button for appstore submission. SInce we are hiding
-    // meetup/direction we are putting this under friend request button
-    // messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
-    messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
-    [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
-    messageBtn.backgroundColor = [UIColor clearColor];
-    messageBtn.tag = 11006;
-    [infoView addSubview:messageBtn];
+        // Meet-up request
+        UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        meetupBtn.frame = CGRectMake(5, infoView.frame.size.height-15-27, 57, 27);
+        [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
+        meetupBtn.backgroundColor = [UIColor clearColor];
+        meetupBtn.tag = 11004;
+        [infoView addSubview:meetupBtn];
+        // TODO: hiding for appstore submission. revert back once feature is implemenetd
+        meetupBtn.hidden = FALSE;
         
-    UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    profileBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35+30, 55, 27);
-    [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [profileBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light.png"] forState:UIControlStateNormal];
-    [profileBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [profileBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
-    [profileBtn setTitle:@"Profile" forState:UIControlStateNormal];
-    profileBtn.backgroundColor = [UIColor clearColor];
-    profileBtn.tag = 11008;
-    [infoView addSubview:profileBtn];    
+        // Directions request
+        UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-15-27, 57, 27);
+        [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
+        directionBtn.backgroundColor = [UIColor clearColor];
+        directionBtn.tag = 11005;
+        [infoView addSubview:directionBtn];
+        // TODO: hiding for appstore submission. revert back once feature is implemenetd
+        directionBtn.hidden = FALSE;
+        
+        //Message button
+        UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        // TODO: repositioning message button for appstore submission. SInce we are hiding
+        // meetup/direction we are putting this under friend request button
+        messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
+        // messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
+        [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
+        messageBtn.backgroundColor = [UIColor clearColor];
+        messageBtn.tag = 11006;
+        [infoView addSubview:messageBtn];
+        
+        //Profile button
+        UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        profileBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+30+30, 53, 27);
+        [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [profileBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+        [profileBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [profileBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+        [profileBtn setTitle:@"Profile" forState:UIControlStateNormal];
+        profileBtn.backgroundColor = [UIColor clearColor];
+        profileBtn.tag = 11008;
+        [infoView addSubview:profileBtn];    
     }
     return annoView;
 }

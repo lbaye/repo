@@ -257,12 +257,13 @@ NSMutableArray *guestListIdArr;
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
 
-    event.permission=@"private";
+    if (editFlag==FALSE) 
+    {
+        event.permission=@"private";
+    }
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
-    
-//    [self.mapView setRegion:newRegion animated:YES];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
@@ -273,7 +274,6 @@ NSMutableArray *guestListIdArr;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
-//    [self.mapView setCenter:annotation.region];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -296,6 +296,33 @@ NSMutableArray *guestListIdArr;
             [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
         }
         event=globalEditEvent;
+        [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+        if ([event.permission isEqualToString:@"public"])
+        {
+            [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"private"])
+        {
+            [private setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"friends"])
+        {
+            [friends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"circles"])
+        {
+            [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"custom"])
+        {
+            [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
+        }
+        addressLabel.text=event.eventAddress;
+        
     }
     else
     {
@@ -326,16 +353,69 @@ NSMutableArray *guestListIdArr;
 //        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
         [self eventFromVenue];
     }
+    else if (editFlag==TRUE)
+    {
+        addressLabel.text=event.eventAddress;
+        [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (editFlag==true)
+    {
+        if (event.guestCanInvite) {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
+        }
+        event=globalEditEvent;
+        [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+        if ([event.permission isEqualToString:@"public"])
+        {
+            [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"private"])
+        {
+            [private setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"friends"])
+        {
+            [friends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"circles"])
+        {
+            [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"custom"])
+        {
+            [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
+        }
+        addressLabel.text=event.eventAddress;
+        
+    }
 }
 
 -(void)getCurrentAddress
 {
-//    addressLabel.text = @"";
-//    annotation.subtitle=addressLabel.text;
+    addressLabel.text = @"Loading current address...";
+    annotation.subtitle=addressLabel.text;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         dispatch_async(dispatch_get_main_queue(), ^{
             annotation.subtitle=addressLabel.text;
+            NSLog(@"get current address.");
         });
     });
 }
