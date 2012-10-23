@@ -14,6 +14,8 @@ defined('APPLICATION_ENV')
 
 define('ROOTDIR', __DIR__);
 
+if (count($argv) < 2) die("<script> <ENV> <USER_ID>\n");
+
 # Initiate bootstrapper
 $bootstrap = new Bootstrap(APPLICATION_ENV);
 

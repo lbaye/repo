@@ -71,7 +71,7 @@ abstract class Base {
         return $yaml->parse(file_get_contents(ROOTDIR . '/../app/config/services.yml'));
     }
 
-    protected function _stillValid($workload) {
+    protected function isFreshRequest($workload) {
         // 0 means always valid
         if (empty($workload->validity)) return true;
 

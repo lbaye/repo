@@ -28,7 +28,7 @@ class SendPushNotification extends Base
         $workload = json_decode($job->workload());
         $this->debug('Workload - ' . $job->workload());
 
-        if ($this->_stillValid($workload)) {
+        if ($this->isFreshRequest($workload)) {
             $this->debug('Is still valid request.');
 
             $this->userRepository = $this->services['dm']->getRepository('Document\User');
