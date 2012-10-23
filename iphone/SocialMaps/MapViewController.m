@@ -419,7 +419,7 @@ ButtonClickCallbackData callBackData;
     MKMapRect r = [self.mapView visibleMapRect];
     MKMapPoint pt = MKMapPointForCoordinate(locItem.coordinate);
     r.origin.x = pt.x - r.size.width * 0.3;
-    r.origin.y = pt.y - r.size.height * 0.5;
+    r.origin.y = pt.y - r.size.height * 0.6;
     [self.mapView setVisibleMapRect:r animated:YES];
 }
 
@@ -432,10 +432,16 @@ ButtonClickCallbackData callBackData;
         selLocation.currDisplayState = MapAnnotationStateNormal;
         [_mapView removeAnnotation:(id <MKAnnotation>)selectedAnno];
         [_mapView addAnnotation:(id <MKAnnotation>)selectedAnno];
+        
+    }
+    
+    if (selectedAnno != anno) {
+        [self startMoveMap:(LocationItem*)anno];
     }
     
     [self mapAnnotationInfoUpdated:anno];
     selectedAnno = anno;
+   
 }
 
 - (void) viewEventDetail:(id <MKAnnotation>)anno {
