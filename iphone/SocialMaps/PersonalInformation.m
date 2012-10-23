@@ -365,7 +365,7 @@
     
     // Service text
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
-    service = [self getTextField:itemFrame text:@"Service..." tag:currTag++];
+    service = [self getTextField:itemFrame text:@"Work..." tag:currTag++];
     service.delegate = parent;
     service.text = smAppDelegate.userAccountPrefs.workStatus;
     [self addSubview:service];

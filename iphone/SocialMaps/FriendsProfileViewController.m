@@ -80,7 +80,10 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
-    
+    [textViewNewMsg.layer setCornerRadius:8.0f];
+    [textViewNewMsg.layer setBorderWidth:0.5];
+    [textViewNewMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [textViewNewMsg.layer setMasksToBounds:YES];
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;

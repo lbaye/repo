@@ -295,7 +295,7 @@ NSMutableArray *selectedScrollIndex;
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
     }
     else
     {
