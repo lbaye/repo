@@ -324,8 +324,16 @@ NSMutableArray *selectedScrollIndex;
     else
     {
         NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
-        distanceLabel.text=[NSString stringWithFormat:@"%.2fm",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance];
-        userInfo.distance=(int)((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
+        float distance=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
+        userInfo.distance=(int)distance;
+        if (distance > 99999)
+        {
+            distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+        }
+        else
+        {
+            distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)distance];
+        }
     }
     if (userInfo.age>0) {
         ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];

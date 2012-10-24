@@ -74,7 +74,15 @@ BOOL isBackgroundTaskRunning=FALSE;
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
     eventAddress.text=globalEvent.eventAddress;
-    eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[globalEvent.eventDistance doubleValue]];
+    float distance=[globalEvent.eventDistance floatValue];
+    if (distance > 99999)
+    {
+        eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+    }
+    else
+    {
+        eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+    }
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
@@ -109,8 +117,17 @@ BOOL isBackgroundTaskRunning=FALSE;
         aEvent.eventAddress=@"Address not found";
     }
 	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
-	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+//	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+//	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+    if (distance > 99999)
+    {
+        annotation.subtitle = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+    }
+    else
+    {
+        annotation.subtitle = [NSString stringWithFormat:@"%dm", (int)distance];
+    }
+
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     

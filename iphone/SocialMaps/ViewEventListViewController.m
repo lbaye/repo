@@ -448,7 +448,17 @@ bool searchFlags=true;
         cell.eventDetail.text=event.eventShortSummary;
         cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
-        cell.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
+        float distance=[event.eventDistance floatValue];
+        if (distance > 99999)
+        {
+            cell.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+            cell1.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+        }
+        else
+        {
+            cell.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+            cell1.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+        }
         
         cell1.eventName.text = cellValue;
         cell1.eventDetail.text=event.eventShortSummary;

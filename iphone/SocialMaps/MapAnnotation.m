@@ -72,16 +72,19 @@
     //UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
     
     UIImageView *locImage = [[UIImageView alloc] initWithFrame:imgFrame];
+    UIImageView *locImageSquare ;
     if ([locItem isKindOfClass:[LocationItemPeople class]]) {
         locImage.image = [UIImage imageNamed:@"user_thumb_only.png"];
+        locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
     }
     else
     {
         locImage.image = [UIImage imageNamed:@"user_thumb_only_gray.png"];
+        locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 3, ANNO_IMG_WIDTH - 8, ANNO_IMG_WIDTH - 8)];
+        
     }
     locImage.tag = 11000;
     
-    UIImageView *locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
     [locImage addSubview:locImageSquare];
     locImageSquare.image = locItem.itemIcon;
     [locImageSquare.layer setCornerRadius:4.0f];

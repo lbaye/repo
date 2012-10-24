@@ -740,7 +740,7 @@ ButtonClickCallbackData callBackData;
         _mapView.showsUserLocation=NO;
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
-    [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters]; 
+    [locationManager setDistanceFilter:kCLLocationAccuracyNearestTenMeters];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
@@ -925,7 +925,7 @@ ButtonClickCallbackData callBackData;
         [mapAnno changeStateToNormal:selLocation];
     }
     
-    selectedAnno = nil;
+//    selectedAnno = nil;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -1213,10 +1213,21 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
+    if (annotationCurrentLocation) {
+    [_mapView removeAnnotation:annotationCurrentLocation];
+    
+    CLLocationCoordinate2D theCoordinate;
+    theCoordinate.latitude = userLocation.coordinate.latitude;
+    theCoordinate.longitude = userLocation.coordinate.longitude;
+    
+    [annotationCurrentLocation setCoordinate:theCoordinate];
+    [_mapView addAnnotation:annotationCurrentLocation];
+    }
     if (smAppDelegate.needToCenterMap == TRUE) {
         //smAppDelegate.needToCenterMap = FALSE;
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     }
+    NSLog(@"update location");
 }
 
 // Keep the selected annotation on top
