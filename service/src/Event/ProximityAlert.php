@@ -40,6 +40,7 @@ class ProximityAlert extends Base {
 
         } catch (\Exception $e) {
             $this->error("Failed to send proximity alert - " . $e->getMessage());
+            $this->error($e);
         }
 
         $this->runTasks();
@@ -71,22 +72,23 @@ class ProximityAlert extends Base {
             try {
                 // Retrieve friend's current location
                 $to = $friend['currentLocation'];
+                $friendObj = $this->userRepository->map($friend);
 
                 // Calculate distance between friend and target user
                 $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
 
                 // Determine whether target user should be notified if friend with in the range
-                if ($this->_shouldNotify($user, $friend, $distance)) {
-                    $userNotificationData = $this->_createNotificationData($friend);
+                #if ($this->_shouldNotify($user, $friend, $distance)) {
+                    $userNotificationData = $this->_createNotificationData($friendObj);
                     \Helper\Notification::send($userNotificationData, array($user));
                     $friendsNotifyAbout[] = $friend;
-                }
+                #}
 
                 // Determine whether friend should be notified if user is in range
                 if ($this->_shouldNotify($friend, $user, $distance)) {
                     $friendsToBeNotified[] = $friend;
 
-                    $this->_sendPushNotification($friend, $friendsNotificationData);
+                    $this->_sendPushNotification($friendObj, $friendsNotificationData);
                 }
             } catch (\Exception $e) {
                 $this->warn('Failed to determine nearby friends to send proximity alert - ' . $e->getMessage());
@@ -103,6 +105,9 @@ class ProximityAlert extends Base {
     }
 
     private function _sendPushNotification($user, $userNotificationData) {
+        $this->debug('Sending push notification - ' . json_encode($user));
+        $this->debug('Sending push notification with data - ' . json_encode($userNotificationData));
+        
         $pushSettings = $user->getPushSettings();
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
@@ -148,11 +153,23 @@ class ProximityAlert extends Base {
 
     private function _createGroupedFriendNames($friends) {
         if (count($friends) > 2) {
-            return $friends[0]->getFirstName() . ', ' . $friends[1]->getFirstName() . ' and ' . (count($friends) - 2) . ' others are';
+            return $this->methodOrKey($friends[0], 'firstName') . ', '
+                   . $this->methodOrKey($friends[1], 'firstName') . ' and ' .
+                   (count($friends) - 2) . ' others are';
+
         } else if (count($friends) == 2) {
-            return $friends[0]->getFirstName() . ' and ' . $friends[1]->getFirstName() . ' are';
+            return $this->methodOrKey($friends[0], 'firstName') .
+                   ' and ' . $this->methodOrKey($friends[1], 'firstName') . ' are';
+
         } else {
-            return $friends[0]->getName() . ' is ';
+            return $this->methodOrKey($friends[0], 'firstName') . ' is ';
         }
+    }
+    
+    private function methodOrKey($instance, $key) {
+        if (is_array($instance))
+            return $instance[$key];
+        else
+            return $instance->{'get' . ucfirst($key)}();
     }
 }
