@@ -32,19 +32,24 @@ class Photos extends Base
 
         $imageData = $postData['image'];
 
-
         $user = $this->user;
         $user->setUpdateDate(new \DateTime());
         $timeStamp = $user->getUpdateDate()->getTimestamp();
-        $filePath = "/images/user-photos/" . $user->getId();
+
+        # Ensure directory is created
+        $dirPath = '/images/photos/' . $user->getId();
+        $filePath = $dirPath . '/' . (time() * rand(100, 1000)) . '.jpg';
+
+        if (!file_exists(ROOTDIR . $dirPath))
+            mkdir($dirPath, 0777, true);
+
         $photoUrl = filter_var($imageData, FILTER_VALIDATE_URL);
 
         if ($photoUrl !== false) {
             $uri = $photoUrl;
         } else {
-            ImageHelper::saveImageFromBase64($imageData, ROOTDIR .$filePath);
+            ImageHelper::saveImageFromBase64($imageData, ROOTDIR . $filePath);
             $uri = $filePath . "?" . $timeStamp;
-
         }
 
         $photo = $this->photoRepo->set_photo($user, $postData['title'], $postData['description'], $uri);

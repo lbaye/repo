@@ -65,6 +65,7 @@ class Photo extends Content
         try {
             Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->notEmpty()->assert($this->getDescription());
+            Validator::create()->notEmpty()->assert($this->getUri());
         } catch (\InvalidArgumentException $e) {
             return false;
         }
