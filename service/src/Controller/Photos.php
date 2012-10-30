@@ -37,11 +37,11 @@ class Photos extends Base
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
         # Ensure directory is created
-        $dirPath = '/images/photos/' . $user->getId();
-        $filePath = $dirPath . '/' . (time() * rand(100, 1000)) . '.jpg';
+        $dirPath = '/images/photos';
+        $filePath = $dirPath . '/' . $user->getId() . '_' . (time() * rand(100, 1000)) . '.jpg';
 
-        if (!file_exists(ROOTDIR . $dirPath))
-            mkdir($dirPath, 0777, true);
+        #if (!file_exists(ROOTDIR . $dirPath))
+        #    mkdir($dirPath, 0777, true);
 
         $photoUrl = filter_var($imageData, FILTER_VALIDATE_URL);
 

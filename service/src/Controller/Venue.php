@@ -8,7 +8,6 @@ use Helper\Status;
 use Repository\UserRepo as userRepository;
 use Helper\Location;
 
-use Helper\Status;
 //use Repository\resource as resourceRepository;
 
 /**
