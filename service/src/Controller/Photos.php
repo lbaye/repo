@@ -6,7 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Helper\Status;
 use Repository\UserRepo as userRepository;
 use Repository\PhotosRepo as photoRepository;
-use Document\Photo as  photoDocument;
+use Document\Photo as photoDocument;
+use Helper\Image as ImageHelper;
 
 class Photos extends Base
 {
@@ -26,51 +27,87 @@ class Photos extends Base
     }
 
     # TODO Check authentication
-    public function create() {
+//    public function create() {
+//        $postData = $this->request->request->all();
+//        // Check if file was uploaded ok
+//        if (!is_uploaded_file($_FILES['image']['tmp_name']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+//            $this->response->setContent(json_encode(array('message' => 'File not uploaded. Possibly too large.')));
+//            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+//            return $this->response;
+//        }
+//
+//
+//        // Create image from file
+//        switch (strtolower($_FILES['image']['type'])) {
+//            case 'image/jpeg':
+//                echo "in case";
+//                $image = imagecreatefromjpeg($_FILES['image']['tmp_name']);
+//                echo "out of case";
+//                break;
+//            case 'image/png':
+//                $image = imagecreatefrompng($_FILES['image']['tmp_name']);
+//                break;
+//            case 'image/gif':
+//                $image = imagecreatefromgif($_FILES['image']['tmp_name']);
+//                break;
+//            default:
+//                $this->response->setContent(json_encode(array('message' => 'Unsupported type: ' . $_FILES['image']['type'])));
+//                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+//                return $this->response;
+//        }
+//
+//        // Target dimensions
+//        $maxWidth = 240;
+//        $maxHeight = 180;
+//
+//        $data = $this->imageResize($maxWidth,$maxHeight,$image);
+//
+//        // Output data
+//        echo $data;
+////        var_dump($postData);
+//        exit;
+//        $photo = $this->photoRepo->map($postData);
+//
+//        $photo = $this->photoRepo->insert($photo);
+//        $this->response->setContent(json_encode($photo));
+//        $this->response->setStatusCode(Status::CREATED);
+//        return $this->response;
+//    }
+
+    public function create()
+    {
+
         $postData = $this->request->request->all();
-        // Check if file was uploaded ok
-        if (!is_uploaded_file($_FILES['image']['tmp_name']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            $this->response->setContent(json_encode(array('message' => 'File not uploaded. Possibly too large.')));
-            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-            return $this->response;
+
+        $imageData = $postData['image'];
+
+
+        $user = $this->user;
+        $user->setUpdateDate(new \DateTime());
+        $timeStamp = $user->getUpdateDate()->getTimestamp();
+        $filePath = "/images/user-photos/" . $user->getId();
+        $photoUrl = filter_var($imageData, FILTER_VALIDATE_URL);
+
+        if ($photoUrl !== false) {
+            $uri = $photoUrl;
+        } else {
+            ImageHelper::saveImageFromBase64($imageData, ROOTDIR .$filePath);
+            $uri = $filePath . "?" . $timeStamp;
+
         }
 
-        // Create image from file
-        switch (strtolower($_FILES['image']['type'])) {
-            case 'image/jpeg':
-                $image = imagecreatefromjpeg($_FILES['image']['tmp_name']);
-                break;
-            case 'image/png':
-                $image = imagecreatefrompng($_FILES['image']['tmp_name']);
-                break;
-            case 'image/gif':
-                $image = imagecreatefromgif($_FILES['image']['tmp_name']);
-                break;
-            default:
-                $this->response->setContent(json_encode(array('message' => 'Unsupported type: ' . $_FILES['image']['type'])));
-                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-                return $this->response;
-        }
+        $photo = $this->photoRepo->set_photo($user, $postData['title'], $postData['description'], $uri);
+        $this->photoRepo->insert($photo);
 
-        // Target dimensions
-        $maxWidth = 240;
-        $maxHeight = 180;
 
-        $data = $this->imageResize($maxWidth,$maxHeight,$image);
-
-        // Output data
-        echo $data;
-//        var_dump($postData);
-        exit;
-        $photo = $this->photoRepo->map($postData);
-
-        $photo = $this->photoRepo->insert($photo);
-        $this->response->setContent(json_encode($photo));
+        $this->response->setContent($uri);
         $this->response->setStatusCode(Status::CREATED);
         return $this->response;
+
+
     }
 
-    public function imageResize($maxWidth,$maxHeight,$image)
+    public function imageResize($maxWidth, $maxHeight, $image)
     {
 
         // Get current dimensions
@@ -105,8 +142,9 @@ class Photos extends Base
         return $data;
     }
 
-    public function getByAuthenticatedUser() {
-
+    public function getMyPhotos()
+    {
+        echo $this->photoRepository->getByUser($this->user);
     }
 
 
