@@ -34,14 +34,12 @@ class PhotosRepo extends Base
 
     public function getByUser(UserDocument $user)
     {
-        $photos = $this->dm->createQueryBuilder()
+        return $this->dm->createQueryBuilder()
             ->find('Document\Photo')
             ->field('owner')
             ->equals($user->getId())
             ->sort('createDate', 'desc')
             ->getQuery()
             ->execute();
-
-        return $this->_toArrayAll($photos);
     }
 }
