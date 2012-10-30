@@ -105,5 +105,9 @@ class Photos extends Base
         return $data;
     }
 
+    public function getByAuthenticatedUser() {
+
+    }
+
 
 }
