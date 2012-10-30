@@ -15,7 +15,7 @@ get_photo:
 
 get_photos_by_user:
   pattern: /photos/me
-  defaults: { _controller: Controller\Photos::getByUserId }
+  defaults: { _controller: Controller\Photos::getByAuthenticatedUser }
   requirements: { _method: GET }
 
 update_photo:
