@@ -71,4 +71,15 @@ class Photo extends Content
 
         return true;
     }
+
+    public function toArray() {
+        $hash = array();
+
+        $fields = array('id', 'description', 'title');
+        foreach ($fields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
+
+        $hash['image'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUri()));
+
+        return $hash;
+    }
 }

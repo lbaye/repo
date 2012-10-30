@@ -15,8 +15,7 @@ class Photos extends Base
 
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->photoRepo = $this->dm->getRepository('Document\Photo');
@@ -25,54 +24,6 @@ class Photos extends Base
 
         $this->_ensureLoggedIn();
     }
-
-    # TODO Check authentication
-//    public function create() {
-//        $postData = $this->request->request->all();
-//        // Check if file was uploaded ok
-//        if (!is_uploaded_file($_FILES['image']['tmp_name']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-//            $this->response->setContent(json_encode(array('message' => 'File not uploaded. Possibly too large.')));
-//            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-//            return $this->response;
-//        }
-//
-//
-//        // Create image from file
-//        switch (strtolower($_FILES['image']['type'])) {
-//            case 'image/jpeg':
-//                echo "in case";
-//                $image = imagecreatefromjpeg($_FILES['image']['tmp_name']);
-//                echo "out of case";
-//                break;
-//            case 'image/png':
-//                $image = imagecreatefrompng($_FILES['image']['tmp_name']);
-//                break;
-//            case 'image/gif':
-//                $image = imagecreatefromgif($_FILES['image']['tmp_name']);
-//                break;
-//            default:
-//                $this->response->setContent(json_encode(array('message' => 'Unsupported type: ' . $_FILES['image']['type'])));
-//                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-//                return $this->response;
-//        }
-//
-//        // Target dimensions
-//        $maxWidth = 240;
-//        $maxHeight = 180;
-//
-//        $data = $this->imageResize($maxWidth,$maxHeight,$image);
-//
-//        // Output data
-//        echo $data;
-////        var_dump($postData);
-//        exit;
-//        $photo = $this->photoRepo->map($postData);
-//
-//        $photo = $this->photoRepo->insert($photo);
-//        $this->response->setContent(json_encode($photo));
-//        $this->response->setStatusCode(Status::CREATED);
-//        return $this->response;
-//    }
 
     public function create()
     {
@@ -100,14 +51,10 @@ class Photos extends Base
         $this->photoRepo->insert($photo);
 
 
-        $this->response->setContent($uri);
-        $this->response->setStatusCode(Status::CREATED);
-        return $this->response;
-
-
+        return $this->_generateResponse($photo->toArray(), Status::CREATED);
     }
 
-    public function imageResize($maxWidth, $maxHeight, $image)
+    private function imageResize($maxWidth, $maxHeight, $image)
     {
 
         // Get current dimensions
@@ -142,9 +89,14 @@ class Photos extends Base
         return $data;
     }
 
-    public function getMyPhotos()
+    public function getByAuthenticatedUser()
     {
-        echo $this->photoRepository->getByUser($this->user);
+        $photos = $this->photoRepo->getByUser($this->user);
+        if (count($photos) > 0) {
+            return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
     }
 
 
