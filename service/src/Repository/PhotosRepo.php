@@ -19,4 +19,29 @@ class PhotosRepo extends Base
 
         return $photo;
     }
+
+    public function set_photo($owner, $title, $description, $uri, $photo = null) {
+        if (is_null($photo)) $photo = new Photo();
+
+        $photo->setOwner($owner);
+        $photo->setDescription($description);
+        $photo->setTitle($title);
+        $photo->setUri($uri);
+
+        return $photo;
+
+    }
+
+    public function getByUser(UserDocument $user)
+    {
+        $photos = $this->dm->createQueryBuilder()
+            ->find('Document\Photo')
+            ->field('owner')
+            ->equals($user->getId())
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+
+        return $this->_toArrayAll($photos);
+    }
 }

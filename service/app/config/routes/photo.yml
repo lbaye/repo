@@ -8,15 +8,16 @@ upload_photo:
   defaults: { _controller: Controller\Photos::create }
   requirements: { _method: POST }
 
+get_photos_by_user:
+    pattern: /photos/me
+    defaults: { _controller: Controller\Photos::getByAuthenticatedUser }
+    requirements: { _method: GET }
+
 get_photo:
   pattern: /photos/{id}
   defaults: { _controller: Controller\Photos::getById }
   requirements: { _method: GET }
 
-get_photos_by_user:
-  pattern: /photos/me
-  defaults: { _controller: Controller\Photos::getByAuthenticatedUser }
-  requirements: { _method: GET }
 
 update_photo:
   pattern: /photos/{id}
