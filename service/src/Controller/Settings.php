@@ -11,6 +11,8 @@ use Helper\ShareConstant;
 class Settings extends Base
 {
 
+    const ALLOWED_DISTANCE = 100; # Meters
+
     /**
      * Initialize the controller.
      */
@@ -314,32 +316,33 @@ class Settings extends Base
     {
         $data = $this->request->request->all();
 
-        $location = $this->user->getCurrentLocation();
+        $oldLocation = $this->user->getCurrentLocation();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->returnResponse($location);
+            return $this->returnResponse($oldLocation);
         }
 
         if (array_key_exists('lat', $data) && array_key_exists('lng', $data)) {
 
-            $location['lat'] = floatval($data['lat']);
-            $location['lng'] = floatval($data['lng']);
+            $newLocation['lat'] = floatval($data['lat']);
+            $newLocation['lng'] = floatval($data['lng']);
 
-            $this->user->setCurrentLocation($location);
+            $this->user->setCurrentLocation($newLocation);
             $this->_updateVisibility($this->user);
             $this->persistOnly();
 
             // Update additional information
             try {
                 $this->_updateLastSeenAt($this->user);
-                $this->_sendProximityAlerts($this->user);
+
+                if ($this->hasMovedAway($oldLocation, $newLocation))
+                    $this->_sendProximityAlerts($this->user);
+
             } catch (\Exception $e) {
                 // Do nothing
             }
 
-            //$this->_sendPushNotification($this->user->getId(), 'TEst generic push', 'example_push_event');
-
-            return $this->persistAndReturn($location, true);
+            return $this->persistAndReturn($oldLocation, true);
 
         } else {
 
@@ -348,6 +351,14 @@ class Settings extends Base
 
             return $this->response;
         }
+    }
+
+    private function hasMovedAway($oldLocation, $newLocation) {
+        $distance = \Helper\Location::distance(
+            $oldLocation['lat'], $oldLocation['lng'],
+            $newLocation['lat'], $newLocation['lng']); # Meter
+
+        return $distance > self::ALLOWED_DISTANCE;
     }
 
     /**
