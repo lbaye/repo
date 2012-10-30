@@ -38,6 +38,7 @@
 #import "CustomAlert.h"
 #import "FriendsProfileViewController.h"
 #import "CreateEventViewController.h"
+#import "DirectionViewController.h"
 
 @interface MapViewController ()
 
@@ -534,9 +535,16 @@ ButtonClickCallbackData callBackData;
     [controller release];
 }
 
-- (void) directionSelected:(id <MKAnnotation>)anno {
+- (void) directionSelected:(id <MKAnnotation>)anno 
+{
     NSLog(@"MapViewController:directionSelected");
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+    LocationItem *locItem = (LocationItem*) anno;
+    
+    DirectionViewController *controller = [[DirectionViewController alloc] initWithNibName:@"DirectionViewController" bundle:nil];
+    controller.coordinateTo = locItem.coordinate;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 - (void) messageSelected:(id <MKAnnotation>)anno {
