@@ -121,8 +121,11 @@ class Search extends Base {
                 $user['currentLocation']['lat'], $user['currentLocation']['lng']);
 
             $mongoDate = $user['createdAt'];
+            $now = new \DateTime();
+            $now->setTimestamp($mongoDate->sec);
+
             $user['createdAt'] = array(
-                'date' => date('Y-m-d h:i:s', $mongoDate->sec)
+                'date' => $now
             );
         }
 
