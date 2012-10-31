@@ -38,13 +38,14 @@
     CustomRadioButton *radioFrom = [[CustomRadioButton alloc] initWithFrame:CGRectMake(17, 82, self.view.frame.size.width - 28, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
     radioFrom.delegate = self;
     [scrollViewMain addSubview:radioFrom];
-    [radioFrom release];
     
     CustomRadioButton *radioTo = [[CustomRadioButton alloc] initWithFrame:CGRectMake(17, 350, self.view.frame.size.width - 28, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:3 sender:self tag:4000];
     radioTo.delegate = self;
     [self radioButtonClicked:3 sender:radioTo];
     [scrollViewMain addSubview:radioTo];
     [radioTo release];
+    [self radioButtonClicked:0 sender:radioFrom];
+    [radioFrom release];
     
     for (int i = 0; i < 4; i++) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((i+1) * 12 + 65 * i, 12, 65, 65)];
@@ -163,7 +164,84 @@
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
-    NSLog(@"radioButtonClicked index = %d sender.tag = %d", indx, [sender tag]);
+    NSLog(@"radioButtonClicked index = %d sender.tag = %d sender = %@", indx, [sender tag], sender);
+    
+    if (indx == 0) {
+        
+        BOOL willViewMoveUp = NO;
+        
+        for (UIView *view in [scrollViewMain subviews]) {
+            
+            if (willViewMoveUp && view.tag != 2000 && ![view isEqual:sender]) {
+                
+                view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y - 130, view.frame.size.width, view.frame.size.height);
+                
+            } else if ([view isEqual:tableViewPlacesFrom] && [sender tag] == 2000) {
+                
+                willViewMoveUp = YES;
+                tableViewPlacesFrom.frame = CGRectMake(tableViewPlacesFrom.frame.origin.x, tableViewPlacesFrom.frame.origin.y, tableViewPlacesFrom.frame.size.width, tableViewPlacesFrom.frame.size.height - 132);
+                pointOnMapViewFrom.hidden = YES;
+                labelAddressFrom.hidden = YES;
+                scrollViewMain.contentSize = CGSizeMake(scrollViewMain.contentSize.width, scrollViewMain.contentSize.height - 130);
+                
+            } else if ([view isEqual:tableViewPlacesTo] && [sender tag] == 4000) {
+                
+                willViewMoveUp = YES;
+                tableViewPlacesTo.frame = CGRectMake(tableViewPlacesTo.frame.origin.x, tableViewPlacesTo.frame.origin.y, tableViewPlacesTo.frame.size.width, tableViewPlacesTo.frame.size.height - 132);
+                pointOnMapViewTo.hidden = YES;
+                labelAddressTo.hidden = YES;
+                scrollViewMain.contentSize = CGSizeMake(scrollViewMain.contentSize.width, scrollViewMain.contentSize.height - 130);
+                
+            }
+        }
+    } else if (tableViewPlacesFrom.frame.size.height < 100 && [sender tag] == 2000) {
+        tableViewPlacesFrom.frame = CGRectMake(tableViewPlacesFrom.frame.origin.x, tableViewPlacesFrom.frame.origin.y, tableViewPlacesFrom.frame.size.width, 168);
+        pointOnMapViewFrom.hidden = NO;
+        labelAddressFrom.hidden = NO;
+        scrollViewMain.contentSize = CGSizeMake(scrollViewMain.contentSize.width, scrollViewMain.contentSize.height + 130);
+        
+        BOOL willViewMoveDown = NO;
+        
+        for (UIView *view in [scrollViewMain subviews]) {
+            
+            if (willViewMoveDown && view.tag != 2000 && ![view isEqual:sender]) {
+                
+                view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y + 130, view.frame.size.width, view.frame.size.height);
+                
+            } else if ([view isEqual:tableViewPlacesFrom] && [sender tag] == 2000) {
+                
+                willViewMoveDown = YES;
+            } else if ([view isEqual:tableViewPlacesTo] && [sender tag] == 4000) {
+                
+                willViewMoveDown = YES;
+                
+            }
+        }
+    } else if (tableViewPlacesTo.frame.size.height < 100 && [sender tag] == 4000) {
+        tableViewPlacesTo.frame = CGRectMake(tableViewPlacesTo.frame.origin.x, tableViewPlacesTo.frame.origin.y, tableViewPlacesTo.frame.size.width, 168);
+        pointOnMapViewTo.hidden = NO;
+        labelAddressTo.hidden = NO;
+        scrollViewMain.contentSize = CGSizeMake(scrollViewMain.contentSize.width, scrollViewMain.contentSize.height + 130);
+        
+        BOOL willViewMoveDown = NO;
+        
+        for (UIView *view in [scrollViewMain subviews]) {
+            
+            if (willViewMoveDown && view.tag != 2000 && ![view isEqual:sender]) {
+                
+                view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y + 130, view.frame.size.width, view.frame.size.height);
+                
+            } else if ([view isEqual:tableViewPlacesFrom] && [sender tag] == 2000) {
+                
+                willViewMoveDown = YES;
+            } else if ([view isEqual:tableViewPlacesTo] && [sender tag] == 4000) {
+                
+                willViewMoveDown = YES;
+                
+            }
+        }
+    }
+    
     
     UITableView     *tableViewPlaces;
     DDAnnotation    *annotation;
