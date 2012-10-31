@@ -468,11 +468,16 @@
     {
         if ([[copyListOfItems objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
         {
+            
             NSLog(@"in search");
-            FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
-            controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
-            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-            [self presentModalViewController:controller animated:YES];
+            if (![((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+                
+            }
         }                
     }
     else 
@@ -480,10 +485,13 @@
         if ([[copyDisplayListArray objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
         {
             NSLog(@"not in search");
+            if (![((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
+            {
             FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
             controller.friendsId=((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.userId;
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
+            }
         }        
     }
 }

@@ -74,6 +74,10 @@
     {
         regMedia.image=[UIImage imageNamed:@"icon_facebook.png"];
     }
+    else if ([userInfo.source isEqualToString:@"facebook"])
+    {
+        regMedia.image=[UIImage imageNamed:@"fbCheckin.png"];
+    }
     else
     {
         regMedia.image=[UIImage imageNamed:@"sm_icon@2x.png"];

@@ -27,4 +27,8 @@
 + (BOOL) hasConnectivity;
 + (int) getNotificationCount;
 + (NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList;
++(NSString *)getLocalTimeFromString:(NSString *)timeStamp;
++(NSDate *)dateFromString:(NSString *)string;
++(NSString *)getCurrentTimeOrDate:(NSString *)dateTime;
+
 @end

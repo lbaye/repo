@@ -40,5 +40,6 @@
 @synthesize regMedia;
 @synthesize blockStatus;
 @synthesize source;
+@synthesize lastSeenAtDate;
 
 @end

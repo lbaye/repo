@@ -57,17 +57,22 @@
     UIScrollView *msgView = [[UIScrollView alloc] initWithFrame:msgFrame];
     CGSize msgContentsize = CGSizeMake(msgFrame.size.width*2, msgFrame.size.height);
     msgView.contentSize = msgContentsize;
-    
-    NSString *msg = locItemPeople.userInfo.statusMsg;
+    NSString *msg;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        msg=locItemPeople.userInfo.lastSeenAt;
+    }
+    else
+    {
+        msg = locItemPeople.userInfo.statusMsg;
+    }
     CGSize msgSize = [msg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
 
     CGRect lblFrame = CGRectMake(0, 0, msgSize.width, msgSize.height);
     UILabel *lblMsg = [[UILabel alloc] initWithFrame:lblFrame];
-    lblMsg.text = locItemPeople.userInfo.statusMsg;
     lblMsg.backgroundColor = [UIColor clearColor];
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
-    [msgView addSubview:lblMsg];
 
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
     [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
@@ -75,9 +80,15 @@
 //        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
 //        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
 //        [msgView addSubview:sourceIcon];
-
+        lblMsg.text = locItemPeople.userInfo.lastSeenAt;
+        NSLog(@"locItemPeople.userInfo.lastSeenAtDate %@",[UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate]);
     }
-    
+    else 
+    {
+        lblMsg.text = locItemPeople.userInfo.statusMsg;
+    }
+
+    [msgView addSubview:lblMsg];
     [lblMsg release];
     [infoView addSubview:msgView];
     [msgView release];
@@ -134,18 +145,33 @@
     detailView.opaque = NO;
     
     NSString *age = [self getAgeString:locItemPeople];
-    
-    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
-                                 locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
-                                 locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
-                                 age, 
-                                 locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
-                                 locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
-                                 @"", // Address of current location - use CLGeocoder
-                                 locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
-                                 locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
-                                 locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
-                                 locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];  
+    NSString *detailInfoHtml;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        NSString *msg=locItemPeople.userInfo.lastSeenAt;
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span><span style=\"line-height:1.2\"><br></span></body></html>", 
+                           locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
+                           locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
+                           age, msg==nil?@"":msg, 
+                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           @""// Address of current location - use CLGeocoder
+                           ] autorelease];
+    }
+    else
+    {
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
+                           locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
+                           locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
+                           age, 
+                           locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
+                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           @"", // Address of current location - use CLGeocoder
+                           locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
+                           locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
+                           locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
+                           locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];
+    }
+      
     [detailView loadHTMLString:detailInfoHtml baseURL:nil];
     detailView.delegate = self;
     [infoView addSubview:detailView];
@@ -198,7 +224,7 @@
     // Message request
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
-        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,35,20,20)];
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,87,20,20)];
         sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
         [infoView addSubview:sourceIcon];
 

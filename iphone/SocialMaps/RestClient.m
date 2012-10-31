@@ -1781,6 +1781,9 @@ AppDelegate *smAppDelegate;
                     people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
                     people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
                     people.source=[self getNestedKeyVal:item key1:@"refType" key2:nil key3:nil];
+                    people.lastSeenAtDate=[self getNestedKeyVal:item key1:@"createdAt" key2:@"date" key3:@"date"];
+                    people.lastSeenAt=[NSString stringWithFormat:@"Checked-in at %@ at %@",people.lastSeenAt,[UtilityClass getCurrentTimeOrDate:people.lastSeenAtDate]];
+//                    people.lastSeenAtDate=[[[item objectForKey:@"refType"] objectForKey:@"date"] objectForKey:@"date"];
 //                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
