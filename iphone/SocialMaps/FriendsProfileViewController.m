@@ -22,6 +22,7 @@
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
 #import "LocationItemPeople.h"
+#import "DirectionViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -182,8 +183,16 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)getDirection:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
     NSLog(@"get directions..");
+    
+    DirectionViewController *controller = [[DirectionViewController alloc] initWithNibName: @"DirectionViewController" bundle:nil];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
+    theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
+    controller.coordinateTo = theCoordinate;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 -(IBAction)closeMap:(id)sender

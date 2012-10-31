@@ -223,19 +223,22 @@
 
 - (void)setAddressLabelFromLatLon:(DDAnnotation*)annotation
 {
-    if (annotation == annotationFrom) 
-        labelAddressFrom.text = @"Retrieving address ...";
-    else 
-        labelAddressTo.text = @"Retrieving address ...";
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        if (annotation == annotationFrom) {
-            labelAddressFrom.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-        } else {
-            labelAddressTo.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-        }
+    if (annotation) {
+        if (annotation == annotationFrom) 
+            labelAddressFrom.text = @"Retrieving address ...";
+        else 
+            labelAddressTo.text = @"Retrieving address ...";
         
-    });
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            if (annotation == annotationFrom) {
+                labelAddressFrom.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+            } else {
+                NSLog(@"to annotation %@", annotation);
+                labelAddressTo.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+            }
+            
+        });
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -275,19 +278,6 @@
 
 - (IBAction)actionOkButton:(id)sender 
 {
-    /*
-    if (CLLocationCoordinate2DIsValid(annotationFrom.coordinate) == FALSE || [labelAddressFrom.text isEqualToString:@" "]) {
-        [UtilityClass showAlert:@"" :@"Select from where"];
-        return;
-    }
-    
-    if (CLLocationCoordinate2DIsValid(annotationTo.coordinate) == FALSE || 
-        [labelAddressTo.text isEqualToString:@" "]) {
-        [UtilityClass showAlert:@"" :@"Select to where"];
-        return;
-    }
-    */
-    
     //Use r for transit, b for bicycle, d for driving, h for avoid highways, t for avoid tolls.
     
     NSString *selectedTransportMode;
