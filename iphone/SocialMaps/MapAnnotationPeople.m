@@ -60,7 +60,8 @@
     NSString *msg;
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
-        msg=[NSString stringWithFormat:@"     at %@",locItemPeople.userInfo.lastSeenAt];;
+        msg=[NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
+        //locItemPeople.userInfo.lastSeenAt
     }
     else
     {
@@ -80,8 +81,7 @@
         UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
         sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
         [msgView addSubview:sourceIcon];
-        lblMsg.text = [NSString stringWithFormat:@"     at %@",locItemPeople.userInfo.lastSeenAt];;
-        NSLog(@"locItemPeople.userInfo.lastSeenAtDate %@",[UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate]);
+        lblMsg.text = [NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
     }
     else 
     {
