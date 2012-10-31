@@ -133,7 +133,9 @@ abstract class Base {
     }
 
     protected function _getAddress($current_location) {
+        $this->debug('Get address from reverse geo location service.');
         $reverseGeo = new \Service\Geolocation\Reverse(
+            $this->getLogger(),
             $this->serviceConf['googlePlace']['apiKey'],
             $this->services['dm']);
 

@@ -26,6 +26,7 @@ class LastSeenAddress extends Base
         $this->info("Executing Event::LastSeenAddress with job - {$job->unique()}");
         
         $workload = json_decode($job->workload());
+        $this->debug('Workload - ' . json_encode($workload));
 
         $user = $this->userRepository->find($workload->user_id);
         if ($user) {

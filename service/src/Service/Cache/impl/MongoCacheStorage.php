@@ -1,20 +1,19 @@
 <?php
 
-namespace Service\Cache;
+namespace Service\Cache\impl;
 
 /**
  * Find search results from cached google places record.
  */
 
 
-class CacheAPI implements \Service\Cache\ICacheService
+class MongoCacheStorage implements \Service\Cache\CacheStorage
 {
 
     private $mRepository;
 
     public function __construct(\Doctrine\ODM\MongoDB\DocumentManager $dm)
     {
-
         $this->mRepository = $dm->getRepository('Document\CachedData');
     }
 
@@ -23,15 +22,9 @@ class CacheAPI implements \Service\Cache\ICacheService
     }
 
 
-    public function put($id, $data, $lat, $lng, $type) {
-
-        $instance = new \Document\CachedData;
-        $instance->setId($id);
-        $instance->setData($data);
-        $instance->setType($type);
-        $instance->setLat($lat);
-        $instance->setLng($lng);
-        $this->mRepository->put($instance);
+    public function put($cacheKey, \Document\CachedData $cache) {
+        $cache->setId( $cacheKey );
+        $this->mRepository->put($cache);
         return true;
     }
 
@@ -40,4 +33,5 @@ class CacheAPI implements \Service\Cache\ICacheService
 
         return true;
     }
+
 }
