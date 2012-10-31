@@ -37,11 +37,13 @@ class Photos extends Base
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
         # Ensure directory is created
-        $dirPath = '/images/photos';
-        $filePath = $dirPath . '/' . $user->getId() . '_' . (time() * rand(100, 1000)) . '.jpg';
+        $dirPath = '/images/photos/' . $user->getId();
 
-        #if (!file_exists(ROOTDIR . $dirPath))
-        #    mkdir($dirPath, 0777, true);
+        if(!file_exists(ROOTDIR. "/" .$dirPath)) {
+           mkdir(ROOTDIR ."/". $dirPath, 0777, true);
+        }
+
+        $filePath = $dirPath . '/' . (time() * rand(100, 1000)) . '.jpg';
 
         $photoUrl = filter_var($imageData, FILTER_VALIDATE_URL);
 
@@ -52,12 +54,65 @@ class Photos extends Base
             $uri = $filePath . "?" . $timeStamp;
         }
 
-        $photo = $this->photoRepo->set_photo($user, $postData['title'], $postData['description'], $uri);
+        $photo = $this->photoRepo->set_photo($user, $postData['title'], $postData['description'], $uri, $postData['lat'], $postData['lng']);
+       // $photo = $this->photoRepo->map($postData, $user);
+
         $this->photoRepo->insert($photo);
 
 
         return $this->_generateResponse($photo->toArray(), Status::CREATED);
     }
+
+
+    public function getByAuthenticatedUser()
+    {
+        $photos = $this->photoRepo->getByUser($this->user);
+        if (count($photos) > 0) {
+            return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    public function getById($id){
+
+        $user = $this->userRepository->find($id);
+        $photos = $this->photoRepo->getByUser($user);
+        return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
+    }
+
+    public function update($id){
+
+        $data = $this->request->request->all();
+        $photo = $this->photoRepo->find($id);
+
+        if(empty($photo) || $photo->getOwner() != $this->user){
+          return $this->_generateUnauthorized();
+        }
+
+        $photo = $this->photoRepo->update($data, $id);
+        return $this->_generateResponse($photo->toArray(), Status::OK);
+
+
+    }
+
+    public function delete($id){
+        $photo = $this->photoRepo->find($id);
+
+        if(empty($photo) || $photo->getOwner() != $this->user){
+            return $this->_generateUnauthorized();
+        }
+
+        try {
+            $this->photoRepo->delete($id);
+        } catch (\Exception $e) {
+            $this->_generateException($e);
+        }
+        return $this->_generateResponse(array('message'=>'Deleted Successfully'));
+
+
+    }
+
 
     private function imageResize($maxWidth, $maxHeight, $image)
     {
@@ -92,16 +147,6 @@ class Photos extends Base
         imagedestroy($new);
 
         return $data;
-    }
-
-    public function getByAuthenticatedUser()
-    {
-        $photos = $this->photoRepo->getByUser($this->user);
-        if (count($photos) > 0) {
-            return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
-        } else {
-            return $this->_generateResponse(null, Status::NO_CONTENT);
-        }
     }
 
 

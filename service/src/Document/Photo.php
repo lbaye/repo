@@ -29,6 +29,38 @@ class Photo extends Content
     /** @ODM\String */
     protected $description;
 
+    /**
+     * @ODM\EmbedOne(targetDocument="Location")
+     * @var Location
+     */
+    protected $location;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param \Document\Location $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
+
+    /**
+     * @return \Document\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
     public function setDescription($description) {
         $this->description = $description;
     }
@@ -66,6 +98,7 @@ class Photo extends Content
             Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->notEmpty()->assert($this->getDescription());
             Validator::create()->notEmpty()->assert($this->getUri());
+
         } catch (\InvalidArgumentException $e) {
             return false;
         }
@@ -81,6 +114,12 @@ class Photo extends Content
 
         $hash['image'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUri()));
 
+        $location = $this->getLocation();
+        $location_hash = array(
+         'lat' => $location->getLat(),
+         'lng' => $location->getLng()
+        );
+        $hash['location'] = $location_hash;
         return $hash;
     }
 }
