@@ -138,6 +138,11 @@
     }
 }
 
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event 
+{
+    [self touchesEnded:touches withEvent:event];
+}
+
 - (void)limitMovement:(UITouch*) touch
 {
     imageViewDrag.center = CGPointMake([touch locationInView:self].x, imageViewDrag.center.y);
