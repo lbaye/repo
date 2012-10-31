@@ -119,6 +119,11 @@ class Search extends Base {
             $user['distance'] = \Helper\Location::distance(
                 $location['lat'], $location['lng'],
                 $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+
+            $mongoDate = $user['createdAt'];
+            $user['createdAt'] = array(
+                'date' => date('Y-m-d h:i:s', $mongoDate->sec)
+            );
         }
 
         return $users;
