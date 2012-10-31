@@ -118,35 +118,6 @@ ButtonClickCallbackData callBackData;
 
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation {
     
-    //test change blue dot
-    if ([newAnnotation isKindOfClass:[MKUserLocation class]]) {
-        static NSString* AnnotationIdentifier = @"Annotation";
-        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[newMapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
-        
-        if (!pinView) {
-            MKAnnotationView *customPinView = [[[MKAnnotationView alloc] initWithAnnotation:newAnnotation reuseIdentifier:AnnotationIdentifier] autorelease];
-            //customPinView.image = [UIImage imageNamed:@"icon_48x48.png"];
-            customPinView.image = [UIImage imageNamed:@"map_location_direction.png"];
-
-            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] 
-                                              initWithTarget:self action:@selector(didTapCurrentLocaiton)];
-            [customPinView addGestureRecognizer:tapRec];
-            [tapRec release];
-            
-            annotationCurrentLocation = newAnnotation;
-            
-            return customPinView;
-            
-        } else {
-            
-            pinView.annotation = newAnnotation;
-        }
-        
-        return pinView;
-    }
-    
-    
-    
     LocationItem * locItem = (LocationItem*) newAnnotation;
     
     MKAnnotationView *pin = nil;
@@ -748,7 +719,7 @@ ButtonClickCallbackData callBackData;
         _mapView.showsUserLocation=NO;
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
-    [locationManager setDistanceFilter:kCLLocationAccuracyNearestTenMeters];
+    [locationManager setDistanceFilter:kCLLocationAccuracyHundredMeters];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
@@ -1158,21 +1129,6 @@ ButtonClickCallbackData callBackData;
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
     
-    if (annotationCurrentLocation) {
-        [_mapView removeAnnotation:annotationCurrentLocation];
-        
-        CLLocationCoordinate2D theCoordinate;
-        theCoordinate.latitude = newLocation.coordinate.latitude;
-        theCoordinate.longitude = newLocation.coordinate.longitude;
-        
-        [annotationCurrentLocation setCoordinate:theCoordinate];
-        [_mapView addAnnotation:annotationCurrentLocation];
-        
-        if (smAppDelegate.needToCenterMap == TRUE) 
-            [_mapView setCenterCoordinate:theCoordinate animated:YES];
-        
-    }
-    
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
@@ -1221,16 +1177,6 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-    if (annotationCurrentLocation) {
-    [_mapView removeAnnotation:annotationCurrentLocation];
-    
-    CLLocationCoordinate2D theCoordinate;
-    theCoordinate.latitude = userLocation.coordinate.latitude;
-    theCoordinate.longitude = userLocation.coordinate.longitude;
-    
-    [annotationCurrentLocation setCoordinate:theCoordinate];
-    [_mapView addAnnotation:annotationCurrentLocation];
-    }
     if (smAppDelegate.needToCenterMap == TRUE) {
         //smAppDelegate.needToCenterMap = FALSE;
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
@@ -2512,17 +2458,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     
     [radio gotoButton:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1];
-    /*
-    if (![viewSharingPrefMapPullDown viewWithTag:421]) {
-        NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-        radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1 sender:self tag:2000];
-        radio.tag = 421;
-        radio.delegate = self;
-        [viewSharingPrefMapPullDown addSubview:radio];
-        
-        [viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
-    }
-    */
      
     [self displayNotificationCount];
 }
