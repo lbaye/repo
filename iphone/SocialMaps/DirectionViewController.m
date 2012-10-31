@@ -303,6 +303,7 @@
     NSString *urlString=[NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f&dirflg=%@", annotationFrom.coordinate.latitude, annotationFrom.coordinate.longitude, annotationTo.coordinate.latitude, annotationTo.coordinate.longitude, selectedTransportMode];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
     
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
