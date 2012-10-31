@@ -77,7 +77,7 @@
 //    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
 //    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
-        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,3,15,15)];
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
         sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
         [msgView addSubview:sourceIcon];
         lblMsg.text = [NSString stringWithFormat:@"     at %@",locItemPeople.userInfo.lastSeenAt];;
@@ -109,15 +109,15 @@
     {
         lblDist.text = [UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate];   
         lblDist.textColor = [UIColor blackColor];
-
+        lblDist.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     }
     else
     {
         lblDist.text = distStr;
         lblDist.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0];
+        lblDist.font = [UIFont fontWithName:@"Helvetica" size:12.0f];
     }
     lblDist.backgroundColor = [UIColor clearColor];
-    lblDist.font = [UIFont fontWithName:@"Helvetica" size:12.0f];
     [infoView addSubview:lblDist];
     [lblDist release];
 
