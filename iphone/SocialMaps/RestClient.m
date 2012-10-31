@@ -1343,18 +1343,20 @@ AppDelegate *smAppDelegate;
     // Circles only (circles - array of LocationCircleSettings)
     shareLocation.circles = [[NSMutableArray alloc] init];
     NSDictionary *circleArray = [[jsonObjects objectForKey:@"result"] objectForKey:@"circles_only"];
-    NSEnumerator *enumerator = [circleArray keyEnumerator];
-    id aKey = nil;
-    while ( (aKey = [enumerator nextObject]) != nil) {
-        LocationCircleSettings *circleSetting = [[LocationCircleSettings alloc] init];
-        circleSetting.circleInfo = [[UserCircle alloc] init];
-        
-        circleSetting.circleInfo.circleID = aKey;
-        NSLog(@"Circles only:circle:%@", circleSetting.circleInfo.circleID);
-        circleSetting.privacy = [[LocationPrivacySettings alloc] init];
-        circleSetting.privacy.duration = [[[circleArray objectForKey:aKey] objectForKey:@"duration"] intValue];
-        circleSetting.privacy.radius   = [[[circleArray objectForKey:aKey] objectForKey:@"radius"] intValue];
-        [shareLocation.circles addObject:circleSetting];
+    if (circleArray.count > 0) {
+        NSEnumerator *enumerator = [circleArray keyEnumerator];
+        id aKey = nil;
+        while ( (aKey = [enumerator nextObject]) != nil) {
+            LocationCircleSettings *circleSetting = [[LocationCircleSettings alloc] init];
+            circleSetting.circleInfo = [[UserCircle alloc] init];
+            
+            circleSetting.circleInfo.circleID = aKey;
+            NSLog(@"Circles only:circle:%@", circleSetting.circleInfo.circleID);
+            circleSetting.privacy = [[LocationPrivacySettings alloc] init];
+            circleSetting.privacy.duration = [[[circleArray objectForKey:aKey] objectForKey:@"duration"] intValue];
+            circleSetting.privacy.radius   = [[[circleArray objectForKey:aKey] objectForKey:@"radius"] intValue];
+            [shareLocation.circles addObject:circleSetting];
+        }
     }
     
     // Geofences
@@ -1373,35 +1375,37 @@ AppDelegate *smAppDelegate;
     // Platforms - array of LocationPlatformSettings)
     shareLocation.platforms = [[NSMutableArray alloc] init];
     NSDictionary *platformArray = [[jsonObjects objectForKey:@"result"] objectForKey:@"platforms"];
-    enumerator = [platformArray keyEnumerator];
-    aKey = nil;
-    while ( (aKey = [enumerator nextObject]) != nil) {
-        LocationPlatformSettings *platformSetting = [[LocationPlatformSettings alloc] init];
-        
-        if ([aKey caseInsensitiveCompare:@"fb"] == NSOrderedSame) {
-            platformSetting.platformName = @"Facebook";
-        } else if ([aKey caseInsensitiveCompare:@"twitter"] == NSOrderedSame) {
-            platformSetting.platformName = @"Twitter";
-        } else if ([aKey caseInsensitiveCompare:@"googleplus"] == NSOrderedSame) {
-            platformSetting.platformName = @"Google+";
-        } else if ([aKey caseInsensitiveCompare:@"gmail"] == NSOrderedSame) {
-            platformSetting.platformName = @"Gmail";
-        } else if ([aKey caseInsensitiveCompare:@"yahoo"] == NSOrderedSame) {
-            platformSetting.platformName = @"Yahoo";
-        } else if ([aKey caseInsensitiveCompare:@"badoo"] == NSOrderedSame) {
-            platformSetting.platformName = @"Badoo";
-        } else if ([aKey caseInsensitiveCompare:@"4sq"] == NSOrderedSame) {
-            platformSetting.platformName = @"Foursquare";
-        } else {
-            platformSetting.platformName = aKey;
+    if (platformArray.count > 0) {
+        NSEnumerator *enumerator = [platformArray keyEnumerator];
+        id aKey = nil;
+        while ( (aKey = [enumerator nextObject]) != nil) {
+            LocationPlatformSettings *platformSetting = [[LocationPlatformSettings alloc] init];
+            
+            if ([aKey caseInsensitiveCompare:@"fb"] == NSOrderedSame) {
+                platformSetting.platformName = @"Facebook";
+            } else if ([aKey caseInsensitiveCompare:@"twitter"] == NSOrderedSame) {
+                platformSetting.platformName = @"Twitter";
+            } else if ([aKey caseInsensitiveCompare:@"googleplus"] == NSOrderedSame) {
+                platformSetting.platformName = @"Google+";
+            } else if ([aKey caseInsensitiveCompare:@"gmail"] == NSOrderedSame) {
+                platformSetting.platformName = @"Gmail";
+            } else if ([aKey caseInsensitiveCompare:@"yahoo"] == NSOrderedSame) {
+                platformSetting.platformName = @"Yahoo";
+            } else if ([aKey caseInsensitiveCompare:@"badoo"] == NSOrderedSame) {
+                platformSetting.platformName = @"Badoo";
+            } else if ([aKey caseInsensitiveCompare:@"4sq"] == NSOrderedSame) {
+                platformSetting.platformName = @"Foursquare";
+            } else {
+                platformSetting.platformName = aKey;
+            }
+            
+            platformSetting.privacy = [[LocationPrivacySettings alloc] init];
+            platformSetting.privacy.duration = [[[platformArray objectForKey:aKey] objectForKey:@"duration"] intValue];
+            platformSetting.privacy.radius   = [[[platformArray objectForKey:aKey] objectForKey:@"radius"] intValue];
+            [shareLocation.platforms addObject:platformSetting];
+            NSLog(@"Platform:name:%@, duration:%d, radius:%d", platformSetting.platformName,platformSetting.privacy.duration,
+                  platformSetting.privacy.radius);
         }
-        
-        platformSetting.privacy = [[LocationPrivacySettings alloc] init];
-        platformSetting.privacy.duration = [[[platformArray objectForKey:aKey] objectForKey:@"duration"] intValue];
-        platformSetting.privacy.radius   = [[[platformArray objectForKey:aKey] objectForKey:@"radius"] intValue];
-        [shareLocation.platforms addObject:platformSetting];
-        NSLog(@"Platform:name:%@, duration:%d, radius:%d", platformSetting.platformName,platformSetting.privacy.duration,
-              platformSetting.privacy.radius);
     }
     
     return shareLocation;
