@@ -66,7 +66,6 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *connectToFBView;
     IBOutlet UIView *viewSharingPrefMapPullDown;
     CustomRadioButton *radio;
-    id <MKAnnotation> annotationCurrentLocation;
                                     
 }
 

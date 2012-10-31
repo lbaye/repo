@@ -433,6 +433,12 @@
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
+		B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B07777CB163E3A0A00969699 /* DirectionViewController.m */; };
+		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
+		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
+		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
+		B07777D6163E6D9900969699 /* transport3.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D2163E6D9800969699 /* transport3.png */; };
+		B07777D7163E6D9900969699 /* transport4.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D3163E6D9800969699 /* transport4.png */; };
 		B0851551162E919D003347CB /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = B0851550162E919D003347CB /* blank.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
@@ -1061,6 +1067,13 @@
 		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		B032F99A162C52C0002AFCDB /* icon_48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_48x48.png; path = Images/icon_48x48.png; sourceTree = SOURCE_ROOT; };
 		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
+		B07777CA163E3A0A00969699 /* DirectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionViewController.h; sourceTree = "<group>"; };
+		B07777CB163E3A0A00969699 /* DirectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionViewController.m; sourceTree = "<group>"; };
+		B07777CC163E3A0A00969699 /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
+		B07777D0163E6D9800969699 /* transport1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport1.png; path = Images/transport1.png; sourceTree = SOURCE_ROOT; };
+		B07777D1163E6D9800969699 /* transport2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport2.png; path = Images/transport2.png; sourceTree = SOURCE_ROOT; };
+		B07777D2163E6D9800969699 /* transport3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport3.png; path = Images/transport3.png; sourceTree = SOURCE_ROOT; };
+		B07777D3163E6D9800969699 /* transport4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport4.png; path = Images/transport4.png; sourceTree = SOURCE_ROOT; };
 		B0851550162E919D003347CB /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blank.png; path = Images/blank.png; sourceTree = SOURCE_ROOT; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
@@ -1413,6 +1426,9 @@
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
 				B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */,
 				B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */,
+				B07777CA163E3A0A00969699 /* DirectionViewController.h */,
+				B07777CB163E3A0A00969699 /* DirectionViewController.m */,
+				B07777CC163E3A0A00969699 /* DirectionViewController.xib */,
 				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
 				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
 				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
@@ -1716,6 +1732,10 @@
 				4F4CA53F15C45351004234E5 /* xlose_icon.png */,
 				4F72290815C7F4BB008B60A8 /* yes_button.png */,
 				4F4CA54715C45351004234E5 /* zoom_icon.png */,
+				B07777D0163E6D9800969699 /* transport1.png */,
+				B07777D1163E6D9800969699 /* transport2.png */,
+				B07777D2163E6D9800969699 /* transport3.png */,
+				B07777D3163E6D9800969699 /* transport4.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -2175,6 +2195,11 @@
 				20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */,
 				20BBD9471635589200538777 /* icon_beta_badge.png in Resources */,
 				20BBD949163559AB00538777 /* logo_banner.png in Resources */,
+				B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */,
+				B07777D4163E6D9900969699 /* transport1.png in Resources */,
+				B07777D5163E6D9900969699 /* transport2.png in Resources */,
+				B07777D6163E6D9900969699 /* transport3.png in Resources */,
+				B07777D7163E6D9900969699 /* transport4.png in Resources */,
 				20BDE517164111C0008E22FD /* fbCheckin.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2348,6 +2373,7 @@
 				20C5F285163006C6005E5E56 /* FriendsProfileViewController.m in Sources */,
 				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
 				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
+				B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2378,8 +2404,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2394,8 +2420,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F9124387-C58B-4B2A-B9A6-F99CCC8E1176";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2405,8 +2431,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2415,8 +2441,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2426,8 +2452,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2438,8 +2464,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2449,8 +2475,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2461,8 +2487,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "71A384DC-8FF2-4B60-A4AD-A196A3C04787";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
