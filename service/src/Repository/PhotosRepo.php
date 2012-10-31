@@ -16,8 +16,6 @@ class PhotosRepo extends Base
     {
         if (is_null($photo)) $photo = new Photo();
 
-      //  foreach ($data as $key => $value) $photo->{'set' . ucfirst($key)}($value);
-
         $setIfExistFields = array('title', 'description', 'uri');
 
         foreach($setIfExistFields as $field) {
@@ -35,7 +33,7 @@ class PhotosRepo extends Base
         return $photo;
     }
 
-    public function set_photo($owner, $title, $description, $uri, $lat, $lng, $photo = null) {
+    public function setPhoto($owner, $title, $description, $uri, $lat, $lng, $photo = null) {
         if (is_null($photo)) $photo = new Photo();
 
         if(isset($lat) && isset($lng)){

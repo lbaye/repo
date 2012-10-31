@@ -29,7 +29,6 @@ class Photos extends Base
     {
 
         $postData = $this->request->request->all();
-
         $imageData = $postData['image'];
 
         $user = $this->user;
@@ -44,7 +43,6 @@ class Photos extends Base
         }
 
         $filePath = $dirPath . '/' . (time() * rand(100, 1000)) . '.jpg';
-
         $photoUrl = filter_var($imageData, FILTER_VALIDATE_URL);
 
         if ($photoUrl !== false) {
@@ -54,12 +52,8 @@ class Photos extends Base
             $uri = $filePath . "?" . $timeStamp;
         }
 
-        $photo = $this->photoRepo->set_photo($user, $postData['title'], $postData['description'], $uri, $postData['lat'], $postData['lng']);
-       // $photo = $this->photoRepo->map($postData, $user);
-
+        $photo = $this->photoRepo->setPhoto($user, $postData['title'], $postData['description'], $uri, $postData['lat'], $postData['lng']);
         $this->photoRepo->insert($photo);
-
-
         return $this->_generateResponse($photo->toArray(), Status::CREATED);
     }
 
@@ -92,8 +86,6 @@ class Photos extends Base
 
         $photo = $this->photoRepo->update($data, $id);
         return $this->_generateResponse($photo->toArray(), Status::OK);
-
-
     }
 
     public function delete($id){
@@ -109,8 +101,6 @@ class Photos extends Base
             $this->_generateException($e);
         }
         return $this->_generateResponse(array('message'=>'Deleted Successfully'));
-
-
     }
 
 
