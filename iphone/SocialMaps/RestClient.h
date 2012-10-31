@@ -20,6 +20,7 @@
 #import "Geolocation.h"
 #import "Event.h"
 #import "UserCircle.h"
+#import "Photo.h"
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
@@ -88,5 +89,6 @@
 -(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
 
 - (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
-
+-(void) uploadPhoto:(NSString *)authToken:(NSString *)authTokenValue:(Photo *)photo;
+-(void) getPhotos:(NSString *)authToken:(NSString *)authTokenValue;
 @end

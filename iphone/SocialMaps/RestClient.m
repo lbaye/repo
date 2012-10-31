@@ -5747,4 +5747,174 @@ AppDelegate *smAppDelegate;
     
 }
 
+-(void) uploadPhoto:(NSString *)authToken:(NSString *)authTokenValue:(Photo *)photo
+{
+    NSString *route = [NSString stringWithFormat:@"%@/photos",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:photo.image forKey:@"image"];
+    [request addPostValue:photo.title forKey:@"title"];
+    [request addPostValue:photo.comment forKey:@"description"];
+    [request addPostValue:photo.location.latitude forKey:@"lat"];
+    [request addPostValue:photo.location.longitude forKey:@"lng"];
+    [request addPostValue:photo.address forKey:@"address"];    
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            NSMutableArray *circleList=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in jsonObjects) 
+            {
+                UserCircle *circle=[[UserCircle alloc] init];
+                circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
+                
+                if ([[self getNestedKeyVal:item key1:@"type" key2:nil key3:nil] caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                {
+                    circle.type = CircleTypeSystem;
+                }
+                else
+                {
+                    circle.type = CircleTypeCustom;
+                }
+                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
+                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                NSLog(@"circle.circleID: %@",circle.circleID);
+                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
+                for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
+                {
+                    UserFriends *userFrnd=[[UserFriends alloc] init];
+                    userFrnd.userName=[self getNestedKeyVal:frndDic key1:@"firstName" key2:nil key3:nil];
+                    userFrnd.userId=[self getNestedKeyVal:frndDic key1:@"id" key2:nil key3:nil];
+                    userFrnd.imageUrl=[self getNestedKeyVal:frndDic key1:@"avatar" key2:nil key3:nil];
+                    userFrnd.distance=[[self getNestedKeyVal:frndDic key1:@"distance" key2:nil key3:nil] doubleValue];
+                    userFrnd.coverImageUrl=[self getNestedKeyVal:frndDic key1:@"coverPhoto" key2:nil key3:nil];
+                    userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
+                    userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
+                    userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    [userFrnds addObject:userFrnd];
+                }
+                circle.friends=userFrnds;
+                [circleList addObject:circle];        
+            }
+            circleListDetailGlobalArray=circleList;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:circleList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt upload photo");
+    [request startAsynchronous];
+}
+
+-(void) getPhotos:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/photos/me",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            NSMutableArray *photoList=[[NSMutableArray alloc] init];
+            for (NSDictionary *photoDic in jsonObjects) 
+            {
+                Photo *photo=[[Photo alloc] init];
+//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
+                photo.photoId=[self getNestedKeyVal:photoDic key1:@"id" key2:nil key3:nil];
+                photo.description=[self getNestedKeyVal:photoDic key1:@"description" key2:nil key3:nil];
+                photo.imageUrl=[self getNestedKeyVal:photoDic key1:@"image" key2:nil key3:nil];
+                photo.location.latitude=[self getNestedKeyVal:photoDic key1:@"lat" key2:nil key3:nil];
+                photo.location.longitude=[self getNestedKeyVal:photoDic key1:@"lng" key2:nil key3:nil];
+                photo.address=[self getNestedKeyVal:photoDic key1:@"address" key2:nil key3:nil];
+                [photoList addObject:photo];
+                NSLog(@"photo.imageUrl %@",photo.imageUrl);
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_USER_ALL_PHOTO object:photoList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_USER_ALL_PHOTO object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_USER_ALL_PHOTO object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
 @end

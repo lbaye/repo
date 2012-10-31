@@ -60,6 +60,9 @@
 		20BBD949163559AB00538777 /* logo_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD948163559AB00538777 /* logo_banner.png */; };
 		20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
+		20C376A3163E525B00F989B3 /* MyPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C376A2163E525B00F989B3 /* MyPhotosViewController.m */; };
+		20C376A6163E529200F989B3 /* PhotoStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C376A5163E529100F989B3 /* PhotoStoryboard.storyboard */; };
+		20C376B7163EA07C00F989B3 /* UploadNewPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C376B6163EA07C00F989B3 /* UploadNewPhotoViewController.m */; };
 		20C5F27A162FCE60005E5E56 /* events_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F272162FCE60005E5E56 /* events_icon_small.png */; };
 		20C5F27B162FCE60005E5E56 /* events_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F273162FCE60005E5E56 /* events_icon.png */; };
 		20C5F27C162FCE60005E5E56 /* friends_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F274162FCE60005E5E56 /* friends_icon_small.png */; };
@@ -81,6 +84,7 @@
 		20CF83451611F9780075E647 /* icon_notify_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83421611F9780075E647 /* icon_notify_selected.png */; };
 		20E4A12115D8EB80009A1F6B /* NewsFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4A12015D8EB80009A1F6B /* NewsFeed.m */; };
 		20E75BE115EA0345000B6B8A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E75BE015EA0343000B6B8A /* Event.m */; };
+		20F03402163FF8FA00AE4685 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F03401163FF8FA00AE4685 /* Photo.m */; };
 		4F1B8DDD15E40FB0004AC402 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */; };
 		4F1B8DE015E40FC0004AC402 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B8DDF15E40FC0004AC402 /* sm_icon@2x.png */; };
 		4F1B99B515CC377D0066BF16 /* tagged_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B99AE15CC377D0066BF16 /* tagged_image.png */; };
@@ -533,6 +537,11 @@
 		20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationEvent.h; sourceTree = "<group>"; };
 		20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationEvent.m; sourceTree = "<group>"; };
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
+		20C376A1163E525B00F989B3 /* MyPhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPhotosViewController.h; sourceTree = "<group>"; };
+		20C376A2163E525B00F989B3 /* MyPhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPhotosViewController.m; sourceTree = "<group>"; };
+		20C376A5163E529100F989B3 /* PhotoStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PhotoStoryboard.storyboard; sourceTree = "<group>"; };
+		20C376B5163EA07C00F989B3 /* UploadNewPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadNewPhotoViewController.h; sourceTree = "<group>"; };
+		20C376B6163EA07C00F989B3 /* UploadNewPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadNewPhotoViewController.m; sourceTree = "<group>"; };
 		20C5F272162FCE60005E5E56 /* events_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_icon_small.png; sourceTree = "<group>"; };
 		20C5F273162FCE60005E5E56 /* events_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_icon.png; sourceTree = "<group>"; };
 		20C5F274162FCE60005E5E56 /* friends_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_icon_small.png; sourceTree = "<group>"; };
@@ -561,6 +570,8 @@
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		20E75BE015EA0343000B6B8A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		20F03400163FF8FA00AE4685 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		20F03401163FF8FA00AE4685 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		4F03B64D1609D6E2002C1636 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
 		4F03B64E1609D6E2002C1636 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
 		4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sm_icon@2x.png"; sourceTree = "<group>"; };
@@ -1209,6 +1220,8 @@
 				4F6036DD15DD4DAD00C1BD4E /* People.m */,
 				4F3A4EEF15D244900033AC9E /* PersonalInformation.h */,
 				4F3A4EF015D244900033AC9E /* PersonalInformation.m */,
+				20F03400163FF8FA00AE4685 /* Photo.h */,
+				20F03401163FF8FA00AE4685 /* Photo.m */,
 				4F6036DA15DD4DAD00C1BD4E /* Places.h */,
 				4F6036D915DD4DAD00C1BD4E /* Places.m */,
 				20B0E7E715D7BA89009A500A /* Platform.h */,
@@ -1416,9 +1429,12 @@
 				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
 				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
+				20C376A1163E525B00F989B3 /* MyPhotosViewController.h */,
+				20C376A2163E525B00F989B3 /* MyPhotosViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
 				4FAC302515C5C5DC0014030C /* NotificationController.m */,
 				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
+				20C376A5163E529100F989B3 /* PhotoStoryboard.storyboard */,
 				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
 				4F82576B15BD32EE00760CE1 /* RegistrationController.h */,
 				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
@@ -1430,6 +1446,8 @@
 				B0C206AE15FB26C900177132 /* ShowOnMapController.m */,
 				B0C206AF15FB26C900177132 /* ShowOnMapController.xib */,
 				4FAC301715C583540014030C /* UserAnnotationView.h */,
+				20C376B5163EA07C00F989B3 /* UploadNewPhotoViewController.h */,
+				20C376B6163EA07C00F989B3 /* UploadNewPhotoViewController.m */,
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
 				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
 				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
@@ -2172,6 +2190,7 @@
 				20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */,
 				20BBD9471635589200538777 /* icon_beta_badge.png in Resources */,
 				20BBD949163559AB00538777 /* logo_banner.png in Resources */,
+				20C376A6163E529200F989B3 /* PhotoStoryboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2344,6 +2363,9 @@
 				20C5F285163006C6005E5E56 /* FriendsProfileViewController.m in Sources */,
 				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
 				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
+				20C376A3163E525B00F989B3 /* MyPhotosViewController.m in Sources */,
+				20C376B7163EA07C00F989B3 /* UploadNewPhotoViewController.m in Sources */,
+				20F03402163FF8FA00AE4685 /* Photo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

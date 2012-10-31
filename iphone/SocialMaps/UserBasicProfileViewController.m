@@ -651,7 +651,12 @@ NSMutableArray *selectedScrollIndex;
     }
     if (imageIndex==0) 
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+        UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"myPhotosViewController"];
+        
+        initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:initialHelpView animated:YES];
+
     }
     else if (imageIndex==1)
     {

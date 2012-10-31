@@ -1381,7 +1381,7 @@ ButtonClickCallbackData callBackData;
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];   
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"settingsController"];
     
-    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }
 
@@ -1390,7 +1390,7 @@ ButtonClickCallbackData callBackData;
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
     
-    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }
 
@@ -1927,7 +1927,7 @@ ButtonClickCallbackData callBackData;
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
     
-    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 
 

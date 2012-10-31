@@ -27,4 +27,7 @@
 + (BOOL) hasConnectivity;
 + (int) getNotificationCount;
 + (NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList;
++(void)beganEditing:(UIControl *)control;
++(void)endEditing;
+
 @end
