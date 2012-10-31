@@ -15,6 +15,7 @@
 		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
 		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
 		2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2024BF7816075FE3008013DC /* SelectCircleTableCell.m */; };
+		205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 205464D9164143FD00A96E8B /* fbCheckinIcon.png */; };
 		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
 		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
 		2063A1D615F330E300529CB2 /* PinDown2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D015F330E300529CB2 /* PinDown2.png */; };
@@ -473,6 +474,7 @@
 		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
 		2024BF7716075FE3008013DC /* SelectCircleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCircleTableCell.h; sourceTree = "<group>"; };
 		2024BF7816075FE3008013DC /* SelectCircleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCircleTableCell.m; sourceTree = "<group>"; };
+		205464D9164143FD00A96E8B /* fbCheckinIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbCheckinIcon.png; sourceTree = "<group>"; };
 		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
 		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
 		2063A1D015F330E300529CB2 /* PinDown2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown2.png; sourceTree = "<group>"; };
@@ -1578,6 +1580,7 @@
 				4F4CA52915C45351004234E5 /* fb_checkbox_chcked.png */,
 				4F4CA52815C45351004234E5 /* fb_checkbox_unchcked.png */,
 				20BDE516164111C0008E22FD /* fbCheckin.png */,
+				205464D9164143FD00A96E8B /* fbCheckinIcon.png */,
 				4F4CA52715C45351004234E5 /* fb_search_icon.png */,
 				4F72290E15C7F4BB008B60A8 /* flip_checkbox.png */,
 				20B5D56D16131975001105AF /* friends_rqst_icon.png */,
@@ -2201,6 +2204,7 @@
 				B07777D6163E6D9900969699 /* transport3.png in Resources */,
 				B07777D7163E6D9900969699 /* transport4.png in Resources */,
 				20BDE517164111C0008E22FD /* fbCheckin.png in Resources */,
+				205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

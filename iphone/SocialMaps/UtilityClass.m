@@ -322,10 +322,10 @@
     [dateFormatter2 release];
     NSLog(@"timeStamp1 %@ timeStamp2 %@ timeStamp3 %@",timeStamp1,timeStamp2,timeStamp3);
     if ([timeStamp1 isEqualToString:timeStamp2]) {
-        return timeStamp3;
+        return [NSString stringWithFormat:@"at %@",timeStamp3];
     }
     else {
-        return timeStamp1;
+        return [NSString stringWithFormat:@"on %@",timeStamp1];
     }
     
 }

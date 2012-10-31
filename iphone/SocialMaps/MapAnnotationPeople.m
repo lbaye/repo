@@ -60,7 +60,7 @@
     NSString *msg;
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
-        msg=locItemPeople.userInfo.lastSeenAt;
+        msg=[NSString stringWithFormat:@"     at %@",locItemPeople.userInfo.lastSeenAt];;
     }
     else
     {
@@ -74,13 +74,13 @@
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
 
-    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
-    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+//    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+//    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
-//        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,5,10,10)];
-//        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
-//        [msgView addSubview:sourceIcon];
-        lblMsg.text = locItemPeople.userInfo.lastSeenAt;
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,3,15,15)];
+        sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
+        [msgView addSubview:sourceIcon];
+        lblMsg.text = [NSString stringWithFormat:@"     at %@",locItemPeople.userInfo.lastSeenAt];;
         NSLog(@"locItemPeople.userInfo.lastSeenAtDate %@",[UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate]);
     }
     else 
@@ -105,10 +105,19 @@
                                   distSize.width,
                                   distSize.height);
     UILabel *lblDist = [[UILabel alloc] initWithFrame:distFrame];
-    lblDist.text = distStr;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        lblDist.text = [UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate];   
+        lblDist.textColor = [UIColor blackColor];
+
+    }
+    else
+    {
+        lblDist.text = distStr;
+        lblDist.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0];
+    }
     lblDist.backgroundColor = [UIColor clearColor];
     lblDist.font = [UIFont fontWithName:@"Helvetica" size:12.0f];
-    lblDist.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0];
     [infoView addSubview:lblDist];
     [lblDist release];
 
