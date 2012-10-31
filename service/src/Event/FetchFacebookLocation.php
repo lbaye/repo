@@ -190,16 +190,6 @@ class FetchFacebookLocation extends Base {
         return $extUser;
     }
 
-    private function setCurrentAddress(ExtUser &$extUser) {
-        try {
-            $this->debug("Retrieving location address for - {$extUser->getFirstName()}'s current location");
-            $extUser->setLastSeenAt($this->_getAddress($extUser->getCurrentLocation()));
-            $this->debug("User - {$extUser->getFirstName()} is at {$extUser->getLastSeenAt()}");
-        } catch (\Exception $e) {
-            $this->warn("Failed to retrieve address from google service - " . $e);
-        }
-    }
-
     private function getCheckinsWithMetaData(FB &$facebook, $fbCheckIns) {
         $this->debug("Building checkins with meta data");
 
@@ -295,17 +285,5 @@ class FetchFacebookLocation extends Base {
 
         return array();
 
-    }
-
-    private function _getAddress($current_location) {
-        $reverseGeo = new \Service\Geolocation\Reverse(
-            $this->serviceConf['googlePlace']['apiKey']);
-
-        $address = $reverseGeo->getAddress($current_location);
-        $this->debug('Found reversed geo location - ' .
-                     "$address ({$current_location['lat']}" . ', ' .
-                     "{$current_location['lng']})");
-
-        return $address;
     }
 }
