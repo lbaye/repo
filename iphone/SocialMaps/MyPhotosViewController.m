@@ -16,7 +16,7 @@
 #import "AppDelegate.h"
 
 @interface MyPhotosViewController ()
--(void)scrollToPage:(int)page;
+-(void)scrollToPage:(int)page:(BOOL)animated;
 @end
 
 @implementation MyPhotosViewController
@@ -98,13 +98,13 @@ AppDelegate *smAppdelegate;
 -(IBAction)viewPrevImage:(id)sender
 {
     NSLog(@"view previous img");
-    [self scrollToPage:zoomIndex-1];
+    [self scrollToPage:zoomIndex-1:YES];
 }
 
 -(IBAction)viewNextImage:(id)sender
 {
     NSLog(@"view next img");
-    [self scrollToPage:zoomIndex+1];
+    [self scrollToPage:zoomIndex+1:YES];
 }
 
 -(IBAction)myPhotosAction:(id)sender
@@ -129,7 +129,7 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)gotoZoomView:(id)sender
 {
-    [self scrollToPage:[sender tag]];
+    [self scrollToPage:[sender tag]:NO];
     CGFloat xpos = self.view.frame.origin.x;
     CGFloat ypos = self.view.frame.origin.y;
     zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
@@ -337,12 +337,12 @@ AppDelegate *smAppdelegate;
     }
 }
 
--(void)scrollToPage:(int)page
+-(void)scrollToPage:(int)page:(BOOL)animated
 {
     CGRect frame = customScrollView.frame;
     frame.origin.x = frame.size.width * page;
     frame.origin.y = 0;
-    [customScrollView scrollRectToVisible:frame animated:YES];
+    [customScrollView scrollRectToVisible:frame animated:animated];
 }
 
 -(void)loadData:(NSMutableArray *)photoListArr
@@ -397,8 +397,8 @@ AppDelegate *smAppdelegate;
     {
         [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList1 objectAtIndex:[sender.view tag]];
+    Photo *photo=[[Photo alloc] init];
+    photo=[filteredList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
