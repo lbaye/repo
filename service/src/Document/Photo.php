@@ -115,11 +115,17 @@ class Photo extends Content
         $hash['image'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUri()));
 
         $location = $this->getLocation();
-        $location_hash = array(
-         'lat' => $location->getLat(),
-         'lng' => $location->getLng()
+        if ($location)
+            $hash['location'] = $location->toArray();
+
+        $owner = $this->getOwner();
+        $hash['owner'] = array(
+            'id' => $owner->getId(),
+            'firstName' => $owner->getFirstName(),
+            'lastName' => $owner->getLastName(),
+            'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
         );
-        $hash['location'] = $location_hash;
+
         return $hash;
     }
 }

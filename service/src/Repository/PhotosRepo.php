@@ -33,26 +33,6 @@ class PhotosRepo extends Base
         return $photo;
     }
 
-    public function setPhoto($owner, $title, $description, $uri, $lat, $lng, $photo = null) {
-        if (is_null($photo)) $photo = new Photo();
-
-        if(isset($lat) && isset($lng)){
-            $data = array(
-               'lat' => $lat,
-               'lng' => $lng
-            );
-            $photo->setLocation(new \Document\Location($data));
-        }
-
-        $photo->setOwner($owner);
-        $photo->setDescription($description);
-        $photo->setTitle($title);
-        $photo->setUri($uri);
-
-        return $photo;
-
-    }
-
     public function getByUser(UserDocument $user)
     {
         return $this->dm->createQueryBuilder()

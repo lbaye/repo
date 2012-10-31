@@ -51,8 +51,9 @@ class Photos extends Base
             ImageHelper::saveImageFromBase64($imageData, ROOTDIR . $filePath);
             $uri = $filePath . "?" . $timeStamp;
         }
+        $postData['uri'] = $uri;
 
-        $photo = $this->photoRepo->setPhoto($user, $postData['title'], $postData['description'], $uri, $postData['lat'], $postData['lng']);
+        $photo = $this->photoRepo->map($postData, $this->user);
         $this->photoRepo->insert($photo);
         return $this->_generateResponse($photo->toArray(), Status::CREATED);
     }
