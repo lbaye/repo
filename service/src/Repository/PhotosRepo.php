@@ -12,24 +12,25 @@ use Helper\Image as ImageHelper;
 
 class PhotosRepo extends Base
 {
-    public function map(array $data, Photo $photo = null)
+    public function map(array $data, UserDocument $owner, Photo $photo = null)
     {
         if (is_null($photo)) $photo = new Photo();
-        foreach ($data as $key => $value) $photo->{'set' . ucfirst($key)}($value);
 
-        return $photo;
-    }
+        $setIfExistFields = array('title', 'description', 'uri');
 
-    public function set_photo($owner, $title, $description, $uri, $photo = null) {
-        if (is_null($photo)) $photo = new Photo();
+        foreach($setIfExistFields as $field) {
+            if (isset($data[$field]) && !is_null($data[$field])) {
+                $photo->{"set{$field}"}($data[$field]);
+            }
+        }
+
+        if(isset($data['lat']) && isset($data['lng'])){
+            $photo->setLocation(new \Document\Location($data));
+        }
 
         $photo->setOwner($owner);
-        $photo->setDescription($description);
-        $photo->setTitle($title);
-        $photo->setUri($uri);
 
         return $photo;
-
     }
 
     public function getByUser(UserDocument $user)
@@ -42,4 +43,24 @@ class PhotosRepo extends Base
             ->getQuery()
             ->execute();
     }
+
+    public function update($data, $id) {
+        $photo = $this->find($id);
+
+        if (false === $photo) {
+            throw new \Exception\ResourceNotFoundException();
+        }
+
+        $photo = $this->map($data, $photo->getOwner(), $photo);
+
+        if ($photo->isValid() === false) {
+            return false;
+        }
+
+        $this->dm->persist($photo);
+        $this->dm->flush();
+
+        return $photo;
+    }
+
 }
