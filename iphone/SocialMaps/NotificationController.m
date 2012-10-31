@@ -500,7 +500,7 @@ NSMutableArray *unreadMesg;
                         withStrokeColor:[UIColor grayColor]];
         NSString *msg = [NSString stringWithFormat:@"Congratulations! You and %@ are now friends!", req.notifSender];
         CustomAlert *acceptAlert = [[CustomAlert alloc]
-                                   initWithTitle:@"Frend request accepted!"
+                                   initWithTitle:@"Friend request accepted!"
                                    message:msg
                                    delegate:nil
                                    cancelButtonTitle:@"Done"
