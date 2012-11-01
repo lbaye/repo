@@ -23,6 +23,7 @@
 #import "AppDelegate.h"
 #import "UserCircle.h"
 #import "NewLocationItem.h"
+#import "Globals.h"
 
 #define ROW_HEIGHT 62
 
@@ -77,7 +78,15 @@
         SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:subTitle bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
         [self addSubview:friendSharingView];
         
-        if (smAppDelegate.locSharingPrefs.circles.count > 0) {
+        // Don't show circle settings if no circle
+        int numCustomCircles=0;
+        for (int i=0; i < circleListGlobalArray.count; i++) {
+            UserCircle *aCircle = (UserCircle*) [circleListGlobalArray objectAtIndex:i];
+            if (aCircle.type != CircleTypeSystem) {
+                numCustomCircles++;
+            }
+        }
+        if (numCustomCircles > 0) {
             SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
             circleSharingView.backgroundColor = [UIColor clearColor];
             [self addSubview:circleSharingView];
@@ -85,12 +94,8 @@
             startTag++;
         }
         
-        if (smAppDelegate.locSharingPrefs.platforms.count > 0) {
-            SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-            [self addSubview:platformSharingView];
-        } else {
-            startTag++;
-        }
+        SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        [self addSubview:platformSharingView];
         
         SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
         [self addSubview:strangersSharingView];
@@ -103,6 +108,12 @@
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
                                     (ROW_HEIGHT+2)*rowNum);
     [self setContentSize:contentSize];   
+    
+    // Add a line at the bottom
+    UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
+    sep.backgroundColor = [UIColor lightGrayColor];
+    sep.tag = 30000;
+    [self addSubview:sep];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -128,6 +139,10 @@
             }
         }
     }
+    // Move the line to the bottom of the scroll view
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.contentSize.height, self.frame.size.width, 1);
+    UIView *lineView = [self viewWithTag:30000];
+    lineView.frame = newFrame;
 }
 
 - (void) addLocSharingPlatformView:(int)tag prefs:(int)prefs{

@@ -83,6 +83,15 @@
 
         SettingsMaster *circleGroup = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:aCircle.circleName subTitle:@"" bgImage:@"" type:SettingsDisplayTypeExpand sender:self tag:startTag++ level:1]; 
         circleGroup.backgroundColor = [UIColor clearColor];
+        
+        // Dividers
+        if (i > 0) {
+            UIView *sep;
+            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
+            sep.backgroundColor = [UIColor lightGrayColor];
+            [circleGroup addSubview:sep];
+        }
+
         [self addSubview:circleGroup];
     }
     
