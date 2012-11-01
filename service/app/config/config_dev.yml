@@ -1,10 +1,10 @@
 web:
-  root: http://203.76.126.69/social_maps/web
+  root: http://192.168.1.71/social_maps/web
 
 mongodb:
   host: 'localhost'
   port: 27017
-  database: 'socialmaps_staged'
+  database: 'socialmaps'
 
 imagetype:
   thumb:
