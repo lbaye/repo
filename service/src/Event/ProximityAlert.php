@@ -10,7 +10,8 @@ class ProximityAlert extends Base {
      */
     protected $userRepository;
 
-    const DEFAULT_RADIUS = 4;
+    const ACCEPTABLE_DISTANCE_IN_METERS = 100;
+    const MAX_ALLOWED_DISTANCE = 0.033; # 3 KM
 
     protected function setFunction() {
         $this->function = 'proximity_alert';
@@ -23,15 +24,17 @@ class ProximityAlert extends Base {
         $this->debug('Received workload - ' . $job->workload());
 
         try {
-            if ($this->_stillValid($workload)) {
-                $this->debug("Is still valid request");
+            if ($this->isValidRequest($workload) && $this->isFreshRequest($workload)) {
+                $this->debug("Still valid request");
+                $this->debug('Looking up user by id - ' . $workload->user_id);
 
                 $this->userRepository = $this->services['dm']->getRepository('Document\User');
                 $user = $this->userRepository->find($workload->user_id);
 
                 if (!empty($user)) {
-                    $this->userRepository->refresh($user);
-                    $this->sendNotificationToNearbyFriends($user);
+                    $this->debug('Searching nearby friends for user - ' . $user->getFirstName());
+                    $this->services['dm']->refresh($user);
+                    $this->notifyNearbyFriends($user);
                 }
                 $this->services['dm']->clear();
             } else {
@@ -46,113 +49,151 @@ class ProximityAlert extends Base {
         $this->checkMemoryAfter();
     }
 
-    private function sendNotificationToNearbyFriends(\Document\User $user) {
+    private function isValidRequest($workload) {
+        return !empty($workload->user_id);
+    }
+
+    private function notifyNearbyFriends(\Document\User $user) {
         if (empty($user))
             return;
 
         $this->debug("Sending notification to {$user->getFirstName()}'s nearby friends");
-        $friends = $this->services['dm']
-                ->createQueryBuilder('Document\User')
-                ->select('firstName', 'currentLocation')
-                ->field('id')->in($user->getFriends())
-                ->hydrate(false)
-                ->getQuery()->execute();
+        $this->logCurrentLocation($user);
 
-        // Retrieve target user's current location
+        # If current location is not 100 meters far from last location
+        # Do nothing
+
+        # Find friends from the nearby radius
+        $friends = $this->findNearbyFriends($user);
+        $this->debug('Found ' . count($friends) . ' friends from - ' . $user->getFirstName());
+
+        if (count($friends) > 0) {
+            # Inform friends about user's presence (one to one notification)
+            $this->informFriends($user, $friends);
+
+            # Inform user about nearby friends (many to one notification)
+            $this->informUser($user, $friends);
+        } else {
+            $this->debug('Sad! No one is nearby ' . $user->getFirstName());
+        }
+    }
+
+    private function findNearbyFriends(\Document\User $user) {
         $from = $user->getCurrentLocation();
 
-        // Collect list of friends who needs to be notified.
-        $friendsToBeNotified = array();
-        $friendsNotifyAbout = array();
+        $friendIds = array();
+        $friends = $user->getFriends();
+        foreach ($friends as $friendId) $friendIds[] = $friendId;
 
-        $friendsNotificationData = $this->_createNotificationData($user);
+        $friends = $this->services['dm']
+                ->createQueryBuilder('Document\User')
+                ->select('firstName', 'currentLocation', 'pushSettings')
+                ->field('id')->in($friendIds)
+                ->hydrate(false)
+                ->field('currentLocation')->near($from['lng'], $from['lat']);
 
-        foreach ($friends as $friend) {
-            try {
-                // Retrieve friend's current location
-                $to = $friend['currentLocation'];
+        $query = $friends->getQueryArray();
+        $query['currentLocation']['$maxDistance'] = self::MAX_ALLOWED_DISTANCE;
+        $friends->setQueryArray($query);
 
-                // Calculate distance between friend and target user
-                $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
+        $this->debug('QUERY - ' . json_encode($friends->getQuery()->debug()));
 
-                // Determine whether target user should be notified if friend with in the range
-                if ($this->_shouldNotify($user, $friend, $distance)) {
-                    $userNotificationData = $this->_createNotificationData($friend);
-                    \Helper\Notification::send($userNotificationData, array($user));
-                    $friendsNotifyAbout[] = $friend;
-                }
-
-                // Determine whether friend should be notified if user is in range
-                if ($this->_shouldNotify($friend, $user, $distance)) {
-                    $friendsToBeNotified[] = $friend;
-
-                    $this->_sendPushNotification($friend, $friendsNotificationData);
-                }
-            } catch (\Exception $e) {
-                $this->warn('Failed to determine nearby friends to send proximity alert - ' . $e->getMessage());
-            }
-        }
-
-        // Send grouped push notification about friends to user
-        if (count($friendsNotifyAbout) > 0) {
-            $this->_sendPushNotification($user, $this->_createNotificationData($friendsNotifyAbout));
-        }
-
-        // Send SM notification to all friends
-        \Helper\Notification::send($friendsNotificationData, $friendsToBeNotified);
+        return $friends->getQuery()->execute();
     }
 
-    private function _sendPushNotification($user, $userNotificationData) {
-        $pushSettings = $user->getPushSettings();
-
-        $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
-        if ($pushNotifier)
-            echo $pushNotifier->send($userNotificationData, array($pushSettings['device_id']));
+    private function logCurrentLocation($user) {
+        $this->debug($user->getFirstName() . '\'s current location - ' .
+                     json_encode($user->getCurrentLocation()));
     }
 
-    private function _shouldNotify($user, $friend, $distance) {
-        if (is_array($user))
-            $notificationSettings = isset($user['notificationSettings']) ? $user['notificationSettings'] : array();
-        else
-            $notificationSettings = $user->getNotificationSettings();
-
-        if (is_array($friend))
-            $visible = isset($friend['visible']) ? $friend['visible'] : false;
-        else
-            $visible = $friend->getVisible();
-
-        return $distance <= self::DEFAULT_RADIUS &&
-               $visible &&
-               $notificationSettings['proximity_alerts']['sm'];
+    private function informUser(\Document\User $user, $friends) {
+        $this->debug('Informing user - ' . $user->getFirstName() . ' about his nearby friends');
+        $this->sendNotification(
+            $user, $this->createGroupNotificationMessage($friends));
     }
 
-    private function _createNotificationData($friend) {
-        if (is_array($friend)) {
-            $groupedNames = $this->_createGroupedFriendNames($friend);
-            return array(
-                'title' => 'Your friend ' . $groupedNames . ' here!',
-                'objectType' => 'proximity_alert',
-                'message' => 'Your friend ' . $groupedNames . ' near your location!'
-            );
+    private function informFriends(\Document\User $user, $friends) {
+        $this->debug('Informing friends about - ' . $user->getFirstName() . ' presence.');
 
-        } else {
-            return array(
-                'title' => 'Your friend ' . $friend->getName() . ' is here!',
-                'photoUrl' => $friend->getAvatar(),
-                'objectId' => $friend->getId(),
-                'objectType' => 'proximity_alert',
-                'message' => 'Your friend ' . $friend->getName() . ' is near your location!'
-            );
+        # Iterate through each friend
+        foreach ($friends as $friendHash) {
+            $friend = $this->userRepository->find($friendHash['_id']->{'$id'});
+            $this->userRepository->refresh($friend);
+
+            # TODO: if friend allows inform her
+            # Create in-app notification
+            # Send push notification
+            $this->sendNotification(
+                $friend, $this->createNotificationMessage($user, $friend));
         }
     }
 
-    private function _createGroupedFriendNames($friends) {
+    private function sendNotification(\Document\User $user, array $notification) {
+        $this->debug("Sending notification to - " . $user->getFirstName());
+
+        \Helper\Notification::send($notification, array($user));
+        $this->pushNotification($user, $notification);
+
+        return $notification;
+    }
+
+    private function createNotificationMessage(\Document\User $user, \Document\User $friend) {
+        $from = $user->getCurrentLocation();
+        $to = $friend->getCurrentLocation();
+
+        $distance = \Helper\Location::distance(
+            $from['lat'], $from['lng'],
+            $to['lat'], $to['lng']); // In METER
+
+        $message = $user->getFirstName() . ' is ' . ceil($distance) . 'm away';
+        return array(
+            'title' => $message,
+            'badge' => 1,
+            'tabCounts' => '0|0|0',
+            'photoUrl' => $user->getAvatar(),
+            'objectId' => $user->getId(),
+            'objectType' => 'proximity_alert',
+            'message' => $message
+        );
+    }
+
+    private function createGroupNotificationMessage(\Doctrine\ODM\MongoDB\Cursor $friendsCursor) {
+        $friends = array_values($friendsCursor->toArray());
+
         if (count($friends) > 2) {
-            return $friends[0]->getFirstName() . ', ' . $friends[1]->getFirstName() . ' and ' . (count($friends) - 2) . ' others are';
+            $message = $friends[0]['firstName'] . ', ' .
+                       $friends[1]['firstName'] . ' and ' .
+                       (count($friends) - 2) . ' others are';
         } else if (count($friends) == 2) {
-            return $friends[0]->getFirstName() . ' and ' . $friends[1]->getFirstName() . ' are';
+            $message = $friends[0]['firstName'] . ' and ' .
+                       $friends[1]['firstName'] . ' are';
         } else {
-            return $friends[0]->getName() . ' is ';
+            $name = implode(" ", array_filter(
+                                   array($friends[0]['firstName'],
+                                        $friends[0]['lastName'])));
+            $message = $name . ' is';
         }
+
+        $message .= ' near you!';
+
+        return array(
+            'title' => $message,
+            'badge' => 1,
+            'tabCounts' => '0|0|0',
+            'objectType' => 'proximity_alert',
+            'message' => $message
+        );
+    }
+
+    private function pushNotification(\Document\User $user, $notification) {
+        $this->debug('Sending push notification to ' . $user->getFirstName());
+        $this->debug(print_r($notification, true));
+
+        $pushSettings = $user->getPushSettings();
+        $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+        $this->debug('Sending notification to ' . @$pushSettings['device_type']);
+
+        if ($pushNotifier)
+            echo $pushNotifier->send($notification, array($pushSettings['device_id']));
     }
 }

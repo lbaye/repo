@@ -37,6 +37,9 @@ class ExternalUser {
     /** @ODM\String */
     protected $email;
 
+    /** @ODM\String */
+    protected $gender;
+
     /** @ODM\Date */
     protected $createdAt;
 
@@ -51,7 +54,7 @@ class ExternalUser {
 
     public function toArray() {
         $exposed_fields = array('id', 'smUserId', 'refId', 'refType', 'avatar',
-                                'firstName', 'lastName', 'currentLocation');
+                                'firstName', 'lastName', 'currentLocation', 'gender');
         $values = array();
 
         foreach ($exposed_fields as $field)
@@ -148,5 +151,12 @@ class ExternalUser {
         return $this->createdAt;
     }
 
+    public function setGender($gender) {
+        $this->gender = $gender;
+    }
+
+    public function getGender() {
+        return $this->gender;
+    }
 
 }

@@ -2,11 +2,15 @@
 
 namespace Service\Location;
 
-class Facebook extends Base
-{
-    public function getFriendLocation($userId, $authToken)
-    {
-        $fql = 'SELECT id, author_uid, page_id, type, coords, timestamp, tagged_uids FROM location_post WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1=me())';
+class Facebook extends Base {
+    public function getFriendLocation($userId, $authToken) {
+        $fql = '
+            SELECT id, author_uid, page_id, type, coords, timestamp, tagged_uids
+            FROM location_post
+            WHERE author_uid
+            IN (SELECT uid2 FROM friend WHERE uid1=me())
+            ';
+
         $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
@@ -18,48 +22,65 @@ class Facebook extends Base
      * @param  $authToken string
      * @return array of checkins
      */
-    public function getFbFriendsCheckins()
-    {
-        $fql = 'SELECT author_uid, coords,timestamp FROM checkin WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me())';
+    public function getFriendsCheckins() {
+        $fql = '
+            SELECT author_uid, coords, page_id, timestamp
+            FROM checkin
+            WHERE author_uid
+            IN (SELECT uid2 FROM friend WHERE uid1 = me())
+            ';
+
         $fbCheckins = $this->fetchFqlResult($fql);
 
         return (!empty($fbCheckins)) ? $fbCheckins : array();
     }
 
-    public function getFbFriendsInfo(array $friendIds)
-    {
-        $fql = 'SELECT uid, first_name, last_name, pic_square, email FROM user WHERE uid IN (' . implode(', ', $friendIds) . ')';
+    public function getFriends(array $friendIds) {
+        $fql = '
+            SELECT uid, first_name, last_name, pic_square, sex, email
+            FROM user
+            WHERE uid 
+            IN (' . implode(', ', $friendIds) . ')
+            ';
+
         $results = $this->fetchFqlResult($fql);
 
         return ($results) ? $results : array();
     }
 
-    public function getCheckInByAuth($userId, $authToken)
-    {
+    public function getPages(array $pageIds) {
+        $fql = '
+            SELECT
+                page_id, name, location
+            FROM page
+            WHERE page_id IN (' . implode(', ', $pageIds) . ')
+            ';
+        $results = $this->fetchFqlResult($fql);
+        return (!empty($results)) ? $results : array();
+    }
+
+    public function getCheckInByAuth($userId, $authToken) {
         $fql = 'SELECT author_uid,coords,timestamp FROM checkin WHERE author_uid = $userId  AND author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) ORDER by timestamp desc';
         $results = $this->fetchFqlResult($fql);
         return ($results) ? $results : array();
     }
 
 
-    public function getPublicProfile($facebookId)
-    {
+    public function getPublicProfile($facebookId) {
         $profile = $this->fetchGraphResult($facebookId);
         return $profile;
     }
 
-    public function getPublicAvatar($facebookId)
-    {
+    public function getPublicAvatar($facebookId) {
         $avatar = $this->getProfilePicture($facebookId);
         return $avatar;
     }
 
-    private function fetchFqlResult($q)
-    {
+    private function fetchFqlResult($q) {
         $fql_query_url = 'https://graph.facebook.com' . '/fql?q='
-                       . urlencode($q)
-                       . '&access_token='
-                       . urlencode($this->getFacebookAuthToken());
+                         . urlencode($q)
+                         . '&access_token='
+                         . urlencode($this->getFacebookAuthToken());
 
         $fql_query_result = @file_get_contents($fql_query_url);
 
@@ -72,8 +93,7 @@ class Facebook extends Base
         }
     }
 
-    private function fetchGraphResult($path, array $params = array())
-    {
+    private function fetchGraphResult($path, array $params = array()) {
         $graphUrl = 'https://graph.facebook.com' . '/' . $path .
                     '?access_token=' . urlencode($this->getFacebookAuthToken());
         foreach ($params as $key => $value) {
@@ -92,8 +112,7 @@ class Facebook extends Base
 
     }
 
-    private function getProfilePicture($facebookId)
-    {
+    private function getProfilePicture($facebookId) {
         $picUrl = 'https://graph.facebook.com' . '/' . $facebookId . '/picture';
 
         @file_get_contents($picUrl);

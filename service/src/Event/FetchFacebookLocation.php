@@ -7,6 +7,7 @@ use Repository\UserRepo as UserRepo;
 use Document\User as User;
 use Document\ExternalUser as ExtUser;
 use Service\Location\Facebook as FB;
+use \Doctrine\ODM\MongoDB\DocumentManager as DM;
 
 class FetchFacebookLocation extends Base {
 
@@ -47,14 +48,20 @@ class FetchFacebookLocation extends Base {
                      $facebookAuthToken);
 
         # Retrieve all facebook friend's checkins
-        $fbCheckIns = $facebook->getFbFriendsCheckins();
-        $this->debug('Found ' . @count($fbCheckIns['data']) .
-                                 ' facebook checkins from ' . $smUser->getFirstName() . ' checkins');
+        $fbCheckIns = $facebook->getFriendsCheckins();
+        $totalCheckins = @count($fbCheckIns['data']);
+        $this->debug('Found ' . $totalCheckins . ' facebook checkins from ' .
+                     $smUser->getFirstName() . ' checkins');
 
         # Retrieve checkins with meta data
         if (!empty($fbCheckIns)) {
-            $fbCheckIns = $this->orderCheckinsByTimestamp($this->keepSingleCheckinPerUser($fbCheckIns['data']));
-            $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
+            $fbCheckIns = $this->keepSingleCheckinPerUser($this->orderCheckinsByTimestamp($fbCheckIns['data']));
+
+            $this->debug('Out of ' . $totalCheckins . ' only ' . count($fbCheckIns) . ' none expired checkins found.');
+
+            if (count($fbCheckIns) > 0) {
+                $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
+            }
         } else {
             $this->debug("No facebook checkins found");
         }
@@ -81,6 +88,9 @@ class FetchFacebookLocation extends Base {
         return array_values(array_slice($userCheckinMap, 0, self::MAX_CHECKINS));
     }
 
+    /*
+     * Order checkins by their creation date.
+     */
     private function orderCheckinsByTimestamp(array $fbCheckIns) {
         $this->debug('Ordering ' . count($fbCheckIns) . ' by timestamp');
         $orderedCheckins = array();
@@ -95,11 +105,7 @@ class FetchFacebookLocation extends Base {
     }
 
     private function importExtUsersFromCheckins(
-        \Doctrine\ODM\MongoDB\DocumentManager $dm,
-        ExtUserRepo $extUserRepo,
-        User $smUser,
-        array $fbCheckIns,
-        FB $facebook) {
+        DM $dm, ExtUserRepo $extUserRepo, User $smUser, array $fbCheckIns, FB $facebook) {
 
         $this->info('Importing external users (' . count($fbCheckIns) .
                     ') from ' . $smUser->getFirstName() . ' facebook checkins');
@@ -155,7 +161,6 @@ class FetchFacebookLocation extends Base {
 
             $extUser = $extUserRepo->map($checkinWithMeta);
             $extUser->setSmFriends(array($smUser->getId()));
-            $this->setCurrentAddress($extUser);
 
             $changed = true;
 
@@ -170,7 +175,6 @@ class FetchFacebookLocation extends Base {
             ) {
                 $this->debug("Location changed for user - {$extUser->getFirstName()}");
                 $extUser = $extUserRepo->map($checkinWithMeta, $extUser);
-                $this->setCurrentAddress($extUser);
 
                 $changed = true;
             }
@@ -186,20 +190,11 @@ class FetchFacebookLocation extends Base {
         return $extUser;
     }
 
-    private function setCurrentAddress(ExtUser &$extUser) {
-        try {
-            $this->debug("Retrieving location address for - {$extUser->getFirstName()}'s current location");
-            $extUser->setLastSeenAt($this->_getAddress($extUser->getCurrentLocation()));
-            $this->debug("User - {$extUser->getFirstName()} is at {$extUser->getLastSeenAt()}");
-        } catch (\Exception $e) {
-            $this->warn("Failed to retrieve address from google service - " . $e);
-        }
-    }
-
-    private function getCheckinsWithMetaData(&$facebook, $fbCheckIns) {
+    private function getCheckinsWithMetaData(FB &$facebook, $fbCheckIns) {
         $this->debug("Building checkins with meta data");
 
         $checkinsInfo = array();
+        $pageIds = array();
 
         # Iterate through each checkin data and map into a hash map
         for ($i = 0; $i < count($fbCheckIns); $i++) {
@@ -207,40 +202,52 @@ class FetchFacebookLocation extends Base {
             $fbFriendId = $fbCheckIn['author_uid'];
             $fbCoords = $fbCheckIn['coords'];
             $fbTimestamp = $fbCheckIn['timestamp'];
+            $fbPageId = $fbCheckIn['page_id'];
 
             $checkinsInfo[$fbFriendId] = array(
                 'friendId' => $fbFriendId,
                 'coords' => $fbCoords,
-                'timestamp' => $fbTimestamp
+                'timestamp' => $fbTimestamp,
+                'pageId' => $fbPageId
             );
+
+            $pageIds[] = $fbPageId;
         }
 
         # Retrieve all users information
         $this->debug("Retrieving checkin associated friends detail information");
-        $users = $facebook->getFbFriendsInfo(array_keys($checkinsInfo));
+        $users = $facebook->getFriends(array_keys($checkinsInfo));
+
+        $this->debug('Retrieving checkin detail information');
+        $pages = $this->mapByPageId($facebook->getPages($pageIds));
 
         $fullCheckinsInfo = array();
 
         # Map users info with user id
-        foreach ($users['data'] as $user) {
-            $this->debug('Building checkin information for user - ' . $user['first_name']);
-            $uid = $user['uid'];
-            $info = $checkinsInfo[$uid];
+        foreach ($users['data'] as $userInfo) {
+            $this->debug('Building checkin information for user - ' . $userInfo['first_name']);
+            $uid = $userInfo['uid'];
+            $checkinInfo = $checkinsInfo[$uid];
+            $pageInfo = $pages[$checkinInfo['pageId']];
+            $this->debug('Found page info - ' . json_encode($pageInfo));
 
             $created_at = new \DateTime();
-            $created_at->setTimestamp((int)$info['timestamp']);
+            $created_at->setTimestamp((int)$checkinInfo['timestamp']);
 
             $fullCheckinsInfo[$uid] = array(
                 'refId' => $uid,
                 'refType' => \Document\ExternalUser::SOURCE_FB,
-                'firstName' => $user['first_name'],
-                'lastName' => $user['last_name'],
-                'email' => $user['email'],
-                'avatar' => $user['pic_square'],
+                'firstName' => $userInfo['first_name'],
+                'lastName' => $userInfo['last_name'],
+                'email' => $userInfo['email'],
+                'avatar' => $userInfo['pic_square'],
+                'gender' => $userInfo['sex'],
                 'createdAt' => $created_at,
+                'lastSeenAt' => $pageInfo['name'],
                 'currentLocation' => array(
-                    'lat' => $info['coords']['latitude'],
-                    'lng' => $info['coords']['longitude']
+                    'lat' => $checkinInfo['coords']['latitude'],
+                    'lng' => $checkinInfo['coords']['longitude'],
+                    'address' => $this->buildAddress($pageInfo)
                 )
             );
         }
@@ -248,5 +255,34 @@ class FetchFacebookLocation extends Base {
         $this->debug("Found and constructed checkins with meta data");
 
         return array_values($fullCheckinsInfo);
+    }
+
+    private function buildAddress(array $info) {
+        $location = $info['location'];
+        if (!empty($location)) {
+            return implode(", ", array_filter(array($location['street'], $location['city'], $location['country'])));
+        }
+
+        return null;
+    }
+
+    private function mapByPageId(array $pagesResult) {
+        $this->debug('Remapping pages with page_id as key and data as value');
+
+        if (!empty($pagesResult)) {
+            $pages = $pagesResult['data'];
+
+            if (!empty($pages)) {
+                $map = array();
+                foreach ($pages as $page) $map[$page['page_id']] = $page;
+                return $map;
+            } else {
+                $this->warn('Could not find pages information');
+            }
+        } else {
+            $this->warn('Could not find pages information');
+        }
+
+        return array();
     }
 }

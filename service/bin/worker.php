@@ -13,6 +13,8 @@ defined('APPLICATION_ENV')
 
 define('ROOTDIR', __DIR__);
 
+$_ENV['APPLICATION_ENV'] = APPLICATION_ENV;
+
 # Initiate bootstrapper
 $bootstrap = new Bootstrap(APPLICATION_ENV);
 

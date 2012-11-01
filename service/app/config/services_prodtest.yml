@@ -1,0 +1,11 @@
+googlePlace:
+  apiKey: AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw
+
+googleGCM:
+  apiKey: AIzaSyCcJ6Oq6dGtVa9j3sT5kYHxxhmgQB5A020
+  endPoint: https://android.googleapis.com/gcm/send
+
+iOSPushNotification:
+  pemFile: SM_Push_Cert_Key.pem
+  endPoint: ssl://gateway.sandbox.push.apple.com:2195
+  passphrase: martin

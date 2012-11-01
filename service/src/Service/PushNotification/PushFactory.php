@@ -34,7 +34,13 @@ class PushFactory
 
     private static function _getServiceConfig()
     {
+        $env = $_ENV['APPLICATION_ENV'];
+        $env = empty($env) ? '' : '_' . $env;
+
+        $config_path = ROOTDIR .'/../app/config/services' . $env . '.yml';
+        echo $config_path . PHP_EOL;
+
         $yaml = new Parser();
-        return $yaml->parse(file_get_contents(ROOTDIR .'/../app/config/services.yml'));
+        return $yaml->parse(file_get_contents($config_path));
     }
 }

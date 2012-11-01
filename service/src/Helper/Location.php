@@ -17,10 +17,11 @@ class Location
      *                     where: 'm' is statute miles
      *                            'k' is kilometers (default)
      *                            'n' is nautical miles
+     *                            'me' is meter
      *
      * @return float
      */
-    public static function distance($lat1, $lon1, $lat2, $lon2, $unit = 'k')
+    public static function distance($lat1, $lon1, $lat2, $lon2, $unit = 'ME')
     {
         if (!empty($lat1) && !empty($lat2) && !empty($lon1) && !empty($lon2)) {
             if ($lat1 == $lat2 && $lon1 == $lon2) {
@@ -40,7 +41,7 @@ class Location
         $miles = $dist * 60 * 1.1515;
         $unit  = strtoupper($unit);
 
-        if ($unit == "K") {
+        if ($unit == "ME") {
             return ($miles * 1609.344);
         } else if ($unit == "N") {
             return ($miles * 0.8684);

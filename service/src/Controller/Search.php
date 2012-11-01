@@ -20,6 +20,11 @@ class Search extends Base {
      */
     const DEFAULT_RADIUS = .017985612;
 
+    /**
+     * Maximum allowed older checkins to show in the list.
+     */
+    const MAX_ALLOWED_OLDER_CHECKINS = '12 hours ago';
+
     private $extUserRepo;
 
     /**
@@ -104,6 +109,7 @@ class Search extends Base {
         $users = array_values(
             $this->dm->createQueryBuilder('Document\ExternalUser')
                     ->field('smFriends')->equals($this->user->getId())
+                    ->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
                     ->hydrate(false)
                     ->skip(0)
                     ->limit(200)
@@ -113,6 +119,14 @@ class Search extends Base {
             $user['distance'] = \Helper\Location::distance(
                 $location['lat'], $location['lng'],
                 $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+
+            $mongoDate = $user['createdAt'];
+            $now = new \DateTime();
+            $now->setTimestamp($mongoDate->sec);
+
+            $user['createdAt'] = array(
+                'date' => $now
+            );
         }
 
         return $users;
