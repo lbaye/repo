@@ -33,17 +33,15 @@
         [img setContentMode:UIViewContentModeScaleAspectFill];
         [self addSubview:img];
         
-        CGRect btnFrame = CGRectMake(2, (self.frame.size.height-20)/2, 
-                                     10, 20);
+        CGRect btnFrame = CGRectMake(0, 0, self.frame.size.width/4, self.frame.size.height);
         UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         leftBtn.frame = btnFrame;
         [leftBtn setImage:[UIImage imageNamed:@"radius_left_ar.png"] forState:UIControlStateNormal];
         [leftBtn addTarget:self action:@selector(decreaseCount:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:leftBtn];
         
-        btnFrame = CGRectMake(self.frame.size.width-2-10, 
-                              (self.frame.size.height-20)/2, 
-                              10, 20);
+        btnFrame = CGRectMake(self.frame.size.width/4*3, 0, self.frame.size.width/4, self.frame.size.height);
+
         UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         rightBtn.frame = btnFrame;
         [rightBtn setImage:[UIImage imageNamed:@"radius_right_ar.png"] forState:UIControlStateNormal];
