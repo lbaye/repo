@@ -16,6 +16,7 @@
 #import "RadioButtonItem.h"
 #import "LocationSharingPref.h"
 #import "AppDelegate.h"
+#import "UITextField+Scrolling.h"
 
 #define ROW_HEIGHT 62
 
@@ -74,6 +75,11 @@
     [self addSubview:infoView];
     //[self addSubview:unitView];
     
+    // Add a line at the bottom
+    UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
+    sep.backgroundColor = [UIColor lightGrayColor];
+    sep.tag = 3000;
+    [self addSubview:sep];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -89,6 +95,11 @@
             aview.frame = newRect;
         }
     }
+    
+    // Move the line to the bottom of the scroll view
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.contentSize.height, self.frame.size.width, 1);
+    UIView *lineView = [self viewWithTag:3000];
+    lineView.frame = newFrame;
 }
 
 - (void) addPersonalInfoView:(int)tag {
@@ -351,27 +362,14 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self animateTextField: textField up: YES];
+    [textField animateTextField: textField up: YES];
 }
 
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    [self animateTextField: textField up: NO];
+    [textField animateTextField: textField up: NO];
     // Store the userid and password
 }
 
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up
-{
-    int movementDistance = 200; // tweak as needed
-    const float movementDuration = 0.3f; // tweak as needed
-    
-    int movement = (up ? -movementDistance : movementDistance);
-    
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.frame = CGRectOffset(self.frame, 0, movement);
-    [UIView commitAnimations];
-}
 @end

@@ -100,7 +100,7 @@
     txtField.font = [UIFont fontWithName:@"Helvetica" size:11.0];
     txtField.borderStyle = UITextBorderStyleRoundedRect;
     txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    txtField.returnKeyType = UIReturnKeyNext;
+    txtField.returnKeyType = UIReturnKeyDone;
     txtField.textAlignment = UITextAlignmentLeft;
     txtField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     txtField.tag = tag;
