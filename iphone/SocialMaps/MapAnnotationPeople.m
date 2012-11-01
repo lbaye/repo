@@ -241,7 +241,7 @@
     else {
         // Meet-up request
         UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        meetupBtn.frame = CGRectMake(5, infoView.frame.size.height-15-27, 57, 27);
+        meetupBtn.frame = CGRectMake(5, infoView.frame.size.height-10-27, 57, 27);
         [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
         meetupBtn.backgroundColor = [UIColor clearColor];
@@ -252,7 +252,7 @@
         
         // Directions request
         UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-15-27, 57, 27);
+        directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-10-27, 57, 27);
         [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
         directionBtn.backgroundColor = [UIColor clearColor];
@@ -265,7 +265,7 @@
         UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         // TODO: repositioning message button for appstore submission. SInce we are hiding
         // meetup/direction we are putting this under friend request button
-        messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
+        messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-10-27, 57, 27);
         // messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
         [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
