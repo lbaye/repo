@@ -85,8 +85,7 @@
         [self addSubview:subTitle];
     }
     // Button
-    CGRect btnFrame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-5, 
-                                 (self.frame.size.height-BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    CGRect btnFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = btnFrame;
     [btn addTarget:parent 
@@ -98,6 +97,10 @@
     else
         [btn setImage:[UIImage imageNamed:@"icon_arrow_right.png"]
              forState:UIControlStateNormal];
+    
+    // Position arrow image to the right of the button
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0.0, self.frame.size.width-BUTTON_WIDTH-5, 0.0, 0.0);
+    
     //btn.tag = btnTag;
     self.tag = btnTag;
     
