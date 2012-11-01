@@ -147,7 +147,7 @@ class ProximityAlert extends Base {
 
         $message = $user->getFirstName() . ' is ' . ceil($distance) . 'm away';
         return array(
-            'title' => 'Proximity Alert',
+            'title' => $message,
             'badge' => 1,
             'tabCounts' => '0|0|0',
             'photoUrl' => $user->getAvatar(),
@@ -159,7 +159,6 @@ class ProximityAlert extends Base {
 
     private function createGroupNotificationMessage(\Doctrine\ODM\MongoDB\Cursor $friendsCursor) {
         $friends = array_values($friendsCursor->toArray());
-        var_dump($friends);
 
         if (count($friends) > 2) {
             $message = $friends[0]['firstName'] . ', ' .
@@ -175,13 +174,14 @@ class ProximityAlert extends Base {
             $message = $name . ' is';
         }
 
+        $message .= ' near you!';
 
         return array(
-            'title' => 'Proximity Alert',
+            'title' => $message,
             'badge' => 1,
             'tabCounts' => '0|0|0',
             'objectType' => 'proximity_alert',
-            'message' => $message . ' near you!'
+            'message' => $message
         );
     }
 
