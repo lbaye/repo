@@ -67,15 +67,30 @@
     [self addSubview:enableSharing];
 
     if (sharingEnabled == 1) {
-        SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:@"Currently 7 friends in subgroup" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
+        int numFriendsInGroup = smAppDelegate.locSharingPrefs.custom.friends.count;
+        NSString *subTitle;
+        if (numFriendsInGroup <= 1)
+            subTitle = [NSString stringWithFormat:@"Currently %d friend in subgroup",numFriendsInGroup];
+        else
+            subTitle = [NSString stringWithFormat:@"Currently %d friends in subgroup",numFriendsInGroup];
+            
+        SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:subTitle bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
         [self addSubview:friendSharingView];
         
-        SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
-        circleSharingView.backgroundColor = [UIColor clearColor];
-        [self addSubview:circleSharingView];
+        if (smAppDelegate.locSharingPrefs.circles.count > 0) {
+            SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
+            circleSharingView.backgroundColor = [UIColor clearColor];
+            [self addSubview:circleSharingView];
+        } else {
+            startTag++;
+        }
         
-        SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-        [self addSubview:platformSharingView];
+        if (smAppDelegate.locSharingPrefs.platforms.count > 0) {
+            SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+            [self addSubview:platformSharingView];
+        } else {
+            startTag++;
+        }
         
         SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
         [self addSubview:strangersSharingView];
@@ -161,7 +176,13 @@
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
     CGRect selFrame = CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT);
-    SettingsMaster * newLocation = [[SettingsMaster alloc] initWithFrame:selFrame title:@"New Location" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002];
+    SettingsMaster * newLocation = [[SettingsMaster alloc] initWithFrame:selFrame title:@"New Location" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002 level:1];
+    // Draw a line
+    UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(10, newLocation.frame.size.height, 
+                                                             aview.frame.size.width-10, 1)];
+    aline.backgroundColor = [UIColor lightGrayColor];
+    [newLocation addSubview:aline];
+    [aline release];
     [aview addSubview:newLocation];
     
     LocationSharingPlaces *locSharing = [[LocationSharingPlaces alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+selFrame.size.height, aview.frame.size.width, ROW_HEIGHT-7) sender:self tag:tag+1000];
@@ -204,7 +225,7 @@
                                                     aview.frame.size.height+7, 
                                                     aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
                                                     defRadius:smAppDelegate.locSharingPrefs.strangers.radius 
-                                                    defDuration:smAppDelegate.locSharingPrefs.strangers.duration defPerm:TRUE sender:self tag:tag+1000];
+                                                    defDuration:smAppDelegate.locSharingPrefs.strangers.duration defPerm:TRUE sender:self tag:tag+1000 level:1];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -243,11 +264,11 @@
     aview.title.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
     
     CGRect selFrame = CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT);
-    SettingsMaster * selectFriends = [[SettingsMaster alloc] initWithFrame:selFrame title:@"Select subgroup of friends" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002];
+    SettingsMaster * selectFriends = [[SettingsMaster alloc] initWithFrame:selFrame title:@"Select subgroup of friends" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002 level:1];
     [aview addSubview:selectFriends];
     
     // Draw a line
-    UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+ROW_HEIGHT-1, 
+    UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(10, aview.frame.size.height+7+ROW_HEIGHT-1, 
                                                                        aview.frame.size.width, 1)];
     aline.backgroundColor = [UIColor lightGrayColor];
     aline.tag   = tag+1003;
@@ -258,7 +279,7 @@
                                                 aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs 
                                                 defRadius:smAppDelegate.locSharingPrefs.custom.privacy.radius 
                                                 defDuration:smAppDelegate.locSharingPrefs.custom.privacy.duration 
-                                                defPerm:TRUE sender:self tag:tag+1000];
+                                                defPerm:TRUE sender:self tag:tag+1000 level:1];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
@@ -489,6 +510,12 @@
         NSLog(@"id=%@", [selection.circles objectAtIndex:i]);
         [smAppDelegate.locSharingPrefs.custom.circles addObject:circleId];
     }
+    SettingsMaster *parentView = (SettingsMaster*) [self viewWithTag:2001];
+    int numFriendsInGroup = smAppDelegate.locSharingPrefs.custom.friends.count;
+    if (numFriendsInGroup <= 1)
+        parentView.subTitle.text = [NSString stringWithFormat:@"Currently %d friend in subgroup",numFriendsInGroup];
+    else
+        parentView.subTitle.text = [NSString stringWithFormat:@"Currently %d friends in subgroup",numFriendsInGroup];
 }
 - (void) selectFriendsCancelled {
     NSLog(@"LocationSharing:selectFriendsCancelled");

@@ -31,7 +31,7 @@
         //self.frame = scrollFrame;
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         numSections = smAppDelegate.locSharingPrefs.platforms.count;
-        // Ass facebook if empty
+        // Add facebook if empty
         if (numSections == 0) {
             LocationPlatformSettings *locPlatform = [[LocationPlatformSettings alloc] init];
             locPlatform.privacy = [[LocationPrivacySettings alloc] init];
@@ -63,10 +63,18 @@
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     for (int i=0; i < numSections; i++ ) {
         LocationPlatformSettings *platformLoc = (LocationPlatformSettings*) [smAppDelegate.locSharingPrefs.platforms objectAtIndex:i];
-        SettingsMaster *aPlatform = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:platformLoc.platformName subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        SettingsMaster *aPlatform = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:platformLoc.platformName subTitle:@"" bgImage:@"" type:SettingsDisplayTypeExpand sender:self tag:startTag++ level:1];
 
         // Remove default background image
         [[aPlatform viewWithTag:99999] removeFromSuperview];
+        
+        // Dividers
+        if (i > 0) {
+            UIView *sep;
+            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
+            sep.backgroundColor = [UIColor lightGrayColor];
+            [aPlatform addSubview:sep];
+        }
         [self addSubview:aPlatform];
         [aPlatform release];
     }
@@ -115,7 +123,7 @@
     int indx = tag - 11000;
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     LocationPlatformSettings *platformLoc = (LocationPlatformSettings*) [smAppDelegate.locSharingPrefs.platforms objectAtIndex:indx];
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:platformLoc.privacy.radius defDuration:platformLoc.privacy.duration defPerm:TRUE sender:self tag:tag+1000];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:platformLoc.privacy.radius defDuration:platformLoc.privacy.duration defPerm:TRUE sender:self tag:tag+1000 level:1];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);

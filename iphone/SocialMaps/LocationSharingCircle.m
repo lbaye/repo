@@ -81,7 +81,7 @@
         LocationCircleSettings *locCircle = (LocationCircleSettings*) [circleList objectAtIndex:i];
         UserCircle *aCircle = locCircle.circleInfo;
 
-        SettingsMaster *circleGroup = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:aCircle.circleName subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
+        SettingsMaster *circleGroup = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:aCircle.circleName subTitle:@"" bgImage:@"" type:SettingsDisplayTypeExpand sender:self tag:startTag++ level:1]; 
         circleGroup.backgroundColor = [UIColor clearColor];
         [self addSubview:circleGroup];
     }
@@ -132,7 +132,7 @@
     int indx = tag - 7000;
     LocationCircleSettings *locCircle=[circleList objectAtIndex:indx];
     
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:locCircle.privacy.radius defDuration:locCircle.privacy.duration defPerm:TRUE sender:self tag:tag+1000];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:locCircle.privacy.radius defDuration:locCircle.privacy.duration defPerm:TRUE sender:self tag:tag+1000 level:1];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);
