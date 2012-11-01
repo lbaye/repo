@@ -1,12 +1,12 @@
 //
-//  MyPhotosViewController.m
+//  FriendsPhotosViewController.m
 //  SocialMaps
 //
-//  Created by Abdullah Md. Zubair on 10/29/12.
+//  Created by Abdullah Md. Zubair on 11/1/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
-#import "MyPhotosViewController.h"
+#import "FriendsPhotosViewController.h"
 #import "UserFriends.h"
 #import "Globals.h"
 #import "NotificationController.h"
@@ -16,13 +16,14 @@
 #import "AppDelegate.h"
 #import "Globals.h"
 
-@interface MyPhotosViewController ()
+@interface FriendsPhotosViewController ()
 -(void)scrollToPage:(int)page:(BOOL)animated;
 @end
 
-@implementation MyPhotosViewController
-@synthesize photoScrollView,customScrollView,zoomView,labelNotifCount;
-@synthesize prevButton,nextButton;
+@implementation FriendsPhotosViewController
+@synthesize photoScrollView,customScrollView,zoomView,labelNotifCount,photoLabel;
+@synthesize userName,userId,nextButton,prevButton;
+
 NSMutableDictionary *dicImages_msg;
 NSMutableArray *selectedFriendsIndex, *filteredList1, *filteredList2, *customSelectedFriendsIndex;
 
@@ -52,12 +53,13 @@ AppDelegate *smAppdelegate;
     isBackgroundTaskRunning=true;
     rc=[[RestClient alloc] init];
     smAppdelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserAllPhotoDone:) name:NOTIF_GET_USER_ALL_PHOTO object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePhotoDone:) name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFriendsAllPhotoDone:) name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePhotoDone:) name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
     //    [self reloadScrolview];
+    [photoLabel setTitle:[NSString stringWithFormat:@"Photos of %@",userName] forState:UIControlStateNormal];
     [smAppdelegate showActivityViewer:self.view];
     [smAppdelegate.window setUserInteractionEnabled:NO];
-    [rc getPhotos:@"Auth-Token" :smAppdelegate.authToken];
+    [rc getFriendsPhotos:@"Auth-Token" :smAppdelegate.authToken:userId];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -140,7 +142,7 @@ AppDelegate *smAppdelegate;
 -(IBAction)deleteSelectedPhotosAction:(id)sender
 {
     NSLog(@"delete photos"); 
-//    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
+    //    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
     [smAppdelegate.window setUserInteractionEnabled:NO];
     [smAppdelegate showActivityViewer:self.view];
     [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
@@ -153,9 +155,9 @@ AppDelegate *smAppdelegate;
     CGFloat ypos = self.view.frame.origin.y;
     zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
     [UIView beginAnimations:@"Zoom" context:NULL];
-     [UIView setAnimationDuration:0.8];
-     zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
-     [UIView commitAnimations];
+    [UIView setAnimationDuration:0.8];
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    [UIView commitAnimations];
     [self.view addSubview:zoomView];
     NSLog(@"tag: %d",[sender tag]);
 }
@@ -346,10 +348,10 @@ AppDelegate *smAppdelegate;
                 }
                 [aView addSubview:imgView];
 //                [aView addSubview:name];
-//                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
-//                tapGesture.numberOfTapsRequired = 1;
-//                [aView addGestureRecognizer:tapGesture];
-//                [tapGesture release];           
+                //                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
+                //                tapGesture.numberOfTapsRequired = 1;
+                //                [aView addGestureRecognizer:tapGesture];
+                //                [tapGesture release];           
                 [customScrollView addSubview:aView];
             }        
             x2+=320;
@@ -369,12 +371,12 @@ AppDelegate *smAppdelegate;
 {
     Photo *photo=[[Photo alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
-//    for (int i=0; i<[photoListArr count]; i++)
-//    {
-//        photo=[[Photo alloc] init];
-//        [photoListArr addObject:photo];
-//        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
-//    }
+    //    for (int i=0; i<[photoListArr count]; i++)
+    //    {
+    //        photo=[[Photo alloc] init];
+    //        [photoListArr addObject:photo];
+    //        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
+    //    }
     filteredList1=[photoListArr mutableCopy];
     filteredList2=[photoListArr mutableCopy];
     NSLog(@"filtered count: %d",[filteredList1 count]);
@@ -435,15 +437,15 @@ AppDelegate *smAppdelegate;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-//        else
-//        {
-//            UIView *im1=[subviews objectAtIndex:l];
-//            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-//            UIImageView *im2=[subviews2 objectAtIndex:0];
-//            [im2 setAlpha:0.4];
-//            im2.layer.borderWidth=2.0;
-//            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-//        }
+        //        else
+        //        {
+        //            UIView *im1=[subviews objectAtIndex:l];
+        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
+        //            UIImageView *im2=[subviews2 objectAtIndex:0];
+        //            [im2 setAlpha:0.4];
+        //            im2.layer.borderWidth=2.0;
+        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
+        //        }
     }
     [self reloadScrolview];
 }
@@ -482,7 +484,7 @@ AppDelegate *smAppdelegate;
     [self reloadScrolview];
 }
 
-- (void)getUserAllPhotoDone:(NSNotification *)notif
+- (void)getFriendsAllPhotoDone:(NSNotification *)notif
 {
     NSLog(@"get user all photo %d",[[notif object] count]);
     willLoadPhotoData = FALSE;
@@ -492,8 +494,11 @@ AppDelegate *smAppdelegate;
     {
         [UtilityClass showAlert:@"Social Maps" :@"No photos found"];
     }
-    [self loadData:[notif object]];
-    [self reloadScrolview];
+    else
+    {
+        [self loadData:[notif object]];
+        [self reloadScrolview];
+    }
 }
 
 - (void)deletePhotoDone:(NSNotification *)notif

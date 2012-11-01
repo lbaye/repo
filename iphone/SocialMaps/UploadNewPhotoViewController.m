@@ -15,6 +15,7 @@
 #import "ActionSheetPicker.h"
 #import <Foundation/Foundation.h>
 #import "RestClient.h"
+#import "Globals.h"
 
 @interface UploadNewPhotoViewController ()
 
@@ -108,16 +109,47 @@ RestClient *rc;
     photo.title=@"Test";
     photo.comment=commentView.text;
     [commentView resignFirstResponder];
-    NSLog(@"upload photo %@ %@ %@ %@",photo.title,photo.description,photo.comment,photo.image);
-    [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
-    [smAppDelegate showActivityViewer:self.view];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
+    NSMutableString *msg=[[NSMutableString alloc] initWithString:@"Please select"];
+    
+    if (photo.image == NULL) {
+        [msg appendString:@" image,"];
+    }
+    
+    if ([addressLabel.text isEqualToString:@"Loading current address..."]) 
+    {
+        [msg appendString:@" address,"];
+    }
+    
+    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Your comments..."]))
+    {
+        if (msg.length==13)
+        {
+            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
+        }
+        else
+        {
+            [msg appendString:@" comments"];
+        }
+    }
+    
+    if (msg.length>13)
+    {
+        [UtilityClass showAlert:@"Social Maps" :msg];
+    }
+    else {
+        NSLog(@"upload photo %@ %@ %@ %@",photo.title,photo.description,photo.comment,photo.image);
+        [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        willLoadPhotoData = TRUE;
+    }
 }
 
 -(IBAction)cancel:(id)sender
 {
     NSLog(@"cancel");
     [commentView resignFirstResponder];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)actionNotificationButton:(id)sender {
@@ -144,7 +176,6 @@ RestClient *rc;
             break;
         case 0:
             [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
-            NSLog(@"curAddress: %@",curAddress);
             break;
         default:
             break;
@@ -179,26 +210,30 @@ RestClient *rc;
 -(void)getCurrentAddress
 {
     addressDetailLabel.text=@"";
-    if ((![curAddress isEqualToString:@""]) && (curAddress))
-    {
-        addressLabel.text=curAddress;
-        NSLog(@"use existing add");
-    }
-    else 
-    {
+//    if ((![curAddress isEqualToString:@""]) && (curAddress))
+//    {
+//        addressLabel.text=curAddress;
+//        NSLog(@"use existing add");
+//    }
+//    else 
+//    {
         NSLog(@"load new add");
         addressLabel.text = @"Loading current address...";
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            curAddress=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+            NSString *address=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+            if ((![address isEqual:[NSNull null]]) ||(address != NULL))
+            {
+                curAddress=address;
+            }
+            photo.address=curAddress;
+            photo.location.latitude=smAppDelegate.currPosition.latitude;
+            photo.location.longitude=smAppDelegate.currPosition.longitude;
+            addressLabel.text=curAddress;
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSLog(@"get current address.");
             });
         });
-    }
-    photo.address=curAddress;
-    photo.location.latitude=smAppDelegate.currPosition.latitude;
-    photo.location.longitude=smAppDelegate.currPosition.longitude;
-
+//    }
 }
 
 - (void)uploadPhotoDone:(NSNotification *)notif

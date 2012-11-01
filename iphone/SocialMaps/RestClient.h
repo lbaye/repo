@@ -91,4 +91,7 @@
 - (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
 -(void) uploadPhoto:(NSString *)authToken:(NSString *)authTokenValue:(Photo *)photo;
 -(void) getPhotos:(NSString *)authToken:(NSString *)authTokenValue;
+-(void) deletePhotoByPhotoId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)photoId;
+-(void) getFriendsPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+
 @end

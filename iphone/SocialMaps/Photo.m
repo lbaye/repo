@@ -17,6 +17,7 @@
 @synthesize photoId;
 @synthesize title;
 @synthesize description;
+@synthesize photoImage;
 
 - (id)init
 {

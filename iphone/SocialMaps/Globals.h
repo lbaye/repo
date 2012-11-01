@@ -20,6 +20,7 @@ extern Event *globalEditEvent;
 extern BOOL editFlag;
 extern BOOL isFromVenue;
 extern BOOL useLocalData;
+extern BOOL willLoadPhotoData;
 
 @interface Globals : NSObject 
 

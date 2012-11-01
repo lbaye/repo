@@ -22,6 +22,7 @@
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
 #import "LocationItemPeople.h"
+#import "FriendsPhotosViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -777,7 +778,12 @@ NSMutableArray *selectedScrollIndex;
     }
     if (imageIndex==0) 
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+        FriendsPhotosViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"friendsPhotosViewController"];
+        controller.userId=userInfo.userId;
+        controller.userName=[NSString stringWithFormat:@"%@ %@",userInfo.firstName,userInfo.lastName];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
     }
     else if (imageIndex==1)
     {

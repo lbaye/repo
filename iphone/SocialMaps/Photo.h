@@ -19,6 +19,7 @@
     NSString *address;
     NSString *title;
     NSString *description;
+    UIImage *photoImage;
 }
 
 @property(nonatomic,retain) NSString *photoId;
@@ -29,4 +30,5 @@
 @property(nonatomic,retain) NSString *address;
 @property(nonatomic,retain) NSString *title;
 @property(nonatomic,retain) NSString *description;
+@property(nonatomic,retain) UIImage *photoImage;
 @end
