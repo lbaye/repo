@@ -245,8 +245,10 @@
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
         else
+        {
             [self performSegueWithIdentifier: @"showMapView" sender: self];
-        
+        }
+        smAppDelegate.smLogin=TRUE;
         smAppDelegate.fbId = @"";
         
     } else {
@@ -465,6 +467,9 @@
                                 @"user_about_me",
                                 @"publish_stream",
                                 @"read_stream",
+                                @"friends_status",
+                                @"user_checkins",
+                                @"friends_checkins",
                                 nil];
         [facebook authorize:permissions];
         [permissions release];

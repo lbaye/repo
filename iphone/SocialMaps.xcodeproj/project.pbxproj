@@ -15,6 +15,7 @@
 		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
 		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
 		2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2024BF7816075FE3008013DC /* SelectCircleTableCell.m */; };
+		205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 205464D9164143FD00A96E8B /* fbCheckinIcon.png */; };
 		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
 		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
 		2063A1D615F330E300529CB2 /* PinDown2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1D015F330E300529CB2 /* PinDown2.png */; };
@@ -55,7 +56,22 @@
 		20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D715EF59E000A441E9 /* CreateEventViewController.m */; };
 		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
+		20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD93F1635115000538777 /* user_thumb_only_gray.png */; };
+		20BBD9471635589200538777 /* icon_beta_badge.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD9461635589200538777 /* icon_beta_badge.png */; };
+		20BBD949163559AB00538777 /* logo_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD948163559AB00538777 /* logo_banner.png */; };
+		20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */; };
+		20BDE517164111C0008E22FD /* fbCheckin.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BDE516164111C0008E22FD /* fbCheckin.png */; };
 		20BFC311161707B000F76226 /* icon_facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BFC310161707B000F76226 /* icon_facebook.png */; };
+		20C5F27A162FCE60005E5E56 /* events_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F272162FCE60005E5E56 /* events_icon_small.png */; };
+		20C5F27B162FCE60005E5E56 /* events_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F273162FCE60005E5E56 /* events_icon.png */; };
+		20C5F27C162FCE60005E5E56 /* friends_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F274162FCE60005E5E56 /* friends_icon_small.png */; };
+		20C5F27D162FCE60005E5E56 /* friends_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F275162FCE60005E5E56 /* friends_icon.png */; };
+		20C5F27E162FCE60005E5E56 /* icon_meetup_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F276162FCE60005E5E56 /* icon_meetup_new.png */; };
+		20C5F27F162FCE60005E5E56 /* photos_icon_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F277162FCE60005E5E56 /* photos_icon_small.png */; };
+		20C5F280162FCE60005E5E56 /* photos_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F278162FCE60005E5E56 /* photos_icon.png */; };
+		20C5F281162FCE60005E5E56 /* places_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F279162FCE60005E5E56 /* places_icon.png */; };
+		20C5F285163006C6005E5E56 /* FriendsProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C5F283163006C5005E5E56 /* FriendsProfileViewController.m */; };
+		20C5F286163006C6005E5E56 /* FriendsProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20C5F284163006C6005E5E56 /* FriendsProfileViewController.xib */; };
 		20C92B811618022B000B3D58 /* SectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B7E1618022B000B3D58 /* SectionHeaderView.m */; };
 		20C92B821618022B000B3D58 /* SectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C92B801618022B000B3D58 /* SectionInfo.m */; };
 		20C92B891618042D000B3D58 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20C92B881618042D000B3D58 /* MessageUI.framework */; };
@@ -83,6 +99,7 @@
 		4F1D96B515DCC93B00511624 /* NotificationPref.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1D96AF15DCC93B00511624 /* NotificationPref.m */; };
 		4F1FE46715BF327C00D2484F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F1FE46615BF327C00D2484F /* libsqlite3.dylib */; };
 		4F29A6CA15CB231200305523 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F29A6C815CB231200305523 /* NSData+Base64.m */; };
+		4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F2F464E162B945700B6D0AE /* NewLocationItem.m */; };
 		4F39151515BBCC9400BF6B25 /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F39151415BBCC9400BF6B25 /* LoginController.m */; };
 		4F3A4EED15D227230033AC9E /* ResetPassword.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EEC15D227230033AC9E /* ResetPassword.m */; };
 		4F3A4EF115D244910033AC9E /* PersonalInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F3A4EF015D244900033AC9E /* PersonalInformation.m */; };
@@ -243,6 +260,7 @@
 		4F98A2DF15BB387D000B3124 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */; };
 		4F98A2E215BB387D000B3124 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F98A2E115BB387D000B3124 /* ViewController.m */; };
 		4F9B281415BF53BC00CBA657 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F9B281315BF53BC00CBA657 /* CoreLocation.framework */; };
+		4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */; };
 		4FAC301915C583540014030C /* UserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC301815C583540014030C /* UserAnnotationView.m */; };
 		4FAC302615C5C5DC0014030C /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC302515C5C5DC0014030C /* NotificationController.m */; };
 		4FB1342A15D82391004890A3 /* line_arrow_up_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FB1342915D82391004890A3 /* line_arrow_up_left.png */; };
@@ -414,6 +432,15 @@
 		B028A4D5161C8B0B00D99D3E /* circle_menu_item_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C3161C8B0B00D99D3E /* circle_menu_item_settings.png */; };
 		B028A4D6161C8B0B00D99D3E /* icon_world.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C4161C8B0B00D99D3E /* icon_world.png */; };
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
+		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
+		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
+		B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B07777CB163E3A0A00969699 /* DirectionViewController.m */; };
+		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
+		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
+		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
+		B07777D6163E6D9900969699 /* transport3.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D2163E6D9800969699 /* transport3.png */; };
+		B07777D7163E6D9900969699 /* transport4.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D3163E6D9800969699 /* transport4.png */; };
+		B0851551162E919D003347CB /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = B0851550162E919D003347CB /* blank.png */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
 		B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819451627174500FBCB1A /* btn_bg_green_small.png */; };
@@ -447,6 +474,7 @@
 		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
 		2024BF7716075FE3008013DC /* SelectCircleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCircleTableCell.h; sourceTree = "<group>"; };
 		2024BF7816075FE3008013DC /* SelectCircleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCircleTableCell.m; sourceTree = "<group>"; };
+		205464D9164143FD00A96E8B /* fbCheckinIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbCheckinIcon.png; sourceTree = "<group>"; };
 		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
 		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
 		2063A1D015F330E300529CB2 /* PinDown2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown2.png; sourceTree = "<group>"; };
@@ -508,7 +536,24 @@
 		20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetPicker.m; sourceTree = "<group>"; };
 		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
 		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
+		20BBD93F1635115000538777 /* user_thumb_only_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_thumb_only_gray.png; sourceTree = "<group>"; };
+		20BBD9461635589200538777 /* icon_beta_badge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_beta_badge.png; sourceTree = "<group>"; };
+		20BBD948163559AB00538777 /* logo_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_banner.png; sourceTree = "<group>"; };
+		20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotationEvent.h; sourceTree = "<group>"; };
+		20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotationEvent.m; sourceTree = "<group>"; };
+		20BDE516164111C0008E22FD /* fbCheckin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbCheckin.png; sourceTree = "<group>"; };
 		20BFC310161707B000F76226 /* icon_facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_facebook.png; sourceTree = "<group>"; };
+		20C5F272162FCE60005E5E56 /* events_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_icon_small.png; sourceTree = "<group>"; };
+		20C5F273162FCE60005E5E56 /* events_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_icon.png; sourceTree = "<group>"; };
+		20C5F274162FCE60005E5E56 /* friends_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_icon_small.png; sourceTree = "<group>"; };
+		20C5F275162FCE60005E5E56 /* friends_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_icon.png; sourceTree = "<group>"; };
+		20C5F276162FCE60005E5E56 /* icon_meetup_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_meetup_new.png; sourceTree = "<group>"; };
+		20C5F277162FCE60005E5E56 /* photos_icon_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photos_icon_small.png; sourceTree = "<group>"; };
+		20C5F278162FCE60005E5E56 /* photos_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photos_icon.png; sourceTree = "<group>"; };
+		20C5F279162FCE60005E5E56 /* places_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = places_icon.png; sourceTree = "<group>"; };
+		20C5F282163006C5005E5E56 /* FriendsProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsProfileViewController.h; sourceTree = "<group>"; };
+		20C5F283163006C5005E5E56 /* FriendsProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsProfileViewController.m; sourceTree = "<group>"; };
+		20C5F284163006C6005E5E56 /* FriendsProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsProfileViewController.xib; sourceTree = "<group>"; };
 		20C92B7D1618022B000B3D58 /* SectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderView.h; sourceTree = "<group>"; };
 		20C92B7E1618022B000B3D58 /* SectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderView.m; sourceTree = "<group>"; };
 		20C92B7F1618022B000B3D58 /* SectionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionInfo.h; sourceTree = "<group>"; };
@@ -552,6 +597,8 @@
 		4F24A3D515BF643300DC66B7 /* sm_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sm_icon.png; sourceTree = "<group>"; };
 		4F29A6C815CB231200305523 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		4F29A6C915CB231200305523 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		4F2F464D162B945700B6D0AE /* NewLocationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLocationItem.h; sourceTree = "<group>"; };
+		4F2F464E162B945700B6D0AE /* NewLocationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewLocationItem.m; sourceTree = "<group>"; };
 		4F39151315BBCC9400BF6B25 /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginController.h; sourceTree = "<group>"; };
 		4F39151415BBCC9400BF6B25 /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginController.m; sourceTree = "<group>"; };
 		4F3A4EEB15D227230033AC9E /* ResetPassword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPassword.h; sourceTree = "<group>"; };
@@ -773,6 +820,8 @@
 		4F98A2E015BB387D000B3124 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F98A2E115BB387D000B3124 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4F9B281315BF53BC00CBA657 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Scrolling.h"; sourceTree = "<group>"; };
+		4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Scrolling.m"; sourceTree = "<group>"; };
 		4FAC301715C583540014030C /* UserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAnnotationView.h; sourceTree = "<group>"; };
 		4FAC301815C583540014030C /* UserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAnnotationView.m; sourceTree = "<group>"; };
 		4FAC302415C5C5DC0014030C /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
@@ -1018,6 +1067,16 @@
 		B028A4C3161C8B0B00D99D3E /* circle_menu_item_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle_menu_item_settings.png; sourceTree = "<group>"; };
 		B028A4C4161C8B0B00D99D3E /* icon_world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_world.png; sourceTree = "<group>"; };
 		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
+		B032F99A162C52C0002AFCDB /* icon_48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_48x48.png; path = Images/icon_48x48.png; sourceTree = SOURCE_ROOT; };
+		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
+		B07777CA163E3A0A00969699 /* DirectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionViewController.h; sourceTree = "<group>"; };
+		B07777CB163E3A0A00969699 /* DirectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionViewController.m; sourceTree = "<group>"; };
+		B07777CC163E3A0A00969699 /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
+		B07777D0163E6D9800969699 /* transport1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport1.png; path = Images/transport1.png; sourceTree = SOURCE_ROOT; };
+		B07777D1163E6D9800969699 /* transport2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport2.png; path = Images/transport2.png; sourceTree = SOURCE_ROOT; };
+		B07777D2163E6D9800969699 /* transport3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport3.png; path = Images/transport3.png; sourceTree = SOURCE_ROOT; };
+		B07777D3163E6D9800969699 /* transport4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport4.png; path = Images/transport4.png; sourceTree = SOURCE_ROOT; };
+		B0851550162E919D003347CB /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blank.png; path = Images/blank.png; sourceTree = SOURCE_ROOT; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
 		B08819441627174500FBCB1A /* btn_bg_gray_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_gray_small.png; path = Images/btn_bg_gray_small.png; sourceTree = SOURCE_ROOT; };
@@ -1142,6 +1201,8 @@
 				4FC0820315DBD54A00203C21 /* MapAnnotationPeople.m */,
 				4F59C33D15E7EB060060C8D9 /* MapAnnotationPlace.h */,
 				4F59C33E15E7EB060060C8D9 /* MapAnnotationPlace.m */,
+				20BD6B15162ACC9F00B3BEDD /* MapAnnotationEvent.h */,
+				20BD6B16162ACC9F00B3BEDD /* MapAnnotationEvent.m */,
 				B01DFC4415F5E61000020D49 /* MessageReply.h */,
 				B01DFC4515F5E61000020D49 /* MessageReply.m */,
 				20E4A11F15D8EB80009A1F6B /* NewsFeed.h */,
@@ -1211,6 +1272,10 @@
 				4F1D96A815DCC93B00511624 /* UserInfo.m */,
 				20B0E7DC15D7A9CF009A500A /* UtilityClass.h */,
 				20B0E7DD15D7A9CF009A500A /* UtilityClass.m */,
+				4F2F464D162B945700B6D0AE /* NewLocationItem.h */,
+				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
+				4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */,
+				4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1323,44 +1388,52 @@
 		4F98A2D115BB387D000B3124 /* SocialMaps */ = {
 			isa = PBXGroup;
 			children = (
-				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
-				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
-				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
-				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
-				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
-				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
-				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
-				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				20B656DA15EF5A2E00A441E9 /* ActionSheetPicker.h */,
 				20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */,
 				4F98A2DA15BB387D000B3124 /* AppDelegate.h */,
 				4F98A2DB15BB387D000B3124 /* AppDelegate.m */,
-				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
-				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
+				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
 				2018C29D1604672700457BB6 /* CircleListCheckBoxTableCell.h */,
 				2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */,
+				2018C29A160466F800457BB6 /* CircleListTableCell.h */,
+				2018C29B160466F800457BB6 /* CircleListTableCell.m */,
+				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				20B656D615EF59DF00A441E9 /* CreateEventViewController.h */,
 				20B656D715EF59E000A441E9 /* CreateEventViewController.m */,
 				20B656C715EF580700A441E9 /* EventListRsvpTableCell.h */,
 				20B656C815EF580700A441E9 /* EventListRsvpTableCell.m */,
 				20B656C515EF580600A441E9 /* EventListTableCell.h */,
 				20B656C615EF580600A441E9 /* EventListTableCell.m */,
+				20C5F282163006C5005E5E56 /* FriendsProfileViewController.h */,
+				20C5F283163006C5005E5E56 /* FriendsProfileViewController.m */,
+				20C5F284163006C6005E5E56 /* FriendsProfileViewController.xib */,
+				B08C30D0160AFF570031D7A0 /* FriendListViewController.h */,
+				B08C30D1160AFF570031D7A0 /* FriendListViewController.m */,
+				B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */,
+				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				20B3CB1916269E540099D49E /* GeotagViewController.h */,
 				20B3CB1A16269E540099D49E /* GeotagViewController.m */,
-				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				20C92B8F16184A68000B3D58 /* InviteFromCircleViewController.h */,
 				20C92B9016184A68000B3D58 /* InviteFromCircleViewController.m */,
+				4F3B3C8B15D9366B0025F8DD /* ListViewController.h */,
 				4F3B3C8C15D9366B0025F8DD /* ListViewController.m */,
 				4F39151315BBCC9400BF6B25 /* LoginController.h */,
 				4F39151415BBCC9400BF6B25 /* LoginController.m */,
-				20B3CB1616269E000099D49E /* GeoTagStoryboard.storyboard */,
 				4F98A2DD15BB387D000B3124 /* MainStoryboard.storyboard */,
-				2018C29716045BFC00457BB6 /* CirclesStoryboard.storyboard */,
 				4FE9606D15BC8FE60007327A /* MapViewController.h */,
 				4FE9606E15BC8FE60007327A /* MapViewController.m */,
+				B0F5D4C61602223D00F613FE /* MeetUpListButtonsView.h */,
+				B0F5D4C71602223D00F613FE /* MeetUpListButtonsView.m */,
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
 				B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */,
 				B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */,
+				B07777CA163E3A0A00969699 /* DirectionViewController.h */,
+				B07777CB163E3A0A00969699 /* DirectionViewController.m */,
+				B07777CC163E3A0A00969699 /* DirectionViewController.xib */,
+				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
+				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
+				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
 				B01DFC4815F5E61F00020D49 /* MessageListViewController.h */,
 				B01DFC4915F5E61F00020D49 /* MessageListViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
@@ -1378,21 +1451,19 @@
 				B0C206AF15FB26C900177132 /* ShowOnMapController.xib */,
 				4FAC301715C583540014030C /* UserAnnotationView.h */,
 				4FAC301815C583540014030C /* UserAnnotationView.m */,
-				4F98A2E015BB387D000B3124 /* ViewController.h */,
-				4F98A2E115BB387D000B3124 /* ViewController.m */,
-				200746CD160ADB11001A0873 /* BlockUnblockCircleViewController.h */,
-				200746CE160ADB11001A0873 /* BlockUnblockCircleViewController.m */,
+				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
+				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
+				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				2018C2A01604721D00457BB6 /* ViewCircleListViewController.h */,
 				2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */,
 				200746D1160ADB39001A0873 /* ViewCircleWisePeopleViewController.h */,
 				200746D2160ADB39001A0873 /* ViewCircleWisePeopleViewController.m */,
+				4F98A2E015BB387D000B3124 /* ViewController.h */,
+				4F98A2E115BB387D000B3124 /* ViewController.m */,
 				20B656D415EF59DE00A441E9 /* ViewEventDetailViewController.h */,
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
-				208726D615FF04D500444CC2 /* UserBasicProfileViewController.h */,
-				208726D715FF04D500444CC2 /* UserBasicProfileViewController.m */,
-				208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -1414,6 +1485,7 @@
 		4F98A2E815BB38B1000B3124 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B0851550162E919D003347CB /* blank.png */,
 				B08819441627174500FBCB1A /* btn_bg_gray_small.png */,
 				B08819451627174500FBCB1A /* btn_bg_green_small.png */,
 				B08819461627174500FBCB1A /* btn_bg_light_small.png */,
@@ -1507,17 +1579,22 @@
 				2070A6B915F71FEB008AB0A1 /* event_item_bg.png */,
 				4F4CA52915C45351004234E5 /* fb_checkbox_chcked.png */,
 				4F4CA52815C45351004234E5 /* fb_checkbox_unchcked.png */,
+				20BDE516164111C0008E22FD /* fbCheckin.png */,
+				205464D9164143FD00A96E8B /* fbCheckinIcon.png */,
 				4F4CA52715C45351004234E5 /* fb_search_icon.png */,
 				4F72290E15C7F4BB008B60A8 /* flip_checkbox.png */,
 				20B5D56D16131975001105AF /* friends_rqst_icon.png */,
 				4FE4261915C06FAD00A6B6A3 /* girl.png */,
 				4F469CCC15FD15FE008341C2 /* header.png */,
 				4F1B99B415CC377D0066BF16 /* icon_72x72.png */,
+				B032F99A162C52C0002AFCDB /* icon_48x48.png */,
+				B032F99B162C52C1002AFCDB /* icon_57x57.png */,
 				4FF09BED15CFBC8000F8AD19 /* icon_arrow_dark.png */,
 				4FB7A03315D124E2001EB905 /* icon_arrow_down.png */,
 				4FF09BEC15CFBC8000F8AD19 /* icon_arrow_gray.png */,
 				4FF09BEB15CFBC8000F8AD19 /* icon_arrow_right.png */,
 				4FB7A02C15D124E2001EB905 /* icon_arrow_up.png */,
+				20BBD9461635589200538777 /* icon_beta_badge.png */,
 				20BFC310161707B000F76226 /* icon_facebook.png */,
 				4F1B99B315CC377D0066BF16 /* icon_filter.png */,
 				4FE4261A15C06FAD00A6B6A3 /* icon_lock.png */,
@@ -1550,6 +1627,7 @@
 				4FE4261E15C06FAD00A6B6A3 /* logo.png */,
 				4FE4261C15C06FAD00A6B6A3 /* logo_2.png */,
 				4FE4261D15C06FAD00A6B6A3 /* logo_3.png */,
+				20BBD948163559AB00538777 /* logo_banner.png */,
 				4FC0820B15DC061C00203C21 /* map_add_friend.png */,
 				4F4CA52D15C45351004234E5 /* map_direction_arrow.png */,
 				4F4CA52515C45351004234E5 /* map_direction_icon.png */,
@@ -1636,6 +1714,14 @@
 				4F1B99AE15CC377D0066BF16 /* tagged_image.png */,
 				4FE4262415C06FAD00A6B6A3 /* text_1.png */,
 				4FE4262515C06FAD00A6B6A3 /* thum.png */,
+				20C5F272162FCE60005E5E56 /* events_icon_small.png */,
+				20C5F273162FCE60005E5E56 /* events_icon.png */,
+				20C5F274162FCE60005E5E56 /* friends_icon_small.png */,
+				20C5F275162FCE60005E5E56 /* friends_icon.png */,
+				20C5F276162FCE60005E5E56 /* icon_meetup_new.png */,
+				20C5F277162FCE60005E5E56 /* photos_icon_small.png */,
+				20C5F278162FCE60005E5E56 /* photos_icon.png */,
+				20C5F279162FCE60005E5E56 /* places_icon.png */,
 				B01DFC5115F5E74300020D49 /* top_curve_bg.png */,
 				4FE4262615C06FAD00A6B6A3 /* tx_forget_pass.png */,
 				4FE4262715C06FAD00A6B6A3 /* tx_remember.png */,
@@ -1643,11 +1729,16 @@
 				4F4CA51B15C45351004234E5 /* user_thumb.png */,
 				4F4CA51A15C45351004234E5 /* user_thumb_only.png */,
 				4FC081F215DAFC7200203C21 /* user_thumb_only2.png */,
+				20BBD93F1635115000538777 /* user_thumb_only_gray.png */,
 				4F5151D31607417B00271EAC /* venueimg.png */,
 				B01DFC5215F5E74300020D49 /* whitle_blend.png */,
 				4F4CA53F15C45351004234E5 /* xlose_icon.png */,
 				4F72290815C7F4BB008B60A8 /* yes_button.png */,
 				4F4CA54715C45351004234E5 /* zoom_icon.png */,
+				B07777D0163E6D9800969699 /* transport1.png */,
+				B07777D1163E6D9800969699 /* transport2.png */,
+				B07777D2163E6D9800969699 /* transport3.png */,
+				B07777D3163E6D9800969699 /* transport4.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -2092,6 +2183,28 @@
 				B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */,
 				B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */,
 				B08819491627174500FBCB1A /* btn_bg_light_small.png in Resources */,
+				B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */,
+				B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */,
+				B0851551162E919D003347CB /* blank.png in Resources */,
+				20C5F27A162FCE60005E5E56 /* events_icon_small.png in Resources */,
+				20C5F27B162FCE60005E5E56 /* events_icon.png in Resources */,
+				20C5F27C162FCE60005E5E56 /* friends_icon_small.png in Resources */,
+				20C5F27D162FCE60005E5E56 /* friends_icon.png in Resources */,
+				20C5F27E162FCE60005E5E56 /* icon_meetup_new.png in Resources */,
+				20C5F27F162FCE60005E5E56 /* photos_icon_small.png in Resources */,
+				20C5F280162FCE60005E5E56 /* photos_icon.png in Resources */,
+				20C5F281162FCE60005E5E56 /* places_icon.png in Resources */,
+				20C5F286163006C6005E5E56 /* FriendsProfileViewController.xib in Resources */,
+				20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */,
+				20BBD9471635589200538777 /* icon_beta_badge.png in Resources */,
+				20BBD949163559AB00538777 /* logo_banner.png in Resources */,
+				B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */,
+				B07777D4163E6D9900969699 /* transport1.png in Resources */,
+				B07777D5163E6D9900969699 /* transport2.png in Resources */,
+				B07777D6163E6D9900969699 /* transport3.png in Resources */,
+				B07777D7163E6D9900969699 /* transport4.png in Resources */,
+				20BDE517164111C0008E22FD /* fbCheckin.png in Resources */,
+				205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2260,6 +2373,11 @@
 				20C92B9116184A68000B3D58 /* InviteFromCircleViewController.m in Sources */,
 				B08845691619584C00676EFA /* OverlayViewController.m in Sources */,
 				20B3CB1B16269E540099D49E /* GeotagViewController.m in Sources */,
+				20BD6B17162ACCA000B3BEDD /* MapAnnotationEvent.m in Sources */,
+				20C5F285163006C6005E5E56 /* FriendsProfileViewController.m in Sources */,
+				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
+				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
+				B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2337,6 +2455,7 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2359,6 +2478,7 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2368,7 +2488,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SocialMaps/SocialMaps-Prefix.pch";
 				INFOPLIST_FILE = "SocialMaps/SocialMaps-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";

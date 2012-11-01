@@ -250,7 +250,7 @@
                         withStrokeColor:[UIColor redColor]];
         CustomAlert *loginAlert = [[CustomAlert alloc]
                                    initWithTitle:@"Cannot Register"
-                                   message:@"Please contact provider"
+                                   message:@"Please provide all information required"
                                    delegate:nil
                                    cancelButtonTitle:@"Done"
                                    otherButtonTitles:nil];

@@ -54,6 +54,7 @@
 @synthesize upperView;
 @synthesize lowerView;
 @synthesize viewContainerScrollView;
+@synthesize venueAddress,geolocation;
 
 __strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
 bool searchFlag;
@@ -152,7 +153,7 @@ NSMutableArray *guestListIdArr;
             
         {
             
-            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
             
             NSLog(@"img url null %d",i);
             
@@ -184,6 +185,12 @@ NSMutableArray *guestListIdArr;
     filteredList2=[friendListArr mutableCopy];
     //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
+}
+
+- (id)init
+{
+    self.geolocation=[[Geolocation alloc] init];
+    return self;
 }
 
 - (void)viewDidLoad
@@ -250,12 +257,13 @@ NSMutableArray *guestListIdArr;
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
 
-    event.permission=@"private";
+    if (editFlag==FALSE) 
+    {
+        event.permission=@"private";
+    }
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
-    
-//    [self.mapView setRegion:newRegion animated:YES];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
@@ -266,7 +274,6 @@ NSMutableArray *guestListIdArr;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
-//    [self.mapView setCenter:annotation.region];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -289,6 +296,33 @@ NSMutableArray *guestListIdArr;
             [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
         }
         event=globalEditEvent;
+        [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+        if ([event.permission isEqualToString:@"public"])
+        {
+            [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"private"])
+        {
+            [private setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"friends"])
+        {
+            [friends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"circles"])
+        {
+            [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"custom"])
+        {
+            [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
+        }
+        addressLabel.text=event.eventAddress;
+        
     }
     else
     {
@@ -310,17 +344,78 @@ NSMutableArray *guestListIdArr;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     
-    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+    if (isFromVenue==TRUE) 
+    {
+        event.eventLocation=self.geolocation;
+        event.eventAddress=venueAddress;
+        NSLog(@"geolocation: %@",self.geolocation);
+        NSLog(@"globalEvent.eventName %@ globalEvent.eventLocation.latitude %@,globalEvent.eventLocation.longitude %@",event.eventAddress,event.eventLocation.latitude,event.eventLocation.longitude);
+//        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+        [self eventFromVenue];
+    }
+    else if (editFlag==TRUE)
+    {
+        addressLabel.text=event.eventAddress;
+        [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+    }
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (editFlag==true)
+    {
+        if (event.guestCanInvite) {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
+        }
+        event=globalEditEvent;
+        [private setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [friends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
+        if ([event.permission isEqualToString:@"public"])
+        {
+            [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"private"])
+        {
+            [private setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"friends"])
+        {
+            [friends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"circles"])
+        {
+            [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+        }
+        else if ([event.permission isEqualToString:@"custom"])
+        {
+            [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
+        }
+        addressLabel.text=event.eventAddress;
+        
+    }
 }
 
 -(void)getCurrentAddress
 {
-    addressLabel.text = @"";
+    addressLabel.text = @"Loading current address...";
     annotation.subtitle=addressLabel.text;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         dispatch_async(dispatch_get_main_queue(), ^{
             annotation.subtitle=addressLabel.text;
+            NSLog(@"get current address.");
         });
     });
 }
@@ -399,7 +494,7 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)deleteButtonAction
 {
-    self.eventImagview.image=[UIImage imageNamed:@"event_item_bg.png"];
+    self.eventImagview.image=[UIImage imageNamed:@"blank.png"];
 }
 
 //event info entry ends
@@ -530,8 +625,14 @@ NSMutableArray *guestListIdArr;
     [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+    if (isFromVenue==TRUE) 
+    {
+        [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:[self eventFromVenue] target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    }
+    else {
+        [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    }
     NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
 }
 
@@ -599,7 +700,7 @@ NSMutableArray *guestListIdArr;
     [msg appendString:@"Please enter "];
     bool validationFlag=false;
     NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@ event.permission %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date,event.permission);
-    
+    NSLog(@"event.eventAddress %@ ,event.eventLocation.latitude %@",event.eventAddress,event.eventLocation.latitude);
     if (event.eventName==NULL)
     {
         [msg appendString:@"name, "];
@@ -645,20 +746,23 @@ NSMutableArray *guestListIdArr;
             event.guestList=userIDs;
             
         }
-        if (locationFlag!=1) 
+        if ((locationFlag!=1) && (isFromVenue==false))
         {
             event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
             event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
             event.eventAddress=annotation.subtitle;
         }
-        
         [userCircleArr removeAllObjects];
         for (int i=0; i<[selectedCircleCheckArr count]; i++) 
         {
             NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleName) ;            
             [userCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
         }
-        event.circleList=userCircleArr;        
+        event.circleList=userCircleArr;
+        if (isFromVenue==TRUE)
+        {
+            useLocalData=FALSE;
+        }
         if (editFlag==true)
         {
             [event.guestList addObjectsFromArray:guestListIdArr];
@@ -711,7 +815,7 @@ NSMutableArray *guestListIdArr;
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
 	//Selection was made
-	int selectedCircleIndex = [selectedIndex intValue];
+//	int selectedCircleIndex = [selectedIndex intValue];
 }
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
@@ -727,6 +831,29 @@ NSMutableArray *guestListIdArr;
     addressLabel.text=aPlaceItem.placeInfo.name;
 }
 
+-(int)eventFromVenue
+{
+    if (isFromVenue==TRUE) 
+    {
+        NSLog(@"venueAddress: %@",venueAddress);
+        addressLabel.text=venueAddress;
+        LocationItemPlace *locItemPlace;
+        for (int i=0; i<[smAppDelegate.placeList count]; i++)
+        {
+            if ([((LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i]).itemAddress isEqualToString:venueAddress])
+            {
+                locItemPlace = (LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i];
+                [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
+                [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
     NSDate *date =selectedDate;
@@ -735,7 +862,7 @@ NSMutableArray *guestListIdArr;
     dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
     dateString = [dateFormatter stringFromDate:date];
     event.eventDate.date=[[NSString alloc] initWithString:dateString];
     dateButton.titleLabel.text=dateString;
@@ -787,9 +914,7 @@ NSMutableArray *guestListIdArr;
 {
     static NSString *CellIdentifier = @"circleTableCell";
     static NSString *CustomCellIdentifier = @"customCircleTableCell";
-    
-    int nodeCount = [filteredList1 count];
-        
+            
     SelectCircleTableCell *cell = [circleTableView
                                 dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -1011,7 +1136,7 @@ NSMutableArray *guestListIdArr;
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
                 {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
                 else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
                 { 
@@ -1024,19 +1149,19 @@ NSMutableArray *guestListIdArr;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1086,7 +1211,7 @@ NSMutableArray *guestListIdArr;
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
                 if (userFrnd.imageUrl == nil) 
                 {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
                 else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
                 { 
@@ -1099,19 +1224,19 @@ NSMutableArray *guestListIdArr;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
+//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1180,7 +1305,7 @@ NSMutableArray *guestListIdArr;
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -1223,7 +1348,7 @@ NSMutableArray *guestListIdArr;
 //handling selection from custom scroll view of friends selection
 -(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
 {
-    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
     if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
     {
@@ -1583,7 +1708,10 @@ NSMutableArray *guestListIdArr;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
-
+//    if (isFromVenue==TRUE)
+//    {
+//        [eventListGlobalArray addObject:event];
+//    }
     [self dismissModalViewControllerAnimated:YES];
 }
 

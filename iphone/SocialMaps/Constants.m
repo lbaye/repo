@@ -12,11 +12,12 @@
 //NSString * const WS_URL = @"http://203.76.126.69";
 //NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web"; //
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
+//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
 //NSString * const WS_URL = @"http://203.76.126.69/social-maps-service/web"; 
-//NSString * const WS_URL = @"http://192.168.1.71/social_maps_git/social-maps-service/web";
+//NSString * const WS_URL = @"http://192.168.1.71/stage_social_maps/web";
 //NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web";
 //NSString * const WS_URL = @"http://203.76.126.69/integration_social_maps/web";
-NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_3";
+NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_4";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
@@ -57,6 +58,10 @@ NSString * const NOTIF_UPDATE_CIRCLE_DONE=@"com.genweb2.socialmaps.updatecircles
 NSString * const NOTIF_GET_ALL_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.getallblockedusersdone";
 NSString * const NOTIF_SET_BLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setblockedusersdone";
 NSString * const NOTIF_SET_UNBLOCKED_USERS_DONE=@"com.genweb2.socialmaps.setunblockedusersdone";
+NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE= @"com.genweb2.socialmaps.getalleventsformapdone";
+NSString * const NOTIF_GET_OTHER_USER_PROFILE_DONE= @"com.genweb2.socialmaps.getotheruserprofiledone";
+NSString * const NOTIF_DO_CONNECT_FB_DONE= @"com.genweb2.socialmaps.doconnectfbdone";
+NSString * const NOTIF_DO_CONNECT_WITH_FB= @"com.genweb2.socialmaps.doconnectwithfb";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

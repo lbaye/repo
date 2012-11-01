@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G56" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="1kw-4S-2Az">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="1kw-4S-2Az">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
@@ -103,7 +103,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="FT2-hO-MSy" userLabel="consentLogo">
-                                        <rect key="frame" x="99" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -526,7 +526,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="2um-eL-7hC" userLabel="consentLogo">
-                                        <rect key="frame" x="99" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -995,7 +995,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="dIE-Uy-q95" userLabel="consentLogo">
-                                        <rect key="frame" x="99" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -1368,7 +1368,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="poY-AM-LvZ" userLabel="consentLogo">
-                                        <rect key="frame" x="99" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -1856,12 +1856,131 @@
         <image name="bubble_count_icon.png" width="55" height="57"/>
         <image name="checkbox_unchecked.png" width="50" height="50"/>
         <image name="header.png" width="640" height="91"/>
-        <image name="logo_3.png" width="221" height="41"/>
+        <image name="logo_3.png" width="275" height="50"/>
         <image name="show_on_map.png" width="43" height="43"/>
         <image name="slide_close_bar.png" width="640" height="46"/>
         <image name="sp2.png" width="1" height="60"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
+    <classes>
+        <class className="BlockUnblockCircleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BlockUnblockCircleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="cancelMsg:"/>
+                <relationship kind="action" name="selectAllpeople:"/>
+                <relationship kind="action" name="selectedUser:"/>
+                <relationship kind="action" name="sendMsg:"/>
+                <relationship kind="action" name="viewLocationButton:"/>
+                <relationship kind="outlet" name="blockSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="blockTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="selectAllButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="CircleListCheckBoxTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListCheckBoxTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="checkBoxButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="CircleListTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CircleListTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="coverPicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="firstNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendShipStatus" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="messageButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="profilePicImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="regStsImgView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="showOnMapButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="InviteFromCircleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteFromCircleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="cancelMsg:"/>
+                <relationship kind="action" name="selectAllpeople:"/>
+                <relationship kind="action" name="selectedUser:"/>
+                <relationship kind="action" name="sendMsg:"/>
+                <relationship kind="action" name="viewLocationButton:"/>
+                <relationship kind="outlet" name="inviteSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="inviteTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="selectAllButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ViewCircleListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleListViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="cancelMsg:"/>
+                <relationship kind="action" name="gotoBlockUnBlock:"/>
+                <relationship kind="action" name="gotoCircles:"/>
+                <relationship kind="action" name="gotoInvites:"/>
+                <relationship kind="action" name="gotoTabBar:"/>
+                <relationship kind="action" name="sendMsg:"/>
+                <relationship kind="action" name="showSearch:"/>
+                <relationship kind="outlet" name="circleListTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
+                <relationship kind="outlet" name="listViewfilter" candidateClass="UIView"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="ViewCircleWisePeopleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewCircleWisePeopleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="actionNotificationButton:"/>
+                <relationship kind="action" name="addCircleAction:"/>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="cancelMsg:"/>
+                <relationship kind="action" name="okAction:"/>
+                <relationship kind="action" name="sendMsg:"/>
+                <relationship kind="outlet" name="circleCreateView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="circleListTableCell" candidateClass="CircleListTableCell"/>
+                <relationship kind="outlet" name="circleNameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="circleSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="circleSelectTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="msgView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

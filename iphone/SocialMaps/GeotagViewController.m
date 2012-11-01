@@ -711,7 +711,7 @@ NSMutableArray *guestListIdArr;
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
 	//Selection was made
-	int selectedCircleIndex = [selectedIndex intValue];
+//	int selectedCircleIndex = [selectedIndex intValue];
 }
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
@@ -788,7 +788,7 @@ NSMutableArray *guestListIdArr;
     static NSString *CellIdentifier = @"circleTableCell";
     static NSString *CustomCellIdentifier = @"customCircleTableCell";
     
-    int nodeCount = [filteredList1 count];
+//    int nodeCount = [filteredList1 count];
     
     SelectCircleTableCell *cell = [circleTableView
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -1035,7 +1035,7 @@ NSMutableArray *guestListIdArr;
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
+//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1110,7 +1110,7 @@ NSMutableArray *guestListIdArr;
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
+//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1179,7 +1179,7 @@ NSMutableArray *guestListIdArr;
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -1222,7 +1222,7 @@ NSMutableArray *guestListIdArr;
 //handling selection from custom scroll view of friends selection
 -(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
 {
-    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
     if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
     {

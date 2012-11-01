@@ -17,6 +17,10 @@
 #import "DDAnnotationView.h"
 #import "NotificationController.h"
 #import "UtilityClass.h"
+#import "ActionSheetPicker.h"
+#import "UtilityClass.h"
+#import "MeetUpRequestController.h"
+#import "ViewEventListViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -38,13 +42,16 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount;
+@synthesize totalNotifCount,lastSeenat,nameButton;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
 UserInfo *userInfo;
 NSMutableArray *nameArr;
 BOOL coverImgFlag;
+BOOL isDirty=FALSE;
+NSMutableArray *selectedScrollIndex;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,6 +68,7 @@ BOOL coverImgFlag;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
@@ -68,11 +76,15 @@ BOOL coverImgFlag;
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
     
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];    
     
@@ -81,10 +93,12 @@ BOOL coverImgFlag;
     ImgesName=[[NSMutableArray alloc] init];
     
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
-    for (int i=0; i<[nameArr count]; i++)
-    {
-        [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
-    }
+    [ImgesName addObject:@"photos_icon"];
+    [ImgesName addObject:@"friends_icon"];
+    [ImgesName addObject:@"events_icon"];
+    [ImgesName addObject:@"places_icon"];
+    [ImgesName addObject:@"sm_icon@2x"];
+    
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
@@ -97,7 +111,6 @@ BOOL coverImgFlag;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
-    [smAppDelegate showActivityViewer:self.view];
     
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
@@ -109,6 +122,7 @@ BOOL coverImgFlag;
 
 -(IBAction)editCoverButton:(id)sender
 {
+    isDirty=TRUE;
     coverImgFlag=TRUE;
     [self.photoPicker getPhoto:self];
     [self.entityTextField resignFirstResponder];
@@ -116,6 +130,7 @@ BOOL coverImgFlag;
 
 -(IBAction)editProfilePicButton:(id)sender
 {
+    isDirty=TRUE;
     coverImgFlag=FALSE;
     [self.photoPicker getPhoto:self];
     [self.entityTextField resignFirstResponder];    
@@ -123,7 +138,10 @@ BOOL coverImgFlag;
 
 -(IBAction)editStatusButton:(id)sender
 {
+    entityFlag=0;
     [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"My status message...";
+    entityTextField.text=userInfo.status;
 }
 
 -(IBAction)viewOnMapButton:(id)sender
@@ -151,11 +169,41 @@ BOOL coverImgFlag;
 
 -(IBAction)saveEntity:(id)sender
 {
+    isDirty=TRUE;
     NSLog(@"save");
-    statusMsgLabel.text=entityTextField.text;
-    userInfo.status=entityTextField.text;
     [statusContainer removeFromSuperview];
     [entityTextField resignFirstResponder];
+    if (entityFlag==0)
+    {
+        statusMsgLabel.text=entityTextField.text;
+        userInfo.status=entityTextField.text;        
+    }
+    if (entityFlag==1)
+    {
+        ageLabel.text=entityTextField.text;
+        userInfo.age=[entityTextField.text intValue];
+    }
+    if (entityFlag==2)
+    {
+        relStsLabel.text=entityTextField.text;
+        userInfo.relationshipStatus=entityTextField.text;
+    }
+    if (entityFlag==3)
+    {
+        livingPlace.text=entityTextField.text;
+        userInfo.address.city=entityTextField.text;        
+    }
+    if (entityFlag==4)
+    {
+        worksLabel.text=entityTextField.text;
+        userInfo.workStatus=entityTextField.text;                
+    }    
+    if (entityFlag==5)
+    {
+        [nameButton setTitle:entityTextField.text forState:UIControlStateNormal];
+        userInfo.firstName=entityTextField.text;                
+    }    
+
 }
 
 -(IBAction)cancelEntity:(id)sender
@@ -209,21 +257,30 @@ BOOL coverImgFlag;
 
 -(IBAction)backButton:(id)sender
 {
-    [self.entityTextField resignFirstResponder];
-    [smAppDelegate showActivityViewer:self.view];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
-    [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
+    if (isDirty==FALSE) 
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else if(isDirty==TRUE)
+    {
+        [self.entityTextField resignFirstResponder];
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [rc updateUserProfile:userInfo:@"Auth-Token":smAppDelegate.authToken];
+    }
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
 {
     NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
+    [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
 //     coverImageView.image;
 //     profileImageView.image;
     userInfo=[notif object];
      nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
+    [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
      statusMsgLabel.text=@"";
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
@@ -238,7 +295,7 @@ BOOL coverImgFlag;
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        [regStatus setImage:[UIImage imageNamed:@"f_logo.png"] forState:UIControlStateNormal];
+        [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
     }
     else
     {
@@ -278,9 +335,11 @@ BOOL coverImgFlag;
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
-	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-    [self.mapView addAnnotation:annotation];
-
+    if (CLLocationCoordinate2DIsValid(annotation.coordinate))
+    {
+        [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+        [self.mapView addAnnotation:annotation];        
+    }
 
 }
 
@@ -298,6 +357,58 @@ BOOL coverImgFlag;
 //	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 //    [self presentModalViewController:controller animated:YES];
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(IBAction)ageButtonAction:(id)sender
+{
+    NSLog(@"age button");
+    entityFlag=1;
+//    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"My age...";
+    entityTextField.text=[NSString stringWithFormat:@"%d",userInfo.age];
+    if (userInfo.dateOfBirth) {
+        [ActionSheetPicker displayActionPickerWithView:sender dateOfBirthPickerMode:UIDatePickerModeDate selectedDate:userInfo.dateOfBirth target:self action:@selector(dateWasSelected::) title:@"Select date of birth"];
+    }
+    else 
+    {
+        [ActionSheetPicker displayActionPickerWithView:sender dateOfBirthPickerMode:UIDatePickerModeDate selectedDate:[NSDate date] target:self action:@selector(dateWasSelected::) title:@"Select date of birth"];
+    }
+
+}
+
+-(IBAction)realstsButtonAction:(id)sender
+{
+    NSLog(@"relsts button");    
+    entityFlag=2;
+    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"My relationship status...";
+    entityTextField.text=userInfo.relationshipStatus;
+}
+
+-(IBAction)liveatButtonAction:(id)sender
+{
+    NSLog(@"liveat button");    
+    entityFlag=3;
+    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"My living city...";
+    entityTextField.text=userInfo.address.city;    
+}
+
+-(IBAction)workatButtonAction:(id)sender
+{
+    NSLog(@"work at button");
+    entityFlag=4;
+    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"My work place and position...";
+    entityTextField.text=userInfo.workStatus;
+}
+
+-(IBAction)nameButtonAction:(id)sender
+{
+    entityFlag=5;
+    [self.view addSubview:statusContainer];
+    entityTextField.placeholder=@"Enter first name...";
+    entityTextField.text=userInfo.firstName;    
 }
 
 -(IBAction)hideKeyboard:(id)sender
@@ -324,8 +435,6 @@ BOOL coverImgFlag;
 {
     NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    //temp use
-//    userInfo.coverPhoto=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
     if (img)
     {
@@ -333,7 +442,7 @@ BOOL coverImgFlag;
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"event_item_bg.png"];
+        coverImageView.image=[UIImage imageNamed:@"blank.png"];
     }
 
     NSLog(@"image setted after download1. %@",img);
@@ -345,7 +454,6 @@ BOOL coverImgFlag;
     NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
     NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
     //temp use
-//    userInfo.avatar=@"http://www.cnewsvoice.com/C_NewsImage/NI00005461.jpg";
     UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
     if (img2)
     {
@@ -423,26 +531,7 @@ BOOL coverImgFlag;
             if(i< [ImgesName count]) 
             { 
                 UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
-                if([dicImages_msg valueForKey:[ImgesName objectAtIndex:i]]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:[ImgesName objectAtIndex:i]]; 
-                } 
-                else 
-                { 
-                    if(!isDragging_msg && !isDecliring_msg && ![dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]) 
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"sm_icon@2x.png"] forKey:[ImgesName objectAtIndex:i]]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image                    
-                        imgView.image = [UIImage imageNamed:@"sm_icon@2x.png"];                   
-                    }               
-                }
+
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 75)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 60, 60, 20)];
                 name.textAlignment=UITextAlignmentCenter;
@@ -453,21 +542,26 @@ BOOL coverImgFlag;
                 
                 [name setBackgroundColor:[UIColor clearColor]];
                 imgView.userInteractionEnabled = YES;           
-                imgView.tag = i;           
+                imgView.tag = i;
+                aView.tag = i;
+                imgView.image=[UIImage imageNamed:[ImgesName objectAtIndex:i]];
                 imgView.exclusiveTouch = YES;           
                 imgView.clipsToBounds = NO;           
                 imgView.opaque = YES;   
                 imgView.exclusiveTouch = YES;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=1.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];
                 [aView addSubview:imgView];
                 [aView addSubview:name];
-                [userItemScrollView addSubview:aView];           
+                [userItemScrollView addSubview:aView];
+                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+                tapGesture.numberOfTapsRequired = 1;
+                [aView addGestureRecognizer:tapGesture];
+                [tapGesture release];  
             }       
             x+=65;   
         }
@@ -521,9 +615,79 @@ BOOL coverImgFlag;
     // e.g. self.myOutlet = nil;
 }
 
+//handling selection from scroll view of friends selection
+-(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
+{
+    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
+    NSArray* subviews = [NSArray arrayWithArray: userItemScrollView.subviews];
+    if ([selectedScrollIndex containsObject:[ImgesName objectAtIndex:[sender.view tag]]])
+    {
+        [selectedScrollIndex removeObject:[ImgesName objectAtIndex:[sender.view tag]]];
+        NSLog(@"removed %@",selectedScrollIndex);
+    } 
+    else 
+    {
+        [selectedScrollIndex addObject:[ImgesName objectAtIndex:[sender.view tag]]];
+        NSLog(@"added %@",selectedScrollIndex);
+    }
+    for (int l=0; l<[subviews count]; l++)
+    {
+        UIView *im=[subviews objectAtIndex:l];
+        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
+        UIImageView *im1=[subviews1 objectAtIndex:0];
+        [im1 setAlpha:1.0];
+        im1.layer.borderWidth=2.0;
+        im1.layer.masksToBounds = YES;
+        [im1.layer setCornerRadius:7.0];
+        
+        if ([im1.image isEqual:[UIImage imageNamed:[ImgesName objectAtIndex:imageIndex]]])
+        {
+            im1.layer.borderColor=[[UIColor greenColor]CGColor];
+        }
+        else 
+        {
+            im1.layer.borderColor=[[UIColor grayColor]CGColor];
+        }
+    }
+    if (imageIndex==0) 
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+    }
+    else if (imageIndex==1)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+    }
+    else if (imageIndex==2)
+    {
+        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+    }
+    else if (imageIndex==3)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+    }
+    else if (imageIndex==4)
+    {
+        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
+
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
+{
+    isDirty=TRUE;
+    userInfo.dateOfBirth=selectedDate;
+    ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
 }
 
 @end

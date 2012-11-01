@@ -49,6 +49,7 @@
     NSMutableArray *placeList;
     NSMutableDictionary *placeIndex;
     NSMutableArray *dealList;
+    NSMutableArray *eventList;
     NSMutableArray *displayList;
     NSMutableArray *friendList;
     NSMutableArray *meetUpRequests;
@@ -65,11 +66,13 @@
     bool            showPeople;
     bool            showPlaces;
     bool            showDeals;
+    bool            showEvents;
     bool            gotListing;
     bool needToCenterMap;
     NSString        *deviceTokenId;   // For PUSH notification
     bool            deviceTokenChanged;
     bool            facebookLogin;
+    bool            smLogin;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -100,6 +103,7 @@
 @property (nonatomic, retain)NSMutableArray *dealList;
 @property (nonatomic, retain)NSMutableArray *displayList;
 @property (nonatomic, retain)NSMutableArray *friendList;
+@property (nonatomic,retain)NSMutableArray *eventList;
 @property (nonatomic, retain)Platform        *platformPrefs;
 @property (nonatomic, retain)Layer           *layerPrefs;
 @property (nonatomic, retain)InformationPrefs    *informationPrefs;
@@ -113,15 +117,18 @@
 @property (atomic) bool showPeople;
 @property (atomic) bool showPlaces;
 @property (atomic) bool showDeals;
+@property (atomic) bool showEvents;
 @property (atomic) bool gotListing;
 @property (atomic) bool needToCenterMap;
 @property (atomic, copy) NSString *deviceTokenId;
 @property (atomic) bool deviceTokenChanged;
 @property (atomic) bool facebookLogin;
+@property (atomic) bool smLogin;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
++ (id) sharedInstance;
 - (void) hideActivityViewer;
 - (void) showActivityViewer:(UIView*)sender;
 - (void) getPreferenceSettings:(NSString*) authToken;

@@ -16,6 +16,16 @@
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
     
+    UIView *imageView = [annoView viewWithTag:11000];
+    
+    imageView.frame = CGRectMake(imageView.frame.origin.x * 1.15, imageView.frame.origin.y * 1.15, imageView.frame.size.width * .85 , imageView.frame.size.height * .85);
+    
+    UIView *buttonView = [annoView viewWithTag:11001];
+    buttonView.frame = CGRectMake(buttonView.frame.origin.x * .85 , buttonView.frame.origin.y * .85, buttonView.frame.size.width, buttonView.frame.size.height);
+    
+    UIView *imageView2 = [annoView viewWithTag:110001];
+    imageView2.frame = CGRectMake(imageView2.frame.origin.x * 1.15, imageView2.frame.origin.y * 1.15, imageView2.frame.size.width * .85 , imageView2.frame.size.height * .85);
+    
     return annoView;
 }
 
@@ -90,7 +100,6 @@
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [self getViewForStateSummary:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
-    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     
     CGRect detFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                  (BUTTON_WIDTH+2)*4+20, annoView.frame.size.height+64);
@@ -106,7 +115,7 @@
     // Event
     UIImage *eventImg = [UIImage imageNamed:@"place_event.png"];
     UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(5, infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow)-2, eventImg.size.width, BUTTON_HEIGHT);
+    eventBtn.frame = CGRectMake(5, infoView.frame.size.height-5-BUTTON_HEIGHT*(2-numRow)-2, 40, BUTTON_HEIGHT);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [eventBtn setImage:eventImg forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
@@ -221,13 +230,13 @@
 
     switch (tag) {
         case 11003:
-            actionType = MapAnnoUserActionEvent;
+            actionType = MapAnnoUserActionCreateEvent;
             break;
         case 11004:
             actionType = MapAnnoUserActionPlan;
             break;    
         case 11005:
-            actionType = MapAnnoUserActionDirectionPlace;
+            actionType = MapAnnoUserActionDirection;
             break;
         case 11006:
             actionType = MapAnnoUserActionRecommend;

@@ -25,7 +25,9 @@ typedef enum _MAP_USER_ACTION {
     MapAnnoUserActionSave,
     MapAnnoUserActionMeetupPlace,
     MapAnnoUserActionCheckin,
-    MapAnnoUserActionGeotag
+    MapAnnoUserActionGeotag,
+    MapAnnoUserActionProfile,
+    MapAnnoUserActionCreateEvent
 } MAP_USER_ACTION;
 
 @protocol MapAnnotationDelegate <NSObject>

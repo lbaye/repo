@@ -49,6 +49,15 @@
 	[actionSheetPicker release];
 }
 
++ (void)displayActionPickerWithView:(UIView *)aView dateOfBirthPickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action title:(NSString *)title 
+{
+	ActionSheetPicker *actionSheetPicker = [[ActionSheetPicker alloc] initForDateOfBirthWithContainingView:aView datePickerMode:datePickerMode selectedDate:selectedDate target:target action:action title:title];
+	
+    [actionSheetPicker showActionPicker];
+	[actionSheetPicker release];
+}
+
+
 - (id)initWithContainingView:(UIView *)aView target:(id)target action:(SEL)action {
 	if ((self = [super init]) != nil) {
 		self.view = aView;
@@ -76,6 +85,15 @@
 	return self;
 }
 
+- (id)initForDateOfBirthWithContainingView:(UIView *)aView datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action title:(NSString *)title {
+	if ([self initWithContainingView:aView target:target action:action] != nil) {
+		self.datePickerMode = datePickerMode;
+		self.selectedDate = selectedDate;
+        [self.datePickerView setMaximumDate:[NSDate date]];
+		self.title = title;
+	}
+	return self;
+}
 
 - (void)showActionPicker {
 	[self retain];

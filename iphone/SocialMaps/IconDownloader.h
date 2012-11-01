@@ -25,6 +25,7 @@
 @property (nonatomic, retain) UserFriends *userFriends;
 @property (nonatomic, retain) NSIndexPath *indexPathInTableView;
 @property (nonatomic, assign) id <IconDownloaderDelegate> delegate;
+@property (nonatomic, assign) int scrollSubViewTag;
 
 @property (nonatomic, retain) NSMutableData *activeDownload;
 @property (nonatomic, retain) NSURLConnection *imageConnection;
@@ -38,5 +39,6 @@
 
 //- (void)appImageDidLoad:(NSIndexPath *)indexPath;
 - (void)appImageDidLoad:(NSString *)userId;
+- (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag;
 
 @end

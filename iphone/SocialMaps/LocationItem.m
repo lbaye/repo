@@ -118,6 +118,7 @@
         scrollAddress = [[UIScrollView alloc] initWithFrame:scrollFrame];
         CGSize addrContentsize = CGSizeMake(addressStringSize.width, scrollAddress.frame.size.height);
         scrollAddress.contentSize = addrContentsize;
+        scrollAddress.tag=20031;
         scrollAddress.backgroundColor = [UIColor clearColor];
         
 		lblAddress = [[[UILabel alloc] initWithFrame:addressFrame] autorelease];

@@ -138,6 +138,11 @@
     }
 }
 
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event 
+{
+    [self touchesEnded:touches withEvent:event];
+}
+
 - (void)limitMovement:(UITouch*) touch
 {
     imageViewDrag.center = CGPointMake([touch locationInView:self].x, imageViewDrag.center.y);
@@ -148,6 +153,16 @@
     } else if (imageViewDrag.frame.origin.x >= endDragRect.origin.x) {
         imageViewDrag.frame = endDragRect;
     } 
+}
+
+- (void) gotoButton:(int)buttonNumber 
+{    
+    CGRect radioFrame = CGRectMake(0 + CELL_PADDING+buttonNumber*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-21/2, (self.frame.size.height-21)/2, 21, 21);
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.5];
+    [imageViewDrag setFrame:radioFrame];
+    [UIView commitAnimations];
 }
 
 - (void) buttonClicked:(id)sender {

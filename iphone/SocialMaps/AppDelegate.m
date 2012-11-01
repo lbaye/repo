@@ -49,6 +49,7 @@
 @synthesize peopleList;
 @synthesize placeList;
 @synthesize dealList;
+@synthesize eventList;
 @synthesize displayList;
 @synthesize friendList;
 @synthesize platformPrefs;
@@ -63,6 +64,7 @@
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
+@synthesize showEvents;
 @synthesize peopleIndex;
 @synthesize gotListing;
 @synthesize placeIndex;
@@ -71,6 +73,15 @@
 @synthesize deviceTokenId;
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
+@synthesize smLogin;
+
+static AppDelegate *sharedInstance=nil;
+
+// Get the shared instance and create it if necessary.
++ (AppDelegate *)sharedInstance {
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
 
 - (void)dealloc
 {
@@ -99,6 +110,7 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     facebookLogin = FALSE;
+    smLogin = FALSE;
     gotListing = FALSE;
     needToCenterMap = TRUE;
     rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
@@ -136,6 +148,7 @@
     placeList  = [[NSMutableArray alloc] init];
     placeIndex = [[NSMutableDictionary alloc] init];
     dealList   = [[NSMutableArray alloc] init];
+    eventList  =[[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];
 
     // Location coordinates
@@ -150,6 +163,7 @@
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
+    showEvents = FALSE;
     
     msgRead = FALSE;
     notifRead = FALSE;
@@ -296,7 +310,7 @@
 
 -(void)showActivityViewer:(UIView*) sender
 {
-	CGRect frame = CGRectMake(sender.frame.size.width / 2 - 12, sender.frame.size.height / 2 - 12, 24, 24);
+	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
     
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
     [activityView.layer setCornerRadius:4.0f];
@@ -312,7 +326,6 @@
                                      UIViewAutoresizingFlexibleTopMargin |
                                      UIViewAutoresizingFlexibleBottomMargin);
 	[sender addSubview: activityView];
-	[activityView release];
 }
 
 // Get User information

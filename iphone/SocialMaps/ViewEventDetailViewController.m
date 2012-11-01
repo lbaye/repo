@@ -47,6 +47,7 @@ BOOL isBackgroundTaskRunning=FALSE;
 {
     [super viewDidAppear:animated];
     RestClient *rc=[[RestClient alloc] init];
+    NSLog(@"globalEvent %@ %@",globalEvent,globalEvent.eventID);
     [rc getEventDetailById:globalEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 
 
@@ -73,7 +74,15 @@ BOOL isBackgroundTaskRunning=FALSE;
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
     eventAddress.text=globalEvent.eventAddress;
-    eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[globalEvent.eventDistance doubleValue]];
+    float distance=[globalEvent.eventDistance floatValue];
+    if (distance > 99999)
+    {
+        eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+    }
+    else
+    {
+        eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+    }
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
@@ -108,8 +117,17 @@ BOOL isBackgroundTaskRunning=FALSE;
         aEvent.eventAddress=@"Address not found";
     }
 	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
-	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+//	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+//	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+    if (distance > 99999)
+    {
+        annotation.subtitle = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+    }
+    else
+    {
+        annotation.subtitle = [NSString stringWithFormat:@"%dm", (int)distance];
+    }
+
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     
@@ -225,7 +243,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     }
     else
     {
-        eventImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
+        eventImgView.image=[UIImage imageNamed:@"blank.png"];
     }
     NSLog(@"image setted after download. %@",img);
 }
@@ -332,6 +350,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"invite people");    
     globalEditEvent=globalEvent;
     editFlag=true;
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -360,6 +379,7 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"edit event");
     globalEditEvent=globalEvent;
     editFlag=true;
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

@@ -10,11 +10,13 @@
 
 @interface Geofence : NSObject
 {
+    NSString *name;
     NSString *lat;
     NSString *lng;
     NSString *radius;
 }
 
+@property (nonatomic,retain) NSString *name;
 @property (nonatomic,retain) NSString *lat;
 @property (nonatomic,retain) NSString *lng;
 @property (nonatomic,retain) NSString *radius;

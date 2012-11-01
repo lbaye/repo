@@ -14,7 +14,9 @@
 #import "MapAnnotation.h"
 #import "MapAnnotationPeople.h"
 #import "MapAnnotationPlace.h"
+#import "MapAnnotationEvent.h"
 #import "PullableView.h"
+#import "CustomRadioButton.h"
 
 #define METERS_PER_MILE 1609.344
 
@@ -30,7 +32,7 @@ typedef enum _SHARING_TYPES {
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
                                 MapAnnotationDelegate, IconDownloaderDelegate,
-                                UIGestureRecognizerDelegate,PullableViewDelegate> {
+                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -60,6 +62,11 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *circleView;
     BOOL isFirstTimeDownloading;
     NSTimer *timerGotListing;
+    MapAnnotationEvent *mapAnnoEvent;
+    IBOutlet UIView *connectToFBView;
+    IBOutlet UIView *viewSharingPrefMapPullDown;
+    CustomRadioButton *radio;
+                                    
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -71,6 +78,7 @@ typedef enum _SHARING_TYPES {
 @property (nonatomic, retain) MapAnnotation *mapAnno;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPeople;
 @property (nonatomic, retain) MapAnnotation *mapAnnoPlace;
+@property (nonatomic, retain) MapAnnotationEvent *mapAnnoEvent;
 @property (nonatomic, retain) NSMutableArray *filteredList;
 @property (nonatomic, retain) MapAnnotation *selectedAnno;
 
@@ -92,6 +100,7 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UITableView *inviteFrndTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
 @property(nonatomic,retain) IBOutlet UIView *circleView;
+@property(nonatomic,retain) IBOutlet UIView *connectToFBView;
 //@property(nonatomic,retain) NSMutableDictionary *imageDownloadsInProgress; 
 
 - (IBAction)showPullDown:(id)sender;
@@ -142,5 +151,8 @@ typedef enum _SHARING_TYPES {
 -(IBAction)gotoFriends:(id)sender;
 -(IBAction)gotonNewsFeed:(id)sender;
 -(IBAction)gotonDeals:(id)sender;
+-(void)loadAnnotationForEvents;
+-(IBAction)connectWithFB:(id)sender;
+-(IBAction)closeConnectWithFB:(id)sender;
 
 @end

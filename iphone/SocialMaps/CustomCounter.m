@@ -6,13 +6,17 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "CustomCounter.h"
+#import "UITextField+Scrolling.h"
 
 @implementation CustomCounter
 @synthesize allowNegative;
 @synthesize currVal;
 @synthesize countDisp;
 @synthesize delegate;
+@synthesize parent;
+@synthesize movementDistance;
 
 - (id)initWithFrame:(CGRect)frame allowNeg:(bool)neg default:(int)def sender:(id)sender tag:(int)tag
 {
@@ -22,6 +26,7 @@
         allowNegative = neg;
         currVal       = def;
         self.tag      = tag;
+        self.parent   = sender;
         self.backgroundColor = [UIColor clearColor];
         
         UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"radius_field.png"]];
@@ -46,31 +51,63 @@
         [self addSubview:rightBtn];
         
         CGSize txtSize = [@"99999999" sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:17]];
-        CGRect labelFrame = CGRectMake(2+10+2, 
+        CGRect txtFrame = CGRectMake(2+10+2, 
                                        (self.frame.size.height-txtSize.height)/2, 
                                        self.frame.size.width-4-2*10-4, txtSize.height);
-        countDisp = [[UILabel alloc] initWithFrame:labelFrame];
+        countDisp = [[UITextField alloc] initWithFrame:txtFrame];
         countDisp.font = [UIFont fontWithName:@"Helvetica-Bold" size:15];
         countDisp.textAlignment = UITextAlignmentCenter;
         countDisp.textColor = [UIColor blackColor];
         countDisp.text = [NSString stringWithFormat:@"%d",currVal];
+        countDisp.backgroundColor = [UIColor clearColor];
+        countDisp.borderStyle = UITextBorderStyleNone;
+        countDisp.returnKeyType = UIReturnKeyDone;
+        countDisp.textAlignment = UITextAlignmentCenter;
+        countDisp.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        countDisp.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        countDisp.inputView = nil;
+        //[countDisp setKeyboardType:UIKeyboardTypeNumberPad];
+        [countDisp setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
+        countDisp.delegate = self;
+
         [self addSubview:countDisp];
     }
     return self;
 }
+// UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
+    [self endEditing:YES];
+    
+	return YES;
+}
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [textField animateTextField: parent up: YES];
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField animateTextField: parent up: NO];
+    // Store the entered value and notify delegate
+    currVal  = [countDisp.text intValue];
+    [self notifyDelegate:self];
+}
+
+// UITextField Delegate end
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
     countDisp.text = [NSString stringWithFormat:@"%d",currVal];
-    
 }
 
 - (void) notifyDelegate:(id)sender {
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(counterValueChanged:sender:)]) {
-        [self.delegate counterValueChanged:currVal sender:[sender superview]];
+        [self.delegate counterValueChanged:currVal sender:(id)self.tag];
     }
 }
 

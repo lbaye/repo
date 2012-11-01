@@ -11,6 +11,7 @@
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
 #import "AppDelegate.h"
+#import "MapAnnotationEvent.h"
 
 @implementation MapAnnotation
 @synthesize currState;
@@ -25,13 +26,17 @@
         reuseIdent = @"locAnnoPeople";
     else if ([locItem isKindOfClass:[LocationItemPlace class]]) 
         reuseIdent = @"locAnnoPlace";
+    else if([locItem isKindOfClass:[LocationItem class]]) 
+        reuseIdent = @"locAnnoPlace";
     else
         reuseIdent = @"loggedInUser";
     annoView = [newMapView dequeueReusableAnnotationViewWithIdentifier:reuseIdent];
     if ( annoView == nil ) {
         NSLog(@"MapAnnotation:New MKAnnotationView");
         annoView = [ [ MKAnnotationView alloc ] initWithAnnotation:newAnnotation reuseIdentifier: reuseIdent ];
-    }
+    } else 
+        [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];
+    
     if ([newAnnotation isKindOfClass:[LocationItem class]]) {
         LocationItem *locItem = (LocationItem*) newAnnotation;
         return [self getViewForState:locItem.currDisplayState loc:locItem];
@@ -49,6 +54,10 @@
         [annoView.layer setMasksToBounds:YES];
         [annoView addSubview:locImage];
         [locImage release];
+        
+        
+
+        
         return annoView;
     }
     return nil;
@@ -59,9 +68,34 @@
     [[annoView viewWithTag:11001] removeFromSuperview];
     [[annoView viewWithTag:11002] removeFromSuperview];
     
-    CGRect imgFrame = CGRectMake(5, 5, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
-    UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    CGRect imgFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
+    //UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
+    
+    UIImageView *locImage = [[UIImageView alloc] initWithFrame:imgFrame];
+    UIImageView *locImageSquare ;
+    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
+        locImage.image = [UIImage imageNamed:@"user_thumb_only.png"];
+        locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 2, ANNO_IMG_WIDTH - 6, ANNO_IMG_WIDTH - 6)];
+    }
+    else
+    {
+        locImage.image = [UIImage imageNamed:@"user_thumb_only_gray.png"];
+        locImageSquare = [[UIImageView alloc] initWithFrame:CGRectMake(2.5, 3, ANNO_IMG_WIDTH - 8, ANNO_IMG_WIDTH - 8)];
+        
+    }
     locImage.tag = 11000;
+    
+    [locImage addSubview:locImageSquare];
+    locImageSquare.image = locItem.itemIcon;
+    [locImageSquare.layer setCornerRadius:4.0f];
+    [locImageSquare.layer setMasksToBounds:YES];
+    locImageSquare.tag = 110001;
+    
+    //[locImageSquare.layer setBorderWidth:1.0f];
+    //[locImageSquare.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    
+    [locImageSquare release];
+    
     CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
     annoView.frame = annoFrame;
     annoView.backgroundColor = [UIColor clearColor];
@@ -80,7 +114,9 @@
     changeState.tag = 11001;
     [annoView addSubview:changeState]; 
     annoView.centerOffset = CGPointMake(0.0, 0.0);
-     
+    
+    
+    
     return annoView;
 }
 
@@ -115,8 +151,11 @@
 
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         // TODO: for appstore submission do not show detailed annotation
-        [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
-    }else {
+        [btn setImage:[UIImage imageNamed: @"map_info_expand.png"] forState:UIControlStateNormal];
+    } else if ([locItem isKindOfClass:[LocationItem class]]) {
+            // TODO: for appstore submission do not show detailed annotation
+            [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
+        }else{
         //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     }
@@ -137,13 +176,20 @@
     imgView.frame = CGRectMake(8, 8, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
     
     // TODO: temporary change for appstore submission
-    //CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
-    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);
+    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+150);
+//    CGRect annoFrame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);
     annoView.frame = annoFrame;
     
     // TODO: temporary change for appstore submission
-    //CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
-    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
+    CGRect infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+150);
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    {
+        LocationItemPeople *locItemPeople = (LocationItemPeople*) locItem;
+        if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+        {
+            infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
+        }
+    }
     infoView = [[UIView alloc] initWithFrame:infoFrame];
     infoView.backgroundColor = [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0]; 
     infoView.tag = 11002;
@@ -184,6 +230,7 @@
     switch (locItem.currDisplayState) {
         case MapAnnotationStateNormal:
             locItem.currDisplayState = MapAnnotationStateSummary;
+            NSLog(@"goto summary state");
             break;
         case MapAnnotationStateSummary:
             // Don't show details for non-SM users
@@ -195,8 +242,14 @@
                     locItem.currDisplayState = MapAnnotationStateNormal;
             } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
                 // TODO: for appstore submission do not show detailed annotation
+                locItem.currDisplayState = MapAnnotationStateDetailed;
+            }
+            else if ([locItem isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"event annotation");
                 locItem.currDisplayState = MapAnnotationStateNormal;
-            } else {
+            }
+            else {
                 locItem.currDisplayState = MapAnnotationStateNormal;
             }
             break;    
@@ -207,11 +260,12 @@
             break;
     }
     selAnno.selected=TRUE;
-
+    
+    NSLog(@"self.delegate %@",self.delegate);
     [selAnno setNeedsDisplay];
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(mapAnnotationChanged:)]) {
         [self.delegate mapAnnotationChanged:[selAnno annotation]];
-    }
+    }    
 }
 
 - (void) changeStateToDetails:(id) anno {
@@ -229,7 +283,10 @@
             locItem.currDisplayState = MapAnnotationStateSummary;
     } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
         locItem.currDisplayState = MapAnnotationStateSummary;
-    } 
+    }
+    else if ([locItem isKindOfClass:[LocationItem class]]) {
+        locItem.currDisplayState = MapAnnotationStateSummary;
+    }
 }
 
 - (void) changeStateToSummary:(id) anno 

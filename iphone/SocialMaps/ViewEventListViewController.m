@@ -128,7 +128,7 @@ bool searchFlags=true;
         aEvent=[eventListGlobalArray objectAtIndex:i];
         if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
         {
-            aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
+            aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
         }
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
         [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
@@ -305,6 +305,7 @@ bool searchFlags=true;
 //    [self.eventListTableView reloadData];
     [self.eventSearchBar resignFirstResponder];
     NSLog(@"new event");
+    isFromVenue=FALSE;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     CreateEventViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -447,7 +448,17 @@ bool searchFlags=true;
         cell.eventDetail.text=event.eventShortSummary;
         cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
-        cell.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
+        float distance=[event.eventDistance floatValue];
+        if (distance > 99999)
+        {
+            cell.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+            cell1.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+        }
+        else
+        {
+            cell.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+            cell1.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
+        }
         
         cell1.eventName.text = cellValue;
         cell1.eventDetail.text=event.eventShortSummary;
@@ -474,8 +485,8 @@ bool searchFlags=true;
            
             NSLog(@"userFriends %@   %@",event.eventImage,event.eventImageUrl);
             // if a download is deferred or in progress, return a placeholder image
-            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
+            cell.eventImage.image=[UIImage imageNamed:@"blank.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];                
         }
         
         if ([downloadedImageDict objectForKey:event.eventID])
@@ -485,8 +496,8 @@ bool searchFlags=true;
         }
         else
         {
-            cell.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];                
-            cell1.eventImage.image=[UIImage imageNamed:@"event_item_bg.png"];      
+            cell.eventImage.image=[UIImage imageNamed:@"blank.png"];                
+            cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];      
         }
         
 //        else if ([[imageDownloadsInProgress objectForKey:event.eventID]isEqual:event.eventID]&&([imageDownloadsInProgress objectForKey:event.eventImage]!=NULL) ) 

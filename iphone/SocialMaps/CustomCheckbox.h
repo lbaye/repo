@@ -33,4 +33,5 @@ typedef enum _BOX_LOCATION {
 @property (nonatomic) BOX_LOCATION type;
 
 - (id)initWithFrame:(CGRect)frame boxLocType:(BOX_LOCATION)locType numBoxes:(int)num default:(NSArray*)def labels:(NSArray*) lbls;
+- (void) setState:(int)state btnNum:(int)num;
 @end

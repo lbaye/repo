@@ -17,6 +17,8 @@
 #import "MessageListViewController.h"
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
+#import "Event.h"
+#import "FriendsProfileViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -88,8 +90,8 @@
     [listViewfilter addSubview:label];
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces], nil] labels:[NSArray arrayWithObjects:@"People",@"Places", nil]];
+    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
+//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -218,9 +220,31 @@
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
     if (smAppDelegate.showPlaces == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.placeList];
-    if (smAppDelegate.showDeals == TRUE) 
-        [tempList addObjectsFromArray:smAppDelegate.dealList];
-    
+    if (smAppDelegate.showEvents == TRUE) 
+    {
+        NSLog(@"smAppDelegate.eventList %@",smAppDelegate.eventList);
+        for (int i=0; i<[smAppDelegate.eventList count]; i++)
+        {
+            if ([[smAppDelegate.eventList objectAtIndex:i] isKindOfClass:[Event class]])
+            {
+                Event *aEvent=[[Event alloc] init];
+                aEvent=[smAppDelegate.eventList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aEvent.eventName;
+                item.itemAddress=aEvent.eventDate.date;
+                item.itemType=0;
+                item.itemCategory=0;
+                item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
+                item.itemDistance=[aEvent.eventDistance floatValue];
+                item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
+                item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
+                item.currDisplayState=0;
+                [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+
+        [tempList addObjectsFromArray:smAppDelegate.eventList];
+    }
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [copyDisplayListArray addObjectsFromArray:sortedArray];
@@ -427,7 +451,6 @@
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     if(searching) 
 		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
@@ -440,6 +463,37 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
+    NSLog(@"selected: %@",[copyDisplayListArray objectAtIndex:indexPath.row]);
+    if (searching==YES)
+    {
+        if ([[copyListOfItems objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            
+            NSLog(@"in search");
+            if (![((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+                
+            }
+        }                
+    }
+    else 
+    {
+        if ([[copyDisplayListArray objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
+        {
+            NSLog(@"not in search");
+            if (![((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
+            {
+            FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+            controller.friendsId=((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.userId;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            }
+        }        
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -451,7 +505,6 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
     return [anItem getRowHeight:tableView];
 }
@@ -473,24 +526,25 @@
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
 {
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
+    NSLog(@"states %i %i %i",smAppDelegate.showPeople,smAppDelegate.showPlaces,smAppDelegate.showEvents);
     switch (btnNum) {
-        case 0:
+        case 7000:
             if (newState == 0)
                 smAppDelegate.showPeople = FALSE;
             else
                 smAppDelegate.showPeople = TRUE;
             break;
-        case 1:
+        case 7001:
             if (newState == 0)
                 smAppDelegate.showPlaces = FALSE;
             else
                 smAppDelegate.showPlaces = TRUE;
             break;
-        case 2:
+        case 7002:
             if (newState == 0)
-                smAppDelegate.showDeals = FALSE;
+                smAppDelegate.showEvents = FALSE;
             else
-                smAppDelegate.showDeals = TRUE;
+                smAppDelegate.showEvents = TRUE;
             break;
         default:
             break;

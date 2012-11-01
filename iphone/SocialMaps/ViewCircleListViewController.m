@@ -137,23 +137,17 @@ bool showSM=true;
 {
     NSLog(@"ListViewController: checkboxClicked btn:%d state:%d", btnNum, newState);
     switch (btnNum) {
-        case 0:
+        case 7000:
             if (newState == 0)
                 showFB = FALSE;
             else
                 showFB = TRUE;
             break;
-        case 1:
+        case 7001:
             if (newState == 0)
                 showSM = FALSE;
             else
                 showSM = TRUE;
-            break;
-        case 2:
-            if (newState == 0)
-                smAppDelegate.showDeals = FALSE;
-            else
-                smAppDelegate.showDeals = TRUE;
             break;
         default:
             break;

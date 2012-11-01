@@ -29,4 +29,6 @@
 @property (nonatomic, retain) id<CustomRadioButtonDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame numButtons:(int)numButtons labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag;
+- (void) gotoButton:(int)buttonNumber;
+
 @end

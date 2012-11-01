@@ -105,7 +105,7 @@
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:tz]];
     NSDate *convDate = [dateFormatter dateFromString:date];
 
-    NSLog(@"%@:%@:%@ ---> %@", date, tz_type, tz, [convDate description]);
+    NSLog(@"convertDate date=%@:tz_type=%@:tz%@ ---> %@", date, tz_type, tz, [convDate description]);
     return convDate;
 }
 
@@ -253,6 +253,81 @@
     }
     
     return unReadMessage;
+}
+
++ (NSString *) convertDateToUTC:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
+    NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    [dateFormatter setTimeZone:gmt];
+    NSString *timeStamp = [dateFormatter stringFromDate:date];
+    [dateFormatter release];
+    return timeStamp;
+}
+
++ (NSString *) convertFromUTCDate:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    dateFormatter1.dateFormat = @"yyyy-MM-dd HH:mm";    
+    NSTimeZone *gmt1 = [NSTimeZone systemTimeZone];
+    [dateFormatter1 setTimeZone:gmt1];
+    NSString *timeStamp1 = [dateFormatter1 stringFromDate:date];
+    [dateFormatter1 release];
+    return timeStamp1;
+}
+
++(NSString *)getLocalTimeFromString:(NSString *)timeStamp
+{
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    dateFormatter1.dateFormat = @"yyyy-MM-dd HH:mm Z";
+    NSTimeZone *gmt1 = [NSTimeZone systemTimeZone];
+    [dateFormatter1 setTimeZone:gmt1];
+    NSString *timeStamp1 = [dateFormatter1 stringFromDate:[self dateFromString:timeStamp]];
+    [dateFormatter1 release];
+    
+    NSLog(@"timeStamp1 %@",timeStamp1);
+    return timeStamp1;
+}
+
++(NSDate *)dateFromString:(NSString *)string
+{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [dateFormat setLocale:locale];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSTimeInterval interval = 5 * 60 * 60;
+    
+    NSDate *date1 = [dateFormat dateFromString:string];  
+    date1 = [date1 dateByAddingTimeInterval:interval];
+    if(!date1) date1= [NSDate date];
+    [dateFormat release];
+    [locale release];
+    
+    return date1;
+}
+
++(NSString *)getCurrentTimeOrDate:(NSString *)dateTime
+{
+    NSDate *date=[self dateFromString:dateTime];
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+    dateFormatter1.dateFormat = @"yyyy-MM-dd";
+    NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
+    dateFormatter2.dateFormat = @"hh:mm a";
+
+    NSString *timeStamp1 = [dateFormatter1 stringFromDate:date];
+    NSString *timeStamp2 = [dateFormatter1 stringFromDate:[NSDate date]];
+    NSString *timeStamp3 = [dateFormatter2 stringFromDate:date];
+    [dateFormatter1 release];
+    [dateFormatter2 release];
+    NSLog(@"timeStamp1 %@ timeStamp2 %@ timeStamp3 %@",timeStamp1,timeStamp2,timeStamp3);
+    if ([timeStamp1 isEqualToString:timeStamp2]) {
+        return [NSString stringWithFormat:@"at %@",timeStamp3];
+    }
+    else {
+        return [NSString stringWithFormat:@"on %@",timeStamp1];
+    }
+    
 }
 
 @end

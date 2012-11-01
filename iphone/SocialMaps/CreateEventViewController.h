@@ -10,6 +10,7 @@
 #import "UserFriends.h"
 #import "PhotoPicker.h"
 #import <Mapkit/Mapkit.h>
+#import "Geolocation.h"
 
 @interface CreateEventViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
@@ -69,7 +70,9 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     
     IBOutlet UIView *upperView;
     IBOutlet UIView *lowerView;    
-    IBOutlet UIScrollView *viewContainerScrollView;    
+    IBOutlet UIScrollView *viewContainerScrollView;
+    NSString *venueAddress;
+    Geolocation *geolocation;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
@@ -124,6 +127,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *upperView;
 @property(nonatomic,retain) IBOutlet UIView *lowerView;    
 @property(nonatomic,retain) IBOutlet UIScrollView *viewContainerScrollView;    
+@property(nonatomic,retain) NSString *venueAddress;
+@property(nonatomic,retain) Geolocation *geolocation;
 
 -(IBAction)nameButtonAction;
 -(IBAction)summaryButtonAction;    

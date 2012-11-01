@@ -358,14 +358,14 @@
     itemFrame = CGRectMake(10, heightOffset, LABEL_WIDTH, LABEL_HEIGHT);
     lbl = [[UILabel alloc] initWithFrame:itemFrame];
     lbl.backgroundColor = [UIColor clearColor];
-    lbl.text = @"Service";
+    lbl.text = @"Work";
     lbl.font = [UIFont fontWithName:@"Helvetica" size:11.0];
     [self addSubview:lbl];
     [lbl release];
     
     // Service text
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
-    service = [self getTextField:itemFrame text:@"Service..." tag:currTag++];
+    service = [self getTextField:itemFrame text:@"Work..." tag:currTag++];
     service.delegate = parent;
     service.text = smAppDelegate.userAccountPrefs.workStatus;
     [self addSubview:service];

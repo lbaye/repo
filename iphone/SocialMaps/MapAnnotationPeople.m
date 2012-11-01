@@ -16,7 +16,20 @@
 
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem {
     annoView = [super getViewForStateNormal:locItem];
-    
+    if ([locItem isKindOfClass:[LocationItemPeople class]])
+    {
+        LocationItemPeople *locItemPeople=(LocationItemPeople *)locItem;
+        if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+        {
+            UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(38,3,12,12)];
+            sourceIcon.tag=12002;
+            sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+            [annoView addSubview:sourceIcon];
+            NSLog(@"fb subview added");
+            [sourceIcon release];
+        }
+        
+    }
     return annoView;
 }
 
@@ -44,16 +57,37 @@
     UIScrollView *msgView = [[UIScrollView alloc] initWithFrame:msgFrame];
     CGSize msgContentsize = CGSizeMake(msgFrame.size.width*2, msgFrame.size.height);
     msgView.contentSize = msgContentsize;
-    
-    NSString *msg = locItemPeople.userInfo.statusMsg;
+    NSString *msg;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        msg=[NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
+        //locItemPeople.userInfo.lastSeenAt
+    }
+    else
+    {
+        msg = locItemPeople.userInfo.statusMsg;
+    }
     CGSize msgSize = [msg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
 
     CGRect lblFrame = CGRectMake(0, 0, msgSize.width, msgSize.height);
     UILabel *lblMsg = [[UILabel alloc] initWithFrame:lblFrame];
-    lblMsg.text = locItemPeople.userInfo.statusMsg;
     lblMsg.backgroundColor = [UIColor clearColor];
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
+
+//    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+//    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
+        sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
+        [msgView addSubview:sourceIcon];
+        lblMsg.text = [NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
+    }
+    else 
+    {
+        lblMsg.text = locItemPeople.userInfo.statusMsg;
+    }
+
     [msgView addSubview:lblMsg];
     [lblMsg release];
     [infoView addSubview:msgView];
@@ -71,10 +105,19 @@
                                   distSize.width,
                                   distSize.height);
     UILabel *lblDist = [[UILabel alloc] initWithFrame:distFrame];
-    lblDist.text = distStr;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        lblDist.text = [UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate];   
+        lblDist.textColor = [UIColor blackColor];
+        lblDist.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
+    }
+    else
+    {
+        lblDist.text = distStr;
+        lblDist.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0];
+        lblDist.font = [UIFont fontWithName:@"Helvetica" size:12.0f];
+    }
     lblDist.backgroundColor = [UIColor clearColor];
-    lblDist.font = [UIFont fontWithName:@"Helvetica" size:12.0f];
-    lblDist.textColor = [UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0];
     [infoView addSubview:lblDist];
     [lblDist release];
 
@@ -111,18 +154,33 @@
     detailView.opaque = NO;
     
     NSString *age = [self getAgeString:locItemPeople];
-    
-    NSString *detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
-                                 locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
-                                 locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
-                                 age, 
-                                 locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
-                                 locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
-                                 @"", // Address of current location - use CLGeocoder
-                                 locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
-                                 locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
-                                 locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
-                                 locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];  
+    NSString *detailInfoHtml;
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        NSString *msg=locItemPeople.userInfo.lastSeenAt;
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span><span style=\"line-height:1.2\"><br></span></body></html>", 
+                           locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
+                           locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
+                           age, msg==nil?@"":msg, 
+                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           @""// Address of current location - use CLGeocoder
+                           ] autorelease];
+    }
+    else
+    {
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
+                           locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
+                           locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
+                           age, 
+                           locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
+                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           @"", // Address of current location - use CLGeocoder
+                           locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
+                           locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
+                           locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
+                           locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];
+    }
+      
     [detailView loadHTMLString:detailInfoHtml baseURL:nil];
     detailView.delegate = self;
     [infoView addSubview:detailView];
@@ -130,7 +188,7 @@
     // Buttons
     // Add friend
     UIButton *addFriendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+20, 53, 32);
+    addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+15, 53, 32);
     [addFriendBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [addFriendBtn setImage:[UIImage imageNamed:@"map_add_friend.png"] forState:UIControlStateNormal];
     addFriendBtn.backgroundColor = [UIColor clearColor];
@@ -150,53 +208,83 @@
     if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
         [addFriendBtn setTitle:@"Rejected" forState:UIControlStateNormal];
         [addFriendBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     } else if ([friendShipStatus isEqualToString:@"requested"]) {
         [addFriendBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize-2]];
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         [addFriendBtn setTitle:@"Requested" forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     } else if ([friendShipStatus isEqualToString:@"pending"]) {
         [addFriendBtn setImage:nil forState:UIControlStateNormal];
         [addFriendBtn setTitle:@"Pending" forState:UIControlStateNormal];
+        [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
     }
     
     
-    // Meet-up request
-    UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    meetupBtn.frame = CGRectMake(15, infoView.frame.size.height-15-27, 57, 27);
-    [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
-    meetupBtn.backgroundColor = [UIColor clearColor];
-    meetupBtn.tag = 11004;
-    [infoView addSubview:meetupBtn];
-    // TODO: hiding for appstore submission. revert back once feature is implemenetd
-    meetupBtn.hidden = TRUE;
+   
 
-    // Directions request
-    UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-15-27, 57, 27);
-    [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
-    directionBtn.backgroundColor = [UIColor clearColor];
-    directionBtn.tag = 11005;
-    [infoView addSubview:directionBtn];
-    // TODO: hiding for appstore submission. revert back once feature is implemenetd
-    directionBtn.hidden = TRUE;
-    
+    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
+    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
+
     // Message request
-    UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    // TODO: repositioning message button for appstore submission. SInce we are hiding
-    // meetup/direction we are putting this under friend request button
-//    messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-15-27, 57, 27);
-    messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+20+42, 57, 27);
-    [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
-    [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
-    messageBtn.backgroundColor = [UIColor clearColor];
-    messageBtn.tag = 11006;
-    [infoView addSubview:messageBtn];
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(65,87,20,20)];
+        sourceIcon.image=[UIImage imageNamed:@"icon_facebook.png"];
+        [infoView addSubview:sourceIcon];
+
+    }
+    else {
+        // Meet-up request
+        UIButton *meetupBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        meetupBtn.frame = CGRectMake(5, infoView.frame.size.height-10-27, 57, 27);
+        [meetupBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [meetupBtn setImage:[UIImage imageNamed:@"map_meet_up.png"] forState:UIControlStateNormal];
+        meetupBtn.backgroundColor = [UIColor clearColor];
+        meetupBtn.tag = 11004;
+        [infoView addSubview:meetupBtn];
+        // TODO: hiding for appstore submission. revert back once feature is implemenetd
+        meetupBtn.hidden = FALSE;
+        
+        // Directions request
+        UIButton *directionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        directionBtn.frame = CGRectMake((infoView.frame.size.width-57)/2, infoView.frame.size.height-10-27, 57, 27);
+        [directionBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [directionBtn setImage:[UIImage imageNamed:@"map_directions.png"] forState:UIControlStateNormal];
+        directionBtn.backgroundColor = [UIColor clearColor];
+        directionBtn.tag = 11005;
+        [infoView addSubview:directionBtn];
+        // TODO: hiding for appstore submission. revert back once feature is implemenetd
+        directionBtn.hidden = FALSE;
+        
+        //Message button
+        UIButton *messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        // TODO: repositioning message button for appstore submission. SInce we are hiding
+        // meetup/direction we are putting this under friend request button
+        messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-10-27, 57, 27);
+        // messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
+        [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
+        messageBtn.backgroundColor = [UIColor clearColor];
+        messageBtn.tag = 11006;
+        [infoView addSubview:messageBtn];
+        
+        //Profile button
+        UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        profileBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+30+30, 53, 27);
+        [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        [profileBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+        [profileBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [profileBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+        [profileBtn setTitle:@"Profile" forState:UIControlStateNormal];
+        profileBtn.backgroundColor = [UIColor clearColor];
+        profileBtn.tag = 11008;
+        [infoView addSubview:profileBtn];    
+    }
     return annoView;
 }
 
@@ -231,6 +319,9 @@
             break;
         case 11006:
             actionType = MapAnnoUserActionMessage;
+            break;
+        case 11008:
+            actionType = MapAnnoUserActionProfile;
             break;
         default:
             return;
