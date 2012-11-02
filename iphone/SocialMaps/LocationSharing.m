@@ -334,6 +334,12 @@
     SettingsMaster *parent = (SettingsMaster*)[sender superview];
     NSLog(@"LocationSharing accSettingButtonClicked: tag=%d, parent tag=%d", senderView.tag, parent.tag);
     if (parent.tag >= 2000 && parent.tag <= (2000+rowNum)) {
+        // Reposition selected item at the top of the screen
+        int yOffset = 300 - (self.frame.size.height - parent.frame.origin.y);
+        if (yOffset < 0 )
+            yOffset = 0;
+        [self setContentOffset:CGPointMake(0, yOffset) animated:YES];
+        
         bool newView = FALSE;
         NSObject* senderObj = (NSObject*)sender;
         if ([senderObj isKindOfClass:[UIButton class]]) {
