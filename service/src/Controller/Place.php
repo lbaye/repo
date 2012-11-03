@@ -46,8 +46,14 @@ class Place extends Base
 
         if (!empty($places)) {
             $permittedDocs = $this->_filterByPermission($places);
+            $data = $this->_toArrayAll($permittedDocs);
+            $i= 0;
+            foreach($data as $photoUrl){
+                $data[$i]['photo'] = \Helper\Url::buildPlacePhotoUrl($photoUrl);
+                $i++;
+            }
 
-            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+            return $this->_generateResponse($data);
         } else {
             return $this->_generateResponse(array('message' => 'No places found'), Status::NO_CONTENT);
         }
