@@ -30,6 +30,7 @@
 #import "MessageReply.h"
 #import "MeetUpRequest.h"
 #import "AppDelegate.h"
+#import "Place.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -5750,6 +5751,60 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn srt do connect fb");
+    [request startAsynchronous];
+    
+}
+
+// Save place
+- (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
+    NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/places"]];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request setPostValue:[NSString stringWithFormat:@"%f", place.latitude] forKey:@"lat"];
+    [request setPostValue:[NSString stringWithFormat:@"%f", place.longitude] forKey:@"lng"];
+    [request setPostValue:place.name forKey:@"title"];
+    [request setPostValue:place.category forKey:@"category"];
+    [request setPostValue:place.description forKey:@"description"];
+    [request setPostValue:place.base64Image forKey:@"photo"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201) {
+            [UtilityClass showAlert:@"" :@"Place saved"];
+            NSLog(@"save place successful:status=%d", responseStatus);
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+        } else {
+            NSLog(@"save place unsuccessful:status=%d", responseStatus);
+            [UtilityClass showAlert:@"" :@"Failed to save place"];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        NSLog(@"Save Place failed: unknown error");
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
     [request startAsynchronous];
     
 }

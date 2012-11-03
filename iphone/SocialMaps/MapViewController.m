@@ -39,6 +39,8 @@
 #import "FriendsProfileViewController.h"
 #import "CreateEventViewController.h"
 #import "DirectionViewController.h"
+#import "PlaceViewController.h"
+#import "Place.h"
 
 @interface MapViewController ()
 
@@ -587,7 +589,18 @@ ButtonClickCallbackData callBackData;
 }
 - (void)saveSelected:(id <MKAnnotation>)anno
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    PlaceViewController *controller = [[PlaceViewController alloc] initWithNibName:@"PlaceViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
+    LocationItemPlace *locItemPlace = (LocationItemPlace*)anno;
+    
+    Place *place = [[Place alloc] init];
+    place.latitude = locItemPlace.coordinate.latitude;
+    place.longitude = locItemPlace.coordinate.longitude;
+    [controller setAddressLabelFromLatLon:place];
+    [place release];
+    [controller release];
 }
 - (void)checkinSelected:(id <MKAnnotation>)anno
 {
@@ -1968,7 +1981,11 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoPlace:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+    PlaceViewController *controller = [[PlaceViewController alloc] initWithNibName:@"PlaceViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
+    
 }
 
 -(IBAction)gotoFriends:(id)sender

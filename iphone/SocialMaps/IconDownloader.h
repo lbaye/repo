@@ -39,6 +39,8 @@
 
 //- (void)appImageDidLoad:(NSIndexPath *)indexPath;
 - (void)appImageDidLoad:(NSString *)userId;
+
+@optional
 - (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag;
 
 @end

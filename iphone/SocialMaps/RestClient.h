@@ -21,6 +21,8 @@
 #import "Event.h"
 #import "UserCircle.h"
 
+@class Place;
+
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
 - (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects user:(UserInfo**)user;
@@ -88,5 +90,7 @@
 -(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
 
 - (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
+
+- (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
 @end
