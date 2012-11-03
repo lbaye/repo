@@ -11,6 +11,11 @@ gearman:
   host: '10.234.125.185'
   port: 4730
 
+logging:
+  # DEBUG, WARN, ERROR
+  level: "DEBUG"
+  file: "%s/logs/web_%s.log"
+
 swiftmailer:
   transport:  smtp
   encryption: ssl

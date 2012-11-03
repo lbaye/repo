@@ -5,3 +5,8 @@ mongodb:
   host: 'localhost'
   port: 27017
   database: 'socialmaps'
+
+logging:
+  # DEBUG, WARN, ERROR
+  level: "DEBUG"
+  file: "%s/logs/web_%s.log"

@@ -17,13 +17,15 @@ class Auth extends Base
      */
     public function init()
     {
-        $this->response = new Response();
-        $this->response->headers->set('Content-Type', 'application/json');
+        parent::init();
+        $this->createLogger('Controller::Auth');
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->messageRepository = $this->dm->getRepository('Document\Message');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
+
+        $this->info('Completed controller initialization');
     }
 
     /**
@@ -143,13 +145,18 @@ class Auth extends Base
      */
     public function fbLogin()
     {
+        $this->info('Executing action fbLogin');
         $data = $this->request->request->all();
+
+        $this->debug('Request parameters - ' . json_encode(array_keys($data)));
 
         if(!empty($data['email'])){
             $data['email'] = strtolower($data['email']);
+            $this->debug('Email is set with the parameter.');
         }
 
         if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
+            $this->warn('Invalid facebook login attempt.');
             $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
             $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
             return $this->response;
@@ -160,6 +167,7 @@ class Auth extends Base
             $user = $this->userRepository->validateFbLogin($data);
 
             if ($user instanceof \Document\User) {
+                $this->debug(sprintf('Found existing fb user - %s', $user->getFirstName()));
 
                 $this->userRepository->setCurrentUser($user);
 
@@ -168,16 +176,17 @@ class Auth extends Base
                 }
 
                 if (!empty($data['coverPhoto'])) {
-                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+                    $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
                 }
 
                 $this->userRepository->updateLoginCount($user->getId());
                 $this->userRepository->updateFacebookAuthToken($user->getId(), $data['facebookAuthToken']);
 
             } else {
-
+                $this->debug('Not found existing facebook user, creating now.');
                 $user = $this->userRepository->insert($data);
 
+                $this->debug('New facebook user - ' . $user->getId());
             }
 
             $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());

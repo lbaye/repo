@@ -6,6 +6,11 @@ mongodb:
   port: 27017
   database: 'socialmaps_staged'
 
+logging:
+  # DEBUG, WARN, ERROR
+  level: "DEBUG"
+  file: "%s/logs/web_%s.log"
+
 imagetype:
   thumb:
     width: 50
