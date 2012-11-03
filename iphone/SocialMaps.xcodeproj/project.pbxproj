@@ -441,6 +441,9 @@
 		B07777D6163E6D9900969699 /* transport3.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D2163E6D9800969699 /* transport3.png */; };
 		B07777D7163E6D9900969699 /* transport4.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D3163E6D9800969699 /* transport4.png */; };
 		B0851551162E919D003347CB /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = B0851550162E919D003347CB /* blank.png */; };
+		B086DEB91642478F0039187B /* PlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEB71642478F0039187B /* PlaceViewController.m */; };
+		B086DEBA1642478F0039187B /* PlaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B086DEB81642478F0039187B /* PlaceViewController.xib */; };
+		B086DEBE1642B2A70039187B /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEBD1642B2A70039187B /* Place.m */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
 		B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819451627174500FBCB1A /* btn_bg_green_small.png */; };
@@ -1077,6 +1080,11 @@
 		B07777D2163E6D9800969699 /* transport3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport3.png; path = Images/transport3.png; sourceTree = SOURCE_ROOT; };
 		B07777D3163E6D9800969699 /* transport4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = transport4.png; path = Images/transport4.png; sourceTree = SOURCE_ROOT; };
 		B0851550162E919D003347CB /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blank.png; path = Images/blank.png; sourceTree = SOURCE_ROOT; };
+		B086DEB61642478F0039187B /* PlaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceViewController.h; sourceTree = "<group>"; };
+		B086DEB71642478F0039187B /* PlaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceViewController.m; sourceTree = "<group>"; };
+		B086DEB81642478F0039187B /* PlaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceViewController.xib; sourceTree = "<group>"; };
+		B086DEBC1642B2A70039187B /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		B086DEBD1642B2A70039187B /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
 		B087BF4015FF921000091DA7 /* MeetUpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetUpRequest.h; sourceTree = "<group>"; };
 		B087BF4115FF921100091DA7 /* MeetUpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetUpRequest.m; sourceTree = "<group>"; };
 		B08819441627174500FBCB1A /* btn_bg_gray_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_bg_gray_small.png; path = Images/btn_bg_gray_small.png; sourceTree = SOURCE_ROOT; };
@@ -1228,6 +1236,8 @@
 				4F3A4EF015D244900033AC9E /* PersonalInformation.m */,
 				4F6036DA15DD4DAD00C1BD4E /* Places.h */,
 				4F6036D915DD4DAD00C1BD4E /* Places.m */,
+				B086DEBC1642B2A70039187B /* Place.h */,
+				B086DEBD1642B2A70039187B /* Place.m */,
 				20B0E7E715D7BA89009A500A /* Platform.h */,
 				20B0E7E815D7BA89009A500A /* Platform.m */,
 				20CF833816118B130075E647 /* PullableView.h */,
@@ -1464,6 +1474,9 @@
 				20B656D515EF59DE00A441E9 /* ViewEventDetailViewController.m */,
 				20B656D115EF599200A441E9 /* ViewEventListViewController.h */,
 				20B656D215EF599400A441E9 /* ViewEventListViewController.m */,
+				B086DEB61642478F0039187B /* PlaceViewController.h */,
+				B086DEB71642478F0039187B /* PlaceViewController.m */,
+				B086DEB81642478F0039187B /* PlaceViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -2205,6 +2218,7 @@
 				B07777D7163E6D9900969699 /* transport4.png in Resources */,
 				20BDE517164111C0008E22FD /* fbCheckin.png in Resources */,
 				205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */,
+				B086DEBA1642478F0039187B /* PlaceViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2378,6 +2392,8 @@
 				4F2F464F162B945700B6D0AE /* NewLocationItem.m in Sources */,
 				4FA2C0D2162F19F9004B98D9 /* UITextField+Scrolling.m in Sources */,
 				B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */,
+				B086DEB91642478F0039187B /* PlaceViewController.m in Sources */,
+				B086DEBE1642B2A70039187B /* Place.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
