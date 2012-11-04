@@ -46,8 +46,14 @@ class Place extends Base
 
         if (!empty($places)) {
             $permittedDocs = $this->_filterByPermission($places);
+            $data = $this->_toArrayAll($permittedDocs);
+            $i = 0;
+            foreach ($data as $photoUrl) {
+                $data[$i]['photo'] = \Helper\Url::buildPlacePhotoUrl($photoUrl);
+                $i++;
+            }
 
-            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+            return $this->_generateResponse($data);
         } else {
             return $this->_generateResponse(array('message' => 'No places found'), Status::NO_CONTENT);
         }
@@ -118,6 +124,11 @@ class Place extends Base
         $this->_initRepository($type);
 
         try {
+            if (empty($postData['title'])) {
+                $this->response->setContent(json_encode(array('message' => 'Place title can not be empty.')));
+                $this->response->setStatusCode(Status::BAD_REQUEST);
+                return $this->response;
+            }
             $place = $this->LocationMarkRepository->map($postData, $this->user);
             $this->LocationMarkRepository->insert($place);
 

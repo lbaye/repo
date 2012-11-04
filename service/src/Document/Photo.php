@@ -5,6 +5,8 @@ namespace Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
+use Document\User as User;
+
 /**
  * @ODM\Document(collection="photos",repositoryClass="Repository\PhotosRepo")
  */
@@ -21,7 +23,13 @@ class Photo extends Content
     );
 
     /** @ODM\String */
-    protected $uri;
+    protected $uriThumb;
+
+    /** @ODM\String */
+    protected $uriMedium;
+
+    /** @ODM\String */
+    protected $uriLarge;
 
     /** @ODM\String */
     protected $title;
@@ -29,11 +37,22 @@ class Photo extends Content
     /** @ODM\String */
     protected $description;
 
+    /** @ODM\Hash */
+    protected $like = array();
+
+    /** @ODM\Hash */
+    protected $dislike = array();
+
     /**
      * @ODM\EmbedOne(targetDocument="Location")
      * @var Location
      */
     protected $location;
+
+     /**
+     * @ODM\EmbedMany(targetDocument="PhotoComment")
+     */
+    protected $photoComment = array();
 
     public function setId($id)
     {
@@ -85,19 +104,11 @@ class Photo extends Content
         return $this->title;
     }
 
-    public function setUri($uri) {
-        $this->uri = $uri;
-    }
-
-    public function getUri() {
-        return $this->uri;
-    }
-
     public function isValid() {
         try {
             Validator::create()->notEmpty()->assert($this->getTitle());
             Validator::create()->notEmpty()->assert($this->getDescription());
-            Validator::create()->notEmpty()->assert($this->getUri());
+            Validator::create()->notEmpty()->assert($this->getUriThumb());
 
         } catch (\InvalidArgumentException $e) {
             return false;
@@ -109,10 +120,12 @@ class Photo extends Content
     public function toArray() {
         $hash = array();
 
-        $fields = array('id', 'description', 'title');
+        $fields = array('id', 'description', 'title', 'permission', 'permittedUsers', 'permittedCircles');
         foreach ($fields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
 
-        $hash['image'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUri()));
+        $hash['imageThumb'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUriThumb()));
+        $hash['imageMedium'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUriMedium()));
+        $hash['imageLarge'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUriLarge()));
 
         $location = $this->getLocation();
         if ($location)
@@ -127,5 +140,73 @@ class Photo extends Content
         );
 
         return $hash;
+    }
+
+    public function setUriLarge($uriLarge)
+    {
+        $this->uriLarge = $uriLarge;
+    }
+
+    public function getUriLarge()
+    {
+        return $this->uriLarge;
+    }
+
+    public function setUriMedium($uriMedium)
+    {
+        $this->uriMedium = $uriMedium;
+    }
+
+    public function getUriMedium()
+    {
+        return $this->uriMedium;
+    }
+
+    public function setUriThumb($uriThumb)
+    {
+        $this->uriThumb = $uriThumb;
+    }
+
+    public function getUriThumb()
+    {
+        return $this->uriThumb;
+    }
+
+    public function addLikedUser($userId) {
+        $this->like[] = $userId;
+    }
+
+    public function setLikedUser(array $users)
+    {
+        $this->like = $users;
+    }
+
+    public function getLike()
+    {
+        return $this->like;
+    }
+
+    public function addDislikedUser($userId) {
+        $this->dislike[] = $userId;
+    }
+
+    public function getDisLike()
+    {
+        return $this->dislike;
+    }
+
+    public function addPhotoComment($photoComment)
+    {
+        $this->photoComment[] = $photoComment;
+    }
+
+    public function setPhotoComment($photoComment)
+    {
+        $this->photoComment = $photoComment;
+    }
+
+    public function getPhotoComment()
+    {
+        return $this->photoComment;
     }
 }

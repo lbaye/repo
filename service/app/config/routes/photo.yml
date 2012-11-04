@@ -40,7 +40,7 @@ all_comments_from_a_photo:
   requirements: { _method: GET }
 
 delete_comment_from_a_photo:
-  pattern: /photos/{id}/comments/{comment_id}
+  pattern: /photos/{id}/comments/{commentId}
   defaults: { _controller: Controller\Photos::deleteCommentById }
   requirements: { _method: DELETE }
 

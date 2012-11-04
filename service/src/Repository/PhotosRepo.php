@@ -16,7 +16,7 @@ class PhotosRepo extends Base
     {
         if (is_null($photo)) $photo = new Photo();
 
-        $setIfExistFields = array('title', 'description', 'uri');
+        $setIfExistFields = array('title', 'description', 'uriThumb', 'uriMedium', 'uriLarge');
 
         foreach($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -29,6 +29,9 @@ class PhotosRepo extends Base
         }
 
         $photo->setOwner($owner);
+        if(isset($data['permission'])){
+          $photo->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
+        }
 
         return $photo;
     }
@@ -61,6 +64,25 @@ class PhotosRepo extends Base
         $this->dm->flush();
 
         return $photo;
+    }
+
+    public function addComments($photoId, array $data)
+    {
+        $photo = $this->find($photoId);
+
+        if (is_null($photo)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $comment = new \Document\PhotoComment($data);
+
+        $photo->addPhotoComment($comment);
+
+        $this->dm->persist($comment);
+        $this->dm->persist($photo);
+        $this->dm->flush();
+
+        return $comment;
     }
 
 }

@@ -127,7 +127,6 @@ class Landmark extends Content
     {
         try {
 
-            Validator::create()->alnum()->assert($this->getTitle());
             Validator::create()->equals($this->getLocation()->isValid())->assert(true);
 
         } catch (\InvalidArgumentException $e) {
