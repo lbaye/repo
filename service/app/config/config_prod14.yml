@@ -16,6 +16,7 @@ logging:
   level: "DEBUG"
   file: "%s/logs/web_%s.log"
 
+
 swiftmailer:
   transport:  smtp
   encryption: ssl
