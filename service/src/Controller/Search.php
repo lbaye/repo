@@ -109,7 +109,7 @@ class Search extends Base {
         $users = array_values(
             $this->dm->createQueryBuilder('Document\ExternalUser')
                     ->field('smFriends')->equals($this->user->getId())
-                    ->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
+                    #->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
                     ->hydrate(false)
                     ->skip(0)
                     ->limit(200)
