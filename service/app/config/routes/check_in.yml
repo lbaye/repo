@@ -1,0 +1,19 @@
+create_checkin:
+  pattern: /checkins
+  defaults: { _controller: Controller\CheckIns::create }
+  requirements: { _method: POST }
+
+get_checkin:
+  pattern: /checkins/{id}
+  defaults: { _controller: Controller\CheckIns::show}
+  requirements: { _method: GET}
+
+update_checkin:
+  pattern: /checkins/{id}
+  defaults: { _controller: Controller\CheckIns::update}
+  requirements: { _method: PUT}
+
+delete_checkin:
+  pattern: /checkins/{id}
+  defaults: { _controller: Controller\CheckIns::delete}
+  requirements: { _mehotd: DELETE}
