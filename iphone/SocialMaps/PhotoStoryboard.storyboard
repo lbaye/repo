@@ -338,8 +338,144 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
+                            <view contentMode="scaleToFill" id="zNr-eF-arO">
+                                <rect key="frame" x="20" y="107" width="280" height="314"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="hNi-et-J3t">
+                                        <rect key="frame" x="0.0" y="88" width="280" height="186"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7Ck-oi-n8v" id="x0d-RT-RTP"/>
+                                        </connections>
+                                    </scrollView>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="xSo-RS-zKd">
+                                        <rect key="frame" x="0.0" y="41" width="280" height="233"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="circleTableCell" id="Z2e-pP-b0i" customClass="SelectCircleTableCell">
+                                                <rect key="frame" x="0.0" y="22" width="280" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="qcZ-Uz-11N">
+                                                            <rect key="frame" x="20" y="10" width="182" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Vpv-6l-y5k">
+                                                            <rect key="frame" x="224" y="6" width="33" height="30"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                            <state key="normal" image="checkbox_unchecked.png">
+                                                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <state key="highlighted">
+                                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <connections>
+                                                    <outlet property="circrcleCheckbox" destination="Vpv-6l-y5k" id="Ukf-oP-hnT"/>
+                                                    <outlet property="circrcleName" destination="qcZ-Uz-11N" id="5mx-At-32g"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="7Ck-oi-n8v" id="Mhz-zr-a5J"/>
+                                            <outlet property="delegate" destination="7Ck-oi-n8v" id="qus-Ff-0F2"/>
+                                        </connections>
+                                    </tableView>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.94999999999999996" contentMode="scaleToFill" id="Zc8-Lw-chL">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <items>
+                                            <barButtonItem style="plain" id="Atf-Dd-IZc">
+                                                <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="ctW-tp-Wu1">
+                                                    <rect key="frame" x="6" y="8" width="267" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <segments>
+                                                        <segment title="Friends"/>
+                                                        <segment title="Circles"/>
+                                                    </segments>
+                                                    <color key="tintColor" red="0.58039218189999997" green="0.75294125079999996" blue="0.1098039299" alpha="1" colorSpace="deviceRGB"/>
+                                                    <connections>
+                                                        <action selector="segmentChanged:" destination="7Ck-oi-n8v" eventType="valueChanged" id="KmC-IL-YiS"/>
+                                                    </connections>
+                                                </segmentedControl>
+                                            </barButtonItem>
+                                        </items>
+                                        <color key="tintColor" red="0.58039218189999997" green="0.75294125079999996" blue="0.1098039299" alpha="1" colorSpace="deviceRGB"/>
+                                    </toolbar>
+                                    <searchBar contentMode="redraw" showsCancelButton="YES" id="UTa-Hf-WT6">
+                                        <rect key="frame" x="0.0" y="44" width="280" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="1" colorSpace="deviceRGB"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="7Ck-oi-n8v" id="IsB-sO-bFV"/>
+                                        </connections>
+                                    </searchBar>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sJf-Ci-9cD">
+                                        <rect key="frame" x="24" y="281" width="108" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                        <state key="normal" title="Save">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveCustom:" destination="7Ck-oi-n8v" eventType="touchUpInside" id="iAX-YX-cGa"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dMj-st-xWs">
+                                        <rect key="frame" x="143" y="281" width="108" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelCustom:" destination="7Ck-oi-n8v" eventType="touchUpInside" id="c2p-UC-BmE"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="WCd-dL-6Z1">
+                                        <rect key="frame" x="137" y="281" width="1" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1fX-1V-kw2">
+                                        <rect key="frame" x="10" y="276" width="260" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
+                            </view>
                             <view contentMode="scaleToFill" id="Dam-RA-4Gx">
-                                <rect key="frame" x="1000" y="0.0" width="320" height="309"/>
+                                <rect key="frame" x="1000" y="0.0" width="320" height="411"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tag photo to a location:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="VVq-HC-PDt">
@@ -377,7 +513,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="m2i-Sk-1Wt">
-                                        <rect key="frame" x="152" y="276" width="116" height="30"/>
+                                        <rect key="frame" x="152" y="378" width="116" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                                         <state key="normal" title="Upload this photo">
@@ -393,7 +529,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ffy-wr-NCu">
-                                        <rect key="frame" x="65" y="276" width="64" height="30"/>
+                                        <rect key="frame" x="65" y="378" width="64" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                                         <state key="normal" title="Cancel">
@@ -408,8 +544,18 @@
                                             <action selector="myPhotosAction:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="roa-Fj-arN"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line_arrow_down_left.png" id="YkH-C5-Tjs">
+                                        <rect key="frame" x="12" y="315" width="300" height="7"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Share With:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="kgV-JX-YqN">
+                                        <rect key="frame" x="20" y="287" width="87" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="uu7-5a-9QA">
-                                        <rect key="frame" x="139" y="276" width="1" height="30"/>
+                                        <rect key="frame" x="139" y="378" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="MX4-3A-oX6">
@@ -439,11 +585,16 @@
                     <connections>
                         <outlet property="addressDetailLabel" destination="MX4-3A-oX6" id="qKM-9b-jKH"/>
                         <outlet property="addressLabel" destination="ykb-eV-9QA" id="MT5-NB-csc"/>
+                        <outlet property="circleTableView" destination="xSo-RS-zKd" id="6dW-5s-gqa"/>
                         <outlet property="commentView" destination="Sb9-E7-A44" id="3wX-0X-Cyg"/>
+                        <outlet property="customView" destination="zNr-eF-arO" id="m57-6x-Tle"/>
+                        <outlet property="friendSearchbar" destination="UTa-Hf-WT6" id="ryk-3f-KzP"/>
+                        <outlet property="frndsScrollView" destination="hNi-et-J3t" id="07a-nO-hci"/>
                         <outlet property="labelNotifCount" destination="43b-JY-HwT" id="rOC-7f-dr0"/>
                         <outlet property="lowerView" destination="Dam-RA-4Gx" id="6DN-cR-Mxe"/>
                         <outlet property="mainScrollView" destination="63V-pD-g7F" id="UaI-9u-dKk"/>
                         <outlet property="photoImageView" destination="lTh-0d-vAU" id="Xrm-HN-Ufz"/>
+                        <outlet property="segmentControl" destination="ctW-tp-Wu1" id="ugX-mc-yP3"/>
                         <outlet property="upperView" destination="J5m-a3-ceM" id="VuT-1E-p2W"/>
                     </connections>
                 </viewController>
@@ -690,6 +841,7 @@
         <image name="arrow_solid_right.png" width="10" height="19"/>
         <image name="back_b_small.png" width="70" height="35"/>
         <image name="bubble_count_icon.png" width="55" height="57"/>
+        <image name="checkbox_unchecked.png" width="50" height="50"/>
         <image name="header.png" width="640" height="91"/>
         <image name="icon_camera.png" width="56" height="38"/>
         <image name="img_settings_header_bg.png" width="640" height="110"/>
@@ -739,6 +891,13 @@
                 <relationship kind="outlet" name="zoomView" candidateClass="UIView"/>
             </relationships>
         </class>
+        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
         <class className="UploadNewPhotoViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UploadNewPhotoViewController.h"/>
             <relationships>
@@ -746,15 +905,23 @@
                 <relationship kind="action" name="addTakePhotos:"/>
                 <relationship kind="action" name="backButtonAction:"/>
                 <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="cancelCustom:"/>
                 <relationship kind="action" name="myPhotos:"/>
+                <relationship kind="action" name="saveCustom:"/>
+                <relationship kind="action" name="segmentChanged:"/>
                 <relationship kind="action" name="uploadPhotos:"/>
                 <relationship kind="outlet" name="addressDetailLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="customView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="frndsScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="labelNotifCount" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="mainScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="photoImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="upperView" candidateClass="UIView"/>
             </relationships>
         </class>

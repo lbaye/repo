@@ -109,6 +109,9 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)closeZoomView:(id)sender
 {
+    [UIView beginAnimations:@"FadeIn" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView commitAnimations];
     [zoomView removeFromSuperview];
 }
 

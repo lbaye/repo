@@ -5761,8 +5761,20 @@ AppDelegate *smAppDelegate;
     [request addPostValue:photo.comment forKey:@"description"];
     [request addPostValue:photo.location.latitude forKey:@"lat"];
     [request addPostValue:photo.location.longitude forKey:@"lng"];
-    [request addPostValue:photo.address forKey:@"address"];    
-    
+    [request addPostValue:photo.address forKey:@"address"];
+    [request addPostValue:photo.permission forKey:@"permission"];
+    if ([photo.permission isEqualToString:@"custom"])
+    {
+        for (int i=0; i<[photo.permittedUsers count]; i++)
+        {
+            [request addPostValue:[photo.permittedUsers objectAtIndex:i] forKey:@"permittedUsers[]"];
+        }
+        
+        for (int i=0; i<[photo.permittedCircles count]; i++)
+        {
+            [request addPostValue:[photo.permittedCircles objectAtIndex:i] forKey:@"permittedCircles[]"];
+        }
+    }
     // Handle successful REST call
     [request setCompletionBlock:^{
         

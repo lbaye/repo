@@ -50,6 +50,7 @@ AppDelegate *smAppdelegate;
     filteredList2=[[NSMutableArray alloc] init];
     customSelectedFriendsIndex=[[NSMutableArray alloc] init];
     isBackgroundTaskRunning=true;
+    [prevButton setHidden:YES];
     rc=[[RestClient alloc] init];
     smAppdelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserAllPhotoDone:) name:NOTIF_GET_USER_ALL_PHOTO object:nil];
@@ -107,6 +108,9 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)closeZoomView:(id)sender
 {
+    [UIView beginAnimations:@"FadeIn" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView commitAnimations];
     [zoomView removeFromSuperview];
 }
 
@@ -532,6 +536,19 @@ AppDelegate *smAppdelegate;
         CGFloat pageWidth = customScrollView.frame.size.width;
         int page = floor((customScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
         zoomIndex=page;
+        if (page==0) 
+        {
+            [nextButton setHidden:NO];
+            [prevButton setHidden:YES];
+        }
+        else if (page==[filteredList2 count]-1) {
+            [nextButton setHidden:YES];
+            [prevButton setHidden:NO];
+        }
+        else {
+            [prevButton setHidden:NO];
+            [nextButton setHidden:NO];
+        }
     }
     // Switch the indicator when more than 50% of the previous/next page is visible
     // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)

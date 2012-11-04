@@ -18,10 +18,16 @@
 @synthesize title;
 @synthesize description;
 @synthesize photoImage;
+@synthesize permission;
+@synthesize permittedUsers;
+@synthesize permittedCircles;
+
 
 - (id)init
 {
     location=[[Geolocation alloc] init];
+    permittedUsers=[[NSMutableArray alloc] init];
+    permittedCircles=[[NSMutableArray alloc] init];
     return self;
 }
 

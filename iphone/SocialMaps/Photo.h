@@ -20,6 +20,10 @@
     NSString *title;
     NSString *description;
     UIImage *photoImage;
+    NSString *permission;
+    NSMutableArray *permittedUsers;
+    NSMutableArray *permittedCircles;
+
 }
 
 @property(nonatomic,retain) NSString *photoId;
@@ -31,4 +35,8 @@
 @property(nonatomic,retain) NSString *title;
 @property(nonatomic,retain) NSString *description;
 @property(nonatomic,retain) UIImage *photoImage;
+@property(nonatomic,retain) NSString *permission;
+@property(nonatomic,retain) NSMutableArray *permittedUsers;
+@property(nonatomic,retain) NSMutableArray *permittedCircles;
+
 @end
