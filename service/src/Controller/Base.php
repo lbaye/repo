@@ -214,9 +214,7 @@ abstract class Base {
     }
 
     protected function _generateErrorResponse($message, $code = Status::NOT_ACCEPTABLE) {
-        return $this->_generateResponse(array(
-                                             'message' => $message
-                                        ), $code);
+        return $this->_generateResponse(array( 'message' => $message ), $code);
     }
 
     protected function _generate404() {
@@ -275,17 +273,17 @@ abstract class Base {
 
     protected function _sendPushNotification(array $userIds, $title, $objectType, $objectId = null, $validity = 0) {
         foreach ($userIds as $userId) {
-
-            $this->addTask('send_push_notification', json_encode(array(
-                                                                      'user_id' => $userId,
-                                                                      'notification' => array(
-                                                                          'title' => $title,
-                                                                          'objectId' => $objectId,
-                                                                          'objectType' => $objectType,
-                                                                      ),
-                                                                      'timestamp' => time(),
-                                                                      'validity' => $validity,
-                                                                 )));
+            $this->addTask('send_push_notification',
+                           json_encode(array(
+                                            'user_id' => $userId,
+                                            'notification' => array(
+                                                'title' => $title,
+                                                'objectId' => $objectId,
+                                                'objectType' => $objectType,
+                                            ),
+                                            'timestamp' => time(),
+                                            'validity' => $validity,
+                                       )));
         }
     }
 

@@ -7,21 +7,22 @@ use Repository\UserRepo as UserRepository;
 
 use Document\FriendRequest;
 use Helper\Status;
+use Helper\AppMessage as AppMessage;
 
 
-class User extends Base
-{
+class User extends Base {
     /**
      * Initialize the controller.
      */
-    public function init()
-    {
+    public function init() {
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
+
+        $this->createLogger('Controller::User');
     }
 
     /**
@@ -29,8 +30,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function get()
-    {
+    public function get() {
         $this->_ensureLoggedIn();
 
         $start = $this->request->get('start', 0);
@@ -61,8 +61,7 @@ class User extends Base
      *`
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getNotifications()
-    {
+    public function getNotifications() {
         $this->_ensureLoggedIn();
 
         $notifications = $this->user->getNotification();
@@ -79,7 +78,7 @@ class User extends Base
         $this->userRepository->removeOldNotifications($this->user);
 
         if (empty($result)) {
-            $this->_generateResponse(array(), Status::OK    );
+            $this->_generateResponse(array(), Status::OK);
         } else {
             $this->_generateResponse($this->_toArrayAll($result));
         }
@@ -94,8 +93,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFriendRequest($status = 'all')
-    {
+    public function getFriendRequest($status = 'all') {
         $friendRequests = $this->user->getFriendRequest();
         $result = array();
 
@@ -133,16 +131,23 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendFriendRequest($friendId)
-    {
+    public function sendFriendRequest($friendId) {
         $data = $this->request->request->all();
 
         try {
-            $frequest = $this->userRepository->sendFriendRequests($data, $friendId);
+            $this->debug('Sending friend request');
+            $friendRequest = $this->userRepository->sendFriendRequests($data, $friendId);
 
-            $this->_sendPushNotification(array($friendId), $this->_createPushMessage(), 'friend_request');
+            $this->debug('Sending in app notification');
+            $this->sendInAppNotification($this->user, $friendRequest);
 
-            $this->response->setContent(json_encode($frequest->toArray()));
+            $this->debug('Sending push notification');
+            $this->_sendPushNotification(
+                array($friendId), $this->_createPushMessage(),
+                AppMessage::FRIEND_REQUEST, $friendRequest->getId()
+            );
+
+            $this->response->setContent(json_encode($friendRequest->toArray()));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
@@ -155,13 +160,24 @@ class User extends Base
         return $this->response;
     }
 
+    private function sendInAppNotification(\Document\User $user, \Document\FriendRequest $request) {
+        $data = array(
+            'objectId' => $request->getRecipientId(),
+            'objectType' => \Helper\AppMessage::FRIEND_REQUEST,
+            'message' => $this->_createPushMessage()
+        );
+        $this->debug(json_encode($data));
+
+        $this->userRepository->addNotification($request->getRecipientId(), $data);
+        $this->debug('In App notification is created.');
+    }
+
     /**
      * GET /me
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCurrentUser()
-    {
+    public function getCurrentUser() {
         if ($this->user instanceof \Document\User) {
 
             $data = $this->user->toArrayDetailed();
@@ -186,8 +202,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getById($id)
-    {
+    public function getById($id) {
         $this->_ensureLoggedIn();
         $user = $this->userRepository->find($id);
 
@@ -215,8 +230,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getByEmail($email)
-    {
+    public function getByEmail($email) {
         $this->_ensureLoggedIn();
         $user = $this->userRepository->getByEmail($email);
 
@@ -241,8 +255,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function create()
-    {
+    public function create() {
         $data = $this->request->request->all();
         $key = $this->config['googlePlace']['apiKey'];
         if (!isset($data['coverPhoto']) || empty($data['coverPhoto'])) {
@@ -275,8 +288,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id)
-    {
+    public function update($id) {
         $this->_ensureLoggedIn();
         $data = $this->request->request->all();
         if (!empty($data['email'])) {
@@ -324,8 +336,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function delete($id)
-    {
+    public function delete($id) {
         if ($id == $this->user->getId()) {
             try {
                 $this->userRepository->delete($id);
@@ -349,8 +360,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addCircle()
-    {
+    public function addCircle() {
         $circleData = $this->request->request->all();
 
         $this->userRepository->addCircle($circleData);
@@ -376,8 +386,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCircles()
-    {
+    public function getCircles() {
         $circles = $this->user->getCircles();
 
         $result = array();
@@ -403,8 +412,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function acceptFriendRequest($friendId, $response)
-    {
+    public function acceptFriendRequest($friendId, $response) {
         $this->_ensureLoggedIn();
 
         try {
@@ -436,8 +444,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateNotification($notificationId)
-    {
+    public function updateNotification($notificationId) {
         try {
             $this->userRepository->updateNotification($notificationId);
             $this->response->setStatusCode(Status::OK);
@@ -466,8 +473,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getUserNotifications()
-    {
+    public function getUserNotifications() {
         $this->_ensureLoggedIn();
 
         $friendRequests = $this->user->getFriendRequest();
@@ -493,9 +499,9 @@ class User extends Base
             $this->response->setContent(json_encode(array()));
         } else {
             $this->response->setContent(json_encode(array(
-                'friend request' => $friendResult,
-                'notifications' => $notificationResult
-            )));
+                                                         'friend request' => $friendResult,
+                                                         'notifications' => $notificationResult
+                                                    )));
         }
 
         $this->response->setStatusCode(Status::OK);
@@ -508,8 +514,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function blockUser()
-    {
+    public function blockUser() {
         $this->_ensureLoggedIn();
 
         $postData = $this->request->request->all();
@@ -533,7 +538,7 @@ class User extends Base
 
                             $this->dm->flush();
                         }
-                            $this->getBlockedUsers();
+                        $this->getBlockedUsers();
 
                     } else {
 
@@ -561,8 +566,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getCircleDetail($id)
-    {
+    public function getCircleDetail($id) {
         $circles = $this->user->getCircles();
 
         $result = array();
@@ -588,8 +592,7 @@ class User extends Base
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function updateCustomCircle($id)
-    {
+    public function updateCustomCircle($id) {
         $this->_ensureLoggedIn();
 
         try {
@@ -639,8 +642,7 @@ class User extends Base
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function getFriendList()
-    {
+    public function getFriendList() {
         $user = $this->user;
 
         if ($user instanceof \Document\User) {
@@ -659,9 +661,8 @@ class User extends Base
         return $this->response;
     }
 
-    private function _createPushMessage()
-    {
-        return $this->user->getFirstName() . " added you as a friend.";
+    private function _createPushMessage() {
+        return AppMessage::getMessage(AppMessage::FRIEND_REQUEST, $this->user->getFirstName());
     }
 
     /**
@@ -671,8 +672,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCustomCircle($id)
-    {
+    public function deleteCustomCircle($id) {
         $this->_ensureLoggedIn();
 
         try {
@@ -686,7 +686,7 @@ class User extends Base
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(Status::NOT_FOUND);
         }
@@ -701,8 +701,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeFriendFromCircle($id)
-    {
+    public function removeFriendFromCircle($id) {
         $this->_ensureLoggedIn();
 
         try {
@@ -752,8 +751,7 @@ class User extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addFriendToMultipleCircle($id)
-    {
+    public function addFriendToMultipleCircle($id) {
         $this->_ensureLoggedIn();
 
         try {
@@ -783,13 +781,12 @@ class User extends Base
         return $this->response;
     }
 
-     /*
-     * PUT /me/users/un-block
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function unblockUsers()
-    {
+    /*
+    * PUT /me/users/un-block
+    *
+    * @return \Symfony\Component\HttpFoundation\Response
+    */
+    public function unblockUsers() {
         $this->_ensureLoggedIn();
 
         try {
@@ -799,7 +796,7 @@ class User extends Base
             $unBlockUsers = $this->userRepository->unBlockUsers($this->user->getId(), $postData);
             if ($unBlockUsers == true) {
                 $this->getBlockedUsers();
-              }
+            }
         } catch (\Exception\ResourceNotFoundException $e) {
 
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
@@ -822,13 +819,13 @@ class User extends Base
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function getBlockedUsers(){
+    public function getBlockedUsers() {
 
         if ($this->user instanceof \Document\User) {
 
             $user = $this->user->getBlockedUsers();
 
-            $userDetail = $this->_getUserSummaryList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+            $userDetail = $this->_getUserSummaryList($user, array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
 
             $this->response->setContent(json_encode($userDetail));
             $this->response->setStatusCode(Status::OK);
@@ -840,21 +837,20 @@ class User extends Base
         return $this->response;
     }
 
-     /**
+    /**
      * RENAME /me/circles/{id}/rename
      *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renameCustomCircle($id)
-    {
+    public function renameCustomCircle($id) {
         $this->_ensureLoggedIn();
         $postData = $this->request->request->all();
 
         try {
 
-            $this->userRepository->renameCustomCircle($id,$postData);
+            $this->userRepository->renameCustomCircle($id, $postData);
 
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[200])));
             $this->response->setStatusCode(Status::OK);
@@ -863,7 +859,7 @@ class User extends Base
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(Status::NOT_FOUND);
         }
