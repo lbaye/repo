@@ -25,6 +25,9 @@
 		2063A1DF15F3317000529CB2 /* DDAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DC15F3317000529CB2 /* DDAnnotation.m */; };
 		2063A1E015F3317000529CB2 /* DDAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2063A1DE15F3317000529CB2 /* DDAnnotationView.m */; };
 		2063A1E215F3332100529CB2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2063A1E115F3332100529CB2 /* QuartzCore.framework */; };
+		206F5AD916464D7C005EAF5F /* PlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEB71642478F0039187B /* PlaceViewController.m */; };
+		206F5ADB16464DAD005EAF5F /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEBD1642B2A70039187B /* Place.m */; };
+		206F5ADC16464DBE005EAF5F /* DirectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B07777CB163E3A0A00969699 /* DirectionViewController.m */; };
 		2070A6BA15F71FEB008AB0A1 /* event_item_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2070A6B915F71FEB008AB0A1 /* event_item_bg.png */; };
 		208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */; };
 		208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E015FF149D00444CC2 /* profile_brush_icon.png */; };
@@ -441,16 +444,13 @@
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
-		B07777CD163E3A0A00969699 /* DirectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B07777CB163E3A0A00969699 /* DirectionViewController.m */; };
 		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
 		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
 		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
 		B07777D6163E6D9900969699 /* transport3.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D2163E6D9800969699 /* transport3.png */; };
 		B07777D7163E6D9900969699 /* transport4.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D3163E6D9800969699 /* transport4.png */; };
 		B0851551162E919D003347CB /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = B0851550162E919D003347CB /* blank.png */; };
-		B086DEB91642478F0039187B /* PlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEB71642478F0039187B /* PlaceViewController.m */; };
 		B086DEBA1642478F0039187B /* PlaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B086DEB81642478F0039187B /* PlaceViewController.xib */; };
-		B086DEBE1642B2A70039187B /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = B086DEBD1642B2A70039187B /* Place.m */; };
 		B087BF4215FF921200091DA7 /* MeetUpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B087BF4115FF921100091DA7 /* MeetUpRequest.m */; };
 		B08819471627174500FBCB1A /* btn_bg_gray_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819441627174500FBCB1A /* btn_bg_gray_small.png */; };
 		B08819481627174500FBCB1A /* btn_bg_green_small.png in Resources */ = {isa = PBXBuildFile; fileRef = B08819451627174500FBCB1A /* btn_bg_green_small.png */; };
@@ -2261,6 +2261,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				206F5ADC16464DBE005EAF5F /* DirectionViewController.m in Sources */,
+				206F5ADB16464DAD005EAF5F /* Place.m in Sources */,
+				206F5AD916464D7C005EAF5F /* PlaceViewController.m in Sources */,
 				4FF1E8BC160C6808004A63D3 /* PushNotification.m in Sources */,
 				4F4FB0A7160101CE00E142A7 /* UserBasicProfileViewController.m in Sources */,
 				4F98A2D815BB387D000B3124 /* main.m in Sources */,
