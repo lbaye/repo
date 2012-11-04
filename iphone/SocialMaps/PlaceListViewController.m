@@ -8,6 +8,7 @@
 
 #import "PlaceListViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIImageView+Cached.h"
 #import "AppDelegate.h"
 #import "RestClient.h"
 #import "Constants.h"
@@ -77,7 +78,7 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, CELL_HEIGHT)];
         imageView.tag = 3001;
         imageView.backgroundColor = [UIColor blackColor];
-        imageView.image = [UIImage imageNamed:@"cover_pic_default.png"];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [cell.contentView addSubview:imageView];
         [imageView release];
         
@@ -152,10 +153,12 @@
         [line release];
     }
     
+    UIImageView *imageView = (UIImageView*)[cell viewWithTag:3001];
+    [imageView setImageForUrlIfAvailable:place.photoURL];
+    
     UILabel *labelPlaceName  = (UILabel*)[cell viewWithTag:3002];
     labelPlaceName.frame = CGRectMake(labelPlaceName.frame.origin.x, labelPlaceName.frame.origin.y, nameStringSize.width, nameStringSize.height);
     labelPlaceName.text = place.name;
-    
     
     UIScrollView *scrollViewAddress = (UIScrollView*)[cell viewWithTag:3003];
     scrollViewAddress.contentSize = addressStringSize;
@@ -235,7 +238,6 @@
     [tableViewPlaceList reloadData];
 }
 
-
 - (void)dealloc 
 {
     [tableViewPlaceList release];
@@ -246,4 +248,44 @@
 {
     [self dismissModalViewControllerAnimated:YES];
 }
+
+- (void)loadImagesForOnscreenRows {
+    
+    if ([placeList count] > 0) {
+        
+        NSArray *visiblePaths = [tableViewPlaceList indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            UITableViewCell *cell = [tableViewPlaceList cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell viewWithTag:3001];
+            
+            Place *place = [placeList objectAtIndex:indexPath.row];
+            
+            [imgCover loadFromURL:place.photoURL];
+            
+        }
+        
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) {
+        
+        [self loadImagesForOnscreenRows];
+        
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
+}
+
 @end

@@ -461,6 +461,9 @@
 		B08997F716203E2E003A9FA9 /* map_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F616203E2E003A9FA9 /* map_view_icon_black.png */; };
 		B08B6C4F16469C1B00279EDD /* PlaceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */; };
 		B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */; };
+		B08B6C601646A2F900279EDD /* CachedImages.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C5B1646A2F800279EDD /* CachedImages.m */; };
+		B08B6C611646A2F900279EDD /* ImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C5D1646A2F800279EDD /* ImageInfo.m */; };
+		B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */; };
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
@@ -1118,6 +1121,12 @@
 		B08B6C4C16469C1B00279EDD /* PlaceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceListViewController.h; sourceTree = "<group>"; };
 		B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceListViewController.m; sourceTree = "<group>"; };
 		B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceListViewController.xib; sourceTree = "<group>"; };
+		B08B6C5A1646A2F800279EDD /* CachedImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CachedImages.h; sourceTree = "<group>"; };
+		B08B6C5B1646A2F800279EDD /* CachedImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CachedImages.m; sourceTree = "<group>"; };
+		B08B6C5C1646A2F800279EDD /* ImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageInfo.h; sourceTree = "<group>"; };
+		B08B6C5D1646A2F800279EDD /* ImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageInfo.m; sourceTree = "<group>"; };
+		B08B6C5E1646A2F900279EDD /* UIImageView+Cached.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Cached.h"; sourceTree = "<group>"; };
+		B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Cached.m"; sourceTree = "<group>"; };
 		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
 		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
@@ -1311,6 +1320,12 @@
 				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
 				4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */,
 				4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */,
+				B08B6C5A1646A2F800279EDD /* CachedImages.h */,
+				B08B6C5B1646A2F800279EDD /* CachedImages.m */,
+				B08B6C5C1646A2F800279EDD /* ImageInfo.h */,
+				B08B6C5D1646A2F800279EDD /* ImageInfo.m */,
+				B08B6C5E1646A2F900279EDD /* UIImageView+Cached.h */,
+				B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2440,6 +2455,9 @@
 				20F03402163FF8FA00AE4685 /* Photo.m in Sources */,
 				20C5F16D164280820095A391 /* FriendsPhotosViewController.m in Sources */,
 				B08B6C4F16469C1B00279EDD /* PlaceListViewController.m in Sources */,
+				B08B6C601646A2F900279EDD /* CachedImages.m in Sources */,
+				B08B6C611646A2F900279EDD /* ImageInfo.m in Sources */,
+				B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

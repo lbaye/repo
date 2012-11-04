@@ -5842,7 +5842,7 @@ AppDelegate *smAppDelegate;
                 NSLog(@"place name = %@", place.name);
                 place.category  = [self getNestedKeyVal:item key1:@"category" key2:nil key3:nil];
                 place.description = [self getNestedKeyVal:item key1:@"description" key2:nil key3:nil];
-                place.photoURL = [self getNestedKeyVal:item key1:@"photo" key2:nil key3:nil];
+                place.photoURL = [NSURL URLWithString:[self getNestedKeyVal:item key1:@"photo" key2:nil key3:nil]];
                 place.latitude = [[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil] floatValue];
                 place.longitude = [[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil] floatValue];
                 place.address = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
