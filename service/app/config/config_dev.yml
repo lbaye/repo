@@ -8,13 +8,13 @@ mongodb:
 
 imagetype:
   thumb:
-    width: 50
-    height: 50
+    width: 135
+    height: 135
 
   medium:
-    width: 150
-    height: 150
+    width: 570
+    height: 370
 
   large:
-    width: 250
-    height: 250
+    width: 640
+    height: 920
