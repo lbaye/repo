@@ -31,4 +31,7 @@
 +(NSDate *)dateFromString:(NSString *)string;
 +(NSString *)getCurrentTimeOrDate:(NSString *)dateTime;
 
++(void)beganEditing:(UIControl *)control;
++(void)endEditing;
+
 @end

@@ -22,5 +22,6 @@ Event *globalEditEvent;
 BOOL editFlag;
 BOOL isFromVenue;
 BOOL useLocalData;
+BOOL willLoadPhotoData;
 
 @end
