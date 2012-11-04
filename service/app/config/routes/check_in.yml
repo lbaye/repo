@@ -16,4 +16,14 @@ update_checkin:
 delete_checkin:
   pattern: /checkins/{id}
   defaults: { _controller: Controller\CheckIns::delete}
-  requirements: { _mehotd: DELETE}
+  requirements: { _method: DELETE}
+
+get_by_venue:
+  pattern: /checkins/venue/{venue}
+  defaults: { _controller: Controller\CheckIns::getByVenue}
+  requirements: { _method: GET}
+
+get_by_venue_type:
+  pattern: /checkins/venue_type/{venue_type}
+  defaults: { _controller: Controller\CheckIns::getByVenueType}
+  requirements: { _method: GET}

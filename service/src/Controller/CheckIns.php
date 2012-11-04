@@ -63,7 +63,7 @@ class CheckIns extends Base
     {
         $checkIn = $this->checkInRepo->find($id);
         if (empty($checkIn))
-            return $this->_generateResponse(array("message" => "No such Checkin"), Status::NOT_FOUND);
+            return $this->_generateResponse(null, Status::NOT_FOUND);
 
         return $this->_generateResponse($checkIn->toArray(), Status::OK);
     }
@@ -99,5 +99,27 @@ class CheckIns extends Base
             $this->_generateException($e);
         }
         return $this->_generateResponse(array('message' => 'Deleted Successfully'));
+    }
+
+    public function getByVenue($venue)
+    {
+        $checkIns = $this->checkInRepo->getByVenue($venue);
+
+        if (count($checkIns) > 0) {
+            return $this->_generateResponse($this->_toArrayAll($checkIns->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    public function getByVenueType($venue_type)
+    {
+        $checkIns = $this->checkInRepo->get_by_venue_type($venue_type);
+
+        if (count($checkIns) > 0) {
+            return $this->_generateResponse($this->_toArrayAll($checkIns->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
     }
 }

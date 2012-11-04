@@ -59,6 +59,28 @@ class CheckInRepo extends Base
             ->execute();
     }
 
+    public function getByVenue($venue)
+    {
+        return $this->dm->createQueryBuilder()
+            ->find('Document\CheckIn')
+            ->field('venue')
+            ->equals($venue)
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function get_by_venue_type($venue_type)
+    {
+        return $this->dm->createQueryBuilder()
+            ->find('Document\CheckIn')
+            ->field('venueType')
+            ->equals($venue_type)
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+    }
+
 
 
     public function update($data, $id) {
