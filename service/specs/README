@@ -1,3 +1,5 @@
 Define SERVICE_URI environment variable.
 ie. export SERVICE_URI="http://api.socialmaps.local:8888/web/index.php"
 
+# export SERVICE_URI="http://203.76.126.69/stage_social_maps/web"
+# export SERVICE_URI="http://203.76.126.69/test_social_maps/web"

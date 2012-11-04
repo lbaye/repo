@@ -4,9 +4,9 @@ Feature: User Authentication
   I want to verify user credential
 
   Scenario: Authenticate user
-    Given I've already setup user account with "test@email.com" and "abcdef"
+    Given I've already setup user account with "email=xyz@test.com" and "121212"
     When I'm sending http "POST" request to "/auth/login"
-    And I'm posting "email=test@email.com, password=abcdef"
+    And I'm posting "email=xyz@test.com, password=121212"
     Then I should see http "200" status
     And Response is valid "application/json" formatted
     And Response should match ""authToken":"
