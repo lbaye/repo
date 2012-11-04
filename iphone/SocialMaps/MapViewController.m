@@ -40,6 +40,7 @@
 #import "CreateEventViewController.h"
 #import "DirectionViewController.h"
 #import "PlaceViewController.h"
+#import "PlaceListViewController.h"
 #import "Place.h"
 
 @interface MapViewController ()
@@ -596,6 +597,8 @@ ButtonClickCallbackData callBackData;
     LocationItemPlace *locItemPlace = (LocationItemPlace*)anno;
     
     Place *place = [[Place alloc] init];
+    place.name = locItemPlace.itemName;
+    place.address = locItemPlace.itemAddress;
     place.latitude = locItemPlace.coordinate.latitude;
     place.longitude = locItemPlace.coordinate.longitude;
     [controller setAddressLabelFromLatLon:place];
@@ -1981,7 +1984,7 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoPlace:(id)sender
 {
-    PlaceViewController *controller = [[PlaceViewController alloc] initWithNibName:@"PlaceViewController" bundle:nil];
+    PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];

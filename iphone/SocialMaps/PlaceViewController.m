@@ -141,14 +141,16 @@
 - (void)setAddressLabelFromLatLon:(Place*)_place
 {
     self.place = _place;
-    self.place.name = @"";
+//    self.place.name = @"";
     
-    labelAddress.text = @"Retrieving address ...";
+    labelAddress.text = self.place.address;
     
+    //labelAddress.text = @"Retrieving address ...";
+    /*
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         labelAddress.text=[UtilityClass getAddressFromLatLon:self.place.latitude withLongitude:self.place.longitude];
     });
-    
+    */
 }
 
 - (void)viewDidUnload

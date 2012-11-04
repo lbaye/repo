@@ -10,12 +10,15 @@
 
 @implementation Place
 
+@synthesize placeID;
 @synthesize name;
 @synthesize description;
 @synthesize category;
 @synthesize photo;
+@synthesize photoURL;
 @synthesize latitude;
 @synthesize longitude;
 @synthesize base64Image;
+@synthesize address;
 
 @end

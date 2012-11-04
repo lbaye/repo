@@ -459,6 +459,8 @@
 		B08845691619584C00676EFA /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08845671619584C00676EFA /* OverlayViewController.m */; };
 		B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F316203E1F003A9FA9 /* list_view_icon_black.png */; };
 		B08997F716203E2E003A9FA9 /* map_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F616203E2E003A9FA9 /* map_view_icon_black.png */; };
+		B08B6C4F16469C1B00279EDD /* PlaceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */; };
+		B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */; };
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
@@ -1113,6 +1115,9 @@
 		B08845671619584C00676EFA /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
 		B08997F316203E1F003A9FA9 /* list_view_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_view_icon_black.png; sourceTree = "<group>"; };
 		B08997F616203E2E003A9FA9 /* map_view_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map_view_icon_black.png; sourceTree = "<group>"; };
+		B08B6C4C16469C1B00279EDD /* PlaceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceListViewController.h; sourceTree = "<group>"; };
+		B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceListViewController.m; sourceTree = "<group>"; };
+		B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceListViewController.xib; sourceTree = "<group>"; };
 		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
 		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
@@ -1504,6 +1509,9 @@
 				B086DEB61642478F0039187B /* PlaceViewController.h */,
 				B086DEB71642478F0039187B /* PlaceViewController.m */,
 				B086DEB81642478F0039187B /* PlaceViewController.xib */,
+				B08B6C4C16469C1B00279EDD /* PlaceListViewController.h */,
+				B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */,
+				B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -2251,6 +2259,7 @@
 				20C376A6163E529200F989B3 /* PhotoStoryboard.storyboard in Resources */,
 				20C5F1711642BC090095A391 /* icon_camera.png in Resources */,
 				20C5F1721642BC090095A391 /* icon_gallery.png in Resources */,
+				B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2430,6 +2439,7 @@
 				20C376B7163EA07C00F989B3 /* UploadNewPhotoViewController.m in Sources */,
 				20F03402163FF8FA00AE4685 /* Photo.m in Sources */,
 				20C5F16D164280820095A391 /* FriendsPhotosViewController.m in Sources */,
+				B08B6C4F16469C1B00279EDD /* PlaceListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -55,6 +55,7 @@ extern NSString * const NOTIF_DO_UPLOAD_PHOTO;
 extern NSString * const NOTIF_GET_USER_ALL_PHOTO;
 extern NSString * const NOTIF_DELETE_USER_PHOTO_DONE;
 extern NSString * const NOTIF_GET_FRIENDS_ALL_PHOTO;
+extern NSString * const NOTIF_GET_PLACES_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

@@ -5770,6 +5770,7 @@ AppDelegate *smAppDelegate;
     [request setPostValue:place.category forKey:@"category"];
     [request setPostValue:place.description forKey:@"description"];
     [request setPostValue:place.base64Image forKey:@"photo"];
+    [request setPostValue:place.address forKey:@"address"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -5805,6 +5806,67 @@ AppDelegate *smAppDelegate;
     }];
     
     //[request setDelegate:self];
+    [request startAsynchronous];
+}
+
+- (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue 
+{    
+    NSURL *url = [NSURL URLWithString:[WS_URL stringByAppendingString:@"/places"]];
+    NSMutableArray *placeList = [[NSMutableArray alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            for (NSDictionary *item in jsonObjects) {
+                
+                Place *place = [[Place alloc] init];
+                place.placeID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSLog(@"place id = %@", place.placeID);
+                place.name  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
+                NSLog(@"place name = %@", place.name);
+                place.category  = [self getNestedKeyVal:item key1:@"category" key2:nil key3:nil];
+                place.description = [self getNestedKeyVal:item key1:@"description" key2:nil key3:nil];
+                place.photoURL = [self getNestedKeyVal:item key1:@"photo" key2:nil key3:nil];
+                place.latitude = [[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil] floatValue];
+                place.longitude = [[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil] floatValue];
+                place.address = [self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil];
+                [placeList addObject:place];
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLACES_DONE object:placeList];
+            
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLACES_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLACES_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getPlaces");
     [request startAsynchronous];
     
 }

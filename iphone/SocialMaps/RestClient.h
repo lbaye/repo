@@ -97,5 +97,6 @@
 -(void) getFriendsPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
 
 - (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
 @end
