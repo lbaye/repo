@@ -60,6 +60,9 @@ AppDelegate *smAppdelegate;
     [smAppdelegate showActivityViewer:self.view];
     [smAppdelegate.window setUserInteractionEnabled:NO];
     [rc getFriendsPhotos:@"Auth-Token" :smAppdelegate.authToken:userId];
+    [nextButton setHidden:NO];
+    [prevButton setHidden:YES];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -540,6 +543,19 @@ AppDelegate *smAppdelegate;
         CGFloat pageWidth = customScrollView.frame.size.width;
         int page = floor((customScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
         zoomIndex=page;
+        if (page==0) 
+        {
+            [nextButton setHidden:NO];
+            [prevButton setHidden:YES];
+        }
+        else if (page==[filteredList2 count]-1) {
+            [nextButton setHidden:YES];
+            [prevButton setHidden:NO];
+        }
+        else {
+            [prevButton setHidden:NO];
+            [nextButton setHidden:NO];
+        }
     }
     // Switch the indicator when more than 50% of the previous/next page is visible
     // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)
