@@ -63,6 +63,7 @@ NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE= @"com.genweb2.socialmaps.get
 NSString * const NOTIF_GET_OTHER_USER_PROFILE_DONE= @"com.genweb2.socialmaps.getotheruserprofiledone";
 NSString * const NOTIF_DO_CONNECT_FB_DONE= @"com.genweb2.socialmaps.doconnectfbdone";
 NSString * const NOTIF_DO_CONNECT_WITH_FB= @"com.genweb2.socialmaps.doconnectwithfb";
+NSString * const NOTIF_GET_PLACES_DONE= @"com.genweb2.socialmaps.getplacesdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

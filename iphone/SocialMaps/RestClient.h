@@ -92,5 +92,6 @@
 - (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
 
 - (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
 @end
