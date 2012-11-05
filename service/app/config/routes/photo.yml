@@ -50,7 +50,7 @@ like_a_photo:
   requirements: { _method: POST }
 
 dislike_a_photo:
-  pattern: /photos/{id}/dislike
-  defaults: { _controller: Controller\Photos::dislikePhoto }
+  pattern: /photos/{id}/unlike
+  defaults: { _controller: Controller\Photos::unlikePhoto }
   requirements: { _method: POST }
 

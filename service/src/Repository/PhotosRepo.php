@@ -47,6 +47,19 @@ class PhotosRepo extends Base
             ->execute();
     }
 
+    public function getByPhotoId(UserDocument $user,$photoId)
+    {
+        return $this->dm->createQueryBuilder()
+            ->find('Document\Photo')
+            ->field('_id')
+            ->equals($photoId)
+            ->field('owner')
+            ->equals($user->getId())
+            ->sort('createDate', 'desc')
+            ->getQuery()
+            ->execute();
+    }
+
     public function update($data, $id) {
         $photo = $this->find($id);
 
@@ -83,6 +96,11 @@ class PhotosRepo extends Base
         $this->dm->flush();
 
         return $comment;
+    }
+
+    public function getAllByUser(UserDocument $user,$limit = 20, $offset = 0)
+    {
+        return $this->findBy(array('owner' => $user->getId()), array('_id' => 'DESC'));
     }
 
 }

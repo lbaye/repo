@@ -10,3 +10,16 @@ logging:
   # DEBUG, WARN, ERROR
   level: "DEBUG"
   file: "%s/logs/web_%s.log"
+
+imagetype:
+  thumb:
+    width: 135
+    height: 135
+
+  medium:
+    width: 570
+    height: 370
+
+  large:
+    width: 640
+    height: 920

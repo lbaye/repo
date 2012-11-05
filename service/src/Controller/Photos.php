@@ -25,6 +25,26 @@ class Photos extends Base
         $this->_ensureLoggedIn();
     }
 
+    /**
+     * GET /photos
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function index()
+    {
+        $start = $this->request->get('start', 0);
+        $limit = $this->request->get('limit', 200);
+
+        $photos = $this->photoRepo->getAllByUser($this->user, $limit, $start);
+
+        if (!empty($photos)) {
+            $data = $this->_toArrayAll($photos->toArray());
+            return $this->_generateResponse($data);
+        } else {
+            return $this->_generateResponse(array('message' => 'No photos found'), Status::NO_CONTENT);
+        }
+    }
+
     public function create()
     {
         $postData = $this->request->request->all();
@@ -101,10 +121,9 @@ class Photos extends Base
         }
     }
 
-    public function getById($id){
-
-        $user = $this->userRepository->find($id);
-        $photos = $this->photoRepo->getByUser($user);
+    public function getById($id)
+    {
+        $photos = $this->photoRepo->getByPhotoId($this->user,$id);
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
 
@@ -153,8 +172,8 @@ class Photos extends Base
                 $likeUser = $this->userRepository->find($userId);
 
                 if ($photo instanceof \Document\Photo) {
-                    if (!in_array($likeUser->getId(), $photo->getLike())) {
-                        $photo->addLikedUser($likeUser->getId());
+                    if (!in_array($likeUser->getId(), $photo->getLikes())) {
+                        $photo->addLikesUser($likeUser->getId());
                         $this->dm->persist($photo);
                         $this->dm->flush();
                         $this->response->setContent(json_encode(array('message' => 'Done')));
@@ -171,25 +190,25 @@ class Photos extends Base
     }
 
     /**
-     * POST /photos/{id}/dislike
+     * POST /photos/{id}/unlike
      *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function dislikePhoto($id)
+    public function unlikePhoto($id)
     {
         $postData = $this->request->request->all();
         $photo = $this->photoRepo->find($id);
 
-        if (!empty($postData['dislike'])) {
-            foreach ($postData['dislike'] as $userId) {
+        if (!empty($postData['unlike'])) {
+            foreach ($postData['unlike'] as $userId) {
                 $dislikeUser = $this->userRepository->find($userId);
 
                 if ($photo instanceof \Document\Photo) {
-                    if (in_array($dislikeUser->getId(), $photo->getLike())) {
-                        $removeDislikeUser = array_diff($photo->getLike(), array($dislikeUser->getId()));
-                        $photo->setLikedUser($removeDislikeUser);
+                    if (in_array($dislikeUser->getId(), $photo->getLikes())) {
+                        $removeDislikeUser = array_diff($photo->getLikes(), array($dislikeUser->getId()));
+                        $photo->setLikesUser($removeDislikeUser);
                         $this->dm->persist($photo);
                         $this->dm->flush();
                         $this->response->setContent(json_encode(array('message' => 'Done')));
@@ -257,6 +276,13 @@ class Photos extends Base
         }
 
         return $this->response;
+    }
+
+    public function getCommentsByPhotoId($id)
+    {
+        $photoComment = $this->photoRepo->find($id);
+        $photos = $photoComment->getPhotoComment();
+        return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
 
 }

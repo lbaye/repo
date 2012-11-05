@@ -244,6 +244,13 @@ class User extends Base
     public function create()
     {
         $data = $this->request->request->all();
+        $key = $this->config['googlePlace']['apiKey'];
+        if (!isset($data['coverPhoto']) || empty($data['coverPhoto'])) {
+            if (!empty($data['lat']) && !empty($data['lng'])) {
+                $streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $data['lat'] . "," . $data['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                $data['coverPhoto'] = $streetViewImage;
+            }
+        }
 
         try {
 
