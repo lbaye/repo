@@ -1,7 +1,4 @@
-all_review:
-  pattern: /reviews
-  defaults: { _controller: Controller\Reviews::index }
-  requirements: { _method: GET }
+
 
 create_review:
   pattern: /reviews

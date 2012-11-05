@@ -23,15 +23,9 @@ class Reviews extends Base
         $this->_ensureLoggedIn();
     }
 
-
-    public function index()
-    {
-        echo "hi++++++++++++++++";
-    }
     public function create()
     {
         $postData = $this->request->request->all();
-
         $review = $this->reviewRepo->map($postData, $this->user);
         $this->reviewRepo->insert($review);
 

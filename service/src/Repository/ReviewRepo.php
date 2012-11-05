@@ -8,7 +8,7 @@ use Document\User as UserDocument;
 use Repository\UserRepo as UserRepository;
 use Document\Review as Review;
 use Helper\Security as SecurityHelper;
-use Helper\Image as ImageHelper;
+
 
 class ReviewRepo extends Base
 {
@@ -74,7 +74,7 @@ class ReviewRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $$review = $this->map($data, $$review->getOwner(), $review);
+        $review = $this->map($data, $review->getOwner(), $review);
 
         if ($review->isValid() === false) {
             return false;
