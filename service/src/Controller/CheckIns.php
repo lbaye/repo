@@ -114,7 +114,7 @@ class CheckIns extends Base
 
     public function getByVenueType($venue_type)
     {
-        $checkIns = $this->checkInRepo->get_by_venue_type($venue_type);
+        $checkIns = $this->checkInRepo->GetByVenueType($venue_type);
 
         if (count($checkIns) > 0) {
             return $this->_generateResponse($this->_toArrayAll($checkIns->toArray()));

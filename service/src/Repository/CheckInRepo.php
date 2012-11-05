@@ -70,7 +70,7 @@ class CheckInRepo extends Base
             ->execute();
     }
 
-    public function get_by_venue_type($venue_type)
+    public function GetByVenueType($venue_type)
     {
         return $this->dm->createQueryBuilder()
             ->find('Document\CheckIn')
