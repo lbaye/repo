@@ -38,10 +38,7 @@ class Photo extends Content
     protected $description;
 
     /** @ODM\Hash */
-    protected $like = array();
-
-    /** @ODM\Hash */
-    protected $dislike = array();
+    protected $likes = array();
 
     /**
      * @ODM\EmbedOne(targetDocument="Location")
@@ -172,27 +169,18 @@ class Photo extends Content
         return $this->uriThumb;
     }
 
-    public function addLikedUser($userId) {
-        $this->like[] = $userId;
+    public function addLikesUser($userId) {
+        $this->likes[] = $userId;
     }
 
-    public function setLikedUser(array $users)
+    public function setLikesUser(array $users)
     {
-        $this->like = $users;
+        $this->likes = $users;
     }
 
-    public function getLike()
+    public function getLikes()
     {
-        return $this->like;
-    }
-
-    public function addDislikedUser($userId) {
-        $this->dislike[] = $userId;
-    }
-
-    public function getDisLike()
-    {
-        return $this->dislike;
+        return $this->likes;
     }
 
     public function addPhotoComment($photoComment)

@@ -38,7 +38,7 @@ class Place extends Base
     public function index($type = 'place')
     {
         $start = $this->request->get('start', 0);
-        $limit = $this->request->get('limit', 20);
+        $limit = $this->request->get('limit', 200);
 
         $this->_initRepository($type);
 
