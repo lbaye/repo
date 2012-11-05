@@ -87,7 +87,7 @@ class Reviews extends Base
 
     public function getByVenueType($venue_type)
     {
-        $review = $this->reviewRepo->get_by_venue_type($venue_type);
+        $review = $this->reviewRepo->GetByVenueType($venue_type);
 
         if (count($review) > 0) {
             return $this->_generateResponse($this->_toArrayAll($review->toArray()));
