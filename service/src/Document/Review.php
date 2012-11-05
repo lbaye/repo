@@ -80,10 +80,10 @@ class Review extends Content
     public function isValid()
     {
         try {
-//            Validator::create()->notEmpty()->assert($this->getVenue());
-//            Validator::create()->notEmpty()->assert($this->getVenueType());
-//            Validator::create()->notEmpty()->assert($this->getReview());
-//            Validator::create()->notEmpty()->assert($this->getRating());
+            Validator::create()->notEmpty()->assert($this->getVenue());
+            Validator::create()->notEmpty()->assert($this->getVenueType());
+            Validator::create()->notEmpty()->assert($this->getReview());
+            Validator::create()->notEmpty()->assert($this->getRating());
 
         } catch (\InvalidArgumentException $e) {
             return false;
