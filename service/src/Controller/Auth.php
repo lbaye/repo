@@ -51,6 +51,15 @@ class Auth extends Base
                     return $this->response;
                 }
             }
+            $streetViewStatus = 0;
+            $key = $this->config['googlePlace']['apiKey'];
+            if (!isset($data['coverPhoto']) || empty($data['coverPhoto'])) {
+                if (!empty($data['lat']) && !empty($data['lng'])) {
+                    $streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $data['lat'] . "," . $data['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                    $data['coverPhoto'] = $streetViewImage;
+                    $streetViewStatus = 1;
+                }
+            }
 
             $user = $this->userRepository->insert($data);
 
@@ -58,14 +67,18 @@ class Auth extends Base
                 $user = $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
             }
 
-            if (!empty($data['coverPhoto'])) {
-                $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+            if ($streetViewStatus != 1) {
+                if (!empty($data['coverPhoto'])) {
+                    $user = $this->userRepository->saveCoverPhoto($user->getId(), $data['coverPhoto']);
+                }
             }
 
             $data = $user->toArrayDetailed();
 
             $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
-            $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
+            if ($streetViewStatus != 1) {
+                $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
+            }
 
             $notifications = 0;
             $friendRequest = 0;
