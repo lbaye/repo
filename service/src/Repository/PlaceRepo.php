@@ -95,4 +95,8 @@ class PlaceRepo extends Base
 
         return $place;
     }
+
+    public function getAll($limit = 20, $offset = 0) {
+        return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
+    }
 }
