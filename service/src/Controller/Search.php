@@ -118,7 +118,7 @@ class Search extends Base {
         foreach ($users as &$user) {
             $user['distance'] = \Helper\Location::distance(
                 $location['lat'], $location['lng'],
-                $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+                $user['currentLocation']['lat'],$user['currentLocation']['lat']);
 
             $mongoDate = $user['createdAt'];
             $now = new \DateTime();
@@ -128,7 +128,10 @@ class Search extends Base {
                 'date' => $now
             );
 
-            $user['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=" . $data['lat'] . "," . $data['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$this->config['googlePlace']['apiKey']}";
+            $user['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+                                  . $user['currentLocation']['lat'] . ","
+                                  . $user['currentLocation']['lat'] . "&fov=90&heading=235&pitch=10&sensor=false"
+                                  . "&key={$this->config['googlePlace']['apiKey']}";
         }
 
         return $users;
