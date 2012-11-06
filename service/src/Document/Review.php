@@ -75,8 +75,6 @@ class Review extends Content
         return $this->venue;
     }
 
-
-
     public function isValid()
     {
         try {
@@ -106,7 +104,6 @@ class Review extends Content
             'lastName' => $owner->getLastName(),
             'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
         );
-
 
         return $hash;
     }

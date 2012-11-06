@@ -28,7 +28,6 @@ class ReviewRepo extends Base
         }
 
         $review->setOwner($owner);
-
         return $review;
     }
 
@@ -64,8 +63,6 @@ class ReviewRepo extends Base
             ->getQuery()
             ->execute();
     }
-
-
 
     public function update($data, $id) {
         $review = $this->find($id);
