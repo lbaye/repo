@@ -16,5 +16,6 @@
 
 + (ImageInfo*)getImageFromURL:(NSURL*)URL;
 + (ImageInfo*)getImageFromURLIfAvailable:(NSURL*)URL;
++ (void) removeAllCache;
 
 @end

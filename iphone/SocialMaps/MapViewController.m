@@ -42,6 +42,7 @@
 #import "PlaceViewController.h"
 #import "PlaceListViewController.h"
 #import "Place.h"
+#import "DDAnnotation.h"
 
 @interface MapViewController ()
 
@@ -398,8 +399,39 @@ ButtonClickCallbackData callBackData;
     [self.mapView setVisibleMapRect:r animated:YES];
 }
 
+-(void) startMoveAndAddPin:(Place*)place
+{
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = place.latitude;
+    theCoordinate.longitude = place.longitude;
+    
+    DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    annotation.title = [NSString stringWithFormat:@"%@", place.name];
+    [_mapView addAnnotation:annotation];
+    [_mapView selectAnnotation:annotation animated:NO];
+    
+    MKMapRect r = [self.mapView visibleMapRect];
+    MKMapPoint pt = MKMapPointForCoordinate(theCoordinate);
+    r.origin.x = pt.x - r.size.width;
+    r.origin.y = pt.y - r.size.height;
+    [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
+}
+
+- (void) removeAnnotation:(DDAnnotation*)annotation
+{
+    [_mapView removeAnnotation:annotation];
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self performSelector:@selector(startMoveAndAddPin:) withObject:place afterDelay:.8];
+}
+
 // MapAnnotation delegate methods
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
+    
     NSLog(@"MapViewController:mapAnnotationChanged");
 //    [_mapView setCenterCoordinate:anno.coordinate animated:YES];
     if (selectedAnno != nil && selectedAnno != anno) {
@@ -601,6 +633,8 @@ ButtonClickCallbackData callBackData;
     place.address = locItemPlace.itemAddress;
     place.latitude = locItemPlace.coordinate.latitude;
     place.longitude = locItemPlace.coordinate.longitude;
+    place.category = locItemPlace.itemCategory;
+    NSLog(@"category = %@ vicinity = %@", locItemPlace.itemCategory, locItemPlace.placeInfo.vicinity);
     [controller setAddressLabelFromLatLon:place];
     [place release];
     [controller release];

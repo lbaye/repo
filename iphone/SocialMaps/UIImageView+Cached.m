@@ -69,6 +69,9 @@ static char const * const ObjectTagKey = "ObjectTag";
             [activityIndicator release];
             NSLog(@"Start indicator");
         }
+    } else {
+        ImageInfo *_imageInfo = [((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]) retain];
+        [self checkPreviousDownload:_imageInfo];
     }
 }
 

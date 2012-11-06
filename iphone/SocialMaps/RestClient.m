@@ -5871,6 +5871,103 @@ AppDelegate *smAppDelegate;
     
 }
 
+- (void) updatePlaces:(NSString *)authToken:(NSString *)authTokenValue:(Place*)place
+{
+    NSString *route = [NSString stringWithFormat:@"%@/places/%@", WS_URL, place.placeID];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    if (place.name)
+        [request addPostValue:place.name forKey:@"title"];
+    if (place.category)
+        [request addPostValue:place.category forKey:@"category"];
+    if (place.description)
+        [request addPostValue:place.description forKey:@"description"];
+    if (place.photo)
+        [request addPostValue:place.base64Image forKey:@"photo"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            [UtilityClass showAlert:@"" :@"Place updated"];
+        } else 
+        {
+            [UtilityClass showAlert:@"" :@"Update place failed"];
+        }
+        
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+         [UtilityClass showAlert:@"" :@"Update place failed"];
+    }];
+    
+    NSLog(@"asyn update place");
+    [request startAsynchronous];
+}
+
+-(void) deletePlaceByPlaceId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)placeId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/places/%@", WS_URL, placeId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            [UtilityClass showAlert:@"" :@"Place deleted"];
+        } 
+        else 
+        {
+            [UtilityClass showAlert:@"" :@"Failed to delete place"];
+        }
+        
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [UtilityClass showAlert:@"" :@"Failed to delete place"];
+    }];
+    
+    NSLog(@"asyn srt delete place");
+    [request startAsynchronous];
+}
+
 -(void) uploadPhoto:(NSString *)authToken:(NSString *)authTokenValue:(Photo *)photo
 {
     NSString *route = [NSString stringWithFormat:@"%@/photos",WS_URL];

@@ -12,9 +12,9 @@
 
 @interface OverlayViewController : UIViewController {
 
-	ListViewController *rvController;
+	id rvController;
 }
 
-@property (nonatomic, retain) ListViewController *rvController;
+@property (nonatomic, retain) id rvController;
 
 @end

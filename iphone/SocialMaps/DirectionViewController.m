@@ -138,6 +138,13 @@
         totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
+- (void) viewDidDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    
+    [super viewDidDisappear:animated];
+}
+
 - (void)viewDidUnload
 {
     [scrollViewMain release];

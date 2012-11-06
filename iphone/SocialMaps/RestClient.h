@@ -98,5 +98,7 @@
 
 - (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 - (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) updatePlaces:(NSString *)authToken:(NSString *)authTokenValue:(Place*)place;
+- (void) deletePlaceByPlaceId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)placeId;
 
 @end

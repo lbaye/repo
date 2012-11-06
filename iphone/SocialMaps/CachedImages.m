@@ -126,4 +126,9 @@
 	}
 }
 
++ (void) removeAllCache 
+{
+    [[self cache] removeAllObjects];
+}
+
 @end

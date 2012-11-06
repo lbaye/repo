@@ -17,6 +17,7 @@
 @implementation PlaceViewController
 
 @synthesize place;
+@synthesize isEditingMode;
 
 - (void)viewDidLoad
 {
@@ -127,6 +128,13 @@
                                     @"Veterinary care",
                                     @"Zoo",nil];
     
+    if (isEditingMode) 
+    {
+        labelSavePlace.text = @"Edit Place";
+        viewEditEvent.hidden = FALSE;
+        placeEdit = [[Place alloc] init];
+    }
+    
 }
 
 -(void) displayNotificationCount 
@@ -141,16 +149,24 @@
 - (void)setAddressLabelFromLatLon:(Place*)_place
 {
     self.place = _place;
-//    self.place.name = @"";
-    
+    placeEdit.placeID = self.place.placeID;
+    imageViewPlace.image = self.place.photo;
+    if (imageViewPlace.image)
+        [buttonAddPhoto setTitle:@"Edit photo..." forState:UIControlStateNormal];
     labelAddress.text = self.place.address;
     
-    //labelAddress.text = @"Retrieving address ...";
-    /*
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        labelAddress.text=[UtilityClass getAddressFromLatLon:self.place.latitude withLongitude:self.place.longitude];
-    });
-    */
+    if (place.category) 
+    {
+        for (int i = 0; i < [categoryName count]; i++) 
+        {
+            NSString *categoryString = [[[categoryName objectAtIndex:i] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+            if ([categoryString isEqualToString:place.category] || [[categoryName objectAtIndex:i] isEqualToString:place.category]) 
+            {
+                selectedCatetoryIndex = i;
+                break;
+            }
+        }
+    }
 }
 
 - (void)viewDidUnload
@@ -173,6 +189,10 @@
     buttonCategory = nil;
     [labelAddress release];
     labelAddress = nil;
+    [viewEditEvent release];
+    viewEditEvent = nil;
+    [viewTextInput release];
+    viewTextInput = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -221,18 +241,18 @@
 
 - (IBAction)actionNameButton:(id)sender 
 {
-    [self resetButtons:sender];
-    
     textField.placeholder = @"Name";
     textField.text = self.place.name;
+    viewTextInput.hidden = NO;
+    [textField becomeFirstResponder];
 }
 
 - (IBAction)actionDescriptionButton:(id)sender 
 {
-    [self resetButtons:sender];
-    
     textField.placeholder = @"Description";
     textField.text = self.place.description;
+    viewTextInput.hidden = NO;
+    [textField becomeFirstResponder];
 }
 
 - (IBAction)actionAddPhotoButton:(id)sender 
@@ -244,6 +264,80 @@
 {
     imageViewPlace.image = nil;
     [buttonAddPhoto setTitle:@"Add photo..." forState:UIControlStateNormal];
+}
+
+//Delete place button action
+- (IBAction)actionDeleteEventButton:(id)sender 
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:@"Do you want to delete %@?", place.name] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    [alertView show];
+    [alertView release];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate]; 
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient deletePlaceByPlaceId:@"Auth-Token" :smAppDelegate.authToken :place.placeID];
+        [self dismissModalViewControllerAnimated:YES];
+        [self.presentingViewController performSelector:@selector(deletePlace:) withObject:place afterDelay:.8];
+    }
+}
+
+//Update place buttton action
+- (IBAction)actionUpdateEventButton:(id)sender 
+{
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];   
+    
+    if (!placeEdit.name && !placeEdit.category && !placeEdit.base64Image && !placeEdit.description) {
+        [UtilityClass showAlert:@"" :@"No change to update"];
+        return;
+    }
+    
+    if (placeEdit.name)
+        place.name = placeEdit.name;
+    if (placeEdit.description)
+        place.description = placeEdit.description;
+    if (placeEdit.category)
+        place.category = placeEdit.category;
+    if (imageViewPlace.image) 
+        place.photo = imageViewPlace.image;
+
+    [self.presentingViewController performSelector:@selector(reloadTableView)];
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient updatePlaces:@"Auth-Token" :smAppDelegate.authToken :placeEdit];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)actionSaveTextInput:(id)sender 
+{
+    if ([textField.placeholder isEqualToString:@"Name"]) 
+    {
+        if (self.isEditingMode)
+            placeEdit.name = textField.text;
+        else 
+            self.place.name = textField.text;
+            
+    } 
+    else if ([textField.placeholder isEqualToString:@"Description"]) 
+    {
+        if (self.isEditingMode)
+            placeEdit.description = textField.text;
+        else
+            self.place.description = textField.text;
+        
+    }
+    
+    viewTextInput.hidden = YES;
+    [textField resignFirstResponder];
+}
+
+- (IBAction)actionCancelTextInput:(id)sender 
+{
+    [textField resignFirstResponder];
+    viewTextInput.hidden = YES;
 }
 
 - (IBAction)actionCategoryButton:(id)sender 
@@ -259,8 +353,13 @@
         
         NSData *imgdata = UIImagePNGRepresentation(img);
         NSString *imgBase64Data = [imgdata base64EncodedString];
-        place.base64Image = imgBase64Data;
+        
+        if (self.isEditingMode)
+            placeEdit.base64Image = imgBase64Data;
+        else
+            place.base64Image = imgBase64Data;
     } 
+    
     [photoPicker.view removeFromSuperview];
 }
 
@@ -289,7 +388,11 @@
 {
     selectedCatetoryIndex = [selectedIndex intValue];
     
-    place.category = [[[categoryName objectAtIndex:selectedCatetoryIndex] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    if (self.isEditingMode)
+        placeEdit.category = [[[categoryName objectAtIndex:selectedCatetoryIndex] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    else 
+        place.category = [[[categoryName objectAtIndex:selectedCatetoryIndex] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+        
     
     NSLog(@"Place.category = %@", place.category);
 }
@@ -309,6 +412,8 @@
     [picSel release];
     
     [labelAddress release];
+    [viewEditEvent release];
+    [viewTextInput release];
     [super dealloc];
 }
 @end
