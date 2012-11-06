@@ -22,7 +22,7 @@ class Place extends Base
     {
         parent::init();
 
-        $this->userRepository  = $this->dm->getRepository('Document\User');
+        $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
@@ -44,12 +44,17 @@ class Place extends Base
 
         $places = $this->LocationMarkRepository->getAll($limit, $start);
 
+
         if (!empty($places)) {
             $permittedDocs = $this->_filterByPermission($places);
             $data = $this->_toArrayAll($permittedDocs);
             $i = 0;
             foreach ($data as $photoUrl) {
                 $data[$i]['photo'] = \Helper\Url::buildPlacePhotoUrl($photoUrl);
+                $data[$i]['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+                    . $data[$i]['location']['lat'] . ","
+                    . $data[$i]['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
+                    . "&key={$this->config['googlePlace']['apiKey']}";
                 $i++;
             }
 
@@ -93,11 +98,23 @@ class Place extends Base
     {
         $this->_initRepository($type);
         $places = $this->LocationMarkRepository->getByUser($this->user);
+        $this->addCoverPhoto($places);
 
         if ($places) {
             return $this->_generateResponse($places);
         } else {
             return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    private function addCoverPhoto(array &$places)
+    {
+        foreach ($places as &$place) {
+            $place['coverPhoto'] =
+                "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+                    . $place['location']['lat'] . ","
+                    . $place['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
+                    . "&key={$this->config['googlePlace']['apiKey']}";
         }
     }
 
@@ -159,7 +176,7 @@ class Place extends Base
 
         $place = $this->LocationMarkRepository->find($id);
 
-        if(empty($place) || $place->getOwner() != $this->user){
+        if (empty($place) || $place->getOwner() != $this->user) {
             return $this->_generateUnauthorized();
         }
 
@@ -172,7 +189,7 @@ class Place extends Base
             $postData = $place->toArray();
             $postData['photo'] = \Helper\Url::buildPlacePhotoUrl($postData);
 
-            if($place) {
+            if ($place) {
                 return $this->_generateResponse($postData);
             } else {
                 return $this->_generateErrorResponse('Invalid request params');
@@ -201,12 +218,12 @@ class Place extends Base
             $this->_generateException($e);
         }
 
-        return $this->_generateResponse(array('message'=>'Deleted Successfully'));
+        return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
 
     private function _initRepository($type)
     {
-        if($type == 'geotag') {
+        if ($type == 'geotag') {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Geotag');
         } else {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
