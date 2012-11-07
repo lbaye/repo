@@ -148,16 +148,29 @@ class Place extends Base
     }
 
     /**
-     * GET /user/{userId}/places
+     * GET /users/{userId}/places
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getByUser($type = 'place')
+    public function getByUser($userId, $type = 'place')
     {
-        return $this->_generateErrorResponse('Not implemented', Status::NOT_IMPLEMENTED);
-    }
+        $user = $this->userRepository->find($userId);
 
+        if(is_null($user) || empty($user))
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+
+        $this->_initRepository($type);
+        $places = $this->LocationMarkRepository->getByUser($user);
+        $this->addPhoto($places);
+
+        if ($places) {
+            return $this->_generateResponse($places);
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+    
     /**
      * POST /places
      *
