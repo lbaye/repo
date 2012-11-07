@@ -94,9 +94,9 @@ class Photos extends Base
             $mPath = ROOTDIR . $fileMediumPath;
             $lPath = ROOTDIR . $fileLargePath;
             ImageHelper::saveResizeImageFromBase64($imageData, $tPath, $mPath, $lPath,
-                                                   $thumbWidth, $thumbHeight,
-                                                   $mediumWidth, $mediumHeight,
-                                                   $largeWidth, $largeHeight);
+                $thumbWidth, $thumbHeight,
+                $mediumWidth, $mediumHeight,
+                $largeWidth, $largeHeight);
             $uriThumb = $fileThumbPath . "?" . $timeStamp;
             $uriMedium = $fileMediumPath . "?" . $timeStamp;
             $uriLarge = $fileLargePath . "?" . $timeStamp;
@@ -123,27 +123,40 @@ class Photos extends Base
 
     public function getById($id)
     {
-        $photos = $this->photoRepo->getByPhotoId($this->user,$id);
+        $photos = $this->photoRepo->getByPhotoId($this->user, $id);
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
 
-    public function update($id){
+    public function getByUserId($id)
+    {
+        $user = $this->userRepository->find($id);
+        $photos = $this->photoRepo->getByUser($user);
+        if (count($photos) > 0) {
+            return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    public function update($id)
+    {
 
         $data = $this->request->request->all();
         $photo = $this->photoRepo->find($id);
 
-        if(empty($photo) || $photo->getOwner() != $this->user){
-          return $this->_generateUnauthorized();
+        if (empty($photo) || $photo->getOwner() != $this->user) {
+            return $this->_generateUnauthorized();
         }
 
         $photo = $this->photoRepo->update($data, $id);
         return $this->_generateResponse($photo->toArray(), Status::OK);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $photo = $this->photoRepo->find($id);
 
-        if(empty($photo) || $photo->getOwner() != $this->user){
+        if (empty($photo) || $photo->getOwner() != $this->user) {
             return $this->_generateUnauthorized();
         }
 
@@ -152,10 +165,10 @@ class Photos extends Base
         } catch (\Exception $e) {
             $this->_generateException($e);
         }
-        return $this->_generateResponse(array('message'=>'Deleted Successfully'));
+        return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
 
-     /**
+    /**
      * POST /photos/{id}/like
      *
      * @param $id
@@ -224,7 +237,7 @@ class Photos extends Base
         return $this->response;
     }
 
-     /**
+    /**
      * POST /photos/{id}/comments
      *
      * @param $id
@@ -253,7 +266,7 @@ class Photos extends Base
      * @param $commentId
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCommentById($id,$commentId)
+    public function deleteCommentById($id, $commentId)
     {
         $photoComment = $this->photoRepo->find($id);
         if (empty($photoComment) || $photoComment->getOwner() != $this->user) {
