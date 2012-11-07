@@ -199,7 +199,7 @@ AppDelegate *smAppdelegate;
             }
         }   
         
-        photoScrollView.contentSize=CGSizeMake(320,([filteredList1 count]/4)*90);
+        photoScrollView.contentSize=CGSizeMake(320,(ceilf([filteredList1 count]/4.0))*90);
         customScrollView.contentSize=CGSizeMake([filteredList2 count]*320, 460);
         
         NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
@@ -390,16 +390,16 @@ AppDelegate *smAppdelegate;
     {
         //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[filteredList1 objectAtIndex:index];
+        Photo *photo=[[Photo alloc] init];
+        photo=[filteredList1 objectAtIndex:index];
         
-        NSString *Link = userFrnd.imageUrl;
+        NSString *Link = photo.imageUrl;
         //Start download image from url
         UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
         if(img)
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
+            [dicImages_msg setObject:img forKey:photo.imageUrl];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image

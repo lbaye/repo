@@ -67,7 +67,9 @@ NSString * const NOTIF_DO_UPLOAD_PHOTO= @"com.genweb2.socialmaps.douploadphoto";
 NSString * const NOTIF_GET_USER_ALL_PHOTO= @"com.genweb2.socialmaps.getuserallphoto";
 NSString * const NOTIF_DELETE_USER_PHOTO_DONE= @"com.genweb2.socialmaps.deleteuserphotodone";
 NSString * const NOTIF_GET_FRIENDS_ALL_PHOTO= @"com.genweb2.socialmaps.getfriendsallphoto";
-
+NSString * const NOTIF_GET_PHOTO_FOR_GEOTAG= @"com.genweb2.socialmaps.getphotoforgeotag";
+NSString * const NOTIF_CREATE_GEOTAG_DONE=@"com.genweb2.socialmaps.creategeotagdone";
+NSString * const NOTIF_GET_ALL_GEOTAG_DONE=@"com.genweb2.socialmaps.getallgeotagdone";
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
 //NSString * const FB_APPID = @"474672942546031";  // SMTest2

@@ -100,7 +100,10 @@
     else
         distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
-    
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        distSize = [[UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    }
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+lblStringSize.height+1+msgFrame.size.height+1, 
                                   distSize.width,
                                   distSize.height);

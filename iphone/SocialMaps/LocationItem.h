@@ -45,6 +45,7 @@ typedef enum _LOCATION_ACTION_TYPE {
     NSString    *cellIdent;
     MAP_ANNOTATION_STATE currDisplayState;
     id<LocationItemDelegate> delegate;
+    NSString *typeName;
 }
 
 @property (copy) NSString *itemName;
@@ -58,6 +59,7 @@ typedef enum _LOCATION_ACTION_TYPE {
 @property (nonatomic, retain) NSString *cellIdent;
 @property (nonatomic) MAP_ANNOTATION_STATE currDisplayState;
 @property (assign) id<LocationItemDelegate> delegate;
+@property (nonatomic,retain)    NSString *typeName;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
           category:(NSString*)category coordinate:(CLLocationCoordinate2D)coordinate dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg;

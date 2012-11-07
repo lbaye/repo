@@ -318,7 +318,7 @@ CGFloat animatedDistance;
 {
     NSDate *date=[self dateFromString:dateTime];
     NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
-    dateFormatter1.dateFormat = @"yyyy-MM-dd";
+    dateFormatter1.dateFormat = @"MMMM d, yyyy";
     NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
     dateFormatter2.dateFormat = @"hh:mm a";
 

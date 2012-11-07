@@ -160,6 +160,11 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)uploadPhotoButton:(id)sender
 {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"myPhotosViewController"];
+    
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 -(IBAction)closeMap:(id)sender

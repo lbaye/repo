@@ -14,13 +14,15 @@
 #import "UtilityClass.h"
 #import "RestClient.h"
 #import "AppDelegate.h"
-#import "Event.h"
+#import "Geotag.h"
 #import "Globals.h"
 #import "UserCircle.h"
 #import "LocationItemPlace.h"
 #import "SelectCircleTableCell.h"
 #import <Foundation/Foundation.h> 
 #import "NotificationController.h"
+#import "CustomRadioButton.h"
+#import "Places.h"
 
 @interface GeotagViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -53,9 +55,13 @@
 
 @synthesize upperView;
 @synthesize lowerView;
-@synthesize viewContainerScrollView;
+@synthesize viewContainerScrollView,commentsView,line,photoScrollView;
+@synthesize saveButton;
+@synthesize cancelButton;
+@synthesize deletePhotoButton;
+@synthesize uploadPhotoButton,zoomView,nextButton,prevButton,largePhotoScroller,titleTextField;
 
-__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList;
+__strong NSMutableArray *friendsNameArr, *friendsIDArr, *friendListArr, *filteredList1, *filteredList2, *circleList, *photoFilterList1, *photoFilterList2;
 bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
@@ -68,15 +74,19 @@ static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 AppDelegate *smAppDelegate;
-Event *event;
+Geotag *geotag;
 int geoEntityFlag=0;
 DDAnnotation *annotation;
 bool isBackgroundTaskRunning;
 int geoCreateNotf=0;
 int geoUpdateNotf=0;
+int zoomIndex=0;
 NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr, *selectedCustomCircleCheckArr;
 NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
 NSMutableArray *guestListIdArr;
+NSMutableArray *myPlaceArr, *placeNameArr, *categoryName;
+int selectedCatetoryIndex=0;
+RestClient *rc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -124,22 +134,7 @@ NSMutableArray *guestListIdArr;
     filteredList1=[[NSMutableArray alloc] init];
     
     friendListArr=[[NSMutableArray alloc] init];
-    
-    NSLog(@"event.guestList: %@",event.guestList);
-    
-    if (editFlag==true)
-    {
-        
-        event=globalEditEvent;
-        for (int j=0; j<[event.guestList count]; j++) 
-        {
-            UserFriends *guest=[event.guestList objectAtIndex:j];
-            NSLog(@"guest.userId %@",guest.userId);
-            [guestListIdArr addObject:guest.userId];
-        }
-    }
-    
-    
+
     for (int i=0; i<[friendListGlobalArray count]; i++)
         
     {
@@ -189,6 +184,12 @@ NSMutableArray *guestListIdArr;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    [smAppDelegate showActivityViewer:self.view];
+    rc=[[RestClient alloc] init];
+    [rc getGeotagPhotos:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.userId];
+    [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
@@ -207,8 +208,8 @@ NSMutableArray *guestListIdArr;
     [viewContainerScrollView addSubview:lowerView];
     
     NSArray *subviews = [friendSearchbar subviews];
-    UIButton *cancelButton = [subviews objectAtIndex:2];
-    cancelButton.tintColor = [UIColor darkGrayColor];
+    UIButton *cancelButton1 = [subviews objectAtIndex:2];
+    cancelButton1.tintColor = [UIColor darkGrayColor];
     
     frndListScrollView.delegate = self;
     customScrollView.delegate=self;
@@ -223,8 +224,14 @@ NSMutableArray *guestListIdArr;
     userCircleArr=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    event=[[Event alloc] init];
+    geotag=[[Geotag alloc] init];
     neearMeAddressArr=[[NSMutableArray alloc] init];
+    myPlaceArr=[[NSMutableArray alloc] init]; 
+    placeNameArr=[[NSMutableArray alloc] init]; 
+    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 130, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2001];
+    radio.delegate = self;
+    [upperView addSubview:radio];
+    
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
@@ -236,7 +243,7 @@ NSMutableArray *guestListIdArr;
     [self loadDummydata];
     
     selectedFriendsIndex=[[NSMutableArray alloc] init];
-    customSelectedFriendsIndex=[[NSMutableArray alloc] init];
+    customSelectedPhotoIndex=[[NSMutableArray alloc] init];
     //reloading scrollview to start asynchronous download.
     [self reloadScrolview]; 
     [self.mapContainerView  removeFromSuperview];
@@ -250,7 +257,7 @@ NSMutableArray *guestListIdArr;
 	annotation.title = @"Drag to Move Pin";
 	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
     
-    event.permission=@"private";
+    geotag.permission=@"private";
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
@@ -262,11 +269,121 @@ NSMutableArray *guestListIdArr;
 	[self.mapView addAnnotation:annotation];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
+    [self hidePhotoScroller:YES];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getPhotoForGeoTagDone:) name:NOTIF_GET_PHOTO_FOR_GEOTAG object:nil];  
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createGeoTagDone:) name:NOTIF_CREATE_GEOTAG_DONE object:nil];  
+    [commentsView.layer setCornerRadius:8.0f];
+    [commentsView.layer setBorderWidth:0.5];
+    [commentsView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [commentsView.layer setMasksToBounds:YES];
+
+    [circleView.layer setCornerRadius:8.0f];
+    [circleView.layer setBorderWidth:0.5];
+    [circleView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [circleView.layer setMasksToBounds:YES];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
-    //    [self.mapView setCenter:annotation.region];
+    [self loadCategoryData];
+}
+
+-(void)loadCategoryData
+{
+    categoryName = [[NSMutableArray alloc] initWithObjects:@"Accounting",
+                    @"Airport",
+                    @"Amusement park",
+                    @"Aquarium",
+                    @"Art gallery",
+                    @"ATM",
+                    @"Bakery",
+                    @"Bank",
+                    @"Bar",
+                    @"Beauty salon",
+                    @"Bicycle store",
+                    @"Book store",
+                    @"Bowling alley",
+                    @"Bus station",
+                    @"Cafe",
+                    @"Campground",
+                    @"Car dealer",
+                    @"Car rental",
+                    @"Car repair",
+                    @"Car wash",
+                    @"Casino",
+                    @"Cemetery",
+                    @"Church",
+                    @"City hall",
+                    @"Clothing store",
+                    @"Convenience store",
+                    @"Courthouse",
+                    @"Dentist",
+                    @"Department store",
+                    @"Doctor",
+                    @"Electrician",
+                    @"Electronics store",
+                    @"Embassy",
+                    @"Establishment",
+                    @"Finance",
+                    @"Fire station",
+                    @"Florist",
+                    @"Food",
+                    @"Funeral home",
+                    @"Furniture store",
+                    @"Gas station",
+                    @"General contractor",
+                    @"Grocery or supermarket",
+                    @"Gym",
+                    @"Hair care",
+                    @"Hardware store",
+                    @"Health",
+                    @"Hindu temple",
+                    @"Home goods store",
+                    @"Hospital",
+                    @"Insurance agency",
+                    @"Jewelry store",
+                    @"Laundry",
+                    @"Lawyer",
+                    @"Library",
+                    @"Liquor store",
+                    @"Local government office",
+                    @"Locksmith",
+                    @"Lodging",
+                    @"Meal delivery",
+                    @"Meal takeaway",
+                    @"Mosque",
+                    @"Movie rental",
+                    @"Movie theater",
+                    @"Moving company",
+                    @"Museum",
+                    @"Night club",
+                    @"Painter",
+                    @"Park",
+                    @"Parking",
+                    @"Pet store",
+                    @"Pharmacy",
+                    @"Physiotherapist",
+                    @"Place of worship",
+                    @"Plumber",
+                    @"Police",
+                    @"Post office",
+                    @"Real estate agency",
+                    @"Restaurant",
+                    @"Roofing contractor",
+                    @"Rv park",
+                    @"School",
+                    @"Shoe store",
+                    @"Shopping mall",
+                    @"Spa",
+                    @"Stadium",
+                    @"Storage",
+                    @"Store",
+                    @"Subway station",
+                    @"Synagogue",
+                    @"Taxi stand",
+                    @"Train station",
+                    @"Travel agency",
+                    @"University",
+                    @"Veterinary care",
+                    @"Zoo",nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated 
@@ -279,37 +396,23 @@ NSMutableArray *guestListIdArr;
 	[super viewWillAppear:animated];
     [customSelectionView removeFromSuperview];
 	[circleView removeFromSuperview];
-    if (editFlag==true)
-    {
-        if (event.guestCanInvite) {
-            [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
-        }
-        else
-        {
-            [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];        
-        }
-        event=globalEditEvent;
-    }
-    else
-    {
-        event=[[Event alloc] init];
-    }
     
     if (editFlag==true)
     {
         [createButton setTitle:@"Update" forState:UIControlStateNormal];
-        [createLabel setText:@"Update Event"];
+        [createLabel setText:@"Update Geotag"];
         
     }
     else
     {
         [createButton setTitle:@"Create" forState:UIControlStateNormal];
-        [createLabel setText:@"Create Event"];
+        [createLabel setText:@"Create Geotag"];
     }
     
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+
     [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
 }
 
@@ -321,6 +424,9 @@ NSMutableArray *guestListIdArr;
         addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         dispatch_async(dispatch_get_main_queue(), ^{
             annotation.subtitle=addressLabel.text;
+            geotag.geoTagAddress=addressLabel.text;
+            geotag.geoTagLocation.latitude=smAppDelegate.currPosition.latitude;
+            geotag.geoTagLocation.longitude=smAppDelegate.currPosition.longitude;
         });
     });
 }
@@ -328,6 +434,9 @@ NSMutableArray *guestListIdArr;
 -(void)getAddressFromMap
 {
     addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    geotag.geoTagAddress=addressLabel.text;
+    geotag.geoTagLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
+    geotag.geoTagLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -335,6 +444,7 @@ NSMutableArray *guestListIdArr;
 	
 	[super viewWillDisappear:animated];
 	isBackgroundTaskRunning=false;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
@@ -356,7 +466,7 @@ NSMutableArray *guestListIdArr;
         eventImage = img;
         NSData *imgdata = UIImagePNGRepresentation(eventImage);
         NSString *imgBase64Data = [imgdata base64EncodedString];
-        event.eventImageUrl=imgBase64Data;
+        geotag.geoTagImageUrl=imgBase64Data;
     } 
     [photoPicker.view removeFromSuperview];
 }
@@ -365,26 +475,10 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)nameButtonAction
 {
-    [createView setHidden:NO];
-    geoEntityFlag=0;
-    entryTextField.text=event.eventName;
-    entryTextField.placeholder=@"Name...";
-}
-
--(IBAction)summaryButtonAction
-{
-    [createView setHidden:NO];    
-    geoEntityFlag=1;
-    entryTextField.text=event.eventShortSummary;
-    entryTextField.placeholder=@"Summary...";
-}    
-
--(IBAction)descriptionButtonAction
-{
-    [createView setHidden:NO];    
-    geoEntityFlag=2;
-    entryTextField.text=event.eventDescription;
-    entryTextField.placeholder=@"Description...";
+    [line setImage:[UIImage imageNamed:@"line_arrow_up_left.png"] forState:UIControlStateNormal];
+    [self hideCommentsView:NO];
+    [self hidePhotoScroller:YES];
+    [commentsView resignFirstResponder];
 }
 
 -(IBAction)dateButtonAction:(id)sender
@@ -394,12 +488,45 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)photoButtonAction
 {
-    [self.photoPicker getPhoto:self];
+    [line setImage:[UIImage imageNamed:@"line_arrow_up_right.png"] forState:UIControlStateNormal];
+    [self hideCommentsView:YES];
+    [self hidePhotoScroller:NO];
+    [commentsView resignFirstResponder];
+//    [self.photoPicker getPhoto:self];
 }
 
 -(IBAction)deleteButtonAction
 {
     self.eventImagview.image=[UIImage imageNamed:@"event_item_bg.png"];
+}
+
+-(IBAction)saveComments:(id)sender
+{
+}
+
+-(IBAction)cancelComments:(id)sender
+{
+}
+
+-(IBAction)savePhoto:(id)sender
+{
+}
+
+-(IBAction)cancelPhoto:(id)sender
+{
+}
+
+-(IBAction)categoriesButtonAction:(id)sender
+{
+    [commentsView resignFirstResponder];
+    [ActionSheetPicker displayActionPickerWithView:self.view data:categoryName selectedIndex:selectedCatetoryIndex target:self action:@selector(didSelectCategory::) title:@"Select a category"];
+}
+
+-(void)didSelectCategory:(NSNumber *)selectedIndex:(id)element 
+{
+        selectedCatetoryIndex = [selectedIndex intValue];        
+        geotag.category = [[[categoryName objectAtIndex:selectedCatetoryIndex] lowercaseString] stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+        NSLog(@"geo.category = %@", geotag.category);
 }
 
 //event info entry ends
@@ -412,7 +539,7 @@ NSMutableArray *guestListIdArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    event.permission=@"private";
+    geotag.permission=@"private";
     
 }
 
@@ -423,7 +550,7 @@ NSMutableArray *guestListIdArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    event.permission=@"friends";
+    geotag.permission=@"friends";
 }
 
 -(IBAction)degreeFriendsButtonAction
@@ -433,7 +560,7 @@ NSMutableArray *guestListIdArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    event.permission=@"circles";
+    geotag.permission=@"circles";
 }
 
 -(IBAction)peopleButtonAction
@@ -443,7 +570,7 @@ NSMutableArray *guestListIdArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    event.permission=@"public";
+    geotag.permission=@"public";
 }
 
 -(IBAction)customButtonAction
@@ -453,7 +580,7 @@ NSMutableArray *guestListIdArr;
     [degreeFriends setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [people setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [custom setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    event.permission=@"custom";
+    geotag.permission=@"custom";
     [self.view addSubview:customSelectionView];
 }
 //share with radio button ends up
@@ -470,21 +597,21 @@ NSMutableArray *guestListIdArr;
         [permittedCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCustomCircleCheckArr objectAtIndex:i]).row]).circleID];
     }
     
-    for (int i=0; i<[customSelectedFriendsIndex count]; i++)
+    for (int i=0; i<[customSelectedPhotoIndex count]; i++)
     {
         //        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
-        [permittedUserArr addObject:((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId];
+        [permittedUserArr addObject:((UserFriends *)[customSelectedPhotoIndex objectAtIndex:i]).userId];
     }
     NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
-    event.permittedUsers=permittedUserArr;
-    event.circleList=permittedCircleArr;
+    geotag.permittedUsers=permittedUserArr;
+    geotag.circleList=permittedCircleArr;
     [customSelectionView removeFromSuperview];
 }
 
 -(IBAction)cancelCustom:(id)sender
 {
     [selectedCustomCircleCheckArr removeAllObjects];
-    [customSelectedFriendsIndex removeAllObjects];
+    [customSelectedPhotoIndex removeAllObjects];
     [customSelectionView removeFromSuperview];
 }
 
@@ -506,41 +633,24 @@ NSMutableArray *guestListIdArr;
 }
 
 //location with radio button starts
--(IBAction)curLocButtonAction
+-(void)curLocButtonAction
 {
-    [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
-    
+    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];    
 }
 
--(IBAction)myPlaceButtonAction
+-(void)myPlaceButtonAction
 {
-    [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal]; 
     [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
 }
 
--(IBAction)neamePlaceButtonAction:(id)sender
+-(void)nearmePlaceButtonAction
 {
-    [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
-    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+    [ActionSheetPicker displayActionPickerWithView:self.view data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
     NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
 }
 
--(IBAction)pointOnMapButtonAction
+-(void)pointOnMapButtonAction
 {
-    [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-    [pointOnMap setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
     [self.view addSubview:mapContainerView];
 }
 ////location with radio button ends
@@ -562,21 +672,6 @@ NSMutableArray *guestListIdArr;
     [circleView removeFromSuperview];
 }
 
--(IBAction)guestCanInvite:(id)sender
-{
-    checkCount++;
-    if (checkCount%2!=0)
-    {
-        [guestCanInviteButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
-        event.guestCanInvite=true;
-    }
-    else
-    {
-        [guestCanInviteButton setImage:[UIImage imageNamed:@"list_uncheck.png"] forState:UIControlStateNormal];
-        event.guestCanInvite=false;
-    }
-}
-
 -(IBAction)unSelectAll:(id)sender
 {
     [selectedFriendsIndex removeAllObjects];
@@ -594,84 +689,131 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)createEvent:(id)sender
 {
+    [commentsView resignFirstResponder];
+    [titleTextField resignFirstResponder];
     //title*, description*,eventShortSummary,eventImage, guests[], address, lat, lng*, time* , 
-    NSMutableString *msg=[[NSMutableString alloc] init];
-    [msg appendString:@"Please enter "];
-    bool validationFlag=false;
-    NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@ event.permission %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date,event.permission);
+    NSMutableString *msg=[[NSMutableString alloc] initWithString:@"Please select"];
     
-    if (event.eventName==NULL)
-    {
-        [msg appendString:@"name, "];
-        validationFlag=true;
-    }
     
-    if (event.eventDescription==NULL)
+    if ([addressLabel.text length]==0)
     {
-        [msg appendString:@"description, "];
-        validationFlag=true;
+        [msg appendString:@" address"];
     }
-    if (event.eventShortSummary==NULL)
+
+    if ([titleTextField.text length]==0)
     {
-        [msg appendString:@"short summary, "];
-        validationFlag=true;
-    }
-    //    if (event.eventLocation.longitude==NULL)
-    //    {
-    //        [msg appendString:@"event location, "];
-    //                validationFlag=true;
-    //    }
-    if (event.eventDate.date==NULL)
-    {
-        [msg appendString:@"date"];
-        validationFlag=true;
+        [msg appendString:@", title"];
     }
     
-    if (validationFlag==true) 
+    if (([commentsView.text length]==0)||([commentsView.text isEqualToString:@"Geotag description..."]))
     {
-        [UtilityClass showAlert:@"Social Maps" :msg];
+        [msg appendString:@", comments"];
+    }
+    
+    if ([customSelectedPhotoIndex count]==0)
+    {
+        [msg appendString:@", photo"];
+    }
+    
+    if ([geotag.category length]==0)
+    {
+        [msg appendString:@", category"];
+    }
+    
+    if ([msg length]<=13) {
+    geotag.geoTagDescription=commentsView.text;
+    NSData *imgdata;
+    if ([customSelectedPhotoIndex count]>0) {
+        imgdata = UIImagePNGRepresentation([dicImages_msg objectForKey:((Photo *)[customSelectedPhotoIndex objectAtIndex:0]).imageUrl]);        
+        NSString *imgBase64Data = [imgdata base64EncodedString];
+        geotag.geoTagImageUrl=imgBase64Data;
+    }
+    for (int i=0; i<[selectedFriendsIndex count]; i++) 
+    {
+        [geotag.frndList addObject:((UserFriends *)[selectedFriendsIndex objectAtIndex:i]).userId];
+    }
+    
+    for (int i=0; i<[selectedCircleCheckArr count]; i++) 
+    {
+        UserCircle *circle=[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row];
+        NSString *circleId=circle.circleID;
+        [geotag.circleList addObject:circleId];
+    }
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    [rc createGeotag:geotag :@"Auth-Token" :smAppDelegate.authToken];
     }
     else
     {
-        [smAppDelegate showActivityViewer:self.view];
-        RestClient *rc=[[RestClient alloc] init];
-        UserFriends *frnd;
-        NSMutableArray *userIDs=[[NSMutableArray alloc] init];
-        for (int i=0; i<[selectedFriendsIndex count]; i++)
-        {
-            frnd=[[UserFriends alloc] init];
-            frnd=[selectedFriendsIndex objectAtIndex:i];
-            [userIDs addObject:frnd.userId];
-            event.guestList=userIDs;
-            
-        }
-        if (geoLocationFlag!=1) 
-        {
-            event.eventLocation.latitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude];
-            event.eventLocation.longitude=[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude];
-            event.eventAddress=annotation.subtitle;
-        }
-        
-        [userCircleArr removeAllObjects];
-        for (int i=0; i<[selectedCircleCheckArr count]; i++) 
-        {
-            NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleName) ;            
-            [userCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
-        }
-        event.circleList=userCircleArr;        
-        if (editFlag==true)
-        {
-            [event.guestList addObjectsFromArray:guestListIdArr];
-            [rc updateEvent:event.eventID:event:@"Auth-Token":smAppDelegate.authToken];
-        }
-        else
-        {
-            [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
-        }
-        NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
-        
+        [UtilityClass showAlert:@"Social Maps" :msg];
     }
-    
+}
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+//    [commentsView resignFirstResponder];
+    [UtilityClass beganEditing:(UIControl *)textField];
+    return YES;
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [UtilityClass endEditing];
+    return YES;
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+        NSLog(@"textview did begin");
+//    [titleTextField resignFirstResponder];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+//    [commentsView resignFirstResponder];
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [titleTextField resignFirstResponder];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    else
+        return YES;
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    NSLog(@"textview should begin");
+//    [titleTextField resignFirstResponder];
+    [UtilityClass beganEditing:(UIControl *)textView];
+    if (!(textView.textColor == [UIColor blackColor])) 
+    {
+        if ([textView.text isEqualToString:@"Geotag description..."]) {
+                textView.text = @"";
+        }
+        textView.textColor = [UIColor blackColor];
+    }
+    return YES;
+}
+
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    [UtilityClass endEditing];
+    if (!(textView.textColor == [UIColor lightGrayColor])) {
+        //        textView.text = @"Your comments...";
+        textView.textColor = [UIColor lightGrayColor];
+    }
+    geotag.geoTagDescription=commentsView.text;
+    [commentsView resignFirstResponder];
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -681,20 +823,7 @@ NSMutableArray *guestListIdArr;
 
 -(IBAction)saveEntity:(id)sender
 {
-    [createView setHidden:YES];
-    [entryTextField resignFirstResponder];
-    if (geoEntityFlag==0)
-    {
-        event.eventName=entryTextField.text;
-    }
-    else if (geoEntityFlag==1)
-    {
-        event.eventShortSummary=entryTextField.text;
-    }
-    else if (geoEntityFlag==2)
-    {
-        event.eventDescription=entryTextField.text;
-    }
+    
 }
 
 -(IBAction)cancelEntity:(id)sender
@@ -721,26 +850,34 @@ NSMutableArray *guestListIdArr;
     NSLog(@"selectedLocation %d",selectedLocation);
     LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
     NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
-    event.eventLocation.latitude=aPlaceItem.placeInfo.location.latitude;
-    event.eventLocation.longitude=aPlaceItem.placeInfo.location.longitude;
-    event.eventAddress=aPlaceItem.placeInfo.name;
+    geotag.geoTagLocation.latitude=aPlaceItem.placeInfo.location.latitude;
+    geotag.geoTagLocation.longitude=aPlaceItem.placeInfo.location.longitude;
+    geotag.geoTagAddress=aPlaceItem.placeInfo.name;
     addressLabel.text=aPlaceItem.placeInfo.name;
+}
+
+-(void)myPlacesWasSelected:(NSNumber *)selectedIndex:(id)element
+{
+    int selectedLocation= [selectedIndex intValue];
+    NSLog(@"sel ind %d %@",[selectedIndex intValue],[myPlaceArr objectAtIndex:selectedLocation]);
+    Places *place=[myPlaceArr objectAtIndex:selectedLocation];
+    addressLabel.text=place.name;
+    geotag.geoTagAddress=place.name;
+    geotag.geoTagLocation.latitude=place.location.latitude;
+    geotag.geoTagLocation.longitude=place.location.longitude;
 }
 
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
     NSDate *date =selectedDate;
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    event.eventDate.date=[UtilityClass convertNSDateToUnix:date];
     dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
-    dateString = [dateFormatter stringFromDate:date];
-    event.eventDate.date=[[NSString alloc] initWithString:dateString];
+    dateString = [dateFormatter stringFromDate:date];    
     dateButton.titleLabel.text=dateString;
     //selectedDate=dateString 2012-09-12 08.50;
-    NSLog(@"Selected Date: %@  %@ %@",dateString, event.eventDate.date,[UtilityClass convertNSDateToUnix:selectedDate]);
 }
 
 
@@ -1076,79 +1213,6 @@ NSMutableArray *guestListIdArr;
         }
         
         //handling custom scroller
-        for(int i=0; i<[filteredList2 count];i++)               
-        {
-            if(i< [filteredList2 count]) 
-            { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[filteredList2 objectAtIndex:i];
-                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-                if (userFrnd.imageUrl == nil) 
-                {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil)) 
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                    }               
-                }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
-                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
-                [name setNumberOfLines:0];
-                [name setText:userFrnd.userName];
-                [name setBackgroundColor:[UIColor clearColor]];
-                imgView.userInteractionEnabled = YES;
-                imgView.tag = i;
-                aView.tag=i;
-                imgView.exclusiveTouch = YES;
-                imgView.clipsToBounds = NO;
-                imgView.opaque = YES;
-                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-                imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=2.0;
-                imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-                for (int c=0; c<[customSelectedFriendsIndex count]; c++)
-                {
-                    if ([[filteredList2 objectAtIndex:i] isEqual:[customSelectedFriendsIndex objectAtIndex:c]]) 
-                    {
-                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                        NSLog(@"found selected: %@",[customSelectedFriendsIndex objectAtIndex:c]);
-                    }
-                    else
-                    {
-                    }
-                }
-                [aView addSubview:imgView];
-                [aView addSubview:name];
-                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
-                tapGesture.numberOfTapsRequired = 1;
-                [aView addGestureRecognizer:tapGesture];
-                [tapGesture release];           
-                [customScrollView addSubview:aView];
-            }        
-            x2+=65;
-        }
     }
 }
 
@@ -1224,16 +1288,16 @@ NSMutableArray *guestListIdArr;
 {
 //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
-    if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
+    if ([customSelectedPhotoIndex containsObject:[photoFilterList1 objectAtIndex:[sender.view tag]]])
     {
-        [customSelectedFriendsIndex removeObject:[filteredList2 objectAtIndex:[sender.view tag]]];
+        [customSelectedPhotoIndex removeObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
     } 
     else 
     {
-        [customSelectedFriendsIndex addObject:[filteredList2 objectAtIndex:[sender.view tag]]];
+        [customSelectedPhotoIndex addObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList2 objectAtIndex:[sender.view tag]];
+    Photo *photo=[[Photo alloc] init];
+    photo=[photoFilterList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -1241,7 +1305,7 @@ NSMutableArray *guestListIdArr;
         NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
         UIImageView *im1=[subviews1 objectAtIndex:0];
         
-        if ([im1.image isEqual:frnds.userProfileImage])
+        if ([im1.image isEqual:photo.photoImage])
         {
             [im1 setAlpha:1.0];
             im1.layer.borderWidth=2.0;
@@ -1250,7 +1314,7 @@ NSMutableArray *guestListIdArr;
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }        
     }
-    [self reloadScrolview];
+    [self reloadPhotoScrolview];
 }
 
 //scroll view delegate method
@@ -1269,6 +1333,32 @@ NSMutableArray *guestListIdArr;
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
 {
     isDecliring_msg = TRUE;
+}
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)sender 
+{
+    if (sender==largePhotoScroller) {
+        CGFloat pageWidth = largePhotoScroller.frame.size.width;
+        int page = floor((largePhotoScroller.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        zoomIndex=page;
+        if (page==0) 
+        {
+            [nextButton setHidden:NO];
+            [prevButton setHidden:YES];
+        }
+        else if (page==[photoFilterList2 count]-1) {
+            [nextButton setHidden:YES];
+            [prevButton setHidden:NO];
+        }
+        else {
+            [prevButton setHidden:NO];
+            [nextButton setHidden:NO];
+        }
+    }
+    // Switch the indicator when more than 50% of the previous/next page is visible
+    // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)
+    // A possible optimization would be to unload the views+controllers which are no longer visible
 }
 
 //lazy load method ends
@@ -1493,6 +1583,305 @@ NSMutableArray *guestListIdArr;
 
 //searchbar delegate method end
 
+//Photo scroller starts
+
+-(void) reloadPhotoScrolview
+{
+    NSLog(@"photo scroll init");
+    if (isBackgroundTaskRunning==true)
+    {
+        int x=0; //declared for imageview x-axis point    
+        int x2=0; //declared for imageview x-axis point
+        int y=0;
+        NSArray* subviews = [NSArray arrayWithArray:photoScrollView.subviews];
+        UIImageView *imgView;
+        for (UIView* view in subviews) 
+        {
+            if([view isKindOfClass :[UIView class]])
+            {
+                [view removeFromSuperview];
+            }
+            else if([view isKindOfClass :[UIImageView class]])
+            {
+                // [view removeFromSuperview];
+            }
+        }
+        NSArray* subviews1 = [[NSArray arrayWithArray: largePhotoScroller.subviews] mutableCopy];
+        for (UIView* view in subviews1) 
+        {
+            if([view isKindOfClass :[UIView class]])
+            {
+                [view removeFromSuperview];
+            }
+            else if([view isKindOfClass :[UIImageView class]])
+            {
+                // [view removeFromSuperview];
+            }
+        }   
+        
+        photoScrollView.contentSize=CGSizeMake(320,(ceilf([photoFilterList1 count]/4.0))*90);
+        largePhotoScroller.contentSize=CGSizeMake([photoFilterList2 count]*320, 460);
+        
+        NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
+        for(int i=0; i<[photoFilterList1 count];i++)               
+        {
+            if(i< [photoFilterList1 count]) 
+            { 
+                Photo *photo=[[Photo alloc] init];
+                photo=[photoFilterList1 objectAtIndex:i];
+                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
+                
+                if ((photo.imageUrl==NULL)||[photo.imageUrl isEqual:[NSNull null]])
+                {
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
+                } 
+                else if([dicImages_msg valueForKey:photo.imageUrl]) 
+                { 
+                    //If image available in dictionary, set it to imageview 
+                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
+                } 
+                else 
+                { 
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil))
+                        
+                    {
+                        //If scroll view moves set a placeholder image and start download image. 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
+                        [self performSelectorInBackground:@selector(DownLoadPhoto:) withObject:[NSNumber numberWithInt:i]];  
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                    }
+                    else 
+                    { 
+                        // Image is not available, so set a placeholder image
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                    }               
+                }
+                x=(i%4)*80;
+                y=(i/4)*90;
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x+5, y, 80, 80)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
+                name.textAlignment=UITextAlignmentCenter;
+                UIButton *zoomButton= [UIButton buttonWithType:UIButtonTypeCustom];;
+                zoomButton.tag=i;
+                zoomButton.frame=CGRectMake(45, 45, 20, 20);
+                [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom_icon.png"] forState:UIControlStateNormal];
+                [zoomButton addTarget:self action:@selector(gotoZoomView:) forControlEvents:UIControlEventTouchUpInside];
+                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
+                [name setNumberOfLines:0];
+                [name setText:photo.description];
+                [name setBackgroundColor:[UIColor clearColor]];
+                imgView.userInteractionEnabled = YES;
+                imgView.tag = i;
+                aView.tag=i;
+                imgView.exclusiveTouch = YES;
+                imgView.clipsToBounds = NO;
+                imgView.opaque = YES;
+                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
+                imgView.userInteractionEnabled=YES;
+                imgView.layer.borderWidth=2.0;
+                imgView.layer.masksToBounds = YES;
+                [imgView.layer setCornerRadius:7.0];
+                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+                for (int c=0; c<[customSelectedPhotoIndex count]; c++)
+                {
+                    if ([[photoFilterList1 objectAtIndex:i] isEqual:[customSelectedPhotoIndex objectAtIndex:c]]) 
+                    {
+                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
+                        NSLog(@"found selected: %@",[customSelectedPhotoIndex objectAtIndex:c]);
+                    }
+                    else
+                    {
+                    }
+                }
+                [aView addSubview:imgView];
+                [aView addSubview:zoomButton];
+                [aView addSubview:name];
+                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePhotoTapGesture:)];
+                tapGesture.numberOfTapsRequired = 1;
+                [imgView addGestureRecognizer:tapGesture];
+                [tapGesture release];           
+                [photoScrollView addSubview:aView];
+            }        
+        }
+        
+        //handling custom scroller
+        for(int i=0; i<[photoFilterList2 count];i++)               
+        {
+            if(i< [photoFilterList2 count]) 
+            { 
+                Photo *photo=[[Photo alloc] init];
+                photo=[photoFilterList2 objectAtIndex:i];
+                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+                if (photo.imageUrl == nil) 
+                {
+                    imgView.image = [UIImage imageNamed:@"blank.png"];
+                } 
+                else if([dicImages_msg valueForKey:photo.imageUrl]) 
+                { 
+                    //If image available in dictionary, set it to imageview 
+                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
+                } 
+                else 
+                { 
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil)) 
+                        
+                    {
+                        //If scroll view moves set a placeholder image and start download image. 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
+                        [self performSelectorInBackground:@selector(DownLoadPhoto:) withObject:[NSNumber numberWithInt:i]];  
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                    }
+                    else 
+                    { 
+                        // Image is not available, so set a placeholder image
+                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                    }               
+                }
+                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
+                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
+                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
+                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
+                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
+                [name setNumberOfLines:0];
+                [name setText:photo.description];
+                [name setBackgroundColor:[UIColor clearColor]];
+                imgView.userInteractionEnabled = YES;
+                imgView.tag = i;
+                aView.tag=i;
+                imgView.exclusiveTouch = YES;
+                imgView.clipsToBounds = NO;
+                imgView.opaque = YES;
+                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
+                imgView.userInteractionEnabled=YES;
+                imgView.layer.borderWidth=2.0;
+                imgView.layer.masksToBounds = YES;
+                [imgView.layer setCornerRadius:7.0];
+                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+                [aView addSubview:imgView];
+                [largePhotoScroller addSubview:aView];
+            }        
+            x2+=320;
+        }
+    }
+}
+
+-(IBAction)gotoZoomView:(id)sender
+{
+    [self scrollToPage:[sender tag]:NO];
+    CGFloat xpos = self.view.frame.origin.x;
+    CGFloat ypos = self.view.frame.origin.y;
+    zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+    [UIView beginAnimations:@"Zoom" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    [UIView commitAnimations];
+    [self.view addSubview:zoomView];
+    NSLog(@"tag: %d",[sender tag]);
+}
+
+-(IBAction)closeZoomView:(id)sender
+{
+    [UIView beginAnimations:@"FadeIn" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView commitAnimations];
+    [zoomView removeFromSuperview];
+}
+
+-(IBAction)viewPrevImage:(id)sender
+{
+    NSLog(@"view previous img");
+    [self scrollToPage:zoomIndex-1:YES];
+}
+
+-(IBAction)viewNextImage:(id)sender
+{
+    NSLog(@"view next img %d",zoomIndex);
+    [self scrollToPage:zoomIndex+1:YES];
+}
+
+-(void)scrollToPage:(int)page:(BOOL)animated
+{
+    CGRect frame = largePhotoScroller.frame;
+    frame.origin.x = frame.size.width * page;
+    frame.origin.y = 0;
+    [largePhotoScroller scrollRectToVisible:frame animated:animated];
+}
+
+-(void)loadData:(NSMutableArray *)photoListArr
+{
+    Photo *photo=[[Photo alloc] init];
+    photoFilterList1=[[NSMutableArray alloc] init];
+    //    for (int i=0; i<[photoListArr count]; i++)
+    //    {
+    //        photo=[[Photo alloc] init];
+    //        [photoListArr addObject:photo];
+    //        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
+    //    }
+    photoFilterList1=[photoListArr mutableCopy];
+    photoFilterList2=[photoListArr mutableCopy];
+    [self reloadPhotoScrolview];
+    NSLog(@"photoFilterList1 count: %d",[photoFilterList1 count]);
+}
+
+-(void)DownLoadPhoto:(NSNumber *)path
+{
+    if (isBackgroundTaskRunning==true)
+    {
+        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+        int index = [path intValue];
+        Photo *photo=[[Photo alloc] init];
+        photo=[photoFilterList1 objectAtIndex:index];
+        
+        NSString *Link = photo.imageUrl;
+        //Start download image from url
+        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        if(img)
+        {
+            //If download complete, set that image to dictionary
+            [dicImages_msg setObject:img forKey:photo.imageUrl];
+            [self reloadPhotoScrolview];
+        }
+        // Now, we need to reload scroll view to load downloaded image
+        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        //    [pl release];
+    }
+}
+
+//handling selection from scroll view of friends selection
+-(IBAction) handlePhotoTapGesture:(UIGestureRecognizer *)sender
+{
+    NSArray* subviews = [NSArray arrayWithArray: photoScrollView.subviews];
+    if ([customSelectedPhotoIndex containsObject:[photoFilterList1 objectAtIndex:[sender.view tag]]])
+    {
+        [customSelectedPhotoIndex removeObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
+    } 
+    else 
+    {
+        [customSelectedPhotoIndex removeAllObjects];
+        [customSelectedPhotoIndex addObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
+    }
+    Photo *photo=[[Photo alloc] init];
+    photo=[photoFilterList1 objectAtIndex:[sender.view tag]];
+    NSLog(@"selectedFriendsIndex2 : %@",customSelectedPhotoIndex);
+    for (int l=0; l<[subviews count]; l++)
+    {
+        UIView *im=[subviews objectAtIndex:l];
+        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
+        UIImageView *im1=[subviews1 objectAtIndex:0];
+        
+        if ([im1.image isEqual:photo.photoImage])
+        {
+            [im1 setAlpha:1.0];
+            im1.layer.borderWidth=2.0;
+            im1.layer.masksToBounds = YES;
+            [im1.layer setCornerRadius:7.0];
+            im1.layer.borderColor=[[UIColor greenColor]CGColor];
+        }
+    }
+    [self reloadPhotoScrolview];
+}
+
+//Photo scrollers ends
 //keyboard hides input fields deleget methods
 
 -(void)beganEditing:(UISearchBar *)searchBar
@@ -1544,6 +1933,36 @@ NSMutableArray *guestListIdArr;
     
 }
 
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
+    
+    if ([sender tag] == 2001) {
+        switch (indx) {
+            case 3:
+                [self pointOnMapButtonAction];
+                break;
+            case 2:
+                [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Places near to me"];
+                break;
+            case 1:
+                if ([placeNameArr count]==0)
+                {
+                        [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
+                }
+                else
+                {
+                    [ActionSheetPicker displayActionPickerWithView:sender data:placeNameArr selectedIndex:0 target:self action:@selector(myPlacesWasSelected::) title:@"My places"];
+                }
+                break;
+            case 0:
+                [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 -(void)endEditing
 {
     CGRect viewFrame = self.view.frame;
@@ -1555,58 +1974,52 @@ NSMutableArray *guestListIdArr;
     [UIView commitAnimations];    
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (void)getPhotoForGeoTagDone:(NSNotification *)notif
 {
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-}
-
-- (void)createEventDone:(NSNotification *)notif
-{
-    geoCreateNotf++;
-    if (geoCreateNotf==1)
-    {
-        ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-        //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-        //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-        //    NSLog(@"GOT SERVICE DATA.. :D");
-        
-        //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-        //    [self presentModalViewController:controller animated:YES];
-        [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
-    }
-    [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    NSLog(@"dele %@",[notif object]);
+    [smAppDelegate hideActivityViewer];
+    [self loadData:[notif object]];
+    [self reloadPhotoScrolview];
+}
+
+- (void)createGeoTagDone:(NSNotification *)notif
+{
     
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [smAppDelegate hideActivityViewer];
+    [UtilityClass showAlert:@"Social Maps" :@"Geo-tag created"];
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)updateEventDone:(NSNotification *)notif
+- (void)getMyPlaces:(NSNotification *)notif
 {
-    geoUpdateNotf++;
-    if (geoUpdateNotf==1) 
+    myPlaceArr=[notif object];
+    for (int i=0; i<[myPlaceArr count]; i++)
     {
-        NSLog(@"dele %@",[notif object]);
-        ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-        //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-        ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-        //    NSLog(@"GOT SERVICE DATA.. :D");
-        
-        //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-        //    [self presentModalViewController:controller animated:YES];
-        [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
+        Places *place=[myPlaceArr objectAtIndex:i];
+        [placeNameArr addObject:place.name];
     }
-    globalEvent=[notif object];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)hidePhotoScroller:(BOOL)isHidden
+{
+    [deletePhotoButton setHidden:isHidden];
+    [uploadPhotoButton setHidden:isHidden];
+    [photoScrollView setHidden:isHidden];
+}
+
+-(void)hideCommentsView:(BOOL)isHidden
+{
+    [saveButton setHidden:isHidden];
+    [cancelButton setHidden:isHidden];
+    [commentsView setHidden:isHidden];
+}
+
+-(IBAction)hideKeyboard:(id)sender
+{
+    [commentsView resignFirstResponder];
+    [titleTextField resignFirstResponder];
+    geotag.geoTagTitle=titleTextField.text;
 }
 
 -(IBAction)gotoNotification:(id)sender

@@ -165,7 +165,7 @@ NSString *searchText;
         [msg appendString:@" address,"];
     }
     
-    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Your comments..."]))
+    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
     {
         if (msg.length==13)
         {
@@ -355,6 +355,7 @@ NSString *searchText;
     NSLog(@"[notif object] %@",[notif object]);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -362,12 +363,25 @@ NSString *searchText;
 {
     [UtilityClass beganEditing:(UIControl *)textView];
     if (!(textView.textColor == [UIColor blackColor])) {
-        textView.text = @"";
+        if ([textView.text isEqualToString:@"Image description..."])
+        {
+            textView.text = @"";
+        }
+
         textView.textColor = [UIColor blackColor];
     }
     return YES;
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    else
+        return YES;
+}
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {

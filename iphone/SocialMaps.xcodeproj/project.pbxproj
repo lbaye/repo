@@ -90,6 +90,7 @@
 		20CF83431611F9780075E647 /* icon_friend_request_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83401611F9770075E647 /* icon_friend_request_selected.png */; };
 		20CF83441611F9780075E647 /* icon_message_notification_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83411611F9770075E647 /* icon_message_notification_selected.png */; };
 		20CF83451611F9780075E647 /* icon_notify_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83421611F9780075E647 /* icon_notify_selected.png */; };
+		20E3655B1647A08E00F06437 /* Geotag.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3655A1647A08E00F06437 /* Geotag.m */; };
 		20E4A12115D8EB80009A1F6B /* NewsFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4A12015D8EB80009A1F6B /* NewsFeed.m */; };
 		20E75BE115EA0345000B6B8A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E75BE015EA0343000B6B8A /* Event.m */; };
 		20F03402163FF8FA00AE4685 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F03401163FF8FA00AE4685 /* Photo.m */; };
@@ -586,6 +587,8 @@
 		20CF83401611F9770075E647 /* icon_friend_request_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_friend_request_selected.png; sourceTree = "<group>"; };
 		20CF83411611F9770075E647 /* icon_message_notification_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_message_notification_selected.png; sourceTree = "<group>"; };
 		20CF83421611F9780075E647 /* icon_notify_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_notify_selected.png; sourceTree = "<group>"; };
+		20E365591647A08E00F06437 /* Geotag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geotag.h; sourceTree = "<group>"; };
+		20E3655A1647A08E00F06437 /* Geotag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Geotag.m; sourceTree = "<group>"; };
 		20E4A11F15D8EB80009A1F6B /* NewsFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeed.h; sourceTree = "<group>"; };
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -1191,6 +1194,8 @@
 				4F1D96A615DCC93B00511624 /* Geofence.m */,
 				4F6036E015DD4DAD00C1BD4E /* Geolocation.h */,
 				4F6036DF15DD4DAD00C1BD4E /* Geolocation.m */,
+				20E365591647A08E00F06437 /* Geotag.h */,
+				20E3655A1647A08E00F06437 /* Geotag.m */,
 				20B0E7D415D7A9CF009A500A /* Globals.h */,
 				20B0E7D515D7A9CF009A500A /* Globals.m */,
 				20B0E7D615D7A9CF009A500A /* IconDownloader.h */,
@@ -2430,6 +2435,7 @@
 				20C376B7163EA07C00F989B3 /* UploadNewPhotoViewController.m in Sources */,
 				20F03402163FF8FA00AE4685 /* Photo.m in Sources */,
 				20C5F16D164280820095A391 /* FriendsPhotosViewController.m in Sources */,
+				20E3655B1647A08E00F06437 /* Geotag.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2460,8 +2466,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2476,8 +2482,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2487,8 +2493,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2497,8 +2503,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2508,8 +2514,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2520,8 +2526,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2531,8 +2537,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Social Maps AB";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Social Maps AB";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2543,8 +2549,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "072E9D41-FE1D-47E5-80FC-E62FA0B232BD";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

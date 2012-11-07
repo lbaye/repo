@@ -19,6 +19,7 @@
 #import "ViewEventListViewController.h"
 #import "Event.h"
 #import "FriendsProfileViewController.h"
+#import "Geotag.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -219,7 +220,29 @@
     if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
     if (smAppDelegate.showPlaces == TRUE) 
+    {
         [tempList addObjectsFromArray:smAppDelegate.placeList];
+        for (int i=0; i<[smAppDelegate.geotagList count]; i++)
+        {
+            if ([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[Geotag class]])
+            {
+                Geotag *aGeotag=[[Geotag alloc] init];
+                aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aGeotag.geoTagTitle;
+                item.itemType=4;
+                item.coordinate=CLLocationCoordinate2DMake([aGeotag.geoTagLocation.latitude doubleValue], [aGeotag.geoTagLocation.longitude doubleValue]);
+                item.itemDistance=[aGeotag.geoTagDistance floatValue];
+                item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
+                item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+                item.currDisplayState=0;
+                item.itemCategory=aGeotag.date;
+                item.itemAddress=[NSString stringWithFormat:@"Geo-Tagged at %@ %@",aGeotag.geoTagAddress,[UtilityClass getCurrentTimeOrDate:item.itemCategory]] ;
+                [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+        [tempList addObjectsFromArray:smAppDelegate.geotagList];
+    }   
     if (smAppDelegate.showEvents == TRUE) 
     {
         NSLog(@"smAppDelegate.eventList %@",smAppDelegate.eventList);

@@ -54,7 +54,7 @@
     
     if ([userInfo.source isEqualToString:@"facebook"]) 
     {
-        NSString *checkin=[NSString stringWithFormat:@"Checked-in at %@ at %@",[[userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:userInfo.lastSeenAtDate]];
+        NSString *checkin=[NSString stringWithFormat:@"Checked-in at %@ %@",[[userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:userInfo.lastSeenAtDate]];
         lblAddress.text=checkin;
         CGSize addressStringSize = [checkin sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
         lblAddress.frame=CGRectMake(2,5, addressStringSize.width, 15);

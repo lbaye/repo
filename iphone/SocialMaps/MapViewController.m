@@ -717,6 +717,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotMeetUpRequests:) name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentFriendRequest:) name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsForMapView:) name:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllGeotagsForMapView:) name:NOTIF_GET_ALL_GEOTAG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
@@ -833,6 +834,7 @@ ButtonClickCallbackData callBackData;
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
+        [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
         //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
 
@@ -1084,7 +1086,10 @@ ButtonClickCallbackData callBackData;
     [_mapView setRegion:adjustedRegion animated:YES]; 
     
     if (smAppDelegate.gotListing == TRUE)
+    {
+        [self loadAnnotationForGeotag];
         [self loadAnnotations:animated];
+    }
     
     if (smAppDelegate.showEvents == TRUE)
     {
@@ -1103,6 +1108,7 @@ ButtonClickCallbackData callBackData;
     }
     
     [self loadAnnotationForEvents];
+    [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
     [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
@@ -1932,8 +1938,9 @@ ButtonClickCallbackData callBackData;
         [_showPeopleButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     [self getSortedDisplayList];
-    [self loadAnnotations:YES];
     [self loadAnnotationForEvents];
+    [self loadAnnotationForGeotag];
+    [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
 }
 
@@ -1950,8 +1957,9 @@ ButtonClickCallbackData callBackData;
         [_showPlacesButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
     [self getSortedDisplayList];
-    [self loadAnnotations:YES];
     [self loadAnnotationForEvents];
+    [self loadAnnotationForGeotag];   
+    [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
 }
 
@@ -1965,6 +1973,7 @@ ButtonClickCallbackData callBackData;
     }
 //    [self getSortedDisplayList];
     [self loadAnnotationForEvents];
+    [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
 }
@@ -2444,8 +2453,9 @@ ButtonClickCallbackData callBackData;
     //by Rishi
     if (!isFirstTimeDownloading) { 
         //for first time
-        [self loadAnnotations:YES];
         [self loadAnnotationForEvents];
+        [self loadAnnotationForGeotag];
+        [self loadAnnotations:YES];
         [self.view setNeedsDisplay];
         isFirstTimeDownloading = YES;
     }
@@ -2488,11 +2498,87 @@ ButtonClickCallbackData callBackData;
 {
     useLocalData=TRUE;
     NSLog(@"got all events for map %@",smAppDelegate.eventList);
-    [self loadAnnotations:NO];
-    
     [self loadAnnotationForEvents];
+    [self loadAnnotationForGeotag];
+    [self loadAnnotations:NO];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+-(void)getAllGeotagsForMapView:(NSNotification *)notif 
+{
+    smAppDelegate.geotagList=[notif object];
+    NSLog(@"got all geotag for map %@",smAppDelegate.geotagList);
+    [self loadAnnotationForGeotag];
+    [self loadAnnotations:NO];    
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+}
+
+-(void)loadAnnotationForGeotag
+{
+    if (smAppDelegate.showPlaces == TRUE)
+    {
+        for (int i=0; i<[smAppDelegate.geotagList count]; i++)
+        {
+            if ([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[Geotag class]])
+            {
+                Geotag *aGeotag=[[Geotag alloc] init];
+                aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aGeotag.geoTagTitle;
+                item.itemAddress=[NSString stringWithFormat:@"Geo-tagged at %@ %@",aGeotag.geoTagAddress] ;
+                item.itemType=4;
+                item.coordinate=CLLocationCoordinate2DMake([aGeotag.geoTagLocation.latitude doubleValue], [aGeotag.geoTagLocation.longitude doubleValue]);
+                item.itemDistance=[aGeotag.geoTagDistance floatValue];
+                item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
+                item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+                item.currDisplayState=0;
+                item.itemCategory=aGeotag.date;
+                [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+        
+        //adding annotations  
+        if ([smAppDelegate.geotagList count]>0) 
+        {
+            for (int i=0; i<[smAppDelegate.geotagList count]; i++)
+            {
+                if([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[LocationItem class]])
+                {
+                    NSLog(@"geotag annotation added ");
+                    LocationItem *anno = (LocationItem*) [smAppDelegate.geotagList objectAtIndex:i];
+                    if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                    {
+                        //                    [_mapView addAnnotation:anno];
+                        if (![smAppDelegate.displayList containsObject:anno]) 
+                        {
+                            [smAppDelegate.displayList addObject:anno];
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<[smAppDelegate.geotagList count]; i++)
+        {
+            if([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[LocationItem class]])
+            {
+                NSLog(@"geotag annotation removed ");
+                LocationItem *anno = (LocationItem*) [smAppDelegate.geotagList objectAtIndex:i];
+                if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+                {
+                    //[_mapView addAnnotation:anno];
+                    [smAppDelegate.displayList removeObject:anno];
+                    
+                }
+            }
+        }
+    }
+
 }
 
 -(void)loadAnnotationForEvents
@@ -2555,7 +2641,7 @@ ButtonClickCallbackData callBackData;
                 LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
                 if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                 {
-                    //                    [_mapView addAnnotation:anno];
+                    //[_mapView addAnnotation:anno];
                     [smAppDelegate.displayList removeObject:anno];
                     
                 }

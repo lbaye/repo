@@ -21,6 +21,7 @@
 #import "Event.h"
 #import "UserCircle.h"
 #import "Photo.h"
+#import "Geotag.h"
 
 @class Place;
 
@@ -97,5 +98,8 @@
 -(void) getFriendsPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
 
 - (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+-(void) getGeotagPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+-(void)createGeotag:(Geotag*)geotag:(NSString *)authToken:(NSString *)authTokenValue;
+-(void) getAllGeotag:(NSString *)authToken:(NSString *)authTokenValue;
 
 @end

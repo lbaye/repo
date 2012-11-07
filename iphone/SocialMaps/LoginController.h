@@ -20,6 +20,8 @@
     Facebook *facebook;
     AppDelegate *smAppDelegate;
     IBOutlet UIImageView *profileImageView;
+    IBOutlet UIImageView *bgImgView;
+    IBOutlet UIView *tapview;
 }
 
 @property (retain, nonatomic) NSString *strUserID;
@@ -27,6 +29,7 @@
 @property (nonatomic) bool autoLogin;
 @property (retain, nonatomic) Facebook *facebook;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
+@property (nonatomic, retain) IBOutlet UIView *tapview;
 
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 
@@ -38,6 +41,7 @@
 @property (retain, nonatomic) IBOutlet UITextField *txtForgotPWEmail;
 @property (retain, nonatomic) IBOutlet UIView *dialogView;
 @property (nonatomic,retain) IBOutlet UIImageView *profileImageView;
+@property (nonatomic,retain) IBOutlet UIImageView *bgImgView;
 
 - (IBAction)doLogin:(id)sender;
 - (IBAction)doConnectFB:(id)sender;

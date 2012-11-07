@@ -23,6 +23,7 @@
 @synthesize cellIdent;
 @synthesize currDisplayState;
 @synthesize delegate;
+@synthesize typeName;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
           category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg{
