@@ -1136,12 +1136,21 @@ ButtonClickCallbackData callBackData;
     {
         [_showDealsButton setImage:[UIImage imageNamed:@"people_unchecked.png"] forState:UIControlStateNormal];
     }
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
     if (useLocalData==false)
     {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:YES];
+    }
+    
+    if(loadGeotagServiceData==true)
+    {
+        [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+
     }
     
     [self loadAnnotationForEvents];
@@ -2550,6 +2559,7 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotations:NO];    
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    loadGeotagServiceData=false;
 }
 
 -(void)loadAnnotationForGeotag

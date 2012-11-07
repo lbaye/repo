@@ -23,5 +23,6 @@ BOOL editFlag;
 BOOL isFromVenue;
 BOOL useLocalData;
 BOOL willLoadPhotoData;
+BOOL loadGeotagServiceData;
 
 @end

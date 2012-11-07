@@ -71,7 +71,7 @@ LocationItem *locationItem;
     // Address
     if (locItem.itemType == 4) 
     {
-        lblStringSize = [[NSString stringWithFormat:@"at %@",locItem.itemAddress] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];        
+        lblStringSize = [[NSString stringWithFormat:@"%@",locItem.itemAddress] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];        
     }
     else
     {
@@ -84,7 +84,7 @@ LocationItem *locationItem;
     if (locItem.itemType == 4) 
     {
         NSLog(@"locItem.itemAddress %@",locItem.itemAddress);
-        lblAddress.text = [NSString stringWithFormat:@"at %@",locItem.itemAddress];
+        lblAddress.text = [NSString stringWithFormat:@"%@",locItem.itemAddress];
     }
     else
     {

@@ -1984,7 +1984,7 @@ RestClient *rc;
 
 - (void)createGeoTagDone:(NSNotification *)notif
 {
-    
+    loadGeotagServiceData=true;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
     [UtilityClass showAlert:@"Social Maps" :@"Geo-tag created"];
