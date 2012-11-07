@@ -44,17 +44,16 @@ class Place extends Base
 
         $places = $this->LocationMarkRepository->getAll($limit, $start);
 
-
         if (!empty($places)) {
             $permittedDocs = $this->_filterByPermission($places);
             $data = $this->_toArrayAll($permittedDocs);
             $i = 0;
             foreach ($data as $photoUrl) {
                 $data[$i]['photo'] = \Helper\Url::buildPlacePhotoUrl($photoUrl);
-                $data[$i]['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
-                    . $data[$i]['location']['lat'] . ","
-                    . $data[$i]['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
-                    . "&key={$this->config['googlePlace']['apiKey']}";
+
+                if (is_null($data[$i]['photo'])) {
+                    $data[$i]['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($data[$i]);
+                }
                 $i++;
             }
 
@@ -78,7 +77,7 @@ class Place extends Base
         $place = $this->LocationMarkRepository->find($id);
 
         if (null !== $place) {
-            if($place->isPermittedFor($this->user)){
+            if ($place->isPermittedFor($this->user)) {
                 return $this->_generateResponse($place->toArray());
             } else {
                 return $this->_generateForbidden('Not permitted for you');
@@ -98,7 +97,7 @@ class Place extends Base
     {
         $this->_initRepository($type);
         $places = $this->LocationMarkRepository->getByUser($this->user);
-        $this->addCoverPhoto($places);
+        $this->addPhoto($places);
 
         if ($places) {
             return $this->_generateResponse($places);
@@ -107,14 +106,23 @@ class Place extends Base
         }
     }
 
-    private function addCoverPhoto(array &$places)
+
+    private function addStreetViewPhotoIfNoPhotoPresent($place)
+    {
+        $photoUrl = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+            . $place['location']['lat'] . ","
+            . $place['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
+            . "&key={$this->config['googlePlace']['apiKey']}";
+
+        return $photoUrl;
+    }
+
+    private function addPhoto(array &$places)
     {
         foreach ($places as &$place) {
-            $place['coverPhoto'] =
-                "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
-                    . $place['location']['lat'] . ","
-                    . $place['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
-                    . "&key={$this->config['googlePlace']['apiKey']}";
+            if (is_null($place['photo'])) {
+                $place['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($place);
+            }
         }
     }
 
