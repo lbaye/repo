@@ -24,6 +24,7 @@
 @synthesize permittedUsers;
 @synthesize permittedCircles;
 @synthesize date;
+@synthesize ownerFirstName,ownerLastName;
 
 - (id)init
 {

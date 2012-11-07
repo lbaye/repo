@@ -947,13 +947,11 @@ RestClient *rc;
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
     {
-        cell.circrcleName.text=@"Custom";
-        customCell.circrcleName.text=@"Custom";
+        cell.circrcleName.text=[NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
     }
     else 
     {
-        cell.circrcleName.text=[circleList objectAtIndex:indexPath.row];
-        customCell.circrcleName.text=[circleList objectAtIndex:indexPath.row];        
+        cell.circrcleName.text=[NSString stringWithFormat:@"%@ (%d)",[circleList objectAtIndex:indexPath.row],[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
     }
     
     if ([selectedCircleCheckArr containsObject:indexPath]) 

@@ -230,7 +230,7 @@
                 item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
                 item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
                 item.currDisplayState=0;
-                item.itemCategory=aGeotag.date;
+                item.itemCategory=[NSString stringWithFormat:@"%@ %@",aGeotag.ownerLastName,aGeotag.ownerFirstName];;
                 item.itemAddress=[NSString stringWithFormat:@"at %@",aGeotag.geoTagAddress] ;
                 [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
             }

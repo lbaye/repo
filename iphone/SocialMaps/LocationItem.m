@@ -179,7 +179,7 @@
 	NSLog(@"itemtype %d %@",itemType,itemName);
     if (itemType == 4) 
     {
-        NSString *checkin=[NSString stringWithFormat:@"Geo-Tagged %@ %@",itemAddress,[UtilityClass getCurrentTimeOrDate:itemCategory]];
+        NSString *checkin=[NSString stringWithFormat:@"Geo-Tagged %@ by %@",itemAddress,itemCategory];
         lblAddress.text=checkin;
         CGSize addressStringSize = [checkin sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
         lblAddress.frame=CGRectMake(2,5, addressStringSize.width, 15);

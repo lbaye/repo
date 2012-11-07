@@ -6480,6 +6480,8 @@ AppDelegate *smAppDelegate;
                 geotag.date=[self getNestedKeyVal:geotagDic key1:@"createDate" key2:@"date" key3:nil];
                 geotag.frndList=[self getNestedKeyVal:geotagDic key1:@"friends" key2:nil key3:nil];
                 geotag.circleList=[self getNestedKeyVal:geotagDic key1:@"circles" key2:nil key3:nil];
+                geotag.ownerFirstName=[self getNestedKeyVal:geotagDic key1:@"owner" key2:@"firstName" key3:nil];
+                geotag.ownerLastName=[self getNestedKeyVal:geotagDic key1:@"owner" key2:@"lastName" key3:nil];
                 [geotagList addObject:geotag];
                 NSLog(@"photo.geoTagTitle %@",geotag.geoTagTitle);
             }

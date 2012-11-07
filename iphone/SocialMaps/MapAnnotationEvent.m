@@ -33,11 +33,22 @@ LocationItem *locationItem;
     
     CGRect sumFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                  annoView.frame.size.width, annoView.frame.size.height+25);
-    annoView.frame = sumFrame;
+    if (locItem.itemType!=4) {
+        annoView.frame = sumFrame;
+    }
+    if (locItem.itemType==4)
+    {
+        infoView.frame = CGRectMake(0, 0, 188, 51);
+    }
     CGRect infoFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                   annoView.frame.size.width-12, annoView.frame.size.height);
     infoView.frame = infoFrame;
-    
+    if (locItem.itemType==4)
+    {
+        infoView.frame = CGRectMake(0, 0, 188, 51);
+    }
+
+    NSLog(@" %@",NSStringFromCGRect(infoFrame));
     // Category icon
     CGRect catIconFrame = CGRectMake(infoView.frame.size.width-33-2, 2, 33, 25);
     UIImageView *imgCatIcon = [[UIImageView alloc] initWithFrame:catIconFrame];
@@ -61,6 +72,9 @@ LocationItem *locationItem;
     }
     else
     {
+        lblNameFrame = CGRectMake(ANNO_IMG_WIDTH+2, (2+lblStringSize.height)/2, 
+                                  infoView.frame.size.width-4-ANNO_IMG_WIDTH, lblStringSize.height);
+        lblName.frame=lblNameFrame;
         lblName.text = [NSString stringWithFormat:@"%@", locItem.itemName];
     }
     lblName.backgroundColor = [UIColor clearColor];
@@ -83,6 +97,10 @@ LocationItem *locationItem;
     UILabel *lblAddress = [[UILabel alloc] initWithFrame:addrFrame];
     if (locItem.itemType == 4) 
     {
+        addrFrame = CGRectMake(ANNO_IMG_WIDTH+2, 4+catIconFrame.size.height+1, 
+                               lblStringSize.width,
+                               lblStringSize.height+2);
+        lblAddress.frame=addrFrame;
         NSLog(@"locItem.itemAddress %@",locItem.itemAddress);
         lblAddress.text = [NSString stringWithFormat:@"%@",locItem.itemAddress];
     }
@@ -102,18 +120,21 @@ LocationItem *locationItem;
     else
         distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItem.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
-    
-    if (locItem.itemType==4) 
-    {
-        distSize = [[UtilityClass getCurrentTimeOrDate:locItem.itemCategory] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
-    }
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1+addrFrame.size.height+1, 
                                   distSize.width,
                                   distSize.height);
+    if (locItem.itemType==4) 
+    {
+        distSize = [[NSString stringWithFormat:@"by %@",locItem.itemCategory] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+        distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 3+addrFrame.size.height+1, 
+                               distSize.width,
+                               distSize.height);
+    }
+    
     UILabel *lblDist = [[UILabel alloc] initWithFrame:distFrame];
     if (locItem.itemType==4) 
     {
-        NSString *msg=[UtilityClass getCurrentTimeOrDate:locItem.itemCategory];
+        NSString *msg=[NSString stringWithFormat:@"by %@",locItem.itemCategory];
         lblDist.text=msg;
         lblDist.textColor=[UIColor blackColor];
     }
@@ -146,7 +167,7 @@ LocationItem *locationItem;
     //direction
     UIImage *dirImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
     UIButton *dirBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    dirBtn.frame = CGRectMake(25+eventBtn.frame.size.width, eventBtn.frame.origin.y,eventBtn.frame.size.width+5,eventBtn.frame.size.height);
+    dirBtn.frame = CGRectMake(35+eventBtn.frame.size.width, eventBtn.frame.origin.y,eventBtn.frame.size.width+5,eventBtn.frame.size.height);
     [dirBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [dirBtn setBackgroundImage:dirImg forState:UIControlStateNormal];
     [dirBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];

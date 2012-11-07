@@ -27,6 +27,8 @@
     NSString *date;
     NSMutableArray *permittedUsers;
     NSMutableArray *permittedCircles;
+    NSString *ownerLastName;
+    NSString *ownerFirstName;    
 }
 
 @property(nonatomic,retain) NSString *geoTagID;
@@ -44,5 +46,8 @@
 @property(nonatomic,retain) NSString *date;
 @property(nonatomic,retain) NSMutableArray *permittedUsers;
 @property(nonatomic,retain) NSMutableArray *permittedCircles;
+@property(nonatomic,retain) NSString *ownerLastName;
+@property(nonatomic,retain) NSString *ownerFirstName;    
+
 
 @end

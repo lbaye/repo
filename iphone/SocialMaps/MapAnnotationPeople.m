@@ -44,7 +44,6 @@
     UILabel *lblName = [[UILabel alloc] initWithFrame:lblNameFrame];
     
     NSString *age = [self getAgeString:locItemPeople];
-    
     lblName.text = [NSString stringWithFormat:@"%@%@", locItemPeople.itemName, age];
     lblName.backgroundColor = [UIColor clearColor];
     lblName.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
@@ -123,7 +122,7 @@
     lblDist.backgroundColor = [UIColor clearColor];
     [infoView addSubview:lblDist];
     [lblDist release];
-
+    NSLog(@"info %@",NSStringFromCGRect(infoView.frame));
     return annoView;
 }
 
