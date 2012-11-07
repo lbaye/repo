@@ -412,8 +412,8 @@ ButtonClickCallbackData callBackData;
     
     MKMapRect r = [self.mapView visibleMapRect];
     MKMapPoint pt = MKMapPointForCoordinate(theCoordinate);
-    r.origin.x = pt.x - r.size.width;
-    r.origin.y = pt.y - r.size.height;
+    r.origin.x = pt.x - r.size.width / 2;
+    r.origin.y = pt.y - r.size.height  / 2;
     [self.mapView setVisibleMapRect:r animated:YES];
     
     [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
@@ -2427,7 +2427,7 @@ ButtonClickCallbackData callBackData;
                     NSLog(@"Name=%@ Location=%f,%f, distance=%f",item.name, loc.latitude,loc.longitude, distanceFromMe);
                     
                    
-                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:@"Bar" coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:[item.typeArr lastObject] coordinate:loc dist:distanceFromMe icon:icon bg:bg];
                     
                     aPlace.placeInfo = item;
                     [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeList.count] forKey:item.ID];
