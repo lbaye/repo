@@ -734,6 +734,7 @@ ButtonClickCallbackData callBackData;
 - (void)viewDidLoad {
     [super viewDidLoad];  
     
+    [circleView removeFromSuperview];
     NSLog(@"MapViewController:viewDidLoad" );
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -1104,7 +1105,6 @@ ButtonClickCallbackData callBackData;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [circleView removeFromSuperview];
     [connectToFBView removeFromSuperview];
     if ([CLLocationManager locationServicesEnabled])
         _mapView.showsUserLocation=YES;

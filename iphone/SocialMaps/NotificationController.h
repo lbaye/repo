@@ -42,5 +42,6 @@ typedef enum _NOTIFY_TYPES {
 - (IBAction)showNotifications:(id)sender;
 - (void)moreButtonTapped:(id)sender;
 - (void) buttonClicked:(NSString*)name cellRow:(int)row;
+- (IBAction)actionBackMe:(id)sender;
 
 @end
