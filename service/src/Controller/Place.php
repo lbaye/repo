@@ -49,8 +49,8 @@ class Place extends Base
             $data = $this->_toArrayAll($permittedDocs);
             $i = 0;
             foreach ($data as $photoUrl) {
+                $this->addOwnerInfo($data[$i]);
                 $data[$i]['photo'] = \Helper\Url::buildPlacePhotoUrl($photoUrl);
-
                 if (is_null($data[$i]['photo'])) {
                     $data[$i]['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($data[$i]);
                 }
@@ -78,7 +78,13 @@ class Place extends Base
 
         if (null !== $place) {
             if ($place->isPermittedFor($this->user)) {
-                return $this->_generateResponse($place->toArray());
+                $place = $place->toArray();
+                $place['photo'] = \Helper\Url::buildPlacePhotoUrl($place);
+                if (is_null($place['photo'])) {
+                    $place['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($place);
+                }
+                $this->addOwnerInfo($place);
+                return $this->_generateResponse($place);
             } else {
                 return $this->_generateForbidden('Not permitted for you');
             }
@@ -107,7 +113,6 @@ class Place extends Base
         }
     }
 
-
     /**
      * GET /me/places
      *
@@ -119,6 +124,38 @@ class Place extends Base
         $this->_initRepository($type);
         $places = $this->LocationMarkRepository->getByUser($this->user);
         $this->addPhoto($places);
+
+        foreach ($places as &$place) {
+            $this->addOwnerInfo($place);
+        }
+
+        if ($places) {
+            return $this->_generateResponse($places);
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+    /**
+     * GET /users/{userId}/places
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getByUser($userId, $type = 'place')
+    {
+        $user = $this->userRepository->find($userId);
+
+        if(is_null($user) || empty($user))
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+
+        $this->_initRepository($type);
+        $places = $this->LocationMarkRepository->getByUser($user);
+        $this->addPhoto($places);
+
+        foreach ($places as &$place) {
+            $this->addOwnerInfo($place);
+        }
 
         if ($places) {
             return $this->_generateResponse($places);
@@ -147,29 +184,17 @@ class Place extends Base
         }
     }
 
-    /**
-     * GET /users/{userId}/places
-     *
-     * @param $type
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getByUser($userId, $type = 'place')
+    private function addOwnerInfo(&$data)
     {
-        $user = $this->userRepository->find($userId);
-
-        if(is_null($user) || empty($user))
-            return $this->_generateResponse(null, Status::NO_CONTENT);
-
-        $this->_initRepository($type);
-        $places = $this->LocationMarkRepository->getByUser($user);
-        $this->addPhoto($places);
-
-        if ($places) {
-            return $this->_generateResponse($places);
-        } else {
-            return $this->_generateResponse(null, Status::NO_CONTENT);
-        }
+        $owner = $this->LocationMarkRepository->getOwnerByPlaceId($data['id']);
+        $data['owner'] = array(
+            'id' => $owner->getId(),
+            'firstName' => $owner->getFirstName(),
+            'lastName' => $owner->getLastName(),
+            'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
+        );
     }
+
     /**
      * POST /places
      *
@@ -269,7 +294,5 @@ class Place extends Base
         } else {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
         }
-
     }
-
 }
