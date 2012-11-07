@@ -757,7 +757,7 @@ class User extends Base {
         try {
 
             $circleData = $this->request->request->all();
-            $this->userRepository->removeFriendFromCircle($id, $circleData);
+            $this->userRepository->removeFriendFromMyCircle($id);
 
             $this->userRepository->addFriendToMultipleCircle($id, $circleData);
 
