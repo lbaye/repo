@@ -130,7 +130,14 @@ class Photos extends Base
     public function getByUserId($id)
     {
         $user = $this->userRepository->find($id);
+
+        if (is_null($user) || empty($user))
+        {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+
         $photos = $this->photoRepo->getByUser($user);
+
         if (count($photos) > 0) {
             return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
         } else {
