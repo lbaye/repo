@@ -424,6 +424,30 @@ NSMutableArray *selectedScrollIndex;
         [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setUserInteractionEnabled:NO];
+        NSString *friendShipStatus=userInfo.friendshipStatus;
+        if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
+            [addFrndButton setTitle:@"Rejected" forState:UIControlStateNormal];
+            [addFrndButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        } else if ([friendShipStatus isEqualToString:@"requested"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        } else if ([friendShipStatus isEqualToString:@"pending"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        }
+        else if ([friendShipStatus isEqualToString:@"friend"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        }
     }
     
     if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
