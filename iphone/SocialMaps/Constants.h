@@ -58,6 +58,8 @@ extern NSString * const NOTIF_GET_FRIENDS_ALL_PHOTO;
 extern NSString * const NOTIF_GET_PHOTO_FOR_GEOTAG;
 extern NSString * const NOTIF_CREATE_GEOTAG_DONE;
 extern NSString * const NOTIF_GET_ALL_GEOTAG_DONE;
+extern NSString * const NOTIF_GET_PLACES_DONE;
+
 // Font related stuff
 extern NSString * const kFontName;
 extern NSString * const kFontNameBold;

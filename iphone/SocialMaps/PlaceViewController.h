@@ -23,15 +23,20 @@
     IBOutlet UIButton       *buttonDescription;
     IBOutlet UIButton       *buttonCategory;
     IBOutlet UITextField    *textField;
+    IBOutlet UIView         *viewEditEvent;
+    IBOutlet UIView         *viewTextInput;
     
     Place                   *place;
+    Place                   *placeEdit;
     PhotoPicker             *photoPicker;
     UIImagePickerController *picSel;
     NSMutableArray          *categoryName;
     int                     selectedCatetoryIndex;
+    BOOL                    isEdidtingMode;
 }
 
 @property (nonatomic, retain) Place *place;
+@property (nonatomic, assign) BOOL isEditingMode;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)actionNameButton:(id)sender;
@@ -41,6 +46,10 @@
 - (IBAction)actionDescriptionButton:(id)sender;
 - (IBAction)actionAddPhotoButton:(id)sender;
 - (IBAction)actionDeletePhotoButton:(id)sender;
+- (IBAction)actionDeleteEventButton:(id)sender;
+- (IBAction)actionUpdateEventButton:(id)sender;
+- (IBAction)actionSaveTextInput:(id)sender;
+- (IBAction)actionCancelTextInput:(id)sender;
 
 - (void)displayNotificationCount; 
 - (void)setAddressLabelFromLatLon:(Place*)_place;
