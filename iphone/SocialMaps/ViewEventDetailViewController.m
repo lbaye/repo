@@ -559,7 +559,13 @@ BOOL isBackgroundTaskRunning=FALSE;
     int index = [path intValue];
     NSString *Link = [ImgesName objectAtIndex:index];
     //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        UIImage *img;
+        if ([Link isEqual:[NSNull null]]) {
+            img = [UIImage imageNamed:@"blank.png"];
+        }
+        else {
+            img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        }
     if((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
     {
         //If download complete, set that image to dictionary

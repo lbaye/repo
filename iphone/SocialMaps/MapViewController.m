@@ -2564,7 +2564,7 @@ ButtonClickCallbackData callBackData;
                 aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
                 LocationItem *item=[[LocationItem alloc] init];
                 item.itemName=aGeotag.geoTagTitle;
-                item.itemAddress=[NSString stringWithFormat:@"Geo-tagged at %@ %@",aGeotag.geoTagAddress] ;
+                item.itemAddress=[NSString stringWithFormat:@"at %@",aGeotag.geoTagAddress] ;
                 item.itemType=4;
                 item.coordinate=CLLocationCoordinate2DMake([aGeotag.geoTagLocation.latitude doubleValue], [aGeotag.geoTagLocation.longitude doubleValue]);
                 item.itemDistance=[aGeotag.geoTagDistance floatValue];

@@ -237,7 +237,7 @@
                 item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
                 item.currDisplayState=0;
                 item.itemCategory=aGeotag.date;
-                item.itemAddress=[NSString stringWithFormat:@"Geo-Tagged at %@ %@",aGeotag.geoTagAddress,[UtilityClass getCurrentTimeOrDate:item.itemCategory]] ;
+                item.itemAddress=[NSString stringWithFormat:@"at %@",aGeotag.geoTagAddress] ;
                 [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
             }
         }

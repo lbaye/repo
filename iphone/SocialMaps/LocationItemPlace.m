@@ -8,6 +8,7 @@
 
 #import "LocationItemPlace.h"
 #import "ListViewController.h"
+#import "UtilityClass.h"
 
 @implementation LocationItemPlace
 @synthesize catIcon;
@@ -27,7 +28,6 @@
     
     cellIdent = @"placeItem";
     UITableViewCell *cell = [super getTableViewCell:tv sender:controller];
-    
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];    
     UIImageView   *catImage = (UIImageView*) [cell viewWithTag:2007];  
     if (catImage == nil) {
@@ -58,6 +58,7 @@
 		
 		[cell.contentView addSubview:review];
     }
+    
     // TODO: Hiding review for appstore submission. revert once feature is implemented
     review.hidden = TRUE;
     

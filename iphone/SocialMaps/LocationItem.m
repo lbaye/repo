@@ -10,6 +10,7 @@
 #import "LocationItem.h"
 #import "Constants.h"
 #import "UIImageView+roundedCorner.h"
+#import "UtilityClass.h"
 
 @implementation LocationItem
 @synthesize itemName;
@@ -175,8 +176,20 @@
     
     // Address
     lblAddress.frame = addressFrame;
-    lblAddress.text  = itemAddress;
-	
+	NSLog(@"itemtype %d %@",itemType,itemName);
+    if (itemType == 4) 
+    {
+        NSString *checkin=[NSString stringWithFormat:@"Geo-Tagged %@ %@",itemAddress,[UtilityClass getCurrentTimeOrDate:itemCategory]];
+        lblAddress.text=checkin;
+        CGSize addressStringSize = [checkin sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
+        lblAddress.frame=CGRectMake(2,5, addressStringSize.width, 15);
+        NSLog(@"lbladress: %@", NSStringFromCGRect(lblAddress.frame));
+        UIScrollView *addScr = (UIScrollView*) [cell viewWithTag:20031];
+        [addScr setContentSize:lblAddress.frame.size];
+    }
+    else {
+        lblAddress.text  = itemAddress;
+    }
     // Distance
     if (itemDistance > 999)
         lblDist.text = [NSString stringWithFormat:@"%.1fkm", itemDistance/1000.0];
