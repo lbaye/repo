@@ -85,21 +85,10 @@ class CheckInRepo extends Base
 
     public function update($data, $id) {
         $checkIn = $this->find($id);
-
-        if (false === $checkIn) {
-            throw new \Exception\ResourceNotFoundException();
-        }
+        if (false === $checkIn) throw new \Exception\ResourceNotFoundException();
 
         $checkIn = $this->map($data, $checkIn->getOwner(), $checkIn);
-
-        if ($checkIn->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($checkIn);
-        $this->dm->flush();
-
-        return $checkIn;
+        return $this->updateObject($checkIn);
     }
 
 }

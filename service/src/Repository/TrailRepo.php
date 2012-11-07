@@ -24,21 +24,10 @@ class TrailRepo extends Base
     public function update($data, $id)
     {
         $trail = $this->find($id);
-
-        if (false === $trail) {
-            throw new \Exception\ResourceNotFoundException();
-        }
+        if (false === $trail) throw new \Exception\ResourceNotFoundException();
 
         $trail = $this->map($data, $trail->getOwner(), $trail);
-
-        if ($trail->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($trail);
-        $this->dm->flush();
-
-        return $trail;
+        return $this->updateObject($trail);
     }
 
     /**

@@ -63,18 +63,8 @@ class GatheringRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
-
-
         $gathering = $this->map($data, $gathering->getOwner(), $gathering);
-
-        if ($gathering->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($gathering);
-        $this->dm->flush();
-
-        return $gathering;
+        return $this->updateObject($gathering);
     }
 
     public function addGuests($newGuests, $gathering)

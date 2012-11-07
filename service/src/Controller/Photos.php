@@ -126,15 +126,13 @@ class Photos extends Base
         $photos = $this->photoRepo->getByPhotoId($this->user, $id);
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
-
+    
     public function getByUserId($id)
     {
         $user = $this->userRepository->find($id);
 
-        if (is_null($user) || empty($user))
-        {
+        if (empty($user))
             return $this->_generateResponse(null, Status::NO_CONTENT);
-        }
 
         $photos = $this->photoRepo->getByUser($user);
 
@@ -145,15 +143,17 @@ class Photos extends Base
         }
     }
 
-    public function update($id)
-    {
+    public function update($id){
 
         $data = $this->request->request->all();
         $photo = $this->photoRepo->find($id);
+        
+        if (!$photo)
+            return $this->_generate404();
 
-        if (empty($photo) || $photo->getOwner() != $this->user) {
+        if ($photo->getOwner() != $this->user)
             return $this->_generateUnauthorized();
-        }
+        
 
         $photo = $this->photoRepo->update($data, $id);
         return $this->_generateResponse($photo->toArray(), Status::OK);
@@ -163,14 +163,17 @@ class Photos extends Base
     {
         $photo = $this->photoRepo->find($id);
 
-        if (empty($photo) || $photo->getOwner() != $this->user) {
+        if (!$photo)
+            return $this->_generate404();
+
+        if ($photo->getOwner() != $this->user){
             return $this->_generateUnauthorized();
         }
 
         try {
             $this->photoRepo->delete($id);
         } catch (\Exception $e) {
-            $this->_generateException($e);
+            $this->_generate500($e->getMessage());
         }
         return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
@@ -244,7 +247,7 @@ class Photos extends Base
         return $this->response;
     }
 
-    /**
+     /**
      * POST /photos/{id}/comments
      *
      * @param $id

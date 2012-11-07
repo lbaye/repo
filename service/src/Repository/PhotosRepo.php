@@ -9,9 +9,14 @@ use Repository\UserRepo as UserRepository;
 use Document\Photo as Photo;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
+use \Document\PhotosObserver;
 
 class PhotosRepo extends Base
 {
+    protected function bindObservers() {
+        $this->addObserver(new \Document\PhotosObserver($this->dm));
+    }
+
     public function map(array $data, UserDocument $owner, Photo $photo = null)
     {
         if (is_null($photo)) $photo = new Photo();
@@ -62,21 +67,10 @@ class PhotosRepo extends Base
 
     public function update($data, $id) {
         $photo = $this->find($id);
-
-        if (false === $photo) {
-            throw new \Exception\ResourceNotFoundException();
-        }
+        if (false === $photo) throw new \Exception\ResourceNotFoundException();
 
         $photo = $this->map($data, $photo->getOwner(), $photo);
-
-        if ($photo->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($photo);
-        $this->dm->flush();
-
-        return $photo;
+        return $this->updateObject($photo);
     }
 
     public function addComments($photoId, array $data)

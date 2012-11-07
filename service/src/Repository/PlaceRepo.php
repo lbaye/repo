@@ -11,25 +11,17 @@ use Helper\Image as ImageHelper;
 
 class PlaceRepo extends Base
 {
+    protected function bindObservers() {
+        $this->addObserver(new \Document\PlacesObserver($this->dm));
+    }
 
     public function update($data, $id)
     {
         $place = $this->find($id);
-
-        if (false === $place) {
-            throw new \Exception\ResourceNotFoundException();
-        }
+        if (false === $place) throw new \Exception\ResourceNotFoundException();
 
         $place = $this->map($data, $place->getOwner(), $place);
-
-        if ($place->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($place);
-        $this->dm->flush();
-
-        return $place;
+        return $this->updateObject($place);
     }
 
     public function map(array $data, UserDocument $owner, \Document\Landmark $placeTypeDoc = null)

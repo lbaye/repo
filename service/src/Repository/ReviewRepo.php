@@ -66,21 +66,10 @@ class ReviewRepo extends Base
 
     public function update($data, $id) {
         $review = $this->find($id);
-
-        if (false === $review) {
-            throw new \Exception\ResourceNotFoundException();
-        }
+        if (false === $review) throw new \Exception\ResourceNotFoundException();
 
         $review = $this->map($data, $review->getOwner(), $review);
-
-        if ($review->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($review);
-        $this->dm->flush();
-
-        return $review;
+        return $this->updateObject($review);
     }
 
 }

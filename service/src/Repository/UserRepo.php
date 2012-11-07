@@ -11,8 +11,13 @@ use Helper\Image as ImageHelper;
 class UserRepo extends Base
 {
     const MAX_NOTIFICATIONS = 20;
+    const EVENT_ADDED_FRIEND = 'added_friend';
 
     protected $loggerName = 'Repository::UserRepo';
+
+    public function bindObservers() {
+        $this->addObserver(new \Document\UsersObserver($this->dm, $this));
+    }
 
     public function validateLogin($data)
     {
@@ -213,14 +218,7 @@ class UserRepo extends Base
 
         $user->setUpdateDate(new \DateTime());
 
-        if ($user->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($user);
-        $this->dm->flush();
-
-        return $user;
+        return $this->updateObject($user);
     }
 
     public function addCircle(array $data)
@@ -454,9 +452,11 @@ class UserRepo extends Base
         }
 
         $friendRequests = $this->currentUser->getFriendRequest();
+        $frequest = null;
 
         foreach ($friendRequests as &$friendRequest) {
             if ($friendRequest->getUserId() == $userId) {
+                $frequest = $friendRequest;
                 $friendRequest->setAccepted(($response == 'accept'));
             }
         }
@@ -465,6 +465,9 @@ class UserRepo extends Base
 
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
+
+        if ($frequest)
+            $this->announcement(self::EVENT_ADDED_FRIEND, array('object' => $frequest));
     }
 
     public function addDefaultCircles($id)

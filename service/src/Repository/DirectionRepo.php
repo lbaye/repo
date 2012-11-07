@@ -11,16 +11,10 @@ class DirectionRepo extends Base
 {
     public function update($data,$id)
     {
-        $data = $this->map($data,$id);
+        $direction = $this->find($id);
+        $direction = $this->map($data, $direction->getOwner(), $direction);
 
-        if ($data->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($data);
-        $this->dm->flush();
-
-        return $data;
+        return $this->updateObject($direction);
     }
 
 

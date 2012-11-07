@@ -19,15 +19,7 @@ class BreadcrumbRepo extends Base
         }
 
         $breadcrumb = $this->map($data, $breadcrumb->getOwner(), $breadcrumb);
-
-        if ($breadcrumb->isValid() === false) {
-            return false;
-        }
-
-        $this->dm->persist($breadcrumb);
-        $this->dm->flush();
-
-        return $breadcrumb;
+        return $this->updateObject($breadcrumb);
     }
 
     public function addPhoto($data, $id)

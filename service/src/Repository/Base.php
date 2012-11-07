@@ -7,11 +7,12 @@ use Document\User as UserDocument;
 use Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler as StreamHandler;
 
-class Base extends DocumentRepository {
+class Base extends DocumentRepository implements DocumentObserver {
 
     protected $loggerName = null;
     protected $logger;
     protected $loggerStreamHandler;
+    protected $documentObservers = array();
 
     /**
      * @var array
@@ -27,6 +28,15 @@ class Base extends DocumentRepository {
      * @var \GearmanClient
      */
     protected $gearmanClient;
+
+    public function __construct(
+        \Doctrine\ODM\MongoDB\DocumentManager $dm,
+        \Doctrine\ODM\MongoDB\UnitOfWork $uow,
+        \Doctrine\Common\Persistence\Mapping\ClassMetadata $class) {
+
+        parent::__construct($dm, $uow, $class);
+        $this->bindObservers();
+    }
 
     public function setConfig($config) {
         $this->config = $config;
@@ -63,14 +73,19 @@ class Base extends DocumentRepository {
     }
 
     public function insert($doc) {
-        $valid = $doc->isValid();
+        # Event - Before validation
+        $this->beforeValidation($doc);
 
-        if ($valid !== true) {
-            throw new \InvalidArgumentException('Invalid Location data', 406);
-        }
+        if (!$doc->isValid())
+            throw new \InvalidArgumentException('Validation failed please provide all required fields');
 
+        # Event - Before create event
+        $this->beforeCreate($doc);
         $this->dm->persist($doc);
         $this->dm->flush($doc);
+
+        # Event - After create event
+        $this->afterCreate($doc);
 
         return $doc;
     }
@@ -78,12 +93,49 @@ class Base extends DocumentRepository {
     public function delete($id) {
         $doc = $this->find($id);
 
-        if (is_null($doc)) {
-            throw new \Exception("Not found", 404);
-        }
+        # Event - Before destroy
+        $this->beforeDestroy($doc);
+
+        if (is_null($doc)) throw new \Exception("Not found", 404);
 
         $this->dm->remove($doc);
         $this->dm->flush();
+
+        # Event - After destroy
+        $this->afterDestroy($doc);
+    }
+
+    public function deleteBy($conditions) {
+        $doc = $this->findOneBy($conditions);
+
+        # Event - Before destroy
+        $this->beforeDestroy($doc);
+
+        if (is_null($doc)) throw new \Exception("Not found", 404);
+
+        $this->dm->remove($doc);
+        $this->dm->flush();
+
+        # Event - After destroy
+        $this->afterDestroy($doc);
+    }
+
+    public function updateObject(&$object) {
+        # Event - Before validation
+        $this->beforeValidation($object);
+
+        if (!$object->isValid()) return false;
+
+        # Event - Before update
+        $this->beforeUpdate($object);
+
+        $this->dm->persist($object);
+        $this->dm->flush();
+
+        # Event - After update
+        $this->afterUpdate($object);
+
+        return $object;
     }
 
     protected function _toArrayAll($results) {
@@ -226,5 +278,66 @@ class Base extends DocumentRepository {
         $this->debug("Memory usage after: " . (memory_get_usage() / 1024) . " KB");
     }
 
+    protected function populateIfExists(&$objectInstance, array $data) {
+        foreach ($data as $field => $value) {
+            $method = 'set' . ucfirst($field);
+            if (method_exists($objectInstance, $method))
+                $objectInstance->{
+                $method
+                }($value);
+        }
+    }
+
+    public function addObserver(DocumentObserver &$observer) {
+        $this->documentObservers[$observer->getName()] = $observer;
+    }
+
+    public function removeObserver(DocumentObserver &$observer) {
+        unset($this->documentObservers[$observer->getName()]);
+    }
+
+    public function getName() {
+        return 'Base';
+    }
+
+    public function afterDestroy(&$object) {
+        $this->fireObserversEvent('afterDestroy', $object);
+    }
+
+    public function beforeDestroy(&$object) {
+        $this->fireObserversEvent('beforeDestroy', $object);
+    }
+
+    public function afterUpdate(&$object) {
+        $this->fireObserversEvent('afterUpdate', $object);
+    }
+
+    public function beforeUpdate(&$object) {
+        $this->fireObserversEvent('beforeUpdate', $object);
+    }
+
+    public function afterCreate(&$object) {
+        $this->fireObserversEvent('afterCreate', $object);
+    }
+
+    public function beforeCreate(&$object) {
+        $this->fireObserversEvent('beforeCreate', $object);
+    }
+
+    public function beforeValidation(&$object) {
+        $this->fireObserversEvent('beforeValidation', $object);
+    }
+
+    public function announcement($type, array $array) {
+        $this->fireObserversEvent('announcement', array_merge($array, array('type' => $type)));
+    }
+
+    private function fireObserversEvent($eventName, &$object) {
+        foreach ($this->documentObservers as &$observer)
+            $observer->{$eventName}($object['type'], $object);
+    }
+
+    protected function bindObservers() {
+    }
 
 }

@@ -21,7 +21,8 @@ class AppMessage {
 
     public static function getMessage($key) {
         if (func_num_args() > 1) {
-            return call_user_func_array('sprintf', array_merge(array(self::$MESSAGES[$key]), array_slice(func_get_args(), 1)));
+            return call_user_func_array(
+                'sprintf', array_merge(array(self::$MESSAGES[$key]), array_slice(func_get_args(), 1)));
         } else
             return self::$MESSAGES[$key];
     }
