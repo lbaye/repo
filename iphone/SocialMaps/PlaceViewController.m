@@ -31,7 +31,8 @@
 	picSel.allowsEditing = YES;
 	picSel.delegate = self;
     
-    categoryName = [[NSMutableArray alloc] initWithObjects:@"Accounting",
+    categoryName = [[NSMutableArray alloc] initWithObjects:@"",
+                                    @"Accounting",
                                     @"Airport",
                                     @"Amusement park",
                                     @"Aquarium",
@@ -155,6 +156,8 @@
         [buttonAddPhoto setTitle:@"Edit photo..." forState:UIControlStateNormal];
     labelAddress.text = self.place.address;
     
+    selectedCatetoryIndex = 0;
+    
     if (place.category) 
     {
         for (int i = 0; i < [categoryName count]; i++) 
@@ -226,6 +229,11 @@
     
     if ([place.name isEqualToString:@""]) {
         [UtilityClass showAlert:@"" :@"Please enter a place name"];
+        return;
+    }
+    
+    if (selectedCatetoryIndex == 0) {
+        [UtilityClass showAlert:@"" :@"Please select a category"];
         return;
     }
     
