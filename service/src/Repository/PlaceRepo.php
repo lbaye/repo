@@ -96,7 +96,27 @@ class PlaceRepo extends Base
         return $place;
     }
 
-    public function getAll($limit = 20, $offset = 0) {
+    public function getAll($limit = 20, $offset = 0)
+    {
         return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
+    }
+
+    public function search(UserDocument $user,$lng,$lat)
+    {
+        $circles = $user->getCircles();
+        foreach ($circles as $circle) {
+            $circleId[] = $circle->getId();
+        }
+        $qb = $this->dm->createQueryBuilder('Document\Geotag');
+        if (!empty($lat) && !empty($lng))
+            $qb->field('location')->near($lat, $lng);
+        $qb->addOr($qb->expr()->field('owner')->equals($user->getId()));
+        $qb->addOr($qb->expr()->field('permittedUsers')->equals($user->getId()));
+        $qb->addOr($qb->expr()->field('permittedCircles')->in($circleId));
+        $qb->addOr($qb->expr()->field('permission')->equals('public'));
+
+        $docs = $qb->getQuery()->execute();
+
+        return $this->_toArrayAll($docs);
     }
 }

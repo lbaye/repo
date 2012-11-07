@@ -84,6 +84,27 @@ class Place extends Base
     }
 
     /**
+     * GET /geotags/all
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function search($type)
+    {
+        $this->_initRepository($type);
+        $lng = $this->request->get('lng');
+        $lat = $this->request->get('lat');
+        $geoTags = $this->LocationMarkRepository->search($this->user, $lng, $lat);
+
+        if ($geoTags) {
+            return $this->_generateResponse($geoTags);
+        } else {
+            return $this->_generateResponse(null, Status::NO_CONTENT);
+        }
+    }
+
+
+    /**
      * GET /me/places
      *
      * @param $type

@@ -3,6 +3,11 @@ all_geotags:
   defaults: { _controller: Controller\Place::index, type: geotag }
   requirements: { _method: GET }
 
+all_geotags_search:
+  pattern:  /geotags/all
+  defaults: { _controller: Controller\Place::search, type: geotag }
+  requirements: { _method: POST }
+
 a_geotag:
   pattern:  /geotags/{id}
   defaults: { _controller: Controller\Place::getById, type: geotag }
