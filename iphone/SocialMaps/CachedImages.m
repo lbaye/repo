@@ -122,7 +122,12 @@
     
 	if (newImage) {
         NSLog(@"Image From Cache.......");
-        imageInfo.image = newImage;
+        ImageInfo *imageInfoValid = [[self cache] objectForKey:url.description];
+        
+        if (imageInfoValid) {
+            imageInfo.image = newImage;
+        } 
+        
 	}
 }
 
