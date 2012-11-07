@@ -41,7 +41,7 @@ CGFloat animatedDistance;
 
 +(void)showAlert:(NSString *)title:(NSString *)subTitle
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title 
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
                                                     message:subTitle 
                                                    delegate:nil 
                                           cancelButtonTitle:@"OK" 
