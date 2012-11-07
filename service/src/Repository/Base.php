@@ -58,7 +58,7 @@ class Base extends DocumentRepository {
     }
 
     public function getByUser(UserDocument $user) {
-        $docs = $this->findBy(array('owner' => $user->getId()));
+        $docs = $this->findBy(array('owner' => $user->getId()), array('createDate' => 'DESC'));
         return $this->_toArrayAll($docs);
     }
 

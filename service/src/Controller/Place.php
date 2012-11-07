@@ -178,6 +178,7 @@ class Place extends Base
     private function addPhoto(array &$places)
     {
         foreach ($places as &$place) {
+            $place['photo'] = \Helper\Url::buildPlacePhotoUrl($place);
             if (is_null($place['photo'])) {
                 $place['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($place);
             }
