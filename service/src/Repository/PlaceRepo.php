@@ -101,7 +101,7 @@ class PlaceRepo extends Base
         return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
 
-    public function getByMeInclude(UserDocument $user,$lng,$lat)
+    public function search(UserDocument $user,$lng,$lat)
     {
         $circles = $user->getCircles();
         foreach ($circles as $circle) {

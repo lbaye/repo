@@ -89,12 +89,12 @@ class Place extends Base
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAllMeInclude($type)
+    public function search($type)
     {
         $this->_initRepository($type);
         $lng = $this->request->get('lng');
         $lat = $this->request->get('lat');
-        $geoTags = $this->LocationMarkRepository->getByMeInclude($this->user, $lng, $lat);
+        $geoTags = $this->LocationMarkRepository->search($this->user, $lng, $lat);
 
         if ($geoTags) {
             return $this->_generateResponse($geoTags);
