@@ -128,7 +128,7 @@ class Search extends Base {
                 'date' => $now
             );
 
-            $user['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+            $user['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=320x130&location="
                                   . $user['currentLocation']['lat'] . ","
                                   . $user['currentLocation']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
                                   . "&key={$this->config['googlePlace']['apiKey']}";

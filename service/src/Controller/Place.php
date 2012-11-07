@@ -130,7 +130,7 @@ class Place extends Base
 
     private function addStreetViewPhotoIfNoPhotoPresent($place)
     {
-        $photoUrl = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location="
+        $photoUrl = "http://maps.googleapis.com/maps/api/streetview?size=320x130&location="
             . $place['location']['lat'] . ","
             . $place['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
             . "&key={$this->config['googlePlace']['apiKey']}";
@@ -170,7 +170,6 @@ class Place extends Base
             return $this->_generateResponse(null, Status::NO_CONTENT);
         }
     }
-    
     /**
      * POST /places
      *
