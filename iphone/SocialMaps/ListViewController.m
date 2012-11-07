@@ -20,6 +20,7 @@
 #import "Event.h"
 #import "FriendsProfileViewController.h"
 #import "Geotag.h"
+#import "PlaceListViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -438,7 +439,10 @@
 
 -(IBAction)gotoPlace:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+    PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 -(IBAction)gotoFriends:(id)sender
