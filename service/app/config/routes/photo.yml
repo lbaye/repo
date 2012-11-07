@@ -13,6 +13,11 @@ get_photos_by_user:
     defaults: { _controller: Controller\Photos::getByAuthenticatedUser }
     requirements: { _method: GET }
 
+get_photos_by_user_id:
+    pattern: /photos/users/{id}
+    defaults: { _controller: Controller\Photos::getByUserId }
+    requirements: { _method: GET }
+
 get_photo:
   pattern: /photos/{id}
   defaults: { _controller: Controller\Photos::getById }

@@ -5,15 +5,13 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Helper\Status;
 
-class Messages extends Base
-{
+class Messages extends Base {
     /**
      * @var \Repository\MessageRepo
      */
     private $messageRepository;
 
-    public function init()
-    {
+    public function init() {
         parent::init();
 
         $this->messageRepository = $this->dm->getRepository('Document\Message');
@@ -26,36 +24,35 @@ class Messages extends Base
         $this->_ensureLoggedIn();
     }
 
-    public function getById($id)
-    {
+    public function getById($id) {
         $message = $this->messageRepository->find($id);
         if (empty($message)) {
             $this->_generate404();
         } else {
 
-                $messageDetail = array();
+            $messageDetail = array();
 
-                $messageArr = $message->toArray(true);
+            $messageArr = $message->toArray(true);
 
-                $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-                foreach ($messageArr['recipients'] AS &$recipient) {
-                    $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
-                }
+            foreach ($messageArr['recipients'] AS &$recipient) {
+                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
+            }
 
-                foreach ($messageArr['replies'] AS &$avatar) {
+            foreach ($messageArr['replies'] AS &$avatar) {
 
-                    $avatar['sender']['avatar'] = \Helper\Url::buildAvatarUrl($avatar['sender']);
-                }
+                $avatar['sender']['avatar'] = \Helper\Url::buildAvatarUrl($avatar['sender']);
+            }
 
-                $messageDetail = $messageArr;
+            $messageDetail = $messageArr;
 
-                if(!in_array($this->user->getId(),$messageDetail['readBy'] )){
-                   $this->messageRepository->updateStatus($message, $this->user->getId());
-                   $messageDetail['status'] = 'unread';
-                } else {
-                    $messageDetail['status'] = 'read';
-                }
+            if (!in_array($this->user->getId(), $messageDetail['readBy'])) {
+                $this->messageRepository->updateStatus($message, $this->user->getId());
+                $messageDetail['status'] = 'unread';
+            } else {
+                $messageDetail['status'] = 'read';
+            }
 
             $this->_generateResponse($messageDetail);
         }
@@ -63,8 +60,7 @@ class Messages extends Base
         return $this->response;
     }
 
-    public function create()
-    {
+    public function create() {
         $postData = $this->request->request->all();
 
         try {
@@ -75,7 +71,7 @@ class Messages extends Base
             // Don't put it before insert operation. this is intentional
             $message->setStatus('read');
             $this->_sendNotification($postData, $message);
-            
+
             $this->response->setContent(json_encode($message->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
@@ -86,45 +82,49 @@ class Messages extends Base
         return $this->response;
     }
 
-    private function _sendNotification($postData, \Document\Message $message)
-    {
-        $replyRecipient = array();
+    private function _sendNotification($postData, \Document\Message $message) {
+        if ($message->getThread())
+            $this->notifyNewReplyRecipients($postData, $message);
+        else
+            $this->notifyNewMessageRecipients($postData, $message);
+    }
 
-        if (isset($postData['recipients'])) {
-            $msgText = ' has sent you a new message.';
-            $usersToGetNotified = array_diff($postData['recipients'], array($this->user->getId()));
+    private function notifyNewReplyRecipients(array $postData, \Document\Message $message) {
+        $thread = $message->getThread();
+        $recipients[] = $thread->getSender()->getId();
 
-            if (!empty($usersToGetNotified)) {
-                $this->_sendPushNotification($usersToGetNotified, $this->_createPushMessage($msgText), 'message_new', $message->getId());
-            }
-        } else if (isset($postData['thread'])) {
+        foreach ($thread->getRecipients() as $recipient) $recipients[] = $recipient->getId();
+        $recipients = array_diff($recipients, array($this->user->getId()));
 
-            $msgText = ' has replied on a thread.';
-            $msgInfo = $message->toArray(\Document\Message::DETAILS_ARRAY);
-            $replyRecipient[] = $msgInfo['thread']['sender']['id'];
-
-            foreach ($msgInfo['thread']['recipients'] as $extractRecipientMsgInfo) {
-                $replyRecipient[] = $extractRecipientMsgInfo['id'];
-            }
-
-            $replyRecipient = array_diff($replyRecipient, array($this->user->getId()));
-
-            if (!empty($replyRecipient)) {
-                $this->_sendPushNotification($replyRecipient, $this->_createPushMessage($msgText), 'message_reply', $message->getId());
-            }
-
+        if (!empty($recipients)) {
+            $this->_sendPushNotification(
+                $recipients,
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::REPLY_MESSAGE,
+                $message->getId());
         }
     }
 
-    public function getByCurrentUser()
-    {
+    private function notifyNewMessageRecipients(array $postData, \Document\Message $message) {
+        $recipients = $postData['recipients'];
+        $filteredRecipientsIds = array_diff($recipients, array($this->user->getId()));
+
+        if (!empty($filteredRecipientsIds)) {
+            $this->_sendPushNotification(
+                $filteredRecipientsIds,
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::NEW_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::NEW_MESSAGE,
+                $message->getId());
+        }
+    }
+
+    public function getByCurrentUser() {
         return $this->_generateResponse(
             $this->messageRepository->getByUser($this->user));
     }
 
-    public function getInbox()
-    {
-        $showLastReply = (boolean) $this->request->get('show_last_reply');
+    public function getInbox() {
+        $showLastReply = (boolean)$this->request->get('show_last_reply');
 
         $messages = $this->messageRepository->getByRecipient($this->user);
 
@@ -134,28 +134,28 @@ class Messages extends Base
 
             $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-            foreach($messageArr['recipients'] AS &$recipient){
+            foreach ($messageArr['recipients'] AS &$recipient) {
                 $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
             }
 
-            if($showLastReply == true){
+            if ($showLastReply == true) {
 
-                if(!empty($messageArr['replies'])){
+                if (!empty($messageArr['replies'])) {
 
                     $messageArr['replies'] = array(end($messageArr['replies']));
                     $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
-                }else{
+                } else {
                     $messageArr['replies'] = null;
                 }
-            }else{
+            } else {
                 unset($messageArr['replies']);
             }
 
-            if(!in_array($this->user->getId(), $messageArr['readBy'] )){
-                   $messageArr['status'] = 'unread';
-             } else {
-                   $messageArr['status'] = 'read';
-             }
+            if (!in_array($this->user->getId(), $messageArr['readBy'])) {
+                $messageArr['status'] = 'unread';
+            } else {
+                $messageArr['status'] = 'read';
+            }
 
             $docsAsArr[] = $messageArr;
         }
@@ -169,8 +169,7 @@ class Messages extends Base
      * Flag a message as READ or UNREAD
      * @param $status Accepts only READ or UNREAD
      */
-    public function updateStatus($id, $status)
-    {
+    public function updateStatus($id, $status) {
         try {
             $message = $this->messageRepository->find($id);
             if (empty($message))
@@ -188,8 +187,7 @@ class Messages extends Base
         return $this->response;
     }
 
-    public function updateRecipients($id)
-    {
+    public function updateRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
 
@@ -219,17 +217,16 @@ class Messages extends Base
         return $this->response;
     }
 
-    public function getRepliesByLastVisitedSince($id)
-    {
+    public function getRepliesByLastVisitedSince($id) {
         try {
             $message = $this->messageRepository->find($id);
 
-             if(!in_array($this->user->getId(),$message->getReadBy() )){
-                   $this->messageRepository->updateStatus($message, $this->user->getId());
-                   $messageDetail['status'] = 'unread';
-             } else {
-                    $messageDetail['status'] = 'read';
-             }
+            if (!in_array($this->user->getId(), $message->getReadBy())) {
+                $this->messageRepository->updateStatus($message, $this->user->getId());
+                $messageDetail['status'] = 'unread';
+            } else {
+                $messageDetail['status'] = 'read';
+            }
 
             if (empty($message))
                 return $this->_generate404();
@@ -251,7 +248,7 @@ class Messages extends Base
                         getRepliesSince($message, $since),
                 Status::OK,
                 array(
-                    'except' => array('replies', 'thread', 'recipients')
+                     'except' => array('replies', 'thread', 'recipients')
                 ));
 
 
@@ -262,8 +259,7 @@ class Messages extends Base
         return $this->response;
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
         try {
             $this->messageRepository->delete($id);
             $this->_generateResponse(
@@ -277,13 +273,11 @@ class Messages extends Base
         return $this->response;
     }
 
-    private function _createPushMessage($msgText)
-    {
-        return $this->user->getFirstName() .$msgText ;
+    private function _createPushMessage($msgText) {
+        return $this->user->getFirstName() . $msgText;
     }
 
-    public function addRecipients($id)
-    {
+    public function addRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
 
@@ -301,7 +295,7 @@ class Messages extends Base
             # Update recipients list
             $messageArray = $message->toArray();
 
-            foreach($messageArray['recipients'] as $recipient){
+            foreach ($messageArray['recipients'] as $recipient) {
                 $previousRecipients[] = $recipient['id'];
             }
 

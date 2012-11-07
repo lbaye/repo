@@ -12,6 +12,8 @@ class UserRepo extends Base
 {
     const MAX_NOTIFICATIONS = 20;
 
+    protected $loggerName = 'Repository::UserRepo';
+
     public function validateLogin($data)
     {
         if (empty($data)) {
@@ -285,20 +287,18 @@ class UserRepo extends Base
 
     public function sendFriendRequests($data, $friendId)
     {
-        $recipient = $this->find($friendId);
+        $friend = $this->find($friendId);
+        if (is_null($friend)) throw new \Exception\ResourceNotFoundException($friendId);
 
-        if (is_null($recipient)) {
-            throw new \Exception\ResourceNotFoundException($friendId);
-        }
+        $this->debug(sprintf('Sending friend request to - %s', $friend->getFirstName()));
 
-        $existingFriendRequests = $recipient->getFriendRequest();
+        $existingRequests = $friend->getFriendRequest();
 
-        foreach ($existingFriendRequests as $existingFriendRequest) {
-
-            if ($existingFriendRequest->getUserId() == $this->currentUser->getId()) {
+        foreach ($existingRequests as $request)
+            if ($request->getUserId() == $this->currentUser->getId()) {
+                $this->warn('Existing friend request found');
                 throw new \Exception('Friend request previously sent to this recipient.');
             }
-        }
 
         $data['userId'] = $this->currentUser->getId();
         $data['friendName'] = $this->currentUser->getFirstName() . " " . $this->currentUser->getLastName();
@@ -307,21 +307,13 @@ class UserRepo extends Base
         $friendRequest = new FriendRequest($data);
         $friendRequest->setRequestdate(new \DateTime);
 
-        $recipient->addFriendRequest($friendRequest);
+        $friend->addFriendRequest($friendRequest);
 
         $this->dm->persist($friendRequest);
-        $this->dm->persist($recipient);
+        $this->dm->persist($friend);
 
         $this->dm->flush();
-
-        $data = array(
-            'userId' => $friendId,
-            'objectId' => $recipient->getId(),
-            'objectType' => 'FriendRequest',
-            'message' => (!empty($data['message']) ? $data['message'] : $recipient->getLastName() . "is inviting you to use socialmaps, download the app and login.")
-        );
-
-        $this->addTask('new_friend_request', json_encode($data));
+        $this->debug('Friend request stored');
 
         return $friendRequest;
     }
@@ -1054,6 +1046,25 @@ class UserRepo extends Base
             $this->dm->flush();
         }
         
+        return true;
+    }
+
+     public function removeFriendFromMyCircle($id)
+    {
+        $circles = $this->currentUser->getCircles();
+        $friendId = $this->_trimInvalidUsers($id);
+
+        if (!empty($friendId)) {
+            foreach ($circles as $circle) {
+                $circleFriends = $circle->getFriends();
+                $circle->setFriendIds(array_diff($circleFriends, $friendId));
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
         return true;
     }
 }
