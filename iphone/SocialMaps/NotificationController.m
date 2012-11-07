@@ -556,4 +556,9 @@ NSMutableArray *unreadMesg;
     
     [notificationItems reloadData];
 }
+
+- (IBAction)actionBackMe:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 @end
