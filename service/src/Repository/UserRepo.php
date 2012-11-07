@@ -1048,4 +1048,23 @@ class UserRepo extends Base
         
         return true;
     }
+
+     public function removeFriendFromMyCircle($id)
+    {
+        $circles = $this->currentUser->getCircles();
+        $friendId = $this->_trimInvalidUsers($id);
+
+        if (!empty($friendId)) {
+            foreach ($circles as $circle) {
+                $circleFriends = $circle->getFriends();
+                $circle->setFriendIds(array_diff($circleFriends, $friendId));
+            }
+        }
+
+        $this->currentUser->setCircles($circles);
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
 }
