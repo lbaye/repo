@@ -38,6 +38,11 @@ block_user:
   defaults: { _controller: Controller\User::blockUser}
   requirements: { _method: PUT}
 
+block_user_overwrite:
+  pattern: /me/users/block/overwrite
+  defaults: { _controller: Controller\User::blockUserOverwrite}
+  requirements: { _method: PUT}
+
 list:
   pattern: /list
   defaults: { _controller: Controller\AllList::index}
