@@ -101,6 +101,17 @@ class PlaceRepo extends Base
         return $this->findBy(array(), array('createDate' => 'DESC'), $limit, $offset);
     }
 
+    public function getOwnerByPlaceId($id)
+    {
+        $place = $this->find($id);
+        return $place->getOwner();
+    }
+
+    public function getByUser(UserDocument $user) {
+        $docs = $this->findBy(array('owner' => $user->getId()), array('createDate' => 'DESC'));
+        return $this->_toArrayAll($docs);
+    }
+
     public function search(UserDocument $user,$lng,$lat)
     {
         $circles = $user->getCircles();
