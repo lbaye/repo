@@ -233,12 +233,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [self doBottomViewAnimation:messageCreationView];
 }
 
-- (IBAction)actionBackBtn:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+- (IBAction)actionBackBtn:(id)sender 
+{
     if (replyTimer) {
         [replyTimer invalidate];
         replyTimer = nil;
     }
+    
+    if (!messageCreationView.hidden || !messageRepiesView.hidden) {
+        [self actionMessageBtn:nil];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
 }
 
 - (IBAction)actionCancelBtn:(id)sender {
