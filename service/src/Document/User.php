@@ -413,6 +413,7 @@ class User {
         if ($this->getCircles()) {
             $circles = $this->getCircles();
             foreach ($circles as $circle) {
+                if($circle->getType() != "system")
                 $data['circles'][] = $circle->toArray();
             }
         }
