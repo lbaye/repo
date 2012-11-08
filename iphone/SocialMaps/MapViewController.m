@@ -396,6 +396,10 @@ ButtonClickCallbackData callBackData;
     MKMapPoint pt = MKMapPointForCoordinate(locItem.coordinate);
     r.origin.x = pt.x - r.size.width * 0.3;
     r.origin.y = pt.y - r.size.height * 0.6;
+    if ([locItem isKindOfClass:[LocationItemPeople class]] && locItem.currDisplayState == MapAnnotationStateDetailed) {
+        r.origin.y = pt.y - r.size.height * .7; 
+    }
+    
     [self.mapView setVisibleMapRect:r animated:YES];
 }
 
@@ -443,7 +447,8 @@ ButtonClickCallbackData callBackData;
         
     }
     
-    if (selectedAnno != anno) {
+    //if (selectedAnno != anno) {
+    if (((LocationItem*)anno).currDisplayState != MapAnnotationStateNormal) {
         [self startMoveMap:(LocationItem*)anno];
     }
     
@@ -954,11 +959,11 @@ ButtonClickCallbackData callBackData;
     if (selectedAnno) {
         
         LocationItem *selLocation = (LocationItem*)selectedAnno;
-        [self mapAnnotationChanged:selLocation];
         [mapAnno changeStateToNormal:selLocation];
+        [self mapAnnotationChanged:selLocation];
     }
     
-//    selectedAnno = nil;
+    selectedAnno = nil;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
