@@ -151,8 +151,12 @@ LocationItem *locationItem;
     
     // Event
     UIImage *eventImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
-    UIButton *eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    eventBtn.frame = CGRectMake(25, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, distSize.width+5, distSize.height+5);
+    UIButton *eventBtn = (UIButton *)[annoView viewWithTag:110003];
+    if (eventBtn==NULL)
+    {
+        eventBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    }
+    eventBtn.frame = CGRectMake(35, 2+catIconFrame.size.height+1+addrFrame.size.height+1+distFrame.size.height+1, 57, distSize.height+5);
     NSLog(@"eventBtn.frame %lf %lf %lf %lf",eventBtn.frame.origin.x,eventBtn.frame.origin.y,eventBtn.frame.size.width,eventBtn.frame.size.height);
     [eventBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [eventBtn setBackgroundImage:eventImg forState:UIControlStateNormal];
@@ -160,14 +164,14 @@ LocationItem *locationItem;
     [eventBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     [eventBtn setTitle:@"Detail" forState:UIControlStateNormal];
     eventBtn.backgroundColor = [UIColor clearColor];
-    eventBtn.tag = 11003;
+    eventBtn.tag = 110003;
     if(locItem.itemType!=4)
     [infoView addSubview:eventBtn];
     
     //direction
     UIImage *dirImg = [UIImage imageNamed:@"btn_bg_light_small.png"];
     UIButton *dirBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    dirBtn.frame = CGRectMake(35+eventBtn.frame.size.width, eventBtn.frame.origin.y,eventBtn.frame.size.width+5,eventBtn.frame.size.height);
+    dirBtn.frame = CGRectMake(eventBtn.frame.origin.x+5+eventBtn.frame.size.width, eventBtn.frame.origin.y,eventBtn.frame.size.width,eventBtn.frame.size.height);
     [dirBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [dirBtn setBackgroundImage:dirImg forState:UIControlStateNormal];
     [dirBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];

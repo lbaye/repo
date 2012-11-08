@@ -399,4 +399,34 @@ CGFloat animatedDistance;
     [UIView commitAnimations];    
 }
 
++(NSString *)getDistanceWithFormattingFromLocation:(Geolocation *)location
+{
+    AppDelegate *smAppDelegate = [(UIApplication *)[UIApplication sharedApplication] delegate];
+    NSString *distanceText;
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    if (distanceFromMe > 99999)
+    {
+        distanceText = [NSString stringWithFormat:@"%.2fkm", distanceFromMe/1000];
+    }
+    else
+    {
+        distanceText = [NSString stringWithFormat:@"%.2fm", distanceFromMe];
+    }
+    
+    return distanceText;
+}
+
++(float)getDistanceWithoutFormattingFromLocation:(Geolocation *)location
+{
+    AppDelegate *smAppDelegate = [(UIApplication *)[UIApplication sharedApplication] delegate];
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];    
+    return distanceFromMe;
+}
+
 @end

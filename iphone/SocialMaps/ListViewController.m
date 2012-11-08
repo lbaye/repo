@@ -226,7 +226,7 @@
                 item.itemName=aGeotag.geoTagTitle;
                 item.itemType=4;
                 item.coordinate=CLLocationCoordinate2DMake([aGeotag.geoTagLocation.latitude doubleValue], [aGeotag.geoTagLocation.longitude doubleValue]);
-                item.itemDistance=[aGeotag.geoTagDistance floatValue];
+                item.itemDistance=[UtilityClass getDistanceWithoutFormattingFromLocation:aGeotag.geoTagLocation];
                 item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
                 item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
                 item.currDisplayState=0;
@@ -252,7 +252,7 @@
                 item.itemType=0;
                 item.itemCategory=0;
                 item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
-                item.itemDistance=[aEvent.eventDistance floatValue];
+                item.itemDistance=[UtilityClass getDistanceWithoutFormattingFromLocation:aEvent.eventLocation];
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
                 item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
                 item.currDisplayState=0;

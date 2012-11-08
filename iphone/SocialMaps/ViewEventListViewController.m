@@ -448,17 +448,9 @@ bool searchFlags=true;
         cell.eventDetail.text=event.eventShortSummary;
         cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
-        float distance=[event.eventDistance floatValue];
-        if (distance > 99999)
-        {
-            cell.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
-            cell1.eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
-        }
-        else
-        {
-            cell.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
-            cell1.eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
-        }
+        cell.eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:event.eventLocation];
+        cell1.eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:event.eventLocation];
+
         
         cell1.eventName.text = cellValue;
         cell1.eventDetail.text=event.eventShortSummary;
@@ -863,7 +855,7 @@ bool searchFlags=true;
     }
 	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
+	annotation.subtitle=[UtilityClass getDistanceWithFormattingFromLocation:aEvent.eventLocation];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
 }
