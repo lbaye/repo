@@ -36,11 +36,14 @@ class CachedGooglePlacesService implements \Service\Location\IPlacesService
             # If not found retrieve from google
             # Cache google places result
             $result = $this->mService->search($rounded_location, $keywords, $radius);
-            $this->mRepository->insert($this->mRepository->map(array(
-                'lat' => $rounded_location['lat'],
-                'lng' => $rounded_location['lng'],
-                'source' => 'google',
-                'cachedData' => $result)));
+
+            if (!empty($result)) {
+                $this->mRepository->insert($this->mRepository->map(array(
+                    'lat' => $rounded_location['lat'],
+                    'lng' => $rounded_location['lng'],
+                    'source' => 'google',
+                    'cachedData' => $result)));
+            }
             return $result;
         } else {
             return $this->updateDistance($location, $cachedData->getCachedData());
