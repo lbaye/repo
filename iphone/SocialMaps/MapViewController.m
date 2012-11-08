@@ -83,8 +83,6 @@
 @synthesize mapAnnoEvent,connectToFBView;
 
 UserFriends *afriend;
-NSMutableDictionary *imageDownloadsInProgress;
-NSMutableArray *userFriendsInviteIdArr;
 __strong NSString *searchText;
 bool searchFlag=FALSE;
 FacebookHelper *fbHelper;
@@ -719,11 +717,6 @@ ButtonClickCallbackData callBackData;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // terminate all pending download connections
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -812,14 +805,10 @@ ButtonClickCallbackData callBackData;
     [_mapView addSubview:locUpdateBtn];
     
     afriend=[[UserFriends alloc] init];
-    userFriendsInviteIdArr=[[NSMutableArray alloc] init];
     userDefault=[[UserDefault alloc] init];
     searchText=[[NSString alloc] init];
 
     fbHelper=[FacebookHelper sharedInstance];
-    
-    imageDownloadsInProgress = [NSMutableDictionary dictionary];
-    [imageDownloadsInProgress retain];
     
     _mapPulldown.hidden = TRUE;
     _mapPullupMenu.hidden = TRUE;
@@ -1078,6 +1067,8 @@ ButtonClickCallbackData callBackData;
     zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
     zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
     
+    if (CLLocationCoordinate2DIsValid(zoomLocation)) {
+        
     // 2
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
     // 3
@@ -1098,19 +1089,23 @@ ButtonClickCallbackData callBackData;
     
     // 4
     if (smAppDelegate.needToCenterMap == TRUE) {
-        NSLog(@"MapViewController:loadAnnotations centering map");
+        NSLog(@"MapViewController:loadAnnotations centering map %f %f",adjustedRegion.center.latitude,zoomLocation.latitude);
         [_mapView setRegion:adjustedRegion animated:YES];
+        NSLog(@"1");
         [_mapView setCenterCoordinate:zoomLocation animated:YES];
+        NSLog(@"2");
     }
     
     if (viewSearch.frame.origin.y > 44) {
         [self searchAnnotations];
+    }
     }
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [connectToFBView removeFromSuperview];
     if ([CLLocationManager locationServicesEnabled])
         _mapView.showsUserLocation=YES;
@@ -1162,7 +1157,6 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
-    [super viewWillAppear:animated];
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
    //[self initPullView];
@@ -1288,7 +1282,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
-    [imageDownloadsInProgress release];
+    NSLog(@"in dealloc");
     [radio release];
     
     if (timerGotListing) {
@@ -1299,7 +1293,6 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     [copySearchAnnotationList release];
-    [_mapView release];
     [_mapView release];
     [_mapPulldown release];
     [_shareAllButton release];
@@ -1437,379 +1430,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"Selected filter: %@. Index of selected color: %i", [savedFilters objectAtIndex:row], row);
     pickSavedFilter.hidden = TRUE;
     _selectedFilter.text = [savedFilters objectAtIndex:row];
-}
-
-//Table view delegate methods
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-	return 1;
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	
-	return [filteredList count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	
-	return NULL;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-	
-	static NSString *CellIdentifier = @"Cell";
-    static NSString *PlaceholderCellIdentifier = @"PlaceholderCell";
-    
-    // add a placeholder cell while waiting on table data
-    int nodeCount = [filteredList count];
-	
-	if (nodeCount == 0 && indexPath.row == 0)
-	{
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PlaceholderCellIdentifier];
-        if (cell == nil)
-		{
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-										   reuseIdentifier:PlaceholderCellIdentifier] autorelease];   
-            cell.detailTextLabel.textAlignment = UITextAlignmentCenter;
-			cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        }
-        
-		cell.detailTextLabel.text = @"Loading…";
-		return cell;
-    }
-	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-									   reuseIdentifier:CellIdentifier] autorelease];
-		cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        NSLog(@"indexPath: %@",indexPath);
-    }
-    
-    // Leave cells empty if there's no data yet
-    if (nodeCount > 0)
-	{
-        // Set up the cell...
-        UserFriends *userFriends = [filteredList objectAtIndex:indexPath.row];
-        
-		NSString *cellValue;		
-        cellValue=userFriends.userName;
-        cell.textLabel.textAlignment = UITextAlignmentLeft; 
-        cell.textLabel.textColor = [UIColor lightGrayColor];
-        cell.textLabel.text = cellValue;
-        cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:(12.0)]; 
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.opaque = NO;
-        cell.textLabel.backgroundColor = [UIColor whiteColor];	
-		
-        // Only load cached images; defer new downloads until scrolling ends
-        NSLog(@"nodeCount > 0");
-        if ((!userFriends.userProfileImage)||([userFriends.userProfileImage isEqual:[UIImage imageNamed:@"girl.png"] ]))
-        {
-            NSLog(@"!userFriends.userProfileImage");
-            if (self.inviteFrndTableView.dragging == NO && self.inviteFrndTableView.decelerating == NO)
-            {
-                [self startIconDownload:userFriends forIndexPath:indexPath];
-                NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
-            }            
-            else if(searchFlag==true)
-            {
-                NSLog(@"search flag true start download");
-                [self startIconDownload:userFriends forIndexPath:indexPath];
-            }
-            NSLog(@"userFriends %@   %@",userFriends.userProfileImage,userFriends.imageUrl);
-            // if a download is deferred or in progress, return a placeholder image
-            cell.imageView.image=[UIImage imageNamed:@"girl.png"];                
-        }
-        else
-        {
-            cell.imageView.image = userFriends.userProfileImage;
-        }
-    }
-
-    return cell;
-    
-}
-
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UserFriends *aFriend=[filteredList objectAtIndex:indexPath.row];
-    
-    [userFriendsInviteIdArr removeObject:aFriend.userId];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-    UserFriends *aFriend=[filteredList objectAtIndex:indexPath.row];
-    
-    if ([userFriendsInviteIdArr indexOfObject:aFriend.userId] == NSNotFound)
-        [userFriendsInviteIdArr addObject:aFriend.userId];
-}
-
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath 
-{	
-	[self tableView:tableView didSelectRowAtIndexPath:indexPath];
-}
-//tableview delegate method ends
-
-
-//Lazy loading method starts
-
-#pragma mark -
-#pragma mark Table cell image support
-
-- (void)startIconDownload:(UserFriends *)userFriends forIndexPath:(NSIndexPath *)indexPath
-{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
-    if (iconDownloader == nil)
-    {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.userFriends = userFriends;
-        iconDownloader.indexPathInTableView = indexPath;
-        iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-        NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
-        [iconDownloader startDownload];
-        NSLog(@"start downloads ... %@ %d",userFriends.userName, indexPath.row);
-        [iconDownloader release];   
-    }
-}
-
-// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
-- (void)loadImagesForOnscreenRows
-{
-    if ([filteredList count] > 0)
-    {
-        NSArray *visiblePaths = [self.inviteFrndTableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths)
-        {
-            UserFriends *userFriends = [filteredList objectAtIndex:indexPath.row];
-            
-            if (!userFriends.userProfileImage) // avoid the app icon download if the app already has an icon
-            {
-                [self startIconDownload:userFriends forIndexPath:indexPath];
-            }
-        }
-    }
-}
-
-// called by our ImageDownloader when an icon is ready to be displayed
-- (void)appImageDidLoad:(NSString *)userId
-{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
-    if (iconDownloader != nil)
-    {
-        //UserFriends *friend = [filteredList objectAtIndex:indexPath.row];
-        //friend.userProfileImage = iconDownloader.userFriends.userProfileImage;
-        NSNumber *indx = [userFriendslistIndex objectForKey:userId];
-        UserFriends *user = [userFriendslistArray objectAtIndex:[indx intValue]];
-        user.userProfileImage = iconDownloader.userFriends.userProfileImage;
-        
-        UITableViewCell *cell = [self.inviteFrndTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        
-        // Display the newly loaded image
-        cell.imageView.image = iconDownloader.userFriends.userProfileImage;
-        //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
-        [self.inviteFrndTableView reloadData];
-    }
-}
-
-#pragma mark -
-#pragma mark Deferred image loading (UIScrollViewDelegate)
-
-// Load images for all onscreen rows when scrolling is finished
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (!decelerate)
-	{
-        [self loadImagesForOnscreenRows];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self loadImagesForOnscreenRows];
-}
-
-//Lazy loading method ends.
-
-//search bar delegate method starts
-- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText 
-{
-    if ([theSearchBar isEqual:searchBar]) {
-        return;
-    }
-    // We don't want to do anything until the user clicks 
-    // the 'Search' button.
-    // If you wanted to display results as the user types 
-    // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
-    searchText=friendSearchBar.text;
-
-    if ([searchText length]>0) 
-    {
-        [self performSelector:@selector(searchResult) withObject:nil afterDelay:0.1];
-        searchFlag=true;
-        [self.inviteFrndTableView reloadData];
-        NSLog(@"searchText  %@",searchText);
-    }
-    else
-    {
-        searchText=@" ";
-        //[self loadFriendListsData]; TODO: commented this
-        [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
-        [self.inviteFrndTableView reloadData];
-    }
-    
-}
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
-
-    if ([theSearchBar isEqual:searchBar]) {
-        return;
-    }
-    // searchBarTextDidBeginEditing is called whenever 
-    // focus is given to the UISearchBar
-    // call our activate method so that we can do some 
-    // additional things when the UISearchBar shows.
-    searchText=friendSearchBar.text;
-    [UIView beginAnimations:@"FadeIn" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView commitAnimations];
-
-    NSLog(@"2");    
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar 
-{
-    if ([theSearchBar isEqual:searchBar]) {
-        return;
-    }
-    // searchBarTextDidEndEditing is fired whenever the 
-    // UISearchBar loses focus
-    // We don't need to do anything here.
-    [self.inviteFrndTableView reloadData];
-    [friendSearchBar resignFirstResponder];
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    // Clear the search text
-    // Deactivate the UISearchBar
-    friendSearchBar.text=@"";
-    searchText=@"";
-
-    [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
-    [self.inviteFrndTableView reloadData];
-    [friendSearchBar resignFirstResponder];
-    NSLog(@"3");
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
-{
-    // Do the search and show the results in tableview
-    // Deactivate the UISearchBar
-	
-    // You'll probably want to do this on another thread
-    // SomeService is just a dummy class representing some 
-    // api that you are using to do the search
-    
-    if ([theSearchBar isEqual:searchBar]) {
-        [self searchAnnotations];
-        [searchBar resignFirstResponder];
-        return;
-    }
-    
-    NSLog(@"Search button clicked");
-    searchText=friendSearchBar.text;
-    searchFlag=false;
-    [self searchResult];
-    [friendSearchBar resignFirstResponder];   
-    
-}
-
--(void)searchResult
-{
-    searchText = friendSearchBar.text;
-    NSLog(@"in search method..");
-    [filteredList removeAllObjects];
-
-    if ([searchText isEqualToString:@""])
-    {
-        NSLog(@"null string");
-        friendSearchBar.text=@" ";
-        filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
-    }
-    else
-    for (UserFriends *sTemp in userFriendslistArray)
-	{
-		NSRange titleResultsRange = [sTemp.userName rangeOfString:searchText options:NSCaseInsensitiveSearch];		
-		if (titleResultsRange.length > 0)
-        {
-			[filteredList addObject:sTemp];
-            NSLog(@"filtered friend: %@", sTemp.userName);            
-        }
-        else
-        {
-        }
-	}
-    searchFlag=false;    
-
-    NSLog(@"filteredList %@",filteredList);
-    [self.inviteFrndTableView reloadData];
-}
-
--(IBAction)inviteAllUsers:(id)sender
-{        
-    for (int i = 0; i < [inviteFrndTableView numberOfSections]; i++) 
-    {
-        for (int j = 0; j < [inviteFrndTableView numberOfRowsInSection:i]; j++) 
-        {
-            NSUInteger ints[2] = {i,j};
-            NSIndexPath *indexPath = [NSIndexPath indexPathWithIndexes:ints length:2];
-            [inviteFrndTableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
-        }
-    }
-    NSArray *selectedRows = [self.inviteFrndTableView indexPathsForSelectedRows];
-    NSLog(@"inviting all users %@",selectedRows);
-    if([selectedRows count]>50)
-    {
-        [UtilityClass showAlert:@"Social Maps" :@"Can not request more then 50 friends"];
-    }
-    else
-    {
-        [self sendInvitationToSelectedUser:[selectedRows mutableCopy]];
-    }
-}
-
--(IBAction)inviteSelectedUsers:(id)sender
-{
-    NSArray *selectedRows = [self.inviteFrndTableView indexPathsForSelectedRows];
-    if([selectedRows count]>50)
-    {
-        [UtilityClass showAlert:@"Social Map" :@"Can not request more then 50 friends"];
-    }
-    else if ([selectedRows count]>0)
-    {
-        [self sendInvitationToSelectedUser:[selectedRows mutableCopy]];
-    }
-    else 
-    {
-        [UtilityClass showAlert:@"Social Map" :@"Please select a friend to invite to Social Maps!"];
-    }
-}
-
--(void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows
-{
-    
-    NSLog(@"inviting selected users %@",userFriendsInviteIdArr);
-    [fbHelper inviteFriends:userFriendsInviteIdArr];
 }
 
 - (IBAction)gotoMyPlaces:(id)sender
@@ -2028,16 +1648,6 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
     [self.view setNeedsDisplay];
-}
-
--(IBAction)closeInviteFrnds:(id)sender
-{
-    // terminate all pending download connections
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    
-    [inviteFriendView removeFromSuperview];
-    [userFriendslistArray removeAllObjects];
 }
 
 -(IBAction)gotoPlace:(id)sender
