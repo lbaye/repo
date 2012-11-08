@@ -810,7 +810,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function search($keyword = null, $location = array(), $limit = 20)
+    public function search($keyword = null, $location = array(), $limit = 20,$key=null)
     {
         $exclude = array();
         $blockUserList = array();
@@ -844,10 +844,16 @@ class UserRepo extends Base
             $blockUserList = $this->currentUser->getBlockedUsers();
             foreach ($users as &$user) {
                 $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
-                if (in_array($user['id'],$blockUserList)) {
+                if (in_array($user['id'], $blockUserList)) {
                     $user['blockStatus'] = "blocked";
                 } else {
                     $user['blockStatus'] = "unblocked";
+                }
+                if (!isset($user['coverPhoto']) || empty($user['coverPhoto'])) {
+                    if (!empty($user['currentLocation']['lat']) && !empty($user['currentLocation']['lng'])) {
+                        $streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $user['currentLocation']['lat'] . "," . $user['currentLocation']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                        $user['coverPhoto'] = $streetViewImage;
+                    }
                 }
             }
 
@@ -857,8 +863,8 @@ class UserRepo extends Base
         return array();
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20) {
-        $people_around = $this->search($keyword, $location, $limit);
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20,$key=null) {
+        $people_around = $this->search($keyword, $location, $limit,$key);
         $visible_people = array();
 
         # TODO: How to fix less than $limit items
