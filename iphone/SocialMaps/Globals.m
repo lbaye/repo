@@ -24,5 +24,6 @@ BOOL isFromVenue;
 BOOL useLocalData;
 BOOL willLoadPhotoData;
 BOOL loadGeotagServiceData;
+BOOL showFrndsEvents;
 
 @end

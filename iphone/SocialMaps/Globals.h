@@ -22,6 +22,7 @@ extern BOOL isFromVenue;
 extern BOOL useLocalData;
 extern BOOL willLoadPhotoData;
 extern BOOL loadGeotagServiceData;
+extern BOOL showFrndsEvents;
 
 @interface Globals : NSObject 
 

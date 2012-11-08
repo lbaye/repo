@@ -25,6 +25,7 @@
 #import "DirectionViewController.h"
 #import "FriendsPhotosViewController.h"
 #import "PlaceListViewController.h"
+#import "Globals.h"
 
 @interface FriendsProfileViewController ()
 
@@ -827,10 +828,18 @@ NSMutableArray *selectedScrollIndex;
     }
     else if (imageIndex==2)
     {
-        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
-        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentModalViewController:controller animated:YES];
+        if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+        }
+        else 
+        {
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            showFrndsEvents=true;
+            [self presentModalViewController:controller animated:YES];            
+        }
     }
     else if (imageIndex==3)
     {
@@ -843,11 +852,17 @@ NSMutableArray *selectedScrollIndex;
     }
     else if (imageIndex==4)
     {
+        if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+        }
+        else 
+        {
         MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
         [controller release];
-        
+        }
     }
 }
 

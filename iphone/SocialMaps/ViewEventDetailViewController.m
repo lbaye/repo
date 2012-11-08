@@ -55,15 +55,15 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(void)initView
 {
-    [eventName.layer setCornerRadius:3.0f];
-    [eventDate.layer setCornerRadius:3.0f];
-    [eventAddress.layer setCornerRadius:3.0f];
-    [eventDistance.layer setCornerRadius:3.0f];
-    [eventShortDetail.layer setCornerRadius:3.0f];    
-    
-    eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
-    eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
-    eventShortDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+//    [eventName.layer setCornerRadius:3.0f];
+//    [eventDate.layer setCornerRadius:3.0f];
+//    [eventAddress.layer setCornerRadius:3.0f];
+//    [eventDistance.layer setCornerRadius:3.0f];
+//    [eventShortDetail.layer setCornerRadius:3.0f];    
+//    
+//    eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+//    eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+//    eventShortDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
     
     descriptionView.text=globalEvent.eventDescription;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
@@ -83,6 +83,9 @@ BOOL isBackgroundTaskRunning=FALSE;
     eventName.text=globalEvent.eventName;
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
+    CGSize lblStringSize = [globalEvent.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+    eventAddress.frame=CGRectMake(eventAddress.frame.origin.x, eventAddress.frame.origin.y, lblStringSize.width, lblStringSize.height);
+    addressScollview.contentSize=eventAddress.frame.size;
     eventAddress.text=globalEvent.eventAddress;
     eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:globalEvent.eventLocation];
     descriptionView.text=globalEvent.eventDescription;

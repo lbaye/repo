@@ -697,27 +697,27 @@ RestClient *rc;
     
     if ([addressLabel.text length]==0)
     {
-        [msg appendString:@" address"];
+        [msg appendString:@" address,"];
     }
 
     if ([titleTextField.text length]==0)
     {
-        [msg appendString:@", title"];
+        [msg appendString:@" title,"];
     }
     
     if (([commentsView.text length]==0)||([commentsView.text isEqualToString:@"Geotag description..."]))
     {
-        [msg appendString:@", comments"];
+        [msg appendString:@" comments,"];
     }
     
     if ([customSelectedPhotoIndex count]==0)
     {
-        [msg appendString:@", photo"];
+        [msg appendString:@" photo,"];
     }
     
     if ([geotag.category length]==0)
     {
-        [msg appendString:@", category"];
+        [msg appendString:@" category,"];
     }
     
     if ([msg length]<=13) {

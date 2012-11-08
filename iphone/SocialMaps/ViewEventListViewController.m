@@ -102,6 +102,7 @@ bool searchFlags=true;
     [friendsEventButton setBackgroundColor:[UIColor clearColor]];
     [myEventButton setBackgroundColor:[UIColor clearColor]];
     [publicEventButton setBackgroundColor:[UIColor clearColor]];
+    
     RestClient *rc=[[RestClient alloc] init];
     [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -147,6 +148,11 @@ bool searchFlags=true;
     [self.view setNeedsDisplay];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
+    if (showFrndsEvents==true)
+    {
+        [self friendsEventAction:nil];
+    }
+    showFrndsEvents=false;
     [self.eventListTableView reloadData];
 }
 
@@ -375,14 +381,13 @@ bool searchFlags=true;
            
         }
     }
-    cell.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    cell.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    cell.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    cell1.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    cell1.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    cell1.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
-    
-
+    /*
+    cell.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+    cell.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+    cell.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+    cell1.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+    cell1.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
+    cell1.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
     [cell.eventName.layer setCornerRadius:3.0f];
     [cell.eventDate.layer setCornerRadius:3.0f];
     [cell.eventAddress.layer setCornerRadius:3.0f];
@@ -392,7 +397,7 @@ bool searchFlags=true;
     [cell1.eventDate.layer setCornerRadius:3.0f];
     [cell1.eventAddress.layer setCornerRadius:3.0f];
     [cell1.eventDistance.layer setCornerRadius:3.0f];
-    [cell1.eventDetail.layer setCornerRadius:3.0f];
+    [cell1.eventDetail.layer setCornerRadius:3.0f];*/
     // Configure the cell...
     cell.eventAddress.text = [NSString stringWithFormat:@"event address"];
     cell.eventName.text = [NSString stringWithFormat:@"event name"];
@@ -522,6 +527,9 @@ bool searchFlags=true;
 //            cell1.eventImage.image=event.eventImage;                
 //        }
     }
+    
+    cell.eventImage.contentMode = UIViewContentModeScaleAspectFit;
+    cell1.eventImage.contentMode = UIViewContentModeScaleAspectFit;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
