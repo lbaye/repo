@@ -36,6 +36,8 @@
 @synthesize totalNotifCount;
 @synthesize circleView;
 
+PullableView *pullUpView;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -130,7 +132,7 @@
     //listPullupMenu.hidden = YES;
     
     CGFloat xOffset = 0;
-    PullableView *pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
+    pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
     pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
     pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height);
     pullUpView.center = pullUpView.closedCenter;
@@ -318,6 +320,7 @@
 //    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
 //    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 //    [self presentModalViewController:controller animated:YES];
+    [pullUpView setOpened:FALSE animated:TRUE];
     [self.view addSubview:circleView];
 }
 

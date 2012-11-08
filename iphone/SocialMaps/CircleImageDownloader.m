@@ -50,6 +50,7 @@
     [self.imageConnection cancel];
     self.imageConnection = nil;
     self.activeDownload = nil;
+    self.delegate = nil;
 }
 
 

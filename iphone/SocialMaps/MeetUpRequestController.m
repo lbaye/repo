@@ -779,6 +779,7 @@ DDAnnotation *annotation;
                     iconDownloader.delegate = self;
                     //imgView.image = [[UIImage alloc] init];
                     iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
+                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
                     [iconDownloader startDownload];
                     
                 }
@@ -985,10 +986,13 @@ DDAnnotation *annotation;
 }
 - (void)appImageDidLoad:(NSString *)userId {
 }
+
 - (void)dealloc {
+    [imageDownloadsInProgress release];
     [tableViewPlaces release];
     [textViewPersonalMsg release];
     [viewComposePersonalMsg release];
     [super dealloc];
 }
+
 @end

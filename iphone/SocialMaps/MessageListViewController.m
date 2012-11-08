@@ -1162,7 +1162,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)dealloc 
 {
     [messageReplyList release];
-    //[imageDownloadsInProgress release];
+    [imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];
@@ -1480,6 +1480,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     //
                     iconDownloader.userFriends = userFrnd;
                     iconDownloader.delegate = self;
+                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
                     //imgView.image = [[UIImage alloc] init];
                     iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
                     [iconDownloader startDownload];
