@@ -864,7 +864,7 @@ class UserRepo extends Base
     }
 
     public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20,$key=null) {
-        $people_around = $this->search($keyword, $location, $limit,$key);
+        $people_around = $this->search($keyword, $location, $limit, $key);
         $visible_people = array();
 
         # TODO: How to fix less than $limit items
