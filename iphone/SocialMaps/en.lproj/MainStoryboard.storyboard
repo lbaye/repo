@@ -469,7 +469,7 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="0ok-4Z-2ne" userLabel="mapDividerOne">
                                         <rect key="frame" x="5" y="71" width="310" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.89019614459999996" green="0.89411771299999998" blue="0.8980392814" alpha="1" colorSpace="deviceRGB"/>
                                     </imageView>
                                     <view hidden="YES" contentMode="scaleToFill" id="pET-Ns-awj" userLabel="mapCheckin">
                                         <rect key="frame" x="6" y="77" width="95" height="60"/>
@@ -581,7 +581,7 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="FiB-AT-HKt" userLabel="mapDividerTwo">
                                         <rect key="frame" x="5" y="122" width="310" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.89019614459999996" green="0.89411771299999998" blue="0.8980392814" alpha="1" colorSpace="deviceRGB"/>
                                     </imageView>
                                     <view hidden="YES" contentMode="scaleToFill" id="kIs-La-7dP" userLabel="mapEditFilters">
                                         <rect key="frame" x="224" y="153" width="95" height="60"/>
@@ -762,12 +762,12 @@
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="QSS-ri-hWs" userLabel="mapDividerThree">
                                         <rect key="frame" x="5" y="218" width="310" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.89019614459999996" green="0.89411771299999998" blue="0.8980392814" alpha="1" colorSpace="deviceRGB"/>
                                     </imageView>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="Xaf-Tu-CQ6" userLabel="mapDividerFour">
                                         <rect key="frame" x="5" y="264" width="310" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.89019614459999996" green="0.89411771299999998" blue="0.8980392814" alpha="1" colorSpace="deviceRGB"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" id="rQo-LY-ySW" userLabel="SharingPref">
                                         <rect key="frame" x="2" y="129" width="313" height="69"/>
@@ -936,20 +936,24 @@
                                             <action selector="actionSearchButton:" destination="wC3-So-nVM" eventType="touchUpInside" id="5uq-HY-Opt"/>
                                         </connections>
                                     </button>
-                                    <searchBar contentMode="top" barStyle="blackTranslucent" placeholder="Your search..." id="XaY-PU-jl7">
+                                    <searchBar opaque="NO" contentMode="top" barStyle="blackTranslucent" placeholder="Your search..." id="XaY-PU-jl7">
                                         <rect key="frame" x="0.0" y="0.0" width="270" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.95294117647058818" green="0.95686274509803915" blue="0.96078431372549022" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.95294117647058818" green="0.95686274509803915" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="tintColor" red="0.95294117647058818" green="0.95686274509803915" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <scopeButtonTitles>
+                                            <string>Title</string>
+                                            <string>Title</string>
+                                        </scopeButtonTitles>
                                         <connections>
                                             <outlet property="delegate" destination="wC3-So-nVM" id="aVs-me-ADi"/>
                                         </connections>
                                     </searchBar>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="Bnh-xF-TMU" userLabel="mapDividerOne">
-                                        <rect key="frame" x="10" y="43" width="310" height="1"/>
+                                        <rect key="frame" x="0.0" y="43" width="320" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.95294117647058818" green="0.95686274509803915" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
@@ -1583,9 +1587,9 @@
                                         </connections>
                                     </searchBar>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="YlP-FU-Nap" userLabel="mapDividerOne">
-                                        <rect key="frame" x="10" y="43" width="310" height="1"/>
+                                        <rect key="frame" x="0.0" y="43" width="320" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="backgroundColor" red="0.95294117647058818" green="0.95686274509803915" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>

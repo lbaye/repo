@@ -1288,9 +1288,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
-//.   [imageDownloadsInProgress release];
-//    [imageDownloadsInProgressCopy release];
-    
+    [imageDownloadsInProgress release];
     [radio release];
     
     if (timerGotListing) {
@@ -1325,6 +1323,7 @@ ButtonClickCallbackData callBackData;
     [viewSearch release];
     [searchBar release];
     [viewSharingPrefMapPullDown release];
+    
     [super dealloc];
 }
 
@@ -1390,7 +1389,8 @@ ButtonClickCallbackData callBackData;
 //    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
 //    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 //    [self presentModalViewController:controller animated:YES];
-        [self.view addSubview:circleView];
+    [pullUpView setOpened:FALSE animated:TRUE];
+    [self.view addSubview:circleView];
 }
 
 -(IBAction)gotoBasicProfile:(id)sender
