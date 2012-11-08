@@ -25,9 +25,10 @@
 @synthesize currDisplayState;
 @synthesize delegate;
 @synthesize typeName;
+@synthesize itemCoverPhotoUrl;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
-          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg{
+category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
     if ((self = [super init])) {
         itemName = [name copy];
         itemAddress = [address copy];
@@ -38,6 +39,7 @@
         itemIcon = icon;
         itemBg = bg;
         currDisplayState = MapAnnotationStateNormal;
+        itemCoverPhotoUrl = [_coverPhotoUrl copy];
     }
     return self;
 }
@@ -92,8 +94,14 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent] autorelease];
         cell.frame = CellFrame;
         // Background
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
-		cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+        ////cell.backgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+		////cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
+        imageView.tag = 123456789;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [cell.contentView addSubview:imageView];
+        [imageView release];
         
         // Icon
         imgIcon = [UIImageView imageViewWithRectImage:iconFrame andImage:itemIcon withCornerradius:.10f];
@@ -104,10 +112,12 @@
         // Name
 		lblName = [[[UILabel alloc] initWithFrame:nameFrame] autorelease];
 		lblName.tag = 2003;
-        lblName.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
+        lblName.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
 		lblName.textColor = [UIColor whiteColor];
-		lblName.backgroundColor = [UIColor clearColor];
+        lblName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
 		[cell.contentView addSubview:lblName];
+        [lblName.layer setCornerRadius:3.0f];
+        [lblName.layer setMasksToBounds:YES];
 		
         // Footer view
         footerView = [[UIView alloc] initWithFrame:footerFrame];
@@ -189,6 +199,8 @@
     }
     else {
         lblAddress.text  = itemAddress;
+        UIScrollView *addScr = (UIScrollView*) [cell viewWithTag:20031];
+        [addScr setContentSize:lblAddress.frame.size];
     }
     // Distance
     if (itemDistance > 999)
@@ -239,6 +251,6 @@
         int row = [self getCellRow:sender];
         [delegate buttonClicked:LocationActionTypeGotoMap row:row];
     }
-
 }
+
 @end

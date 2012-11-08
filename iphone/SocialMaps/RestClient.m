@@ -1716,6 +1716,9 @@ AppDelegate *smAppDelegate;
                     people.statusMsg=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
                     people.regMedia=[self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
                     people.blockStatus=[self getNestedKeyVal:item key1:@"blockStatus" key2:nil key3:nil];
+                    
+                    people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+                    
 //                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
@@ -1747,6 +1750,7 @@ AppDelegate *smAppDelegate;
                         [place setReference:[item objectForKey:@"reference"]];
                         [place setTypeArr:[item objectForKey:@"types"]];
                         [place setVicinity:[item objectForKey:@"vicinity"] ];
+                        [place setCoverPhotoUrl:[item objectForKey:@"streetViewImage"]];
                         [searchLocation.placeArr addObject:place];
                     }
                 }

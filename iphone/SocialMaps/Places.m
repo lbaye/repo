@@ -20,4 +20,6 @@
 @synthesize vicinity;
 @synthesize distance;
 @synthesize address;
+@synthesize coverPhotoUrl;
+
 @end
