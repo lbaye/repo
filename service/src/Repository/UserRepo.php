@@ -986,6 +986,23 @@ class UserRepo extends Base
         return true;
     }
 
+    public function unBlockAllUsers($id, array $data)
+    {
+
+        if (empty($data['users'])) {
+            throw new \InvalidArgumentException('Invalid request', 406);
+        }
+
+        $users = $this->_trimInvalidUsers($data['users']);
+        $user = $this->find($id);
+        $user->updateBlockedUser($users);
+
+        $this->dm->persist($this->currentUser);
+        $this->dm->flush();
+
+        return true;
+    }
+
     public function deleteCustomCircle($id)
     {
         $circles = $this->currentUser->getCircles();
