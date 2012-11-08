@@ -333,8 +333,12 @@ class Base extends DocumentRepository implements DocumentObserver {
     }
 
     private function fireObserversEvent($eventName, &$object) {
-        foreach ($this->documentObservers as &$observer)
-            $observer->{$eventName}($object['type'], $object);
+        foreach ($this->documentObservers as &$observer) {
+            if (is_array($object))
+                $observer->{$eventName}($object['type'], $object);
+            else
+                $observer->{$eventName}($object);
+        }
     }
 
     protected function bindObservers() {
