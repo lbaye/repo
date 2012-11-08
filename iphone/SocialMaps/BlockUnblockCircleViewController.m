@@ -1005,7 +1005,6 @@ bool searchFlag3=true;
 }
 
 - (void)dealloc {
-    NSLog(@"%@", [NSThread callStackSymbols]);
     [labelNotifCount release];
     [super dealloc];
 }

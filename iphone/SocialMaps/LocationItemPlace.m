@@ -17,9 +17,9 @@
 @synthesize placeInfo;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
-          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg {
+          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
     
-    if (self = [super initWithName:name address:address type:type category:category coordinate:coord dist:dist icon:icon bg:bg]) {
+    if (self = [super initWithName:name address:address type:type category:category coordinate:coord dist:dist icon:icon bg:bg itemCoverPhotoUrl:_coverPhotoUrl]) {
         
     }
     return self;
