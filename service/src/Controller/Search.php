@@ -60,8 +60,8 @@ class Search extends Base {
     protected function people($data) {
         $location = array('lat' => (float)$data['lat'], 'lng' => (float)$data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
-
-        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD);
+        $key = $this->config['googlePlace']['apiKey'];
+        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD,$key);
         $friends = $this->user->getFriends();
 
         array_walk($people, function(&$person) use ($friends, $data) {
