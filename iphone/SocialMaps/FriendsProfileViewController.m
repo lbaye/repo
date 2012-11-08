@@ -24,6 +24,7 @@
 #import "LocationItemPeople.h"
 #import "DirectionViewController.h"
 #import "FriendsPhotosViewController.h"
+#import "PlaceListViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -102,7 +103,7 @@ NSMutableArray *selectedScrollIndex;
     
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
     [ImgesName addObject:@"photos_icon"];
-    [ImgesName addObject:@"friends_icon"];
+    [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
@@ -819,8 +820,8 @@ NSMutableArray *selectedScrollIndex;
         [self presentModalViewController:controller animated:YES];
     }
     else if (imageIndex==1)
-    {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+    {       
+        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."]; 
     }
     else if (imageIndex==2)
     {
@@ -831,7 +832,12 @@ NSMutableArray *selectedScrollIndex;
     }
     else if (imageIndex==3)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+        PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
+        controller.otherUserId = userInfo.userId;
+        controller.placeType = OtherPeople;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
     }
     else if (imageIndex==4)
     {
@@ -841,6 +847,12 @@ NSMutableArray *selectedScrollIndex;
         [controller release];
         
     }
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

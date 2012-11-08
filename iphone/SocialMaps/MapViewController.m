@@ -426,6 +426,7 @@ ButtonClickCallbackData callBackData;
 
 - (void) showPinOnMapView:(Place*)place 
 {
+    [circleView removeFromSuperview];
     [self performSelector:@selector(startMoveAndAddPin:) withObject:place afterDelay:.8];
 }
 
@@ -1332,9 +1333,9 @@ ButtonClickCallbackData callBackData;
 -(IBAction)connectWithFB:(id)sender
 {
     NSLog(@"do connect fb");
-    Facebook *facebook = [[FacebookHelper sharedInstance] facebook];
+    Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
 //    [smAppDelegate showActivityViewer:self.view];
-    if ([facebook isSessionValid])
+    if ([facebookApi isSessionValid])
     {
         [fbHelper inviteFriends:nil];        
     }
@@ -1355,7 +1356,7 @@ ButtonClickCallbackData callBackData;
                                 @"user_checkins",
                                 @"friends_checkins",
                                 nil];
-        [facebook authorize:permissions];
+        [facebookApi authorize:permissions];
         //    smAppDelegate.facebookLogin=TRUE;
         [permissions release];
     }

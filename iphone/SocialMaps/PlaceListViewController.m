@@ -23,6 +23,9 @@
 
 @implementation PlaceListViewController
 
+@synthesize placeType;
+@synthesize otherUserId;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -31,12 +34,18 @@
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getPlaces:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    
+    if (self.placeType == OtherPeople)
+        [restClient getOtherUserPlacesByUserId:self.otherUserId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    else
+        [restClient getPlaces:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    
     [smAppDelegate showActivityViewer:self.view];
     
     [self displayNotificationCount];
     
     copyListOfItems = [[NSMutableArray alloc] init];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -84,6 +93,14 @@
     return distanceFromMe;
 }
 
+- (int) decideLabelHeight:(UITextView *) textView {
+    int height = [textView contentSize].height;
+    if (height > 70)
+        return 70;
+    else
+        return height;
+}
+
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -110,15 +127,17 @@
         [cell.contentView addSubview:imageView];
         [imageView release];
         
-        UILabel *lblPlaceName = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 150, 25)];
+        UITextView *lblPlaceName = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, 210, 70)];
         lblPlaceName.tag = 3002;
         [lblPlaceName.layer setCornerRadius:3.0f];
         [lblPlaceName.layer setMasksToBounds:YES];
         lblPlaceName.textAlignment = UITextAlignmentLeft;
         lblPlaceName.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
         lblPlaceName.textColor = [UIColor whiteColor];
-        lblPlaceName.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+        lblPlaceName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+        lblPlaceName.editable = FALSE;
         [cell.contentView addSubview:lblPlaceName];
+        
         [lblPlaceName release];
         
         UIButton *btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -131,6 +150,8 @@
         [btnEdit setTitle:@"Edit place" forState:UIControlStateNormal];
         [btnEdit addTarget:self action:@selector(actionEditPlace:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:btnEdit];
+        if (self.placeType == OtherPeople)
+            btnEdit.hidden = YES;
         
         // Footer view
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, CELL_HEIGHT - 30, 300, 25)];
@@ -190,9 +211,15 @@
         [imageView setImageForUrlIfAvailable:place.photoURL];
     }
     
-    UILabel *labelPlaceName  = (UILabel*)[cell viewWithTag:3002];
-    labelPlaceName.frame = CGRectMake(labelPlaceName.frame.origin.x, labelPlaceName.frame.origin.y, nameStringSize.width, nameStringSize.height);
-    labelPlaceName.text = place.name;
+    UITextView *placeNameTextView  = (UITextView*)[cell viewWithTag:3002];
+    
+    placeNameTextView.text = place.name;
+    placeNameTextView.frame = CGRectMake(placeNameTextView.frame.origin.x, 
+                                      placeNameTextView.frame.origin.y, 
+                                      210, 
+                                      [self decideLabelHeight:placeNameTextView]);
+    
+    
     
     UIScrollView *scrollViewAddress = (UIScrollView*)[cell viewWithTag:3003];
     scrollViewAddress.contentSize = addressStringSize;
@@ -295,9 +322,9 @@
     
     smAppDelegate.needToCenterMap = FALSE;
     
-    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place afterDelay:.8];
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 // GCD async notifications

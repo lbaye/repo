@@ -12,6 +12,11 @@
 @class AppDelegate;
 @class OverlayViewController;
 
+typedef enum _PLACE_TYPES {
+    Own=0,
+    OtherPeople
+} PLACE_TYPES;
+
 @interface PlaceListViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
     
     IBOutlet    UITableView *tableViewPlaceList;
@@ -26,6 +31,9 @@
     OverlayViewController		*ovController;
     NSMutableArray				*copyListOfItems;
 }
+
+@property (atomic) PLACE_TYPES placeType;
+@property (nonatomic, retain) NSString *otherUserId;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)gotoNotification:(id)sender;

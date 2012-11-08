@@ -421,8 +421,6 @@
     
     initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
-    
-    
 }
 
 -(IBAction)removeCircleView:(id)sender
@@ -436,6 +434,12 @@
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 -(IBAction)gotoFriends:(id)sender
