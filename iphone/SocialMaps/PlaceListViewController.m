@@ -336,6 +336,10 @@
     [tableViewPlaceList reloadData];
     [smAppDelegate hideActivityViewer];
     [self loadImagesForOnscreenRows];
+    if ([placeList count]==0)
+    {
+        [UtilityClass showAlert:@"" :@"No places found"];
+    }
 }
 
 - (void)dealloc 

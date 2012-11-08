@@ -5953,7 +5953,7 @@ AppDelegate *smAppDelegate;
         [request addPostValue:place.category forKey:@"category"];
     if (place.description)
         [request addPostValue:place.description forKey:@"description"];
-    if (place.photo)
+    if (place.base64Image)
         [request addPostValue:place.base64Image forKey:@"photo"];
     
     // Handle successful REST call

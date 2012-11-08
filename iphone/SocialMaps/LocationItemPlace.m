@@ -63,9 +63,13 @@
     review.hidden = TRUE;
     
 	// Name
-    CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-    CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, 
-                                  catImage.frame.origin.y+catImage.frame.size.height+5, nameSize.width, nameSize.height);
+    //CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    //CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, 
+                                  //catImage.frame.origin.y+catImage.frame.size.height+5, nameSize.width, nameSize.height);
+    
+     CGSize nameStringSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
+    CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, catImage.frame.origin.y+catImage.frame.size.height+5, nameStringSize.width, nameStringSize.height);
+    
     lblName.frame = nameFrame;
     
 	return cell;
