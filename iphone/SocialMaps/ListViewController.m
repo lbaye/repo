@@ -21,6 +21,8 @@
 #import "FriendsProfileViewController.h"
 #import "Geotag.h"
 #import "PlaceListViewController.h"
+#import "UIImageView+Cached.h"
+#import "CachedImages.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -115,6 +117,19 @@ PullableView *pullUpView;
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
     
     //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self loadImagesForOnscreenRows];
+}
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+    [CachedImages removeAllCache];
+    [super viewDidDisappear:animated];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -258,6 +273,7 @@ PullableView *pullUpView;
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
                 item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
                 item.currDisplayState=0;
+                item.itemCoverPhotoUrl=[NSURL URLWithString:aEvent.eventImageUrl];
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
         }
@@ -484,6 +500,11 @@ PullableView *pullUpView;
     anItem.delegate = self;
     UITableViewCell * cell = [anItem getTableViewCell:tv sender:self];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UIImageView *imageView = (UIImageView*)[cell viewWithTag:123456789];
+    //[imageView setImageForUrlIfAvailable:[NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"]];
+    [imageView setImageForUrlIfAvailable:anItem.itemCoverPhotoUrl];
+    
     return cell;
 }
 
@@ -581,6 +602,7 @@ PullableView *pullUpView;
         [self searchTableView];
     }
     [itemList reloadData];
+    [self loadImagesForOnscreenRows];
 }
 
 // LocationItem delegate
@@ -796,5 +818,43 @@ PullableView *pullUpView;
 - (IBAction)actionSearchOkButton:(id)sender {
     [self searchBarSearchButtonClicked:searchBar];
 }
+
+- (void)loadImagesForOnscreenRows {
+    
+    if ([copyDisplayListArray count] > 0) {
+        
+        NSArray *visiblePaths = [itemList indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            UITableViewCell *cell = [itemList cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell viewWithTag:123456789];
+            
+            LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
+            
+            //anItem.itemCoverPhotoUrl = [NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"];
+            
+            if (anItem.itemCoverPhotoUrl) 
+                [imgCover loadFromURL:anItem.itemCoverPhotoUrl];
+            
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) 
+        [self loadImagesForOnscreenRows];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
+}
+
 
 @end

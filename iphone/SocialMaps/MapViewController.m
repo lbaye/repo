@@ -2310,7 +2310,7 @@ ButtonClickCallbackData callBackData;
                 if (![smAppDelegate.userId isEqualToString:item.userId]) {
                     // Do we already have this in the list?
                     __block NSNumber *indx;
-                    
+        
                     if ((indx=[smAppDelegate.peopleIndex objectForKey:item.userId]) == nil) {
                         UIImage *icon;
                         NSString *iconPath;
@@ -2337,7 +2337,8 @@ ButtonClickCallbackData callBackData;
 //                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
                         //NSString *address = @"Address";
                         
-                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
+                        
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
                         
@@ -2451,7 +2452,7 @@ ButtonClickCallbackData callBackData;
                     NSLog(@"Name=%@ Location=%f,%f, distance=%f",item.name, loc.latitude,loc.longitude, distanceFromMe);
                     
                    
-                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:[item.typeArr lastObject] coordinate:loc dist:distanceFromMe icon:icon bg:bg];
+                    LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:[item.typeArr lastObject] coordinate:loc dist:distanceFromMe icon:icon bg:bg itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
                     
                     aPlace.placeInfo = item;
                     [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeList.count] forKey:item.ID];
@@ -2659,6 +2660,7 @@ ButtonClickCallbackData callBackData;
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
                 item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
                 item.currDisplayState=0;
+                item.itemCoverPhotoUrl=[NSURL URLWithString:aEvent.eventImageUrl];
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
         }
