@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "ViewEventListViewController.h"
 #import "EventListTableCell.h"
 #import "EventListRsvpTableCell.h"
@@ -73,7 +74,6 @@ bool searchFlags=true;
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     
     [super viewDidLoad];
-    Event *aEvent=[[Event alloc] init];
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
@@ -120,7 +120,6 @@ bool searchFlags=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    NSMutableArray *eventList=[[NSMutableArray alloc] init];
     for (int i=0; i<[eventListGlobalArray count]; i++)
     {
         NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
@@ -154,7 +153,6 @@ bool searchFlags=true;
 -(void)hideActivity
 {
     NSArray* subviews = [NSArray arrayWithArray: self.view.subviews];
-    UIActivityIndicatorView *indView;
     for (UIView* view in subviews) 
     {
         if([view isKindOfClass :[UIActivityIndicatorView class]])
@@ -354,9 +352,9 @@ bool searchFlags=true;
     event = [filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
-    EventListTableCell *cell = [self.eventListTableView
+    EventListTableCell *cell = (EventListTableCell *)[self.eventListTableView
                               dequeueReusableCellWithIdentifier:CellIdentifier];
-    EventListRsvpTableCell *cell1= [self.eventListTableView
+    EventListRsvpTableCell *cell1= (EventListRsvpTableCell *)[self.eventListTableView
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell == nil)
     {
@@ -365,15 +363,36 @@ bool searchFlags=true;
             cell = [[EventListTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
                     reuseIdentifier:CellIdentifier];
+                        
+            NSLog(@"cell is null");
+
         }
         else
         {
             cell1 = [[EventListRsvpTableCell alloc]
                      initWithStyle:UITableViewCellStyleDefault 
                      reuseIdentifier:CellIdentifier1];
+           
         }
     }
+    cell.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    cell.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    cell.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    cell1.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    cell1.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    cell1.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
     
+
+    [cell.eventName.layer setCornerRadius:3.0f];
+    [cell.eventDate.layer setCornerRadius:3.0f];
+    [cell.eventAddress.layer setCornerRadius:3.0f];
+    [cell.eventDistance.layer setCornerRadius:3.0f];
+    [cell.eventDetail.layer setCornerRadius:3.0f];
+    [cell1.eventName.layer setCornerRadius:3.0f];
+    [cell1.eventDate.layer setCornerRadius:3.0f];
+    [cell1.eventAddress.layer setCornerRadius:3.0f];
+    [cell1.eventDistance.layer setCornerRadius:3.0f];
+    [cell1.eventDetail.layer setCornerRadius:3.0f];
     // Configure the cell...
     cell.eventAddress.text = [NSString stringWithFormat:@"event address"];
     cell.eventName.text = [NSString stringWithFormat:@"event name"];
@@ -434,7 +453,6 @@ bool searchFlags=true;
     [cell1.noButton addTarget:self action:@selector(noButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell1.maybesButton addTarget:self action:@selector(maybeButton:) forControlEvents:UIControlEventTouchUpInside];    
     [cell1.viewEventOnMap addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];     
-    UIImage *eventPhoto = [UIImage imageNamed:@"1.png"];
     
     // Leave cells empty if there's no data yet
     if (nodeCount > 0)
@@ -540,7 +558,6 @@ bool searchFlags=true;
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     
 //    [smAppDelegate showActivityViewer:self.view];
-    RestClient *rc=[[RestClient alloc] init];
     Event *aEvent=[[Event alloc] init];
     aEvent=[filteredList objectAtIndex:indexPath.row];
     globalEvent=[[Event alloc] init];
@@ -599,12 +616,11 @@ bool searchFlags=true;
     EventImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:eventID];
     if (iconDownloader != nil)
     {
-        NSNumber *indx = [eventListIndex objectForKey:eventID];
         Event *event = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
         event.eventImage = iconDownloader.event.eventImage;
         
-        EventListTableCell *cell = [self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        EventListRsvpTableCell *cell1 = [self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        EventListTableCell *cell = (EventListTableCell *)[self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        EventListRsvpTableCell *cell1 = (EventListRsvpTableCell *)[self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
         [downloadedImageDict setValue:iconDownloader.event.eventImage forKey:eventID];

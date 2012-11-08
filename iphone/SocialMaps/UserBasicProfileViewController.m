@@ -68,7 +68,9 @@ NSMutableArray *selectedScrollIndex;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [statusMsgLabel.layer setCornerRadius:3.0f];
+    [addressOrvenueLabel.layer setCornerRadius:3.0f];
+    [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
@@ -288,6 +290,7 @@ NSMutableArray *selectedScrollIndex;
      nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
     [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
      statusMsgLabel.text=@"";
+    
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
      ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];

@@ -75,7 +75,9 @@ NSMutableArray *selectedScrollIndex;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [statusMsgLabel.layer setCornerRadius:3.0f];
+    [addressOrvenueLabel.layer setCornerRadius:3.0f];
+    [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];

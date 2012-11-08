@@ -24,7 +24,7 @@
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
 @synthesize inviteEventButton,totalNotifCount;               
-
+@synthesize addressScollview;
 
 NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
@@ -55,7 +55,17 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(void)initView
 {
+    [eventName.layer setCornerRadius:3.0f];
+    [eventDate.layer setCornerRadius:3.0f];
+    [eventAddress.layer setCornerRadius:3.0f];
+    [eventDistance.layer setCornerRadius:3.0f];
+    [eventShortDetail.layer setCornerRadius:3.0f];    
     
+    eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+    eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+    eventShortDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+    
+    descriptionView.text=globalEvent.eventDescription;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
