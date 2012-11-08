@@ -71,13 +71,18 @@ class PlaceRepo extends Base
 
         $timeStamp = $place->getUpdateDate()->getTimestamp();
 
-        $filePath = "/images/place-photo/" . $place->getId();
+        $dirPath = "/images/place-photo/";
+        $filePath = "/images/place-photo/" . $place->getId() . '.jpg';
         $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
 
         if ($photoUrl !== false) {
             $place->setPhoto($photoUrl);
         } else {
-            @ImageHelper::saveImageFromBase64($placePhoto, ROOTDIR . $filePath);
+            if (!file_exists(ROOTDIR . "/" . $dirPath)) {
+                mkdir(ROOTDIR . "/" . $dirPath, 0777, true);
+            }
+            
+            ImageHelper::saveImageFromBase64($placePhoto, ROOTDIR . $filePath);
             $place->setPhoto($filePath . "?" . $timeStamp);
         }
 
