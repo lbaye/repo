@@ -1151,7 +1151,7 @@ ButtonClickCallbackData callBackData;
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:YES];
-
+        NSLog(@"call geotag service");
     }
     
     [self loadAnnotationForEvents];

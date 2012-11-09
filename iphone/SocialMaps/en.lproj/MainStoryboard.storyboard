@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11E2617" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <development version="4200" defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <development version="4200" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="5">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -88,13 +86,13 @@
                         <segue destination="hmN-q9-RwG" kind="modal" identifier="showLogin" modalTransitionStyle="crossDissolve" id="qvJ-bu-e6k"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="101" y="82"/>
         </scene>
         <!--Login Controller-->
         <scene sceneID="Dwd-AY-Pvc">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="A2r-i0-7m4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="hmN-q9-RwG" customClass="LoginController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="S5Q-kW-zE7">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -333,13 +331,13 @@
                         <segue destination="W0I-Zl-uMx" kind="modal" identifier="showLocSharingConsent" modalTransitionStyle="crossDissolve" id="GFp-dd-HWZ"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A2r-i0-7m4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="514" y="98"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="TeC-Wj-rub">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Tl2-Uw-3dW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="mapViewController" id="wC3-So-nVM" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iiB-MM-eFF">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -1438,6 +1436,7 @@
                         <outlet property="viewSharingPrefMapPullDown" destination="rQo-LY-ySW" id="edG-IE-r0X"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tl2-Uw-3dW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <searchBar contentMode="redraw" id="lHn-lE-7Kr">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -1449,7 +1448,6 @@
         <!--consentView-->
         <scene sceneID="AOP-5k-Bvb">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vuP-iD-MEg" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="W0I-Zl-uMx" userLabel="consentView" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sX7-rU-li4">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -1525,13 +1523,13 @@
                         <color key="backgroundColor" red="0.90980398654937744" green="0.91372555494308472" blue="0.90980398654937744" alpha="1" colorSpace="deviceRGB"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vuP-iD-MEg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="535" y="723"/>
         </scene>
         <!--List View Controller - List View Controller-->
         <scene sceneID="Ea4-0Q-PdY">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2dn-ga-dT0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController title="List View Controller" id="fgr-fq-SqM" customClass="ListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2r9-Es-OgG">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -2007,13 +2005,13 @@
                         <outlet property="viewSearch" destination="ToD-Ow-5ff" id="fOZ-bR-QNY"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2dn-ga-dT0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1120" y="1514"/>
         </scene>
         <!--Notification Controller-->
         <scene sceneID="aWu-kw-m9s">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="GY2-DI-b1v" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="notificationViewController" id="xAh-9q-Sej" customClass="NotificationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jm0-Vq-vBY">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -2206,13 +2204,13 @@
                         <outlet property="reqCount" destination="MvU-Or-hjk" id="0RI-gI-ldy"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GY2-DI-b1v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1728" y="386"/>
         </scene>
         <!--Registration Controller-->
         <scene sceneID="VTl-EO-6Pd">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1VE-MH-gLs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="dhQ-Hm-f8i" customClass="RegistrationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nWj-YI-Rwb">
                         <rect key="frame" x="0.0" y="20" width="320" height="416"/>
@@ -2431,13 +2429,13 @@
                         <segue destination="hmN-q9-RwG" kind="modal" identifier="regBackToLogin" modalTransitionStyle="crossDissolve" id="55q-NQ-wYQ"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1VE-MH-gLs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1120" y="-345"/>
         </scene>
         <!--Settings Controller - Settings-->
         <scene sceneID="MIL-ew-tq6">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ivh-dm-JvC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="settingsController" title="Settings" id="i7v-82-K9c" customClass="SettingsController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JaF-DN-fXb" userLabel="settingsView">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -2759,13 +2757,13 @@
                         <outlet property="totalNotifCount" destination="ylV-Xu-7Qg" id="8oK-SK-PWi"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ivh-dm-JvC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1655" y="-320"/>
         </scene>
         <!--View Event Detail View Controller-->
         <scene sceneID="wUp-ba-aCh">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LMK-FF-drG" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="eventDetail" modalTransitionStyle="crossDissolve" id="PnO-dp-Cvz" customClass="ViewEventDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5mh-Gq-JSR">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -3174,13 +3172,13 @@
                         <segue destination="iEq-R0-8Ox" kind="modal" identifier="updateEvent" modalTransitionStyle="crossDissolve" id="BET-LK-FoH"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LMK-FF-drG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2084" y="1090"/>
         </scene>
         <!--Create Event View Controller-->
         <scene sceneID="T4R-du-3MH">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Sek-92-6Sm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="createEvent" id="iEq-R0-8Ox" customClass="CreateEventViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zWa-Xs-AI7">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -3323,25 +3321,16 @@
                                         <accessibility key="accessibilityConfiguration" hint="hint" label="label">
                                             <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
                                         </accessibility>
-                                        <mutableAttributedString key="userComments">
-                                            <!--notes
--->
-                                            <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGREVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCA8T
-GiQlJiwwODk8P1UkbnVsbNMJCgsMDQ5cTlNBdHRyaWJ1dGVzViRjbGFzc1hOU1N0cmluZ4AEgA2AAtIK
-EBESWU5TLnN0cmluZ4ADVm5vdGVzCtIUFRYXWiRjbGFzc25hbWVYJGNsYXNzZXNfEA9OU011dGFibGVT
-dHJpbmejFhgZWE5TU3RyaW5nWE5TT2JqZWN00wobHB0eIVdOUy5rZXlzWk5TLm9iamVjdHOADKIfIIAF
-gAaiIiOAB4AJXxAQTlNQYXJhZ3JhcGhTdHlsZVZOU0ZvbnTTJwooKSorWk5TVGFiU3RvcHNbTlNBbGln
-bm1lbnSAAIAIEATSFBUtLl8QEE5TUGFyYWdyYXBoU3R5bGWiLxlfEBBOU1BhcmFncmFwaFN0eWxl1Aox
-MjM0NTY3Vk5TTmFtZVZOU1NpemVYTlNmRmxhZ3OAC4AKI0AoAAAAAAAAEBBZSGVsdmV0aWNh0hQVOjtW
-TlNGb250ojoZ0hQVPT5cTlNEaWN0aW9uYXJ5oj0Z0hQVQEFfEBlOU011dGFibGVBdHRyaWJ1dGVkU3Ry
-aW5no0JDGV8QGU5TTXV0YWJsZUF0dHJpYnV0ZWRTdHJpbmdfEBJOU0F0dHJpYnV0ZWRTdHJpbmdfEA9O
-U0tleWVkQXJjaGl2ZXLRRkdUcm9vdIABAAgAEQAaACMALQAyADcARgBMAFMAYABnAHAAcgB0AHYAewCF
-AIcAjgCTAJ4ApwC5AL0AxgDPANYA3gDpAOsA7gDwAPIA9QD3APkBDAETARoBJQExATMBNQE3ATwBTwFS
-AWUBbgF1AXwBhQGHAYkBkgGUAZ4BowGqAa0BsgG/AcIBxwHjAecCAwIYAioCLQIyAAAAAAAAAgEAAAAA
-AAAASAAAAAAAAAAAAAAAAAAAAjQ
-</mutableData>
-                                        </mutableAttributedString>
+                                        <attributedString key="userComments">
+                                            <fragment>
+                                                <string key="content">notes
+</string>
+                                                <attributes>
+                                                    <font key="NSFont" size="12" name="Helvetica"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top_curve_bg.png" id="sSU-wd-fZH">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
@@ -4122,13 +4111,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                         <outlet property="viewContainerScrollView" destination="OwU-rF-Xae" id="wKt-fr-5TG"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sek-92-6Sm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2076" y="1837"/>
         </scene>
         <!--View Event List View Controller-->
         <scene sceneID="RZs-mC-Xnf">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1i7-i9-pXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="viewEventList" id="x4f-Rr-4Qj" customClass="ViewEventListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kfg-wW-S7l">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -4630,13 +4619,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                         <outlet property="totalNotifCount" destination="7A0-Wx-9Kx" id="38k-8X-m2a"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1i7-i9-pXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1588" y="1090"/>
         </scene>
         <!--Message List View Controller-->
         <scene sceneID="vie-XL-DUb">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jYg-xX-Ywk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="messageList" id="npU-ox-hYr" customClass="MessageListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DQr-XG-JRD">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -5161,6 +5150,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                         <outlet property="viewSearch" destination="jt3-Zv-ta5" id="dp1-4d-Ics"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jYg-xX-Ywk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2204" y="20"/>
         </scene>
@@ -5529,9 +5519,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
                 <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
             </relationships>
-        </class>
-        <class className="NSDictionary" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>

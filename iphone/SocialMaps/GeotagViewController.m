@@ -87,6 +87,7 @@ NSMutableArray *guestListIdArr;
 NSMutableArray *myPlaceArr, *placeNameArr, *categoryName;
 int selectedCatetoryIndex=0;
 RestClient *rc;
+int geoCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -241,7 +242,7 @@ RestClient *rc;
     
     //set scroll view content size.
     [self loadDummydata];
-    
+    [line setImage:[UIImage imageNamed:@"line_arrow_up_left.png"] forState:UIControlStateNormal];
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     customSelectedPhotoIndex=[[NSMutableArray alloc] init];
     //reloading scrollview to start asynchronous download.
@@ -1354,6 +1355,11 @@ RestClient *rc;
             [nextButton setHidden:NO];
         }
     }
+    else if (sender==viewContainerScrollView)
+    {
+        [titleTextField resignFirstResponder];
+        [commentsView resignFirstResponder];
+    }
     // Switch the indicator when more than 50% of the previous/next page is visible
     // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)
     // A possible optimization would be to unload the views+controllers which are no longer visible
@@ -1982,10 +1988,14 @@ RestClient *rc;
 
 - (void)createGeoTagDone:(NSNotification *)notif
 {
+    geoCounter++;
     loadGeotagServiceData=true;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
-    [UtilityClass showAlert:@"Social Maps" :@"Geo-tag created"];
+    if (geoCounter==1)
+    {
+        [UtilityClass showAlert:@"Social Maps" :@"Geo-tag created"];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 
