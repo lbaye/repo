@@ -29,6 +29,7 @@
 @synthesize facebook;
 @synthesize smAppDelegate;
 @synthesize profileImageView;
+@synthesize bgImgView,tapview;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -123,6 +124,33 @@
 
     
     facebook = [[FacebookHelper sharedInstance] facebook];
+    
+    bgImgView.userInteractionEnabled = YES;
+    bgImgView.exclusiveTouch = YES;
+    
+    UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    UITapGestureRecognizer *tapGesture1=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+
+    
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture1.numberOfTapsRequired = 1;
+    [bgImgView addGestureRecognizer:tapGesture];
+    [tapview addGestureRecognizer:tapGesture1];
+//    for (int i=0; i<[[dialogView subviews] count]; i++)
+//    {
+//        [[dialogView.subviews objectAtIndex:i] removeGestureRecognizer:tapGesture1];
+//    }
+//    NSLog(@"%@",dialogView.subviews);
+    [tapGesture release];
+    [tapGesture1 release];    
+}
+
+-(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
+{
+        NSLog(@"in gesture %@",sender.view);
+        [txtEmail resignFirstResponder];
+        [txtPassword resignFirstResponder];
+        [txtForgotPWEmail resignFirstResponder];
 }
 
 - (void)viewDidUnload

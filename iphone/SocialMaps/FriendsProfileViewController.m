@@ -23,6 +23,9 @@
 #import "ViewEventListViewController.h"
 #import "LocationItemPeople.h"
 #import "DirectionViewController.h"
+#import "FriendsPhotosViewController.h"
+#import "PlaceListViewController.h"
+#import "Globals.h"
 
 @interface FriendsProfileViewController ()
 
@@ -73,7 +76,9 @@ NSMutableArray *selectedScrollIndex;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [statusMsgLabel.layer setCornerRadius:3.0f];
+    [addressOrvenueLabel.layer setCornerRadius:3.0f];
+    [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
@@ -101,7 +106,7 @@ NSMutableArray *selectedScrollIndex;
     
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
     [ImgesName addObject:@"photos_icon"];
-    [ImgesName addObject:@"friends_icon"];
+    [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
@@ -423,6 +428,30 @@ NSMutableArray *selectedScrollIndex;
         [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setUserInteractionEnabled:NO];
+        NSString *friendShipStatus=userInfo.friendshipStatus;
+        if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
+            [addFrndButton setTitle:@"Rejected" forState:UIControlStateNormal];
+            [addFrndButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        } else if ([friendShipStatus isEqualToString:@"requested"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        } else if ([friendShipStatus isEqualToString:@"pending"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        }
+        else if ([friendShipStatus isEqualToString:@"friend"]) {
+            [addFrndButton setImage:nil forState:UIControlStateNormal];
+            [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
+            [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
+            addFrndButton.userInteractionEnabled = NO;
+        }
     }
     
     if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
@@ -786,31 +815,61 @@ NSMutableArray *selectedScrollIndex;
     }
     if (imageIndex==0) 
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
-    }
-    else if (imageIndex==1)
-    {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
-    }
-    else if (imageIndex==2)
-    {
-        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+        UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+        FriendsPhotosViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"friendsPhotosViewController"];
+        controller.userId=userInfo.userId;
+        controller.userName=[NSString stringWithFormat:@"%@ %@",userInfo.firstName,userInfo.lastName];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
     }
+    else if (imageIndex==1)
+    {       
+        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."]; 
+    }
+    else if (imageIndex==2)
+    {
+        if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+        }
+        else 
+        {
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            showFrndsEvents=true;
+            [self presentModalViewController:controller animated:YES];            
+        }
+    }
     else if (imageIndex==3)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+        PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
+        controller.otherUserId = userInfo.userId;
+        controller.placeType = OtherPeople;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
     }
     else if (imageIndex==4)
     {
+        if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+        }
+        else 
+        {
         MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
         [controller release];
-        
+        }
     }
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

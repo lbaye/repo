@@ -39,6 +39,7 @@
     IBOutlet UIButton *inviteEventButton;
     BOOL isBackgroundTaskRunning;
     IBOutlet UILabel *totalNotifCount;
+    IBOutlet UIScrollView *addressScollview;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *eventName;
@@ -47,7 +48,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *eventAddress;
 @property(nonatomic,retain) IBOutlet UILabel *eventDistance;    
 @property(nonatomic,retain) IBOutlet UIImageView *eventImgView;
-
+@property(nonatomic,retain) IBOutlet UIScrollView *addressScollview;
 @property(nonatomic,retain) IBOutlet UIButton *yesButton;
 @property(nonatomic,retain) IBOutlet UIButton *noButton;
 @property(nonatomic,retain) IBOutlet UIButton *maybeButton;

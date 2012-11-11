@@ -44,7 +44,6 @@
     UILabel *lblName = [[UILabel alloc] initWithFrame:lblNameFrame];
     
     NSString *age = [self getAgeString:locItemPeople];
-    
     lblName.text = [NSString stringWithFormat:@"%@%@", locItemPeople.itemName, age];
     lblName.backgroundColor = [UIColor clearColor];
     lblName.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
@@ -100,7 +99,10 @@
     else
         distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
-    
+    if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        distSize = [[UtilityClass getCurrentTimeOrDate:locItemPeople.userInfo.lastSeenAtDate] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    }
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+lblStringSize.height+1+msgFrame.size.height+1, 
                                   distSize.width,
                                   distSize.height);
@@ -120,7 +122,7 @@
     lblDist.backgroundColor = [UIColor clearColor];
     [infoView addSubview:lblDist];
     [lblDist release];
-
+    NSLog(@"info %@",NSStringFromCGRect(infoView.frame));
     return annoView;
 }
 

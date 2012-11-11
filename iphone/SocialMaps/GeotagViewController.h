@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "UserFriends.h"
 #import "PhotoPicker.h"
+#import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>
 
 @interface GeotagViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
+UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UILabel *createLabel;
     IBOutlet UIButton *createButton;
@@ -48,7 +49,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     NSMutableArray *ImgesName;
     
     CGFloat animatedDistance;
-    NSMutableArray *selectedFriendsIndex, *customSelectedFriendsIndex;
+    NSMutableArray *selectedFriendsIndex, *customSelectedPhotoIndex;
     IBOutlet UIView *createView;
     PhotoPicker *photoPicker;
     UIImage *eventImage;
@@ -69,7 +70,16 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     
     IBOutlet UIView *upperView;
     IBOutlet UIView *lowerView;    
-    IBOutlet UIScrollView *viewContainerScrollView;    
+    IBOutlet UIScrollView *viewContainerScrollView;
+    IBOutlet UITextView *commentsView;
+    IBOutlet UIScrollView *photoScrollView;
+    
+    IBOutlet UIButton *saveButton;
+    IBOutlet UIButton *cancelButton;
+    IBOutlet UIButton *deletePhotoButton;
+    IBOutlet UIButton *uploadPhotoButton;
+    IBOutlet UIView *zoomView;
+    IBOutlet UITextField *titleTextField;
 }
 
 @property(nonatomic,retain) IBOutlet UILabel *createLabel;
@@ -124,12 +134,24 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *upperView;
 @property(nonatomic,retain) IBOutlet UIView *lowerView;    
 @property(nonatomic,retain) IBOutlet UIScrollView *viewContainerScrollView;    
+@property(nonatomic,retain) IBOutlet UITextView *commentsView;
+@property(nonatomic,retain) IBOutlet UIButton *line;
+@property(nonatomic,retain) IBOutlet UIScrollView *photoScrollView;
+@property(nonatomic,retain) IBOutlet UIButton *saveButton;
+@property(nonatomic,retain) IBOutlet UIButton *cancelButton;
+@property(nonatomic,retain) IBOutlet UIButton *deletePhotoButton;
+@property(nonatomic,retain) IBOutlet UIButton *uploadPhotoButton;
+@property(nonatomic,retain) IBOutlet UIView *zoomView;
+@property(nonatomic,retain) IBOutlet UIButton *nextButton;
+@property(nonatomic,retain) IBOutlet UIButton *prevButton;
+@property(nonatomic,retain) IBOutlet UIScrollView *largePhotoScroller;
+@property(nonatomic,retain) IBOutlet UITextField *titleTextField;
 
 -(IBAction)nameButtonAction;
--(IBAction)summaryButtonAction;    
--(IBAction)descriptionButtonAction;
 -(IBAction)dateButtonAction:(id)sender;
 -(IBAction)photoButtonAction;
+-(IBAction)categoriesButtonAction:(id)sender;
+
 -(IBAction)deleteButtonAction;    
 
 -(IBAction)privateButtonAction;
@@ -138,14 +160,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)peopleButtonAction;
 -(IBAction)customButtonAction;        
 
--(IBAction)curLocButtonAction;
--(IBAction)myPlaceButtonAction;    
--(IBAction)neamePlaceButtonAction:(id)sender;
--(IBAction)pointOnMapButtonAction;    
-
 -(IBAction)showCircle:(id)sender;
 
--(IBAction)guestCanInvite:(id)sender;
 -(IBAction)unSelectAll:(id)sender;
 -(IBAction)addAll:(id)sender;
 -(IBAction)createEvent:(id)sender;
@@ -166,8 +182,21 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 -(void)beganEditing:(UISearchBar *)searchBar;
 -(void)endEditing;
+-(void)scrollToPage:(int)page:(BOOL)animated;
 -(IBAction)backButton:(id)sender;
 
 -(IBAction)gotoNotification:(id)sender;
+
+-(IBAction)saveComments:(id)sender;
+-(IBAction)cancelComments:(id)sender;
+
+-(IBAction)savePhoto:(id)sender;
+-(IBAction)cancelPhoto:(id)sender;
+-(IBAction)closeZoomView:(id)sender;
+
+-(IBAction)viewPrevImage:(id)sender;
+
+-(IBAction)viewNextImage:(id)sender;
+-(IBAction)hideKeyboard:(id)sender;
 
 @end

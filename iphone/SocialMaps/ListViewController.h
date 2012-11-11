@@ -75,4 +75,6 @@
 -(IBAction)gotonNewsFeed:(id)sender;
 -(IBAction)gotonDeals:(id)sender;
 
+- (void)loadImagesForOnscreenRows;
+
 @end

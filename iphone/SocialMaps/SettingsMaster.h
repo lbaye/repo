@@ -29,6 +29,7 @@ typedef enum _SETTINGS_DISPLAY_STATE {
     id              parent;
     NSString        *bgImageName;
     int             settingsType;
+    int             level;
 }
 @property (nonatomic, retain) NSString *titleString;
 @property (nonatomic, retain) NSString *subtitleString;
@@ -39,7 +40,9 @@ typedef enum _SETTINGS_DISPLAY_STATE {
 @property (nonatomic, retain) id parent;
 @property (nonatomic, retain) NSString *bgImageName;
 @property (nonatomic) int settingsType;
+@property (nonatomic) int level;
 
+- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImageName type:(int) dispType sender:(id) sender tag:(int)tag level:(int) lvl;
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImageName type:(int) dispType sender:(id) sender tag:(int)tag;
 - (void) setState:(SETTINGS_DISPLAY_STATE)state;
 @end

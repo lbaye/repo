@@ -33,10 +33,6 @@
         CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
         CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
         
-        CGFloat msgHeight = msgRows*msgStringSize.height+16;
-//        CGRect msgFrame = CGRectMake(10+itemIcon.size.width+10, 
-//                                     lblName.frame.origin.y+lblName.frame.size.height+5,
-//                                     tv.frame.size.width/2, msgHeight);
         CGRect msgFrame = CGRectMake(80, 
                                      lblName.frame.origin.y+lblName.frame.size.height,
                                      250, 25);
@@ -54,7 +50,7 @@
     
     if ([userInfo.source isEqualToString:@"facebook"]) 
     {
-        NSString *checkin=[NSString stringWithFormat:@"Checked-in at %@ at %@",[[userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:userInfo.lastSeenAtDate]];
+        NSString *checkin=[NSString stringWithFormat:@"Checked-in at %@ %@",[[userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:userInfo.lastSeenAtDate]];
         lblAddress.text=checkin;
         CGSize addressStringSize = [checkin sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
         lblAddress.frame=CGRectMake(2,5, addressStringSize.width, 15);

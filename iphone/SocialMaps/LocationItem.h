@@ -45,6 +45,8 @@ typedef enum _LOCATION_ACTION_TYPE {
     NSString    *cellIdent;
     MAP_ANNOTATION_STATE currDisplayState;
     id<LocationItemDelegate> delegate;
+    NSString *typeName;
+    NSURL   *itemCoverPhotoUrl;
 }
 
 @property (copy) NSString *itemName;
@@ -58,9 +60,11 @@ typedef enum _LOCATION_ACTION_TYPE {
 @property (nonatomic, retain) NSString *cellIdent;
 @property (nonatomic) MAP_ANNOTATION_STATE currDisplayState;
 @property (assign) id<LocationItemDelegate> delegate;
+@property (nonatomic,retain)    NSString *typeName;
+@property (nonatomic, retain) NSURL *itemCoverPhotoUrl;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
-          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coordinate dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg;
+          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl;
 - (NSComparisonResult) compareDistance:(LocationItem*) other;
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(ListViewController*)controller;
 - (CGFloat) getRowHeight:(UITableView*)tv;

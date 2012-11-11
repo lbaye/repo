@@ -73,7 +73,7 @@
 @synthesize deviceTokenId;
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
-@synthesize smLogin;
+@synthesize smLogin,geotagList;
 
 static AppDelegate *sharedInstance=nil;
 
@@ -150,6 +150,7 @@ static AppDelegate *sharedInstance=nil;
     dealList   = [[NSMutableArray alloc] init];
     eventList  =[[NSMutableArray alloc] init];
     displayList= [[NSMutableArray alloc] init];
+    geotagList= [[NSMutableArray alloc] init];
 
     // Location coordinates
     currPosition = [[Geolocation alloc] init];

@@ -367,10 +367,12 @@
 }
 
 - (void)dealloc {
-         [tableViewMeetUps release];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
-         [super dealloc];
+    [imageDownloadsInProgress release];
+    [tableViewMeetUps release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
+    [super dealloc];
+
 }
 
 #pragma mark -

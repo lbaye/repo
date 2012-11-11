@@ -10,6 +10,7 @@
 #import "LocationItem.h"
 #import "Constants.h"
 #import "UIImageView+roundedCorner.h"
+#import "UtilityClass.h"
 
 @implementation LocationItem
 @synthesize itemName;
@@ -23,9 +24,11 @@
 @synthesize cellIdent;
 @synthesize currDisplayState;
 @synthesize delegate;
+@synthesize typeName;
+@synthesize itemCoverPhotoUrl;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
-          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg{
+category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
     if ((self = [super init])) {
         itemName = [name copy];
         itemAddress = [address copy];
@@ -36,6 +39,7 @@
         itemIcon = icon;
         itemBg = bg;
         currDisplayState = MapAnnotationStateNormal;
+        itemCoverPhotoUrl = [_coverPhotoUrl copy];
     }
     return self;
 }
@@ -90,8 +94,14 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent] autorelease];
         cell.frame = CellFrame;
         // Background
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
-		cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+        ////cell.backgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+		////cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
+        imageView.tag = 123456789;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [cell.contentView addSubview:imageView];
+        [imageView release];
         
         // Icon
         imgIcon = [UIImageView imageViewWithRectImage:iconFrame andImage:itemIcon withCornerradius:.10f];
@@ -102,10 +112,12 @@
         // Name
 		lblName = [[[UILabel alloc] initWithFrame:nameFrame] autorelease];
 		lblName.tag = 2003;
-        lblName.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
+        lblName.font = [UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize];
 		lblName.textColor = [UIColor whiteColor];
-		lblName.backgroundColor = [UIColor clearColor];
+        lblName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
 		[cell.contentView addSubview:lblName];
+        [lblName.layer setCornerRadius:3.0f];
+        [lblName.layer setMasksToBounds:YES];
 		
         // Footer view
         footerView = [[UIView alloc] initWithFrame:footerFrame];
@@ -174,8 +186,22 @@
     
     // Address
     lblAddress.frame = addressFrame;
-    lblAddress.text  = itemAddress;
-	
+	NSLog(@"itemtype %d %@",itemType,itemName);
+    if (itemType == 4) 
+    {
+        NSString *checkin=[NSString stringWithFormat:@"Geo-Tagged %@ by %@",itemAddress,itemCategory];
+        lblAddress.text=checkin;
+        CGSize addressStringSize = [checkin sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
+        lblAddress.frame=CGRectMake(2,5, addressStringSize.width, 15);
+        NSLog(@"lbladress: %@", NSStringFromCGRect(lblAddress.frame));
+        UIScrollView *addScr = (UIScrollView*) [cell viewWithTag:20031];
+        [addScr setContentSize:lblAddress.frame.size];
+    }
+    else {
+        lblAddress.text  = itemAddress;
+        UIScrollView *addScr = (UIScrollView*) [cell viewWithTag:20031];
+        [addScr setContentSize:lblAddress.frame.size];
+    }
     // Distance
     if (itemDistance > 999)
         lblDist.text = [NSString stringWithFormat:@"%.1fkm", itemDistance/1000.0];
@@ -225,6 +251,6 @@
         int row = [self getCellRow:sender];
         [delegate buttonClicked:LocationActionTypeGotoMap row:row];
     }
-
 }
+
 @end

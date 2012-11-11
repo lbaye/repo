@@ -56,9 +56,18 @@
     // Location sharing information
     for (int i=0; i < numSections; i++ ) {
         Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:i];
-        SettingsMaster *aLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:geoFence.name subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++]; 
+        SettingsMaster *aLoc = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:geoFence.name subTitle:@"" bgImage:@"" type:SettingsDisplayTypeExpand sender:self tag:startTag++ level:1]; 
         // Remove default background image
         [[aLoc viewWithTag:99999] removeFromSuperview];
+        
+        // Dividers
+        if (i > 0) {
+            UIView *sep;
+            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
+            sep.backgroundColor = [UIColor lightGrayColor];
+            [aLoc addSubview:sep];
+        }
+
         [self addSubview:aLoc];
         [aLoc release];
     }
@@ -125,7 +134,7 @@
     
     int indx = tag - 9000;
     Geofence *geoFence = (Geofence*) [smAppDelegate.locSharingPrefs.geoFences objectAtIndex:indx];
-    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:[geoFence.radius intValue] defDuration:60 defPerm:TRUE sender:self tag:tag+1000];
+    LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) prefs:prefs defRadius:[geoFence.radius intValue] defDuration:60 defPerm:TRUE sender:self tag:tag+1000 level:1];
     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(20, aview.frame.size.height, 310, 7);

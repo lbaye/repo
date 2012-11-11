@@ -53,6 +53,7 @@
     NSMutableArray *displayList;
     NSMutableArray *friendList;
     NSMutableArray *meetUpRequests;
+    NSMutableArray *geotagList;
     // Preferences
     Platform        *platformPrefs;
     Layer           *layerPrefs;
@@ -104,6 +105,7 @@
 @property (nonatomic, retain)NSMutableArray *displayList;
 @property (nonatomic, retain)NSMutableArray *friendList;
 @property (nonatomic,retain)NSMutableArray *eventList;
+@property (nonatomic,retain)NSMutableArray *geotagList;
 @property (nonatomic, retain)Platform        *platformPrefs;
 @property (nonatomic, retain)Layer           *layerPrefs;
 @property (nonatomic, retain)InformationPrefs    *informationPrefs;

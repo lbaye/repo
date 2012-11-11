@@ -17,7 +17,9 @@
 //NSString * const WS_URL = @"http://192.168.1.71/stage_social_maps/web";
 //NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web";
 //NSString * const WS_URL = @"http://203.76.126.69/integration_social_maps/web";
-NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_4";
+//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_4";
+NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
+//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
@@ -62,6 +64,14 @@ NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE= @"com.genweb2.socialmaps.get
 NSString * const NOTIF_GET_OTHER_USER_PROFILE_DONE= @"com.genweb2.socialmaps.getotheruserprofiledone";
 NSString * const NOTIF_DO_CONNECT_FB_DONE= @"com.genweb2.socialmaps.doconnectfbdone";
 NSString * const NOTIF_DO_CONNECT_WITH_FB= @"com.genweb2.socialmaps.doconnectwithfb";
+NSString * const NOTIF_DO_UPLOAD_PHOTO= @"com.genweb2.socialmaps.douploadphoto";
+NSString * const NOTIF_GET_USER_ALL_PHOTO= @"com.genweb2.socialmaps.getuserallphoto";
+NSString * const NOTIF_DELETE_USER_PHOTO_DONE= @"com.genweb2.socialmaps.deleteuserphotodone";
+NSString * const NOTIF_GET_FRIENDS_ALL_PHOTO= @"com.genweb2.socialmaps.getfriendsallphoto";
+NSString * const NOTIF_GET_PHOTO_FOR_GEOTAG= @"com.genweb2.socialmaps.getphotoforgeotag";
+NSString * const NOTIF_CREATE_GEOTAG_DONE=@"com.genweb2.socialmaps.creategeotagdone";
+NSString * const NOTIF_GET_ALL_GEOTAG_DONE=@"com.genweb2.socialmaps.getallgeotagdone";
+NSString * const NOTIF_GET_PLACES_DONE= @"com.genweb2.socialmaps.getplacesdone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

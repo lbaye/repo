@@ -24,7 +24,7 @@
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
 @synthesize inviteEventButton,totalNotifCount;               
-
+@synthesize addressScollview;
 
 NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
@@ -55,7 +55,17 @@ BOOL isBackgroundTaskRunning=FALSE;
 
 -(void)initView
 {
+//    [eventName.layer setCornerRadius:3.0f];
+//    [eventDate.layer setCornerRadius:3.0f];
+//    [eventAddress.layer setCornerRadius:3.0f];
+//    [eventDistance.layer setCornerRadius:3.0f];
+//    [eventShortDetail.layer setCornerRadius:3.0f];    
+//    
+//    eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+//    eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
+//    eventShortDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
     
+    descriptionView.text=globalEvent.eventDescription;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
@@ -73,16 +83,11 @@ BOOL isBackgroundTaskRunning=FALSE;
     eventName.text=globalEvent.eventName;
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
+    CGSize lblStringSize = [globalEvent.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+    eventAddress.frame=CGRectMake(eventAddress.frame.origin.x, eventAddress.frame.origin.y, lblStringSize.width, lblStringSize.height);
+    addressScollview.contentSize=eventAddress.frame.size;
     eventAddress.text=globalEvent.eventAddress;
-    float distance=[globalEvent.eventDistance floatValue];
-    if (distance > 99999)
-    {
-        eventDistance.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
-    }
-    else
-    {
-        eventDistance.text = [NSString stringWithFormat:@"%dm", (int)distance];
-    }
+    eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:globalEvent.eventLocation];
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
@@ -119,14 +124,7 @@ BOOL isBackgroundTaskRunning=FALSE;
 	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
 //	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 //	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
-    if (distance > 99999)
-    {
-        annotation.subtitle = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
-    }
-    else
-    {
-        annotation.subtitle = [NSString stringWithFormat:@"%dm", (int)distance];
-    }
+    annotation.subtitle = [UtilityClass getDistanceWithFormattingFromLocation:globalEvent.eventLocation];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
@@ -559,7 +557,13 @@ BOOL isBackgroundTaskRunning=FALSE;
     int index = [path intValue];
     NSString *Link = [ImgesName objectAtIndex:index];
     //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        UIImage *img;
+        if ([Link isEqual:[NSNull null]]) {
+            img = [UIImage imageNamed:@"blank.png"];
+        }
+        else {
+            img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        }
     if((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
     {
         //If download complete, set that image to dictionary

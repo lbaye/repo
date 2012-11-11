@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Geolocation.h"
 
 @interface UtilityClass : NSObject
 
@@ -30,5 +31,11 @@
 +(NSString *)getLocalTimeFromString:(NSString *)timeStamp;
 +(NSDate *)dateFromString:(NSString *)string;
 +(NSString *)getCurrentTimeOrDate:(NSString *)dateTime;
+
++(void)beganEditing:(UIControl *)control;
++(void)endEditing;
+
++(NSString *)getDistanceWithFormattingFromLocation:(Geolocation *)location;
++(float)getDistanceWithoutFormattingFromLocation:(Geolocation *)location;
 
 @end

@@ -233,12 +233,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [self doBottomViewAnimation:messageCreationView];
 }
 
-- (IBAction)actionBackBtn:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+- (IBAction)actionBackBtn:(id)sender 
+{
     if (replyTimer) {
         [replyTimer invalidate];
         replyTimer = nil;
     }
+    
+    if (!messageCreationView.hidden || !messageRepiesView.hidden) {
+        [self actionMessageBtn:nil];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
 }
 
 - (IBAction)actionCancelBtn:(id)sender {
@@ -1155,7 +1162,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)dealloc 
 {
     [messageReplyList release];
-    //[imageDownloadsInProgress release];
+    [imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];
@@ -1473,6 +1480,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     //
                     iconDownloader.userFriends = userFrnd;
                     iconDownloader.delegate = self;
+                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
                     //imgView.image = [[UIImage alloc] init];
                     iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
                     [iconDownloader startDownload];

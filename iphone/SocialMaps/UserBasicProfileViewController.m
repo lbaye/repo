@@ -21,6 +21,7 @@
 #import "UtilityClass.h"
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
+#import "PlaceListViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -67,7 +68,9 @@ NSMutableArray *selectedScrollIndex;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [statusMsgLabel.layer setCornerRadius:3.0f];
+    [addressOrvenueLabel.layer setCornerRadius:3.0f];
+    [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
@@ -94,7 +97,7 @@ NSMutableArray *selectedScrollIndex;
     
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
     [ImgesName addObject:@"photos_icon"];
-    [ImgesName addObject:@"friends_icon"];
+    [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
@@ -160,6 +163,11 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)uploadPhotoButton:(id)sender
 {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"myPhotosViewController"];
+    
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 -(IBAction)closeMap:(id)sender
@@ -282,6 +290,7 @@ NSMutableArray *selectedScrollIndex;
      nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
     [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
      statusMsgLabel.text=@"";
+    
      addressOrvenueLabel.text=userInfo.address.street;
      distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
      ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
@@ -651,7 +660,12 @@ NSMutableArray *selectedScrollIndex;
     }
     if (imageIndex==0) 
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PhotoStoryboard" bundle:nil];
+        UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"myPhotosViewController"];
+        
+        initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:initialHelpView animated:YES];
+
     }
     else if (imageIndex==1)
     {
@@ -666,7 +680,10 @@ NSMutableArray *selectedScrollIndex;
     }
     else if (imageIndex==3)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+        PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];        
     }
     else if (imageIndex==4)
     {
@@ -676,6 +693,12 @@ NSMutableArray *selectedScrollIndex;
         [controller release];
 
     }
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

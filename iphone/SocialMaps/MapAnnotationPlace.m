@@ -31,6 +31,9 @@
 
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem {
     annoView = [super getViewForStateSummary:locItem];
+    
+
+    
     LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     UIView *infoView = [annoView viewWithTag:11002];
     
@@ -100,6 +103,16 @@
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem {
     annoView = [self getViewForStateSummary:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
+    
+    UIView *imageView = [annoView viewWithTag:11000];
+    
+    imageView.frame = CGRectMake((imageView.frame.origin.x * 1.15)+5, (imageView.frame.origin.y * 1.15)+5, imageView.frame.size.width  , imageView.frame.size.height);
+    
+    //    UIView *buttonView = [annoView viewWithTag:11001];
+    //    buttonView.frame = CGRectMake((buttonView.frame.origin.x * 1.15)+5 , (buttonView.frame.origin.y * 1.15)+5, buttonView.frame.size.width, buttonView.frame.size.height);
+    
+    UIView *imageView2 = [annoView viewWithTag:110001];
+    imageView2.frame = CGRectMake((imageView2.frame.origin.x * 1.15), (imageView2.frame.origin.y * 1.15), imageView2.frame.size.width , imageView2.frame.size.height);
     
     CGRect detFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
                                  (BUTTON_WIDTH+2)*4+20, annoView.frame.size.height+64);

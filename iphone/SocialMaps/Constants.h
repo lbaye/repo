@@ -51,6 +51,14 @@ extern NSString * const NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE;
 extern NSString * const NOTIF_GET_OTHER_USER_PROFILE_DONE;
 extern NSString * const NOTIF_DO_CONNECT_FB_DONE;
 extern NSString * const NOTIF_DO_CONNECT_WITH_FB;
+extern NSString * const NOTIF_DO_UPLOAD_PHOTO;
+extern NSString * const NOTIF_GET_USER_ALL_PHOTO;
+extern NSString * const NOTIF_DELETE_USER_PHOTO_DONE;
+extern NSString * const NOTIF_GET_FRIENDS_ALL_PHOTO;
+extern NSString * const NOTIF_GET_PHOTO_FOR_GEOTAG;
+extern NSString * const NOTIF_CREATE_GEOTAG_DONE;
+extern NSString * const NOTIF_GET_ALL_GEOTAG_DONE;
+extern NSString * const NOTIF_GET_PLACES_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

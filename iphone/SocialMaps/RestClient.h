@@ -20,6 +20,10 @@
 #import "Geolocation.h"
 #import "Event.h"
 #import "UserCircle.h"
+#import "Photo.h"
+#import "Geotag.h"
+
+@class Place;
 
 @interface RestClient : NSObject<ASIHTTPRequestDelegate>
 
@@ -88,5 +92,18 @@
 -(void)doConnectFB:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)FBid:(NSString *)fbAuthToken;
 
 - (void) setSharingPrivacySettings:(NSString*)authToken authTokenVal:(NSString*)authTokenValue privacyType:(NSString*)privacyType sharingOption:(NSString*)sharingOption;
+-(void) uploadPhoto:(NSString *)authToken:(NSString *)authTokenValue:(Photo *)photo;
+-(void) getPhotos:(NSString *)authToken:(NSString *)authTokenValue;
+-(void) deletePhotoByPhotoId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)photoId;
+-(void) getFriendsPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+
+- (void) SavePlace:(Place*)place authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+- (void) getOtherUserPlacesByUserId:(NSString*)userId  authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue ;
+- (void) updatePlaces:(NSString *)authToken:(NSString *)authTokenValue:(Place*)place;
+- (void) deletePlaceByPlaceId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)placeId;
+-(void) getGeotagPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
+-(void)createGeotag:(Geotag*)geotag:(NSString *)authToken:(NSString *)authTokenValue;
+-(void) getAllGeotag:(NSString *)authToken:(NSString *)authTokenValue;
 
 @end

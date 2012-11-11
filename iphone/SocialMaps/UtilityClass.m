@@ -14,6 +14,13 @@
 #import "AppDelegate.h"
 #import "NotifMessage.h"
 
+static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
+static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
+static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
+static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
+CGFloat animatedDistance;
+
 @implementation UtilityClass
 
 + (void) showCustomAlert:(NSString*)title subTitle:(NSString*)subTitle
@@ -34,7 +41,7 @@
 
 +(void)showAlert:(NSString *)title:(NSString *)subTitle
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title 
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
                                                     message:subTitle 
                                                    delegate:nil 
                                           cancelButtonTitle:@"OK" 
@@ -311,7 +318,7 @@
 {
     NSDate *date=[self dateFromString:dateTime];
     NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
-    dateFormatter1.dateFormat = @"yyyy-MM-dd";
+    dateFormatter1.dateFormat = @"MMMM d, yyyy";
     NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
     dateFormatter2.dateFormat = @"hh:mm a";
 
@@ -328,6 +335,98 @@
         return [NSString stringWithFormat:@"on %@",timeStamp1];
     }
     
+}
+
++(void)beganEditing:(UIControl *)control
+{
+    //UIControl need to config here
+    AppDelegate *smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CGRect textFieldRect =
+	[smAppDelegate.window convertRect:control.bounds fromView:control];
+    
+    CGRect viewRect =
+	[smAppDelegate.window convertRect:smAppDelegate.window.bounds fromView:smAppDelegate.window];
+	
+	CGFloat midline = textFieldRect.origin.y + 0.5 * textFieldRect.size.height;
+    CGFloat numerator =
+	midline - viewRect.origin.y
+	- MINIMUM_SCROLL_FRACTION * viewRect.size.height;
+    CGFloat denominator =
+	(MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION)
+	* viewRect.size.height;
+    CGFloat heightFraction = numerator / denominator;
+	if (heightFraction < 0.0)
+    {
+        heightFraction = 0.0;
+    }
+    else if (heightFraction > 1.0)
+    {
+        heightFraction = 1.0;
+    }
+	UIInterfaceOrientation orientation =
+	[[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
+    }
+    else
+    {
+        animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
+    }
+	CGRect viewFrame = smAppDelegate.window.frame;
+    viewFrame.origin.y -= animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [smAppDelegate.window setFrame:viewFrame];
+    
+    [UIView commitAnimations];
+    
+}
+
++(void)endEditing
+{
+    AppDelegate *smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CGRect viewFrame = smAppDelegate.window.frame;
+    viewFrame.origin.y += animatedDistance;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];    
+    [smAppDelegate.window setFrame:viewFrame];    
+    [UIView commitAnimations];    
+}
+
++(NSString *)getDistanceWithFormattingFromLocation:(Geolocation *)location
+{
+    AppDelegate *smAppDelegate = [(UIApplication *)[UIApplication sharedApplication] delegate];
+    NSString *distanceText;
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    if (distanceFromMe > 99999)
+    {
+        distanceText = [NSString stringWithFormat:@"%.2fkm", distanceFromMe/1000];
+    }
+    else
+    {
+        distanceText = [NSString stringWithFormat:@"%.2fm", distanceFromMe];
+    }
+    
+    return distanceText;
+}
+
++(float)getDistanceWithoutFormattingFromLocation:(Geolocation *)location
+{
+    AppDelegate *smAppDelegate = [(UIApplication *)[UIApplication sharedApplication] delegate];
+    Geolocation *myPos = smAppDelegate.currPosition;
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];    
+    return distanceFromMe;
 }
 
 @end

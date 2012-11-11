@@ -19,6 +19,10 @@
 #import "ViewEventListViewController.h"
 #import "Event.h"
 #import "FriendsProfileViewController.h"
+#import "Geotag.h"
+#import "PlaceListViewController.h"
+#import "UIImageView+Cached.h"
+#import "CachedImages.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -33,6 +37,8 @@
 @synthesize smAppDelegate;
 @synthesize totalNotifCount;
 @synthesize circleView;
+
+PullableView *pullUpView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,13 +67,6 @@
 }*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [circleView removeFromSuperview];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -120,6 +119,19 @@
     //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
 }
 
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self loadImagesForOnscreenRows];
+}
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+    [CachedImages removeAllCache];
+    [super viewDidDisappear:animated];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
         NSLog(@"At the top");
@@ -135,7 +147,7 @@
     //listPullupMenu.hidden = YES;
     
     CGFloat xOffset = 0;
-    PullableView *pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
+    pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
     pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
     pullUpView.closedCenter = CGPointMake(160 + xOffset, self.view.frame.size.height);
     pullUpView.center = pullUpView.closedCenter;
@@ -219,7 +231,29 @@
     if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
     if (smAppDelegate.showPlaces == TRUE) 
+    {
         [tempList addObjectsFromArray:smAppDelegate.placeList];
+        for (int i=0; i<[smAppDelegate.geotagList count]; i++)
+        {
+            if ([[smAppDelegate.geotagList objectAtIndex:i] isKindOfClass:[Geotag class]])
+            {
+                Geotag *aGeotag=[[Geotag alloc] init];
+                aGeotag=[smAppDelegate.geotagList objectAtIndex:i];
+                LocationItem *item=[[LocationItem alloc] init];
+                item.itemName=aGeotag.geoTagTitle;
+                item.itemType=4;
+                item.coordinate=CLLocationCoordinate2DMake([aGeotag.geoTagLocation.latitude doubleValue], [aGeotag.geoTagLocation.longitude doubleValue]);
+                item.itemDistance=[UtilityClass getDistanceWithoutFormattingFromLocation:aGeotag.geoTagLocation];
+                item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
+                item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+                item.currDisplayState=0;
+                item.itemCategory=[NSString stringWithFormat:@"%@ %@",aGeotag.ownerLastName,aGeotag.ownerFirstName];;
+                item.itemAddress=[NSString stringWithFormat:@"at %@",aGeotag.geoTagAddress] ;
+                [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];
+            }
+        }
+        [tempList addObjectsFromArray:smAppDelegate.geotagList];
+    }   
     if (smAppDelegate.showEvents == TRUE) 
     {
         NSLog(@"smAppDelegate.eventList %@",smAppDelegate.eventList);
@@ -235,10 +269,11 @@
                 item.itemType=0;
                 item.itemCategory=0;
                 item.coordinate=CLLocationCoordinate2DMake([aEvent.eventLocation.latitude doubleValue], [aEvent.eventLocation.longitude doubleValue]);
-                item.itemDistance=[aEvent.eventDistance floatValue];
+                item.itemDistance=[UtilityClass getDistanceWithoutFormattingFromLocation:aEvent.eventLocation];
                 item.itemIcon=[UIImage imageNamed:@"icon_event.png"];
                 item.itemBg=[UIImage imageNamed:@"event_item_bg.png"];
                 item.currDisplayState=0;
+                item.itemCoverPhotoUrl=[NSURL URLWithString:aEvent.eventImageUrl];
                 [smAppDelegate.eventList replaceObjectAtIndex:i withObject:item];
             }
         }
@@ -301,6 +336,7 @@
 //    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
 //    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 //    [self presentModalViewController:controller animated:YES];
+    [pullUpView setOpened:FALSE animated:TRUE];
     [self.view addSubview:circleView];
 }
 
@@ -404,8 +440,6 @@
     
     initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
-    
-    
 }
 
 -(IBAction)removeCircleView:(id)sender
@@ -415,7 +449,16 @@
 
 -(IBAction)gotoPlace:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];
+    PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
+}
+
+- (void) showPinOnMapView:(Place*)place 
+{
+    [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 -(IBAction)gotoFriends:(id)sender
@@ -457,6 +500,11 @@
     anItem.delegate = self;
     UITableViewCell * cell = [anItem getTableViewCell:tv sender:self];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UIImageView *imageView = (UIImageView*)[cell viewWithTag:123456789];
+    //[imageView setImageForUrlIfAvailable:[NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"]];
+    [imageView setImageForUrlIfAvailable:anItem.itemCoverPhotoUrl];
+    
     return cell;
 }
 
@@ -554,6 +602,7 @@
         [self searchTableView];
     }
     [itemList reloadData];
+    [self loadImagesForOnscreenRows];
 }
 
 // LocationItem delegate
@@ -769,5 +818,43 @@
 - (IBAction)actionSearchOkButton:(id)sender {
     [self searchBarSearchButtonClicked:searchBar];
 }
+
+- (void)loadImagesForOnscreenRows {
+    
+    if ([copyDisplayListArray count] > 0) {
+        
+        NSArray *visiblePaths = [itemList indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            UITableViewCell *cell = [itemList cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell viewWithTag:123456789];
+            
+            LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
+            
+            //anItem.itemCoverPhotoUrl = [NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"];
+            
+            if (anItem.itemCoverPhotoUrl) 
+                [imgCover loadFromURL:anItem.itemCoverPhotoUrl];
+            
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) 
+        [self loadImagesForOnscreenRows];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
+}
+
 
 @end

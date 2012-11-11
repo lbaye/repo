@@ -22,12 +22,15 @@ typedef enum _LOC_SHARING_PREFS_TYPES {
     CounterItem *timeLimit;
     CounterItem *radius;
     RadioButtonItem *permission;
+    int         level;
 }
 @property (nonatomic, retain) id parent;
 @property (nonatomic, retain) CounterItem *timeLimit;
 @property (nonatomic, retain) CounterItem *radius;
 @property (nonatomic, retain) RadioButtonItem *permission;
+@property (nonatomic) int level;
 
 - (id)initWithFrame:(CGRect)frame prefs:(int)prefs defRadius:(int) rad defDuration:(int) dur defPerm:(bool)perm sender:(id) sender tag:(int)tag;
+- (id)initWithFrame:(CGRect)frame prefs:(int)prefs defRadius:(int) rad defDuration:(int) dur defPerm:(bool)perm sender:(id) sender tag:(int)tag level:(int)lvl;
 - (void) counterValueChanged:(int)newVal sender:(id)sender;
 @end

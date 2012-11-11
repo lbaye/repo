@@ -8,6 +8,7 @@
 
 #import "LocationItemPlace.h"
 #import "ListViewController.h"
+#import "UtilityClass.h"
 
 @implementation LocationItemPlace
 @synthesize catIcon;
@@ -16,9 +17,9 @@
 @synthesize placeInfo;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
-          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg {
+          category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
     
-    if (self = [super initWithName:name address:address type:type category:category coordinate:coord dist:dist icon:icon bg:bg]) {
+    if (self = [super initWithName:name address:address type:type category:category coordinate:coord dist:dist icon:icon bg:bg itemCoverPhotoUrl:_coverPhotoUrl]) {
         
     }
     return self;
@@ -27,7 +28,6 @@
     
     cellIdent = @"placeItem";
     UITableViewCell *cell = [super getTableViewCell:tv sender:controller];
-    
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];    
     UIImageView   *catImage = (UIImageView*) [cell viewWithTag:2007];  
     if (catImage == nil) {
@@ -58,13 +58,18 @@
 		
 		[cell.contentView addSubview:review];
     }
+    
     // TODO: Hiding review for appstore submission. revert once feature is implemented
     review.hidden = TRUE;
     
 	// Name
-    CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-    CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, 
-                                  catImage.frame.origin.y+catImage.frame.size.height+5, nameSize.width, nameSize.height);
+    //CGSize nameSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    //CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, 
+                                  //catImage.frame.origin.y+catImage.frame.size.height+5, nameSize.width, nameSize.height);
+    
+     CGSize nameStringSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
+    CGRect nameFrame = CGRectMake(10+itemIcon.size.width+10, catImage.frame.origin.y+catImage.frame.size.height+5, nameStringSize.width, nameStringSize.height);
+    
     lblName.frame = nameFrame;
     
 	return cell;

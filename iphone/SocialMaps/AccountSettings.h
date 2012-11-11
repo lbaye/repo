@@ -13,6 +13,6 @@
 - (UIScrollView*) initWithFrame:(CGRect)scrollFrame;
 - (void) accSettingButtonClicked:(id) sender;
 - (void) accSettingResetButtonClicked:(id) sender;
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
+//- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 
 @end

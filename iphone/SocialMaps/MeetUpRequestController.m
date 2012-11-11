@@ -183,6 +183,9 @@ DDAnnotation *annotation;
 
 - (void) viewDidDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
+    
     NSArray *allDownloads = [imageDownloadsInProgress allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
     [super viewDidDisappear:animated];
@@ -190,9 +193,6 @@ DDAnnotation *annotation;
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
-    
     [pointOnMapView release];
     pointOnMapView = nil;
     [labelAddress release];
@@ -779,6 +779,7 @@ DDAnnotation *annotation;
                     iconDownloader.delegate = self;
                     //imgView.image = [[UIImage alloc] init];
                     iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
+                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
                     [iconDownloader startDownload];
                     
                 }
@@ -985,10 +986,13 @@ DDAnnotation *annotation;
 }
 - (void)appImageDidLoad:(NSString *)userId {
 }
+
 - (void)dealloc {
+    [imageDownloadsInProgress release];
     [tableViewPlaces release];
     [textViewPersonalMsg release];
     [viewComposePersonalMsg release];
     [super dealloc];
 }
+
 @end

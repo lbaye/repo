@@ -22,8 +22,26 @@
 @synthesize parent;
 @synthesize bgImageName;
 @synthesize settingsType;
+@synthesize level;
 
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImgName type:(int) dispType sender:(id) sender tag:(int)tag
+{
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        // Initialization code
+//        btnTag = tag;
+//        titleString = [NSString stringWithString:titleStr];
+//        subtitleString = [NSString stringWithString:subTitleStr];
+//        parent = sender;
+//        self.bgImageName = bgImgName;
+//        self.backgroundColor = [UIColor clearColor];
+//        self.settingsType = dispType;
+//    }
+//    return self;
+    return [self initWithFrame:frame title:titleStr subTitle:subTitleStr bgImage:bgImgName type:dispType sender:sender tag:tag level:0];
+}
+
+- (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImgName type:(int) dispType sender:(id) sender tag:(int)tag level:(int)lvl
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -35,6 +53,7 @@
         self.bgImageName = bgImgName;
         self.backgroundColor = [UIColor clearColor];
         self.settingsType = dispType;
+        self.level = lvl;
     }
     return self;
 }
@@ -60,22 +79,24 @@
     
     if (subtitleString == nil || [subtitleString isEqualToString:@""]) {
         subTitle = nil;
-        CGRect titleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height)/2, titleStringSize.width, titleStringSize.height);
+        CGRect titleFrame = CGRectMake(10*(level+1), (self.frame.size.height-titleStringSize.height)/2, 
+                                       self.frame.size.width-10*(level+1), titleStringSize.height);
         title = [[UILabel alloc] initWithFrame:titleFrame];
         title.text = titleString;
         title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
         title.backgroundColor = [UIColor clearColor];
         [self addSubview:title];
     } else {
-        CGRect titleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height*2)/2, titleStringSize.width, titleStringSize.height);
+        CGRect titleFrame = CGRectMake(10*(level+1), (self.frame.size.height-titleStringSize.height*2)/2, 
+                                       self.frame.size.width-10*(level+1), titleStringSize.height);
         title = [[UILabel alloc] initWithFrame:titleFrame];
         title.text = titleString;
         title.font = [UIFont fontWithName:@"Helvetica" size:14.0];
         title.backgroundColor = [UIColor clearColor];
         
         CGSize subtitleStringSize = [subtitleString sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0]];
-        CGRect subtitleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height*2)/2+titleFrame.size.height, 
-                                          subtitleStringSize.width, subtitleStringSize.height);
+        CGRect subtitleFrame = CGRectMake(10*(level+1), (self.frame.size.height-titleStringSize.height*2)/2+titleFrame.size.height, 
+                                          self.frame.size.width-10*(level+1), subtitleStringSize.height);
         subTitle = [[UILabel alloc] initWithFrame:subtitleFrame];
         subTitle.text = subtitleString;
         subTitle.font = [UIFont fontWithName:@"Helvetica" size:12.0];
@@ -85,8 +106,7 @@
         [self addSubview:subTitle];
     }
     // Button
-    CGRect btnFrame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-5, 
-                                 (self.frame.size.height-BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    CGRect btnFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = btnFrame;
     [btn addTarget:parent 
@@ -98,6 +118,10 @@
     else
         [btn setImage:[UIImage imageNamed:@"icon_arrow_right.png"]
              forState:UIControlStateNormal];
+    
+    // Position arrow image to the right of the button
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0.0, self.frame.size.width-BUTTON_WIDTH-5-15*level, 0.0, 5+15*level);
+    
     //btn.tag = btnTag;
     self.tag = btnTag;
     

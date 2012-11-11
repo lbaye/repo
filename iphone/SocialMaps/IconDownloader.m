@@ -54,6 +54,7 @@
     [self.imageConnection cancel];
     self.imageConnection = nil;
     self.activeDownload = nil;
+    self.delegate = nil;
 }
 
 
@@ -98,15 +99,18 @@
     
     // Release the connection now that it's finished
     self.imageConnection = nil;
-        
-    if (scrollSubViewTag) {
+    
+    if (delegate != nil && image != nil && scrollSubViewTag) {
         [delegate appImageDidLoadForScrollView:userFriends:image:scrollSubViewTag];
         return;
     }
-    [image release];
+    
+    [image release]; image = nil;
+    
     // call our delegate and tell it that our icon is ready for display
     //[delegate appImageDidLoad:self.indexPathInTableView];
-    [delegate appImageDidLoad:self.userFriends.userId];
+    if (delegate != nil)
+        [delegate appImageDidLoad:self.userFriends.userId];
 }
 
 @end
