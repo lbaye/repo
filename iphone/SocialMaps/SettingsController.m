@@ -285,6 +285,7 @@
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 4001;
+    /*
     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
                                    5, 15, 15);
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -295,9 +296,8 @@
           forControlEvents:UIControlEventTouchUpInside];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
                            forState:UIControlStateNormal];
-    
-    
     [settingsHeader addSubview:closeButton];
+     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
 }
@@ -313,6 +313,7 @@
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 3001;
+    /*
     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
                                    5, 15, 15);
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -323,15 +324,32 @@
           forControlEvents:UIControlEventTouchUpInside];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
                            forState:UIControlStateNormal];
-    
-    
     [settingsHeader addSubview:closeButton];
+    */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
 }
 
 - (IBAction)goBack:(id)sender {
+    
+    UIView *view;
+   
+    if ((view = [self.view viewWithTag:420]))
+        [view removeFromSuperview];
+    else if ((view = [self.view viewWithTag:4007]))
+        [view removeFromSuperview];
+    else if ((view = [self.view viewWithTag:4001]))
+        [self closeSharingInfo:nil];
+    else if ((view = [self.view viewWithTag:5001]))
+        [self closeLocationSharing:nil];
+    else if ((view = [self.view viewWithTag:6001]))
+        [self closeNotifSettings:nil];
+    else if ((view = [self.view viewWithTag:3001]))
+        [self closeAccountSettings:nil];
+    
+    if (!view)
+        [self performSegueWithIdentifier:@"backToMap" sender:sender];
 }
 
 - (IBAction)setLocationSharing:(id)sender {
@@ -345,6 +363,7 @@
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 5001;
+    /*
     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
                                    5, 15, 15);
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -355,9 +374,8 @@
           forControlEvents:UIControlEventTouchUpInside];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
                            forState:UIControlStateNormal];
-    
-    
     [settingsHeader addSubview:closeButton];
+     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
@@ -410,9 +428,10 @@
 - (void) closeLocationSharing:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    
+    /*
     UIButton *closeButton = (UIButton*) (sender);
     [closeButton removeFromSuperview];
+     */
     UIScrollView *scrollView = (UIScrollView*) [self.view viewWithTag:5001];
     [scrollView removeFromSuperview];
 }
@@ -421,9 +440,10 @@
 - (void) closeSharingInfo:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    
+    /*
     UIButton *closeButton = (UIButton*) (sender);
     [closeButton removeFromSuperview];
+     */
     UIScrollView *scrollView = (UIScrollView*) [self.view viewWithTag:4001];
     [scrollView removeFromSuperview];
 }
@@ -431,9 +451,10 @@
 - (void) closeAccountSettings:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    
+    /*
     UIButton *closeButton = (UIButton*) (sender);
     [closeButton removeFromSuperview];
+     */
     AccountSettings *scrollView = (AccountSettings*) [self.view viewWithTag:3001];
     [scrollView removeFromSuperview];
     
@@ -442,9 +463,10 @@
 - (void) closeNotifSettings:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    
+    /*
     UIButton *closeButton = (UIButton*) (sender);
     [closeButton removeFromSuperview];
+     */
     AccountSettings *scrollView = (AccountSettings*) [self.view viewWithTag:6001];
     [scrollView removeFromSuperview];
     
