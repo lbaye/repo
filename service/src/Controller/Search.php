@@ -13,7 +13,7 @@ class Search extends Base {
     /**
      * Total number of users to return
      */
-    const PEOPLE_THRESHOLD = 100;
+    const PEOPLE_THRESHOLD = 2000;
 
     /**
      * Km to radius (km / 111.2)
