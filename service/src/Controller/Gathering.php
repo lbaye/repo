@@ -9,7 +9,8 @@ use Repository\GatheringRepo as gatheringRepository;
 use Helper\Status;
 use Helper\ShareConstant;
 
-class Gathering extends Base {
+class Gathering extends Base
+{
 
     const TYPE_MEETUP = 'meetup';
     const TYPE_EVENT = 'event';
@@ -22,7 +23,8 @@ class Gathering extends Base {
     /**
      * Initialize the controller.
      */
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
@@ -42,7 +44,8 @@ class Gathering extends Base {
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function index($type) {
+    public function index($type)
+    {
         $start = (int)$this->request->get('start', 0);
         $limit = (int)$this->request->get('limit', 20);
         $this->_initRepository($type);
@@ -63,7 +66,8 @@ class Gathering extends Base {
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function getActiveEvent($type) {
+    public function getActiveEvent($type)
+    {
         $start = (int)$this->request->get('start', 0);
         $limit = (int)$this->request->get('limit', 20);
         $this->_initRepository($type);
@@ -86,7 +90,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getById($id, $type) {
+    public function getById($id, $type)
+    {
         $this->_initRepository($type);
         $gathering = $this->gatheringRepository->find($id);
 
@@ -125,7 +130,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getByCurrentUser($type) {
+    public function getByCurrentUser($type)
+    {
         return $this->getByUser($this->user, $type);
     }
 
@@ -136,7 +142,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getByUser($user, $type) {
+    public function getByUser($user, $type)
+    {
         $this->_initRepository($type);
 
         if (is_string($user)) {
@@ -163,7 +170,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function create($type) {
+    public function create($type)
+    {
         $formData = $this->request->request->all();
         $this->_initRepository($type);
 
@@ -193,14 +201,16 @@ class Gathering extends Base {
         return $this->_generateResponse($data, Status::CREATED);
     }
 
-    private function isValidDateFormat($type, $formData) {
+    private function isValidDateFormat($type, $formData)
+    {
         if ($type === self::TYPE_EVENT && isset($formData['time']))
             if (count(preg_split('/\s+|\t/', $formData['time'])) < 3) return false;
 
         return true;
     }
 
-    private function storeGathering(array $postData, \Document\User $user) {
+    private function storeGathering(array $postData, \Document\User $user)
+    {
         $gathering = $this->gatheringRepository->map($postData, $user);
         $this->gatheringRepository->insert($gathering);
 
@@ -212,7 +222,8 @@ class Gathering extends Base {
         return $gathering;
     }
 
-    private function sendNotification($type, $gathering, $guestsIds) {
+    private function sendNotification($type, $gathering, $guestsIds)
+    {
         $eventGuests = $this->userRepository->getAllByIds($guestsIds, false);
         $pushMessageType = $this->decidePushMessageType($type);
         $pushNotificationText = $this->createInvitationText($type, $this->user, $gathering);
@@ -235,7 +246,8 @@ class Gathering extends Base {
         $this->_sendPushNotification($guestsIds, $pushNotificationText, $pushMessageType, $gathering->getId());
     }
 
-    private function decidePushMessageType($type) {
+    private function decidePushMessageType($type)
+    {
         switch ($type) {
             case self::TYPE_EVENT :
                 return \Helper\AppMessage::EVENT_GUEST_REQUEST;
@@ -253,7 +265,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function update($id, $type) {
+    public function update($id, $type)
+    {
         $this->_initRepository($type);
 
         $postData = $this->request->request->all();
@@ -323,10 +336,11 @@ class Gathering extends Base {
         return $this->_generateResponse($data);
     }
 
-    private function inviteNewGuests($type, \Document\Gathering $gathering, $guestsIds) {
+    private function inviteNewGuests($type, \Document\Gathering $gathering, $guestsIds)
+    {
         $this->debug(sprintf('Checking new guest for - %s', $gathering->getTitle()));
         $newGuestsIds = $this->determineNewGuests($gathering, $guestsIds);
-        
+
         if (count($newGuestsIds) > 0) {
             $this->debug(sprintf('New guests found - %s', json_encode($newGuestsIds)));
             $this->sendNotification($type, $gathering, $newGuestsIds);
@@ -335,7 +349,8 @@ class Gathering extends Base {
 
     }
 
-    private function determineNewGuests(\Document\Gathering $gathering, $guestsIds) {
+    private function determineNewGuests(\Document\Gathering $gathering, $guestsIds)
+    {
         return array_diff($guestsIds, $gathering->getGuests());
     }
 
@@ -347,7 +362,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function delete($id, $type) {
+    public function delete($id, $type)
+    {
         $this->_initRepository($type);
 
         $gathering = $this->gatheringRepository->find($id);
@@ -370,7 +386,8 @@ class Gathering extends Base {
         return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
 
-    private function _initRepository($type) {
+    private function _initRepository($type)
+    {
         if ($type == 'event') {
             $this->gatheringRepository = $this->dm->getRepository('Document\Event');
         } else if ($type == 'meetup') {
@@ -391,7 +408,8 @@ class Gathering extends Base {
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function setRsvp($id, $type) {
+    public function setRsvp($id, $type)
+    {
         $this->_initRepository($type);
 
         $gathering = $this->gatheringRepository->find($id);
@@ -425,7 +443,8 @@ class Gathering extends Base {
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function share($id, $type) {
+    public function share($id, $type)
+    {
         $this->_initRepository($type);
 
         $postData = $this->request->request->all();
@@ -446,7 +465,8 @@ class Gathering extends Base {
         return $this->_generateResponse(array('message' => 'Shared successfully!'));
     }
 
-    protected function _toArrayAll(array $results) {
+    protected function _toArrayAll(array $results)
+    {
         $gatheringItems = array();
         foreach ($results as $place) {
             $gatheringItem = $place->toArray();
@@ -458,7 +478,8 @@ class Gathering extends Base {
                 $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
             }
 
-            $gatheringItem['is_invited'] = in_array($this->user->getId(), $place->getGuests());
+            if (in_array($this->user->getId(), $place->getGuests()))
+                $gatheringItem['is_invited'] = true;
 
             if (!empty($gatheringItem['eventImage'])) {
 
@@ -473,12 +494,12 @@ class Gathering extends Base {
         return $gatheringItems;
     }
 
-    protected function _checkGatheringType($owner) {
+    protected function _checkGatheringType($owner)
+    {
         $friends = $this->_getFriendList($this->user);
-
-        if ($owner == $this->user) {
+        if ($owner->getId() == $this->user->getId()) {
             return "my_event";
-        } elseif (!empty($friends)) {
+        } elseif (in_array($owner->getId(), $this->user->getFriends()) OR in_array($this->user->getId(), $owner->getFriends())) {
             return "friends_event";
         } else {
             return "public_event";
@@ -492,7 +513,8 @@ class Gathering extends Base {
      * @internal param $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getInvitedMeetups($type) {
+    public function getInvitedMeetups($type)
+    {
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getInvitedMeetups($this->user->getId());
         $gatheringIMNotOwner = array();
@@ -512,7 +534,8 @@ class Gathering extends Base {
 
     }
 
-    private function createInvitationText($type, \Document\User $user, \Document\Gathering $gathering) {
+    private function createInvitationText($type, \Document\User $user, \Document\Gathering $gathering)
+    {
         if ($type == self::TYPE_EVENT)
             return \Helper\AppMessage::getMessage(
                 \Helper\AppMessage::EVENT_GUEST_REQUEST,
@@ -537,7 +560,8 @@ class Gathering extends Base {
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addGuests($id, $type) {
+    public function addGuests($id, $type)
+    {
         $this->_initRepository($type);
 
         $postData = $this->request->request->all();
