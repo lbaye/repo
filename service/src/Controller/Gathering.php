@@ -499,7 +499,7 @@ class Gathering extends Base
         $friends = $this->_getFriendList($this->user);
         if ($owner->getId() == $this->user->getId()) {
             return "my_event";
-        } elseif (in_array($owner->getId(), $this->user->getFriends()) OR in_array($this->user->getId(), $owner->getFriends())) {
+        } elseif (in_array($this->user->getId(), $owner->getFriends())) {
             return "friends_event";
         } else {
             return "public_event";
