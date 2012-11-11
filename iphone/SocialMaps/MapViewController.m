@@ -2316,4 +2316,13 @@ ButtonClickCallbackData callBackData;
     }
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
+{
+    if ([theSearchBar isEqual:searchBar]) {
+        [self searchAnnotations];
+        [searchBar resignFirstResponder];
+        return;
+    }
+}
+
 @end
