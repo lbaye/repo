@@ -39,6 +39,7 @@ class Place extends Base
     {
         $start = $this->request->get('start', 0);
         $limit = $this->request->get('limit', 200);
+        $location = $this->user->getCurrentLocation();
 
         $this->_initRepository($type);
 
@@ -54,6 +55,11 @@ class Place extends Base
                 if (is_null($data[$i]['photo'])) {
                     $data[$i]['photo'] = $this->addStreetViewPhotoIfNoPhotoPresent($data[$i]);
                 }
+
+                if (!empty($location['lat']) && !empty($location['lng'])) {
+                    $data[$i]['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $data[$i]['location']['lat'], $data[$i]['location']['lng']);
+                }
+
                 $i++;
             }
 
@@ -146,7 +152,7 @@ class Place extends Base
     {
         $user = $this->userRepository->find($userId);
 
-        if(is_null($user) || empty($user))
+        if (is_null($user) || empty($user))
             return $this->_generateResponse(null, Status::NO_CONTENT);
 
         $this->_initRepository($type);
