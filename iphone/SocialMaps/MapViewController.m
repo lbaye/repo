@@ -1284,7 +1284,15 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"Deallocating MapViewController");
     NSLog(@"MapView retain count - %d", [_mapView retainCount]);
-    [imageDownloadsInProgress release];
+    [radio release];
+    
+    if (timerGotListing) {
+        [timerGotListing invalidate];
+        timerGotListing = nil;
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
+
     [copySearchAnnotationList release];
     [_mapPulldown release];
     [_shareAllButton release];

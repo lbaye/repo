@@ -81,7 +81,7 @@
     // Add a line at the bottom
     UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
     sep.backgroundColor = [UIColor lightGrayColor];
-    sep.tag = 3000;
+    sep.tag = 4000;
     [self addSubview:sep];
 }
 
@@ -101,7 +101,7 @@
     
     // Move the line to the bottom of the scroll view
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.contentSize.height, self.frame.size.width, 1);
-    UIView *lineView = [self viewWithTag:3000];
+    UIView *lineView = [self viewWithTag:4000];
     lineView.frame = newFrame;
 }
 
@@ -215,6 +215,7 @@
     [self setContentSize:contentSize];
     [self cascadeHeightChange:tag incr:incr];
     [self setNeedsLayout];
+ 
 }
 - (void) removeConfirmView:(int)tag incr:(int)dec{
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
@@ -363,8 +364,9 @@
 }
 
 - (void) noButtonClicked:(id)sender {
-    //NSLog(@"ConfirmView:noButtonClicked %@ %d", ((UIButton*)sender).superview.superview, [[sender superview] superview].tag);
-    
+    NSLog(@"ConfirmView:noButtonClicked");
+    SettingsMaster *parent = (SettingsMaster*)[[sender superview] superview];
+    [self accSettingResetButtonClicked:parent.btn];
 }
 
 - (void) yesButtonClicked:(id)sender {
