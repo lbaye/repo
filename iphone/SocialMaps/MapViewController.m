@@ -1282,18 +1282,10 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
-    NSLog(@"in dealloc");
-    [radio release];
-    
-    if (timerGotListing) {
-        [timerGotListing invalidate];
-        timerGotListing = nil;
-    }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
-    
+    NSLog(@"Deallocating MapViewController");
+    NSLog(@"MapView retain count - %d", [_mapView retainCount]);
+    [imageDownloadsInProgress release];
     [copySearchAnnotationList release];
-    [_mapView release];
     [_mapPulldown release];
     [_shareAllButton release];
     [_shareFriendsButton release];
@@ -1315,8 +1307,7 @@ ButtonClickCallbackData callBackData;
     [viewNotification release];
     [viewSearch release];
     [searchBar release];
-    [viewSharingPrefMapPullDown release];
-    
+    [_mapView release]; _mapView = nil;
     [super dealloc];
 }
 
@@ -2013,6 +2004,7 @@ ButtonClickCallbackData callBackData;
                     }
                 }
             }
+
         }  
         if (listings.placeArr != nil) {
             NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
