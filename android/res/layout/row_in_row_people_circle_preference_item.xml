@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/llHeaderPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="130dip" >
+
+            <ImageView
+                android:id="@+id/cover_image_view"
+                android:layout_width="fill_parent"
+                android:layout_height="130dip"
+                android:adjustViewBounds="true"
+                android:background="@color/black"
+                android:scaleType="fitXY"
+                android:src="@null" />
+
+            <LinearLayout
+                android:id="@+id/container_info"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="0dip"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginTop="20dip"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dip"
+                        android:layout_marginRight="5dip" >
+
+                        <ImageView
+                            android:id="@+id/people_icon_image"
+                            android:layout_width="80dip"
+                            android:layout_height="80dip"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dip"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/rounded_border_image_bg"
+                            android:scaleType="fitCenter"
+                            android:src="@null" />
+
+                        
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="0dip" >
+
+                            <RelativeLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1" >
+
+                                <ImageView
+                                    android:id="@+id/ivSource"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentLeft="true"
+                                    android:src="@drawable/icon"
+                                    android:scaleType="centerInside" />
+
+                                <Button
+                                    android:id="@+id/btnAddMoveToCircle"
+                                    android:layout_width="80dp"
+                                    android:layout_height="30dp"
+                                    android:layout_toLeftOf="@+id/btnMessagePeopleCicleFriend"
+                                    android:background="@drawable/selector_btn_green"
+                                    android:text="@string/addMoveTo"
+                                    android:textColor="@color/white"
+                                    android:textSize="12dip" />
+
+                                <Button
+                                    android:id="@+id/btnMessagePeopleCicleFriend"
+                                    android:layout_width="70dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginLeft="10dp"
+                                    android:background="@drawable/selector_btn_green"
+                                    android:text="@string/messageLabel"
+                                    android:textColor="@color/white"
+                                    android:textSize="12dip" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/first_name_text"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:paddingTop="5dip"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="14dip"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="30dip"
+                            android:layout_marginTop="5dip"
+                            android:background="@drawable/rounder_border_bg" >
+
+                            <TextView
+                                android:id="@+id/distance_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="12dip"
+                                android:textStyle="normal" />
+
+                            <ImageView
+                                android:id="@+id/map_image_btn"
+                                android:layout_width="25dip"
+                                android:layout_height="25dip"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="2dip"
+                                android:layout_toLeftOf="@+id/distance_text"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/show_on_map" />
+
+                            
+
+                       
+
+                            
+
+                                <TextView
+                                    android:id="@+id/address_text"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_toLeftOf="@+id/map_image_btn"
+                                    android:layout_centerVertical="true"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textColor="@android:color/white"
+                                    android:textSize="10dip"
+                                    android:textStyle="bold" />
+                            
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <View
+            android:id="@+id/headerSeperator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/gray_light"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llItemContents"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+    </LinearLayout>
+
+</LinearLayout>

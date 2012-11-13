@@ -24,20 +24,16 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
+import com.facebook.android.*;
 import com.facebook.android.Facebook.*;
-
 import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.ui.R;
 
-
-public class LoginButton extends ImageButton {
+public class LoginButton extends Button {
 
     private Facebook mFb;
     private Handler mHandler;
@@ -45,6 +41,9 @@ public class LoginButton extends ImageButton {
     private String[] mPermissions;
     private Activity mActivity;
     private int mActivityCode;
+    
+    private String loginLabel = "Connect with Facebook";
+    private String logoutLabel = "Logout Facebook";
 
     public LoginButton(Context context) {
         super(context);
@@ -70,8 +69,8 @@ public class LoginButton extends ImageButton {
         mPermissions = permissions;
         mHandler = new Handler();
 
-        setBackgroundColor(Color.TRANSPARENT);
-        setImageResource(fb.isSessionValid() ? R.drawable.logout_button : R.drawable.login_button);
+        //setBackgroundColor(Color.TRANSPARENT);
+        //setImageResource(fb.isSessionValid() ? R.drawable.logout_button : R.drawable.login_button);
         drawableStateChanged();
 
         SessionEvents.addAuthListener(mSessionListener);
@@ -83,57 +82,54 @@ public class LoginButton extends ImageButton {
         /*
          * Source Tag: login_tag
          */
-        //@Override
+        @Override
         public void onClick(View arg0) {
             if (mFb.isSessionValid()) {
-            	
-            	Log.e("LoginButton", "isSessionValid = true");
-            	
                 SessionEvents.onLogoutBegin();
                 AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(mFb);
                 asyncRunner.logout(getContext(), new LogoutRequestListener());
             } else {
-            	Log.e("LoginButton", "isSessionValid = false");
                 mFb.authorize(mActivity, mPermissions, mActivityCode, new LoginDialogListener());
             }
         }
     }
 
     private final class LoginDialogListener implements DialogListener {
-        //@Override
+    	
+        @Override
         public void onComplete(Bundle values) {
-        	Log.e("LoginDialogListener", "onComplete");
+        	Log.i("LoginDialogListener", "onComplete");
             SessionEvents.onLoginSuccess();
         }
 
-        //@Override
+        @Override
         public void onFacebookError(FacebookError error) {
-        	Log.e("LoginDialogListener", "onFacebookError");
+        	Log.i("LoginDialogListener", "onComplete");
             SessionEvents.onLoginError(error.getMessage());
         }
 
-        //@Override
+        @Override
         public void onError(DialogError error) {
-        	Log.e("LoginDialogListener", "onError");
+        	Log.i("LoginDialogListener", "onError");
             SessionEvents.onLoginError(error.getMessage());
         }
 
-        //@Override
+        @Override
         public void onCancel() {
-        	Log.e("LoginDialogListener", "onCancel");
+        	Log.i("LoginDialogListener", "onCancel");
             SessionEvents.onLoginError("Action Canceled");
         }
     }
 
     private class LogoutRequestListener extends BaseRequestListener {
-        //@Override
+        @Override
         public void onComplete(String response, final Object state) {
             /*
              * callback should be run in the original thread, not the background
              * thread
              */
             mHandler.post(new Runnable() {
-                //@Override
+                @Override
                 public void run() {
                     SessionEvents.onLogoutFinish();
                 }
@@ -143,24 +139,30 @@ public class LoginButton extends ImageButton {
 
     private class SessionListener implements AuthListener, LogoutListener {
 
-        //@Override
+        @Override
         public void onAuthSucceed() {
-            setImageResource(R.drawable.logout_button);
+        	Log.i("SessionListener", "onAuthSucceed");
+            //setImageResource(R.drawable.logout_button);
+        	setText(logoutLabel);
             SessionStore.save(mFb, getContext());
         }
 
-        //@Override
+        @Override
         public void onAuthFail(String error) {
+        	Log.i("SessionListener", "onAuthFail");
         }
 
-        //@Override
+        @Override
         public void onLogoutBegin() {
+        	Log.i("SessionListener", "onLogoutBegin");
         }
 
-        //@Override
+        @Override
         public void onLogoutFinish() {
+        	Log.i("SessionListener", "onLogoutFinish");
             SessionStore.clear(getContext());
-            setImageResource(R.drawable.login_button);
+            //setImageResource(R.drawable.login_button);
+            setText(loginLabel);
         }
     }
 

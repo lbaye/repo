@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="10dip"
+    android:background="@drawable/pickerbg"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip" 
+    android:id="@+id/mainLayoutPeopleCirclePicker">
+
+    <LinearLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/header"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="125dip"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_banner" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/addMoveCircleList"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/CircleNamePane"
+        android:layout_below="@+id/layoutHeader"
+        android:cacheColorHint="@color/transparent"
+        android:choiceMode="multipleChoice" />
+
+    <LinearLayout
+        android:id="@+id/CircleNamePane"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonPanel"
+        android:background="@color/background_light"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:padding="5dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/img_blank"
+            android:padding="5dp"
+            android:text="@string/createNewCircle"
+            android:textColor="@drawable/black"
+            android:textStyle="bold"
+            android:textSize="12dip" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <Button
+                android:id="@+id/btnAddCircle"
+                android:layout_width="70dip"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/selector_btn_light"
+                android:text="@string/addLabel"
+                android:textColor="@drawable/black"
+                android:textSize="12dip" />
+
+            <EditText
+                android:id="@+id/editTextCircleName"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dip"
+                android:layout_toLeftOf="@+id/btnAddCircle"
+                android:hint="Name of the new circle"
+                android:singleLine="true"
+                android:textSize="12dip" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background_light"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="70dip"
+            android:layout_height="35dp"
+            android:background="@drawable/img_blank"
+            android:padding="5dp"
+            android:text="@string/cancel"
+            android:textColor="@drawable/black"
+            android:textSize="12dip"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="70dip"
+            android:layout_height="35dp"
+            android:background="@drawable/img_blank"
+            android:padding="5dp"
+            android:text="@string/okLabel"
+            android:textColor="@drawable/black" 
+            android:textSize="12dip"/>
+    </LinearLayout>
+
+</RelativeLayout>

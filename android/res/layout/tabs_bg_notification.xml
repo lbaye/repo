@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:id="@+id/tabItemLayout"
-        android:layout_width="50dp"
+        android:layout_width="54dp"
         android:layout_height="33dp" >
 
         <TextView
@@ -21,11 +21,11 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@drawable/tab_text_selector"
-            android:textSize="12dip"
+            android:textSize="10dip"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="7dp"
-            android:layout_marginBottom="3dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="4dp"
              />
     </RelativeLayout>
 

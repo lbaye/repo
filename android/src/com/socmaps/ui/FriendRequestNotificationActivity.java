@@ -1,21 +1,8 @@
 package com.socmaps.ui;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.FriendRequest;
-import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.RestClient;
-import com.socmaps.util.ServerResponseParser;
-import com.socmaps.util.Utility;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,12 +11,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
+
+import com.readystatesoftware.mapviewballoons.R;
+import com.socmaps.entity.FriendRequest;
+import com.socmaps.util.Constant;
+import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.Utility;
 
 public class FriendRequestNotificationActivity extends Activity {
 
@@ -41,11 +32,11 @@ public class FriendRequestNotificationActivity extends Activity {
 	ProgressDialog m_ProgressDialog;
 	String friendRequestResponse = "";
 	int friendRequestStatus = 0;
-	
+
 	String friendId;
 	int requestStatus = 0;
 	String requestResponse = "";
-	
+
 	int requestCount = 0;
 
 	@Override
@@ -91,7 +82,8 @@ public class FriendRequestNotificationActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smFriendRequestUrl);
+			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
+					+ "/unaccepted");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -129,102 +121,106 @@ public class FriendRequestNotificationActivity extends Activity {
 		if (status == Constant.STATUS_SUCCESS) {
 			try {
 				friendRequestListContainer.removeAllViews();
-				
-				FriendRequest[] friendRequests = ServerResponseParser.parseFriendRequest(response);
-				
-				if(friendRequests != null)
-				{
-					/*NotificationActivity ta = (NotificationActivity) this.getParent();
-					TabHost th = ta.getMyTabHost();
-					View tab = th.getChildAt(1);
-					TextView tabLabel = (TextView)tab.findViewById(R.id.tvItemCountDisplay);
-					tabLabel.setText(""+friendRequests.length);*/
-					
-					
-					for(int i=0;i<friendRequests.length;i++)
-					{
-						if(friendRequests[i] != null)
-						{
-							View v = inflater.inflate(R.layout.row_friend_request, null);
-							
-							TextView senderName = (TextView)v.findViewById(R.id.sender_name_text_view);
-							TextView sentTime = (TextView)v.findViewById(R.id.sentTime);
-							TextView senderMessage = (TextView)v.findViewById(R.id.senderMessage);
-							
-							final String senderId = friendRequests[i].getSenderId();
-							
-							if(friendRequests[i].getSenderName() != null)
-							{
-								senderName.setText(friendRequests[i].getSenderName());
+
+				FriendRequest[] friendRequests = ServerResponseParser
+						.parseFriendRequest(response);
+
+				if (friendRequests != null) {
+					/*
+					 * NotificationActivity ta = (NotificationActivity)
+					 * this.getParent(); TabHost th = ta.getMyTabHost(); View
+					 * tab = th.getChildAt(1); TextView tabLabel =
+					 * (TextView)tab.findViewById(R.id.tvItemCountDisplay);
+					 * tabLabel.setText(""+friendRequests.length);
+					 */
+
+					for (int i = 0; i < friendRequests.length; i++) {
+						if (friendRequests[i] != null) {
+							View v = inflater.inflate(
+									R.layout.row_friend_request, null);
+
+							TextView senderName = (TextView) v
+									.findViewById(R.id.sender_name_text_view);
+							TextView sentTime = (TextView) v
+									.findViewById(R.id.sentTime);
+							TextView senderMessage = (TextView) v
+									.findViewById(R.id.senderMessage);
+
+							final String senderId = friendRequests[i]
+									.getSenderId();
+
+							if (friendRequests[i].getSenderName() != null) {
+								senderName.setText(friendRequests[i]
+										.getSenderName());
 							}
-							if(friendRequests[i].getDate() != null)
-							{
+							if (friendRequests[i].getDate() != null) {
 								sentTime.setText(friendRequests[i].getDate());
 							}
-							if(friendRequests[i].getMessage() != null)
-							{
-								senderMessage.setText("\""+friendRequests[i].getMessage()+"\"");
+							if (friendRequests[i].getMessage() != null) {
+								senderMessage
+										.setText("\""
+												+ friendRequests[i]
+														.getMessage() + "\"");
 							}
-							
-							
-							//accept_friend_request_btn
-							//decline_friend_request_btn
-							//ignore_friend_request_btn
-							
-							Button acceptButton = (Button)v.findViewById(R.id.accept_friend_request_btn);
-							acceptButton.setOnClickListener(new OnClickListener() {
-								
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									acceptFriendRequest(senderId);
-								}
 
-								
-							});
-							
-							Button declineButton = (Button)v.findViewById(R.id.decline_friend_request_btn);
-							declineButton.setOnClickListener(new OnClickListener() {
-								
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									//declineFriendRequest(senderId);
-								}
+							// accept_friend_request_btn
+							// decline_friend_request_btn
+							// ignore_friend_request_btn
 
-								
-							});
-							
-							Button ignoreButton = (Button)v.findViewById(R.id.ignore_friend_request_btn);
-							ignoreButton.setOnClickListener(new OnClickListener() {
-								
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									//ignoreFriendRequest(senderId);
-								}
+							Button acceptButton = (Button) v
+									.findViewById(R.id.btnAcceptRequest);
+							acceptButton
+									.setOnClickListener(new OnClickListener() {
 
-								
-							});
-							
-							
+										@Override
+										public void onClick(View v) {
+											// TODO Auto-generated method stub
+											acceptFriendRequest(senderId);
+										}
+
+									});
+
+							Button declineButton = (Button) v
+									.findViewById(R.id.btnDeclineRequest);
+							declineButton
+									.setOnClickListener(new OnClickListener() {
+
+										@Override
+										public void onClick(View v) {
+											// TODO Auto-generated method stub
+											declineFriendRequest(senderId);
+										}
+
+									});
+
+							Button ignoreButton = (Button) v
+									.findViewById(R.id.btnIgnoreRequest);
+							ignoreButton
+									.setOnClickListener(new OnClickListener() {
+
+										@Override
+										public void onClick(View v) {
+											// TODO Auto-generated method stub
+											// ignoreFriendRequest(senderId);
+										}
+
+									});
+
 							friendRequestListContainer.addView(v);
 						}
 					}
 				}
 
-				
-
 			} catch (Exception e) {
-				//Log.e("Parse response", e.getMessage());
+				// Log.e("Parse response", e.getMessage());
 				// TODO: handle exception
 			}
 		}
 
 	}
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+	// ///////////////////////////////////////////////////////////////////////////////////////////
+
 	public void acceptFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
@@ -251,11 +247,9 @@ public class FriendRequestNotificationActivity extends Activity {
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
-					+ "/" + friendId+"/accept");
+					+ "/" + friendId + "/accept");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-
-			
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.PUT);
@@ -275,8 +269,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseAcceptFriendRequest(requestStatus,
-					requestResponse);
+			handleResponseAcceptFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
 			m_ProgressDialog.dismiss();
@@ -285,26 +278,26 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	public void handleResponseAcceptFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
-		
+
 		Log.d("Accept Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Friend request accepted.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Friend request accepted.",
+					Toast.LENGTH_SHORT).show();
 			break;
-
 
 		default:
 			Toast.makeText(context,
-					"An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		}
 	}
-	
-	
-	////////////////////////////////////////////////////////////////////////////////////
-	
+
+	// //////////////////////////////////////////////////////////////////////////////////
+
 	public void declineFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
@@ -331,11 +324,9 @@ public class FriendRequestNotificationActivity extends Activity {
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
-					+ "/" + friendId+"/decline");
+					+ "/" + friendId + "/decline");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-
-			
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.PUT);
@@ -355,8 +346,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseDeclineFriendRequest(requestStatus,
-					requestResponse);
+			handleResponseDeclineFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
 			m_ProgressDialog.dismiss();
@@ -365,25 +355,26 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	public void handleResponseDeclineFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
-		
+
 		Log.d("Decline Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Friend request declined.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Friend request declined.",
+					Toast.LENGTH_SHORT).show();
 			break;
-
 
 		default:
 			Toast.makeText(context,
-					"An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////
+
 	public void ignoreFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
@@ -410,11 +401,9 @@ public class FriendRequestNotificationActivity extends Activity {
 		public void run() {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
-					+ "/" + friendId+"/ignore");
+					+ "/" + friendId + "/ignore");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-
-			
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.PUT);
@@ -434,8 +423,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			handleResponseIgnoreFriendRequest(requestStatus,
-					requestResponse);
+			handleResponseIgnoreFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
 			m_ProgressDialog.dismiss();
@@ -444,23 +432,25 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	public void handleResponseIgnoreFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
-		
+
 		Log.d("Ignore Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Friend request ignored.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Friend request ignored.",
+					Toast.LENGTH_SHORT).show();
 			break;
-
 
 		default:
 			Toast.makeText(context,
-					"An unknown error occured. Please try again!!", Toast.LENGTH_SHORT).show();
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public void onContentChanged() {
@@ -483,6 +473,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	}
 
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			// finish();
@@ -510,6 +501,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		 * 
 		 * @see android.view.View.OnClickListener#onClick(android.view.View)
 		 */
+		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 

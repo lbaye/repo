@@ -4,18 +4,15 @@
 
 package com.socmaps.entity;
 
-public class Information 
-{
+public class Information {
 	public String title;
 	public boolean isSet;
 
-	public Information()
-	{
+	public Information() {
 		super();
 	}
 
-	public Information(String title, boolean isSet) 
-	{
+	public Information(String title, boolean isSet) {
 		super();
 		this.title = title;
 		this.isSet = isSet;

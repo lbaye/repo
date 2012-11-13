@@ -1,66 +1,46 @@
 package com.socmaps.ui;
 
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
 
 public class NotifyNotificationActivity extends Activity {
-	
+
 	ButtonActionListener buttonActionListener;
-	
 
 	LinearLayout notificationListContainer;
 	private LayoutInflater inflater;
 	private Context context;
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notify_notification_activity);
-		
+
 		initialize();
-		
-		
 
 	}
-	
-	
-	
-	public void initialize()
-	{
+
+	public void initialize() {
 		buttonActionListener = new ButtonActionListener();
-		context=NotifyNotificationActivity.this;
-		notificationListContainer=(LinearLayout)findViewById(R.id.notification_list_container);
+		context = NotifyNotificationActivity.this;
+		notificationListContainer = (LinearLayout) findViewById(R.id.notification_list_container);
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				
+
 	}
-	
-	
-	
-	
-	
 
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
 
 		// initialize
-		//initialize();
+		// initialize();
 
 	}
 
@@ -68,20 +48,14 @@ public class NotifyNotificationActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		/*notificationListContainer.removeAllViews();
-		for(int i=0;i<5;i++)
-		{
-			if(i%2==0)
-			{
-				View v=inflater.inflate(R.layout.row_notification_without_image, null);
-				notificationListContainer.addView(v);
-			}
-			else
-			{
-				View v=inflater.inflate(R.layout.row_notification_with_image, null);
-				notificationListContainer.addView(v);
-			}
-		}*/
+		/*
+		 * notificationListContainer.removeAllViews(); for(int i=0;i<5;i++) {
+		 * if(i%2==0) { View
+		 * v=inflater.inflate(R.layout.row_notification_without_image, null);
+		 * notificationListContainer.addView(v); } else { View
+		 * v=inflater.inflate(R.layout.row_notification_with_image, null);
+		 * notificationListContainer.addView(v); } }
+		 */
 	}
 
 	@Override
@@ -90,9 +64,10 @@ public class NotifyNotificationActivity extends Activity {
 
 	}
 
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			//finish();
+			// finish();
 			/*
 			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
 			 * adb.setTitle("Set Title here");
@@ -109,18 +84,20 @@ public class NotifyNotificationActivity extends Activity {
 		return false;
 
 	}
-	
-	private class ButtonActionListener implements OnClickListener
-	{
 
-		/* (non-Javadoc)
+	private class ButtonActionListener implements OnClickListener {
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.view.View.OnClickListener#onClick(android.view.View)
 		 */
+		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 
 }

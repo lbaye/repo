@@ -15,25 +15,25 @@ import com.facebook.android.FacebookError;
  */
 public abstract class BaseRequestListener implements RequestListener {
 
-    //@Override
+    @Override
     public void onFacebookError(FacebookError e, final Object state) {
         Log.e("Facebook", e.getMessage());
         e.printStackTrace();
     }
 
-    //@Override
+    @Override
     public void onFileNotFoundException(FileNotFoundException e, final Object state) {
         Log.e("Facebook", e.getMessage());
         e.printStackTrace();
     }
 
-    //@Override
+    @Override
     public void onIOException(IOException e, final Object state) {
         Log.e("Facebook", e.getMessage());
         e.printStackTrace();
     }
 
-    //@Override
+    @Override
     public void onMalformedURLException(MalformedURLException e, final Object state) {
         Log.e("Facebook", e.getMessage());
         e.printStackTrace();

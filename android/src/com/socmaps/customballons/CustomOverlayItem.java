@@ -1,59 +1,86 @@
-/***
- * Copyright (c) 2011 readyState Software Ltd
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- */
-
 package com.socmaps.customballons;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
-import com.socmaps.entity.AccountSettingsEntity;
-import com.socmaps.entity.OtherUserEntity;
+import com.socmaps.entity.Event;
+import com.socmaps.entity.MeetupRequest;
+import com.socmaps.entity.MyInfo;
+import com.socmaps.entity.People;
+import com.socmaps.entity.Place;
+import com.socmaps.entity.SecondDegreePeople;
 
 public class CustomOverlayItem extends OverlayItem {
 
+	private People user;
+	private Place place;
+	private MyInfo self;
+	private Event event;
+	private MeetupRequest meetup;
+	private SecondDegreePeople secondDegreePeople;
 
-	private OtherUserEntity user;
-	
-	
-	/*public CustomOverlayItem(OtherUserEntity ou) {
-		super(new GeoPoint((int)(ou.getCurrentLat()),(int)(ou.getCurrentLng())), "test", "test");
-		
-		
-		this.user=ou;
-	}*/
-
-	public CustomOverlayItem(GeoPoint point, String title, String snipet, OtherUserEntity ou) {
-		super(point,title,snipet);
-		
-		
-		this.user=ou;
-	}
-	public String getImageURL() {
-		return user.getAvatar();
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			Event ee) {
+		super(point, title, snipet);
+		this.event = ee;
 	}
 
-	public void setImageURL(String imageURL) {
-		this.user.setAvatar(imageURL);
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			MeetupRequest ee) {
+		super(point, title, snipet);
+		this.meetup = ee;
 	}
-	
-	public OtherUserEntity getUser() {
+
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			People ou) {
+		super(point, title, snipet);
+		this.user = ou;
+	}
+
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			Place pe) {
+		super(point, title, snipet);
+		this.place = pe;
+	}
+
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			MyInfo self) {
+		super(point, title, snipet);
+		this.self = self;
+	}
+
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			SecondDegreePeople ou) {
+		super(point, title, snipet);
+		this.secondDegreePeople = ou;
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public MeetupRequest getMeetup() {
+		return meetup;
+	}
+
+	public People getUser() {
 		return user;
 	}
 
-	public void setUser(OtherUserEntity ou) {
-		this.user = ou;
+	public Place getPlace() {
+		return place;
 	}
-	
-	
+
+	public MyInfo getMe() {
+		return self;
+	}
+
+	public SecondDegreePeople getSecondDegreePeople() {
+		return secondDegreePeople;
+	}
+
+	@Override
+	public void setMarker(android.graphics.drawable.Drawable marker) {
+		super.setMarker(marker);
+	}
+
 }

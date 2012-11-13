@@ -1,14 +1,5 @@
 package com.socmaps.ui;
 
-import com.socmaps.entity.AccountSettingsEntity;
-import com.socmaps.entity.LayersEntity;
-import com.socmaps.util.AppStaticStorages;
-import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.RestClient;
-import com.socmaps.util.ServerResponseParser;
-import com.socmaps.util.Utility;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,17 +8,24 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.socmaps.entity.LayersPreferences;
+import com.socmaps.util.Constant;
+import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
+import com.socmaps.util.Utility;
+
 public class LayerPreferencesActivity extends Activity implements
 		OnClickListener {
-	
 
 	CheckBox chkWikipedia, chkTripAdvisor, chkFoodspotting;
 	Button btnSave;
@@ -42,7 +40,7 @@ public class LayerPreferencesActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layer_preferences);
+		setContentView(R.layout.layer_preferences_layout);
 
 		initialize();
 		setViewOnClickListener();
@@ -52,57 +50,53 @@ public class LayerPreferencesActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if(AppStaticStorages.layersEntity==null)
-		{
+		if (StaticValues.layersPreferences == null) {
 			startDialogAndBgThread();
+		} else {
+			setFieldValues(StaticValues.layersPreferences);
 		}
-		else
-		{
-			setFieldValues(AppStaticStorages.layersEntity);
-		}
-	}
-	
-	private void setFieldValues(LayersEntity layersEntity) {
-		// TODO Auto-generated method stub
-		
-		setRadioGroupValue(radioGroupWiki,layersEntity.getWikipedia());
-		setRadioGroupValue(radioGroupTripad,layersEntity.getTripadvisor());
-		setRadioGroupValue(radioGroupFoodSpoting,layersEntity.getFoodspotting());
-		
 	}
 
-	private void setRadioGroupValue(RadioGroup rG,
-			boolean status) {
+	private void setFieldValues(LayersPreferences layersPreferences) {
 		// TODO Auto-generated method stub
-		if(status)
-		{
-			((RadioButton)rG.findViewById(R.id.on_radio)).setChecked(status);
-		}
-		else
-			((RadioButton)rG.findViewById(R.id.off_radio)).setChecked(true);
+
+		setRadioGroupValue(radioGroupWiki, layersPreferences.getWikipedia());
+		setRadioGroupValue(radioGroupTripad, layersPreferences.getTripadvisor());
+		setRadioGroupValue(radioGroupFoodSpoting,
+				layersPreferences.getFoodspotting());
+
+	}
+
+	private void setRadioGroupValue(RadioGroup rG, boolean status) {
+		// TODO Auto-generated method stub
+		if (status) {
+			((RadioButton) rG.findViewById(R.id.on_radio)).setChecked(status);
+		} else
+			((RadioButton) rG.findViewById(R.id.off_radio)).setChecked(true);
 	}
 
 	public void handleLayerSettingsResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			LayersEntity layersEntity=ServerResponseParser.parseLayerSettings(response);
-			setFieldValues(layersEntity);
-			AppStaticStorages.layersEntity=layersEntity;
+			LayersPreferences layersPreferences = ServerResponseParser
+					.parseLayerSettings(response);
+			setFieldValues(layersPreferences);
+			StaticValues.layersPreferences = layersPreferences;
 			break;
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
 					Utility.parseResponseString(response), Toast.LENGTH_LONG)
 					.show();
-			
+
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
 					Utility.parseResponseString(response), Toast.LENGTH_LONG)
 					.show();
-			
+
 			break;
 		default:
 			Toast.makeText(getApplicationContext(),
@@ -111,32 +105,33 @@ public class LayerPreferencesActivity extends Activity implements
 
 		}
 	}
-	
-	
-	private Runnable returnResGetLayerSettings=new Runnable() {
-		
+
+	private Runnable returnResGetLayerSettings = new Runnable() {
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
+
 			m_ProgressDialog.dismiss();
 			handleLayerSettingsResponse(responseStatus, responseString);
-			
-			/*AccountSettingsEntity accountSettingsEntity=parseServerResponse();
-			AppStaticStorages.accountSettingsEntity=accountSettingsEntity;*/
-			
-			
+
+			/*
+			 * AccountSettingsEntity
+			 * accountSettingsEntity=parseServerResponse();
+			 * AppStaticStorages.accountSettingsEntity=accountSettingsEntity;
+			 */
+
 		}
 
-		
 	};
-	
-	private Runnable getLayerSettingsInfo=new Runnable() {
-		
+
+	private Runnable getLayerSettingsInfo = new Runnable() {
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient getAccountSettingsClient=new RestClient(Constant.layersSettingsUrl);
+			RestClient getAccountSettingsClient = new RestClient(
+					Constant.layersSettingsUrl);
 			getAccountSettingsClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -150,16 +145,12 @@ public class LayerPreferencesActivity extends Activity implements
 			responseStatus = getAccountSettingsClient.getResponseCode();
 
 			runOnUiThread(returnResGetLayerSettings);
-			
-			
+
 		}
 	};
-	
-	
-	
+
 	private void startDialogAndBgThread() {
 
-		
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, getLayerSettingsInfo,
@@ -173,11 +164,10 @@ public class LayerPreferencesActivity extends Activity implements
 
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
-		
-		
 
 	}
-	
+
+	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
 		Window window = getWindow();
@@ -195,7 +185,7 @@ public class LayerPreferencesActivity extends Activity implements
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 
 		btnSave = (Button) findViewById(R.id.btnSaveLayers);
-		
+
 	}
 
 	private void setViewOnClickListener() {
@@ -240,7 +230,8 @@ public class LayerPreferencesActivity extends Activity implements
 		client.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 		client.AddParam("wikipedia", getRadioStatus(radioGroupWiki) + "");
 		client.AddParam("tripadvisor", getRadioStatus(radioGroupTripad) + "");
-		client.AddParam("foodspotting", getRadioStatus(radioGroupFoodSpoting) + "");
+		client.AddParam("foodspotting", getRadioStatus(radioGroupFoodSpoting)
+				+ "");
 
 		try {
 			client.Execute(RestClient.RequestMethod.PUT);
@@ -274,7 +265,8 @@ public class LayerPreferencesActivity extends Activity implements
 			Toast.makeText(getApplicationContext(),
 					"Information saved successfully!!", Toast.LENGTH_SHORT)
 					.show();
-			AppStaticStorages.layersEntity=ServerResponseParser.parseLayerSettings(response);
+			StaticValues.layersPreferences = ServerResponseParser
+					.parseLayerSettings(response);
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -324,9 +316,7 @@ public class LayerPreferencesActivity extends Activity implements
 			Intent notificationIntent = new Intent(getApplicationContext(),
 					NotificationActivity.class);
 			startActivity(notificationIntent);
-		}
-		else if(v==btnSave)
-		{
+		} else if (v == btnSave) {
 			updateAllValues();
 		}
 

@@ -23,22 +23,27 @@
             android:scaleType="fitXY" />
 
         <ImageView
-            android:layout_width="120dp"
+            android:layout_width="135dip"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:scaleType="centerInside"
-            android:src="@drawable/logo_3" />
+            android:src="@drawable/logo_banner" />
 
         <Button
             android:id="@+id/btnNotification"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="31dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/bubble_count_icon"
-            android:scaleType="fitXY" />
+            android:background="@drawable/selector_icon_notification"
+            android:paddingBottom="12dip"
+            android:paddingRight="2dip"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="10dip"
+            android:textStyle="normal" />
     </RelativeLayout>
 
     <LinearLayout
@@ -109,7 +114,7 @@
                             android:orientation="vertical" >
 
                             <TextView
-                                android:id="@+id/toptext"
+                                android:id="@+id/tvTitleTextTop"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/eraseHistoryTopLabel"
@@ -118,7 +123,7 @@
                                 android:textStyle="normal" />
 
                             <TextView
-                                android:id="@+id/bottomtext"
+                                android:id="@+id/tvTitleTextBottom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/eraseHistoryBottomLabel"
@@ -127,7 +132,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/arrowImageUpDownErase"
+                            android:id="@+id/ivArrowUpDown"
                             android:layout_width="27dip"
                             android:layout_height="22dip"
                             android:layout_alignParentRight="true"
@@ -162,21 +167,140 @@
 
                         <Button
                             android:id="@+id/erase_yes_btn"
-                            android:layout_width="52dip"
+                            android:layout_width="60dip"
                             android:layout_height="32dip"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10dip"
-                            android:background="@drawable/yes_button" />
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/yesLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
 
                         <Button
                             android:id="@+id/erase_no_btn"
-                            android:layout_width="52dip"
+                            android:layout_width="60dip"
                             android:layout_height="32dip"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10dip"
                             android:layout_toLeftOf="@+id/erase_yes_btn"
-                            android:background="@drawable/no_button" />
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/noLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.socmaps.widget.ExpandablePanel>
+
+            <com.socmaps.widget.ExpandablePanel
+                xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
+                android:id="@+id/logoutContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                my:collapsedHeight="50dip"
+                my:expcontent="@+id/logoutValue"
+                my:exphandle="@+id/logoutExpand" >
+
+                <LinearLayout
+                    android:id="@+id/logoutValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@+id/logoutExpand"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip"
+                        android:background="@drawable/img_settings_list_bg"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/tvTitleTextTop"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/logoutTopLabel"
+                                android:textColor="#000000"
+                                android:textSize="14dip"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:id="@+id/tvTitleTextBottom"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#5E5E5E"
+                                android:textSize="12dip"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivArrowUpDown"
+                            android:layout_width="27dip"
+                            android:layout_height="22dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:adjustViewBounds="true"
+                            android:padding="5dip"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_arrow_down" />
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dip"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/line_arrow_down_left" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dip" >
+
+                        <TextView
+                            android:id="@+id/tvConfirmLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dip"
+                            android:text="@string/confirmLogoutLabel"
+                            android:textColor="#5E5E5E"
+                            android:textSize="14dip" />
+
+                        <Button
+                            android:id="@+id/btnLogoutYes"
+                            android:layout_width="60dip"
+                            android:layout_height="32dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/yesLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
+
+                        <Button
+                            android:id="@+id/btnLogoutNo"
+                            android:layout_width="60dip"
+                            android:layout_height="32dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dip"
+                            android:layout_toLeftOf="@+id/btnLogoutYes"
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/noLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.socmaps.widget.ExpandablePanel>
@@ -213,7 +337,7 @@
                             android:orientation="vertical" >
 
                             <TextView
-                                android:id="@+id/top_text_delete_account"
+                                android:id="@+id/tvTitleTextTop"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/deleteAccountTopLabel"
@@ -222,16 +346,16 @@
                                 android:textStyle="normal" />
 
                             <TextView
-                                android:id="@+id/bottom_text_delete_account"
+                                android:id="@+id/tvTitleTextBottom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#5E5E5E"
-                                android:textSize="12dip" />
+                                android:textSize="12dip"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <ImageView
-                           
-                            android:id="@+id/arrowImageUpDownDelete"
+                            android:id="@+id/ivArrowUpDown"
                             android:layout_width="27dip"
                             android:layout_height="22dip"
                             android:layout_alignParentRight="true"
@@ -266,12 +390,15 @@
 
                         <Button
                             android:id="@+id/delete_account_yes_btn"
-                            android:layout_width="52dip"
+                            android:layout_width="60dip"
                             android:layout_height="32dip"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10dip"
-                            android:background="@drawable/yes_button" />
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/yesLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
 
                         <Button
                             android:id="@+id/delete_account_no_btn"
@@ -280,7 +407,10 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10dip"
                             android:layout_toLeftOf="@+id/delete_account_yes_btn"
-                            android:background="@drawable/no_button" />
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/noLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.socmaps.widget.ExpandablePanel>
@@ -317,7 +447,7 @@
                             android:orientation="vertical" >
 
                             <TextView
-                                android:id="@+id/top_text_change_pass"
+                                android:id="@+id/tvTitleTextTop"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/changePassLabel"
@@ -326,16 +456,16 @@
                                 android:textStyle="normal" />
 
                             <TextView
-                                android:id="@+id/bottom_text_change_pass"
+                                android:id="@+id/tvTitleTextBottom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#5E5E5E"
-                                android:textSize="12dip" />
+                                android:textSize="12dip"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/arrowImageUpDownChangePass"
-                         
+                            android:id="@+id/ivArrowUpDown"
                             android:layout_width="27dip"
                             android:layout_height="22dip"
                             android:layout_alignParentRight="true"
@@ -394,12 +524,15 @@
 
                         <Button
                             android:id="@+id/pass_save_btn"
-                            android:layout_width="60dip"
-                            android:layout_height="30dip"
+                            android:layout_width="62dip"
+                            android:layout_height="32dip"
                             android:layout_below="@+id/retype_new_pass_edit_text"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="5dip"
-                            android:background="@drawable/btn_update_dark" />
+                            android:background="@drawable/selector_btn_light"
+                            android:text="@string/updateButtonLabel"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.socmaps.widget.ExpandablePanel>
@@ -436,7 +569,7 @@
                             android:orientation="vertical" >
 
                             <TextView
-                                android:id="@+id/top_text_personal_info"
+                                android:id="@+id/tvTitleTextTop"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/personalInfoLabel"
@@ -445,15 +578,16 @@
                                 android:textStyle="normal" />
 
                             <TextView
-                                android:id="@+id/bottom_text_personal_info"
+                                android:id="@+id/tvTitleTextBottom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#5E5E5E"
-                                android:textSize="12dip" />
+                                android:textSize="12dip"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/arrowImageUpDownPersonal"
+                            android:id="@+id/ivArrowUpDown"
                             android:layout_width="27dip"
                             android:layout_height="22dip"
                             android:layout_alignParentRight="true"
@@ -488,7 +622,7 @@
                                 android:id="@+id/ivProfilePicture"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:scaleType="fitXY"
+                                android:scaleType="fitCenter"
                                 android:src="@drawable/thumb" />
 
                             <ImageView
@@ -526,10 +660,10 @@
                                 android:layout_marginRight="10dp"
                                 android:hint="@string/requiredText"
                                 android:inputType="textEmailAddress"
-                                android:textSize="12dip" >
+                                android:textSize="12dip"
+                                android:enabled="false" >
                             </EditText>
                         </LinearLayout>
-
 
                         <LinearLayout
                             android:layout_width="fill_parent"
@@ -750,12 +884,22 @@
                                 android:text="@string/country"
                                 android:textColor="@drawable/black" />
 
-                            <EditText
-                                android:id="@+id/etCountry"
+                            <!--
+                                 <Spinner
+                                android:id="@+id/spCountry"
+                                android:layout_width="fill_parent"
+                                android:layout_height="45dp"
+                                android:layout_marginRight="10dp"
+                                android:drawSelectorOnTop="true"
+                                android:entries="@array/countries_array" />
+                            -->
+
+                            <Spinner
+                                android:id="@+id/spCountry"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
-                                android:inputType="text"
+                                android:entries="@array/countries_array"
                                 android:textSize="12dip" />
                         </LinearLayout>
 
@@ -807,9 +951,12 @@
 
                             <Button
                                 android:id="@+id/btnSubmit"
-                                android:layout_width="65dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/btn_submit_dark" />
+                                android:layout_width="62dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/selector_btn_light"
+                                android:text="@string/submit"
+                                android:textColor="@color/black"
+                                android:textSize="14dip" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -832,90 +979,58 @@
                     android:textStyle="normal" />
 
                 <RelativeLayout
-                    android:layout_width="85dip"
+                    android:layout_width="100dip"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" >
+                    android:layout_marginTop="10dip" >
 
-                    <RelativeLayout
-                        android:id="@+id/radioLayout"
-                        android:layout_width="80dip"
-                        android:layout_height="21dip"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true" >
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="7dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="7dip"
+                        android:background="#6B696B" />
 
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="7dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dip"
-                            android:layout_marginRight="30dip"
-                            android:background="#6B696B" />
-
-                        <RadioGroup
-                            android:id="@+id/radioUnitGroup"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="0dip"
-                            android:orientation="horizontal" >
-
-                            <!--
-                             <RadioButton
-                            android:id="@+id/radioMetric"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                            -->
-
-                            <RadioButton
-                                android:id="@+id/metric_radio"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:button="@drawable/radiobutton_selector"
-                                android:checked="true" />
-
-                            <RadioButton
-                                android:id="@+id/imperial_unit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:button="@drawable/radiobutton_selector" />
-                        </RadioGroup>
-                    </RelativeLayout>
-
-                    <LinearLayout
+                    <RadioGroup
+                        android:id="@+id/rgUnit"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/radioLayout"
                         android:orientation="horizontal" >
 
-                        <TextView
-                            android:layout_width="0dip"
+                        <RadioButton
+                            android:id="@+id/metric_btn"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="left"
+                            android:background="@drawable/radiobutton_selector_2"
+                            android:button="@null"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="25dip"
                             android:text="@string/metricUnitLabel"
                             android:textColor="@color/gray_dark"
                             android:textSize="11dp" />
 
-                        <TextView
-                            android:layout_width="0dip"
+                        <RadioButton
+                            android:id="@+id/imperial_btn"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="left"
+                            android:background="@drawable/radiobutton_selector_2"
+                            android:button="@null"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="25dip"
                             android:text="@string/imperialUnitLabel"
                             android:textColor="@color/gray_dark"
                             android:textSize="11dp" />
-                    </LinearLayout>
+                    </RadioGroup>
                 </RelativeLayout>
             </RelativeLayout>
-            
-            <View 
+
+            <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dip"
-                android:background="@color/gray_light"
-                />
+                android:background="@color/gray_light" />
         </LinearLayout>
     </ScrollView>
 

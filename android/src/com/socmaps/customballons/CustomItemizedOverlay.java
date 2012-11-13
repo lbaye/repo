@@ -1,48 +1,66 @@
-/***
- * Copyright (c) 2011 readyState Software Ltd
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- */
-
 package com.socmaps.customballons;
 
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.widget.Toast;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
-import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.images.ImageDownloader;
+import com.socmaps.util.Constant;
 
-public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItemizedOverlay<CustomOverlayItem> {
+public class CustomItemizedOverlay<Item extends OverlayItem> extends
+		BalloonItemizedOverlay<CustomOverlayItem> {
 
-	private ArrayList<CustomOverlayItem> m_overlays = new ArrayList<CustomOverlayItem>();
+	public ArrayList<CustomOverlayItem> m_overlays = new ArrayList<CustomOverlayItem>();
 	private Context c;
 	private BubleTapHandle bubleTapHandle;
-	
-	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView,BubleTapHandle bth) {
+	private int typeFlag;
+	private ImageDownloader imageDownloader;
+
+	/*
+	 * private boolean isVisible=true;
+	 * 
+	 * 
+	 * @Override //protected final boolean onTap(int index) { public final
+	 * boolean onTap(int index) {
+	 * 
+	 * if(isVisible) { super.onTap(index); }
+	 * 
+	 * return true; }
+	 * 
+	 * 
+	 * @Override public void draw(Canvas canvas, MapView mapView, boolean
+	 * shadow) { // TODO Auto-generated method stub
+	 * 
+	 * if(isVisible) { super.draw(canvas, mapView, shadow); } }
+	 * 
+	 * public Boolean getIsVisible() { return isVisible; }
+	 * 
+	 * public void setIsVisible(Boolean visible) { this.isVisible = visible; }
+	 * 
+	 * public void toggleVisible() { this.isVisible = !isVisible; }
+	 */
+	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView,
+			BubleTapHandle bth, int flag, ImageDownloader imageDownloader) {
 		super(boundCenter(defaultMarker), mapView);
 		c = mapView.getContext();
-		this.bubleTapHandle=bth;
+		this.bubleTapHandle = bth;
+		this.typeFlag = flag;
+		this.imageDownloader = imageDownloader;
 	}
 
 	public void addOverlay(CustomOverlayItem overlay) {
-	    m_overlays.add(overlay);
-	    populate();
+		m_overlays.add(overlay);
+		populate();
+	}
+
+	public void populateItemizedOverlay() {
+		populate();
+		setLastFocusedIndex(-1);
 	}
 
 	@Override
@@ -57,21 +75,47 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItem
 
 	@Override
 	protected boolean onBalloonTap(int index, CustomOverlayItem item) {
-		/*Toast.makeText(c, "onBalloonTap for overlay index " + item.getUser().getFirstName(),
-				Toast.LENGTH_LONG).show();*/
-		//DialogsAndToasts.showExtendedUserInfoDialog(c);
-		bubleTapHandle.catchBubleTap(item);
+		/*
+		 * Toast.makeText(c, "onBalloonTap for overlay index " +
+		 * item.getUser().getFirstName(), Toast.LENGTH_LONG).show();
+		 */
+		// DialogsAndToasts.showExtendedUserInfoDialog(c);
+		bubleTapHandle.catchBubleTap(item, typeFlag);
 		return true;
 	}
 
 	@Override
 	protected BalloonOverlayView<CustomOverlayItem> createBalloonOverlayView() {
 		// use our custom balloon view with our custom overlay item type:
-		return new CustomBalloonOverlayView<CustomOverlayItem>(getMapView().getContext(), getBalloonBottomOffset());
+
+		if (typeFlag == Constant.FLAG_PEOPLE)
+			return new CustomBalloonOverlayViewPeople<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(), imageDownloader);
+		else if (typeFlag == Constant.FLAG_PLACE)
+			return new CustomBalloonOverlayViewPlace<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		else if (typeFlag == Constant.FLAG_EVENT)
+			return new CustomBalloonOverlayViewEvent<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		else if (typeFlag == Constant.FLAG_MEETUP)
+			return new CustomBalloonOverlayViewMeetup<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		else if (typeFlag == Constant.FLAG_SECOND_DEGREE)
+			return new CustomBalloonOverlayViewSecondDegreePeople<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		else
+			return new CustomBalloonOverlayViewSelf<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
 	}
 
-	public void removeItem(int i){
+	public void removeItem(int i) {
 		m_overlays.remove(i);
-        populate();
-    }
+
+		populate();
+	}
+
+	public void removeAllItem() {
+		m_overlays.clear();
+		populate();
+	}
 }

@@ -10,4 +10,12 @@
     <color name="gray_light">#CCCCCC</color>
     <color name="blue">#0000FF</color>
     <color name="gray_dark">#333333</color>
+     <color name="transparent_light">#44000000</color>
+    <color name="transparent_semi">#88000000</color>
+    <color name="transparent_dark">#BB000000</color>
+    <color name="highlightGreen">#97CA32</color>
+    <color name="background_light">#FFEEEEEE</color>
+    <color name="offwhite">#F6F6F6</color>
+    <color name="seperator">#D7D7D7</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -57,34 +57,76 @@
             android:textStyle="italic" />
     </RelativeLayout>
     
-     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip" >
+     <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:gravity="center" >
 
-       <Button android:id="@+id/accept_friend_request_btn"
-           android:layout_height="32dip"
-           android:layout_width="72dip" 
-           android:background="@drawable/btn_bg_selector_accept"
-           android:layout_alignParentLeft="true"/>
-       
-       
-       <Button android:id="@+id/decline_friend_request_btn"
-           android:layout_height="32dip"
-           android:layout_width="72dip"
-           android:layout_marginLeft="10dip" 
-           android:background="@drawable/decline_btn_bg_selector"
-           android:layout_toRightOf="@+id/accept_friend_request_btn"/>
-       
-       
-       <Button android:id="@+id/ignore_friend_request_btn"
-           android:layout_height="32dip"
-           android:layout_width="72dip"
-           android:layout_marginLeft="10dip" 
-           android:background="@drawable/ignore_btn_bg_selector"
-           android:layout_toRightOf="@+id/decline_friend_request_btn"/>
-         
-    </RelativeLayout>
+            <Button
+                android:id="@+id/btnAcceptRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:background="@drawable/btn_selector_green"
+                android:text="@string/acceptLabel"
+                android:textColor="@drawable/btn_selector_green_text_color"
+                android:textSize="12dip" />
+            <TextView
+                android:id="@+id/tvAcceptedRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:text="@string/acceptedLabel"
+                android:textColor="@color/highlightGreen"
+                android:textSize="12dip"
+                android:gravity="center"
+                android:visibility="gone"
+                 />
+            
+			
+            <Button
+                android:id="@+id/btnDeclineRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:background="@drawable/btn_selector_gray"
+                android:text="@string/declineLabel"
+                android:textColor="@drawable/btn_selector_gray_text_color"
+                android:textSize="12dip"
+                android:layout_marginLeft="10dip"                
+                 />
+            <TextView
+                android:id="@+id/tvDeclinedRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:text="@string/declinedLabel"
+                android:textColor="@color/red"
+                android:textSize="12dip"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_marginLeft="10dip"
+                 />
+
+            <Button
+                android:id="@+id/btnIgnoreRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:background="@drawable/btn_selector_light"
+                android:text="@string/ignoreLabel"
+                android:textColor="@drawable/btn_selector_light_text_color"
+                android:textSize="12dip"
+                android:layout_marginLeft="10dip" />
+            <TextView
+                android:id="@+id/tvIgnoredRequest"
+                android:layout_width="72dip"
+                android:layout_height="32dip"
+                android:text="@string/ignoredLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="12dip"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_marginLeft="10dip"
+                 />
+        </LinearLayout>
     
 <View android:layout_width="fill_parent"
     android:layout_height="1dip"

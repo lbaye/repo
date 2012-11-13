@@ -11,9 +11,6 @@ import java.util.Hashtable;
 
 import org.json.JSONObject;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.Facebook;
-
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,6 +20,9 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.net.http.AndroidHttpClient;
 import android.provider.MediaStore;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.Facebook;
 
 public class FBUtility extends Application {
 
@@ -36,7 +36,7 @@ public class FBUtility extends Application {
     public static Hashtable<String, String> currentPermissions = new Hashtable<String, String>();
 
     private static int MAX_IMAGE_DIMENSION = 720;
-    public static final String HACK_ICON_URL = "http://www.facebookmobileweb.com/hackbook/img/facebook_icon_large.png";
+    
 
     public static Bitmap getBitmap(String url) {
         Bitmap bm = null;

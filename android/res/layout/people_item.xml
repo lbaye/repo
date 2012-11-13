@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listItemParent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:padding="2dip"
+     >
+
+    <LinearLayout
+        android:id="@+id/proficPicContainer"
+        android:layout_width="61dip"
+        android:layout_height="61dip"
+        android:gravity="center"
+        android:background="@color/transparent" >
+
+        <LinearLayout
+            android:id="@+id/proficPicContainer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/highlightGreen"
+            android:padding="1dip" >
+
+            <ImageView
+                android:id="@+id/profilePic"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/user_default" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="12dip"
+        android:textStyle="normal"
+        android:maxHeight="40dip"
+        android:gravity="center_horizontal"
+         />
+
+</LinearLayout>

@@ -10,17 +10,17 @@ import com.facebook.android.FacebookError;
  */
 public abstract class BaseDialogListener implements DialogListener {
 
-    //@Override
+    @Override
     public void onFacebookError(FacebookError e) {
         e.printStackTrace();
     }
 
-    //@Override
+    @Override
     public void onError(DialogError e) {
         e.printStackTrace();
     }
 
-    //@Override
+    @Override
     public void onCancel() {
     }
 

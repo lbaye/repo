@@ -1,6 +1,5 @@
 package com.socmaps.ui;
 
-import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,14 +10,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
 public class NotificationActivity extends TabActivity {
 
@@ -28,6 +26,7 @@ public class NotificationActivity extends TabActivity {
 
 	private TabHost mTabHost;
 
+	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
 		Window window = getWindow();
@@ -44,14 +43,14 @@ public class NotificationActivity extends TabActivity {
 
 		setupTabHost();
 
-		mTabHost.getTabWidget().setDividerDrawable(R.drawable.sp2);
+		mTabHost.getTabWidget().setDividerDrawable(R.drawable.seperator);
 
 		Drawable messageTabIcon = getResources().getDrawable(
-				R.drawable.icon_message_notification);
+				R.drawable.tab_item_notification_message);
 		Drawable friendRequestTabIcon = getResources().getDrawable(
-				R.drawable.icon_friend_request);
+				R.drawable.tab_item_notification_friend_request);
 		Drawable notifyTabIcon = getResources().getDrawable(
-				R.drawable.icon_notify);
+				R.drawable.tab_item_notification_notification);
 
 		/*
 		 * // Tab for message TabSpec messageSpec =
@@ -106,7 +105,7 @@ public class NotificationActivity extends TabActivity {
 		TabSpec setContent = mTabHost.newTabSpec(tag).setIndicator(tabview)
 				.setContent(intent);
 		mTabHost.addTab(setContent);
-		Log.i("TabHost", mTabHost.getChildCount()+"");
+		Log.i("TabHost", mTabHost.getChildCount() + "");
 
 	}
 
@@ -148,6 +147,7 @@ public class NotificationActivity extends TabActivity {
 
 	}
 
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			finish();
@@ -175,6 +175,7 @@ public class NotificationActivity extends TabActivity {
 		 * 
 		 * @see android.view.View.OnClickListener#onClick(android.view.View)
 		 */
+		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if (v == btnBack) {

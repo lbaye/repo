@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/header"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="23dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_back"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:layout_width="135dip"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_banner" />
+
+        <Button
+            android:id="@+id/btnNotification"
+            android:layout_width="30dp"
+            android:layout_height="31dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_icon_notification"
+            android:text="0"
+            android:textSize="10dip"
+            android:textStyle="normal"
+            android:textColor="@color/black"
+            android:paddingBottom="12dip"
+            android:paddingRight="2dip" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/btnNotification"
+            android:background="@drawable/btn_search"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:layout_below="@+id/layoutHeader"
+        android:background="@color/offwhite"
+        android:visibility="visible" >
+
+        <EditText
+            android:id="@+id/etFriendSearch"
+            android:layout_width="220dip"
+            android:layout_height="40dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"
+            android:ems="10"
+            android:hint="@string/search_label_event"
+            android:textSize="12dip" />
+
+        <Button
+            android:id="@+id/doSearchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/etFriendSearch"
+            android:text="Ok" >
+        </Button>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/filterPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchEventContainer"
+        android:background="@color/offwhite"
+        android:gravity="center_horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/atozBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="5dip"
+                android:text="@string/atoz"
+                android:textColor="@color/black"
+                android:textSize="11dip" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="40dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/seperator" />
+
+            <Button
+                android:id="@+id/distanceFilterBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="5dip"
+                android:text="@string/distance_filter_label"
+                android:textColor="@color/black"
+                android:textSize="11dip" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="40dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/seperator" />
+
+            <Button
+                android:id="@+id/circleFilterBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:paddingBottom="5dip"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="5dip"
+                android:text="@string/circlesLabel"
+                android:textColor="@color/black"
+                android:textSize="11dip" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/offwhite"
+        >
+        
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/list_container"
+            android:gravity="center_horizontal">
+            
+        </LinearLayout>
+        
+    </ScrollView>
+    
+</LinearLayout>

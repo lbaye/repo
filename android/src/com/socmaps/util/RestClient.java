@@ -23,201 +23,207 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.protocol.HTTP;
+
+import android.util.Log;
 
 /**
  * @author hasan.mahadi
- *
+ * 
  */
 public class RestClient {
 
-    private ArrayList <NameValuePair> params;
-    private ArrayList <NameValuePair> headers;
+	private ArrayList<NameValuePair> params;
+	private ArrayList<NameValuePair> headers;
 
-    private String url;
+	private String url;
 
-    private int responseCode;
-    private String message;
+	private int responseCode;
+	private String message;
 
-    private String response;
-    
-    public static enum RequestMethod { GET, POST, PUT, DELETE }
+	private String response;
 
-    
+	public static enum RequestMethod {
+		GET, POST, PUT, DELETE
+	}
 
-    public String getResponse() {
-        return response;
-    }
+	public int timeoutConnection = 20000;// in milliseconds, 20 seconds
+	public int timeoutSocket = 20000; // in milliseconds, 20 seconds
 
-    public String getErrorMessage() {
-        return message;
-    }
+	public String getResponse() {
+		return response;
+	}
 
-    public int getResponseCode() {
-        return responseCode;
-    }
+	public String getErrorMessage() {
+		return message;
+	}
 
-    public RestClient(String url)
-    {
-        this.url = url;
-        params = new ArrayList<NameValuePair>();
-        headers = new ArrayList<NameValuePair>();
-    }
+	public int getResponseCode() {
+		return responseCode;
+	}
 
-    public void AddParam(String name, String value)
-    {
-        params.add(new BasicNameValuePair(name, value));
-    }
+	public RestClient(String url) {
+		this.url = url;
+		params = new ArrayList<NameValuePair>();
+		headers = new ArrayList<NameValuePair>();
+	}
 
-    public void AddHeader(String name, String value)
-    {
-        headers.add(new BasicNameValuePair(name, value));
-    }
+	public void AddParam(String name, String value) {
+		params.add(new BasicNameValuePair(name, value));
+	}
 
-    public void Execute(RequestMethod method) throws Exception
-    {
-        switch(method) {
-            case GET:
-            {
-                //add parameters
-                String combinedParams = "";
-                if(!params.isEmpty()){
-                    combinedParams += "?";
-                    for(NameValuePair p : params)
-                    {
-                        String paramString = p.getName() + "=" + URLEncoder.encode(p.getValue(),"UTF-8");
-                        if(combinedParams.length() > 1)
-                        {
-                            combinedParams  +=  "&" + paramString;
-                        }
-                        else
-                        {
-                            combinedParams += paramString;
-                        }
-                    }
-                }
+	public void AddHeader(String name, String value) {
+		headers.add(new BasicNameValuePair(name, value));
+	}
 
-                HttpGet request = new HttpGet(url + combinedParams);
+	public void Execute(RequestMethod method) throws Exception {
+		switch (method) {
+		case GET: {
+			// add parameters
+			String combinedParams = "";
+			if (!params.isEmpty()) {
+				combinedParams += "?";
+				for (NameValuePair p : params) {
+					String paramString = p.getName() + "="
+							+ URLEncoder.encode(p.getValue(), "UTF-8");
+					if (combinedParams.length() > 1) {
+						combinedParams += "&" + paramString;
+					} else {
+						combinedParams += paramString;
+					}
+				}
+			}
 
-                //add headers
-                for(NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
+			HttpGet request = new HttpGet(url + combinedParams);
 
-                executeRequest(request, url);
-                break;
-            }
-            case POST:
-            {
-                HttpPost request = new HttpPost(url);
+			// add headers
+			for (NameValuePair h : headers) {
+				request.addHeader(h.getName(), h.getValue());
+			}
 
-                //add headers
-                for(NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
+			executeRequest(request, url);
+			break;
+		}
+		case POST: {
+			HttpPost request = new HttpPost(url);
 
-                if(!params.isEmpty()){
-                    request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-                }
+			// add headers
+			for (NameValuePair h : headers) {
+				request.addHeader(h.getName(), h.getValue());
+			}
 
-                executeRequest(request, url);
-                break;
-            }
-            
-            case PUT:
-            {
-                HttpPut request = new HttpPut(url);
+			if (!params.isEmpty()) {
+				request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			}
 
-                //add headers
-                for(NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
+			executeRequest(request, url);
+			break;
+		}
 
-                if(!params.isEmpty()){
-                    request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-                }
+		case PUT: {
+			HttpPut request = new HttpPut(url);
 
-                executeRequest(request, url);
-                break;
-            }
-            
-            case DELETE:
-            {
-                HttpDelete request = new HttpDelete(url);
+			// add headers
+			for (NameValuePair h : headers) {
+				request.addHeader(h.getName(), h.getValue());
+			}
 
-                //add headers
-                for(NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
+			if (!params.isEmpty()) {
+				request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			}
 
-                if(!params.isEmpty()){
-                   // request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-                }
+			executeRequest(request, url);
+			break;
+		}
 
-                executeRequest(request, url);
-                break;
-            }
-        }
-    }
+		case DELETE: {
+			HttpDelete request = new HttpDelete(url);
 
-    private void executeRequest(HttpUriRequest request, String url)
-    {
-        HttpClient client = new DefaultHttpClient();
+			// add headers
+			for (NameValuePair h : headers) {
+				request.addHeader(h.getName(), h.getValue());
+			}
 
-        HttpResponse httpResponse;
+			if (!params.isEmpty()) {
+				// request.setEntity(new UrlEncodedFormEntity(params,
+				// HTTP.UTF_8));
+			}
 
-        try {
-            httpResponse = client.execute(request);
-            responseCode = httpResponse.getStatusLine().getStatusCode();
-            message = httpResponse.getStatusLine().getReasonPhrase();
-            
-            //httpResponse.getHeaders(name)
+			executeRequest(request, url);
+			break;
+		}
+		}
+	}
 
-            HttpEntity entity = httpResponse.getEntity();
+	private void executeRequest(HttpUriRequest request, String url) {
+		BasicHttpParams httpParams = new BasicHttpParams();
+		// HttpConnectionParams.setConnectionTimeout(httpParams,
+		// timeoutConnection);
+		// HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
+		// HttpClient client = new DefaultHttpClient(httpParams);
 
-            if (entity != null) {
+		HttpClient client = new DefaultHttpClient();
 
-                InputStream instream = entity.getContent();
-                response = convertStreamToString(instream);
+		HttpResponse httpResponse;
 
-                // Closing the input stream will trigger connection release
-                instream.close();
-            }
+		try {
+			httpResponse = client.execute(request);
+			responseCode = httpResponse.getStatusLine().getStatusCode();
+			message = httpResponse.getStatusLine().getReasonPhrase();
 
-        } catch (ClientProtocolException e)  {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        } catch (IOException e) {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        }
-    }
+			// httpResponse.getHeaders(name)
 
-    private static String convertStreamToString(InputStream is) {
+			HttpEntity entity = httpResponse.getEntity();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
+			if (entity != null) {
 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-    
-    
+				InputStream instream = entity.getContent();
+				response = convertStreamToString(instream);
+
+				// Closing the input stream will trigger connection release
+				instream.close();
+			}
+
+		} catch (ClientProtocolException e) {
+			Log.e("REST Client", "protocol:" + e.getMessage());
+			client.getConnectionManager().shutdown();
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.e("REST Client", "" + e.getMessage());
+			client.getConnectionManager().shutdown();
+			e.printStackTrace();
+		}
+	}
+
+	private static String convertStreamToString(InputStream is) {
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
+	}
+
+	public void setConnectionTimeout(int timeInSeconds) {
+		timeoutConnection = timeInSeconds * 1000;
+	}
+
+	public void setSocketTimeout(int timeInSeconds) {
+		timeoutSocket = timeInSeconds * 1000;
+	}
+
 }
