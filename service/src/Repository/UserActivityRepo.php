@@ -10,12 +10,13 @@ use Repository\UserRepo as UserRepo;
 
 class UserActivityRepo extends Base {
 
-    public function getByUser(User $user) {
+    public function getByUser(User $user, $limit = 20) {
         return $this->dm->createQueryBuilder()
                 ->find('Document\UserActivity')
                 ->field('owner')
                 ->equals($user->getId())
                 ->sort('createDate', 'desc')
+                ->limit($limit)
                 ->getQuery()
                 ->execute();
     }

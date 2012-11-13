@@ -118,4 +118,17 @@ class UserActivity {
         return $this->comments;
     }
 
+    public function toArray() {
+
+        # Build hash object from the basic fields
+        $exportableFields = array('id', 'objectId', 'objectType', 'title', 'likes');
+        $hash = array();
+        foreach ($exportableFields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
+
+        # Add likes related fields
+        $hash['likesCount'] = count($this->getLikes());
+
+        return $hash;
+    }
+
 }

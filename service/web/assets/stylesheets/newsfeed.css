@@ -1,0 +1,50 @@
+body {
+  margin: 0px;
+  padding: 2px;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  background: red;
+  margin: 5px;
+}
+ul li .photo .row {
+  clear: both;
+  display: block;
+}
+ul li .photo .row .avatar {
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  background: #000;
+}
+ul li .photo .row .name {
+  float: left;
+}
+ul li .photo .row .name h4 {
+  padding: 2px;
+  margin: 0px;
+}
+ul li .photo .row .time {
+  float: right;
+  margin-right: 10px;
+}
+ul li .photo .row .comment {
+  clear: both;
+  background: #8a2be2;
+  padding: 5px;
+  margin-left: 70px;
+  top: -25px;
+  position: relative;
+  width: 90%;
+}
+ul li .photo .row .photo {
+  background: yellow;
+  margin-top: -80px;
+}
