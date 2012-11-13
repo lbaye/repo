@@ -324,14 +324,14 @@ class Place extends Base
 
             if ($recommendType == "venue") {
                 $metaType = "venue";
-                $getMsg = appMessage::RECOMMEND_VENUE_MESSAGE;
+                $staticMsg = appMessage::RECOMMEND_VENUE_MESSAGE;
             } elseif ($recommendType == "place") {
                 $metaType = "place";
-                $getMsg = appMessage::RECOMMEND_PLACE_MESSAGE;
+                $staticMsg = appMessage::RECOMMEND_PLACE_MESSAGE;
 
             } elseif ($recommendType == "geotag") {
                 $metaType = "geotag";
-                $getMsg = appMessage::RECOMMEND_GEOTAG_MESSAGE;
+                $staticMsg = appMessage::RECOMMEND_GEOTAG_MESSAGE;
 
             }
             else {
@@ -340,14 +340,13 @@ class Place extends Base
                 return $this->response;
             }
 
-
             if (empty($postData['recipients']) && empty($postData['metaTitle']) && empty($postData['metaContent'])) {
                 $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
                 $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                 return $this->response;
             }
             if (empty($postData['subject'])) {
-                $postData['subject'] = $metaType . ": " . $postData['metaTitle'];
+                $postData['subject'] = $postData['metaTitle'];
             }
 
             if (empty($postData['content'])) {
@@ -373,8 +372,8 @@ class Place extends Base
 
             if (!empty($recipients)) {
                 $this->_sendPushNotification(
-                    array($recipients), $this->_createPushMessage($postData['subject'], $getMsg),
-                    $getMsg, $id
+                    array($recipients), $this->_createPushMessage($postData['subject'], $staticMsg),
+                    $staticMsg, $id
                 );
 
             }
@@ -437,9 +436,9 @@ class Place extends Base
         return $this->response;
     }
 
-    private function _createPushMessage($metaTitle, $getMsg)
+    private function _createPushMessage($metaTitle, $staticMsg)
     {
-        return AppMessage::getMessage($getMsg, $this->user->getFirstName(), $metaTitle);
+        return AppMessage::getMessage($staticMsg, $this->user->getFirstName(), $metaTitle);
 
     }
 }
