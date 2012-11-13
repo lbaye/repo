@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
+#import "CustomRadioButton.h"
 
-@interface ViewEventDetailViewController : UIViewController<UIScrollViewDelegate>
+@interface ViewEventDetailViewController : UIViewController<UIScrollViewDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UILabel *eventName;
     IBOutlet UILabel *eventDate;

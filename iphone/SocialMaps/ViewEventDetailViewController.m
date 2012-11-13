@@ -24,7 +24,7 @@
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
 @synthesize inviteEventButton,totalNotifCount;               
-@synthesize addressScollview;
+@synthesize addressScollview,ImgesName,results;
 
 NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
@@ -32,6 +32,7 @@ AppDelegate *smAppDelegate;
 int notfCounter=0;
 int detNotfCounter=0;
 BOOL isBackgroundTaskRunning=FALSE;
+CustomRadioButton *radio;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,9 +82,10 @@ BOOL isBackgroundTaskRunning=FALSE;
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventName.text=globalEvent.eventName;
+//    eventDate.text=[UtilityClass getCurrentTimeOrDate:globalEvent.eventDate.date];
     eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
-    CGSize lblStringSize = [globalEvent.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica" size:11.0f]];
+    CGSize lblStringSize = [globalEvent.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:11.0f]];
     eventAddress.frame=CGRectMake(eventAddress.frame.origin.x, eventAddress.frame.origin.y, lblStringSize.width, lblStringSize.height);
     addressScollview.contentSize=eventAddress.frame.size;
     eventAddress.text=globalEvent.eventAddress;
@@ -158,7 +160,8 @@ BOOL isBackgroundTaskRunning=FALSE;
         [yesButton setUserInteractionEnabled:NO];
         [noButton setUserInteractionEnabled:NO];
         [maybeButton setUserInteractionEnabled:NO];
-        
+        [radio gotoButton:0];
+        [radio setUserInteractionEnabled:NO];
         [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
         [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
         [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
@@ -176,22 +179,14 @@ BOOL isBackgroundTaskRunning=FALSE;
         NSLog(@"aEvent.myResponse %@",aEvent.myResponse);
         if ([aEvent.myResponse isEqualToString:@"yes"])
         {
-            [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-            [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+            [radio gotoButton:0];
         }
         else if([aEvent.myResponse isEqualToString:@"no"]) 
         {
-            [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            [noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-            [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-        }
+            [radio gotoButton:1];        }
         else
         {
-            [yesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            [noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
-            [maybeButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
-        }
+            [radio gotoButton:2];        }
     }
 }
 
@@ -206,6 +201,9 @@ BOOL isBackgroundTaskRunning=FALSE;
 {
     [super viewDidLoad];
     NSLog(@"globalEvent det %@",globalEvent.eventID);
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(140, 3, 170, 43) numButtons:3 labels:[NSArray arrayWithObjects:@"Yes",@"No",@"May be",nil]  default:0 sender:self tag:20001];
+    radio.delegate = self;
+    [rsvpView addSubview:radio];
     
     notfCounter=0;
     detNotfCounter=0;
@@ -230,6 +228,41 @@ BOOL isBackgroundTaskRunning=FALSE;
     NSLog(@"before reload.");
     [self initView];
     
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [smAppDelegate hideActivityViewer];
+    //    [smAppDelegate.window setUserInteractionEnabled:NO];
+    
+    if ([sender tag] == 20001) 
+    {
+        switch (indx) 
+        {
+            case 2:
+                NSLog(@"may be");
+                globalEvent.myResponse=@"maybe";
+                NSLog(@"eventID %@",globalEvent.eventID);
+                [rc setEventRsvp:globalEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            case 1:
+                NSLog(@"no");
+                globalEvent.myResponse=@"no";
+                NSLog(@"eventID %@",globalEvent.eventID);
+                [rc setEventRsvp:globalEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            case 0:
+                NSLog(@"yes");
+                globalEvent.myResponse=@"yes";
+                NSLog(@"eventID %@",globalEvent.eventID);
+                [rc setEventRsvp:globalEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 -(void)loadImageView

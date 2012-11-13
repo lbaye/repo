@@ -21,6 +21,8 @@
     IBOutlet UIButton *noButton;
     IBOutlet UIButton *maybesButton;
     IBOutlet UIView *footerView;
+    IBOutlet UIScrollView *eventNameScrollView;
+    IBOutlet UIScrollView *eventAddressScrollView;
 }
 
 @property(nonatomic,retain)IBOutlet UIView *footerView;
@@ -34,5 +36,7 @@
 @property(nonatomic,retain)IBOutlet UIButton *yesButton;
 @property(nonatomic,retain)IBOutlet UIButton *noButton;
 @property(nonatomic,retain)IBOutlet UIButton *maybesButton;
+@property(nonatomic,retain) IBOutlet UIScrollView *eventNameScrollView;
+@property(nonatomic,retain) IBOutlet UIScrollView *eventAddressScrollView;
 
 @end

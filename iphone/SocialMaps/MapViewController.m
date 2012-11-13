@@ -456,6 +456,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) viewEventDetail:(id <MKAnnotation>)anno {
+    NSLog(@"event detail action");
      LocationItem *locationItem = (LocationItem*) anno;
      Event *aEvent=[[Event alloc] init];
      int i= [smAppDelegate.eventList indexOfObject:locationItem];

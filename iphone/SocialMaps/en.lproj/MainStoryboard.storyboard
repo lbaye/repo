@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11E2617" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
+        <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -340,7 +341,7 @@
             <objects>
                 <viewController storyboardIdentifier="mapViewController" id="wC3-So-nVM" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iiB-MM-eFF">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="vAv-Wy-i1h" userLabel="MapView">
@@ -1532,7 +1533,7 @@
             <objects>
                 <viewController title="List View Controller" id="fgr-fq-SqM" customClass="ListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2r9-Es-OgG">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Sh-3V-Ss1" userLabel="listPullDown">
@@ -2014,7 +2015,7 @@
             <objects>
                 <viewController storyboardIdentifier="notificationViewController" id="xAh-9q-Sej" customClass="NotificationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jm0-Vq-vBY">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="QOl-IZ-Dve" userLabel="notifHeader">
@@ -2293,7 +2294,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="XYB-c9-szR" userLabel="regEmail">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="XYB-c9-szR" userLabel="regEmail">
                                 <rect key="frame" x="90" y="167" width="210" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -2332,7 +2333,7 @@
                                     <action selector="selectGender:" destination="dhQ-Hm-f8i" eventType="touchUpInside" id="FFh-KZ-yct"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="Wry-pZ-hYL" userLabel="regName">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="Wry-pZ-hYL" userLabel="regName">
                                 <rect key="frame" x="93" y="313" width="207" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -2341,7 +2342,7 @@
                                     <outlet property="delegate" destination="dhQ-Hm-f8i" id="1Hp-74-htA"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="5hA-hw-Yv0" userLabel="regFirstName">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="5hA-hw-Yv0" userLabel="regFirstName">
                                 <rect key="frame" x="93" y="264" width="207" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
@@ -2812,7 +2813,7 @@
                                     </label>
                                 </subviews>
                             </scrollView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="left" text="Distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="bO1-Tm-0fs">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="bO1-Tm-0fs">
                                 <rect key="frame" x="254" y="145" width="63" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -2970,83 +2971,11 @@
                                 <rect key="frame" x="0.0" y="171" width="320" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="xDD-1K-MyG">
-                                        <rect key="frame" x="158" y="15" width="134" height="7"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.29019609089999998" green="0.29019609089999998" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
-                                        <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                    </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Will you attend?" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="rvb-8m-HxJ">
                                         <rect key="frame" x="6" y="10" width="118" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bhl-7b-dzW" userLabel="selNone">
-                                        <rect key="frame" x="147" y="5" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_cheked.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="yesAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="ydk-lu-7QQ"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="x3k-yt-c8I" userLabel="selCircles">
-                                        <rect key="frame" x="214" y="5" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="noAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="FFb-14-jj0"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xrf-RH-NEx" userLabel="selCustom">
-                                        <rect key="frame" x="282" y="5" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="maybeAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="dlJ-5Y-8kc"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Yes" lineBreakMode="tailTruncation" minimumFontSize="10" id="zLS-UV-ees">
-                                        <rect key="frame" x="147" y="27" width="28" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No" lineBreakMode="tailTruncation" minimumFontSize="10" id="1gC-LO-AxG">
-                                        <rect key="frame" x="214" y="27" width="24" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Maybe" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="8Zf-g7-Pa3">
-                                        <rect key="frame" x="264" y="27" width="49" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -3068,7 +2997,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="NYM-dH-GFe">
-                                <rect key="frame" x="0" y="85" width="320" height="280"/>
+                                <rect key="frame" x="0.0" y="85" width="320" height="280"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="LyA-FD-sXt">
@@ -3164,11 +3093,8 @@
                         <outlet property="inviteEventButton" destination="CIc-Bs-eUT" id="Sy9-7t-5fT"/>
                         <outlet property="mapContainer" destination="NYM-dH-GFe" id="sfB-Dx-H8a"/>
                         <outlet property="mapView" destination="hv2-vn-oPN" id="glA-g9-GJf"/>
-                        <outlet property="maybeButton" destination="Xrf-RH-NEx" id="cAb-qN-yTR"/>
-                        <outlet property="noButton" destination="x3k-yt-c8I" id="c29-On-gh0"/>
                         <outlet property="rsvpView" destination="ZMq-Sm-dBK" id="VxP-yW-skd"/>
                         <outlet property="totalNotifCount" destination="lww-xc-wM7" id="VdN-9t-WCi"/>
-                        <outlet property="yesButton" destination="bhl-7b-dzW" id="wRM-tU-K0g"/>
                         <segue destination="iEq-R0-8Ox" kind="modal" identifier="updateEvent" modalTransitionStyle="crossDissolve" id="BET-LK-FoH"/>
                     </connections>
                 </viewController>
@@ -3321,10 +3247,10 @@
                                         <accessibility key="accessibilityConfiguration" hint="hint" label="label">
                                             <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
                                         </accessibility>
-<mutableAttributedString key="userComments">
-<!--notes
+                                        <mutableAttributedString key="userComments">
+                                            <!--notes
 -->
-<mutableData key="keyedArchiveRepresentation">
+                                            <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGREVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCA8T
 GiQlJiwwODk8P1UkbnVsbNMJCgsMDQ5cTlNBdHRyaWJ1dGVzViRjbGFzc1hOU1N0cmluZ4AEgA2AAtIK
 EBESWU5TLnN0cmluZ4ADVm5vdGVzCtIUFRYXWiRjbGFzc25hbWVYJGNsYXNzZXNfEA9OU011dGFibGVT
@@ -3339,92 +3265,12 @@ AIcAjgCTAJ4ApwC5AL0AxgDPANYA3gDpAOsA7gDwAPIA9QD3APkBDAETARoBJQExATMBNQE3ATwBTwFS
 AWUBbgF1AXwBhQGHAYkBkgGUAZ4BowGqAa0BsgG/AcIBxwHjAecCAwIYAioCLQIyAAAAAAAAAgEAAAAA
 AAAASAAAAAAAAAAAAAAAAAAAAjQ
 </mutableData>
-</mutableAttributedString>
-                                        <attributedString key="userComments">
-                                            <fragment>
-                                                <string key="content">notes
-</string>
-                                                <attributes>
-                                                    <font key="NSFont" size="12" name="Helvetica"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                </attributes>
-                                            </fragment>
-                                        </attributedString>
+                                        </mutableAttributedString>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top_curve_bg.png" id="sSU-wd-fZH">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="KcR-Se-KZA">
-                                        <rect key="frame" x="59" y="83" width="205" height="7"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.29019609089999998" green="0.29019609089999998" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
-                                        <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6N2-1T-rb7" userLabel="selCircles">
-                                        <rect key="frame" x="115" y="73" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="myPlaceButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="VxQ-9e-nwT"/>
-                                            <action selector="noAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="JtW-63-Xx3"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="h5G-GX-Jda" userLabel="selCustom">
-                                        <rect key="frame" x="183" y="73" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="maybeAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="qDw-vX-x2M"/>
-                                            <action selector="neamePlaceButtonAction:" destination="iEq-R0-8Ox" eventType="touchUpInside" id="MjR-nY-BgC"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3PC-Ci-nyO" userLabel="selCustom">
-                                        <rect key="frame" x="251" y="74" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="maybeAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="d0b-bU-l9U"/>
-                                            <action selector="pointOnMapButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="oZL-3q-Rbc"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TYv-IU-4zt" userLabel="selNone">
-                                        <rect key="frame" x="48" y="73" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_cheked.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="curLocButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="g30-3x-slp"/>
-                                            <action selector="yesAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="yhE-tk-u5p"/>
-                                        </connections>
-                                    </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="TYQ-n1-8d9">
                                         <rect key="frame" x="173" y="168" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3440,13 +3286,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Point on map" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="0kS-Vu-iDA">
-                                        <rect key="frame" x="247" y="102" width="68" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="DMR-kK-6ve">
                                         <rect key="frame" x="97" y="213" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3459,13 +3298,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <rect key="frame" x="259" y="168" width="1" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="My Place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="cZN-63-eet">
-                                        <rect key="frame" x="100" y="102" width="47" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RNU-di-O9C">
                                         <rect key="frame" x="102" y="172" width="67" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3481,13 +3313,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                             <action selector="summaryButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="Edh-Hx-2eY"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Current Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="bdK-iB-lad">
-                                        <rect key="frame" x="11" y="102" width="83" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TgS-bh-FJK">
                                         <rect key="frame" x="11" y="217" width="84" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3507,13 +3332,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <rect key="frame" x="38" y="18" width="145" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="16"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Places near to me" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="sqG-7g-yaZ">
-                                        <rect key="frame" x="151" y="102" width="90" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -3694,122 +3512,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <rect key="frame" x="167" y="325" width="1" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="LoJ-A0-tHb">
-                                        <rect key="frame" x="70" y="75" width="40" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Private" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="la8-UK-7Ok">
-                                        <rect key="frame" x="12" y="75" width="40" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Circles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="g4Z-Mx-KLr">
-                                        <rect key="frame" x="114" y="75" width="89" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Public" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="63m-9e-jDV">
-                                        <rect key="frame" x="212" y="75" width="31" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Custom" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="fat-ft-rfj">
-                                        <rect key="frame" x="268" y="75" width="44" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="n2u-08-pUr">
-                                        <rect key="frame" x="16" y="60" width="275" height="6"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.29019609089999998" green="0.29019609089999998" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
-                                        <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="QEw-cx-eEk" userLabel="selNone">
-                                        <rect key="frame" x="79" y="49" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="friendsButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="oIQ-rb-EWA"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="JI4-Ln-f49" userLabel="selNone">
-                                        <rect key="frame" x="12" y="50" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_cheked.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="privateButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="S20-H3-Zn7"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cfG-gy-MkC" userLabel="selCircles">
-                                        <rect key="frame" x="146" y="49" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="degreeFriendsButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="Oe7-W5-41P"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ryd-B3-tbq" userLabel="selCustom">
-                                        <rect key="frame" x="214" y="49" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="peopleButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="AGm-Kl-1x2"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="q7r-j1-LoE" userLabel="selCustom">
-                                        <rect key="frame" x="282" y="50" width="24" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" image="location_bar_radio_none.png">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="customButtonAction" destination="iEq-R0-8Ox" eventType="touchUpInside" id="2lo-bX-9qh"/>
-                                        </connections>
-                                    </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="gRB-pr-qHG">
                                         <rect key="frame" x="258" y="166" width="1" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -4097,32 +3799,23 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                         <outlet property="createButton" destination="0bh-yg-Ont" id="iFj-L1-iIo"/>
                         <outlet property="createLabel" destination="9zH-iF-vJW" id="fkD-4d-VN0"/>
                         <outlet property="createView" destination="dv5-gH-peM" id="8dh-eZ-YNN"/>
-                        <outlet property="curLoc" destination="TYv-IU-4zt" id="SGf-Q0-jfu"/>
-                        <outlet property="custom" destination="q7r-j1-LoE" id="kep-LR-riy"/>
                         <outlet property="customScrollView" destination="Lpj-dy-NiG" id="b33-Fb-Wu5"/>
                         <outlet property="customSearchBar" destination="MhF-bi-Eqt" id="gdd-gq-A0g"/>
                         <outlet property="customSelectionView" destination="FLi-cp-cLG" id="zFp-q4-IHl"/>
                         <outlet property="customTableView" destination="pmh-V4-FcA" id="Ofp-TI-Zve"/>
                         <outlet property="dateButton" destination="3fJ-AA-1dN" id="g1e-Rs-hVc"/>
-                        <outlet property="degreeFriends" destination="cfG-gy-MkC" id="jBv-9U-JLa"/>
                         <outlet property="deleteButton" destination="hiO-ny-Saq" id="D9s-Bc-UCS"/>
                         <outlet property="descriptionButton" destination="n0j-Rm-FCT" id="xY4-1p-44d"/>
                         <outlet property="entryTextField" destination="oOC-In-4yN" id="5BV-UT-qan"/>
                         <outlet property="eventImagview" destination="nhH-Dz-eoc" id="Nd6-gT-HT2"/>
                         <outlet property="friendSearchbar" destination="lEa-uf-YfI" id="6SV-fo-VwC"/>
-                        <outlet property="friends" destination="QEw-cx-eEk" id="8qi-WM-vDm"/>
                         <outlet property="frndListScrollView" destination="Ei1-vs-49a" id="fUx-DW-umx"/>
                         <outlet property="guestCanInviteButton" destination="8p2-pI-y5I" id="VLZ-nN-hah"/>
                         <outlet property="lowerView" destination="mh0-j1-MJI" id="6pR-lz-HCa"/>
                         <outlet property="mapContainerView" destination="OgG-yG-mY3" id="IcI-7e-StM"/>
                         <outlet property="mapView" destination="i1N-IB-mtL" id="XpQ-MM-dN9"/>
-                        <outlet property="myPlace" destination="6N2-1T-rb7" id="I0T-DL-xrc"/>
                         <outlet property="nameButton" destination="Rpq-FD-ncv" id="Ogg-mR-Gjy"/>
-                        <outlet property="neamePlace" destination="h5G-GX-Jda" id="nmg-oA-FZy"/>
-                        <outlet property="people" destination="ryd-B3-tbq" id="qoH-x1-9I7"/>
                         <outlet property="photoButton" destination="TgS-bh-FJK" id="PN5-qF-Zcm"/>
-                        <outlet property="pointOnMap" destination="3PC-Ci-nyO" id="XUz-Mi-M1i"/>
-                        <outlet property="private" destination="JI4-Ln-f49" id="tOz-u7-QXb"/>
                         <outlet property="segmentControl" destination="yOS-Lq-90F" id="bY5-yo-DZI"/>
                         <outlet property="summaryButton" destination="RNU-di-O9C" id="8KX-en-HeZ"/>
                         <outlet property="totalNotifCount" destination="CGb-C1-PNo" id="rEh-QP-R3n"/>
@@ -4165,14 +3858,20 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NgB-pB-0cn">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ySy-Rk-hiR">
                                                     <rect key="frame" x="20" y="4" width="292" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NgB-pB-0cn">
+                                                            <rect key="frame" x="0.0" y="0.0" width="292" height="20"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="FzK-Qr-9wN">
                                                     <rect key="frame" x="20" y="26" width="204" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -4181,13 +3880,19 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="oG9-Sm-9Zq">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="WLC-aW-JkY">
                                                     <rect key="frame" x="20" y="86" width="152" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="oG9-Sm-9Zq">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="5ZX-Kw-eDw">
                                                     <rect key="frame" x="211" y="86" width="101" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -4225,11 +3930,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                                         <connections>
                                             <outlet property="eventAddress" destination="oG9-Sm-9Zq" id="pt9-Yc-Qva"/>
+                                            <outlet property="eventAddressScrollView" destination="WLC-aW-JkY" id="ogw-8N-LJS"/>
                                             <outlet property="eventDate" destination="FzK-Qr-9wN" id="yS8-Gy-q63"/>
                                             <outlet property="eventDetail" destination="M9F-yi-yf9" id="ckW-VY-4hg"/>
                                             <outlet property="eventDistance" destination="5ZX-Kw-eDw" id="0MA-z4-4tN"/>
                                             <outlet property="eventImage" destination="P2L-f2-twi" id="iar-2X-t4E"/>
                                             <outlet property="eventName" destination="NgB-pB-0cn" id="eEK-HH-7kW"/>
+                                            <outlet property="eventNameScrollView" destination="ySy-Rk-hiR" id="vyl-f9-VfX"/>
                                             <outlet property="footerView" destination="R7y-lI-7VD" id="pc0-c3-9Xe"/>
                                             <outlet property="viewEventOnMap" destination="ZHe-dE-gqm" id="dkM-gO-ddn"/>
                                         </connections>
@@ -4255,14 +3962,20 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="rYt-OO-L4E">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="9Nr-bE-F14">
                                                     <rect key="frame" x="20" y="4" width="292" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="rYt-OO-L4E">
+                                                            <rect key="frame" x="0.0" y="0.0" width="292" height="20"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Event Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="5Tc-Tk-WuF">
                                                     <rect key="frame" x="20" y="26" width="204" height="15"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -4271,13 +3984,19 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="XRR-AY-qSJ">
-                                                    <rect key="frame" x="20" y="87" width="152" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="cxc-M4-cn2">
+                                                    <rect key="frame" x="20" y="86" width="152" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="XRR-AY-qSJ">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="12"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                    </subviews>
+                                                </scrollView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="distance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="vf2-t4-oJD">
                                                     <rect key="frame" x="211" y="87" width="96" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -4297,7 +4016,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="WtV-HI-SIB">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="WtV-HI-SIB">
                                                     <rect key="frame" x="151" y="135" width="134" height="7"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.29019609089999998" green="0.29019609089999998" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
@@ -4310,7 +4029,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6iL-7F-q79" userLabel="selNone">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6iL-7F-q79" userLabel="selNone">
                                                     <rect key="frame" x="140" y="125" width="24" height="26"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -4325,7 +4044,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                         <action selector="yesAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="ijT-Ui-TWa"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eki-N0-5jx" userLabel="selCircles">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eki-N0-5jx" userLabel="selCircles">
                                                     <rect key="frame" x="207" y="125" width="24" height="26"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -4340,7 +4059,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                         <action selector="noAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="85k-Dh-juh"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="n74-Xc-urv" userLabel="selCustom">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="n74-Xc-urv" userLabel="selCustom">
                                                     <rect key="frame" x="275" y="125" width="24" height="26"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -4355,21 +4074,21 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                         <action selector="maybeAttendAction:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="ILd-Hz-zOe"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Yes" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="Wpv-C4-1OR">
+                                                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Yes" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="Wpv-C4-1OR">
                                                     <rect key="frame" x="140" y="150" width="28" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No" lineBreakMode="tailTruncation" minimumFontSize="10" id="836-gC-dyR">
+                                                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No" lineBreakMode="tailTruncation" minimumFontSize="10" id="836-gC-dyR">
                                                     <rect key="frame" x="207" y="150" width="24" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Maybe" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="UpV-tf-FGH">
+                                                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Maybe" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="UpV-tf-FGH">
                                                     <rect key="frame" x="270" y="150" width="49" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
@@ -4390,11 +4109,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="eventAddress" destination="XRR-AY-qSJ" id="5Cx-wg-JOF"/>
+                                            <outlet property="eventAddressScrollView" destination="cxc-M4-cn2" id="fmJ-tq-4Mk"/>
                                             <outlet property="eventDate" destination="5Tc-Tk-WuF" id="COU-o5-DZi"/>
                                             <outlet property="eventDetail" destination="vZR-Rn-XiO" id="qhD-AM-9lA"/>
                                             <outlet property="eventDistance" destination="vf2-t4-oJD" id="Mtp-4A-WiB"/>
                                             <outlet property="eventImage" destination="EMe-Qi-46n" id="xSO-1J-f5A"/>
                                             <outlet property="eventName" destination="rYt-OO-L4E" id="6pi-Tu-JvW"/>
+                                            <outlet property="eventNameScrollView" destination="9Nr-bE-F14" id="jfQ-nT-fuA"/>
                                             <outlet property="footerView" destination="cg6-RC-t7K" id="xje-Ec-AGv"/>
                                             <outlet property="maybesButton" destination="n74-Xc-urv" id="fqq-8z-LPE"/>
                                             <outlet property="noButton" destination="eki-N0-5jx" id="jvA-DR-WbV"/>
@@ -5345,11 +5066,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListRsvpTableCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="maybesButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
@@ -5361,11 +5084,13 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListTableCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
             </relationships>
@@ -5687,6 +5412,5 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qvJ-bu-e6k"/>
-        <segue reference="kWh-8P-X1J"/>
     </inferredMetricsTieBreakers>
 </document>
