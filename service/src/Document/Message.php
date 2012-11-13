@@ -48,8 +48,20 @@ class Message
     /** @ODM\String */
     protected $status = self::STATUS_UNREAD;
 
-     /** @ODM\Hash */
+    /** @ODM\Hash */
     protected $readBy = array();
+
+    /** @ODM\String */
+    protected $recommendMetaTitle;
+
+    /** @ODM\Hash */
+    protected $recommendMetaContent = array(
+        'content' => null,
+        'address' => null,
+        'note' => array(),
+        'lng' => 0,
+        'lat' => 0
+    );
 
 
     public function isValid()
@@ -185,7 +197,7 @@ class Message
             $items['thread'] = null;
         }
 
-        if($detail == self::DETAILS_ARRAY) {
+        if ($detail == self::DETAILS_ARRAY) {
             if ($this->replies->count() > 0) {
                 $items['replies'] = $this->toArrayOfMessages($this->getReplies());
             } else {
@@ -213,7 +225,8 @@ class Message
                     'updateDate' => $value->getUpdateDate()
                 );
                 $replies[] = $reply;
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return $replies;
@@ -227,7 +240,8 @@ class Message
             try {
                 $user = $value->toArray(false);
                 $users[] = $user;
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return $users;
@@ -237,7 +251,7 @@ class Message
     {
         $serializableFields = array(
             'id', 'subject', 'content', 'createDate',
-            'updateDate', 'status','readBy'
+            'updateDate', 'status', 'readBy'
         );
 
         $result = array();
@@ -258,12 +272,33 @@ class Message
         return $this->readBy;
     }
 
-    public function addReadStatusFor(\Document\User $user) {
+    public function addReadStatusFor(\Document\User $user)
+    {
         if (empty($this->readBy)) {
             $this->readBy = array($user->getId());
         } else {
             $this->readBy[] = $user->getId();
         }
+    }
+
+    public function setRecommendMetaContent($recommendMetaContent)
+    {
+        $this->recommendMetaContent = $recommendMetaContent;
+    }
+
+    public function getRecommendMetaContent()
+    {
+        return $this->recommendMetaContent;
+    }
+
+    public function setRecommendMetaTitle($recommendMetaTitle)
+    {
+        $this->recommendMetaTitle = $recommendMetaTitle;
+    }
+
+    public function getRecommendMetaTitle()
+    {
+        return $this->recommendMetaTitle;
     }
 
 }

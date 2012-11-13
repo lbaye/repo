@@ -32,3 +32,13 @@ delete_place:
   pattern:  /places/{id}
   defaults: { _controller: Controller\Place::delete }
   requirements: { _method: DELETE }
+
+recommend_venue:
+  pattern:  /venue/recommend/{id}
+  defaults: { _controller: Controller\Place::recommendVenue }
+  requirements: { _method: POST }
+
+recommend_place_fb_checkin:
+  pattern:  /places/recommend/fbcheckin/{id}
+  defaults: { _controller: Controller\Place::recommendPlaceFbCheckin }
+  requirements: { _method: POST }

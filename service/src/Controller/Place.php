@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Repository\PlaceRepo as placeRepository;
 use Helper\Status;
+use Helper\AppMessage as AppMessage;
 
 class Place extends Base
 {
@@ -21,6 +22,9 @@ class Place extends Base
     public function init()
     {
         parent::init();
+
+        $this->messageRepository = $this->dm->getRepository('Document\Message');
+        $this->messageRepository->setConfig($this->config);
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -301,5 +305,120 @@ class Place extends Base
         } else {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
         }
+    }
+
+    /**
+     * POST  /venue/recommend/{id}
+     *
+     * @param $id
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function recommendVenue($id, $type = 'place')
+    {
+        try {
+            $this->_initRepository($type);
+            $place = $this->LocationMarkRepository->find($id);
+            $postData = $this->request->request->all();
+            if (empty($postData['recipients']) && empty($postData['recommendMetaTitle']) && empty($postData['recommendMetaContent'])) {
+                $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            if (empty($postData['title'])) {
+                $postData['title'] = $postData['recommendMetaTitle'];
+            }
+
+            if (empty($postData['content'])) {
+                $postData['content'] = $postData['recommendMetaTitle'];
+            }
+
+            $recipients = $postData['recipients'];
+            if (!empty($place)) {
+                $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
+            } else {
+                $createMetaData = array("id" => $id, "content" => $postData['recommendMetaContent']);
+            }
+
+            $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
+            $message->setRecommendMetaTitle($postData['title']);
+            $message->setRecommendMetaContent($createMetaData);
+            $getResponse = $this->messageRepository->insert($message);
+
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
+
+            if (!empty($recipients)) {
+                $this->_sendPushNotification(
+                    array($recipients), $this->_createPushMessage($postData['title']),
+                    AppMessage::RECOMMEND_MESSAGE, $id
+                );
+
+            }
+
+            $this->response->setContent(json_encode(array("message" => "Message Sent Successfully.")));
+            $this->response->setStatusCode(Status::CREATED);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    /**
+     * POST  /places/recommend/fbcheckin/{id}
+     *
+     * @param $id
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function recommendPlaceFbCheckin($id, $type = 'place')
+    {
+        try {
+            $this->_initRepository($type);
+            $place = $this->LocationMarkRepository->find($id);
+            $postData = $this->request->request->all();
+            if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
+                $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            $recipients = $postData['recipients'];
+            $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
+
+            $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
+            $message->setPlaceRecommend($createMetaData);
+            $getResponse = $this->messageRepository->insert($message);
+
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
+
+            if (!empty($recipients)) {
+                $this->_sendPushNotification(
+                    array($recipients), $this->_createPushMessage($place->getTitle()),
+                    AppMessage::RECOMMEND_MESSAGE, $place->getId()
+                );
+
+            }
+
+            $this->response->setContent(json_encode(array("message" => "Message Sent Successfully.")));
+            $this->response->setStatusCode(Status::CREATED);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    private function _createPushMessage($placeId)
+    {
+        return AppMessage::getMessage(AppMessage::RECOMMEND_MESSAGE, $this->user->getFirstName(), $placeId);
+
     }
 }
