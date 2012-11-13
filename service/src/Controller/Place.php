@@ -308,43 +308,64 @@ class Place extends Base
     }
 
     /**
-     * POST  /venue/recommend/{id}
+     * POST /recommend/{recommendType}/{id}
      *
      * @param $id
      *
-     * @param $type
+     * @param $recommendType
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function recommendVenue($id, $type = 'place')
+    public function recommend($id, $recommendType, $type = 'place')
     {
         try {
             $this->_initRepository($type);
             $place = $this->LocationMarkRepository->find($id);
             $postData = $this->request->request->all();
-            if (empty($postData['recipients']) && empty($postData['recommendMetaTitle']) && empty($postData['recommendMetaContent'])) {
+
+            if ($recommendType == "venue") {
+                $metaType = "venue";
+                $getMsg = appMessage::RECOMMEND_VENUE_MESSAGE;
+            } elseif ($recommendType == "place") {
+                $metaType = "place";
+                $getMsg = appMessage::RECOMMEND_PLACE_MESSAGE;
+
+            } elseif ($recommendType == "geotag") {
+                $metaType = "geotag";
+                $getMsg = appMessage::RECOMMEND_GEOTAG_MESSAGE;
+
+            }
+            else {
                 $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
                 $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                 return $this->response;
             }
-            if (empty($postData['title'])) {
-                $postData['title'] = $postData['recommendMetaTitle'];
+
+
+            if (empty($postData['recipients']) && empty($postData['metaTitle']) && empty($postData['metaContent'])) {
+                $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            if (empty($postData['subject'])) {
+                $postData['subject'] = $metaType . ": " . $postData['metaTitle'];
             }
 
             if (empty($postData['content'])) {
-                $postData['content'] = $postData['recommendMetaTitle'];
+                $postData['content'] = $postData['metaTitle'];
             }
 
             $recipients = $postData['recipients'];
             if (!empty($place)) {
                 $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
             } else {
-                $createMetaData = array("id" => $id, "content" => $postData['recommendMetaContent']);
+                $createMetaData = array("id" => $id, "content" => $postData['metaContent']);
             }
 
             $message = $this->messageRepository->map($postData, $this->user);
             $message->addReadStatusFor($this->user);
-            $message->setRecommendMetaTitle($postData['title']);
-            $message->setRecommendMetaContent($createMetaData);
+            $message->setMetaType($metaType);
+            $message->setMetaTitle($postData['subject']);
+            $message->setMetaContent($createMetaData);
             $getResponse = $this->messageRepository->insert($message);
 
             // Don't put it before insert operation. this is intentional
@@ -352,8 +373,8 @@ class Place extends Base
 
             if (!empty($recipients)) {
                 $this->_sendPushNotification(
-                    array($recipients), $this->_createPushMessage($postData['title']),
-                    AppMessage::RECOMMEND_MESSAGE, $id
+                    array($recipients), $this->_createPushMessage($postData['subject'], $getMsg),
+                    $getMsg, $id
                 );
 
             }
@@ -400,8 +421,8 @@ class Place extends Base
 
             if (!empty($recipients)) {
                 $this->_sendPushNotification(
-                    array($recipients), $this->_createPushMessage($place->getTitle()),
-                    AppMessage::RECOMMEND_MESSAGE, $place->getId()
+                    array($recipients), $this->_createPushMessage($place->getTitle(), 'test'),
+                    AppMessage::RECOMMEND_VENUE_MESSAGE, $place->getId()
                 );
 
             }
@@ -416,9 +437,9 @@ class Place extends Base
         return $this->response;
     }
 
-    private function _createPushMessage($placeId)
+    private function _createPushMessage($metaTitle, $getMsg)
     {
-        return AppMessage::getMessage(AppMessage::RECOMMEND_MESSAGE, $this->user->getFirstName(), $placeId);
+        return AppMessage::getMessage($getMsg, $this->user->getFirstName(), $metaTitle);
 
     }
 }

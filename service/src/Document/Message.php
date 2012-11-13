@@ -52,10 +52,13 @@ class Message
     protected $readBy = array();
 
     /** @ODM\String */
-    protected $recommendMetaTitle;
+    protected $metaType;
+
+    /** @ODM\String */
+    protected $metaTitle;
 
     /** @ODM\Hash */
-    protected $recommendMetaContent = array(
+    protected $metaContent = array(
         'content' => null,
         'address' => null,
         'note' => array(),
@@ -281,24 +284,34 @@ class Message
         }
     }
 
-    public function setRecommendMetaContent($recommendMetaContent)
+    public function setMetaContent($metaContent)
     {
-        $this->recommendMetaContent = $recommendMetaContent;
+        $this->metaContent = $metaContent;
     }
 
-    public function getRecommendMetaContent()
+    public function getMetaContent()
     {
-        return $this->recommendMetaContent;
+        return $this->metaContent;
     }
 
-    public function setRecommendMetaTitle($recommendMetaTitle)
+    public function setMetaTitle($metaTitle)
     {
-        $this->recommendMetaTitle = $recommendMetaTitle;
+        $this->metaTitle = $metaTitle;
     }
 
-    public function getRecommendMetaTitle()
+    public function getMetaTitle()
     {
-        return $this->recommendMetaTitle;
+        return $this->metaTitle;
+    }
+
+    public function setMetaType($metaType)
+    {
+        $this->metaType = $metaType;
+    }
+
+    public function getMetaType()
+    {
+        return $this->metaType;
     }
 
 }
