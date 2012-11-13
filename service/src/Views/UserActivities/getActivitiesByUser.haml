@@ -20,15 +20,16 @@
                 11m ago
 
               .comment
-                = $photo->getTitle()
+                = $photo->getDescription()
 
-            .row
+            .row(style='height:140px')
               .image
                 %img(src= $photo->getUriMedium())
               .icon.icon_zoom
 
             .row
-              %button 13
-              %button 23
+              .buttons
+                %button 13
+                %button 23
               
   

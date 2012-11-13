@@ -24,7 +24,7 @@ class PhotosObserver extends AbstractObserver {
 
     public function afterCreate(&$object) {
         $activity = new UserActivity();
-        $activity->setTitle($object->getTitle());
+        $activity->setTitle($object->getDescription());
         $activity->setObjectType(UserActivity::ACTIVITY_PHOTO);
         $activity->setOwner($object->getOwner());
         $activity->setObjectId($object->getId());

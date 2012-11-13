@@ -36,6 +36,9 @@ class UserActivity {
     /** @ODM\Hash */
     protected $comments = array();
 
+    /** @ODM\Date */
+    protected $createdAt;
+
     # TODO: Add comments
 
     /**
@@ -47,6 +50,10 @@ class UserActivity {
      * @ODM\ReferenceOne(targetDocument="User", simple=true)
      */
     protected $owner;
+
+    public function __construct() {
+        $this->createdAt = new DateTime();
+    }
 
     public function setId($id) {
         $this->id = $id;
@@ -118,10 +125,18 @@ class UserActivity {
         return $this->comments;
     }
 
+    public function setCreatedAt($createdAt) {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getCreatedAt() {
+        return $this->createdAt;
+    }
+
     public function toArray() {
 
         # Build hash object from the basic fields
-        $exportableFields = array('id', 'objectId', 'objectType', 'title', 'likes');
+        $exportableFields = array('id', 'objectId', 'objectType', 'title', 'likes', 'createdAt');
         $hash = array();
         foreach ($exportableFields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
 
@@ -130,5 +145,4 @@ class UserActivity {
 
         return $hash;
     }
-
 }
