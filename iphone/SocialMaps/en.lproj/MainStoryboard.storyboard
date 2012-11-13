@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
@@ -2679,7 +2679,6 @@
                                         </state>
                                         <connections>
                                             <action selector="goBack:" destination="i7v-82-K9c" eventType="touchUpInside" id="ezz-Kv-0lS"/>
-                                            <segue destination="wC3-So-nVM" kind="modal" identifier="backToMap" modalTransitionStyle="crossDissolve" id="kWh-8P-X1J"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Trc-vc-Uw5" userLabel="settingZoom">
@@ -2756,6 +2755,7 @@
                         <outlet property="settingsMainHeader" destination="ZwV-j6-FWV" id="6jv-vC-xFH"/>
                         <outlet property="settingsScrollView" destination="Kzz-7a-uOL" id="6g0-Tb-L6L"/>
                         <outlet property="totalNotifCount" destination="ylV-Xu-7Qg" id="8oK-SK-PWi"/>
+                        <segue destination="wC3-So-nVM" kind="modal" identifier="backToMap" modalTransitionStyle="crossDissolve" id="O7W-hL-Xr5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ivh-dm-JvC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5411,6 +5411,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="O7W-hL-Xr5"/>
         <segue reference="qvJ-bu-e6k"/>
     </inferredMetricsTieBreakers>
 </document>

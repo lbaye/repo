@@ -50,6 +50,8 @@
     // Delete account
     SettingsMaster *deleteView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Delete Account..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
     */
+    SettingsMaster *logoutView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Logout" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag - 1];
+    
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if ([smAppDelegate.fbId isEqualToString:@""]) {
         // Change password
@@ -71,6 +73,7 @@
                                                                           
     //[self addSubview:eraseView];
     //[self addSubview:deleteView];
+    [self addSubview:logoutView];
     
     [self addSubview:infoView];
     //[self addSubview:unitView];
@@ -78,7 +81,7 @@
     // Add a line at the bottom
     UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
     sep.backgroundColor = [UIColor lightGrayColor];
-    sep.tag = 3000;
+    sep.tag = 4000;
     [self addSubview:sep];
 }
 
@@ -98,7 +101,7 @@
     
     // Move the line to the bottom of the scroll view
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.contentSize.height, self.frame.size.width, 1);
-    UIView *lineView = [self viewWithTag:3000];
+    UIView *lineView = [self viewWithTag:4000];
     lineView.frame = newFrame;
 }
 
@@ -212,6 +215,7 @@
     [self setContentSize:contentSize];
     [self cascadeHeightChange:tag incr:incr];
     [self setNeedsLayout];
+ 
 }
 - (void) removeConfirmView:(int)tag incr:(int)dec{
     SettingsMaster *aview = (SettingsMaster*) [self viewWithTag:tag];
@@ -284,10 +288,14 @@
     
     SettingsMaster *parent = (SettingsMaster*)[btn superview];
     NSLog(@"AccountSettings accSettingButtonClicked: tag=%d", parent.tag);
-    if (parent.tag >= 2000 && parent.tag <= 2004) {
+    if (parent.tag >= 1999 && parent.tag <= 2004) {
         [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         switch (parent.tag) {
+            case 1999:
+                // Logout
+                [self addConfirmView:parent.tag msg:@"Confirm logout?" incr:ROW_HEIGHT];
+                break;
             case 2000:
                 // Erase data
                 [self addConfirmView:parent.tag msg:@"Confirm erase history?" incr:ROW_HEIGHT];
@@ -321,10 +329,14 @@
 
     SettingsMaster *parent = (SettingsMaster*)[btn superview];
     NSLog(@"accSettingResetButtonClicked: tag=%d", parent.tag);
-    if (parent.tag >= 2000 && parent.tag <= 2004) {
+    if (parent.tag >= 1999 && parent.tag <= 2004) {
         [btn removeTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         switch (parent.tag) {
+            case 1999:
+                // Logout
+                [self removeConfirmView:parent.tag incr:ROW_HEIGHT];
+                break;
             case 2000:
                 // Erase data
                 [self removeConfirmView:parent.tag incr:ROW_HEIGHT];
@@ -349,7 +361,44 @@
                 break;
         }
     }
+}
 
+- (void) noButtonClicked:(id)sender {
+    NSLog(@"ConfirmView:noButtonClicked");
+    SettingsMaster *parent = (SettingsMaster*)[[sender superview] superview];
+    [self accSettingResetButtonClicked:parent.btn];
+}
+
+- (void) yesButtonClicked:(id)sender {
+    NSLog(@"ConfirmView:yesButtonClicked");
+    
+    SettingsMaster *parent = (SettingsMaster*)((UIButton*)sender).superview.superview;
+    AppDelegate *smAppDelegate;
+    
+    switch (parent.tag) {
+        case 1999:
+            // Logout
+            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [[smAppDelegate.window rootViewController] dismissModalViewControllerAnimated:NO];
+            break;
+        case 2000:
+            // Erase data
+            break;
+        case 2001:
+            // Delete account
+            break;
+        case 2002:
+            // Change password
+            break;
+        case 2003:
+            // Personal information
+            break;
+        case 2004:
+            // Personal information
+            break;    
+        default:
+            break;
+    }
 }
 
 // UITextFieldDelegate

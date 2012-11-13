@@ -365,6 +365,8 @@
             [prefs setObject:txtEmail.text forKey:@"email"];
             [prefs setObject:txtPassword.text forKey:@"password"];
             [prefs synchronize];
+            smAppDelegate.email = txtEmail.text;
+            smAppDelegate.password = txtPassword.text;
         }
         RestClient *restClient = [[RestClient alloc] init];
         [restClient login:txtEmail.text password:txtPassword.text];
