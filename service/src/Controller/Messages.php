@@ -101,7 +101,7 @@ class Messages extends Base {
                 $recipients,
                 \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getFirstName()),
                 \Helper\AppMessage::REPLY_MESSAGE,
-                $message->getId());
+                $thread->getId());
         }
     }
 
