@@ -2329,6 +2329,7 @@ public class HomeActivity extends MapActivity implements
 		} else if (v == btnCircleMenuItemNewsfeed) {
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 			
+			
 			/*Intent messageIntent = new Intent(getApplicationContext(),
 					FriendListActivity.class);
 			startActivity(messageIntent);*/
