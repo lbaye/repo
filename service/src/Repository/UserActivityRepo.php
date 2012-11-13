@@ -10,12 +10,13 @@ use Repository\UserRepo as UserRepo;
 
 class UserActivityRepo extends Base {
 
-    public function getByUser(User $user) {
+    public function getByUser(User $user, $limit = 20) {
         return $this->dm->createQueryBuilder()
                 ->find('Document\UserActivity')
                 ->field('owner')
                 ->equals($user->getId())
-                ->sort('createDate', 'desc')
+                ->sort('createdAt', 'desc')
+                ->limit($limit)
                 ->getQuery()
                 ->execute();
     }
@@ -26,7 +27,9 @@ class UserActivityRepo extends Base {
 
     public function map( array $data, User $owner, UserActivity $activity = null) {
 
-        if (is_null($activity)) $activity = new UserActivity();
+        if (is_null($activity)) {
+            $activity = new UserActivity();
+        }
 
         $this->populateIfExists($activity, $data);
         $activity->setOwner( $owner );

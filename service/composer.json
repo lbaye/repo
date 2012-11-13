@@ -3,6 +3,8 @@
         "symfony/class-loader": "2.1.*",
         "symfony/http-foundation": "2.1.*",
         "symfony/routing": "2.1.*",
+        "symfony/templating": "2.1.*",
+        "mthaml/mthaml": ">=1.1.1",
         "doctrine/mongodb-odm": "1.0.0BETA4",
         "symfony/http-kernel": "2.1.*",
         "respect/validation": "dev-master",

@@ -25,3 +25,6 @@ facebook:
 
 googlePlace:
   apiKey: AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw
+
+framework:
+    templating: { engines: ['twig', 'php'] }

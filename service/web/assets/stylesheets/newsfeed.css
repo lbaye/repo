@@ -1,0 +1,76 @@
+body {
+  margin: 0px;
+  padding: 2px;
+  font-family: helvetica;
+  font-size: 12px;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  margin: 5px;
+}
+ul li .photo .row {
+  clear: both;
+  display: block;
+}
+ul li .photo .row .avatar {
+  float: left;
+  margin-left: 10px;
+  margin-right: 5px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  background: #000;
+  position: relative;
+  z-index: 300;
+}
+ul li .photo .row .name {
+  float: left;
+  margin-top: 5px;
+}
+ul li .photo .row .name h4 {
+  padding: 2px;
+  margin: 0px;
+  font-size: 110%;
+}
+ul li .photo .row .time {
+  float: right;
+  margin-right: 10px;
+  margin-top: 5px;
+  color: #888;
+}
+ul li .photo .row .comment {
+  clear: both;
+  background: #f2dede;
+  padding: 5px;
+  margin-left: 70px;
+  margin-right: 5px;
+  opacity: 0.6;
+  top: -20px;
+  position: relative;
+  width: auto;
+  z-index: 200;
+}
+ul li .photo .row .image {
+  top: -50px;
+  position: relative;
+  z-index: 100;
+  width: auto;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+ul li .photo .row .image img {
+  width: 290px;
+}
+ul li .photo .row .buttons {
+  text-align: right;
+  padding: 5px;
+  padding-top: 0;
+}
+ul li .photo .row .buttons button {
+  width: 70px;
+  height: 25px;
+}
