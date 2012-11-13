@@ -1,5 +1,0 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_pressed="true" android:drawable="@drawable/circle_menu_item_profile_pressed" /> 
-    <item android:state_enabled="false" android:drawable="@drawable/circle_menu_item_profile" /> 
-    <item android:drawable="@drawable/circle_menu_item_profile" /> 
-</selector>
