@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true" >
+
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/header"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="23dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_back"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:layout_width="135dip"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_banner" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnNotification"
+            android:background="@drawable/btn_search"
+            android:scaleType="fitXY" />
+
+        <Button
+            android:id="@+id/btnNotification"
+            android:layout_width="30dp"
+            android:layout_height="31dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_icon_notification"
+            android:paddingBottom="12dip"
+            android:paddingRight="2dip"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="10dip"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchEventContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutHeader"
+        android:background="#EFF3EF"
+        android:padding="10dip"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/btnNewEvent"
+            android:layout_width="65dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/transparent"
+            android:text="@string/new_event_label"
+            android:textSize="12dip" />
+
+        <LinearLayout
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dip"
+            android:layout_marginRight="8dip"
+            android:layout_toLeftOf="@+id/btnNewEvent"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/seperator" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDoSearch"
+            android:layout_width="50dip"
+            android:layout_height="32dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dip"
+            android:layout_toLeftOf="@+id/separator"
+            android:background="@drawable/selector_btn_green"
+            android:text="@string/okLabel"
+            android:textColor="@color/white"
+            android:textSize="12dip" />
+
+        <EditText
+            android:id="@+id/etFriendSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="38dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dip"
+            android:layout_toLeftOf="@+id/btnDoSearch"
+            android:hint="@string/search_label_event"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/filterPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_below="@+id/searchEventContainer"
+        android:background="@color/offwhite"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <Button
+            android:id="@+id/btnFilterByDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:gravity="left"
+            android:padding ="5dip"
+            android:text="@string/date_filter_label"
+            android:textColor="@color/black"
+            android:textSize="10dip" />
+
+        <ImageView
+            android:layout_width="1dip"
+            android:layout_height="30dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/btnFilterByDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:padding ="5dip"
+            android:text="@string/distance_filter_label"
+            android:textColor="@color/black"
+            android:textSize="10dip" />
+
+        <ImageView
+            android:layout_width="1dip"
+            android:layout_height="30dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/btnFilterByFriendsEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:padding ="5dip"
+            android:text="@string/friends_event_filter_label"
+            android:textColor="@color/black"
+            android:textSize="10dip" />
+
+        <ImageView
+            android:layout_width="1dip"
+            android:layout_height="30dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/btnFilterByMyEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:padding ="5dip"
+            android:text="@string/my_event_filter_label"
+            android:textColor="@color/black"
+            android:textSize="10dip" />
+
+        <ImageView
+            android:layout_width="1dip"
+            android:layout_height="30dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/btnFilterByPublicEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:gravity="right"
+            android:padding = "5dip"
+            android:text="@string/public_event_filter_label"
+            android:textColor="@color/black"
+            android:textSize="10dip" />
+    </LinearLayout>
+    <View 
+        android:id="@+id/filterPanelSeperator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/gray_light"
+        android:layout_below="@+id/filterPanel"/>
+
+    <ListView
+        android:id="@+id/event_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/filterPanelSeperator"
+        android:background="@color/offwhite"
+        android:cacheColorHint="@android:color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/forgotpassbg"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp" >
+
+    <TextView
+        android:id="@+id/fpDesc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="@string/inviteFbTitle"
+        android:textColor="@drawable/white"
+        android:textSize="13dp" />
+
+    <ScrollView
+        android:id="@+id/friendListScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="250dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:scrollbars="none"
+        android:layout_below="@+id/fpDesc" >
+
+        <LinearLayout
+            android:id="@+id/friend_list_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendListScrollView"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/img_blank"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:textColor="@drawable/white" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/sp" />
+
+        <Button
+            android:id="@+id/btnInvite"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/img_blank"
+            android:padding="10dp"
+            android:text="@string/inviteSelected"
+            android:textColor="@drawable/white" />
+    </LinearLayout>
+
+</RelativeLayout>

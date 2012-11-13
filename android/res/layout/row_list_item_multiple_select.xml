@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemTitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:checkMark="@drawable/check_button_selector"
+    android:ellipsize="end"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="10dip"
+    android:singleLine="true"
+    android:textColor="#000000"
+    android:textSize="12dip" />

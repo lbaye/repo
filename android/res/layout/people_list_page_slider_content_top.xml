@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#EFF3EF"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:orientation="horizontal"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dip"
+            android:text="@string/menuItemShowOnList"
+            android:textColor="@color/gray_dark"
+            android:textSize="12dp" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemSocialMaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:checked="true"
+            android:text="@string/socialMapsLabel"
+            android:textColor="@color/gray_dark"
+            android:textSize="12dp" />
+
+        <CheckBox
+            android:id="@+id/chkMenuItemFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:checked="true"
+            android:text="@string/facebookLabel"
+            android:textColor="@color/gray_dark"
+            android:textSize="12dp" />
+
+        
+    </LinearLayout>
+
+</LinearLayout>

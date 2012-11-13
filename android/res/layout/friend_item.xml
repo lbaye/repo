@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listItemParent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:padding="0dip"
+    android:gravity="center"
+     >
+
+    <LinearLayout
+        android:id="@+id/proficPicContainer"
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:gravity="center"
+        android:background="@color/transparent"
+         >
+
+        <RelativeLayout
+            android:id="@+id/proficPicContainer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/highlightGreen"
+            android:padding="1dip" >
+
+            <ImageView
+                android:id="@+id/profilePic"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/user_default"
+                android:layout_centerInParent="true" />
+
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignBottom="@+id/profilePic"
+                android:layout_alignRight="@+id/profilePic"
+                android:background="@drawable/btn_search"
+                android:scaleType="fitXY" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+       
+        android:gravity="left|center_vertical"
+        android:orientation="vertical"
+		android:background="@android:color/transparent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="25dp"
+            android:gravity="center_vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="7dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="30dp"
+                    android:background="#6B696B" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroupCommon"
+                android:layout_width="fill_parent"
+                android:layout_height="35dp"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radioAllUsers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".22"
+                    android:button="@drawable/radiobutton_selector"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radioFriendsOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".22"
+                    android:button="@drawable/radiobutton_selector" />
+
+                <RadioButton
+                    android:id="@+id/radioNoOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".22"
+                    android:button="@drawable/radiobutton_selector" />
+
+                <RadioButton
+                    android:id="@+id/radioCirclesOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".22"
+                    android:button="@drawable/radiobutton_selector" />
+
+                <RadioButton
+                    android:id="@+id/radioCustom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".12"
+                    android:button="@drawable/radiobutton_selector" />
+            </RadioGroup>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/menuItemAllUsersLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="11dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/menuItemFriendsOnlyLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="11dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/menuItemNoOneLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="11dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/menuItemCirclesOnlyLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="11dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/menuItemCustomLabel"
+                android:textColor="@color/gray_dark"
+                android:textSize="11dp" />
+        </LinearLayout>
+    </LinearLayout>
+

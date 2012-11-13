@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="320dip"
+    android:layout_marginTop="10dip"
+    android:background="@drawable/pickerbg"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+            android:id="@+id/titleContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="50dip"
+             >
+		<View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="3dip"
+                android:background="@color/gray" />
+        </RelativeLayout>
+
+       
+
+        <com.readystatesoftware.maps.TapControlledMapView
+        android:id="@+id/myGMap"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:apiKey="@string/map_api_key"
+        android:clickable="true"
+        android:state_enabled="true"
+        
+         />
+            
+           
+           
+        
+
+       
+    
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        android:background="@color/background_light"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dip" >
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="70dip"
+            android:layout_height="40dp"
+            android:background="@drawable/img_blank"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:textColor="@drawable/black" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rbCurrentLocation"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/radiobutton_selector_horizontal_right"
+    android:button="@null"
+    android:gravity="left|center_vertical"
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip"
+    android:paddingLeft="25dip"
+    android:text="Unknown place"
+    android:textColor="@color/gray_dark"
+    android:textSize="12dp"/>
