@@ -3,10 +3,10 @@
 namespace Controller;
 
 use Monolog\Logger as Logger,
-    Monolog\Handler\StreamHandler as StreamHandler,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
-    Doctrine\ODM\MongoDB\DocumentManager;
+Monolog\Handler\StreamHandler as StreamHandler,
+Symfony\Component\HttpFoundation\Request,
+Symfony\Component\HttpFoundation\Response,
+Doctrine\ODM\MongoDB\DocumentManager;
 
 use Repository\UserRepo as userRepository;
 
@@ -14,6 +14,9 @@ use Helper\Status;
 use Helper\ShareConstant;
 
 abstract class Base {
+
+    const DEFAULT_CONTENT_TYPE = 'json';
+    const CONTENT_TYPE_HTML = 'html';
 
     protected $logger;
     protected $loggerStreamHandler;
@@ -61,6 +64,8 @@ abstract class Base {
 
     protected $missingFields;
 
+    private $hamlEnvironment;
+
     /**
      * Inject the Request object for further use.
      *
@@ -84,8 +89,14 @@ abstract class Base {
      */
     public function setSessionUser() {
         if ($this->request->headers->has('Auth-Token')) {
-            $authToken = $this->request->headers->get('Auth-Token');
-            $this->user = $this->dm->getRepository('Document\User')->getByAuthToken($authToken);
+            $this->user = $this->dm
+                    ->getRepository('Document\User')
+                    ->getByAuthToken($this->request->headers->get('Auth-Token'));
+
+        } elseif ($this->request->query->has('authToken')) {
+            $this->user = $this->dm
+                    ->getRepository('Document\User')
+                    ->getByAuthToken($this->request->query->get('authToken'));
         }
     }
 
@@ -214,7 +225,7 @@ abstract class Base {
     }
 
     protected function _generateErrorResponse($message, $code = Status::NOT_ACCEPTABLE) {
-        return $this->_generateResponse(array( 'message' => $message ), $code);
+        return $this->_generateResponse(array('message' => $message), $code);
     }
 
     protected function _generate404() {
@@ -322,7 +333,9 @@ abstract class Base {
 
     private function log($type, $msg) {
         if ($this->isLoggerEnabled()) {
-            $this->logger->{$type}($msg);
+            $this->logger->{
+            $type
+            }($msg);
         }
     }
 
@@ -352,6 +365,71 @@ abstract class Base {
 
     public function checkMemoryAfter() {
         $this->debug("Memory usage after: " . (memory_get_usage() / 1024) . " KB");
+    }
+
+    public function getHamlEnvironment() {
+        if ($this->hamlEnvironment == null)
+            $this->hamlEnvironment = new \MtHaml\Environment('php');
+
+        return $this->hamlEnvironment;
+    }
+
+    public function render($vars = array(), $templateFile = null) {
+        if (empty($templateFile))
+            $templateFile = $this->getTemplateFile(debug_backtrace());
+
+        return $this->renderTemplate($vars, $templateFile);
+    }
+
+    private function renderTemplate($vars, $templateFile) {
+        $this->response->setContent($this->generateContent($vars, $templateFile));
+        $this->response->setStatusCode(Status::OK);
+        $this->response->headers->set('Content-Type', 'text/html');
+
+        return $this->response;
+    }
+
+    private function generateContent($vars, $templateFile) {
+        $fileNameParts = explode(DIRECTORY_SEPARATOR, $templateFile);
+        $fileName = $fileNameParts[count($fileNameParts) - 1];
+
+        $cacheFile = implode(DIRECTORY_SEPARATOR, array(ROOTDIR, '..', 'app', 'cache', $fileName));
+        $cacheDir = implode(DIRECTORY_SEPARATOR, array(ROOTDIR, '..', 'app', 'cache'));
+
+        $this->convertHamlToPhpTemplate($cacheFile, $templateFile);
+
+        $loader = new \Symfony\Component\Templating\Loader\FilesystemLoader($cacheDir . '/%name%');
+        $view = new \Symfony\Component\Templating\PhpEngine(
+            new \Symfony\Component\Templating\TemplateNameParser(), $loader);
+
+        return $view->render($fileName, $vars);
+    }
+
+    private function convertHamlToPhpTemplate($cacheFile, $templateFile) {
+        if (!file_exists($cacheFile) || $this->templateCacheHasExpired($cacheFile, $templateFile)) {
+            $compiled = $this->getHamlEnvironment()
+                    ->compileString(file_get_contents($templateFile), $templateFile);
+            file_put_contents($cacheFile, $compiled);
+        }
+    }
+
+    private function templateCacheHasExpired($cacheFile, $templateFile) {
+        return filemtime($templateFile) > filemtime($cacheFile);
+    }
+
+    private function getTemplateFile($trace) {
+        array_shift($trace);
+        $caller = $trace[0];
+
+        return implode(
+                   DIRECTORY_SEPARATOR, array(ROOTDIR, '..', 'src', 'Views',
+                                             $this->simplifyControllerName(get_class($caller['object'])),
+                                             $caller['function'])) . '.haml';
+    }
+
+    private function simplifyControllerName($name) {
+        $parts = explode('\\', $name);
+        return $parts[count($parts) - 1];
     }
 
 }

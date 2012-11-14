@@ -1,0 +1,35 @@
+!!!
+%html
+  %head
+    %title Hello
+    %link(rel='stylesheet' href='/assets/stylesheets/newsfeed.css')
+%body
+  %ul
+    - foreach($activities as $activity)
+      %li
+        - if ($activity->getObjectType() === 'photo')
+          - $photo = $photoRepo->find($activity->getObjectId())
+
+          .photo
+            .row
+              .avatar
+                %img(src=$photo->getOwner()->getAvatar())
+              .name
+                %h4= $photo->getOwner()->getName()
+              .time
+                11m ago
+
+              .comment
+                = $photo->getDescription()
+
+            .row(style='height:140px')
+              .image
+                %img(src= $photo->getUriMedium())
+              .icon.icon_zoom
+
+            .row
+              .buttons
+                %button 13
+                %button 23
+              
+  
