@@ -1635,23 +1635,23 @@ int geoCounter=0;
                 photo=[photoFilterList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((photo.imageUrl==NULL)||[photo.imageUrl isEqual:[NSNull null]])
+                if ((photo.photoThum==NULL)||[photo.photoThum isEqual:[NSNull null]])
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
-                else if([dicImages_msg valueForKey:photo.imageUrl]) 
+                else if([dicImages_msg valueForKey:photo.photoThum]) 
                 { 
                     //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
+                    imgView.image = [dicImages_msg valueForKey:photo.photoThum]; 
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil))
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.photoThum]==nil))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoadPhoto:) withObject:[NSNumber numberWithInt:i]];  
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.photoThum]; 
+                        [self performSelectorInBackground:@selector(DownLoadThum:) withObject:[NSNumber numberWithInt:i]];  
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
@@ -1844,6 +1844,30 @@ int geoCounter=0;
         {
             //If download complete, set that image to dictionary
             [dicImages_msg setObject:img forKey:photo.imageUrl];
+            [self reloadPhotoScrolview];
+        }
+        // Now, we need to reload scroll view to load downloaded image
+        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        //    [pl release];
+    }
+}
+
+-(void)DownLoadThum:(NSNumber *)path
+{
+    if (isBackgroundTaskRunning==true)
+    {
+        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+        int index = [path intValue];
+        Photo *photo=[[Photo alloc] init];
+        photo=[photoFilterList1 objectAtIndex:index];
+        
+        NSString *Link = photo.photoThum;
+        //Start download image from url
+        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        if(img)
+        {
+            //If download complete, set that image to dictionary
+            [dicImages_msg setObject:img forKey:photo.photoThum];
             [self reloadPhotoScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image

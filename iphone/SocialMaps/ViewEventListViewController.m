@@ -508,8 +508,8 @@ bool searchFlags=true;
         
         cell.eventName.text = cellValue;
         cell.eventDetail.text=event.eventShortSummary;
-//        cell.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
-        cell.eventDate.text=event.eventDate.date;
+        cell.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
+//        cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
         CGSize lblStringSize1 = [event.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0f]];
         
@@ -525,10 +525,9 @@ bool searchFlags=true;
         cell1.eventName.frame=CGRectMake(cell.eventName.frame.origin.x, cell.eventName.frame.origin.y, lblStringSize.width, lblStringSize.height);
         cell1.eventNameScrollView.contentSize=cell.eventName.frame.size;
         cell1.eventDetail.text=event.eventShortSummary;
-        cell1.eventDate.text=event.eventDate.date;
-//        cell1.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
+//        cell1.eventDate.text=event.eventDate.date;
+        cell1.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
         cell1.eventAddress.text=event.eventAddress;
-        cell1.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
 
         
         // Only load cached images; defer new downloads until scrolling ends
