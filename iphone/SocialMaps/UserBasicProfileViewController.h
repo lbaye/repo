@@ -30,6 +30,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *mapContainer;
     IBOutlet UIView *statusContainer;
     IBOutlet UITextField *entityTextField;
+    IBOutlet UIWebView *newsfeedView;
     PhotoPicker *photoPicker;
 
     
@@ -60,6 +61,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet UIView *statusContainer;
 @property(nonatomic,retain) IBOutlet UITextField *entityTextField;
+@property(nonatomic,retain) IBOutlet UIWebView *newsfeedView;
 
 @property(nonatomic,retain) PhotoPicker *photoPicker;
 @property(nonatomic,retain) UIImage *coverImage;

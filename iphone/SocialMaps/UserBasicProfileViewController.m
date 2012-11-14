@@ -43,7 +43,7 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount,lastSeenat,nameButton;
+@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -78,7 +78,16 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
-    
+    nameLabl.layer.shadowRadius = 5.0f;
+    nameLabl.layer.shadowOpacity = .9;
+    nameLabl.layer.shadowOffset = CGSizeZero;
+    nameLabl.layer.masksToBounds = NO;
+
+    statusMsgLabel.layer.shadowRadius = 5.0f;
+    statusMsgLabel.layer.shadowOpacity = .9;
+    statusMsgLabel.layer.shadowOffset = CGSizeZero;
+    statusMsgLabel.layer.masksToBounds = NO;
+
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
@@ -114,7 +123,9 @@ NSMutableArray *selectedScrollIndex;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
-    
+    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,smAppDelegate.authToken];
+    NSLog(@"urlStr %@",urlStr);
+//    [newsfeedView loadRequest:[NSURL URLWithString:urlStr]];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;

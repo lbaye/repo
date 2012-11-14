@@ -13,6 +13,8 @@
 
 -(id)initWithFrame:(CGRect)frame title:(NSString*)title section:(NSInteger)sectionNumber delegate:(id <SectionHeaderViewDelegate>)delegate;
 -(void)toggleOpenWithUserAction:(BOOL)userAction;
+-(IBAction)deleteButtonAction:(id)sender;
+-(IBAction)renameButtonAction:(id)sender;
 
 @end
 
@@ -26,6 +28,8 @@
 @optional
 -(void)sectionHeaderView:(SectionHeaderView*)sectionHeaderView sectionOpened:(NSInteger)section;
 -(void)sectionHeaderView:(SectionHeaderView*)sectionHeaderView sectionClosed:(NSInteger)section;
+-(void)renameCircle:(int)index;
+-(void)deleteCircle:(int)index;
 
 @end
 

@@ -111,7 +111,7 @@ NSString *searchText;
         NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
     }
     
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    self.photoPicker = [[[PhotoPickerOriginalImage alloc] init] autorelease];
     self.photoPicker.delegate = self;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
@@ -298,7 +298,7 @@ NSString *searchText;
 
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {
-    NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
+    NSLog(@"PersonalInformation:photoPickerDone, status=%d  %@", status,img);
     if (status == TRUE) 
     {
         [photoImageView setImage:img];

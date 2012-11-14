@@ -369,7 +369,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     else if (editFlag==TRUE)
     {
         addressLabel.text=event.eventAddress;
-        [radio1 gotoButton:-1];
+        [annotation setCoordinate:(CLLocationCoordinate2DMake([event.eventLocation.latitude doubleValue], [event.eventLocation.longitude doubleValue]))];
+        [radio1 gotoButton:3];
     }
     else
     {

@@ -1,13 +1,14 @@
 
 #import "SectionHeaderView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ViewCircleWisePeopleViewController.h"
 
 @implementation SectionHeaderView
 
 
 @synthesize titleLabel=_titleLabel, disclosureButton=_disclosureButton, delegate=_delegate;
 @synthesize section=_section;
-
+ViewCircleWisePeopleViewController *circleView;
 
 + (Class)layerClass {
     
@@ -22,13 +23,11 @@
     if (self != nil) {
         
         // Set up the tap gesture recognizer.
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleOpen:)];
-        [self addGestureRecognizer:tapGesture];
 
         _delegate = delegate;        
         self.userInteractionEnabled = YES;
         
-        
+        circleView = [[ViewCircleWisePeopleViewController alloc] init];
         // Create and configure the title label.
         _section = sectionNumber;
         CGRect titleLabelFrame = self.bounds;
@@ -41,8 +40,13 @@
         label.textColor = [UIColor darkGrayColor];
         label.backgroundColor = [UIColor clearColor];
         [self addSubview:label];
+        UIView *view=[[UIView alloc] initWithFrame:self.frame];
+        [view setBackgroundColor:[UIColor clearColor]];
+        [self addSubview:view];
         _titleLabel = label;
         
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleOpen:)];
+        [view addGestureRecognizer:tapGesture];
         
         // Create and configure the disclosure button.
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -54,18 +58,44 @@
         _disclosureButton = button;
         
         
+        //add edit and rename button
+        
+        UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        deleteButton.frame = CGRectMake(180.0, 10.0, 50.0, 26.0);
+        deleteButton.layer.cornerRadius=5.0;
+        [deleteButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal] ;
+        [deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+        deleteButton.tag=sectionNumber;
+        [deleteButton.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+        [deleteButton addTarget:self action:@selector(deleteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [deleteButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        
+        UIButton *renameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        renameButton.frame = CGRectMake(235, 10.0, 50.0, 26.0);
+        renameButton.layer.cornerRadius=5.0;
+        [renameButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal] ;
+        [renameButton setTitle:@"Rename" forState:UIControlStateNormal];
+        renameButton.tag=sectionNumber;
+        [renameButton.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+        [renameButton addTarget:self action:@selector(renameButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [renameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        
+        [self addSubview:deleteButton];
+        [self addSubview:renameButton];
+        //finish edit and rename button
+        
         // Set the colors for the gradient layer.
-        static NSMutableArray *colors = nil;
-        if (colors == nil) {
-            colors = [[NSMutableArray alloc] initWithCapacity:3];
-            UIColor *color = nil;
-            color = [UIColor colorWithRed:0.128 green:0.188 blue:0.007 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-            color = [UIColor colorWithRed:0.148 green:0.193 blue:0.028 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-            color = [UIColor colorWithRed:0.102 green:0.152 blue:0.033 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-        }
+//        static NSMutableArray *colors = nil;
+//        if (colors == nil) {
+//            colors = [[NSMutableArray alloc] initWithCapacity:3];
+//            UIColor *color = nil;
+//            color = [UIColor colorWithRed:0.128 green:0.188 blue:0.007 alpha:1.0];
+//            [colors addObject:(id)[color CGColor]];
+//            color = [UIColor colorWithRed:0.148 green:0.193 blue:0.028 alpha:1.0];
+//            [colors addObject:(id)[color CGColor]];
+//            color = [UIColor colorWithRed:0.102 green:0.152 blue:0.033 alpha:1.0];
+//            [colors addObject:(id)[color CGColor]];
+//        }
 //        [(CAGradientLayer *)self.layer setColors:colors];
 //        [(CAGradientLayer *)self.layer setLocations:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:0.48], [NSNumber numberWithFloat:1.0], nil]];
         [self setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_settings_list_bg.png"]]];
@@ -80,6 +110,17 @@
     [self toggleOpenWithUserAction:YES];
 }
 
+-(IBAction)deleteButtonAction:(id)sender
+{
+    [self.delegate deleteCircle:[sender tag]];
+    NSLog(@"[sender tag] %d",[sender tag]);
+}
+
+-(IBAction)renameButtonAction:(id)sender
+{
+    [self.delegate renameCircle:[sender tag]];
+    NSLog(@"[sender tag] %d",[sender tag]);    
+}
 
 -(void)toggleOpenWithUserAction:(BOOL)userAction {
     

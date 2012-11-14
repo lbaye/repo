@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
-#import "PhotoPicker.h"
+#import "PhotoPickerOriginalImage.h"
 #import "Photo.h"
 
 @interface UploadNewPhotoViewController : UIViewController<CustomRadioButtonDelegate,UIPickerViewDataSource, 
 UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,UIScrollViewDelegate>
+UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerOriginalImageDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate>
 {
     IBOutlet UIImageView *photoImageView;
     IBOutlet UIScrollView *mainScrollView;
@@ -22,7 +22,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UILabel *labelNotifCount;
     IBOutlet UILabel *addressLabel;
     IBOutlet UILabel *addressDetailLabel;
-    PhotoPicker *photoPicker;
+    PhotoPickerOriginalImage *photoPicker;
     UIImagePickerController *picSel;
     Photo *photo;
     IBOutlet UITextView *commentView;
@@ -42,7 +42,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UILabel *labelNotifCount;
 @property(nonatomic,retain) IBOutlet UILabel *addressLabel;
 @property(nonatomic,retain) IBOutlet UILabel *addressDetailLabel;
-@property(nonatomic,retain) PhotoPicker *photoPicker;
+@property(nonatomic,retain) PhotoPickerOriginalImage *photoPicker;
 @property(nonatomic,retain) UIImagePickerController *picSel;
 @property(nonatomic,retain) Photo *photo;
 @property(nonatomic,retain) IBOutlet UITextView *commentView;

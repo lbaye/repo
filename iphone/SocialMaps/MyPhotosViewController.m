@@ -143,11 +143,20 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)deleteSelectedPhotosAction:(id)sender
 {
-    NSLog(@"delete photos"); 
-//    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
-    [smAppdelegate.window setUserInteractionEnabled:NO];
-    [smAppdelegate showActivityViewer:self.view];
-    [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
+    NSLog(@"delete photos");
+    if ([selectedFriendsIndex count]>0) {
+        //    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
+        [smAppdelegate.window setUserInteractionEnabled:NO];
+        [smAppdelegate showActivityViewer:self.view];
+        [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
+    }
+    else if ([filteredList1 count]==0)
+    {
+        [UtilityClass showAlert:@"" :@"You have no photo"];    }
+    else
+    {
+        [UtilityClass showAlert:@"" :@"Please select a photo"];
+    }
 }
 
 -(IBAction)gotoZoomView:(id)sender
@@ -334,6 +343,7 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    

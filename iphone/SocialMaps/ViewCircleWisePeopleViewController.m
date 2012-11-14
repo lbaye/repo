@@ -72,12 +72,14 @@ CGFloat animatedDistance;
 
 @synthesize circleCreateView,circleNameTextField;
 @synthesize msgView;
-@synthesize textViewNewMsg;
+@synthesize textViewNewMsg,renameTextField,renameUIView;
 
 AppDelegate *smAppDelegate;
 NSMutableArray *selectedCircleCheckArr;
 RestClient *rc;
 NSString *userID;
+NSString *renameCircleName;
+int renameCircleOndex;
 
 -(BOOL)canBecomeFirstResponder {
     
@@ -115,6 +117,8 @@ NSString *userID;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllCircleDone:) name:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createCircleDone:) name:NOTIF_CREATE_CIRCLE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCircleDone:) name:NOTIF_UPDATE_CIRCLE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteCircleDone:) name:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renameCircleDone:) name:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];
 
     labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
 }
@@ -123,12 +127,18 @@ NSString *userID;
 - (void)viewWillAppear:(BOOL)animated {
 	
 	[super viewWillAppear:animated];
+    [renameUIView removeFromSuperview];
     [circleCreateView removeFromSuperview];
     [msgView removeFromSuperview];
+    [self initData];
+}
+
+-(void)initData
+{
     /*
      Check whether the section info array has been created, and if so whether the section count still matches the current section count. In general, you need to keep the section info synchronized with the rows and section. If you support editing in the table view, you need to appropriately update the section info during editing operations.
      */
-//	if ((self.sectionInfoArray == nil) || ([self.sectionInfoArray count] != [self numberOfSectionsInTableView:self.circleTableView]))
+    //	if ((self.sectionInfoArray == nil) || ([self.sectionInfoArray count] != [self numberOfSectionsInTableView:self.circleTableView]))
     {
 		
         // For each play, set up a corresponding SectionInfo object to contain the default height for each row.
@@ -147,13 +157,19 @@ NSString *userID;
             {
 				[sectionInfo insertObject:defaultRowHeight inRowHeightsAtIndex:i];
 			}
-			NSLog(@"play.name %@ play.quotations %@",userCircle.circleName,userCircle.friends);
+			NSLog(@"circle.name %@ circle.friends %@",userCircle.circleName,userCircle.friends);
 			[infoArray addObject:sectionInfo];
 		}
 		
 		self.sectionInfoArray = infoArray;
 	}
 	
+}
+
+-(void)loadRenameView
+{
+    UIView *renameView = [[UIView alloc] initWithFrame:CGRectMake(0, 45, 320, 96)];
+    [self.view addSubview:renameView];
 }
 
 -(IBAction)addCircleAction:(id)sender
@@ -216,6 +232,11 @@ NSString *userID;
     
     // To reduce memory pressure, reset the section info array if the view is unloaded.
 	self.sectionInfoArray = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CREATE_CIRCLE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_CIRCLE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];    
     NSLog(@"Circlewise view did unload called");
 }
 
@@ -699,7 +720,7 @@ NSString *userID;
 //    [self.circleTableView reloadData];
 //    [self.view setNeedsDisplay];
     self.userCircle=circleListDetailGlobalArray;
-    [self viewWillAppear:NO];
+    [self initData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.circleTableView reloadData];
@@ -709,10 +730,62 @@ NSString *userID;
     [self.circleCreateView setNeedsDisplay];    
 }
 
+-(IBAction)saveRenameCircle:(id)sender
+{
+    if ([renameTextField.text isEqualToString:@""])
+    {
+        [UtilityClass showAlert:@"" :@"Please enter circle name"];
+    }
+    else
+    {
+        [renameTextField resignFirstResponder];
+        [renameUIView removeFromSuperview];    
+        
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        
+        renameCircleName=renameTextField.text;
+        UserCircle* circle= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:renameCircleOndex]);
+        circle.circleName= renameCircleName;
+        [rc renameCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circle.circleID:renameCircleName];
+        [circleListDetailGlobalArray replaceObjectAtIndex:renameCircleOndex withObject:circle];
+        self.userCircle=[circleListDetailGlobalArray mutableCopy];
+        [self initData];
+        [renameTextField setText:@""];
+    }
+}
+
+-(IBAction)cancelRenameCircle:(id)sender
+{
+    [renameTextField resignFirstResponder];    
+    [renameUIView removeFromSuperview];
+}
+
+-(void)renameCircle:(int)index
+{
+    NSLog(@"renameUIView index %d %@ %@ %@ %@",index,renameUIView,renameTextField,self.view,self);
+    renameCircleOndex=index;
+    [self.view addSubview:renameUIView];
+}
+
+-(void)deleteCircle:(int)index
+{
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    NSString *circleID;
+    circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
+    [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
+    [circleListDetailGlobalArray removeObjectAtIndex:index];
+    self.userCircle=[circleListDetailGlobalArray mutableCopy];
+
+    NSLog(@"delete index %d %@",index,circleID);    
+    
+}
+
 - (void)createCircleDone:(NSNotification *)notif
 {
     self.userCircle=circleListDetailGlobalArray;
-    [self viewWillAppear:NO];
+    [self initData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.view setNeedsDisplay];
@@ -745,7 +818,7 @@ NSString *userID;
     //    [self.circleTableView reloadData];
     //    [self.view setNeedsDisplay];
     self.userCircle=circleListDetailGlobalArray;
-    [self viewWillAppear:NO];
+    [self initData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.view setNeedsDisplay];
@@ -765,6 +838,21 @@ NSString *userID;
     [self.circleTableView reloadData];
 }
 
+- (void)deleteCircleDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [self initData];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self.circleTableView reloadData];
+    [UtilityClass showAlert:@"" :@"Circle deleted successfully"];
+}
+
+- (void)renameCircleDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self.circleTableView reloadData];
+}
 
 -(void)addToCircle:(id)sender
 {

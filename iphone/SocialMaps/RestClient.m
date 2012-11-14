@@ -5063,7 +5063,7 @@ AppDelegate *smAppDelegate;
             }
             circleListDetailGlobalArray=circleList;
             
-            NSLog(@"getPlatforms response: %@",jsonObjects);    
+            NSLog(@"getall circles response: %@",jsonObjects);    
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:circleList];
         } 
@@ -5283,6 +5283,124 @@ AppDelegate *smAppDelegate;
     [request startAsynchronous];
 }
 
+-(void) deleteCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/circles/%@",WS_URL,circleId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    NSLog(@"URL: %@",route);
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSString *msg=[jsonObjects objectForKey:@"message"];
+            NSLog(@"msg %@",msg);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_CIRCLE_DONE object:msg];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt delete circle");
+    [request startAsynchronous];
+}
+
+-(void) renameCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleID:(NSString *)circleName
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/circles/%@/rename",WS_URL,circleID];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:circleName forKey:@"name"];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSString *msg=[jsonObjects objectForKey:@"message"];
+            NSLog(@"msg %@",msg);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RENAME_USER_CIRCLE_DONE object:msg];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt rename circle");
+    [request startAsynchronous];
+}
+
 -(void)getBlockUserList:(NSString *)authToken:(NSString *)authTokenValue
 {
     NSString *route = [NSString stringWithFormat:@"%@/me/blocked-users",WS_URL];
@@ -5338,7 +5456,7 @@ AppDelegate *smAppDelegate;
                     [userFrnds addObject:people];
                 }
                            
-            NSLog(@"getPlatforms response: %@",userFrnds);    
+            NSLog(@"getBlockeuser response: %@",userFrnds);    
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:userFrnds];
         } 
@@ -5422,7 +5540,7 @@ AppDelegate *smAppDelegate;
                 [userFrnds addObject:people];
             }
             
-            NSLog(@"getPlatforms response: %@",userFrnds);    
+            NSLog(@"getblockuser response: %@",userFrnds);    
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:userFrnds];
         } 
@@ -5505,7 +5623,7 @@ AppDelegate *smAppDelegate;
                 [userFrnds addObject:people];
             }
             
-            NSLog(@"getPlatforms response: %@",userFrnds);    
+            NSLog(@"get unblock response: %@",userFrnds);    
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:userFrnds];
         } 

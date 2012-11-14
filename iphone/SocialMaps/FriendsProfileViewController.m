@@ -86,6 +86,16 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
+    
+    nameLabl.layer.shadowRadius = 5.0f;
+    nameLabl.layer.shadowOpacity = .9;
+    nameLabl.layer.shadowOffset = CGSizeZero;
+    nameLabl.layer.masksToBounds = NO;
+    
+    statusMsgLabel.layer.shadowRadius = 5.0f;
+    statusMsgLabel.layer.shadowOpacity = .9;
+    statusMsgLabel.layer.shadowOffset = CGSizeZero;
+    statusMsgLabel.layer.masksToBounds = NO;
     [textViewNewMsg.layer setCornerRadius:8.0f];
     [textViewNewMsg.layer setBorderWidth:0.5];
     [textViewNewMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];

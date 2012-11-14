@@ -15,6 +15,7 @@
 		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
 		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
 		2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2024BF7816075FE3008013DC /* SelectCircleTableCell.m */; };
+		2026D740165228EA00739CAA /* PhotoPickerOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2026D73F165228EA00739CAA /* PhotoPickerOriginalImage.m */; };
 		205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 205464D9164143FD00A96E8B /* fbCheckinIcon.png */; };
 		2063A1D415F330E300529CB2 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CE15F330E300529CB2 /* Pin.png */; };
 		2063A1D515F330E300529CB2 /* PinDown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2063A1CF15F330E300529CB2 /* PinDown1.png */; };
@@ -490,6 +491,8 @@
 		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
 		2024BF7716075FE3008013DC /* SelectCircleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCircleTableCell.h; sourceTree = "<group>"; };
 		2024BF7816075FE3008013DC /* SelectCircleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCircleTableCell.m; sourceTree = "<group>"; };
+		2026D73E165228EA00739CAA /* PhotoPickerOriginalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPickerOriginalImage.h; sourceTree = "<group>"; };
+		2026D73F165228EA00739CAA /* PhotoPickerOriginalImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPickerOriginalImage.m; sourceTree = "<group>"; };
 		205464D9164143FD00A96E8B /* fbCheckinIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbCheckinIcon.png; sourceTree = "<group>"; };
 		2063A1CE15F330E300529CB2 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin.png; sourceTree = "<group>"; };
 		2063A1CF15F330E300529CB2 /* PinDown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PinDown1.png; sourceTree = "<group>"; };
@@ -1497,9 +1500,11 @@
 				20C376A2163E525B00F989B3 /* MyPhotosViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
 				4FAC302515C5C5DC0014030C /* NotificationController.m */,
-				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
 				20C376A5163E529100F989B3 /* PhotoStoryboard.storyboard */,
+				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
 				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
+				2026D73E165228EA00739CAA /* PhotoPickerOriginalImage.h */,
+				2026D73F165228EA00739CAA /* PhotoPickerOriginalImage.m */,
 				4F82576B15BD32EE00760CE1 /* RegistrationController.h */,
 				4F82576C15BD32EE00760CE1 /* RegistrationController.m */,
 				2024BF7716075FE3008013DC /* SelectCircleTableCell.h */,
@@ -2464,6 +2469,7 @@
 				B08B6C601646A2F900279EDD /* CachedImages.m in Sources */,
 				B08B6C611646A2F900279EDD /* ImageInfo.m in Sources */,
 				B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */,
+				2026D740165228EA00739CAA /* PhotoPickerOriginalImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
