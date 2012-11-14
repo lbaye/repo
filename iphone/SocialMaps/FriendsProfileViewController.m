@@ -52,6 +52,10 @@
 @synthesize msgView,textViewNewMsg;
 @synthesize frndStatusButton;
 @synthesize addFrndButton,lastSeenat,meetUpButton;
+@synthesize  profileView;
+@synthesize newsfeedView;
+@synthesize profileScrollView;
+
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -140,6 +144,22 @@ NSMutableArray *selectedScrollIndex;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
     
+    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,userInfo.authToken];
+    urlStr=@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=e8bc1d84c9042d49856d69cdf5f320528b3330fb";
+    NSLog(@"urlStr %@",urlStr);
+    
+    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+    
+}
+
+-(void)reloadProfileScrollView
+{
+    [profileView removeFromSuperview];
+    [newsfeedView removeFromSuperview];
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+newsfeedView.frame.size.height)];
+    [profileScrollView addSubview:profileView];
+    [profileScrollView addSubview:newsfeedView];
 }
 
 -(IBAction)editCoverButton:(id)sender
@@ -169,6 +189,44 @@ NSMutableArray *selectedScrollIndex;
 -(IBAction)viewOnMapButton:(id)sender
 {
     [self.view addSubview:mapContainer];
+}
+
+- (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
+    NSString *fragment, *scheme;
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [webView stopLoading];
+        fragment = [[request URL] fragment];
+        scheme = [[request URL] scheme];
+        NSLog(@"%@ scheme",scheme);
+        if ([[[request URL] absoluteString] hasPrefix:@"button://"]) {
+            // Do custom code
+            NSLog(@"got button %@",scheme);
+            return NO;
+        } 
+        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
+            [self performSelector: NSSelectorFromString(fragment)];
+            return NO;
+        }
+        
+        [[UIApplication sharedApplication] openURL: [request URL]];
+    }
+    
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    CGRect frame = aWebView.frame;
+    frame.size.height = 1;
+    aWebView.frame = frame;
+    CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    aWebView.frame = frame;
+    
+    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    [self reloadProfileScrollView];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
 }
 
 -(IBAction)geotagButton:(id)sender

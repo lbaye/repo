@@ -243,7 +243,7 @@
 
 - (void)loginDone:(NSNotification *)notif
 {
-    NSLog(@"In LoginController:loginDone");
+    NSLog(@"In LoginController:loginDone %@",[notif object]);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     
