@@ -44,6 +44,7 @@
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
 @synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
+@synthesize profileView,profileScrollView;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -78,10 +79,10 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
-    nameLabl.layer.shadowRadius = 5.0f;
-    nameLabl.layer.shadowOpacity = .9;
-    nameLabl.layer.shadowOffset = CGSizeZero;
-    nameLabl.layer.masksToBounds = NO;
+    nameButton.titleLabel.layer.shadowRadius = 5.0f;
+    nameButton.titleLabel.layer.shadowOpacity = .9;
+    nameButton.titleLabel.layer.shadowOffset = CGSizeZero;
+    nameButton.titleLabel.layer.masksToBounds = NO;
 
     statusMsgLabel.layer.shadowRadius = 5.0f;
     statusMsgLabel.layer.shadowOpacity = .9;
@@ -117,6 +118,16 @@ NSMutableArray *selectedScrollIndex;
     [self reloadScrolview];
 }
 
+-(void)reloadProfileScrollView
+{
+    [profileView removeFromSuperview];
+    [newsfeedView removeFromSuperview];
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+newsfeedView.frame.size.height)];
+    [profileScrollView addSubview:profileView];
+    [profileScrollView addSubview:newsfeedView];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
@@ -124,8 +135,10 @@ NSMutableArray *selectedScrollIndex;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
     NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,smAppDelegate.authToken];
+    urlStr=@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=e8bc1d84c9042d49856d69cdf5f320528b3330fb";
     NSLog(@"urlStr %@",urlStr);
-//    [newsfeedView loadRequest:[NSURL URLWithString:urlStr]];
+    
+    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
@@ -523,6 +536,43 @@ NSMutableArray *selectedScrollIndex;
 	return draggablePinView;
 }
 
+- (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
+    NSString *fragment, *scheme;
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [webView stopLoading];
+        fragment = [[request URL] fragment];
+        scheme = [[request URL] scheme];
+        NSLog(@"%@ scheme",[[request URL] absoluteString]);
+        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"1"] count]>0) {
+            // Do custom code
+            NSLog(@"got button %@",scheme);
+            return NO;
+        } 
+        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
+            [self performSelector: NSSelectorFromString(fragment)];
+            return NO;
+        }
+        
+        [[UIApplication sharedApplication] openURL: [request URL]];
+    }
+    
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    CGRect frame = aWebView.frame;
+    frame.size.height = 1;
+    aWebView.frame = frame;
+    CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    aWebView.frame = frame;
+    
+    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    [self reloadProfileScrollView];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+}
 //lazy scroller
 
 -(void) reloadScrolview

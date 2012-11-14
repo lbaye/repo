@@ -1757,6 +1757,7 @@ int geoCounter=0;
                 imgView.exclusiveTouch = YES;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;

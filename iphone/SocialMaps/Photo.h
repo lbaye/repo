@@ -21,6 +21,7 @@
     NSString *description;
     UIImage *photoImage;
     NSString *permission;
+    NSString *photoThum;
     NSMutableArray *permittedUsers;
     NSMutableArray *permittedCircles;
 
@@ -36,6 +37,7 @@
 @property(nonatomic,retain) NSString *description;
 @property(nonatomic,retain) UIImage *photoImage;
 @property(nonatomic,retain) NSString *permission;
+@property(nonatomic,retain) NSString *photoThum;
 @property(nonatomic,retain) NSMutableArray *permittedUsers;
 @property(nonatomic,retain) NSMutableArray *permittedCircles;
 

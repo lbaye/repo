@@ -6311,6 +6311,7 @@ AppDelegate *smAppDelegate;
                 photo.location.latitude=[self getNestedKeyVal:photoDic key1:@"lat" key2:nil key3:nil];
                 photo.location.longitude=[self getNestedKeyVal:photoDic key1:@"lng" key2:nil key3:nil];
                 photo.address=[self getNestedKeyVal:photoDic key1:@"address" key2:nil key3:nil];
+                photo.photoThum=[self getNestedKeyVal:photoDic key1:@"imageThumb" key2:nil key3:nil];
                 [photoList addObject:photo];
                 NSLog(@"photo.imageUrl %@",photo.imageUrl);
             }
@@ -6441,6 +6442,7 @@ AppDelegate *smAppDelegate;
                 photo.location.latitude=[self getNestedKeyVal:photoDic key1:@"lat" key2:nil key3:nil];
                 photo.location.longitude=[self getNestedKeyVal:photoDic key1:@"lng" key2:nil key3:nil];
                 photo.address=[self getNestedKeyVal:photoDic key1:@"address" key2:nil key3:nil];
+                photo.photoThum=[self getNestedKeyVal:photoDic key1:@"imageThumb" key2:nil key3:nil];
                 [photoList addObject:photo];
                 NSLog(@"photo.imageUrl %@",photo.imageUrl);
             }
@@ -6505,13 +6507,14 @@ AppDelegate *smAppDelegate;
             for (NSDictionary *photoDic in jsonObjects) 
             {
                 Photo *photo=[[Photo alloc] init];
-                //                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
+//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 photo.photoId=[self getNestedKeyVal:photoDic key1:@"id" key2:nil key3:nil];
                 photo.description=[self getNestedKeyVal:photoDic key1:@"description" key2:nil key3:nil];
                 photo.imageUrl=[self getNestedKeyVal:photoDic key1:@"imageLarge" key2:nil key3:nil];
                 photo.location.latitude=[self getNestedKeyVal:photoDic key1:@"lat" key2:nil key3:nil];
                 photo.location.longitude=[self getNestedKeyVal:photoDic key1:@"lng" key2:nil key3:nil];
                 photo.address=[self getNestedKeyVal:photoDic key1:@"address" key2:nil key3:nil];
+                photo.photoThum=[self getNestedKeyVal:photoDic key1:@"imageThumb" key2:nil key3:nil];
                 [photoList addObject:photo];
                 NSLog(@"photo.imageUrl %@",photo.imageUrl);
             }

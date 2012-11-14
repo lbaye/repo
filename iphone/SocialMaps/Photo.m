@@ -21,7 +21,7 @@
 @synthesize permission;
 @synthesize permittedUsers;
 @synthesize permittedCircles;
-
+@synthesize photoThum;
 
 - (id)init
 {
