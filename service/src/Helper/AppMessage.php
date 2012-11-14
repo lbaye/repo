@@ -7,6 +7,9 @@ class AppMessage {
     const EVENT_GUEST_REQUEST = 'event_guest';
     const NEW_MESSAGE = 'new_message';
     const REPLY_MESSAGE = 'reply_message';
+    const RECOMMEND_VENUE_MESSAGE = 'recommend_venue';
+    const RECOMMEND_PLACE_MESSAGE = 'recommend_place';
+    const RECOMMEND_GEOTAG_MESSAGE = 'recommend_geotag';
 
     /**
      * List of notification messages
@@ -16,7 +19,10 @@ class AppMessage {
         self::MEETUP_REQUEST => '%s wants to meet you %s',
         self::EVENT_GUEST_REQUEST => '%s has invited you in %s',
         self::NEW_MESSAGE => 'New message from %s',
-        self::REPLY_MESSAGE => 'New reply from %s'
+        self::REPLY_MESSAGE => 'New reply from %s',
+        self::RECOMMEND_VENUE_MESSAGE => '%s has recommended you at %s',
+        self::RECOMMEND_PLACE_MESSAGE => '%s has recommended you at %s',
+        self::RECOMMEND_GEOTAG_MESSAGE => '%s has recommended you at %s'
     );
 
     public static function getMessage($key) {

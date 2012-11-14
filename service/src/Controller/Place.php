@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Repository\PlaceRepo as placeRepository;
 use Helper\Status;
+use Helper\AppMessage as AppMessage;
 
 class Place extends Base
 {
@@ -21,6 +22,9 @@ class Place extends Base
     public function init()
     {
         parent::init();
+
+        $this->messageRepository = $this->dm->getRepository('Document\Message');
+        $this->messageRepository->setConfig($this->config);
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
@@ -301,5 +305,140 @@ class Place extends Base
         } else {
             $this->LocationMarkRepository = $this->dm->getRepository('Document\Place');
         }
+    }
+
+    /**
+     * POST /recommend/{recommendType}/{id}
+     *
+     * @param $id
+     *
+     * @param $recommendType
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function recommend($id, $recommendType, $type = 'place')
+    {
+        try {
+            $this->_initRepository($type);
+            $place = $this->LocationMarkRepository->find($id);
+            $postData = $this->request->request->all();
+
+            if ($recommendType == "venue") {
+                $metaType = "venue";
+                $staticMsg = appMessage::RECOMMEND_VENUE_MESSAGE;
+            } elseif ($recommendType == "place") {
+                $metaType = "place";
+                $staticMsg = appMessage::RECOMMEND_PLACE_MESSAGE;
+
+            } elseif ($recommendType == "geotag") {
+                $metaType = "geotag";
+                $staticMsg = appMessage::RECOMMEND_GEOTAG_MESSAGE;
+
+            }
+            else {
+                $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
+            if (empty($postData['recipients']) && empty($postData['metaTitle']) && empty($postData['metaContent'])) {
+                $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            if (empty($postData['subject'])) {
+                $postData['subject'] = $postData['metaTitle'];
+            }
+
+            if (empty($postData['content'])) {
+                $postData['content'] = $postData['metaTitle'];
+            }
+
+            $recipients = $postData['recipients'];
+            if (!empty($place)) {
+                $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
+            } else {
+                $createMetaData = array("id" => $id, "content" => $postData['metaContent']);
+            }
+
+            $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
+            $message->setMetaType($metaType);
+            $message->setMetaTitle($postData['subject']);
+            $message->setMetaContent($createMetaData);
+            $getResponse = $this->messageRepository->insert($message);
+
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
+
+            if (!empty($recipients)) {
+                $this->_sendPushNotification(
+                    array($recipients), $this->_createPushMessage($postData['subject'], $staticMsg),
+                    $staticMsg, $id
+                );
+
+            }
+
+            $this->response->setContent(json_encode(array("message" => "Message Sent Successfully.")));
+            $this->response->setStatusCode(Status::CREATED);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    /**
+     * POST  /places/recommend/fbcheckin/{id}
+     *
+     * @param $id
+     *
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function recommendPlaceFbCheckin($id, $type = 'place')
+    {
+        try {
+            $this->_initRepository($type);
+            $place = $this->LocationMarkRepository->find($id);
+            $postData = $this->request->request->all();
+            if (empty($data['facebookAuthToken']) OR (empty($data['facebookId']))) {
+                $this->response->setContent(json_encode(array('message' => "Required field 'facebookId' and/or 'facebookAuthToken' not found.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+            $recipients = $postData['recipients'];
+            $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
+
+            $message = $this->messageRepository->map($postData, $this->user);
+            $message->addReadStatusFor($this->user);
+            $message->setPlaceRecommend($createMetaData);
+            $getResponse = $this->messageRepository->insert($message);
+
+            // Don't put it before insert operation. this is intentional
+            $message->setStatus('read');
+
+            if (!empty($recipients)) {
+                $this->_sendPushNotification(
+                    array($recipients), $this->_createPushMessage($place->getTitle(), 'test'),
+                    AppMessage::RECOMMEND_VENUE_MESSAGE, $place->getId()
+                );
+
+            }
+
+            $this->response->setContent(json_encode(array("message" => "Message Sent Successfully.")));
+            $this->response->setStatusCode(Status::CREATED);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
+    private function _createPushMessage($metaTitle, $staticMsg)
+    {
+        return AppMessage::getMessage($staticMsg, $this->user->getFirstName(), $metaTitle);
+
     }
 }
