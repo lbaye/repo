@@ -4,7 +4,8 @@
     %title Hello
     %link(rel='stylesheet' href='http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/assets/stylesheets/newsfeed.css')
 %body
-  %ul
+  %ul(style='width:320px')
+    -$i=0
     - foreach($activities as $activity)
       %li
         - if ($activity->getObjectType() === 'photo')
@@ -28,6 +29,7 @@
               .icon.icon_zoom
 
             .row
-              %a(href="#") Click Here
+              %a(href=$i) Click Here
+      -$i++
               
   
