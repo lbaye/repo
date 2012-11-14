@@ -1480,7 +1480,7 @@ ButtonClickCallbackData callBackData;
     ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-    [smAppDelegate showActivityViewer:self.view];
+    //[smAppDelegate showActivityViewer:self.view];
 }
 
 -(void)getAllEvents

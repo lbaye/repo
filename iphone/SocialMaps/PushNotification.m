@@ -68,6 +68,9 @@
     } else if ([type caseInsensitiveCompare:@"meetup"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationMeetupRequest;
         newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else if ([type caseInsensitiveCompare:@"event_guest"] == NSOrderedSame) {
+        newNotif.notifType = PushNotificationEventInvite;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
     } else {
         newNotif.notifType = PushNotificationShareBreadcrumb;
     }

@@ -89,7 +89,7 @@ bool searchFlags=true;
 //    eventListArray=[[self loadDummyData] mutableCopy];
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
-    [smAppDelegate showActivityViewer:self.view];
+    
     [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start.  %@",smAppDelegate);
     [self.eventSearchBar setText:@""];
@@ -113,6 +113,8 @@ bool searchFlags=true;
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     [self.eventListTableView reloadData];
+    
+    [smAppDelegate showActivityViewer:self.view];
 
 }
 

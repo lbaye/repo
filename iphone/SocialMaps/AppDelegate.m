@@ -22,6 +22,7 @@
 #import "PushNotification.h"
 #import "MessageListViewController.h"
 #import "NotifMessage.h"
+#import "ViewEventListViewController.h"
 
 @implementation AppDelegate
 
@@ -306,6 +307,17 @@ static AppDelegate *sharedInstance=nil;
             
             [self.currentModelViewController presentModalViewController:controller animated:NO];
             
+        } else if (newNotif.notifType == PushNotificationEventInvite) {
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            ViewEventListViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            if ([self.currentModelViewController isKindOfClass:[ViewEventListViewController class]]) {
+                [self.currentModelViewController viewDidAppear:NO];
+                return;
+            }
+            
+            [self.currentModelViewController presentModalViewController:controller animated:YES];
         }
        
     }
