@@ -213,7 +213,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			if (resultCode == RESULT_OK) {
 
 				if (photoIcon != null) {
-					photoIcon.recycle();
+					//photoIcon.recycle();
 				}
 
 				photoIcon = Utility
@@ -238,7 +238,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 					// data.getData());
 					if (photoIcon != null) {
-						photoIcon.recycle();
+						//photoIcon.recycle();
 					}
 					photoIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
@@ -613,16 +613,17 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		if (photoIcon != null) {
-			photoIcon.recycle();
-		}
-		System.gc();
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		if (photoIcon != null) {
+			photoIcon.recycle();
+		}
+		System.gc();
 	}
 
 }

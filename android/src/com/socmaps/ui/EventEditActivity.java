@@ -1174,7 +1174,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			if (resultCode == RESULT_OK) {
 
 				if (eventPicture != null) {
-					eventPicture.recycle();
+					//eventPicture.recycle();
 				}
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
 						.get("data"), Constant.eventPhotoWidth,
@@ -1195,7 +1195,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 				try {
 
 					if (eventPicture != null) {
-						eventPicture.recycle();
+						//eventPicture.recycle();
 					}
 					eventPicture = Utility
 							.resizeBitmap(

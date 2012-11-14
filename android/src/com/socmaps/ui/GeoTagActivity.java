@@ -854,7 +854,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 			if (resultCode == RESULT_OK) {
 				// eventPicture = (Bitmap) data.getExtras().get("data");
 				if (eventPicture != null) {
-					eventPicture.recycle();
+					//eventPicture.recycle();
 				}
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
 						.get("data"), Constant.eventPhotoWidth,
@@ -876,7 +876,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 					// imageUri);
 
 					if (eventPicture != null) {
-						eventPicture.recycle();
+						//eventPicture.recycle();
 					}
 					eventPicture = Utility
 							.resizeBitmap(

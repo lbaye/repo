@@ -91,9 +91,11 @@
         <activity android:name=".DirectionActivity" android:screenOrientation="portrait" android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PlaceEditSaveActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>       
         <activity android:name=".PlacesListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".GeoTagActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name="GeoTagActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PhotoListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PhotoUploadNewPhotoActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name="zMeetupRequestNewActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        
         
         <service android:name="com.socmaps.notificationBroadcast.BroadcastService" />
         <!--
@@ -117,6 +119,12 @@
         
          <service android:name=".GCMIntentService" />
         <uses-library android:name="com.google.android.maps" />
+        
+        
+        
+        
+        
+
         
         
        

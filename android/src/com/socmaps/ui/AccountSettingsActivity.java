@@ -140,7 +140,7 @@ public class AccountSettingsActivity extends Activity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		if (avatar != null) {
-			// avatar.recycle();
+			avatar.recycle();
 		}
 
 		//SessionEvents.removeAuthListener(fbAPIsAuthListener);

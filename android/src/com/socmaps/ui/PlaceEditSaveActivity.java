@@ -552,7 +552,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 
 				if (placeIcon != null) {
-					placeIcon.recycle();
+					//placeIcon.recycle();
 				}
 
 				// avatar = (Bitmap) data.getExtras().get("data");
@@ -578,7 +578,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 					// data.getData());
 					if (placeIcon != null) {
-						placeIcon.recycle();
+						//placeIcon.recycle();
 					}
 					placeIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(

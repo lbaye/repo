@@ -128,40 +128,35 @@
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dip" >
+        android:padding="5dip" >
 
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingBottom="5dip"
-            android:paddingLeft="10dip"
-            android:paddingRight="25dip"
-            android:paddingTop="5dip"
+            android:layout_marginRight="15dip"
+            android:background="@color/transparent"
+            android:padding="10dip"
             android:text="@string/cancel"
-            android:textColor="@color/black"
+            android:textColor="@drawable/selector_btn_transparent_black"
             android:textSize="12dip"
             android:textStyle="normal" />
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="1dip"
             android:layout_height="40dip"
-            android:scaleType="centerInside"
+            android:scaleType="fitXY"
             android:src="@drawable/seperator" />
 
         <Button
             android:id="@+id/btnUploadPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:paddingBottom="5dip"
-            android:paddingLeft="25dip"
-            android:paddingRight="10dip"
-            android:paddingTop="5dip"
+            android:layout_marginLeft="15dip"
+            android:background="@color/transparent"
+            android:padding="10dip"
             android:text="@string/uploadThisPhotosLabel"
-            android:textColor="@color/black"
+            android:textColor="@drawable/selector_btn_transparent_black"
             android:textSize="12dip"
             android:textStyle="normal" />
     </LinearLayout>
@@ -171,7 +166,6 @@
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:layout_above="@+id/buttonContainerBottom"
-        android:layout_marginBottom="10dip"
         android:layout_marginTop="10dip"
         android:background="@color/gray_light" />
 
@@ -184,16 +178,17 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:paddingBottom="15dip">
 
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="150dip"
-                android:layout_margin="15dip"
-                android:background="@color/gray_dark"
+                android:layout_margin="10dip"
+                android:background="@color/highlightGreen"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:padding="5dip" >
+                android:padding="3dip" >
 
                 <ImageView
                     android:id="@+id/ivPhoto"
@@ -228,10 +223,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
-                android:paddingLeft="5dp"
                 android:text="@string/tagPhotosLabel"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="12dip"
                 android:textStyle="bold" />
 
             <!-- RadioGroup for location starts -->
@@ -256,10 +250,10 @@
                 android:layout_marginBottom="10dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginTop="10dip"
-                android:paddingLeft="5dp"
                 android:text="@string/addDescriptionLabel"
                 android:textColor="@color/black"
-                android:textSize="15dp" />
+                android:textSize="12dip"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editImageDiscription"
@@ -268,10 +262,9 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="15dip"
                 android:gravity="top"
-                android:hint="Image description.."
+                android:hint="Image description..."
                 android:maxLines="3"
                 android:minLines="3"
-                android:paddingLeft="5dp"
                 android:textColor="@color/black"
                 android:textSize="12dp" />
 
@@ -280,7 +273,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:layout_marginTop="10dip"
-                android:paddingLeft="5dp"
                 android:text="@string/shareWithLabel"
                 android:textColor="@color/black"
                 android:textSize="12dp"

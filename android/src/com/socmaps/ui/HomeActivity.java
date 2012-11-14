@@ -1558,6 +1558,32 @@ public class HomeActivity extends MapActivity implements
 			}
 		});
 
+		// -- for meet up when Place Pop Up appear -- //
+
+		Button meet_up = (Button) d.findViewById(R.id.meet_up_btn);
+		meet_up.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				Log.d("PLACE MEET UP",
+						String.valueOf(item.getPlace().getLatitude())
+								+ " "
+								+ String.valueOf(item.getPlace().getLongitude()));
+
+				Intent intentForMeetup = new Intent(context,
+						zMeetupRequestNewActivity.class);
+				intentForMeetup.putExtra("destLat", item.getPlace()
+						.getLatitude());
+				intentForMeetup.putExtra("destLng", item.getPlace()
+						.getLongitude());
+				// intentForMeetup.putExtra("destAddress",
+				// item.getPlace().getAddress());
+				startActivity(intentForMeetup);
+			}
+		});
+
 		d.show();
 	}
 
@@ -1831,6 +1857,36 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				d.dismiss();
+			}
+		});
+
+		// --- Secondary People's meet up & direction --- //
+		Button meet_up_btn_2 = (Button) d.findViewById(R.id.meet_up_btn_2);
+		meet_up_btn_2.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context,
+						MeetupRequestNewActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		Button directions_btn = (Button) d.findViewById(R.id.directions_btn);
+		directions_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("destLat", item.getSecondDegreePeople()
+						.getCurrentLat());
+				intent.putExtra("destLng", item.getSecondDegreePeople()
+						.getCurrentLng());
+				intent.putExtra("destAddress", item.getSecondDegreePeople()
+						.getCurrentAddress());
+				startActivity(intent);
 			}
 		});
 
@@ -2321,9 +2377,6 @@ public class HomeActivity extends MapActivity implements
 
 		else if (v == btnCircleMenuItemDeals) {
 
-			// Intent peopleIntent = new Intent(getApplicationContext(),
-			// PhotoUploadNewPhotoActivity.class);
-			// startActivity(peopleIntent);
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
@@ -2334,12 +2387,7 @@ public class HomeActivity extends MapActivity implements
 					MessageActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
-			Intent intent = new Intent(getApplicationContext(),
-					PhotoListActivity.class);
-			startActivity(intent);
+			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemPeople) {
 
@@ -2352,9 +2400,9 @@ public class HomeActivity extends MapActivity implements
 
 		} else if (v == btnCircleMenuItemPlaces) {
 
-			Intent peopleIntent = new Intent(getApplicationContext(),
+			Intent placeIntent = new Intent(getApplicationContext(),
 					PlacesListActivity.class);
-			startActivity(peopleIntent);
+			startActivity(placeIntent);
 
 			// Toast.makeText(context, "Coming soon.",
 			// Toast.LENGTH_SHORT).show();

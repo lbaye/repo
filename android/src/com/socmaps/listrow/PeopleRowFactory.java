@@ -96,10 +96,11 @@ public class PeopleRowFactory {
 		holder.firstNameText.setText(Utility.getFieldText(people));
 		// ******************************************************************status
 		if (people.getStatusMsg() != null) {
-			if (!people.getStatusMsg().equals("")) {
-
-				holder.statusText.setText(people.getStatusMsg());
-				holder.statusText.setVisibility(View.VISIBLE);
+			if (!people.getStatusMsg().equals("")) { 
+				
+					holder.statusText.setText(people.getStatusMsg());
+					holder.statusText.setVisibility(View.VISIBLE);
+							
 			} else
 				holder.statusText.setVisibility(View.GONE);
 		} else

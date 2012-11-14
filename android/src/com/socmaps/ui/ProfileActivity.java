@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -55,19 +56,23 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	ImageView ivProfilePic, ivCoverPic, ivRegMedia;
 	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus,
-			btnNavigateToMap, btnEvent;
+			btnNavigateToMap;
+	ImageView photos_icon_image, friends_icon_image, btnEvent,
+			places_icon_image, meetup_icon_image;
 	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge,
 			tvCity, tvCompany, tvRelationshipStatus;
 
 	LinearLayout age_layout, relationship_layout, living_in_layout,
-			work_at_layout, layEditCoverPic, layEditStatus, layEditProfilePic; 
-	
+			work_at_layout, layEditCoverPic, layEditStatus, layEditProfilePic;
+
 	RelativeLayout relativeLayoutForGeoTag, relativeLayoutForUploadPhoto;
 
 	int responseStatus = 0;
 	String responseString = "";
 
 	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
+
 	private String flag = ""; // UNIT or INFO
 	private ProgressDialog m_ProgressDialog = null;
 
@@ -82,6 +87,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	String strRelationshipStatus;
 	String status, age, city, workStatus;
+
+	boolean isChanged = false;
+
+	// LinearLayout ll1, listItemParent, ll3, ll4, ll5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +113,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	}
 
 	private void initialize() {
+
+		imageDownloader = new ImageDownloader();
+		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 
 		context = ProfileActivity.this;
 
@@ -131,8 +143,20 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		btnNavigateToMap = (ImageView) findViewById(R.id.btnNavigateToMap);
 		btnNavigateToMap.setOnClickListener(this);
 
+		photos_icon_image = (ImageView) findViewById(R.id.photos_icon_image);
+		photos_icon_image.setOnClickListener(this);
+
+		friends_icon_image = (ImageView) findViewById(R.id.friends_icon_image);
+		friends_icon_image.setOnClickListener(this);
+
 		btnEvent = (ImageView) findViewById(R.id.btnEvent);
 		btnEvent.setOnClickListener(this);
+
+		places_icon_image = (ImageView) findViewById(R.id.places_icon_image);
+		places_icon_image.setOnClickListener(this);
+
+		meetup_icon_image = (ImageView) findViewById(R.id.meetup_icon_image);
+		meetup_icon_image.setOnClickListener(this);
 
 		tvName = (TextView) findViewById(R.id.tvName);
 		tvStatusMessage = (TextView) findViewById(R.id.tvStatusMessage);
@@ -150,10 +174,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		work_at_layout = (LinearLayout) findViewById(R.id.work_at_layout);
 		layEditCoverPic = (LinearLayout) findViewById(R.id.layEditCoverPic);
 		layEditStatus = (LinearLayout) findViewById(R.id.layEditStatus);
-		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic); 
-		
-		relativeLayoutForGeoTag = (RelativeLayout) findViewById(R.id.relativeLayoutForGeoTag); 
-		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto); 
+		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
+
+		relativeLayoutForGeoTag = (RelativeLayout) findViewById(R.id.relativeLayoutForGeoTag);
+		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto);
 
 		age_layout.setOnClickListener(this);
 		relationship_layout.setOnClickListener(this);
@@ -161,9 +185,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		work_at_layout.setOnClickListener(this);
 		layEditCoverPic.setOnClickListener(this);
 		layEditStatus.setOnClickListener(this);
-		layEditProfilePic.setOnClickListener(this); 
-		
-		relativeLayoutForGeoTag.setOnClickListener(this); 
+		layEditProfilePic.setOnClickListener(this);
+
+		relativeLayoutForGeoTag.setOnClickListener(this);
 		relativeLayoutForUploadPhoto.setOnClickListener(this);
 
 		tvRelationshipStatus = (TextView) findViewById(R.id.tvRelationshipStatus);
@@ -172,13 +196,15 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	public void setDefaultValues() {
 
+		imageDownloader.clearCache();
+
 		if (StaticValues.myInfo != null) {
 
 			status = StaticValues.myInfo.getStatusMsg();
 			age = StaticValues.myInfo.getAge() + "";
 			city = StaticValues.myInfo.getCity();
 			workStatus = StaticValues.myInfo.getWorkStatus();
-			
+
 			imageLoader.clearCache();
 
 			if (StaticValues.myInfo.getAvatar() != null) {
@@ -190,8 +216,14 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				 * ivProfilePic, 60, 60);
 				 */
 
-				imageLoader.DisplayImage(StaticValues.myInfo.getAvatar(),
-						ivProfilePic, R.drawable.thumb);
+				/*
+				 * imageLoader.DisplayImage(StaticValues.myInfo.getAvatar(),
+				 * ivProfilePic, R.drawable.thumb);
+				 */
+
+				ivProfilePic.setImageResource(R.drawable.thumb);
+				imageDownloader.download(StaticValues.myInfo.getAvatar(),
+						ivProfilePic);
 			}
 
 			if (StaticValues.myInfo.getCoverPhoto() != null) {
@@ -204,8 +236,14 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				 * ivCoverPic, 320, 150);
 				 */
 
-				imageLoader.DisplayImage(StaticValues.myInfo.getCoverPhoto(),
-						ivCoverPic, R.drawable.cover_pic_default);
+				/*
+				 * imageLoader.DisplayImage(StaticValues.myInfo.getCoverPhoto(),
+				 * ivCoverPic);
+				 */
+
+				ivCoverPic.setImageResource(R.drawable.img_blank);
+				imageDownloader.download(StaticValues.myInfo.getCoverPhoto(),
+						ivCoverPic);
 			}
 			if (StaticValues.myInfo.getRegMedia() != null) {
 				if (StaticValues.myInfo.getRegMedia().equals("fb")) {
@@ -289,34 +327,51 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
-
 			/*
 			 * AppStaticStorages.selectedMeetupRequest = meetupRequestEntity;
 			 * Intent intent = new Intent(context, ShowItemOnMap.class);
 			 * intent.putExtra("FLAG", Constant.FLAG_PEOPLE);
 			 * startActivity(intent);
 			 */
-		} else if (v == btnEvent) {
-			Intent i = new Intent(context, EventListActivity.class);
-			startActivity(i);
+			// Toast.makeText(context, "Will Go To Map",
+			// Toast.LENGTH_SHORT).show();
 		} else if (v == btnBack) {
-
-			// finish();
-
-			showDialogToUpdateInfo();
-
+			if (isChanged == false)
+				finish();
+			else
+				showDialogToUpdateInfo();
 		} else if (v == btnNotification) {
 			Intent notificationIntent = new Intent(context,
 					NotificationActivity.class);
 			startActivity(notificationIntent);
+
+			finish();
 		}
 
 		if (v.getId() == R.id.btnEditProfilePic) {
-
 			isCoverPic = false;
-
 			uploadIconFromGalaryOrCamara();
+		}
 
+		else if (v == photos_icon_image) {
+			showPhotos();
+		}
+
+		else if (v == friends_icon_image) {
+			showFriends();
+		}
+
+		else if (v == btnEvent) {
+			Intent i = new Intent(context, EventListActivity.class);
+			startActivity(i);
+		}
+
+		else if (v == places_icon_image) {
+			showPlaces();
+		}
+
+		else if (v == meetup_icon_image) {
+			showMeetUp();
 		}
 
 		switch (v.getId()) {
@@ -362,20 +417,49 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		case R.id.layEditProfilePic:
 			isCoverPic = false;
 			uploadIconFromGalaryOrCamara();
-			break; 
-			
-		case R.id.relativeLayoutForGeoTag: 
+			break;
+
+		case R.id.relativeLayoutForGeoTag:
 			geoTagFunction();
-			break; 
-			
-		case R.id.relativeLayoutForUploadPhoto: 
-			uploadPhoto(); 
+			break;
+
+		case R.id.relativeLayoutForUploadPhoto:
+			uploadPhoto();
 			break;
 
 		default:
 			break;
 		}
 
+	}
+
+	private void showPhotos() {
+		// Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(getApplicationContext(),
+				PhotoListActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void showFriends() {
+		Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
+	}
+
+	private void showPlaces() {
+		// Toast.makeText(context, "will be added very soon",
+		// Toast.LENGTH_SHORT).show();
+		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
+		startActivity(intentToGoPlace);
+		finish();
+	}
+
+	private void showMeetUp() {
+		// Toast.makeText(context, "fffffff", Toast.LENGTH_SHORT).show();
+
+		Intent intentToShowMeetUp = new Intent(context,
+				MeetupRequestNewActivity.class);
+		startActivity(intentToShowMeetUp);
+		finish();
 	}
 
 	public void spinnerShowRelationshipOption() {
@@ -392,8 +476,6 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			}
 		}
 
-		// final String str[] = { "Single", "Married", "Complicated" };
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// builder.setTitle("Select...");
 		builder.setItems(relArray, new DialogInterface.OnClickListener() {
@@ -404,7 +486,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 				// Toast.makeText(context, str[position], 1000).show();
 				tvRelationshipStatus.setText(relArray[position]);
-
+				isChanged = true;
 			}
 
 		});
@@ -499,6 +581,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 						age = Utility.calculateAge(sb.toString()) + " years";
 						tvAge.setText(age);
 
+						isChanged = true;
+
 					}
 
 				}, selectedYear, selectedMonth - 1, selectedDay);
@@ -584,11 +668,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ProfileActivity.REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
-
 				if (isCoverPic) {
 
 					if (coverPic != null) {
-						coverPic.recycle();
+						// coverPic.recycle();
 					}
 
 					// coverPic = (Bitmap) data.getExtras().get("data");
@@ -601,7 +684,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				} else {
 
 					if (avatar != null) {
-						avatar.recycle();
+						// avatar.recycle();
 					}
 
 					// avatar = (Bitmap) data.getExtras().get("data");
@@ -612,7 +695,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 					ivProfilePic.setImageBitmap(avatar);
 
 				}
-
+				isChanged = true;
 			}
 
 			if (resultCode == RESULT_CANCELED) {
@@ -622,6 +705,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		} else if (requestCode == ProfileActivity.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 				// imageUri = data.getData();
+				// isChanged = true;
 				try {
 
 					if (isCoverPic) {
@@ -630,7 +714,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 						// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 						// data.getData());
 						if (coverPic != null) {
-							coverPic.recycle();
+							// coverPic.recycle();
 						}
 						coverPic = Utility.resizeBitmap(
 								MediaStore.Images.Media.getBitmap(
@@ -639,6 +723,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 								Constant.profileCoverWidth,
 								Constant.profileCoverHeight);
 						ivCoverPic.setImageBitmap(coverPic);
+						isChanged = true;
 
 					} else {
 
@@ -646,7 +731,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 						// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 						// data.getData());
 						if (avatar != null) {
-							avatar.recycle();
+							// avatar.recycle();
 						}
 						avatar = Utility.resizeBitmap(
 								MediaStore.Images.Media.getBitmap(
@@ -654,18 +739,20 @@ public class ProfileActivity extends Activity implements OnClickListener {
 										data.getData()), Constant.thumbWidth,
 								Constant.thumbHeight);
 						ivProfilePic.setImageBitmap(avatar);
-
+						isChanged = true;
 					}
 
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch(OutOfMemoryError e) {
-					
+				} catch (OutOfMemoryError e) {
+
 					Log.e("Gallery image", "OutOfMemoryError");
-					Toast.makeText(context, getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
-				}catch (IOException e) {
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -727,20 +814,31 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 				if (!inputText.equalsIgnoreCase("")) {
 
+					isChanged = true;
+
 					switch (id) {
 
 					case R.id.living_in_layout:
 						city = inputText;
 						tvCity.setText(inputText);
+						if (inputText.equalsIgnoreCase(StaticValues.myInfo
+								.getCity()))
+							isChanged = false;
 						break;
 
 					case R.id.work_at_layout:
 						workStatus = inputText;
 						tvCompany.setText(inputText);
+						if (inputText.equalsIgnoreCase(StaticValues.myInfo
+								.getWorkStatus()))
+							isChanged = false;
 						break;
 					case R.id.btnEditStatus:
 						status = inputText;
 						tvStatusMessage.setText(inputText);
+						if (inputText.equalsIgnoreCase(StaticValues.myInfo
+								.getStatusMsg()))
+							isChanged = false;
 						break;
 
 					default:
@@ -979,25 +1077,24 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			break;
 
 		}
-	} 
-	
-	private void geoTagFunction() 
-	{
-		//Toast.makeText(getApplicationContext(), "Coming Soon", Toast.LENGTH_SHORT).show(); 
-		
-		Intent intentForGeoTag = new Intent(context, GeoTagActivity.class); 
-		startActivity(intentForGeoTag);
-	} 
-	
-	private void uploadPhoto()
-	{
-		/*Intent intentForUploadPhoto = new Intent(context, UploadPhotoActivity.class);
-		startActivity(intentForUploadPhoto);*/ 
-		
-		Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
 	}
-	
-	
+
+	private void geoTagFunction() {
+		// Toast.makeText(getApplicationContext(), "Coming Soon",
+		// Toast.LENGTH_SHORT).show();
+
+		finish();
+		Intent intentForGeoTag = new Intent(context, GeoTagActivity.class);
+		startActivity(intentForGeoTag);
+	}
+
+	private void uploadPhoto() {
+
+		finish();
+		Intent intent = new Intent(context, PhotoUploadNewPhotoActivity.class);
+		startActivity(intent);
+
+	}
 
 	@Override
 	protected void onDestroy() {

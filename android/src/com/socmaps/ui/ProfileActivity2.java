@@ -1,48 +1,32 @@
 package com.socmaps.ui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
-import com.socmaps.entity.SearchResult;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -57,23 +41,22 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	ImageView ivProfilePic, ivCoverPic, ivRegMedia;
 	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus,
 			btnNavigateToMap, btnEvent;
-	ImageView photos_icon_image, friends_icon_image, places_icon_image;
-
-	/* Meet Up(Interest) ImageView : along side Photos, Friends, Places & Events */
-	ImageView interest_icon_image;
-	/* finish */
+	ImageView photos_icon_image, friends_icon_image, places_icon_image,
+			interest_icon_image;
 
 	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge,
 			tvCity, tvCompany, tvRelationshipStatus;
 
 	LinearLayout age_layout, relationship_layout, living_in_layout,
 			work_at_layout;
+	LinearLayout layEditProfilePic;
+	LinearLayout lenearLayoutFirstMeetUp;
 
 	int responseStatus = 0;
 	String responseString = "";
 
-	ImageLoader imageLoader;
-	private String flag = ""; // UNIT or INFO
+	ImageDownloader imageDownloader;
+
 	private ProgressDialog m_ProgressDialog = null;
 	public final static int REQUEST_CODE_CAMERA = 700;
 	public final static int REQUEST_CODE_GALLERY = 701;
@@ -90,10 +73,32 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			userName, getStatusMsg, getStreetAdd, getLastLog, getAge,
 			getRelationshipStatus, getCity, getWorkInfo;
 
+	RelativeLayout relativeLayoutFriendshipStatus, relativeLayoutFriend,
+			relativeLayoutMeetUp, relativeLayoutMessage,
+			relativeLayoutDirection;
+	TextView tvFriendshipStatus, tvFriendshipCheck;
+
+	public Dialog msgDialog, frndRequestDialog;
+	// public Dialog currentBubbleDialog;
+
+	String friendRequestFriendId = "";
+	String friendRequestMessage = "";
+	String friendRequestResponse = "";
+	int friendRequestStatus = 0;
+
+	public List<String> friendRequestSentList = new ArrayList<String>();
+
+	String sendMessageFriendId = "";
+	String sendMessageSubject = "";
+	String sendMessageContent = "";
+	String sendMessageResponse = "";
+	int sendMessageStatus = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.other_user_profile);
+		// setContentView(R.layout.other_user_profile);
+		setContentView(R.layout.other_layout);
 
 		Object obj = getIntent().getSerializableExtra("otherUser");
 		if (obj != null) {
@@ -104,6 +109,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		initialize();
 		setDefaultValues();
+		setButtonForDisplay();
 
 	}
 
@@ -117,7 +123,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	private void initialize() {
 		context = ProfileActivity2.this;
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = new ImageDownloader();
+		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -128,20 +135,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		ivProfilePic = (ImageView) findViewById(R.id.ivProfilePic);
 		ivCoverPic = (ImageView) findViewById(R.id.ivCoverPic);
 		ivRegMedia = (ImageView) findViewById(R.id.ivRegMedia);
-
-		/*
-		 * btnEditProfilePic = (ImageView) findViewById(R.id.btnEditProfilePic);
-		 * btnEditProfilePic.setOnClickListener(this);
-		 * btnEditProfilePic.setVisibility(View.INVISIBLE);
-		 * 
-		 * btnEditCoverPic = (ImageView) findViewById(R.id.btnEditCoverPic);
-		 * btnEditCoverPic.setOnClickListener(this);
-		 * btnEditCoverPic.setVisibility(View.INVISIBLE);
-		 * 
-		 * btnEditStatus = (ImageView) findViewById(R.id.btnEditStatus);
-		 * btnEditStatus.setOnClickListener(this);
-		 * btnEditStatus.setVisibility(View.INVISIBLE);
-		 */
 
 		btnNavigateToMap = (ImageView) findViewById(R.id.btnNavigateToMap);
 		btnNavigateToMap.setOnClickListener(this);
@@ -180,29 +173,51 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		living_in_layout = (LinearLayout) findViewById(R.id.living_in_layout);
 		work_at_layout = (LinearLayout) findViewById(R.id.work_at_layout);
 
-		/*
-		 * age_layout.setOnClickListener(this);
-		 * relationship_layout.setOnClickListener(this);
-		 * living_in_layout.setOnClickListener(this);
-		 * work_at_layout.setOnClickListener(this);
-		 */
-
 		tvRelationshipStatus = (TextView) findViewById(R.id.tvRelationshipStatus);
+
+		relativeLayoutFriendshipStatus = (RelativeLayout) findViewById(R.id.relativeLayoutFriendshipStatus);
+
+		relativeLayoutFriend = (RelativeLayout) findViewById(R.id.relativeLayoutFriend);
+		relativeLayoutFriend.setOnClickListener(this);
+
+		relativeLayoutMeetUp = (RelativeLayout) findViewById(R.id.relativeLayoutMeetUp);
+		relativeLayoutMeetUp.setOnClickListener(this);
+
+		relativeLayoutMessage = (RelativeLayout) findViewById(R.id.relativeLayoutMessage);
+		relativeLayoutMessage.setOnClickListener(this);
+
+		relativeLayoutDirection = (RelativeLayout) findViewById(R.id.relativeLayoutDirection);
+		relativeLayoutDirection.setOnClickListener(this);
+
+		lenearLayoutFirstMeetUp = (LinearLayout) findViewById(R.id.linearLayoutFirstMeetUp);
+
+		tvFriendshipStatus = (TextView) findViewById(R.id.tvFriendshipStatus);
+
+		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
+		tvFriendshipCheck = (TextView) findViewById(R.id.tvFriendshipCheck);
+
+		if (people.getFriendshipStatus().equalsIgnoreCase(
+				Constant.STATUS_FRIENDSHIP_FRIEND)) {
+			layEditProfilePic.setVisibility(View.VISIBLE);
+			lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+		}
 
 	}
 
 	public void setDefaultValues() {
 
-		imageLoader.clearCache();
+		imageDownloader.clearCache();
 
 		if (people.getAvatar() != null) {
-			imageLoader.DisplayImage(people.getAvatar(), ivProfilePic,
-					R.drawable.thumb);
+
+			ivProfilePic.setImageResource(R.drawable.thumb);
+			imageDownloader.download(people.getAvatar(), ivProfilePic);
 		}
 
 		if (people.getCoverPhoto() != null) {
-			imageLoader.DisplayImage(people.getCoverPhoto(), ivCoverPic,
-					R.drawable.cover_pic_default);
+
+			ivCoverPic.setImageResource(R.drawable.img_blank);
+			imageDownloader.download(people.getCoverPhoto(), ivCoverPic);
 		}
 		if (people.getRegMedia() != null) {
 			if (people.getRegMedia().equals("fb")) {
@@ -220,7 +235,10 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		tvName.setText(name);
 
 		if (people.getStatusMsg() != null) {
-			tvStatusMessage.setText(people.getStatusMsg());
+			if (people.getStatusMsg().equalsIgnoreCase("status"))
+				tvStatusMessage.setVisibility(View.GONE);
+			else
+				tvStatusMessage.setText(people.getStatusMsg());
 		} else {
 			tvStatusMessage.setVisibility(View.GONE);
 		}
@@ -243,6 +261,13 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 		/* finished */
 
+		if (Utility.getFormatedDistance(people.getDistance()) != null) {
+			// tvDistance.setText(Utility.getFormatedDistance(people.getDistance()));
+			tvDistance.setText(Utility.getFormatedDistance(
+					people.getDistance(), StaticValues.myInfo.getSettings()
+							.getUnit()));
+		}
+
 		if (people.getLastLogIn() != null) {
 			tvTime.setText(Utility.getFormattedDisplayDate(people
 					.getLastLogIn()));
@@ -251,11 +276,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		if (people.getAge() > 0) {
 			tvAge.setText(people.getAge() + " years");
 		}
-		// --- extra work : may be discard later on --- //
 		if (people.getAge() == 0) {
 			tvAge.setText(" ");
 		}
-		// ---- finish --- //
 
 		if (people.getRelationshipStatus() != null) {
 			tvRelationshipStatus.setText(people.getRelationshipStatus());
@@ -279,12 +302,14 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
+			Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
+					.show();
+
 		} else if (v == btnEvent) {
 			Intent i = new Intent(context, EventListActivity.class);
 			startActivity(i);
 		} else if (v == btnBack) {
 			finish();
-			// showDialogToUpdateInfo();
 		} else if (v == btnNotification) {
 			Intent notificationIntent = new Intent(context,
 					NotificationActivity.class);
@@ -302,47 +327,379 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 							+ " friends will be shown later on",
 					Toast.LENGTH_SHORT).show();
 		} else if (v == places_icon_image) {
-			Toast.makeText(
-					getApplicationContext(),
-					people.getFirstName() + "'s"
-							+ " places list will be shown later on",
-					Toast.LENGTH_SHORT).show();
+			goToShowPlaces();
 		} else if (v == interest_icon_image) {
-			Toast.makeText(
-					getApplicationContext(),
-					people.getFirstName() + "'s"
-							+ " interest list will be shown later on",
-					Toast.LENGTH_SHORT).show();
+			goToMeetUp();
+		} else if (v == relativeLayoutFriend) {
+			showFrndRequestDialog(people);
+		} else if (v == relativeLayoutMeetUp) {
+			goToMeetUp();
+		} else if (v == relativeLayoutMessage) {
+			showMessageDialog(people);
+		} else if (v == relativeLayoutDirection) {
+			goToDirection();
 		}
 
 	}
 
-	/*
-	 * @Override protected void onActivityResult(int requestCode, int
-	 * resultCode, Intent data) { super.onActivityResult(requestCode,
-	 * resultCode, data); if (requestCode ==
-	 * ProfileActivity2.REQUEST_CODE_CAMERA) { if (resultCode == RESULT_OK) {
-	 * 
-	 * if (avatar != null) { avatar.recycle(); }
-	 * 
-	 * // avatar = (Bitmap) data.getExtras().get("data"); avatar =
-	 * Utility.resizeBitmap( (Bitmap) data.getExtras().get("data"),
-	 * Constant.thumbWidth, Constant.thumbHeight);
-	 * btnEditProfilePic.setImageBitmap(avatar); }
-	 * 
-	 * if (resultCode == RESULT_CANCELED) { return; }
-	 * 
-	 * } else if (requestCode == ProfileActivity2.REQUEST_CODE_GALLERY) { if
-	 * (resultCode == RESULT_OK) { // imageUri = data.getData(); try { // avatar
-	 * = // MediaStore.Images.Media.getBitmap(this.getContentResolver(), //
-	 * data.getData()); if (avatar != null) { avatar.recycle(); } avatar =
-	 * Utility.resizeBitmap( MediaStore.Images.Media.getBitmap(
-	 * this.getContentResolver(), data.getData()), Constant.thumbWidth,
-	 * Constant.thumbHeight); btnEditProfilePic.setImageBitmap(avatar); } catch
-	 * (FileNotFoundException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } catch (IOException e) { // TODO Auto-generated
-	 * catch block e.printStackTrace(); } catch (Exception e) { // TODO: handle
-	 * exception e.printStackTrace(); } //
-	 * ivProfilePicture.setImageURI(imageUri); } } }
-	 */
+	private void goToShowPlaces() {
+		// Toast.makeText(context, "will be added very soon",
+		// Toast.LENGTH_SHORT).show();
+		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
+		Log.d("People Name & ID", people.getFirstName() + " " + people.getId());
+		startActivity(intentToGoPlace);
+	}
+
+	private void goToMeetUp() {
+		// Toast.makeText(context, "Not This Time", Toast.LENGTH_SHORT).show();
+
+		Intent intentToShowMeetUp = new Intent(context,
+				MeetupRequestNewActivity.class);
+		startActivity(intentToShowMeetUp);
+	}
+
+	private void goToDirection() {
+		// Toast.makeText(context, "A dialog will open to send message",
+		// Toast.LENGTH_SHORT).show();
+
+		Intent intentToGoDirection = new Intent(context,
+				DirectionActivity.class);
+		intentToGoDirection.putExtra("destLat", people.getCurrentLat());
+		intentToGoDirection.putExtra("destLng", people.getCurrentLng());
+		intentToGoDirection.putExtra("destAddress", people.getCurrentAddress());
+
+		startActivity(intentToGoDirection);
+	}
+
+	private void setButtonForDisplay() {
+		String userId = people.getId();
+		String friendshipStatus = people.getFriendshipStatus();
+		Log.d("User ID & Friendship Status Check", userId + " "
+				+ friendshipStatus);
+
+		if (friendRequestSentList.contains(userId)) {
+			tvFriendshipStatus.setText("Pending");
+		} else {
+			if (friendshipStatus
+					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
+				// tvFriendshipStatus.setVisibility(View.GONE);
+				// relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
+				// tvFriendshipStatus.setText("No Friendship");
+
+				relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra ---
+																// //
+				relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // ---
+																				// extra
+																				// ---
+																				// //
+
+				relativeLayoutFriend.setVisibility(View.VISIBLE);
+
+			} else if (friendshipStatus
+					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+				// tvFriendshipStatus.setVisibility(View.GONE);
+				// tvFriendshipStatus.setText("Friend");
+
+				relativeLayoutFriend.setVisibility(View.GONE); // --- extra ---
+																// //
+				relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // ---
+																				// extra
+																				// ---
+																				// //
+
+				relativeLayoutMeetUp.setVisibility(View.VISIBLE);
+			} else {
+				// tvFriendshipStatus.setVisibility(View.VISIBLE);
+				// relativeLayoutFriend.setVisibility(View.GONE);
+				relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
+
+				relativeLayoutFriend.setVisibility(View.INVISIBLE);
+
+				relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra ---
+																// //
+
+				String status = "";
+				if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+					status = getString(R.string.status_friend_request_friend);
+					relativeLayoutMeetUp.setVisibility(View.VISIBLE);
+
+					relativeLayoutFriend.setVisibility(View.GONE); // --- extra
+																	// --- //
+					relativeLayoutFriendshipStatus
+							.setVisibility(View.INVISIBLE); // --- extra --- //
+				} else if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
+					status = getString(R.string.status_friend_request_pending);
+				} else if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
+					status = getString(R.string.status_friend_request_sent);
+				} else if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
+					status = getString(R.string.status_friend_request_declined_by_me);
+				} else if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
+					status = getString(R.string.status_friend_request_declined_by_him);
+				}
+				tvFriendshipStatus.setText(status);
+			}
+		}
+	}
+
+	private void showFrndRequestDialog(final People people) {
+		// TODO Auto-generated method stub
+		frndRequestDialog = DialogsAndToasts.showAddFrnd(context);
+		final EditText msgEditText = (EditText) frndRequestDialog
+				.findViewById(R.id.message_body_text);
+
+		Button send = (Button) frndRequestDialog.findViewById(R.id.btnSend);
+		Button cancel = (Button) frndRequestDialog.findViewById(R.id.btnCancel);
+		send.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				/*
+				 * sendFriendRequest(item.getUser().getId(),
+				 * msgEditText.getText() .toString().trim());
+				 */
+
+				sendFriendRequest(people.getId(), msgEditText.getText()
+						.toString().trim());
+
+			}
+		});
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				frndRequestDialog.dismiss();
+			}
+		});
+		frndRequestDialog.show();
+	}
+
+	public void sendFriendRequest(String friendId, String message) {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			friendRequestFriendId = friendId;
+			friendRequestMessage = message;
+
+			Thread thread = new Thread(null, friendRequestThread,
+					"Start send message");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog.show(context, getResources()
+					.getString(R.string.please_wait_text), getResources()
+					.getString(R.string.sending_request_text), true);
+
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
+		}
+	}
+
+	private Runnable friendRequestThread = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smFriendRequestUrl
+					+ "/" + friendRequestFriendId);
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			restClient.AddParam("message", friendRequestMessage);
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.POST);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			friendRequestResponse = restClient.getResponse();
+			friendRequestStatus = restClient.getResponseCode();
+
+			runOnUiThread(friendRequestReturnResponse);
+		}
+	};
+
+	private Runnable friendRequestReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseFriendRequest(friendRequestStatus,
+					friendRequestResponse);
+
+			// dismiss progress dialog if needed
+			m_ProgressDialog.dismiss();
+		}
+	};
+
+	public void handleResponseFriendRequest(int status, String response) {
+		// show proper message through Toast or Dialog
+
+		Log.d("Send Frnd Request", status + ":" + response);
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+			// Log.d("Login", status+":"+response);
+
+			handleSuccssfulFriendRequest();
+
+			Toast.makeText(context, "Request sent successfully.",
+					Toast.LENGTH_SHORT).show();
+			frndRequestDialog.dismiss();
+
+			break;
+
+		case Constant.STATUS_BADREQUEST:
+			Toast.makeText(context,
+					"Friend request already sent to this user.",
+					Toast.LENGTH_SHORT).show();
+			frndRequestDialog.dismiss();
+
+			break;
+		default:
+			Toast.makeText(getApplicationContext(),
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
+			break;
+
+		}
+	}
+
+	public void handleSuccssfulFriendRequest() {
+		// currentBubbleDialog.dismiss();
+		if (!friendRequestSentList.contains(friendRequestFriendId)) {
+			friendRequestSentList.add(friendRequestFriendId);
+		}
+
+		ArrayList<People> peopleList = StaticValues.searchResult.getPeoples();
+
+		for (int i = 0; i < peopleList.size(); i++) {
+			String userId = peopleList.get(i).getId();
+			if (friendRequestSentList.contains(userId)) {
+				peopleList.get(i).setFriendshipStatus(
+						Constant.STATUS_FRIENDSHIP_PENDING);
+			}
+		}
+		StaticValues.searchResult.setPeoples(peopleList);
+		// updateMap();
+	}
+
+	private void showMessageDialog(final People people) {
+		// TODO Auto-generated method stub
+		msgDialog = DialogsAndToasts.showSendMessage(context);
+		final EditText msgEditText = (EditText) msgDialog
+				.findViewById(R.id.message_body_text);
+		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
+		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
+		send.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (!msgEditText.getText().toString().trim().equals("")) {
+					sendMessage(people.getId(), "Message", msgEditText
+							.getText().toString().trim());
+				} else {
+					msgEditText.setError("Please enter your message!!");
+				}
+			}
+		});
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				msgDialog.dismiss();
+			}
+		});
+		msgDialog.show();
+	}
+
+	public void sendMessage(String friendId, String subject, String content) {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			sendMessageFriendId = friendId;
+			sendMessageSubject = subject;
+			sendMessageContent = content;
+
+			Thread thread = new Thread(null, sendMessageThread,
+					"Start send message");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog.show(context, getResources()
+					.getString(R.string.please_wait_text), getResources()
+					.getString(R.string.sending_request_text), true);
+
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
+		}
+	}
+
+	private Runnable sendMessageThread = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smMessagesUrl);
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			restClient.AddParam("recipients[]", sendMessageFriendId);
+			restClient.AddParam("subject", sendMessageSubject);
+			restClient.AddParam("content", sendMessageContent);
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.POST);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			sendMessageResponse = restClient.getResponse();
+			sendMessageStatus = restClient.getResponseCode();
+
+			runOnUiThread(sendMessageReturnResponse);
+		}
+	};
+
+	private Runnable sendMessageReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
+
+			// dismiss progress dialog if needed
+			m_ProgressDialog.dismiss();
+		}
+	};
+
+	public void handleResponseSendMessage(int status, String response) {
+		// show proper message through Toast or Dialog
+		Log.d("Send Message", status + ":" + response);
+		switch (status) {
+		case Constant.STATUS_CREATED:
+			// Log.d("Login", status+":"+response);
+			Toast.makeText(context, "Message sent successfully.",
+					Toast.LENGTH_SHORT).show();
+			msgDialog.dismiss();
+			break;
+
+		default:
+			Toast.makeText(getApplicationContext(),
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
+			break;
+
+		}
+
+	}
 }

@@ -448,7 +448,7 @@ public class RegistrationActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 
 				if (avatar != null) {
-					avatar.recycle();
+					//avatar.recycle();
 				}
 
 				// avatar = (Bitmap) data.getExtras().get("data");
@@ -470,7 +470,7 @@ public class RegistrationActivity extends Activity {
 					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 					// data.getData());
 					if (avatar != null) {
-						avatar.recycle();
+						//avatar.recycle();
 					}
 					avatar = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
