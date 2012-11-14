@@ -127,6 +127,13 @@
     selectedPlaceIndexFrom = 1;
     selectedPlaceIndexTo = 0;
     transportMode = 2;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void) displayNotificationCount 

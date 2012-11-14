@@ -100,6 +100,7 @@ bool searchFlag4=true;
     // [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start. %@",smAppDelegate);
     [self.inviteSearchBar setText:@""];
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated

@@ -140,6 +140,7 @@ NSMutableArray *selectedScrollIndex;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
     
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(IBAction)editCoverButton:(id)sender

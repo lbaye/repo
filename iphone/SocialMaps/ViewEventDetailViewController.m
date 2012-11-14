@@ -195,6 +195,8 @@ CustomRadioButton *radio;
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void)viewDidLoad

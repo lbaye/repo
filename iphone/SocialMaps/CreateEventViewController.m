@@ -377,6 +377,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    
+
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated

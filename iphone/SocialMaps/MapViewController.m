@@ -1161,6 +1161,7 @@ ButtonClickCallbackData callBackData;
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
    //[self initPullView];
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated

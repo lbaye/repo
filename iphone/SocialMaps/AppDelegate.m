@@ -20,6 +20,8 @@
 #import "Globals.h"
 #import "UserDefault.h"
 #import "PushNotification.h"
+#import "MessageListViewController.h"
+#import "NotifMessage.h"
 
 @implementation AppDelegate
 
@@ -74,6 +76,8 @@
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
 @synthesize smLogin,geotagList;
+@synthesize currentModelViewController;
+@synthesize isAppInBackgound;
 
 static AppDelegate *sharedInstance=nil;
 
@@ -237,14 +241,73 @@ static AppDelegate *sharedInstance=nil;
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
-    NSLog(@"Received notification: count:%d, data:%@", newNotif.badgeCount, userInfo);
-
+    NSLog(@"Received notification: count:%d, data:%@  id:%@ type:%d", newNotif.badgeCount, userInfo, newNotif.objectIds, newNotif.notifType);
+    
     // Temporary - set count to zero
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    if (gotListing == TRUE) {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:currPosition :@"Auth-Token" :authToken];
-        [restClient getInbox:@"Auth-Token" authTokenVal:authToken];
+    if (gotListing == TRUE && isAppInBackgound == TRUE) {
+        //RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        //[restClient getLocation:currPosition :@"Auth-Token" :authToken];
+        
+        if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
+            
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+            
+            /////[restClient getInbox:@"Auth-Token" authTokenVal:authToken];
+            
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            if (newNotif.notifType != PushNotificationMeetupRequest) {
+                
+                BOOL isParentMsgExist = FALSE;
+                
+                for (NotifMessage *notifMsg in self.messages) {
+                    if ([notifMsg.notifID isEqualToString:[newNotif.objectIds lastObject]]) 
+                    {
+                        isParentMsgExist = TRUE;
+                        controller.selectedMessage = notifMsg;
+                        break;
+                    }
+                }
+                
+                if (!isParentMsgExist) 
+                {
+                    NotifMessage *notifMessage = [[NotifMessage alloc] init];
+                    notifMessage.notifID = [newNotif.objectIds lastObject];
+                    notifMessage.notifMessage = newNotif.message;
+                    notifMessage.notifSender = @"sender";
+                    notifMessage.notifSenderId = @"sender_id";
+                    notifMessage.notifSubject = @"";
+                    notifMessage.notifTime = nil;
+                    notifMessage.notifAvater = @"avater";
+                    controller.selectedMessage = notifMessage;
+                    //[self.messages addObject:notifMessage];
+                    [notifMessage release];
+                }
+            }
+            
+            if ([self.currentModelViewController isKindOfClass:[MessageListViewController class]]) {
+
+                if (newNotif.notifType != PushNotificationMeetupRequest) {
+                    [(MessageListViewController*)self.currentModelViewController setSelectedMessage:controller.selectedMessage];
+                } else {
+                    [(MessageListViewController*)self.currentModelViewController setWillSelectMeetUp:YES];
+                }
+                
+                [self.currentModelViewController viewDidAppear:NO];
+                return;
+            }
+            
+            if (newNotif.notifType == PushNotificationMeetupRequest)
+                controller.willSelectMeetUp = YES;
+            else
+                controller.willSelectMeetUp = NO;
+            
+            [self.currentModelViewController presentModalViewController:controller animated:NO];
+            
+        }
+       
     }
 }
 
@@ -258,6 +321,7 @@ static AppDelegate *sharedInstance=nil;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    self.isAppInBackgound = YES;
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
@@ -273,6 +337,7 @@ static AppDelegate *sharedInstance=nil;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    self.isAppInBackgound = NO;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
@@ -280,6 +345,7 @@ static AppDelegate *sharedInstance=nil;
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    NSLog(@"applicationWillTerminate");
     /*
      Called when the application is about to terminate.
      Save data if appropriate.

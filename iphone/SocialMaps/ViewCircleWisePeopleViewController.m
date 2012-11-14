@@ -163,7 +163,7 @@ int renameCircleOndex;
 		
 		self.sectionInfoArray = infoArray;
 	}
-	
+	smAppDelegate.currentModelViewController = self;
 }
 
 -(void)loadRenameView

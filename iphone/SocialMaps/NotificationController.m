@@ -143,6 +143,8 @@ NSMutableArray *unreadMesg;
         msgCount.text = @"";
     else
         msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList

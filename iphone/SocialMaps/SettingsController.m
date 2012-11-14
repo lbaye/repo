@@ -91,6 +91,13 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    smAppDelegate.currentModelViewController = self;
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     RestClient *restClient = [[RestClient alloc] init];
     [restClient setLayer:smAppDelegate.layerPrefs :@"Auth-Token" :smAppDelegate.authToken];

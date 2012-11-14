@@ -131,6 +131,8 @@ NSMutableArray *selectedScrollIndex;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
+    
+    smAppDelegate.currentModelViewController = self;
 
 }
 
