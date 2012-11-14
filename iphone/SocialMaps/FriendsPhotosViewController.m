@@ -83,6 +83,8 @@ AppDelegate *smAppdelegate;
     {
         [self reloadScrolview];
     }
+    
+    smAppdelegate.currentModelViewController = self;
 }
 
 -(void)viewDidDisappear:(BOOL)animated

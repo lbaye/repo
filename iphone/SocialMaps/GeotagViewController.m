@@ -415,6 +415,8 @@ int geoCounter=0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
 
     [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)getCurrentAddress

@@ -179,6 +179,7 @@ DDAnnotation *annotation;
     }
      */
     [self reloadScrolview];
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void) viewDidDisappear:(BOOL)animated

@@ -130,6 +130,9 @@
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
+@property (nonatomic, retain) UIViewController *currentModelViewController;
+@property (nonatomic, assign) BOOL isAppInBackgound;
+
 + (id) sharedInstance;
 - (void) hideActivityViewer;
 - (void) showActivityViewer:(UIView*)sender;

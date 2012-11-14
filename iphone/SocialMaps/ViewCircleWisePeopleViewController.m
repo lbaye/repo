@@ -153,7 +153,7 @@ NSString *userID;
 		
 		self.sectionInfoArray = infoArray;
 	}
-	
+	smAppDelegate.currentModelViewController = self;
 }
 
 -(IBAction)addCircleAction:(id)sender

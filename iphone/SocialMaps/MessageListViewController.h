@@ -64,7 +64,8 @@
 @property (nonatomic, retain) NSString *msgParentID;
 @property (nonatomic, retain) NSString *timeSinceLastUpdate; //needed for automatic reply update
 @property (nonatomic, retain) NotifMessage *selectedMessage;
-@property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+@property (nonatomic, retain) IBOutlet UILabel *totalNotifCount;
+@property (nonatomic, assign) BOOL willSelectMeetUp;
 
 - (IBAction)actionMessageBtn:(id)sender;
 - (IBAction)actionMeetUpBtn:(id)sender;
@@ -80,12 +81,13 @@
 -(void)doTopViewAnimation:(UIView*)incomingView;
 -(void)loadDummydata;
 
--(IBAction)gotoNotification:(id)sender;
+- (IBAction)gotoNotification:(id)sender;
 - (IBAction)actionAddMoreButton:(id)sender;
 - (IBAction)actionCancelAddPplButton:(id)sender;
 - (IBAction)actionSaveAddPplButton:(id)sender;
 - (IBAction)actionCancelCircleButton:(id)sender;
 - (IBAction)actionSaveCircleButton:(id)sender;
 - (IBAction)actionShowCircleListButton:(id)sender;
+- (void)setMsgReplyTableView:(NotifMessage*)msg;
 
 @end

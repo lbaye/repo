@@ -124,6 +124,8 @@ PullableView *pullUpView;
     [super viewDidAppear:animated];
     
     [self loadImagesForOnscreenRows];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void) viewDidDisappear:(BOOL)animated

@@ -44,9 +44,6 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMeetUpRequest:) name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
         
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        
         imageDownloadsInProgress = [NSMutableDictionary dictionary];
         [imageDownloadsInProgress retain];
         
@@ -367,7 +364,7 @@
 }
 
 - (void)dealloc {
-    [imageDownloadsInProgress release];
+    //[imageDownloadsInProgress release];
     [tableViewMeetUps release];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];

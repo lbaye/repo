@@ -110,6 +110,8 @@ bool showSM=true;
     NSLog(@"activity start.  %@",smAppDelegate);
     [self.circleSearchBar setText:@""];
     [msgView removeFromSuperview];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated

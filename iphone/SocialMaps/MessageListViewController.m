@@ -36,6 +36,7 @@
 @synthesize timeSinceLastUpdate;
 @synthesize selectedMessage;
 @synthesize totalNotifCount;
+@synthesize willSelectMeetUp;
 
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
@@ -121,7 +122,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     if (self.selectedMessage) {
         [self setMsgReplyTableView:self.selectedMessage];
+    } 
+    
+    if (self.willSelectMeetUp) {
+        [self actionMeetUpBtn:nil];
     }
+    
+    [self actionRefreshBtn:nil];
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void) viewDidDisappear:(BOOL)animated
@@ -308,10 +320,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (IBAction)actionRefreshBtn:(id)sender {
     
+    [smAppDelegate showActivityViewer:self.view];
+    
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getInbox:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    NSLog(@"AuthToken = %@", smAppDelegate.authToken);
 
-}
+}   
 
 - (void)gotInboxMessages:(NSNotification *)notif {
     NSMutableArray *msg = [notif object];
@@ -320,8 +335,21 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     for (int i = 0; i < [smAppDelegate.messages count]; i++) {
         [profileImageList addObject:@""];
+        if ([self.selectedMessage.notifSenderId isEqualToString:@"sender_id"] && [self.selectedMessage.notifID isEqualToString:[(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] notifID]]) {
+            NotifMessage *notifMsg = (NotifMessage*)[smAppDelegate.messages objectAtIndex:i];
+            MessageReply *messageReply = [[MessageReply alloc] init];
+            messageReply.content = notifMsg.notifMessage;
+            messageReply.time = notifMsg.notifTime;
+            NSArray *components = [notifMsg.notifSender componentsSeparatedByString:@" "];
+            messageReply.senderName = [components objectAtIndex:0];
+            messageReply.senderID = notifMsg.notifSenderId;
+            messageReply.senderAvater = notifMsg.notifAvater;
+            [messageReplyList insertObject:messageReply atIndex:0];
+            [messageReplyTableView reloadData];
+        }
     }
     [msgListTableView reloadData];
+    [smAppDelegate hideActivityViewer];
 }
 
 -(void) displayNotificationCount {
@@ -768,7 +796,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     //messageReply.senderImage = cell.imageView.image;
     [messageReplyList removeAllObjects];
-    [messageReplyList addObject:messageReply];
+    if (![messageReply.senderID isEqualToString:@"sender_id"])
+            [messageReplyList addObject:messageReply];
     [messageReply release];
     
     [messageReplyTableView reloadData];
@@ -979,7 +1008,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
     }
     [msgListTableView reloadData];
-    NSLog(@"profileImageList = %@", profileImageList);
+    //NSLog(@"profileImageList = %@", profileImageList);
 }
 
 - (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
@@ -1162,7 +1191,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)dealloc 
 {
     [messageReplyList release];
-    [imageDownloadsInProgress release];
+    //[imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];

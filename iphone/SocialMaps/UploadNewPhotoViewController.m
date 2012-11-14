@@ -62,6 +62,7 @@ NSString *searchText;
     [self loadDummydata];    
     [self reloadScrollview];
     [customView removeFromSuperview];
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void)viewDidLoad

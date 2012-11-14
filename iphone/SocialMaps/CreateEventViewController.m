@@ -362,6 +362,9 @@ NSMutableArray *guestListIdArr;
     {
         [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
     }
+    
+
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated
