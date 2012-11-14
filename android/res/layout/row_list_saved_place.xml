@@ -45,7 +45,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/btnEditPlace"
                 android:layout_marginRight="10dip"                
-                android:background="@drawable/rounder_border_bg"
+                android:background="@drawable/rounder_border_bg_title"
                 android:paddingTop="0dip"
                 android:minHeight="30dp"
                 android:gravity="center_vertical" >
@@ -54,7 +54,7 @@
                     android:id="@+id/first_name_text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="ddd"
                     android:textColor="@android:color/white"
                     android:textSize="12dip"
                     android:textStyle="normal"

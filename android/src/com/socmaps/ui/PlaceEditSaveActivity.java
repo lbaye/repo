@@ -45,8 +45,8 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	private Dialog msgDialog;
 
 	private ImageView ivPlace, separatorDeleteCancel;
-	private final static int REQUEST_CODE_CAMERA = 705;
-	private final static int REQUEST_CODE_GALLERY = 707;
+	//private final static int REQUEST_CODE_CAMERA = 705;
+	//private final static int REQUEST_CODE_GALLERY = 707;
 	private int requestCode;
 	private Bitmap placeIcon;
 	private boolean isHome;
@@ -186,8 +186,6 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	}
 
-	
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -206,8 +204,6 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		case R.id.btnPlaceDisEdit:
 			showTextInputDialog(R.id.btnPlaceDisEdit, placeDiscription,
 					place.getDescription());
-			// showPlaceNameDiscriptionEditDialog(context, false);
-
 			break;
 
 		case R.id.btnPlaceCategory:
@@ -229,7 +225,8 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 			isUpdate = false;
 
-			updateOrDeletePlace();
+			deleteConfirmDialog();
+
 			break;
 
 		case R.id.btnPeopleCancel:
@@ -241,7 +238,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			isUpdate = true;
 
 			if (isHome) {
+
 				savePlaceToServer();
+
 			} else {
 				updateOrDeletePlace();
 			}
@@ -251,6 +250,8 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+
+	
 
 	/*
 	 * Update and Delete an existing place
@@ -346,12 +347,14 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			Toast.makeText(context, "Places update successful.",
 					Toast.LENGTH_SHORT).show();
 
+			finish();
 			break;
 
 		default:
 			Toast.makeText(getApplicationContext(),
 					"An unknown error occured. Please try again!!",
 					Toast.LENGTH_SHORT).show();
+			finish();
 			break;
 
 		}
@@ -363,22 +366,31 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	 */
 	private void savePlaceToServer() {
 		// TODO Auto-generated method stub
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
-			Thread thread = new Thread(null, savePlacesThread,
-					"Start save place to server");
-			thread.start();
+		if (!placeName.equals("") && placeName != null) {
 
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+			if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+				Thread thread = new Thread(null, savePlacesThread,
+						"Start save place to server");
+				thread.start();
+
+				// show progress dialog if needed
+				m_ProgressDialog = ProgressDialog.show(context, getResources()
+						.getString(R.string.please_wait_text), getResources()
+						.getString(R.string.sending_request_text), true);
+
+			} else {
+
+				DialogsAndToasts
+						.showNoInternetConnectionDialog(getApplicationContext());
+			}
 
 		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
+			Toast.makeText(context, "Please enter place name",
+					Toast.LENGTH_SHORT).show();
 		}
+
 	}
 
 	private Runnable savePlacesThread = new Runnable() {
@@ -446,6 +458,8 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			Toast.makeText(context, "Places saved successful.",
 					Toast.LENGTH_SHORT).show();
 
+			finish();
+
 			break;
 
 		default:
@@ -473,9 +487,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				Toast.makeText(getApplicationContext(), items[item],
 						Toast.LENGTH_SHORT).show();
 				if (items[item].equals("Gallery")) {
-					requestCode = PlaceEditSaveActivity.REQUEST_CODE_GALLERY;
+					requestCode = Constant.REQUEST_CODE_GALLERY;
 				} else {
-					requestCode = PlaceEditSaveActivity.REQUEST_CODE_CAMERA;
+					requestCode = Constant.REQUEST_CODE_CAMERA;
 				}
 				onOptionItemSelected(requestCode);
 			}
@@ -487,14 +501,14 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	public boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
-		case PlaceEditSaveActivity.REQUEST_CODE_GALLERY:
+		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
 					Intent.createChooser(intent, "Select Picture"), requestCode);
 			break;
-		case PlaceEditSaveActivity.REQUEST_CODE_CAMERA:
+		case Constant.REQUEST_CODE_CAMERA:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(cameraIntent, requestCode);
@@ -502,11 +516,39 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		}
 		return true;
 	}
+	
+	
+	private void deleteConfirmDialog() {
+		// TODO Auto-generated method stub
+		AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
+		deleteDialog.setMessage("Are you sure to delete this place");
+		deleteDialog.setPositiveButton("Yes",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+						// Delete this place
+						updateOrDeletePlace();
+						dialog.cancel();
+					}
+				});
+
+		deleteDialog.setNegativeButton("No",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// Action for 'NO' Button
+						dialog.cancel();
+					}
+				});
+
+		AlertDialog alert = deleteDialog.create();
+
+		alert.show();
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == PlaceEditSaveActivity.REQUEST_CODE_CAMERA) {
+		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
 
 				if (placeIcon != null) {
@@ -527,7 +569,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				return;
 			}
 
-		} else if (requestCode == PlaceEditSaveActivity.REQUEST_CODE_GALLERY) {
+		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
 				// imageUri = data.getData();
 				try {
@@ -749,8 +791,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		dialog = builder.create();
 		dialog.show();
 	}
-	
-	
+
 	private int getCategoryPosition(String category) {
 		// TODO Auto-generated method stub
 

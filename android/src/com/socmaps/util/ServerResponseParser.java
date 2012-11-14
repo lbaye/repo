@@ -24,6 +24,7 @@ import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.NotificationPreferences;
 import com.socmaps.entity.People;
+import com.socmaps.entity.Photo;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.PlatformsPreferences;
 import com.socmaps.entity.RSVP;
@@ -1037,6 +1038,117 @@ public class ServerResponseParser {
 		}
 
 		return place;
+	}
+	
+	
+	public static ArrayList<Photo> parsePhotos(String response) {
+
+		ArrayList<Photo> photos = new ArrayList<Photo>();
+		JSONObject photoObj;		
+		try {
+			
+			JSONArray arrayPhotos = new JSONArray(response);
+			for (int i = 0; i < arrayPhotos.length(); i++) {
+
+				photoObj = arrayPhotos.getJSONObject(i);
+				photos.add(parsePhoto(photoObj));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return photos;
+	}
+	
+	public static Photo parsePhoto(JSONObject photoObj) {
+		
+		/*String id;
+		String description;
+		String title;
+		String permission;
+		List<String> permittedUsers;
+		List<String> permittedCircles;
+		String imageThumb;
+		String imageMedium;
+		String imageLarge;
+		double latitude;
+		double longitude;
+		String address;		
+		People owner;
+		TimeEntity createDate*/
+		
+		
+		Photo photo = new Photo();
+
+		try {
+			if (!photoObj.isNull("id")) {
+				photo.setId(photoObj.getString("id"));
+			}
+			if (!photoObj.isNull("description")) {
+				photo.setDescription(photoObj.getString("description"));
+			}
+			if (!photoObj.isNull("title")) {
+				photo.setTitle(photoObj.getString("title"));
+			}
+			if (!photoObj.isNull("permission")) {
+				photo.setPermission(photoObj.getString("permission"));
+			}
+
+			if (!photoObj.isNull("permittedUsers")) {
+
+				photo.setPermittedUsers(getListFromJSONArray(photoObj
+						.getJSONArray("permittedUsers")));
+			}
+			if (!photoObj.isNull("permittedCircles")) {
+				photo.setPermittedCircles(getListFromJSONArray(photoObj
+						.getJSONArray("permittedCircles")));
+			}			
+						
+			if (!photoObj.isNull("imageThumb")) {
+				photo.setImageThumb(photoObj.getString("imageThumb"));
+			}
+			
+			if (!photoObj.isNull("imageMedium")) {
+				photo.setImageMedium(photoObj.getString("imageMedium"));
+			}
+			
+			if (!photoObj.isNull("imageLarge")) {
+				photo.setImageLarge(photoObj.getString("imageLarge"));
+			}
+			
+			
+			if(!photoObj.isNull("owner"))
+			{
+				photo.setOwner(parsePeople(photoObj.getJSONObject("owner")));
+			}
+			if (!photoObj.isNull("location")) {
+				JSONObject location = photoObj.getJSONObject("location");
+
+				if (!location.isNull("lat")) {
+					photo.setLatitude(location.getDouble("lat"));
+				}
+				if (!location.isNull("lng")) {
+					photo.setLongitude(location.getDouble("lng"));
+				}
+				if (!location.isNull("address")) {
+					photo.setAddress(location.getString("address"));
+				}
+			}
+			
+			if(!photoObj.isNull("createDate"))
+			{
+				photo.setCreateDate(getTimeEntityFromJsonObject(photoObj.getJSONObject("createDate")));
+			}
+
+
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return photo;
 	}
 
 	public static ArrayList<People> parseSearchResultPeople(String response) {

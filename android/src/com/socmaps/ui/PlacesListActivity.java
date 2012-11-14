@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,30 +28,24 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.entity.SearchResult;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPlace;
-import com.socmaps.listrow.PlaceRowFactory;
 import com.socmaps.listrow.PlaceRowFactoryForSavedPlace;
 import com.socmaps.listrow.RowType;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
-import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class PlacesListActivity extends Activity implements OnClickListener,
 		ListItemClickListener {
 
-	Button btnBack;
-	Button topCloseButton;
-
-	ListView contentListView;
+	private Button btnBack;
+	private ListView contentListView;
 
 	public Context context;
 	private ContentListAdapter contentAdapter;
@@ -64,11 +57,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	boolean isSearchEnabled = false;
 
 	public Dialog msgDialog;
-	// String sendMessageFriendId = "";
-	// String sendMessageSubject = "";
-	// String sendMessageContent = "";
-	// String sendMessageResponse = "";
-	// int sendMessageStatus = 0;
+	
 	private ProgressDialog m_ProgressDialog;
 
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
@@ -86,14 +75,17 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 		initialize();
 
-		getPlacesFromServer();
-		setListParameters();
 	}
 
 	@Override
 	protected void onResume() {
 
 		super.onResume();
+
+		getPlacesFromServer();
+		setListParameters();
+		
+		Log.w("PlacesListActivity ", "onResume()");
 
 	}
 
@@ -103,9 +95,6 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	public void initialize() {
 
 		context = PlacesListActivity.this;
-
-		// userList = new ArrayList<People>();
-		// searchResult = new SearchResult();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -132,23 +121,21 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
-		/*
-		 * Search Related
-		 */
+		
+		Utility.hideKeyboardContext(context);
+		
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
-			hideKeybord();
+			//hideKeybord();
 			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
-			hideKeybord();
+			//hideKeybord();
 		}
 
 		switch (v.getId()) {
@@ -430,32 +417,32 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	 * Hide Keybord
 	 */
 
-	public void hideKeybord() {
+//	public void hideKeybord() {
+//
+//		// etSearchField
+//		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//		//
+//		// public void onFocusChange(View v, boolean flag) {
+//		// if (flag == false) {
+//		// InputMethodManager inputMethodManager = (InputMethodManager)
+//		// getSystemService(Context.INPUT_METHOD_SERVICE);
+//		// inputMethodManager.hideSoftInputFromWindow(
+//		// v.getWindowToken(), 0);
+//		// }
+//		// }
+//		// });
+//
+//		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
+//	}
 
-		// etSearchField
-		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		//
-		// public void onFocusChange(View v, boolean flag) {
-		// if (flag == false) {
-		// InputMethodManager inputMethodManager = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// inputMethodManager.hideSoftInputFromWindow(
-		// v.getWindowToken(), 0);
-		// }
-		// }
-		// });
-
-		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-	}
-
-	protected void hideMessageDialogKeybord(EditText msgEditText) {
-		// TODO Auto-generated method stub
-
-		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-
-	}
+//	protected void hideMessageDialogKeybord(EditText msgEditText) {
+//		// TODO Auto-generated method stub
+//
+//		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
+//
+//	}
 
 	/*
 	 * Search portion

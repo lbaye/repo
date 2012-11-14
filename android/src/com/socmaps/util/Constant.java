@@ -88,6 +88,9 @@ public class Constant {
 	
 	final static public String smPlaces = smServerUrl + "/me/places";
 	final static public String smCreatePlaces = smServerUrl + "/places";
+	final static public String smUploadPhoto = smServerUrl +"/photos";
+	
+	final static public String smPhotoUrl = smServerUrl + "/photos";
 	
 
 	/*

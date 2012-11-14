@@ -503,6 +503,15 @@
     <string name="addAllLabel">Add all</string>
     <string name="addLabel">Add</string>
     <string name="addPhotoLabel">Add Photo</string>
+      <string name="myPhotosLabel">My photos</string>
+        <string name="uploadNewPhotosLabel">Upload new photo...</string>
+        <string name="uploadThisPhotosLabel">Upload this photo</string>
+         <string name="deleteSelectedPhotosLabel">Delete selected photos</string>
+         <string name="addAnotherPhotosLabel">Add/Take another photo...</string>
+           <string name="tagPhotosLabel">Tag photos to a location:</string>
+           <string name="addDescriptionLabel">Add description:</string>
+            <string name="shareWithLabel">Share with:</string>
+        
     <string name="deletePhotoLabel">Delete Photo</string>
     <string name="deleteLabel">Delete</string>
     <string name="okLabel">OK</string>
@@ -682,8 +691,11 @@
         <item>Travel agency</item> 
         <item>University</item>
         <item>Veterinary care</item> 
-        <item>Zoo</item>     
-         
+        <item>Zoo</item>         
     </string-array>
+    
+    <string name="myPhotos">My photos</string>
+    <string name="uploadNewPhoto">Upload new photo...</string>
+    <string name="deleteSelectedPhotos">Delete selected photos</string>
 
 </resources>

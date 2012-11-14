@@ -875,11 +875,13 @@ public class HomeActivity extends MapActivity implements
 				listDisplayableContent.add(item);
 
 				Place place = (Place) item;
-				
-				GeoPoint geoPoint = new GeoPoint((int) (place.getLatitude() * 1E6),	(int) (place.getLongitude() * 1E6));
-				
-				CustomOverlayItem overlayItem = new CustomOverlayItem(
-						geoPoint, "", "", place);
+
+				GeoPoint geoPoint = new GeoPoint(
+						(int) (place.getLatitude() * 1E6),
+						(int) (place.getLongitude() * 1E6));
+
+				CustomOverlayItem overlayItem = new CustomOverlayItem(geoPoint,
+						"", "", place);
 				itemizedOverlayPlace.addOverlay(overlayItem);
 
 				displayedItemCounter++;
@@ -1213,9 +1215,10 @@ public class HomeActivity extends MapActivity implements
 			itemizedOverlayOtherPeople.onTap(selectedGeoPoint, mapView);
 
 		} else if (StaticValues.highlightAnnotationItem instanceof Place) {
-			Place place = (Place) StaticValues.highlightAnnotationItem;			
-			selectedGeoPoint = new GeoPoint((int) (place.getLatitude() * 1E6),	(int) (place.getLongitude() * 1E6));
-			
+			Place place = (Place) StaticValues.highlightAnnotationItem;
+			selectedGeoPoint = new GeoPoint((int) (place.getLatitude() * 1E6),
+					(int) (place.getLongitude() * 1E6));
+
 			itemizedOverlayPlace.onTap(selectedGeoPoint, mapView);
 		} else if (StaticValues.highlightAnnotationItem instanceof SecondDegreePeople) {
 			// selectedGeoPoint = ((SecondDegreePeople)
@@ -1585,13 +1588,13 @@ public class HomeActivity extends MapActivity implements
 
 		TextView tvStatus = (TextView) d.findViewById(R.id.status_text);
 		TextView age = (TextView) d.findViewById(R.id.age_text);
-		
+
 		if (Utility.isValidString(item.getUser().getStatusMsg())) {
 			tvStatus.setText(item.getUser().getStatusMsg());
 			tvStatus.setVisibility(View.VISIBLE);
 		} else
 			tvStatus.setVisibility(View.GONE);
-		
+
 		int ageValue = item.getUser().getAge();
 		if (ageValue != 0) {
 			age.setText("-Age:" + ageValue);
@@ -2317,6 +2320,10 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		else if (v == btnCircleMenuItemDeals) {
+
+			// Intent peopleIntent = new Intent(getApplicationContext(),
+			// PhotoUploadNewPhotoActivity.class);
+			// startActivity(peopleIntent);
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
@@ -2327,12 +2334,12 @@ public class HomeActivity extends MapActivity implements
 					MessageActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
-			
-			
-			/*Intent messageIntent = new Intent(getApplicationContext(),
-					FriendListActivity.class);
-			startActivity(messageIntent);*/
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
+
+			Intent intent = new Intent(getApplicationContext(),
+					PhotoListActivity.class);
+			startActivity(intent);
 
 		} else if (v == btnCircleMenuItemPeople) {
 
@@ -2349,7 +2356,8 @@ public class HomeActivity extends MapActivity implements
 					PlacesListActivity.class);
 			startActivity(peopleIntent);
 
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemProfile) {
 			Intent profileIntent = new Intent(getApplicationContext(),
