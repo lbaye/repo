@@ -53,7 +53,8 @@ NSMutableArray *nameArr;
 BOOL coverImgFlag;
 BOOL isDirty=FALSE;
 NSMutableArray *selectedScrollIndex;
-
+UIImageView *lineView;
+int scrollHeight,reloadCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -115,6 +116,8 @@ NSMutableArray *selectedScrollIndex;
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
+    lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
+    lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
 }
 
@@ -124,8 +127,10 @@ NSMutableArray *selectedScrollIndex;
     [newsfeedView removeFromSuperview];
     [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
     [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+newsfeedView.frame.size.height)];
+    scrollHeight=newsfeedView.frame.size.height;
     [profileScrollView addSubview:profileView];
     [profileScrollView addSubview:newsfeedView];
+    [profileView addSubview:lineView];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -135,8 +140,9 @@ NSMutableArray *selectedScrollIndex;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
     [zoomView removeFromSuperview];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,smAppDelegate.authToken];
-    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
+    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+//    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
+//    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
@@ -313,6 +319,7 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)backButton:(id)sender
 {
+    NSLog(@"isDirty %i",[[NSNumber numberWithBool:isDirty] intValue]);
     if (isDirty==FALSE) 
     {
         [self dismissModalViewControllerAnimated:YES];
@@ -585,6 +592,7 @@ NSMutableArray *selectedScrollIndex;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    reloadCounter=0;
     CGRect frame = aWebView.frame;
     frame.size.height = 1;
     aWebView.frame = frame;
@@ -594,9 +602,11 @@ NSMutableArray *selectedScrollIndex;
     
     NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
     newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
+    [smAppDelegate hideActivityViewer];
 }
 //lazy scroller
 
@@ -799,6 +809,28 @@ NSMutableArray *selectedScrollIndex;
     isDirty=TRUE;
     userInfo.dateOfBirth=selectedDate;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+    if (scrollView==profileScrollView)
+    {
+        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
+        {
+            reloadCounter++;
+            if (reloadCounter==1) {
+            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
+            [smAppDelegate showActivityViewer:self.view];
+            [newsfeedView reload];
+            }
+        }
+    }
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    isDirty=FALSE;
 }
 
 @end

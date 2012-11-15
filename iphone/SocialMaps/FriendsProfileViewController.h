@@ -53,6 +53,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *profileView;
     IBOutlet UIWebView *newsfeedView;
     IBOutlet UIScrollView *profileScrollView;
+    IBOutlet UIView *zoomView;
+    IBOutlet UIImageView *fullImageView;
 }
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
@@ -88,6 +90,8 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *profileView;
 @property(nonatomic,retain) IBOutlet UIWebView *newsfeedView;
 @property(nonatomic,retain) IBOutlet UIScrollView *profileScrollView;
+@property(nonatomic,retain) IBOutlet UIView *zoomView;
+@property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
 
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
@@ -109,5 +113,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)cancelMsg:(id)sender;
 -(IBAction)showMsgView:(id)sender;
 -(IBAction)getDirection:(id)sender;
-
+-(IBAction)closeZoomView:(id)sender;
+-(IBAction)goToZoomView:(id)sender;
 @end

@@ -19,6 +19,7 @@
 @implementation NewsFeedViewController
 @synthesize newsFeedView,totalNotifCount,newsFeedScroller;
 AppDelegate *smAppDelegate;
+int newsFeedscrollHeight, reloadNewsFeedCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,8 +47,7 @@ AppDelegate *smAppDelegate;
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     [smAppDelegate showActivityViewer:self.view];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,smAppDelegate.authToken];
-    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
+    NSString *urlStr=[NSString stringWithFormat:@"%@/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
     [self displayNotificationCount];
     [newsFeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];    
@@ -81,18 +81,38 @@ AppDelegate *smAppDelegate;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    reloadNewsFeedCounter=0;
+    [smAppDelegate hideActivityViewer];
     CGRect frame = aWebView.frame;
     frame.size.height = 1;
     aWebView.frame = frame;
     CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
     frame.size = fittingSize;
     aWebView.frame = frame;
-    
+    newsFeedscrollHeight=newsFeedView.frame.size.height;
     NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
     [smAppDelegate hideActivityViewer];
-    newsFeedScroller.contentSize=CGSizeMake(320, fittingSize.height);
+    [newsFeedScroller setContentSize:CGSizeMake(320, fittingSize.height)];
+    NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//        NSLog(@"did scroll %f",scrollView.contentOffset.y);
+    if (scrollView==newsFeedScroller)
+    {
+        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+        {
+            reloadNewsFeedCounter++;
+            if (reloadNewsFeedCounter==1) {
+                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+                [smAppDelegate showActivityViewer:self.view];
+                [newsFeedView reload];
+            }
+        }
+    }
 }
 
 -(IBAction)backButton:(id)sender

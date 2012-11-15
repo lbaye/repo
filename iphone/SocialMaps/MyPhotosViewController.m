@@ -270,6 +270,7 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    

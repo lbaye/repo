@@ -166,17 +166,17 @@ NSString *searchText;
         [msg appendString:@" address,"];
     }
     
-    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
-    {
-        if (msg.length==13)
-        {
-            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
-        }
-        else
-        {
-            [msg appendString:@" comments"];
-        }
-    }
+//    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
+//    {
+//        if (msg.length==13)
+//        {
+//            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
+//        }
+//        else
+//        {
+//            [msg appendString:@" comments"];
+//        }
+//    }
 
     for (int i=0; i<[selectedFriends count]; i++)
     {
@@ -197,7 +197,6 @@ NSString *searchText;
         [UtilityClass showAlert:@"Social Maps" :msg];
     }
     else {
-        NSLog(@"upload photo %@ %@ %@ %@",photo.title,photo.description,photo.comment,photo.image);
         [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];

@@ -1686,6 +1686,7 @@ int geoCounter=0;
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
                 imgView.layer.masksToBounds = YES;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
                 for (int c=0; c<[customSelectedPhotoIndex count]; c++)

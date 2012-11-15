@@ -765,6 +765,7 @@ int renameCircleOndex;
 {
     NSLog(@"renameUIView index %d %@ %@ %@ %@",index,renameUIView,renameTextField,self.view,self);
     renameCircleOndex=index;
+    renameTextField.text=((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleName;
     [self.view addSubview:renameUIView];
 }
 
