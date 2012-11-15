@@ -350,7 +350,11 @@ class Place extends Base
             }
 
             if (empty($postData['content'])) {
-                $postData['content'] = $postData['metaTitle'];
+                $postData['content'] = $this->_createPushMessage($postData['subject'], $staticMsg);
+            }
+
+            if (!empty($postData['metaContent']['content'])) {
+                $postData['content'] .= $postData['metaContent']['content'];
             }
 
             $recipients = $postData['recipients'];
