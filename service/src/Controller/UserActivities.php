@@ -15,6 +15,7 @@ class UserActivities extends Base {
 
     private $userActivitiesRepo;
     private $photoRepository;
+    private $geotagRepository;
 
     public function init() {
         parent::init();
@@ -24,6 +25,7 @@ class UserActivities extends Base {
         $this->userActivitiesRepo = $this->dm->getRepository('Document\UserActivity');
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->photoRepository = $this->dm->getRepository('Document\Photo');
+        $this->geotagRepository = $this->dm->getRepository('Document\Geotag');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
@@ -58,7 +60,8 @@ class UserActivities extends Base {
                         'baseUrl' => Dependencies::$rootUrl,
                         'activities' => $activities,
                         'userRepo' => $this->userRepository,
-                        'photoRepo' => $this->photoRepository
+                        'photoRepo' => $this->photoRepository,
+                        'geotagRepo' => $this->geotagRepository
                     ));
             }
         }

@@ -747,6 +747,10 @@ class UserRepo extends Base
 
         $timeStamp = $user->getUpdateDate()->getTimestamp();
 
+        $baseDir = ROOTDIR . "/images/avatar/";
+        if (!file_exists($baseDir))
+            mkdir($baseDir, 0777, true);
+        
         $filePath = "/images/avatar/" . $user->getId();
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
