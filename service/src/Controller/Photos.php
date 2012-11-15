@@ -48,6 +48,11 @@ class Photos extends Base
     public function create()
     {
         $postData = $this->request->request->all();
+        if (empty($postData['image'])) {
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+            return $this->response;
+        }
         $imageData = $postData['image'];
 
         $user = $this->user;
@@ -178,15 +183,15 @@ class Photos extends Base
         return $this->_generateResponse(array('message' => 'Deleted Successfully.'));
     }
 
-    public function multiDelete()
+    public function deletePhotos()
     {
         $postData = $this->request->request->all();
-        if (empty($postData['photoId'])) {
+        if (empty($postData['photoIds'])) {
             $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
             $this->response->setStatusCode(Status::NOT_FOUND);
             return $this->response;
         }
-        foreach ($postData['photoId'] as $photoId) {
+        foreach ($postData['photoIds'] as $photoId) {
             $photo = $this->photoRepo->find($photoId);
 
             if (!$photo)
@@ -202,6 +207,7 @@ class Photos extends Base
                 $this->_generate500($e->getMessage());
             }
         }
+
         return $this->_generateResponse(array('message' => 'Selected Photos Deleted Successfully.'));
     }
 
