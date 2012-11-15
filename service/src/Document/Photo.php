@@ -46,7 +46,7 @@ class Photo extends Content
      */
     protected $location;
 
-     /**
+    /**
      * @ODM\EmbedMany(targetDocument="PhotoComment")
      */
     protected $photoComment = array();
@@ -77,34 +77,39 @@ class Photo extends Content
         return $this->location;
     }
 
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function setMetadata($metadata) {
+    public function setMetadata($metadata)
+    {
         $this->metadata = $metadata;
     }
 
-    public function getMetadata() {
+    public function getMetadata()
+    {
         return $this->metadata;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function isValid() {
+    public function isValid()
+    {
         try {
-            Validator::create()->notEmpty()->assert($this->getTitle());
-            Validator::create()->notEmpty()->assert($this->getDescription());
             Validator::create()->notEmpty()->assert($this->getUriThumb());
 
         } catch (\InvalidArgumentException $e) {
@@ -114,7 +119,8 @@ class Photo extends Content
         return true;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         $hash = array();
 
         $fields = array('id', 'description', 'title', 'permission', 'permittedUsers', 'permittedCircles');
@@ -169,7 +175,8 @@ class Photo extends Content
         return $this->uriThumb;
     }
 
-    public function addLikesUser($userId) {
+    public function addLikesUser($userId)
+    {
         $this->likes[] = $userId;
     }
 
