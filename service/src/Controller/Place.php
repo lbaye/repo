@@ -354,7 +354,7 @@ class Place extends Base
             }
 
             if (!empty($postData['metaContent']['content'])) {
-                $postData['content'] .= ". ".$postData['metaContent']['content'];
+                $postData['content'] .= ". " . $postData['metaContent']['content'];
             }
 
             $recipients = $postData['recipients'];
