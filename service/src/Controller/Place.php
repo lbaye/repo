@@ -340,7 +340,7 @@ class Place extends Base
                 return $this->response;
             }
 
-            if (empty($postData['recipients']) && empty($postData['metaTitle']) && empty($postData['metaContent'])) {
+            if (empty($postData['recipients']) OR empty($postData['metaTitle']) OR empty($postData['metaContent'])) {
                 $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
                 $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                 return $this->response;
@@ -354,7 +354,7 @@ class Place extends Base
             }
 
             if (!empty($postData['metaContent']['content'])) {
-                $postData['content'] .= $postData['metaContent']['content'];
+                $postData['content'] .= ". " . $postData['metaContent']['content'];
             }
 
             $recipients = $postData['recipients'];
