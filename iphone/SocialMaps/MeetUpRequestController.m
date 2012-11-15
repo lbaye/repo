@@ -58,7 +58,7 @@ DDAnnotation *annotation;
 //    radio.delegate = self;
 //    [self.view addSubview:radio];
     
-    
+    /*
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
     NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
     
@@ -67,7 +67,7 @@ DDAnnotation *annotation;
     chkBox.backgroundColor = [UIColor clearColor];
     //chkBox.delegate = self;
     [self.view addSubview:chkBox];
-    
+    */
     //friends list
     frndListScrollView.delegate = self;
     selectedFriendsIndex=[[NSMutableArray alloc] init];
