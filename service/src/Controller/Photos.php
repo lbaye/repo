@@ -155,7 +155,6 @@ class Photos extends Base
         if ($photo->getOwner() != $this->user)
             return $this->_generateUnauthorized();
 
-
         $photo = $this->photoRepo->update($data, $id);
         return $this->_generateResponse($photo->toArray(), Status::OK);
     }
