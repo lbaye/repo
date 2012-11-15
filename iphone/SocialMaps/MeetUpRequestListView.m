@@ -11,7 +11,7 @@
 #import "MeetUpRequest.h"
 #import "Constants.h"
 #import "AppDelegate.h"
-#import "ShowOnMapController.h"
+#import "DirectionViewController.h"
 #import "UtilityClass.h"
 #import "Globals.h"
 #import "UserFriends.h"
@@ -241,10 +241,24 @@
 {
     NSLog(@"actionAddressButton: %d",[sender tag]);
     
+    NSLog(@"get directions..");
+    
     Geolocation *geoLocation = ((MeetUpRequest*)[meetUpRequestList objectAtIndex:[sender tag]]).meetUpLocation;
     
-    double lat = [geoLocation.latitude doubleValue];
-    double lon = [geoLocation.longitude doubleValue];
+    DirectionViewController *controller = [[DirectionViewController alloc] initWithNibName: @"DirectionViewController" bundle:nil];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [geoLocation.latitude doubleValue];
+    theCoordinate.longitude = [geoLocation.longitude doubleValue];
+    controller.coordinateTo = theCoordinate;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [parentViewController presentModalViewController:controller animated:YES];
+    [controller release];
+    
+    /*
+    
+    
+    double lat = 
+    double lon = 
     
     CLLocationCoordinate2D theCoordinate;
     theCoordinate.latitude = lat;
@@ -254,6 +268,8 @@
     controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
     [parentViewController presentModalViewController:controller animated:YES];
     [controller release];
+     
+     */
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  
