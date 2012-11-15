@@ -470,6 +470,10 @@
 		B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */; };
 		B08C30D3160AFF570031D7A0 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08C30D1160AFF570031D7A0 /* FriendListViewController.m */; };
 		B08C30D4160AFF570031D7A0 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */; };
+		B0B73C1A1654BBB300DDF6E5 /* RecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */; };
+		B0B73C1B1654BBB300DDF6E5 /* RecommendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */; };
+		B0B73C1F1654F38100DDF6E5 /* UITextView+Rounded.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C1E1654F38100DDF6E5 /* UITextView+Rounded.m */; };
+		B0B73C221654F5CE00DDF6E5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B73C211654F5CD00DDF6E5 /* UITextView+PlaceHolder.m */; };
 		B0C206B015FB26C900177132 /* ShowOnMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C206AE15FB26C900177132 /* ShowOnMapController.m */; };
 		B0C206B115FB26C900177132 /* ShowOnMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0C206AF15FB26C900177132 /* ShowOnMapController.xib */; };
 		B0D648E815FC4F460006DF0E /* MeetUpRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */; };
@@ -1141,6 +1145,13 @@
 		B08C30D0160AFF570031D7A0 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
 		B08C30D1160AFF570031D7A0 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
 		B08C30D2160AFF570031D7A0 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
+		B0B73C171654BBB300DDF6E5 /* RecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendViewController.h; sourceTree = "<group>"; };
+		B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendViewController.m; sourceTree = "<group>"; };
+		B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecommendViewController.xib; sourceTree = "<group>"; };
+		B0B73C1D1654F38100DDF6E5 /* UITextView+Rounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Rounded.h"; sourceTree = "<group>"; };
+		B0B73C1E1654F38100DDF6E5 /* UITextView+Rounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Rounded.m"; sourceTree = "<group>"; };
+		B0B73C201654F5CD00DDF6E5 /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
+		B0B73C211654F5CD00DDF6E5 /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
 		B0C206AD15FB26C900177132 /* ShowOnMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowOnMapController.h; sourceTree = "<group>"; };
 		B0C206AE15FB26C900177132 /* ShowOnMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowOnMapController.m; sourceTree = "<group>"; };
 		B0C206AF15FB26C900177132 /* ShowOnMapController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowOnMapController.xib; sourceTree = "<group>"; };
@@ -1333,6 +1344,10 @@
 				4F2F464E162B945700B6D0AE /* NewLocationItem.m */,
 				4FA2C0D0162F19F9004B98D9 /* UITextField+Scrolling.h */,
 				4FA2C0D1162F19F9004B98D9 /* UITextField+Scrolling.m */,
+				B0B73C1D1654F38100DDF6E5 /* UITextView+Rounded.h */,
+				B0B73C1E1654F38100DDF6E5 /* UITextView+Rounded.m */,
+				B0B73C201654F5CD00DDF6E5 /* UITextView+PlaceHolder.h */,
+				B0B73C211654F5CD00DDF6E5 /* UITextView+PlaceHolder.m */,
 				B08B6C5A1646A2F800279EDD /* CachedImages.h */,
 				B08B6C5B1646A2F800279EDD /* CachedImages.m */,
 				B08B6C5C1646A2F800279EDD /* ImageInfo.h */,
@@ -1545,6 +1560,9 @@
 				B08B6C4C16469C1B00279EDD /* PlaceListViewController.h */,
 				B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */,
 				B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */,
+				B0B73C171654BBB300DDF6E5 /* RecommendViewController.h */,
+				B0B73C181654BBB300DDF6E5 /* RecommendViewController.m */,
+				B0B73C191654BBB300DDF6E5 /* RecommendViewController.xib */,
 				4F82577815BD4C7E00760CE1 /* Classes */,
 				4F98A2E815BB38B1000B3124 /* Images */,
 				4F98A2D215BB387D000B3124 /* Supporting Files */,
@@ -2294,6 +2312,7 @@
 				20C5F1721642BC090095A391 /* icon_gallery.png in Resources */,
 				B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */,
 				20B984BB1654B4EF003C8C10 /* NewsFeedViewController.xib in Resources */,
+				B0B73C1B1654BBB300DDF6E5 /* RecommendViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2480,6 +2499,9 @@
 				B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */,
 				2026D740165228EA00739CAA /* PhotoPickerOriginalImage.m in Sources */,
 				20B984BA1654B4EF003C8C10 /* NewsFeedViewController.m in Sources */,
+				B0B73C1A1654BBB300DDF6E5 /* RecommendViewController.m in Sources */,
+				B0B73C1F1654F38100DDF6E5 /* UITextView+Rounded.m in Sources */,
+				B0B73C221654F5CE00DDF6E5 /* UITextView+PlaceHolder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

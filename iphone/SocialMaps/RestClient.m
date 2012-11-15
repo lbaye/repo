@@ -6694,4 +6694,59 @@ AppDelegate *smAppDelegate;
     [request startAsynchronous];
 }
 
+
+- (void) recommendPlace:(Place*)place:(NSString *)authToken:(NSString *)authTokenValue withNote:(NSString*)note andRecipients:(NSMutableArray*)recipients 
+{
+    NSString *route = [NSString stringWithFormat:@"%@/recommend/venue/%@", WS_URL, place.placeID];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    [request addPostValue:place.name forKey:@"metaTitle"];
+    [request addPostValue:note forKey:@"metaContent[content]"];
+    [request addPostValue:place.address forKey:@"metaContent[address]"];
+    [request addPostValue:[NSString stringWithFormat:@"%f", place.latitude] forKey:@"metaContent[lat]"];
+    [request addPostValue:[NSString stringWithFormat:@"%f", place.longitude] forKey:@"metaContent[lng]"];
+    
+    for (int i=0; i<[recipients count]; i++)
+        [request addPostValue:[recipients objectAtIndex:i] forKey:@"recipients[]"];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            [UtilityClass showAlert:@"" : @"You have recommended this venue successfully"];
+        } 
+        else 
+        {
+            [UtilityClass showAlert:@"" : @"Failed to recommend this venue"];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [UtilityClass showAlert:@"" : @"Failed to recommend this venue"];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
 @end

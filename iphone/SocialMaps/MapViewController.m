@@ -44,6 +44,7 @@
 #import "Place.h"
 #import "DDAnnotation.h"
 #import "NewsFeedViewController.h"
+#import "RecommendViewController.h"
 
 @interface MapViewController ()
 
@@ -619,8 +620,22 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void)recommendSelected:(id <MKAnnotation>)anno
-{
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+{  
+    RecommendViewController *controller = [[RecommendViewController alloc] initWithNibName:@"RecommendViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    LocationItemPlace *locItemPlace = (LocationItemPlace*)anno;
+    Place *place = [[Place alloc] init];
+    place.placeID = locItemPlace.placeInfo.ID;
+    place.name = locItemPlace.itemName;
+    place.address = locItemPlace.itemAddress;
+    place.latitude = locItemPlace.coordinate.latitude;
+    place.longitude = locItemPlace.coordinate.longitude;
+    place.category = locItemPlace.itemCategory;
+    [self presentModalViewController:controller animated:YES];
+    [controller setSelectedPlace:place];
+    [place release];
+    [controller release];
+    
 }
 - (void)reviewSelected:(id <MKAnnotation>)anno
 {
