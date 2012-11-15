@@ -2,14 +2,16 @@
 %html
   %head
     %title Hello
-    %link(rel='stylesheet' href='http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/assets/stylesheets/newsfeed.css')
+    - $url = $baseUrl . '/assets/stylesheets/newsfeed.css'
+    %link(rel='stylesheet' href=$url)
 %body
   %ul(style='width:320px')
-    -$i=0
     - foreach($activities as $activity)
       %li
         - if ($activity->getObjectType() === 'photo')
           - $photo = $photoRepo->find($activity->getObjectId())
+          - $likeRef = 'photo:like:' . $photo->getId()
+          - $commentRef = 'photo:comment:' . $photo->getId()
 
           .photo
             .row
@@ -21,7 +23,7 @@
                 11m ago
 
               .comment
-                = $photo->getDescription()
+                = stripcslashes($photo->getDescription())
 
             .row(style='height:140px')
               .image
@@ -29,7 +31,8 @@
               .icon.icon_zoom
 
             .row
-              %a(href=$i) Click Here
-      -$i++
-              
+              .buttons
+                %a.link_like(href=$likeRef) Like
+                %a.link_comment(href=$commentRef) Comment
+
   

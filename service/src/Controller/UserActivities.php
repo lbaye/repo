@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use MtHaml\Environment;
 use Helper\Email as EmailHelper;
 use Helper\Status;
+use \Helper\Dependencies as Dependencies;
 
 class UserActivities extends Base {
 
@@ -54,6 +55,7 @@ class UserActivities extends Base {
             else {
                 return $this->render(
                     array(
+                        'baseUrl' => Dependencies::$rootUrl,
                         'activities' => $activities,
                         'userRepo' => $this->userRepository,
                         'photoRepo' => $this->photoRepository
