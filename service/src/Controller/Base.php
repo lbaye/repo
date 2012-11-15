@@ -402,6 +402,7 @@ abstract class Base {
         $view = new \Symfony\Component\Templating\PhpEngine(
             new \Symfony\Component\Templating\TemplateNameParser(), $loader);
 
+        $vars = array_merge($vars, array('currentUser' => $this->user));
         return $view->render($fileName, $vars);
     }
 

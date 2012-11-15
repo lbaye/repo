@@ -3,6 +3,12 @@ my_newsfeed:
   defaults: { _controller: Controller\UserActivities::getActivities, type: json }
   requirements: { _method: GET }
 
+my_network_newsfeed_html:
+  pattern: /me/network/newsfeed.html
+  defaults: { _controller: Controller\UserActivities::getActivities, type: html }
+  requirements: { _method: GET }
+
+
 my_newsfeed_html:
   pattern: /me/newsfeed.html
   defaults: { _controller: Controller\UserActivities::getActivities, type: html }
