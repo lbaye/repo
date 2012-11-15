@@ -71,8 +71,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	private int requestCode;
 	private EditText editImageDiscription;
 	private String eventName = "", eventSummary = "", eventDescription = "",
-			eventDateString = "", eventAddress = "";
-	private double eventLat = 0, eventLng = 0;
+			eventDateString = "", address = "";
+	private double latitude = 0, longitude = 0;
 
 	List<String> shareWithSelectedFriendList;
 	List<String> shareWithSelectedCircleList;
@@ -213,7 +213,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			if (resultCode == RESULT_OK) {
 
 				if (photoIcon != null) {
-					//photoIcon.recycle();
+					// photoIcon.recycle();
 				}
 
 				photoIcon = Utility
@@ -238,7 +238,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 					// data.getData());
 					if (photoIcon != null) {
-						//photoIcon.recycle();
+						// photoIcon.recycle();
 					}
 					photoIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
@@ -342,7 +342,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			tvSelectedLocationAddress.setText("");
 			tvSelectedLocationTitle.setText("");
 			tvSelectedLocationTitle.setVisibility(View.GONE);
-			eventAddress = "";
+			address = "";
 
 			switch (selectedItem) {
 			case CURRENT_LOCATION:
@@ -368,9 +368,9 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	public void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
-				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-				Utility.getAddressByCoordinate(eventLat, eventLng,
+				latitude = StaticValues.myPoint.getLatitudeE6() / 1E6;
+				longitude = StaticValues.myPoint.getLongitudeE6() / 1E6;
+				Utility.getAddressByCoordinate(latitude, longitude,
 						new LocationAddressHandler());
 
 			}
@@ -395,8 +395,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			}
 			// replace by what you need to do
 			if (result != null) {
-				eventAddress = result;
-				displayAddress(null, eventAddress);
+				address = result;
+				displayAddress(null, address);
 			} else {
 				Log.e("ADDRESS", "Failed to get.");
 			}
@@ -425,10 +425,10 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			// TODO Auto-generated method stub
 			if (selectedPlace != null) {
 
-				eventLat = selectedPlace.getLatitude();
-				eventLng = selectedPlace.getLongitude();
-				eventAddress = selectedPlace.getVicinity();
-				displayAddress(selectedPlace.getName(), eventAddress);
+				latitude = selectedPlace.getLatitude();
+				longitude = selectedPlace.getLongitude();
+				address = selectedPlace.getVicinity();
+				displayAddress(selectedPlace.getName(), address);
 
 			}
 		}
@@ -497,10 +497,9 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		// TODO Auto-generated method stub
 
 		description = editImageDiscription.getText().toString().trim();
-		title = "Test";
+		title = "";
 
-		if (!title.equals("") && title != null && description.length() != 0
-				&& photoIcon != null) {
+		if (photoIcon != null) {
 
 			if (Utility.isConnectionAvailble(getApplicationContext())) {
 
@@ -520,7 +519,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			}
 
 		} else {
-			Toast.makeText(context, "Please enter required field",
+			Toast.makeText(context, "Photo should not be empty.",
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -534,20 +533,43 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
-			Log.w("PhotoUploadNewPhotoActivity Save a new Place", "title:"
-					+ title + " lat:" + eventLat + " long:" + eventLng
-					+ " description: " + description + " " + " Address: "
-					+ eventAddress + " permissionValue: " + permissionValue);
+			/*
+			 * Log.w("PhotoUploadNewPhotoActivity Save a new Place", "title:" +
+			 * title + " lat:" + latitude + " long:" + longitude +
+			 * " description: " + description + " " + " Address: " + address +
+			 * " permissionValue: " + permissionValue);
+			 */
 
 			// *title, *image, *description, lat, lng, address, permission
 
-			restClient.AddParam("title", title);
+			if (title != null) {
+				if (!title.equals("")) {
+					restClient.AddParam("title", title);
+				}
+			}
 
-			restClient.AddParam("description", description);
-			restClient.AddParam("lat", eventLat + "");
-			restClient.AddParam("lng", eventLng + "");
-			restClient.AddParam("address", eventAddress);
-			restClient.AddParam("permission", permissionValue);
+			if (description != null) {
+				if (!description.equals("")) {
+					restClient.AddParam("description", description);
+				}
+			}
+
+			if (latitude != 0 && longitude != 0) {
+				restClient.AddParam("lat", latitude + "");
+				restClient.AddParam("lng", longitude + "");
+			}
+
+			if (address != null) {
+				if (!address.equals("")) {
+					restClient.AddParam("address", address);
+				}
+			}
+
+			if (permissionValue != null) {
+				if (!permissionValue.equals("")) {
+					restClient.AddParam("permission", permissionValue);
+				}
+			}
 
 			if (photoIcon != null) {
 
@@ -560,6 +582,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 				placeImageString = Base64.encodeToString(full_bytes,
 						Base64.DEFAULT);
 				restClient.AddParam("image", placeImageString);
+
+				photoIcon = null;
 
 			}
 
@@ -592,11 +616,15 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 		Log.w("Photo upload response from server", status + ":" + response);
 		switch (status) {
-		case Constant.STATUS_SUCCESS:
+		case Constant.STATUS_CREATED:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Photo uploaded successfully.",
-					Toast.LENGTH_SHORT).show();
+			//Toast.makeText(context, "Photo uploaded successfully.",	Toast.LENGTH_SHORT).show();
 
+			Intent uploadPhotoIntent = new Intent(context,
+					PhotoListActivity.class);
+			startActivity(uploadPhotoIntent);
+			finish();
+			
 			break;
 
 		default:
@@ -613,7 +641,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		
+
 	}
 
 	@Override

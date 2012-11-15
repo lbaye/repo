@@ -65,13 +65,19 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private RelativeLayout searchPanel;
 
 	private String placesResponse;
-	private int placesStatus;
+	private int placesStatus; 
+	
+	String personID = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.places_list_layout);
+		setContentView(R.layout.places_list_layout); 
+		
+		personID = getIntent().getStringExtra("personID"); 
+		if(personID != null)
+			Log.d("Person ID", personID); 
 
 		initialize();
 
@@ -214,15 +220,29 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			if (getItemViewType(position) == RowType.PLACE.ordinal()) {
-				return PlaceRowFactoryForSavedPlace.getView(
-						LayoutInflater.from(context), items.get(position),
-						context, PlacesListActivity.this, convertView,
-						imageDownloader, new PlaceItemListener());
-			} else {
+			
+			if (getItemViewType(position) == RowType.PLACE.ordinal()) { 
+				
+				if(personID == null)
+				{
+					return PlaceRowFactoryForSavedPlace.getView(
+							LayoutInflater.from(context), items.get(position),
+							context, PlacesListActivity.this, convertView,
+							imageDownloader, new PlaceItemListener(), 1);
+				} else if(personID != null) 
+				{
+					return PlaceRowFactoryForSavedPlace.getView(
+							LayoutInflater.from(context), items.get(position),
+							context, PlacesListActivity.this, convertView,
+							imageDownloader, new PlaceItemListener(), 2);
+				} else 
+				{ 
+					return null;
+				}
+			} 
+			else {
 				return null;
 			}
-
 		}
 
 	}
@@ -312,8 +332,13 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		public void onShowOnMapButtonClick(Place place) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = place;
-			finish();
+			StaticValues.highlightAnnotationItem = place; 
+			
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			
+			//finish();
 		}
 
 	}
@@ -352,8 +377,19 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private Runnable placesThread = new Runnable() {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smPlaces);
+			// TODO Auto-generated method stub  
+			RestClient restClient;
+			if(personID == null) 
+			{
+				restClient = new RestClient(Constant.smPlaces); 
+			}
+			else 
+			{
+				restClient = new RestClient(Constant.smServerUrl+"/users"+"/"+personID+"/places");
+			}
+				
+			
+			//RestClient restClient = new RestClient(Constant.smPlaces);
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -390,8 +426,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Places response successful.",
-					Toast.LENGTH_SHORT).show();
+			//Toast.makeText(context, "Places response successful.", Toast.LENGTH_SHORT).show();
 
 			listMasterContent.clear();
 			listMasterContent = ServerResponseParser.parseSavedPlaces(response);

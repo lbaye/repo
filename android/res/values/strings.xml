@@ -6,7 +6,7 @@
     hasan.mahadi: "0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA"
     GENWEB2 KEY: "0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw"
     Masum="0prmApk3Xe_FQyx0KgBnMJaxCS_yeC8jf6Qyglg"
-    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
+    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
     -->
 
     <string name="app_name">Socialmaps</string>
@@ -503,15 +503,14 @@
     <string name="addAllLabel">Add all</string>
     <string name="addLabel">Add</string>
     <string name="addPhotoLabel">Add Photo</string>
-      <string name="myPhotosLabel">My photos</string>
-        <string name="uploadNewPhotosLabel">Upload new photo...</string>
-        <string name="uploadThisPhotosLabel">Upload this photo</string>
-         <string name="deleteSelectedPhotosLabel">Delete selected photos</string>
-         <string name="addAnotherPhotosLabel">Add/Take another photo...</string>
-           <string name="tagPhotosLabel">Tag photos to a location:</string>
-           <string name="addDescriptionLabel">Add description:</string>
-            <string name="shareWithLabel">Share with:</string>
-        
+    <string name="myPhotosLabel">My photos</string>
+    <string name="uploadNewPhotosLabel">Upload new photo...</string>
+    <string name="uploadThisPhotosLabel">Upload this photo</string>
+    <string name="deleteSelectedPhotosLabel">Delete selected photos</string>
+    <string name="addAnotherPhotosLabel">Add/Take another photo...</string>
+    <string name="tagPhotosLabel">Tag photos to a location:</string>
+    <string name="addDescriptionLabel">Add description:</string>
+    <string name="shareWithLabel">Share with:</string>
     <string name="deletePhotoLabel">Delete Photo</string>
     <string name="deleteLabel">Delete</string>
     <string name="okLabel">OK</string>
@@ -595,105 +594,105 @@
     <string name="fbInviteDialogDesc">This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends:</string>
     <string name="detailsLabel">Details</string>
     <string name="directionLabel">Direction</string>
-    <string name="errorMessageGallery">An error occured during select image from Gallery. Please try again with Camera.</string> 
-    
+    <string name="errorMessageGallery">An error occured during select image from Gallery. Please try again with Camera.</string>
+
     <string-array name="geoTagListOption">
         <item>Accounting</item>
         <item>Airport</item>
-        <item>Amusement park</item> 
-        <item>Aquarium</item> 
+        <item>Amusement park</item>
+        <item>Aquarium</item>
         <item> ATM</item>
         <item>Bank</item>
-        <item>Bar</item> 
-        <item>Beauty saloon</item>   
-		<item>Bicycle store</item>
+        <item>Bar</item>
+        <item>Beauty saloon</item>
+        <item>Bicycle store</item>
         <item>Book store</item>
         <item>Bowling alley</item>
-        <item>Bus station</item> 
-        <item>Cafe</item>  
+        <item>Bus station</item>
+        <item>Cafe</item>
         <item>Compground</item>
         <item>Car dealer</item>
         <item>Car rental"</item>
-        <item>Car repair</item> 
-        <item>Car wash</item>    
+        <item>Car repair</item>
+        <item>Car wash</item>
         <item>Casino</item>
         <item>Cemetry</item>
         <item>Church</item>
-        <item>City hall</item> 
-        <item>Clothing store</item>     
+        <item>City hall</item>
+        <item>Clothing store</item>
         <item>Convenience store</item>
         <item>Courthouse</item>
         <item>Dentist</item>
-        <item>Department store</item> 
-        <item>Doctor</item>  
+        <item>Department store</item>
+        <item>Doctor</item>
         <item>Electrician</item>
         <item>Electronics store</item>
         <item>Embassy</item>
-        <item>Establishment</item> 
-        <item>Finance</item> 
+        <item>Establishment</item>
+        <item>Finance</item>
         <item>Fire station</item>
         <item>Florist</item>
         <item>Food</item>
-        <item>Funeral home</item> 
-        <item>Furniture store</item> 
+        <item>Funeral home</item>
+        <item>Furniture store</item>
         <item>Gas station</item>
         <item>General contractor</item>
         <item>Grocery or supermarket</item>
-        <item>Gym</item> 
-        <item>Hair care</item>  
+        <item>Gym</item>
+        <item>Hair care</item>
         <item>Hardware store</item>
         <item>Health</item>
         <item>Hindu temple</item>
-        <item>Home goods store</item> 
-        <item>Hospital</item>     
+        <item>Home goods store</item>
+        <item>Hospital</item>
         <item>Insurance agency</item>
         <item>Jewelry store</item>
         <item>Laundry</item>
-        <item>Lawyer</item> 
-        <item>Library</item>       
+        <item>Lawyer</item>
+        <item>Library</item>
         <item>Liquor store</item>
         <item>Local government office</item>
         <item>Locksmith</item>
-        <item>Lodging</item> 
-        <item>Meal delivery</item>   
+        <item>Lodging</item>
+        <item>Meal delivery</item>
         <item>Meal takeaway</item>
         <item>Mosque</item>
         <item>Movie rental</item>
-        <item>Movie theater</item> 
-        <item>Moving company</item>  
-        <item>Museum</item> 
-        <item>Night club</item> 
-        <item>Painter</item> 
-        <item>Park</item> 
+        <item>Movie theater</item>
+        <item>Moving company</item>
+        <item>Museum</item>
+        <item>Night club</item>
+        <item>Painter</item>
+        <item>Park</item>
         <item>Parking</item>
-        <item>Pet store</item> 
+        <item>Pet store</item>
         <item>Pharmacy</item>
-        <item>Physiotherapist</item> 
+        <item>Physiotherapist</item>
         <item>Place of worship</item>
-        <item>Plumber</item> 
+        <item>Plumber</item>
         <item>Police</item>
-        <item>Post office</item> 
+        <item>Post office</item>
         <item>Real estate agency</item>
-        <item>Restaurant</item> 
+        <item>Restaurant</item>
         <item>Roofing contractor</item>
-        <item>Rv park</item> 
+        <item>Rv park</item>
         <item>School</item>
-        <item>Shoe store</item> 
+        <item>Shoe store</item>
         <item>Shopping mall</item>
-        <item>Spa</item> 
+        <item>Spa</item>
         <item>Stadium</item>
-        <item>Storage</item> 
+        <item>Storage</item>
         <item>Store</item>
-        <item>Subway station</item> 
-        <item>Synagogue</item>     
-        <item>Taxi stand</item> 
+        <item>Subway station</item>
+        <item>Synagogue</item>
+        <item>Taxi stand</item>
         <item>Train station</item>
-        <item>Travel agency</item> 
+        <item>Travel agency</item>
         <item>University</item>
-        <item>Veterinary care</item> 
-        <item>Zoo</item>         
+        <item>Veterinary care</item>
+        <item>Zoo</item>
     </string-array>
-    
+
     <string name="myPhotos">My photos</string>
     <string name="uploadNewPhoto">Upload new photo...</string>
     <string name="deleteSelectedPhotos">Delete selected photos</string>

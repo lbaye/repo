@@ -28,6 +28,7 @@ import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.PhotoZoomDialogPicker;
 
 public class PhotoListActivity extends Activity implements OnClickListener {
 
@@ -91,7 +92,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		listContainer.removeAllViews();
 		selectedPhoto.clear();
-		
+
 		buttonContainerBottom.setVisibility(View.GONE);
 
 		if (photoList.size() > 0) {
@@ -117,7 +118,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public View getItemView(Photo photo) {
+	public View getItemView(final Photo photo) {
 
 		View v = inflater.inflate(R.layout.photo_item, null);
 
@@ -168,6 +169,13 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+
+				PhotoZoomDialogPicker photoZoomPicker = new PhotoZoomDialogPicker(
+						context, "CIRCLE LIST", photoList, imageDownloader,
+						photoList.indexOf(photo));
+				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
+						LayoutParams.FILL_PARENT);
+				photoZoomPicker.show();
 
 			}
 		});
@@ -305,8 +313,9 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		if (v == btnBack) {
 			finish();
 		} else if (v == btnUploadNewPhoto) {
-			
-			Intent uploadPhotoIntent=new Intent(context,PhotoUploadNewPhotoActivity.class);
+
+			Intent uploadPhotoIntent = new Intent(context,
+					PhotoUploadNewPhotoActivity.class);
 			startActivity(uploadPhotoIntent);
 			finish();
 
@@ -331,7 +340,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smPhotoUrl+"/me");
+			RestClient restClient = new RestClient(Constant.smPhotoUrl + "/deletephotos");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -339,12 +348,12 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				String key = entry.getKey();
 				boolean value = entry.getValue();
 				if (value) {
-					restClient.AddParam("id[]", key);
+					restClient.AddParam("photoIds[]", key);
 				}
 			}
 
 			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
+				restClient.Execute(RestClient.RequestMethod.POST);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -375,16 +384,15 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		Log.d("Photos", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			
-			
+
 			List<Photo> tempPhotoList = new ArrayList<Photo>();
-			
+
 			for (Photo photo : photoList) {
 				if (!selectedPhoto.get(photo.getId())) {
 					tempPhotoList.add(photo);
 				}
 			}
-			
+
 			photoList.clear();
 			photoList = tempPhotoList;
 

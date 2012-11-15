@@ -302,8 +302,15 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
-			Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
-					.show();
+//			Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
+//					.show(); 
+			
+			StaticValues.isHighlightAnnotation = true;
+			StaticValues.highlightAnnotationItem = people; 
+			
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 
 		} else if (v == btnEvent) {
 			Intent i = new Intent(context, EventListActivity.class);
@@ -340,21 +347,28 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			goToDirection();
 		}
 
-	}
+	} 
 
 	private void goToShowPlaces() {
 		// Toast.makeText(context, "will be added very soon",
 		// Toast.LENGTH_SHORT).show();
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
 		Log.d("People Name & ID", people.getFirstName() + " " + people.getId());
+		intentToGoPlace.putExtra("personID", people.getId());
 		startActivity(intentToGoPlace);
+		finish();
 	}
 
 	private void goToMeetUp() {
 		// Toast.makeText(context, "Not This Time", Toast.LENGTH_SHORT).show();
 
+		Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat())+" "+String.valueOf(people.getCurrentLng()));
+		
 		Intent intentToShowMeetUp = new Intent(context,
-				MeetupRequestNewActivity.class);
+				MeetupRequestNewActivity.class); 
+		intentToShowMeetUp.putExtra("destLat", people.getCurrentLat());
+		intentToShowMeetUp.putExtra("destLng", people.getCurrentLng()); 
+		intentToShowMeetUp.putExtra("destAddress", people.getCurrentAddress());
 		startActivity(intentToShowMeetUp);
 	}
 

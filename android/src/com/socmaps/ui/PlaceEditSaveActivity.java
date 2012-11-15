@@ -40,24 +40,24 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			btnPlaceCategory, btnPlaceAddPhoto, btnPeopleDeletePhoto,
 			btnPeopleDelete, btnPeopleCancel, btnPeopleUpdate;
 
-	private TextView txtPlaceAddress;
+	private TextView txtPlaceAddress, titlePlaceEditSave;
 
 	private Dialog msgDialog;
 
 	private ImageView ivPlace, separatorDeleteCancel;
-	//private final static int REQUEST_CODE_CAMERA = 705;
-	//private final static int REQUEST_CODE_GALLERY = 707;
+	// private final static int REQUEST_CODE_CAMERA = 705;
+	// private final static int REQUEST_CODE_GALLERY = 707;
 	private int requestCode;
 	private Bitmap placeIcon;
 	private boolean isHome;
 	private ProgressDialog m_ProgressDialog;
 	private String savePlacesResponse;
 	private int savePlacesStatus;
-	private static String placeName = "";
-	private static String placeDiscription = "";
+	private String placeName = "";
+	private String placeDiscription = "";
 	private String categoryItem = "";
-	private String strAddress = "";
-	private String photoUrl = "";
+	private String strAddress;
+	private String photoUrl;
 	private Place place;
 
 	private boolean isUpdate;
@@ -74,13 +74,14 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.place_edit_save_layout);
 
 		initialize();
+
+		updateUI();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		updateUI();
 
 	}
 
@@ -95,6 +96,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		place = (Place) getIntent().getSerializableExtra("PLACE_OBJECT");
 
 		txtPlaceAddress = (TextView) findViewById(R.id.txtPlaceAddress);
+		titlePlaceEditSave = (TextView) findViewById(R.id.titlePlaceEditSave);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -132,6 +134,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			separatorDeleteCancel.setVisibility(View.GONE);
 
 			btnPeopleUpdate.setText(getString(R.string.saveLabel));
+			titlePlaceEditSave.setText(getString(R.string.savePlaceLabel));
 		}
 
 	}
@@ -140,18 +143,21 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (place != null) {
 
-			if (place.getName() != null) {
-				placeName = place.getName();
-			}
-			if (place.getDescription() != null) {
-				placeDiscription = place.getDescription();
-			}
+			/*
+			 * if (place.getName() != null) { placeName = place.getName(); } if
+			 * (place.getDescription() != null) { placeDiscription =
+			 * place.getDescription(); }
+			 * 
+			 * if (place.getCategory() != null) { categoryItem =
+			 * place.getCategory(); } if (place.getCategory() != null &&
+			 * place.getCategory() != "") { catagoryPosition =
+			 * getCategoryPosition(place.getCategory()); }
+			 */
 
-			if (place.getCategory() != null) {
-				categoryItem = place.getCategory();
-			}
-			if (place.getAddress() != null) {
-				strAddress = place.getAddress();
+			
+			if (place.getVicinity() != null) {
+				strAddress = place.getVicinity();
+				txtPlaceAddress.setText(strAddress);
 			}
 
 			lat = place.getLatitude();
@@ -159,29 +165,18 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 			if (place.getStreetViewImage() != null) {
 				photoUrl = place.getStreetViewImage();
+				ivPlace.setImageResource(R.drawable.img_blank);
+				il.download(photoUrl, ivPlace);
 			}
 
-			if (place.getCategory() != null && place.getCategory() != "") {
-				catagoryPosition = getCategoryPosition(place.getCategory());
-			}
-
-			Log.i("Save Place Data PlaceEditSaveActivity>>>",
+			Log.i("updateUI() PlaceEditSaveActivity>>>",
 					"Name: " + place.getName() + " Phopt: "
 							+ place.getStreetViewImage() + " Address:"
 							+ place.getAddress() + " Category:"
 							+ place.getCategory() + " lat:"
 							+ place.getLatitude() + " Lon:"
 							+ place.getLongitude());
-		}
 
-		txtPlaceAddress.setText(strAddress);
-
-		if (photoUrl != null) {
-
-			ivPlace.setImageResource(R.drawable.img_blank);
-			il.download(photoUrl, ivPlace);
-		} else {
-			ivPlace.setImageResource(R.drawable.img_blank);
 		}
 
 	}
@@ -250,8 +245,6 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-
-	
 
 	/*
 	 * Update and Delete an existing place
@@ -466,6 +459,8 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			Toast.makeText(getApplicationContext(),
 					"An unknown error occured. Please try again!!",
 					Toast.LENGTH_SHORT).show();
+
+			finish();
 			break;
 
 		}
@@ -516,8 +511,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		}
 		return true;
 	}
-	
-	
+
 	private void deleteConfirmDialog() {
 		// TODO Auto-generated method stub
 		AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
@@ -552,7 +546,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 
 				if (placeIcon != null) {
-					//placeIcon.recycle();
+					// placeIcon.recycle();
 				}
 
 				// avatar = (Bitmap) data.getExtras().get("data");
@@ -578,7 +572,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
 					// data.getData());
 					if (placeIcon != null) {
-						//placeIcon.recycle();
+						// placeIcon.recycle();
 					}
 					placeIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
@@ -639,9 +633,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		final EditText etInputText = (EditText) dialog
 				.findViewById(R.id.etInputText);
 
-		if (hint != null) {
-			etInputText.setHint(hint);
-		}
+		// if (hint != null) {
+		// etInputText.setHint(hint);
+		// }
 
 		if (text != null && !text.trim().equalsIgnoreCase("")) {
 			etInputText.setText(text);

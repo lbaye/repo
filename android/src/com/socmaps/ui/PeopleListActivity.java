@@ -521,8 +521,11 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			// TODO Auto-generated method stub
 
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-			finish();
+			StaticValues.highlightAnnotationItem = people; 
+			
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 
 		}
 
@@ -589,8 +592,11 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		public void onShowOnMapButtonClick(SecondDegreePeople people) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-			finish();
+			StaticValues.highlightAnnotationItem = people; 
+			
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 		}
 
 		@Override

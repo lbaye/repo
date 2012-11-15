@@ -133,7 +133,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.geo_tag2);
+		setContentView(R.layout.geo_tag_test);
 
 		initialize();
 		// setExpandListener();
@@ -165,9 +165,9 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Intent intent = new Intent(context, EventListActivity.class);
+			//Intent intent = new Intent(context, EventListActivity.class);
 			finish();
-			startActivity(intent);
+			//startActivity(intent);
 		}
 		return false;
 
@@ -352,11 +352,11 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				String listItem = relArray[position];
 				String listItem1 = listItem.toLowerCase().toString();
 				eventListItem = listItem1.replace(" ", "_").toLowerCase();
-				Toast.makeText(
+				/*Toast.makeText(
 						getApplicationContext(),
 						relArray[position] + " " + listItem + " " + listItem1
 								+ " " + eventListItem, Toast.LENGTH_SHORT)
-						.show();
+						.show();*/
 				Log.d("Item Selection", relArray[position] + " " + listItem
 						+ " " + listItem1 + " " + eventListItem); 
 				
@@ -482,9 +482,9 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 			Toast.makeText(context, "Successfully Done.", Toast.LENGTH_SHORT)
 					.show();
 
-			// Intent intent = new Intent(context, EventListActivity.class);
-			finish();
-			// startActivity(intent);
+			finish(); 
+//			Intent intent = new Intent(context, ProfileActivity.class);
+//			startActivity(intent);
 
 		} else {
 			Toast.makeText(context, "Failed. Please try again.",

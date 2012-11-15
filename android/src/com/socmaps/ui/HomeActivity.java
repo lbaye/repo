@@ -71,6 +71,7 @@ import com.socmaps.customballons.BubleTapHandle;
 import com.socmaps.customballons.CustomItemizedOverlay;
 import com.socmaps.customballons.CustomOverlayItem;
 import com.socmaps.entity.Event;
+import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
@@ -144,9 +145,9 @@ public class HomeActivity extends MapActivity implements
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayOtherPeople;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlaySecondDegreePeople;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayEvent;
+	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayGeotag;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlaySelf;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayPlace;
-	ArrayList<People> userList;
 
 	// private static boolean flag = false;
 
@@ -155,7 +156,7 @@ public class HomeActivity extends MapActivity implements
 
 	private ProgressDialog m_ProgressDialog;
 
-	String responseStringUpdateLocation = "";
+	String responseStringUpdateLocation;
 	int responseStatusUpdateLocation = 0;
 
 	String friendRequestFriendId = "";
@@ -210,8 +211,13 @@ public class HomeActivity extends MapActivity implements
 	private List<Object> listDisplayableContent;
 
 	int responseEventStatus = 0;
-	String responseEventString = "";
+	String responseEventString;
+
+	int responseGeotagStatus = 0;
+	String responseGeotagString;
+
 	List<Event> eventList;
+	List<GeoTag> geotagList;
 
 	ImageDownloader imageDownloader;
 	Dialog isFirstTimeFbdialog;
@@ -240,7 +246,6 @@ public class HomeActivity extends MapActivity implements
 	public void initialize() {
 
 		context = HomeActivity.this;
-		userList = new ArrayList<People>();
 		gpsService = new GpsService(context, this);
 		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
 
@@ -300,6 +305,14 @@ public class HomeActivity extends MapActivity implements
 				imageDownloader);
 		itemizedOverlayEvent.populateItemizedOverlay();
 		mapOverlays.add(itemizedOverlayEvent);
+
+		Drawable drawableGeotag = getResources().getDrawable(
+				R.drawable.marker_geotag);
+		itemizedOverlayGeotag = new CustomItemizedOverlay<CustomOverlayItem>(
+				drawableGeotag, mapView, this, Constant.FLAG_GEOTAG,
+				imageDownloader);
+		itemizedOverlayGeotag.populateItemizedOverlay();
+		mapOverlays.add(itemizedOverlayGeotag);
 
 		// mapView.setBuiltInZoomControls(true);
 
@@ -552,6 +565,7 @@ public class HomeActivity extends MapActivity implements
 		sendSelfLocationToServer();
 		getSearchResult();
 		getEventList();
+		getGeotagList();
 
 	}
 
@@ -571,20 +585,20 @@ public class HomeActivity extends MapActivity implements
 	};
 
 	private void sendServerRequestToGetSearchResult() {
-		RestClient getUserClient = new RestClient(Constant.smGetUserUrl);
-		getUserClient.AddHeader(Constant.authTokenParam,
+		RestClient restClient = new RestClient(Constant.smGetUserUrl);
+		restClient.AddHeader(Constant.authTokenParam,
 				Utility.getAuthToken(context));
-		getUserClient.AddParam("lat", myLat + "");
-		getUserClient.AddParam("lng", myLng + "");
+		restClient.AddParam("lat", myLat + "");
+		restClient.AddParam("lng", myLng + "");
 		try {
-			getUserClient.Execute(RestClient.RequestMethod.POST);
+			restClient.Execute(RestClient.RequestMethod.POST);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		responseString = getUserClient.getResponse();
+		responseString = restClient.getResponse();
 
-		responseStatus = getUserClient.getResponseCode();
+		responseStatus = restClient.getResponseCode();
 
 		runOnUiThread(returnResGetSearchResult);
 	}
@@ -595,6 +609,7 @@ public class HomeActivity extends MapActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleGetSearchResultResponse(responseStatus, responseString);
+			responseString = null;
 		}
 	};
 
@@ -617,6 +632,89 @@ public class HomeActivity extends MapActivity implements
 			}
 
 			// flag = true;
+			break;
+
+		case Constant.STATUS_BADREQUEST:
+			Toast.makeText(getApplicationContext(),
+					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					.show();
+
+			break;
+
+		case Constant.STATUS_NOTFOUND:
+			Toast.makeText(getApplicationContext(),
+					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					.show();
+
+			break;
+		default:
+			// Toast.makeText(getApplicationContext(),"An unknown error occured.",
+			// Toast.LENGTH_LONG).show();
+			break;
+
+		}
+	}
+
+	public void getGeotagList() {
+		Thread userFetchThread = new Thread(null, getGeotagListThread,
+				"Start geting geotag list");
+		userFetchThread.start();
+	}
+
+	private Runnable getGeotagListThread = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			sendServerRequestToGetGeotagList();
+		}
+	};
+
+	private void sendServerRequestToGetGeotagList() {
+		RestClient restClient = new RestClient(Constant.smGeoTag);
+		restClient.AddHeader(Constant.authTokenParam,
+				Utility.getAuthToken(context));
+
+		try {
+			restClient.Execute(RestClient.RequestMethod.GET);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		responseGeotagString = restClient.getResponse();
+
+		responseGeotagStatus = restClient.getResponseCode();
+
+		runOnUiThread(returnResGetGeotagList);
+	}
+
+	private Runnable returnResGetGeotagList = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleGetGeotagListResponse(responseGeotagStatus,
+					responseGeotagString);
+			responseGeotagString = null;
+		}
+	};
+
+	public void handleGetGeotagListResponse(int status, String response) {
+		// Log.d("Get Search result", status + ":" + response);
+		// userList.clear();
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+
+			geotagList = ServerResponseParser.parseGeotags(response);
+
+			populateMasterList();
+
+			if (isSearchEnabled == false) {
+
+				updateContentList(listMasterContent);
+				updateMapDisplay(listContent);
+			}
+
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -736,6 +834,10 @@ public class HomeActivity extends MapActivity implements
 			addEventsToMasterList();
 		}
 
+		if (geotagList != null) {
+			addGeotagsToMasterList();
+		}
+
 		/*
 		 * if (listMasterContent.size() > 0) { sortMasterListData(); }
 		 */
@@ -743,29 +845,45 @@ public class HomeActivity extends MapActivity implements
 	}
 
 	private void addPlacesToMasterList() {
-		for (int i = 0; i < StaticValues.searchResult.getPlaces().size(); i++) {
-			listMasterContent.add(StaticValues.searchResult.getPlaces().get(i));
+		if (StaticValues.searchResult.getPlaces() != null) {
+			for (int i = 0; i < StaticValues.searchResult.getPlaces().size(); i++) {
+				listMasterContent.add(StaticValues.searchResult.getPlaces()
+						.get(i));
+			}
 		}
+
 	}
 
 	private void addPeoplesToMasterList() {
-		for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-			listMasterContent
-					.add(StaticValues.searchResult.getPeoples().get(i));
+		if (StaticValues.searchResult.getPeoples() != null) {
+			for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
+				listMasterContent.add(StaticValues.searchResult.getPeoples()
+						.get(i));
+			}
 		}
+
 	}
 
 	private void addFacebbokPeoplesToMasterList() {
-		for (int i = 0; i < StaticValues.searchResult.getSecondDegreePeoples()
-				.size(); i++) {
-			listMasterContent.add(StaticValues.searchResult
-					.getSecondDegreePeoples().get(i));
+		if (StaticValues.searchResult.getSecondDegreePeoples() != null) {
+			for (int i = 0; i < StaticValues.searchResult
+					.getSecondDegreePeoples().size(); i++) {
+				listMasterContent.add(StaticValues.searchResult
+						.getSecondDegreePeoples().get(i));
+			}
 		}
+
 	}
 
 	private void addEventsToMasterList() {
 		for (int i = 0; i < eventList.size(); i++) {
 			listMasterContent.add(eventList.get(i));
+		}
+	}
+
+	private void addGeotagsToMasterList() {
+		for (int i = 0; i < geotagList.size(); i++) {
+			listMasterContent.add(geotagList.get(i));
 		}
 	}
 
@@ -843,6 +961,7 @@ public class HomeActivity extends MapActivity implements
 				.getFocus();
 
 		CustomOverlayItem focusedItemEvent = itemizedOverlayEvent.getFocus();
+		CustomOverlayItem focusedItemGeotag = itemizedOverlayGeotag.getFocus();
 
 		clearMap(0, true);
 		listDisplayableContent.clear();
@@ -919,6 +1038,22 @@ public class HomeActivity extends MapActivity implements
 
 				displayedItemCounter++;
 
+			} else if (item instanceof GeoTag
+					&& SharedPreferencesHelper.getInstance(context).getBoolean(
+							Constant.PLACE, true)) {
+				listDisplayableContent.add(item);
+
+				GeoTag geoTag = (GeoTag) item;
+
+				GeoPoint geoPoint = new GeoPoint(
+						(int) (geoTag.getLatitude() * 1E6),
+						(int) (geoTag.getLongitude() * 1E6));
+
+				CustomOverlayItem overlayItem = new CustomOverlayItem(geoPoint,
+						"", "", geoTag);
+				itemizedOverlayGeotag.addOverlay(overlayItem);
+
+				displayedItemCounter++;
 			}
 
 		}
@@ -927,6 +1062,7 @@ public class HomeActivity extends MapActivity implements
 		itemizedOverlayOtherPeople.populateItemizedOverlay();
 		itemizedOverlaySecondDegreePeople.populateItemizedOverlay();
 		itemizedOverlayEvent.populateItemizedOverlay();
+		itemizedOverlayGeotag.populateItemizedOverlay();
 		mapView.invalidate();
 
 		if (displayedItemCounter > 0) {
@@ -934,7 +1070,8 @@ public class HomeActivity extends MapActivity implements
 
 			if (StaticValues.isHighlightAnnotation
 					&& StaticValues.highlightAnnotationItem != null
-					&& (StaticValues.searchResult != null || eventList.size() > 0)) {
+					&& (StaticValues.searchResult != null
+							|| eventList.size() > 0 || geotagList.size() > 0)) {
 
 				highlightAnnotation();
 
@@ -1005,6 +1142,9 @@ public class HomeActivity extends MapActivity implements
 			} else if (focusedItemEvent != null) {
 				selectedGeoPoint = focusedItemEvent.getPoint();
 				itemizedOverlayEvent.onTap(selectedGeoPoint, mapView);
+			} else if (focusedItemGeotag != null) {
+				selectedGeoPoint = focusedItemGeotag.getPoint();
+				itemizedOverlayGeotag.onTap(selectedGeoPoint, mapView);
 			}
 		} else {
 			if (isSearchEnabled) {
@@ -1180,12 +1320,15 @@ public class HomeActivity extends MapActivity implements
 
 		if (StaticValues.isHighlightAnnotation
 				&& StaticValues.highlightAnnotationItem != null
-				&& (StaticValues.searchResult != null || eventList.size() > 0)) {
+				&& (StaticValues.searchResult != null || eventList.size() > 0 || geotagList
+						.size() > 0)) {
 
 			populateMasterList();
 			updateContentList(listMasterContent);
 
-			highlightAnnotation();
+			updateMapDisplay(listContent);
+
+			// highlightAnnotation();
 		}
 
 		startGpsService();
@@ -1240,6 +1383,16 @@ public class HomeActivity extends MapActivity implements
 					(int) (event.getLongitude() * 1E6));
 
 			itemizedOverlayEvent.onTap(selectedGeoPoint, mapView);
+
+		} else if (StaticValues.highlightAnnotationItem instanceof GeoTag) {
+			// selectedGeoPoint = ((SecondDegreePeople)
+			// StaticValues.highlightAnnotationItem).getCurrentPosition();
+
+			GeoTag geoTag = (GeoTag) StaticValues.highlightAnnotationItem;
+			selectedGeoPoint = new GeoPoint((int) (geoTag.getLatitude() * 1E6),
+					(int) (geoTag.getLongitude() * 1E6));
+
+			itemizedOverlayGeotag.onTap(selectedGeoPoint, mapView);
 
 		}
 
@@ -1318,9 +1471,11 @@ public class HomeActivity extends MapActivity implements
 
 		Log.i("HomeActivity", "facebookAuthentication");
 
+		//initInviteFriends();
+		
 		if (StaticValues.myInfo != null
 				&& !Utility.getFacebookInvitationDisplayStatus(context)
-				&& StaticValues.myInfo.getLogInCount() == 0) {
+				&& StaticValues.myInfo.getLogInCount() == 1) {
 
 			Utility.setFacebookInvitationDisplayStatus(context, true);
 
@@ -1573,13 +1728,13 @@ public class HomeActivity extends MapActivity implements
 								+ String.valueOf(item.getPlace().getLongitude()));
 
 				Intent intentForMeetup = new Intent(context,
-						zMeetupRequestNewActivity.class);
+						MeetupRequestNewActivity.class);
 				intentForMeetup.putExtra("destLat", item.getPlace()
 						.getLatitude());
 				intentForMeetup.putExtra("destLng", item.getPlace()
 						.getLongitude());
-				// intentForMeetup.putExtra("destAddress",
-				// item.getPlace().getAddress());
+				intentForMeetup.putExtra("destAddress", item.getPlace()
+						.getAddress());
 				startActivity(intentForMeetup);
 			}
 		});
@@ -1779,8 +1934,17 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				// d.dismiss();
+				Log.d("LAT LNG Meetup People",
+						String.valueOf(item.getUser().getCurrentLat())
+								+ " "
+								+ String.valueOf(item.getUser().getCurrentLng()));
+
 				Intent intent = new Intent(context,
 						MeetupRequestNewActivity.class);
+				intent.putExtra("destLat", item.getUser().getCurrentLat());
+				intent.putExtra("destLng", item.getUser().getCurrentLng());
+				intent.putExtra("destAddress", item.getUser()
+						.getCurrentAddress());
 				startActivity(intent);
 				/*
 				 * Dialog msgDialog = DialogsAndToasts
@@ -2002,6 +2166,8 @@ public class HomeActivity extends MapActivity implements
 			// TODO Auto-generated method stub
 			handleResponseUpdateLocation(responseStatusUpdateLocation,
 					responseStringUpdateLocation);
+
+			responseStringUpdateLocation = null;
 
 			// dismiss progress dialog if needed
 		}
@@ -2380,7 +2546,12 @@ public class HomeActivity extends MapActivity implements
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+			Intent peopleIntent = new Intent(getApplicationContext(),
+					PhotoListActivity.class);
+			startActivity(peopleIntent);
+
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemMessages) {
 			Intent messageIntent = new Intent(getApplicationContext(),

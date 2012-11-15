@@ -52,8 +52,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.Event;
+import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
@@ -98,6 +100,9 @@ public class Utility {
 		} else if (item instanceof Event) {
 			Event temp = ((Event) item);
 			return temp.getEventTitle().toString().toLowerCase();
+		} else if (item instanceof GeoTag) {
+			GeoTag temp = ((GeoTag) item);
+			return temp.getTitle().toString().toLowerCase();
 		} else if (item instanceof String)
 			return item.toString();
 		else
@@ -985,6 +990,21 @@ public class Utility {
 			if (!value.equals(""))
 				return true;
 		return false;
+	}
+	
+	public static double calculateDistance(GeoPoint p1, GeoPoint p2) {
+	    double lat1 = ((double)p1.getLatitudeE6()) / 1e6;
+	    double lng1 = ((double)p1.getLongitudeE6()) / 1e6;
+	    double lat2 = ((double)p2.getLatitudeE6()) / 1e6;
+	    double lng2 = ((double)p2.getLongitudeE6()) / 1e6;
+	    
+	    return calculateDistance(lat1, lng1, lat2, lng2);
+	}
+	
+	public static double calculateDistance(double sourceLat, double sourceLng, double destLat, double destLng) {
+	    float [] dist = new float[1];
+	    Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
+	    return (double)dist[0];
 	}
 
 }

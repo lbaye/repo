@@ -68,6 +68,7 @@
                 android:src="@drawable/icon_event_small" />
 
             <TextView
+                android:id="@+id/titlePlaceEditSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
@@ -86,8 +87,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="180dip"
                 android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@null" />
+                android:scaleType="fitCenter"
+                android:src="@null" 
+                android:background="@color/white"/>
         </TableRow>
 
         <LinearLayout
@@ -132,7 +134,8 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" 
-            android:paddingRight="5dip">
+            android:paddingRight="5dip"
+            android:paddingLeft="5dip">
 
             <TextView
                 android:id="@+id/addressLavel"
@@ -143,7 +146,7 @@
                 android:paddingLeft="5dp"
                 android:text="@string/addressLabel"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
             <TextView

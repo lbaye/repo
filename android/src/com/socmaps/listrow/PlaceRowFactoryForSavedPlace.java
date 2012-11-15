@@ -21,7 +21,8 @@ public class PlaceRowFactoryForSavedPlace {
 			final Place placeObj, final Context con,
 			final ListItemClickListener licl, final View convertView,
 			final ImageDownloader il,
-			final ListItemClickListenerPlace listItemClickListenerPlace) {
+			final ListItemClickListenerPlace listItemClickListenerPlace, 
+			int a) {
 		final ViewHolder holder;
 		View view;
 		final Place place;
@@ -95,7 +96,16 @@ public class PlaceRowFactoryForSavedPlace {
 
 				listItemClickListenerPlace.onShowOnMapButtonClick(place);
 			}
-		});
+		}); 
+		
+		if (a ==1)
+		{
+			holder.btnEditPlace.setVisibility(View.VISIBLE);
+		} 
+		else 
+		{
+			holder.btnEditPlace.setVisibility(View.INVISIBLE);
+		}
 
 		holder.btnEditPlace.setOnClickListener(new View.OnClickListener() {
 

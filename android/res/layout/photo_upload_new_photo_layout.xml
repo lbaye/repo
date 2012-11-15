@@ -195,8 +195,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:adjustViewBounds="true"
-                    android:background="@color/black"
-                    android:scaleType="fitXY"
+                    android:background="@color/white"
+                    android:scaleType="fitCenter"
                     android:src="@null" />
             </TableRow>
 

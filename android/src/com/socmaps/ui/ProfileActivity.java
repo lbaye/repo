@@ -1083,7 +1083,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Toast.makeText(getApplicationContext(), "Coming Soon",
 		// Toast.LENGTH_SHORT).show();
 
-		finish();
+		//finish();
 		Intent intentForGeoTag = new Intent(context, GeoTagActivity.class);
 		startActivity(intentForGeoTag);
 	}

@@ -103,6 +103,9 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends
 		else if (typeFlag == Constant.FLAG_SECOND_DEGREE)
 			return new CustomBalloonOverlayViewSecondDegreePeople<CustomOverlayItem>(
 					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		else if (typeFlag == Constant.FLAG_GEOTAG)
+			return new CustomBalloonOverlayViewGeotag<CustomOverlayItem>(
+					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
 		else
 			return new CustomBalloonOverlayViewSelf<CustomOverlayItem>(
 					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);

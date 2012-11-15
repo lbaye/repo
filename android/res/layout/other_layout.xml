@@ -76,7 +76,7 @@
 
                     <LinearLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="60dip"
+                        android:layout_height="70dip"
                         android:layout_marginLeft="10dip"
                         android:layout_marginRight="5dip"
                         android:layout_marginTop="30dip" >
@@ -98,13 +98,13 @@
 				                <LinearLayout
 				                    android:id="@+id/layEditProfilePic" 
 				                    android:layout_alignRight="@+id/ivProfilePic"
+				                    android:layout_alignBottom="@+id/ivProfilePic"
 				                    android:layout_width="wrap_content"
 				                    android:layout_height="wrap_content"
-				                    android:layout_alignParentBottom="true"
 				                    android:layout_marginBottom="-7dip" 
 				                    android:layout_marginRight="-10dip"
 				                    android:background="@drawable/bg_white_transparent_semi"
-				                    android:visibility="invisible" >
+				                    android:visibility="visible" >
 
 				                    <TextView
 				                        android:id="@+id/tvFriendshipCheck"

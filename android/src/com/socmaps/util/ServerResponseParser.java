@@ -16,6 +16,7 @@ import com.socmaps.entity.Circle;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.FacebookErrorResponse;
 import com.socmaps.entity.FriendRequest;
+import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.InformationSharingPreferences;
 import com.socmaps.entity.LayersPreferences;
 import com.socmaps.entity.MeetupRequest;
@@ -854,9 +855,16 @@ public class ServerResponseParser {
 				placeObj = arrayPlace.getJSONObject(i);
 				places.add(parsePlace(placeObj));
 			}
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return places;
@@ -911,11 +919,13 @@ public class ServerResponseParser {
 				}
 			}
 
-			/*if (!placeObj.isNull("lastSeenAt")) {
-
-				place.setVenue(placeObj.getString("lastSeenAt"));
-
-			}*/
+			/*
+			 * if (!placeObj.isNull("lastSeenAt")) {
+			 * 
+			 * place.setVenue(placeObj.getString("lastSeenAt"));
+			 * 
+			 * }
+			 */
 			if (!placeObj.isNull("geometry")) {
 				JSONObject geometry = placeObj.getJSONObject("geometry");
 				if (!geometry.isNull("location")) {
@@ -949,36 +959,48 @@ public class ServerResponseParser {
 				 * place.setSouthwest(getGeoPointFromjsonObject(southwest)); } }
 				 */
 			}
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return place;
 	}
-	
-	
-	
+
 	public static ArrayList<Place> parseSavedPlaces(String response) {
 
 		ArrayList<Place> places = new ArrayList<Place>();
-		JSONObject placeObj;		
+		JSONObject placeObj;
 		try {
-			
+
 			JSONArray arrayPlace = new JSONArray(response);
 			for (int i = 0; i < arrayPlace.length(); i++) {
 
 				placeObj = arrayPlace.getJSONObject(i);
 				places.add(parseSavedPlace(placeObj));
 			}
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return places;
 	}
-	
+
 	public static Place parseSavedPlace(JSONObject placeObj) {
 		Place place = new Place();
 
@@ -991,21 +1013,21 @@ public class ServerResponseParser {
 			}
 			if (!placeObj.isNull("category")) {
 				place.setCategory(placeObj.getString("category"));
-			}			
+			}
 			if (!placeObj.isNull("description")) {
 				place.setDescription(placeObj.getString("description"));
-			}			
+			}
 			if (!placeObj.isNull("photo")) {
 				place.setStreetViewImage(placeObj.getString("photo"));
 			}
-			if(!placeObj.isNull("createDate"))
-			{
-				place.setCreateDate(getTimeEntityFromJsonObject(placeObj.getJSONObject("createDate")));
+			if (!placeObj.isNull("createDate")) {
+				place.setCreateDate(getTimeEntityFromJsonObject(placeObj
+						.getJSONObject("createDate")));
 			}
-			/*if(!placeObj.isNull("owner"))
-			{
-				place.setOwner(parsePeople(placeObj.getJSONObject("owner")));
-			}*/
+			/*
+			 * if(!placeObj.isNull("owner")) {
+			 * place.setOwner(parsePeople(placeObj.getJSONObject("owner"))); }
+			 */
 			if (!placeObj.isNull("location")) {
 				JSONObject location = placeObj.getJSONObject("location");
 
@@ -1016,22 +1038,20 @@ public class ServerResponseParser {
 					place.setLongitude(location.getDouble("lng"));
 				}
 				if (!location.isNull("address")) {
-					place.setAddress(location.getString("address"));
+					place.setVicinity(location.getString("address"));
 				}
 			}
-			
+
 			if (!placeObj.isNull("type")) {
 				place.setType(placeObj.getString("type"));
 			}
-			
+
 			if (!placeObj.isNull("distance")) {
 
 				place.setDistance(placeObj.getDouble("distance"));
 				// Log.i("Distance", temp.getDouble("distance") + "");
 			}
 
-
-			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1039,46 +1059,43 @@ public class ServerResponseParser {
 
 		return place;
 	}
-	
-	
+
 	public static ArrayList<Photo> parsePhotos(String response) {
 
 		ArrayList<Photo> photos = new ArrayList<Photo>();
-		JSONObject photoObj;		
+		JSONObject photoObj;
 		try {
-			
+
 			JSONArray arrayPhotos = new JSONArray(response);
 			for (int i = 0; i < arrayPhotos.length(); i++) {
 
 				photoObj = arrayPhotos.getJSONObject(i);
 				photos.add(parsePhoto(photoObj));
 			}
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return photos;
 	}
-	
+
 	public static Photo parsePhoto(JSONObject photoObj) {
-		
-		/*String id;
-		String description;
-		String title;
-		String permission;
-		List<String> permittedUsers;
-		List<String> permittedCircles;
-		String imageThumb;
-		String imageMedium;
-		String imageLarge;
-		double latitude;
-		double longitude;
-		String address;		
-		People owner;
-		TimeEntity createDate*/
-		
-		
+
+		/*
+		 * String id; String description; String title; String permission;
+		 * List<String> permittedUsers; List<String> permittedCircles; String
+		 * imageThumb; String imageMedium; String imageLarge; double latitude;
+		 * double longitude; String address; People owner; TimeEntity createDate
+		 */
+
 		Photo photo = new Photo();
 
 		try {
@@ -1103,24 +1120,22 @@ public class ServerResponseParser {
 			if (!photoObj.isNull("permittedCircles")) {
 				photo.setPermittedCircles(getListFromJSONArray(photoObj
 						.getJSONArray("permittedCircles")));
-			}			
-						
+			}
+
 			if (!photoObj.isNull("imageThumb")) {
 				photo.setImageThumb(photoObj.getString("imageThumb"));
 			}
-			
+
 			if (!photoObj.isNull("imageMedium")) {
 				photo.setImageMedium(photoObj.getString("imageMedium"));
 			}
-			
+
 			if (!photoObj.isNull("imageLarge")) {
 				photo.setImageLarge(photoObj.getString("imageLarge"));
 			}
-			
-			
-			if(!photoObj.isNull("owner"))
-			{
-				photo.setOwner(parsePeople(photoObj.getJSONObject("owner")));
+
+			if (!photoObj.isNull("owner")) {
+				// photo.setOwner(parsePeople(photoObj.getJSONObject("owner")));
 			}
 			if (!photoObj.isNull("location")) {
 				JSONObject location = photoObj.getJSONObject("location");
@@ -1135,20 +1150,99 @@ public class ServerResponseParser {
 					photo.setAddress(location.getString("address"));
 				}
 			}
-			
-			if(!photoObj.isNull("createDate"))
-			{
-				photo.setCreateDate(getTimeEntityFromJsonObject(photoObj.getJSONObject("createDate")));
+
+			if (!photoObj.isNull("createDate")) {
+				photo.setCreateDate(getTimeEntityFromJsonObject(photoObj
+						.getJSONObject("createDate")));
 			}
 
-
-			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return photo;
+	}
+
+	public static ArrayList<GeoTag> parseGeotags(String response) {
+
+		ArrayList<GeoTag> geotags = new ArrayList<GeoTag>();
+		JSONObject geotagObj;
+		try {
+
+			JSONArray arrayGeotags = new JSONArray(response);
+			for (int i = 0; i < arrayGeotags.length(); i++) {
+
+				geotagObj = arrayGeotags.getJSONObject(i);
+				geotags.add(parseGeotag(geotagObj));
+			}
+		} catch (NullPointerException e) {
+			return null;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+
+		return geotags;
+	}
+
+	public static GeoTag parseGeotag(JSONObject geotagObj) {
+
+		GeoTag geotag = new GeoTag();
+
+		try {
+			if (!geotagObj.isNull("id")) {
+				geotag.setId(geotagObj.getString("id"));
+			}
+
+			if (!geotagObj.isNull("title")) {
+				geotag.setTitle(geotagObj.getString("title"));
+			}
+			if (!geotagObj.isNull("category")) {
+				geotag.setCategory(geotagObj.getString("category"));
+			}
+			if (!geotagObj.isNull("description")) {
+				geotag.setDescription(geotagObj.getString("description"));
+			}
+
+			if (!geotagObj.isNull("photo")) {
+				geotag.setPhoto(geotagObj.getString("photo"));
+			}
+
+			if (!geotagObj.isNull("createDate")) {
+				geotag.setCreateDate(getTimeEntityFromJsonObject(geotagObj
+						.getJSONObject("createDate")));
+			}
+
+			if (!geotagObj.isNull("owner")) {
+				geotag.setOwner(parsePeople(geotagObj.getJSONObject("owner")));
+			}
+
+			if (!geotagObj.isNull("location")) {
+				JSONObject location = geotagObj.getJSONObject("location");
+
+				if (!location.isNull("lat")) {
+					geotag.setLatitude(location.getDouble("lat"));
+				}
+				if (!location.isNull("lng")) {
+					geotag.setLongitude(location.getDouble("lng"));
+				}
+				if (!location.isNull("address")) {
+					geotag.setAddress(location.getString("address"));
+				}
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return geotag;
 	}
 
 	public static ArrayList<People> parseSearchResultPeople(String response) {
@@ -1163,9 +1257,16 @@ public class ServerResponseParser {
 
 				peoples.add(parsePeople(peopleJSONObj));
 			}
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return peoples;
@@ -1190,9 +1291,16 @@ public class ServerResponseParser {
 				}
 			}
 
+		} catch (NullPointerException e) {
+			return null;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 
 		return secondDegreePeoples;

@@ -3,118 +3,106 @@ package com.socmaps.entity;
 import java.io.Serializable;
 import java.util.List;
 
-public class GeoTag implements Serializable{
+public class GeoTag implements Serializable {
 
-	private String geotagId;
-	private String geotagTitle;
-	private String geotagDescription;
-	private String geotagImageUrl;
-	private String geotagOwner; 
-	private String geotagCategory; 
-	private TimeEntity geotagTime;
+	private String id = "";
+	private String title = "";
+	private String category = "";
+	private String description = "";
+	private String photo = "";
+	private TimeEntity createDate;
+	private People owner;
+	private double latitude = 0;
+	private double longitude = 0;
+	private String address = "";
+	private double distance = 0;
 
-	//private RSVP rsvp;
-	private List<People> guestList;
-	private List<Circle> circleList;
-	
-	double latitude;
-	double longitude;
-	String address;
-	
-	
-	public String getGeotagId() {
-		return geotagId;
-	}
-	
-	public void setGeotagId(String geotagId) {
-		this.geotagId = geotagId;
-	}
-	
-	public String getGeotagTitle() {
-		return geotagTitle;
-	}
-	
-	public void setGeotagTitle(String geotagTitle) {
-		this.geotagTitle = geotagTitle;
-	}
-	
-	public String getGeotagDescription() {
-		return geotagDescription;
-	}
-	
-	public void setGeotagDescription(String geotagDescription) {
-		this.geotagDescription = geotagDescription;
-	}
-	
-	public String getGeotagImageUrl() {
-		return geotagImageUrl;
-	}
-	
-	public void setGeotagImageUrl(String geotagImageUrl) {
-		this.geotagImageUrl = geotagImageUrl;
-	}
-	
-	public String getGeotagOwner() {
-		return geotagOwner;
-	}
-	
-	public void setGeotagOwner(String geotagOwner) {
-		this.geotagOwner = geotagOwner;
-	} 
-	
-	public String getGeotagCategory() {
-		return geotagCategory;
+	public String getId() {
+		return id;
 	}
 
-	public void setGeotagCategory(String geotagCategory) {
-		this.geotagCategory = geotagCategory;
-	} 
-	
-	public TimeEntity getGeotagTime() {
-		return geotagTime;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public void setGeotagTime(TimeEntity geotagTime) {
-		this.geotagTime = geotagTime;
+	public String getTitle() {
+		return title;
 	}
-	
-	public List<People> getGuestList() {
-		return guestList;
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	
-	public void setGuestList(List<People> guestList) {
-		this.guestList = guestList;
+
+	public String getCategory() {
+		return category;
 	}
-	
-	public List<Circle> getCircleList() {
-		return circleList;
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
-	public void setCircleList(List<Circle> circleList) {
-		this.circleList = circleList;
+
+	public String getDescription() {
+		return description;
 	}
-	
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public TimeEntity getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(TimeEntity createDate) {
+		this.createDate = createDate;
+	}
+
+	public People getOwner() {
+		return owner;
+	}
+
+	public void setOwner(People owner) {
+		this.owner = owner;
+	}
+
 	public double getLatitude() {
 		return latitude;
 	}
-	
+
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
+
 	public double getLongitude() {
 		return longitude;
 	}
-	
+
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
-	} 
-	
-	
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 }

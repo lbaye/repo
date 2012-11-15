@@ -777,7 +777,12 @@ public class ListViewActivity extends Activity implements
 			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemPlaces) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
+			Intent placeIntent = new Intent(getApplicationContext(),
+					PlacesListActivity.class);
+			startActivity(placeIntent);
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemProfile) {
 			Intent profileIntent = new Intent(context, ProfileActivity.class);

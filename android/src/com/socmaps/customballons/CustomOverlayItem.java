@@ -3,6 +3,7 @@ package com.socmaps.customballons;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 import com.socmaps.entity.Event;
+import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
@@ -17,6 +18,7 @@ public class CustomOverlayItem extends OverlayItem {
 	private Event event;
 	private MeetupRequest meetup;
 	private SecondDegreePeople secondDegreePeople;
+	private GeoTag geoTag;
 
 	public CustomOverlayItem(GeoPoint point, String title, String snipet,
 			Event ee) {
@@ -53,6 +55,12 @@ public class CustomOverlayItem extends OverlayItem {
 		super(point, title, snipet);
 		this.secondDegreePeople = ou;
 	}
+	
+	public CustomOverlayItem(GeoPoint point, String title, String snipet,
+			GeoTag geoTag) {
+		super(point, title, snipet);
+		this.geoTag = geoTag;
+	}
 
 	public Event getEvent() {
 		return event;
@@ -77,6 +85,11 @@ public class CustomOverlayItem extends OverlayItem {
 	public SecondDegreePeople getSecondDegreePeople() {
 		return secondDegreePeople;
 	}
+	
+	public GeoTag getGeotag() {
+		return geoTag;
+	}
+	
 
 	@Override
 	public void setMarker(android.graphics.drawable.Drawable marker) {

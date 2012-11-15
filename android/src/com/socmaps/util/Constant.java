@@ -144,6 +144,7 @@ public class Constant {
 	public final static int FLAG_EVENT = 4;
 	public final static int FLAG_MEETUP = 5;
 	public final static int FLAG_SECOND_DEGREE = 6;
+	public final static int FLAG_GEOTAG = 7;
 
 	public final static String PEOPLE = "peoples";
 	public final static String PLACE = "places";

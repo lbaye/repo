@@ -84,12 +84,19 @@ public class MeetupRequestNewActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader;
+	ImageLoader imageLoader; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.meetup_new_layout);
+		setContentView(R.layout.meetup_new_layout); 
+		
+		requestLat = getIntent().getDoubleExtra("destLat", 0);
+		requestLng = getIntent().getDoubleExtra("destLng", 0); 
+		requestAddress = getIntent().getStringExtra("destAddress"); 
+		
+		
+		Log.d("Received Place GTag", String.valueOf(requestLat)+" "+ String.valueOf(requestLng));
 
 		initialize();
 
@@ -175,8 +182,13 @@ public class MeetupRequestNewActivity extends Activity {
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
 
-		locationRadioGroupView
-				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		if(requestLat != 0 && requestLng != 0) 
+		{
+			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
+			getDefaultLocationAddress();
+		}
+		else
+			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
@@ -270,7 +282,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 			restClient.AddParam("message", requestMessage);
 			restClient.AddParam("lat", requestLat + "");
-			restClient.AddParam("lng", requestLat + "");
+			restClient.AddParam("lng", requestLng + "");
 			restClient.AddParam("address", requestAddress);
 			restClient.AddParam("permission", Constant.PERMISSION_NONE);
 			// restClient.AddParam("sendDirection", sendDirection);
@@ -403,7 +415,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 		selectedFriends.put(id, false);
 
-		nameView.setText(name);
+		nameView.setText(name); 
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
@@ -435,7 +447,9 @@ public class MeetupRequestNewActivity extends Activity {
 				selectedFriends.put(id, !isSelected);
 
 			}
-		});
+		}); 
+		
+		
 
 		return v;
 	}
@@ -471,7 +485,9 @@ public class MeetupRequestNewActivity extends Activity {
 					selectedCircles.put(id, false);
 				}
 			}
-		});
+		});  
+		
+		
 
 		return v;
 	}
@@ -711,6 +727,16 @@ public class MeetupRequestNewActivity extends Activity {
 			}
 		}
 
+	} 
+	
+	private void getDefaultLocationAddress() 
+	{
+		if (requestLat != 0 && requestLng != 0) {
+
+			Utility.getAddressByCoordinate(requestLat, requestLng,
+					new LocationAddressHandler());
+
+		}
 	}
 
 }
