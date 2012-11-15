@@ -34,6 +34,11 @@ delete_photo:
   defaults: { _controller: Controller\Photos::delete }
   requirements: { _method: DELETE }
 
+delete_photos:
+  pattern: /photos/deletephotos
+  defaults: { _controller: Controller\Photos::deletePhotos }
+  requirements: { _method: POST }
+
 add_comment_to_photo:
   pattern: /photos/{id}/comments
   defaults: { _controller: Controller\Photos::createComment }
