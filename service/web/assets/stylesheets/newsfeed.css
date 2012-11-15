@@ -12,11 +12,11 @@ ul {
 ul li {
   margin: 5px;
 }
-ul li .photo .row {
+ul li .row {
   clear: both;
   display: block;
 }
-ul li .photo .row .avatar {
+ul li .row .avatar {
   float: left;
   margin-left: 10px;
   margin-right: 5px;
@@ -27,22 +27,22 @@ ul li .photo .row .avatar {
   position: relative;
   z-index: 300;
 }
-ul li .photo .row .name {
+ul li .row .name {
   float: left;
   margin-top: 5px;
 }
-ul li .photo .row .name h4 {
+ul li .row .name h4 {
   padding: 2px;
   margin: 0px;
   font-size: 110%;
 }
-ul li .photo .row .time {
+ul li .row .time {
   float: right;
   margin-right: 10px;
   margin-top: 5px;
   color: #888;
 }
-ul li .photo .row .comment {
+ul li .row .comment {
   clear: both;
   background: #fff;
   border: 1px solid #ccc;
@@ -58,23 +58,12 @@ ul li .photo .row .comment {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-ul li .photo .row .image {
-  top: -50px;
-  position: relative;
-  z-index: 100;
-  width: auto;
-  padding: 5px;
-  border: 1px solid #ccc;
-}
-ul li .photo .row .image img {
-  width: 290px;
-}
-ul li .photo .row .buttons {
+ul li .row .buttons {
   text-align: right;
   padding: 5px;
   padding-top: 0;
 }
-ul li .photo .row .buttons a {
+ul li .row .buttons a {
   width: 70px;
   height: 25px;
   text-decoration: none;
@@ -87,9 +76,23 @@ ul li .photo .row .buttons a {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-ul li .photo .row .buttons .link_like {
+ul li .row .buttons .link_like {
   background: #888;
 }
-ul li .photo .row .buttons .link_comment {
+ul li .row .buttons .link_comment {
   background: #94C11C;
+}
+ul li .activity .row .comment {
+  width: auto;
+}
+ul li .photo .row .image {
+  top: -50px;
+  position: relative;
+  z-index: 100;
+  width: auto;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+ul li .photo .row .image img {
+  width: 290px;
 }
