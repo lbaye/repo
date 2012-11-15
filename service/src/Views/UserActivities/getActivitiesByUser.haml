@@ -35,4 +35,19 @@
                 %a.link_like(href=$likeRef) Like
                 %a.link_comment(href=$commentRef) Comment
 
+        - else
+          .activity
+            .row
+              .avatar
+                %img(src=$photo->getOwner()->getAvatar())
+              .name
+                %h4= $photo->getOwner()->getName()
+              .time
+                11m ago
+
+              .comment
+                = stripcslashes($activity->getTitle())
+
+
+
   
