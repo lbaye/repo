@@ -1788,9 +1788,9 @@ int geoCounter=0;
 
 -(IBAction)closeZoomView:(id)sender
 {
-    [UIView beginAnimations:@"FadeIn" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView commitAnimations];
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     [zoomView removeFromSuperview];
 }
 

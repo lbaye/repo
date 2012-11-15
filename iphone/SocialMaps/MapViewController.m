@@ -43,6 +43,7 @@
 #import "PlaceListViewController.h"
 #import "Place.h"
 #import "DDAnnotation.h"
+#import "NewsFeedViewController.h"
 
 @interface MapViewController ()
 
@@ -1667,7 +1668,9 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotonNewsFeed:(id)sende
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    NewsFeedViewController *controller =[[NewsFeedViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 -(IBAction)gotonDeals:(id)sender

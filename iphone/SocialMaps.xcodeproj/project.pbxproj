@@ -60,6 +60,8 @@
 		20B656D915EF59E100A441E9 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656D715EF59E000A441E9 /* CreateEventViewController.m */; };
 		20B656DC15EF5A3000A441E9 /* ActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */; };
 		20B656DF15EF827C00A441E9 /* EventList.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B656DE15EF827B00A441E9 /* EventList.m */; };
+		20B984BA1654B4EF003C8C10 /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B984B81654B4EF003C8C10 /* NewsFeedViewController.m */; };
+		20B984BB1654B4EF003C8C10 /* NewsFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20B984B91654B4EF003C8C10 /* NewsFeedViewController.xib */; };
 		20BBD9401635115000538777 /* user_thumb_only_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD93F1635115000538777 /* user_thumb_only_gray.png */; };
 		20BBD9471635589200538777 /* icon_beta_badge.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD9461635589200538777 /* icon_beta_badge.png */; };
 		20BBD949163559AB00538777 /* logo_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BBD948163559AB00538777 /* logo_banner.png */; };
@@ -555,6 +557,9 @@
 		20B656DB15EF5A2F00A441E9 /* ActionSheetPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetPicker.m; sourceTree = "<group>"; };
 		20B656DD15EF827A00A441E9 /* EventList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventList.h; sourceTree = "<group>"; };
 		20B656DE15EF827B00A441E9 /* EventList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventList.m; sourceTree = "<group>"; };
+		20B984B71654B4EF003C8C10 /* NewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedViewController.h; sourceTree = "<group>"; };
+		20B984B81654B4EF003C8C10 /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
+		20B984B91654B4EF003C8C10 /* NewsFeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsFeedViewController.xib; sourceTree = "<group>"; };
 		20BBD93F1635115000538777 /* user_thumb_only_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_thumb_only_gray.png; sourceTree = "<group>"; };
 		20BBD9461635589200538777 /* icon_beta_badge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_beta_badge.png; sourceTree = "<group>"; };
 		20BBD948163559AB00538777 /* logo_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_banner.png; sourceTree = "<group>"; };
@@ -1488,6 +1493,9 @@
 				B0D648E515FC4F460006DF0E /* MeetUpRequestController.h */,
 				B0D648E615FC4F460006DF0E /* MeetUpRequestController.m */,
 				B0D648E715FC4F460006DF0E /* MeetUpRequestController.xib */,
+				20B984B71654B4EF003C8C10 /* NewsFeedViewController.h */,
+				20B984B81654B4EF003C8C10 /* NewsFeedViewController.m */,
+				20B984B91654B4EF003C8C10 /* NewsFeedViewController.xib */,
 				B07777CA163E3A0A00969699 /* DirectionViewController.h */,
 				B07777CB163E3A0A00969699 /* DirectionViewController.m */,
 				B07777CC163E3A0A00969699 /* DirectionViewController.xib */,
@@ -2285,6 +2293,7 @@
 				20C5F1711642BC090095A391 /* icon_camera.png in Resources */,
 				20C5F1721642BC090095A391 /* icon_gallery.png in Resources */,
 				B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */,
+				20B984BB1654B4EF003C8C10 /* NewsFeedViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2470,6 +2479,7 @@
 				B08B6C611646A2F900279EDD /* ImageInfo.m in Sources */,
 				B08B6C621646A2F900279EDD /* UIImageView+Cached.m in Sources */,
 				2026D740165228EA00739CAA /* PhotoPickerOriginalImage.m in Sources */,
+				20B984BA1654B4EF003C8C10 /* NewsFeedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -145,7 +145,7 @@ NSMutableArray *selectedScrollIndex;
     [profileImageView.layer setCornerRadius:5.0];
     
     NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,userInfo.authToken];
-    urlStr=@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=e8bc1d84c9042d49856d69cdf5f320528b3330fb";
+    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
@@ -228,6 +228,8 @@ NSMutableArray *selectedScrollIndex;
     newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
+
 }
 
 -(IBAction)geotagButton:(id)sender

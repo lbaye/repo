@@ -544,8 +544,10 @@ CustomRadioButton *radio;
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
             [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
             [name setNumberOfLines:0];
-                        
-            [name setText:[nameArr objectAtIndex:i]];
+            
+            if ([nameArr count]-1>=i) {
+                [name setText:[nameArr objectAtIndex:i]];
+            }
             
             [name setBackgroundColor:[UIColor clearColor]];
             imgView.userInteractionEnabled = YES;           

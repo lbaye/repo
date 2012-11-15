@@ -46,7 +46,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIButton *nameButton;
     IBOutlet UIView *profileView;
     IBOutlet UIScrollView *profileScrollView;
+    IBOutlet UIView *zoomView;
+    IBOutlet UIImageView *fullImageView;
 }
+
+@property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
 @property(nonatomic,retain) IBOutlet UILabel *nameLabl;
@@ -75,6 +79,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UILabel *lastSeenat;
 @property(nonatomic,retain) IBOutlet UIView *profileView;
 @property(nonatomic,retain) IBOutlet UIScrollView *profileScrollView;
+@property(nonatomic,retain) IBOutlet UIView *zoomView;
 
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
@@ -93,5 +98,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)liveatButtonAction:(id)sender;
 -(IBAction)workatButtonAction:(id)sender;
 -(IBAction)nameButtonAction:(id)sender;
+-(IBAction)goToZoomView:(id)sender;
+-(IBAction)closeZoomView:(id)sender;
 
 @end

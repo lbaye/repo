@@ -44,7 +44,7 @@
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
 @synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
-@synthesize profileView,profileScrollView;
+@synthesize profileView,profileScrollView,zoomView,fullImageView;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -134,8 +134,9 @@ NSMutableArray *selectedScrollIndex;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [zoomView removeFromSuperview];
     NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@",WS_URL,smAppDelegate.authToken];
-    urlStr=@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=e8bc1d84c9042d49856d69cdf5f320528b3330fb";
+    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
@@ -264,6 +265,27 @@ NSMutableArray *selectedScrollIndex;
         totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
+-(IBAction)goToZoomView:(id)sender;
+{
+    CGFloat xpos = self.view.frame.origin.x;
+    CGFloat ypos = self.view.frame.origin.y;
+    zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+    [UIView beginAnimations:@"Zoom" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    [UIView commitAnimations];
+    [self.view addSubview:zoomView];
+}
+
+-(IBAction)closeZoomView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [zoomView removeFromSuperview];
+}
+
+
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {
     NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
@@ -342,11 +364,11 @@ NSMutableArray *selectedScrollIndex;
     regStatus.layer.masksToBounds = YES;
     [regStatus.layer setCornerRadius:5.0];
     
-//    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
-//    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
     
-    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
-    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
 
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
@@ -493,9 +515,11 @@ NSMutableArray *selectedScrollIndex;
     if (img2)
     {
         profileImageView.image=img2;
+        fullImageView.image=img2;
     }
     else
     {
+        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
     }
     
@@ -572,6 +596,7 @@ NSMutableArray *selectedScrollIndex;
     newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
     [self reloadProfileScrollView];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
 }
 //lazy scroller
 

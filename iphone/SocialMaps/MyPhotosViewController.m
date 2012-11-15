@@ -110,9 +110,9 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)closeZoomView:(id)sender
 {
-    [UIView beginAnimations:@"FadeIn" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView commitAnimations];
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     [zoomView removeFromSuperview];
 }
 
@@ -345,9 +345,9 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
+//                [imgView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85]];
                 imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
                 for (int c=0; c<[customSelectedFriendsIndex count]; c++)
                 {
