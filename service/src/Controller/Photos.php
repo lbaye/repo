@@ -126,7 +126,7 @@ class Photos extends Base
         $photos = $this->photoRepo->getByPhotoId($this->user, $id);
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
-    
+
     public function getByUserId($id)
     {
         $user = $this->userRepository->find($id);
@@ -143,17 +143,18 @@ class Photos extends Base
         }
     }
 
-    public function update($id){
+    public function update($id)
+    {
 
         $data = $this->request->request->all();
         $photo = $this->photoRepo->find($id);
-        
+
         if (!$photo)
             return $this->_generate404();
 
         if ($photo->getOwner() != $this->user)
             return $this->_generateUnauthorized();
-        
+
 
         $photo = $this->photoRepo->update($data, $id);
         return $this->_generateResponse($photo->toArray(), Status::OK);
@@ -166,7 +167,7 @@ class Photos extends Base
         if (!$photo)
             return $this->_generate404();
 
-        if ($photo->getOwner() != $this->user){
+        if ($photo->getOwner() != $this->user) {
             return $this->_generateUnauthorized();
         }
 
@@ -175,7 +176,34 @@ class Photos extends Base
         } catch (\Exception $e) {
             $this->_generate500($e->getMessage());
         }
-        return $this->_generateResponse(array('message' => 'Deleted Successfully'));
+        return $this->_generateResponse(array('message' => 'Deleted Successfully.'));
+    }
+
+    public function multiDelete()
+    {
+        $postData = $this->request->request->all();
+        if (empty($postData['photoId'])) {
+            $this->response->setContent(json_encode(array('message' => Response::$statusTexts[404])));
+            $this->response->setStatusCode(Status::NOT_FOUND);
+            return $this->response;
+        }
+        foreach ($postData['photoId'] as $photoId) {
+            $photo = $this->photoRepo->find($photoId);
+
+            if (!$photo)
+                return $this->_generate404();
+
+            if ($photo->getOwner() != $this->user) {
+                return $this->_generateUnauthorized();
+            }
+
+            try {
+                $this->photoRepo->delete($photoId);
+            } catch (\Exception $e) {
+                $this->_generate500($e->getMessage());
+            }
+        }
+        return $this->_generateResponse(array('message' => 'Selected Photos Deleted Successfully.'));
     }
 
     /**
@@ -247,7 +275,7 @@ class Photos extends Base
         return $this->response;
     }
 
-     /**
+    /**
      * POST /photos/{id}/comments
      *
      * @param $id
