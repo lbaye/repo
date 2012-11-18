@@ -23,6 +23,7 @@
 #import "PlaceListViewController.h"
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
+#import "NewsFeedViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -470,7 +471,9 @@ PullableView *pullUpView;
 
 -(IBAction)gotonNewsFeed:(id)sende
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    NewsFeedViewController *controller =[[NewsFeedViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];    
 }
 
 -(IBAction)gotonDeals:(id)sender
