@@ -550,7 +550,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     {
         [meetUpButton setEnabled:NO];
     }
-    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@&r=%@",WS_URL,userInfo.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?r=%@",WS_URL,userInfo.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];

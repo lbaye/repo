@@ -140,7 +140,8 @@ int scrollHeight,reloadCounter=0;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
     [zoomView removeFromSuperview];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?t=%@",WS_URL,smAppDelegate.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+
 //    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
 //    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
     NSLog(@"urlStr %@",urlStr);

@@ -54,7 +54,7 @@ UILabel *statusLabel;
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     [smAppDelegate showActivityViewer:self.view];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+     NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
     [self displayNotificationCount];
     [newsFeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];    
