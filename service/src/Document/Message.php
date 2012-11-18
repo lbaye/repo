@@ -253,7 +253,7 @@ class Message
     private function buildSerializableFields()
     {
         $serializableFields = array(
-            'id', 'subject', 'content', 'createDate',
+            'id', 'subject', 'content', 'metaType', 'metaContent', 'createDate',
             'updateDate', 'status', 'readBy'
         );
 
