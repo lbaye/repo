@@ -79,6 +79,8 @@ AppDelegate *smAppdelegate;
     {
         [self reloadScrolview];
     }
+    
+    smAppdelegate.currentModelViewController = self;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -108,9 +110,9 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)closeZoomView:(id)sender
 {
-    [UIView beginAnimations:@"FadeIn" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView commitAnimations];
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     [zoomView removeFromSuperview];
 }
 
@@ -143,11 +145,20 @@ AppDelegate *smAppdelegate;
 
 -(IBAction)deleteSelectedPhotosAction:(id)sender
 {
-    NSLog(@"delete photos"); 
-//    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
-    [smAppdelegate.window setUserInteractionEnabled:NO];
-    [smAppdelegate showActivityViewer:self.view];
-    [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
+    NSLog(@"delete photos");
+    if ([selectedFriendsIndex count]>0) {
+        //    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
+        [smAppdelegate.window setUserInteractionEnabled:NO];
+        [smAppdelegate showActivityViewer:self.view];
+        [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
+    }
+    else if ([filteredList1 count]==0)
+    {
+        [UtilityClass showAlert:@"" :@"You have no photo"];    }
+    else
+    {
+        [UtilityClass showAlert:@"" :@"Please select a photo"];
+    }
 }
 
 -(IBAction)gotoZoomView:(id)sender
@@ -211,23 +222,23 @@ AppDelegate *smAppdelegate;
                 photo=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((photo.imageUrl==NULL)||[photo.imageUrl isEqual:[NSNull null]])
+                if ((photo.photoThum==NULL)||[photo.photoThum isEqual:[NSNull null]])
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
-                else if([dicImages_msg valueForKey:photo.imageUrl]) 
+                else if([dicImages_msg valueForKey:photo.photoThum]) 
                 { 
                     //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
+                    imgView.image = [dicImages_msg valueForKey:photo.photoThum]; 
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil))
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.photoThum]==nil))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.photoThum]; 
+                        [self performSelectorInBackground:@selector(DownLoadThum:) withObject:[NSNumber numberWithInt:i]];  
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
                     else 
@@ -259,6 +270,7 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
@@ -334,8 +346,9 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
+//                [imgView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85]];
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
                 for (int c=0; c<[customSelectedFriendsIndex count]; c++)
                 {
@@ -392,7 +405,7 @@ AppDelegate *smAppdelegate;
         int index = [path intValue];
         Photo *photo=[[Photo alloc] init];
         photo=[filteredList1 objectAtIndex:index];
-        
+        NSLog(@"DL large image called");
         NSString *Link = photo.imageUrl;
         //Start download image from url
         UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
@@ -400,6 +413,30 @@ AppDelegate *smAppdelegate;
         {
             //If download complete, set that image to dictionary
             [dicImages_msg setObject:img forKey:photo.imageUrl];
+            [self reloadScrolview];
+        }
+        // Now, we need to reload scroll view to load downloaded image
+        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
+        //    [pl release];
+    }
+}
+
+-(void)DownLoadThum:(NSNumber *)path
+{
+    if (isBackgroundTaskRunning==true)
+    {
+        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
+        int index = [path intValue];
+        Photo *photo=[[Photo alloc] init];
+        photo=[filteredList1 objectAtIndex:index];
+        
+        NSString *Link = photo.photoThum;
+        //Start download image from url
+        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        if(img)
+        {
+            //If download complete, set that image to dictionary
+            [dicImages_msg setObject:img forKey:photo.photoThum];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image

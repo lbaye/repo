@@ -18,6 +18,9 @@
 @synthesize eventDetail;
 @synthesize viewEventOnMap;
 @synthesize eventImage,yesButton,noButton,maybesButton,footerView;
+@synthesize eventNameScrollView;
+@synthesize eventAddressScrollView;
+
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

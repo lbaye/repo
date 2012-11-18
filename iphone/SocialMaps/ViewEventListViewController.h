@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
 #import "EventImageDownloader.h"
+#import "CustomRadioButton.h"
 
-@interface ViewEventListViewController : UIViewController<EventImageDownloaderDelegate>
+@interface ViewEventListViewController : UIViewController<EventImageDownloaderDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UITableView *eventListTableView;
     IBOutlet UISearchBar *eventSearchBar;

@@ -89,10 +89,12 @@ bool searchFlags=true;
 //    eventListArray=[[self loadDummyData] mutableCopy];
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
-    [smAppDelegate showActivityViewer:self.view];
+    
     [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start.  %@",smAppDelegate);
     [self.eventSearchBar setText:@""];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -111,6 +113,8 @@ bool searchFlags=true;
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     [self.eventListTableView reloadData];
+    
+    [smAppDelegate showActivityViewer:self.view];
 
 }
 
@@ -358,10 +362,11 @@ bool searchFlags=true;
     event = [filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
-    EventListTableCell *cell = (EventListTableCell *)[self.eventListTableView
+    EventListTableCell *cell = (EventListTableCell *)[tableView
                               dequeueReusableCellWithIdentifier:CellIdentifier];
-    EventListRsvpTableCell *cell1= (EventListRsvpTableCell *)[self.eventListTableView
+    EventListRsvpTableCell *cell1= (EventListRsvpTableCell *)[tableView
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
+    NSLog(@"cell %@ cell1 %@",cell, cell );
     if (cell == nil)
     {
         if ((event.isInvited==false)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
@@ -373,13 +378,45 @@ bool searchFlags=true;
             NSLog(@"cell is null");
 
         }
-        else
+    }
+    if (cell1 == nil)
+    {
+        cell1 = [[EventListRsvpTableCell alloc]
+                 initWithStyle:UITableViewCellStyleDefault 
+                 reuseIdentifier:CellIdentifier1];
+            NSLog(@"in create cell1");
+    }
+    
+    CustomRadioButton *radio =(CustomRadioButton *)[cell1.contentView viewWithTag:20001];
+    if (radio==NULL)
+    {
+        NSLog(@"radio null");
+        radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(139, 125, 170, 42) numButtons:3 labels:[NSArray arrayWithObjects:@"Yes",@"No",@"May be",nil]  default:0 sender:self tag:20001];
+        radio.delegate = self;
+        [cell1.contentView addSubview:radio];
+    }
+    if (event.isInvited==false)
+    {
+        [radio removeFromSuperview];
+    }
+    if ((event.isInvited==true)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
+    {
+        if ([event.myResponse isEqualToString:@"yes"]) 
         {
-            cell1 = [[EventListRsvpTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault 
-                     reuseIdentifier:CellIdentifier1];
-           
+            [radio gotoButton:0];
         }
+        else if ([event.myResponse isEqualToString:@"no"])
+        {
+            [radio gotoButton:1];        
+        }
+        else if ([event.myResponse isEqualToString:@"maybe"]) 
+        {
+            [radio gotoButton:2];        
+        }
+    }
+    if([smAppDelegate.userId isEqualToString:event.owner])
+    {
+        [radio setUserInteractionEnabled:NO];
     }
     /*
     cell.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
@@ -399,14 +436,12 @@ bool searchFlags=true;
     [cell1.eventDistance.layer setCornerRadius:3.0f];
     [cell1.eventDetail.layer setCornerRadius:3.0f];*/
     // Configure the cell...
-    cell.eventAddress.text = [NSString stringWithFormat:@"event address"];
-    cell.eventName.text = [NSString stringWithFormat:@"event name"];
     cell.eventDate.text = [NSString stringWithFormat:@"event date"];
 //    cell.eventDetail.text = [NSString stringWithFormat:@"1"];
     cell.eventDistance.text = [NSString stringWithFormat:@"event distance"];
     cell.viewEventOnMap.tag=indexPath.row;
     [cell.viewEventOnMap addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
-    
+    cell1.tag=indexPath.row;
     cell1.yesButton.tag=indexPath.row;
     cell1.noButton.tag=indexPath.row;
     cell1.maybesButton.tag=indexPath.row;
@@ -467,19 +502,36 @@ bool searchFlags=true;
         
 		NSString *cellValue;		
         cellValue=event.eventName;
+        CGSize lblStringSize = [cellValue sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:15.0f]];
+        
+        cell.eventName.frame=CGRectMake(cell.eventName.frame.origin.x, cell.eventName.frame.origin.y, lblStringSize.width, lblStringSize.height);
+        cell1.eventName.frame=CGRectMake(cell1.eventName.frame.origin.x, cell.eventName.frame.origin.y, lblStringSize.width, lblStringSize.height);
+        NSLog(@"lblStringSize %@ %@",NSStringFromCGSize(lblStringSize),NSStringFromCGRect(cell.eventName.frame));
+        cell.eventNameScrollView.contentSize=cell.eventName.frame.size;
+        cell1.eventNameScrollView.contentSize=cell1.eventName.frame.size;
+        
         cell.eventName.text = cellValue;
         cell.eventDetail.text=event.eventShortSummary;
-        cell.eventDate.text=event.eventDate.date;
+        cell.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
+//        cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
+        CGSize lblStringSize1 = [event.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0f]];
+        
+        cell.eventAddress.frame=CGRectMake(cell.eventAddress.frame.origin.x, cell.eventAddress.frame.origin.y, lblStringSize1.width, lblStringSize1.height);
+        cell1.eventAddress.frame=CGRectMake(cell1.eventAddress.frame.origin.x, cell.eventAddress.frame.origin.y, lblStringSize1.width, lblStringSize1.height);       
+        cell.eventAddressScrollView.contentSize=cell.eventAddress.frame.size;
+        cell1.eventAddressScrollView.contentSize=cell1.eventAddress.frame.size;
         cell.eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:event.eventLocation];
         cell1.eventDistance.text = [UtilityClass getDistanceWithFormattingFromLocation:event.eventLocation];
 
         
         cell1.eventName.text = cellValue;
+        cell1.eventName.frame=CGRectMake(cell.eventName.frame.origin.x, cell.eventName.frame.origin.y, lblStringSize.width, lblStringSize.height);
+        cell1.eventNameScrollView.contentSize=cell.eventName.frame.size;
         cell1.eventDetail.text=event.eventShortSummary;
-        cell1.eventDate.text=event.eventDate.date;
+//        cell1.eventDate.text=event.eventDate.date;
+        cell1.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
         cell1.eventAddress.text=event.eventAddress;
-        cell1.eventDistance.text=[NSString stringWithFormat:@"%.2lfm",[event.eventDistance doubleValue]];
 
         
         // Only load cached images; defer new downloads until scrolling ends
@@ -841,6 +893,48 @@ bool searchFlags=true;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
 
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d %d", indx,[[[sender superview] superview] tag]);
+    
+    
+    Event *aEvent=[[Event alloc] init];
+    aEvent=[filteredList objectAtIndex:[[[sender superview] superview] tag]];
+    RestClient *rc=[[RestClient alloc] init];
+    
+    [smAppDelegate hideActivityViewer];
+//    [smAppDelegate.window setUserInteractionEnabled:NO];
+    
+    if ([sender tag] == 20001) 
+    {
+        switch (indx) 
+        {
+            case 2:
+                NSLog(@"may be");
+                aEvent.myResponse=@"maybe";
+                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                NSLog(@"eventID %@",aEvent.eventID);
+                [rc setEventRsvp:aEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            case 1:
+                NSLog(@"no");
+                aEvent.myResponse=@"no";
+                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                NSLog(@"eventID %@",aEvent.eventID);
+                [rc setEventRsvp:aEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            case 0:
+                NSLog(@"yes");
+                aEvent.myResponse=@"yes";
+                [filteredList replaceObjectAtIndex:[[[sender superview] superview] tag] withObject:aEvent];
+                NSLog(@"eventID %@",aEvent.eventID);
+                [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 -(IBAction)backButton:(id)sender

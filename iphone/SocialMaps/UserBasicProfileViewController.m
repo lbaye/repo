@@ -43,7 +43,8 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount,lastSeenat,nameButton;
+@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
+@synthesize profileView,profileScrollView,zoomView,fullImageView;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -52,7 +53,8 @@ NSMutableArray *nameArr;
 BOOL coverImgFlag;
 BOOL isDirty=FALSE;
 NSMutableArray *selectedScrollIndex;
-
+UIImageView *lineView;
+int scrollHeight,reloadCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,7 +80,16 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
-    
+    nameButton.titleLabel.layer.shadowRadius = 5.0f;
+    nameButton.titleLabel.layer.shadowOpacity = .9;
+    nameButton.titleLabel.layer.shadowOffset = CGSizeZero;
+    nameButton.titleLabel.layer.masksToBounds = NO;
+
+    statusMsgLabel.layer.shadowRadius = 5.0f;
+    statusMsgLabel.layer.shadowOpacity = .9;
+    statusMsgLabel.layer.shadowOffset = CGSizeZero;
+    statusMsgLabel.layer.masksToBounds = NO;
+
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
@@ -105,7 +116,21 @@ NSMutableArray *selectedScrollIndex;
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
+    lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
+    lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
+}
+
+-(void)reloadProfileScrollView
+{
+    [profileView removeFromSuperview];
+    [newsfeedView removeFromSuperview];
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+newsfeedView.frame.size.height)];
+    scrollHeight=newsfeedView.frame.size.height;
+    [profileScrollView addSubview:profileView];
+    [profileScrollView addSubview:newsfeedView];
+    [profileView addSubview:lineView];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -114,12 +139,21 @@ NSMutableArray *selectedScrollIndex;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [zoomView removeFromSuperview];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?t=%@",WS_URL,smAppDelegate.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+
+//    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
+//    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
+    NSLog(@"urlStr %@",urlStr);
     
+    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
+    
+    smAppDelegate.currentModelViewController = self;
 
 }
 
@@ -238,6 +272,27 @@ NSMutableArray *selectedScrollIndex;
         totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
+-(IBAction)goToZoomView:(id)sender;
+{
+    CGFloat xpos = self.view.frame.origin.x;
+    CGFloat ypos = self.view.frame.origin.y;
+    zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+    [UIView beginAnimations:@"Zoom" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    [UIView commitAnimations];
+    [self.view addSubview:zoomView];
+}
+
+-(IBAction)closeZoomView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [zoomView removeFromSuperview];
+}
+
+
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {
     NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
@@ -265,6 +320,7 @@ NSMutableArray *selectedScrollIndex;
 
 -(IBAction)backButton:(id)sender
 {
+    NSLog(@"isDirty %i",[[NSNumber numberWithBool:isDirty] intValue]);
     if (isDirty==FALSE) 
     {
         [self dismissModalViewControllerAnimated:YES];
@@ -316,11 +372,11 @@ NSMutableArray *selectedScrollIndex;
     regStatus.layer.masksToBounds = YES;
     [regStatus.layer setCornerRadius:5.0];
     
-//    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
-//    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
     
-    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
-    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
 
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
@@ -467,9 +523,11 @@ NSMutableArray *selectedScrollIndex;
     if (img2)
     {
         profileImageView.image=img2;
+        fullImageView.image=img2;
     }
     else
     {
+        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
     }
     
@@ -510,6 +568,47 @@ NSMutableArray *selectedScrollIndex;
 	return draggablePinView;
 }
 
+- (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
+    NSString *fragment, *scheme;
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [webView stopLoading];
+        fragment = [[request URL] fragment];
+        scheme = [[request URL] scheme];
+        NSLog(@"%@ scheme",[[request URL] absoluteString]);
+        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"1"] count]>0) {
+            // Do custom code
+            NSLog(@"got button %@",scheme);
+            return NO;
+        } 
+        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
+            [self performSelector: NSSelectorFromString(fragment)];
+            return NO;
+        }
+        
+        [[UIApplication sharedApplication] openURL: [request URL]];
+    }
+    
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    reloadCounter=0;
+    CGRect frame = aWebView.frame;
+    frame.size.height = 1;
+    aWebView.frame = frame;
+    CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    aWebView.frame = frame;
+    
+    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    
+    [self reloadProfileScrollView];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
+    [smAppDelegate hideActivityViewer];
+}
 //lazy scroller
 
 -(void) reloadScrolview
@@ -711,6 +810,28 @@ NSMutableArray *selectedScrollIndex;
     isDirty=TRUE;
     userInfo.dateOfBirth=selectedDate;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+    if (scrollView==profileScrollView)
+    {
+        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
+        {
+            reloadCounter++;
+            if (reloadCounter==1) {
+            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
+            [smAppDelegate showActivityViewer:self.view];
+            [newsfeedView reload];
+            }
+        }
+    }
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    isDirty=FALSE;
 }
 
 @end

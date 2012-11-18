@@ -112,7 +112,7 @@ CGFloat animatedDistance;
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:tz]];
     NSDate *convDate = [dateFormatter dateFromString:date];
 
-    NSLog(@"convertDate date=%@:tz_type=%@:tz%@ ---> %@", date, tz_type, tz, [convDate description]);
+//    NSLog(@"convertDate date=%@:tz_type=%@:tz%@ ---> %@", date, tz_type, tz, [convDate description]);
     return convDate;
 }
 

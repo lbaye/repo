@@ -30,6 +30,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *mapContainer;
     IBOutlet UIView *statusContainer;
     IBOutlet UITextField *entityTextField;
+    IBOutlet UIWebView *newsfeedView;
     PhotoPicker *photoPicker;
 
     
@@ -43,7 +44,13 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     int entityFlag;
     IBOutlet UILabel *lastSeenat;
     IBOutlet UIButton *nameButton;
+    IBOutlet UIView *profileView;
+    IBOutlet UIScrollView *profileScrollView;
+    IBOutlet UIView *zoomView;
+    IBOutlet UIImageView *fullImageView;
 }
+
+@property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *coverImageView;
 @property(nonatomic,retain) IBOutlet UIImageView *profileImageView;
 @property(nonatomic,retain) IBOutlet UILabel *nameLabl;
@@ -60,6 +67,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet UIView *statusContainer;
 @property(nonatomic,retain) IBOutlet UITextField *entityTextField;
+@property(nonatomic,retain) IBOutlet UIWebView *newsfeedView;
 
 @property(nonatomic,retain) PhotoPicker *photoPicker;
 @property(nonatomic,retain) UIImage *coverImage;
@@ -69,6 +77,10 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 @property(nonatomic,retain) IBOutlet UILabel *lastSeenat;
+@property(nonatomic,retain) IBOutlet UIView *profileView;
+@property(nonatomic,retain) IBOutlet UIScrollView *profileScrollView;
+@property(nonatomic,retain) IBOutlet UIView *zoomView;
+
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
 -(IBAction)editStatusButton:(id)sender;
@@ -86,5 +98,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)liveatButtonAction:(id)sender;
 -(IBAction)workatButtonAction:(id)sender;
 -(IBAction)nameButtonAction:(id)sender;
+-(IBAction)goToZoomView:(id)sender;
+-(IBAction)closeZoomView:(id)sender;
 
 @end

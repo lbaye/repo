@@ -59,6 +59,8 @@ extern NSString * const NOTIF_GET_PHOTO_FOR_GEOTAG;
 extern NSString * const NOTIF_CREATE_GEOTAG_DONE;
 extern NSString * const NOTIF_GET_ALL_GEOTAG_DONE;
 extern NSString * const NOTIF_GET_PLACES_DONE;
+extern NSString * const NOTIF_DELETE_USER_CIRCLE_DONE;
+extern NSString * const NOTIF_RENAME_USER_CIRCLE_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

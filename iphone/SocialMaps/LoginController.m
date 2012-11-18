@@ -243,7 +243,7 @@
 
 - (void)loginDone:(NSNotification *)notif
 {
-    NSLog(@"In LoginController:loginDone");
+    NSLog(@"In LoginController:loginDone %@",[notif object]);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     
@@ -365,6 +365,8 @@
             [prefs setObject:txtEmail.text forKey:@"email"];
             [prefs setObject:txtPassword.text forKey:@"password"];
             [prefs synchronize];
+            smAppDelegate.email = txtEmail.text;
+            smAppDelegate.password = txtPassword.text;
         }
         RestClient *restClient = [[RestClient alloc] init];
         [restClient login:txtEmail.text password:txtPassword.text];

@@ -398,6 +398,7 @@
             }
             SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:smAppDelegate.friendList circles:circles];
             selFriends.delegate = self;
+            selFriends.tag = 420;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                          green:247.0/255.0 
                                                           blue:247.0/255.0 

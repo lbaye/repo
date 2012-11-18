@@ -11,10 +11,11 @@
 #import "PhotoPicker.h"
 #import <Mapkit/Mapkit.h>
 #import "Geolocation.h"
+#import "CustomRadioButton.h"
 
 @interface CreateEventViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate>
+UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UILabel *createLabel;
     IBOutlet UIButton *createButton;

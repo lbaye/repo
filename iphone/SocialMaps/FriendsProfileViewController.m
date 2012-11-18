@@ -52,6 +52,10 @@
 @synthesize msgView,textViewNewMsg;
 @synthesize frndStatusButton;
 @synthesize addFrndButton,lastSeenat,meetUpButton;
+@synthesize  profileView;
+@synthesize newsfeedView;
+@synthesize profileScrollView;
+@synthesize zoomView,fullImageView;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -60,7 +64,8 @@ NSMutableArray *nameArr;
 BOOL coverImgFlag;
 BOOL isDirtyFrnd=FALSE;
 NSMutableArray *selectedScrollIndex;
-
+UIImageView *lineView;
+int newsFeedscrollHeight,reloadFeedCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -86,6 +91,16 @@ NSMutableArray *selectedScrollIndex;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;
+    
+    nameLabl.layer.shadowRadius = 5.0f;
+    nameLabl.layer.shadowOpacity = .9;
+    nameLabl.layer.shadowOffset = CGSizeZero;
+    nameLabl.layer.masksToBounds = NO;
+    
+    statusMsgLabel.layer.shadowRadius = 5.0f;
+    statusMsgLabel.layer.shadowOpacity = .9;
+    statusMsgLabel.layer.shadowOffset = CGSizeZero;
+    statusMsgLabel.layer.masksToBounds = NO;
     [textViewNewMsg.layer setCornerRadius:8.0f];
     [textViewNewMsg.layer setBorderWidth:0.5];
     [textViewNewMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
@@ -113,6 +128,8 @@ NSMutableArray *selectedScrollIndex;
     
     userItemScrollView.delegate = self;
     dicImages_msg = [[NSMutableDictionary alloc] init];
+    lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
+    lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
 }
 
@@ -123,13 +140,25 @@ NSMutableArray *selectedScrollIndex;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
     [msgView removeFromSuperview];
-    
+    [zoomView removeFromSuperview];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
     
+    smAppDelegate.currentModelViewController = self;
+}
+
+-(void)reloadProfileScrollView
+{
+    [profileView removeFromSuperview];
+    [newsfeedView removeFromSuperview];
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+newsfeedView.frame.size.height)];
+    newsFeedscrollHeight=newsfeedView.frame.size.height;
+    [profileScrollView addSubview:profileView];
+    [profileScrollView addSubview:newsfeedView];
 }
 
 -(IBAction)editCoverButton:(id)sender
@@ -159,6 +188,57 @@ NSMutableArray *selectedScrollIndex;
 -(IBAction)viewOnMapButton:(id)sender
 {
     [self.view addSubview:mapContainer];
+}
+
+-(IBAction)closeZoomView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [zoomView removeFromSuperview];
+}
+
+
+- (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
+    NSString *fragment, *scheme;
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [webView stopLoading];
+        fragment = [[request URL] fragment];
+        scheme = [[request URL] scheme];
+        NSLog(@"%@ scheme",scheme);
+        if ([[[request URL] absoluteString] hasPrefix:@"button://"]) {
+            // Do custom code
+            NSLog(@"got button %@",scheme);
+            return NO;
+        } 
+        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
+            [self performSelector: NSSelectorFromString(fragment)];
+            return NO;
+        }
+        
+        [[UIApplication sharedApplication] openURL: [request URL]];
+    }
+    
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    reloadFeedCounter=0;
+    [smAppDelegate hideActivityViewer];
+    CGRect frame = aWebView.frame;
+    frame.size.height = 1;
+    aWebView.frame = frame;
+    CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    aWebView.frame = frame;
+    
+    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    newsfeedView.frame=CGRectMake(0, profileView.frame.size.height,  fittingSize.width, fittingSize.height);
+    [self reloadProfileScrollView];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
+
 }
 
 -(IBAction)geotagButton:(id)sender
@@ -320,6 +400,18 @@ NSMutableArray *selectedScrollIndex;
     }
 }
 
+-(IBAction)goToZoomView:(id)sender
+{
+    CGFloat xpos = self.view.frame.origin.x;
+    CGFloat ypos = self.view.frame.origin.y;
+    zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+    [UIView beginAnimations:@"Zoom" context:NULL];
+    [UIView setAnimationDuration:0.8];
+    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+    [UIView commitAnimations];
+    [self.view addSubview:zoomView];
+}
+
 - (void)getOtherUserProfileDone:(NSNotification *)notif
 {
     NSLog(@"GOT SERVICE DATA FRIENDS Profile.. :D  %@",[notif object]);
@@ -458,7 +550,10 @@ NSMutableArray *selectedScrollIndex;
     {
         [meetUpButton setEnabled:NO];
     }
-
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?r=%@",WS_URL,userInfo.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSLog(@"urlStr %@",urlStr);
+    
+    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -622,14 +717,33 @@ NSMutableArray *selectedScrollIndex;
     if (img2)
     {
         profileImageView.image=img2;
+        fullImageView.image=img2;
     }
     else
     {
         profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
     }
     
     NSLog(@"image setted after download2. %@",img2);    
     [pl drain];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    //    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+    if (scrollView==profileScrollView)
+    {
+        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+        {
+            reloadFeedCounter++;
+            if (reloadFeedCounter==1) {
+                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+                [smAppDelegate showActivityViewer:self.view];
+                [newsfeedView reload];
+            }
+        }
+    }
 }
 
 //handling map view

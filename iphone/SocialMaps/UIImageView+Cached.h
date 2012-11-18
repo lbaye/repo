@@ -9,6 +9,8 @@
 
 @property (nonatomic, retain) ImageInfo *imageInfo;
 
+- (ImageInfo*)getImageInfo;
+
 -(void)loadFromURL:(NSURL*)url;
 -(void)loadFromURL:(NSURL*)url afterDelay:(float)delay;
 -(void)setImageForUrlIfAvailable:(NSURL *)url;

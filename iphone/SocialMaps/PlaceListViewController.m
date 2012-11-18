@@ -48,6 +48,13 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    smAppDelegate.currentModelViewController = self;
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_PLACES_DONE object:nil];

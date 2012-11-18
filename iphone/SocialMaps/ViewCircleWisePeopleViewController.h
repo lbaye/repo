@@ -20,8 +20,10 @@
     IBOutlet UITextField *circleNameTextField;
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
-
     IBOutlet UILabel *labelNotifCount;
+    
+    IBOutlet UIView *renameUIView;
+    IBOutlet UITextField *renameTextField;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *circleTableView;
@@ -35,6 +37,9 @@
 @property (nonatomic,retain)  IBOutlet UIView *msgView;
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
 
+@property(nonatomic,retain) IBOutlet UIView *renameUIView;
+@property(nonatomic,retain) IBOutlet UITextField *renameTextField;
+
 -(IBAction)sendMsg:(id)sender;
 -(IBAction)cancelMsg:(id)sender;
 
@@ -42,5 +47,8 @@
 -(IBAction)okAction:(id)sender;
 -(IBAction)cancelAction:(id)sender;
 - (IBAction)actionNotificationButton:(id)sender;
+
+-(IBAction)saveRenameCircle:(id)sender;
+-(IBAction)cancelRenameCircle:(id)sender;
 
 @end

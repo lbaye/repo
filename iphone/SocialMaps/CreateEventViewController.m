@@ -61,6 +61,8 @@ bool searchFlag;
 __strong int checkCount;
 __strong NSString *searchTexts, *dateString;
 int locationFlag=0;
+CustomRadioButton *radio;
+CustomRadioButton *radio1;
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -77,7 +79,7 @@ int createNotf=0;
 int updateNotf=0;
 NSMutableArray*   neearMeAddressArr, *selectedCircleCheckArr, *selectedCustomCircleCheckArr;
 NSMutableArray *permittedUserArr, *permittedCircleArr, *userCircleArr;
-NSMutableArray *guestListIdArr;
+NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -232,6 +234,8 @@ NSMutableArray *guestListIdArr;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     event=[[Event alloc] init];
     neearMeAddressArr=[[NSMutableArray alloc] init];
+    myPlaceArr=[[NSMutableArray alloc] init];
+    placeNameArr=[[NSMutableArray alloc] init];
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
@@ -270,7 +274,16 @@ NSMutableArray *guestListIdArr;
 	[self.mapView addAnnotation:annotation];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];    
+
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 45, 300, 47) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circle",@"Public",@"Custom",nil]  default:0 sender:self tag:20001];
+    radio.delegate = self;
+    [lowerView addSubview:radio];
     
+    radio1 = [[CustomRadioButton alloc] initWithFrame:CGRectMake(11, 69, 297, 49) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:20002];
+    radio1.delegate = self;
+    [upperView addSubview:radio1];
+    RestClient *rc = [[RestClient alloc] init];
+    [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEventDone:) name:NOTIF_UPDATE_EVENT_DONE object:nil];
@@ -356,12 +369,17 @@ NSMutableArray *guestListIdArr;
     else if (editFlag==TRUE)
     {
         addressLabel.text=event.eventAddress;
-        [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
+        [annotation setCoordinate:(CLLocationCoordinate2DMake([event.eventLocation.latitude doubleValue], [event.eventLocation.longitude doubleValue]))];
+        [radio1 gotoButton:3];
     }
     else
     {
         [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    
+
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -431,6 +449,7 @@ NSMutableArray *guestListIdArr;
 	[super viewWillDisappear:animated];
 	isBackgroundTaskRunning=false;
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
     editFlag=false;
@@ -441,6 +460,100 @@ NSMutableArray *guestListIdArr;
 //    [self viewDidUnload];
 }
 
+-(void)myPlacesWasSelected:(NSNumber *)selectedIndex:(id)element
+{
+    int selectedLocation= [selectedIndex intValue];
+    NSLog(@"sel ind %d %@",[selectedIndex intValue],[myPlaceArr objectAtIndex:selectedLocation]);
+    Places *place=[myPlaceArr objectAtIndex:selectedLocation];
+    addressLabel.text=place.name;
+    event.eventAddress=place.name;
+    event.eventLocation.latitude=place.location.latitude;
+    event.eventLocation.longitude=place.location.longitude;
+}
+
+- (void)getMyPlaces:(NSNotification *)notif
+{
+    myPlaceArr=[notif object];
+    for (int i=0; i<[myPlaceArr count]; i++)
+    {
+        Places *place=[myPlaceArr objectAtIndex:i];
+        [placeNameArr addObject:place.name];
+    }
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
+    
+    [smAppDelegate hideActivityViewer];
+    //    [smAppDelegate.window setUserInteractionEnabled:NO];
+    
+    if ([sender tag] == 20001) 
+    {
+        switch (indx) 
+        {
+            case 4:
+                NSLog(@"custom");
+                event.permission=@"custom";
+                break;
+            case 3:
+                NSLog(@"public");
+                event.permission=@"public";
+                break;
+            case 2:
+                NSLog(@"circles");
+                event.permission=@"circles";
+                break;
+            case 1:
+                NSLog(@"friends");
+                event.permission=@"friends";
+                break;
+            case 0:
+                NSLog(@"private");
+                event.permission=@"private";
+                break;
+            default:
+                break;
+        }
+    }
+    if ([sender tag] == 20002) 
+    {
+        switch (indx) 
+        {
+            case 3:
+                NSLog(@"point on map");
+                [self.view addSubview:mapContainerView];
+                break;
+            case 2:
+                NSLog(@"near me location");
+                if (isFromVenue==TRUE) 
+                {
+                    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:[self eventFromVenue] target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+                }
+                else {
+                    [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Near Me Location"];
+                }
+                NSLog(@"neearMeAddressArr: %@",neearMeAddressArr);
+                break;
+            case 1:
+                NSLog(@"my places");
+                if ([placeNameArr count]==0)
+                {
+                    [UtilityClass showAlert:@"Social Maps" :@"You have no saved places."];
+                }
+                else
+                {
+                    [ActionSheetPicker displayActionPickerWithView:sender data:placeNameArr selectedIndex:0 target:self action:@selector(myPlacesWasSelected::) title:@"My places"];
+                }
+                break;
+            case 0:
+                NSLog(@"POM");
+                [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {

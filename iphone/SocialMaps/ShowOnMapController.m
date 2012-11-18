@@ -11,6 +11,7 @@
 #import "DDAnnotation.h"
 #import "LocationItem.h"
 #import "UtilityClass.h"
+#import "AppDelegate.h"
 
 @implementation ShowOnMapController
 @synthesize mapViewLoacation;
@@ -47,12 +48,14 @@
     annotation.title = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
-/*- (void)viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate.currentModelViewController = self;
 }
-
+/*
 - (void)setAddressLabelFromLatLon 
 {
     labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];

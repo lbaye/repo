@@ -325,7 +325,7 @@ LocationItem *locationItem;
     NSLog(@"MapAnnotationEvent: performUserAction, tag=%d", tag);
     
     switch (tag) {
-        case 11003:
+        case 110003:
             actionType = MapAnnoUserActionEvent;
             break;
         case 11004:

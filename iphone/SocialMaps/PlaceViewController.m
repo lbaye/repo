@@ -138,6 +138,14 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate.currentModelViewController = self;
+}
+
 -(void) displayNotificationCount 
 {
     int totalNotif= [UtilityClass getNotificationCount];

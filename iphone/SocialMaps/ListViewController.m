@@ -23,6 +23,7 @@
 #import "PlaceListViewController.h"
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
+#import "NewsFeedViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -105,7 +106,7 @@ PullableView *pullUpView;
     
     CGSize labelSize = CGSizeMake(70, 20); 
     UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
-    labelRefresh.text = @"Refresh...";
+    labelRefresh.text = @"Reloading...";
     labelRefresh.textAlignment = UITextAlignmentCenter;
     labelRefresh.textColor = [UIColor whiteColor];
     [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
@@ -124,6 +125,8 @@ PullableView *pullUpView;
     [super viewDidAppear:animated];
     
     [self loadImagesForOnscreenRows];
+    
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void) viewDidDisappear:(BOOL)animated
@@ -468,7 +471,9 @@ PullableView *pullUpView;
 
 -(IBAction)gotonNewsFeed:(id)sende
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    NewsFeedViewController *controller =[[NewsFeedViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];    
 }
 
 -(IBAction)gotonDeals:(id)sender

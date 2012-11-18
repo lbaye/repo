@@ -48,7 +48,7 @@
     if ([[payload objectForKey:@"aps"] objectForKey:@"badge"] != [NSNull null])
         newNotif.badgeCount = [[[payload objectForKey:@"aps"] objectForKey:@"badge"] intValue];
     NSString *type = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectType"];
-    
+    NSLog(@"type = %@", type);
     // Keep provision for comma separated list
     NSString *objectIds = [[[payload objectForKey:@"aps"] objectForKey:@"custom_data"] objectForKey:@"objectId"];
     NSArray *users = nil;
@@ -62,8 +62,20 @@
     if ([type caseInsensitiveCompare:@"proximity_alert"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationProximityAlert;
         newNotif.objectIds = [NSArray arrayWithArray:users];
-    } else {
+    } else if ([type caseInsensitiveCompare:@"new_message"] == NSOrderedSame || [type caseInsensitiveCompare:@"reply_message"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationMessage;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else if ([type caseInsensitiveCompare:@"meetup"] == NSOrderedSame) {
+        newNotif.notifType = PushNotificationMeetupRequest;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else if ([type caseInsensitiveCompare:@"event_guest"] == NSOrderedSame) {
+        newNotif.notifType = PushNotificationEventInvite;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else if ([type caseInsensitiveCompare:@"friend_request"] == NSOrderedSame) {
+        newNotif.notifType = PushNotificationFriendRequest;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else {
+        newNotif.notifType = PushNotificationShareBreadcrumb;
     }
     NSLog(@"parsePayload - Push notification: alert=%@,badge=%d,ids=%@",newNotif.message, newNotif.badgeCount, newNotif.objectIds);
     return newNotif;

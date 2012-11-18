@@ -43,6 +43,8 @@
 #import "PlaceListViewController.h"
 #import "Place.h"
 #import "DDAnnotation.h"
+#import "NewsFeedViewController.h"
+#import "RecommendViewController.h"
 
 @interface MapViewController ()
 
@@ -456,6 +458,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) viewEventDetail:(id <MKAnnotation>)anno {
+    NSLog(@"event detail action");
      LocationItem *locationItem = (LocationItem*) anno;
      Event *aEvent=[[Event alloc] init];
      int i= [smAppDelegate.eventList indexOfObject:locationItem];
@@ -617,8 +620,22 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void)recommendSelected:(id <MKAnnotation>)anno
-{
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+{  
+    RecommendViewController *controller = [[RecommendViewController alloc] initWithNibName:@"RecommendViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    LocationItemPlace *locItemPlace = (LocationItemPlace*)anno;
+    Place *place = [[Place alloc] init];
+    place.placeID = locItemPlace.placeInfo.ID;
+    place.name = locItemPlace.itemName;
+    place.address = locItemPlace.itemAddress;
+    place.latitude = locItemPlace.coordinate.latitude;
+    place.longitude = locItemPlace.coordinate.longitude;
+    place.category = locItemPlace.itemCategory;
+    [self presentModalViewController:controller animated:YES];
+    [controller setSelectedPlace:place];
+    [place release];
+    [controller release];
+    
 }
 - (void)reviewSelected:(id <MKAnnotation>)anno
 {
@@ -1160,6 +1177,7 @@ ButtonClickCallbackData callBackData;
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
    //[self initPullView];
+    smAppDelegate.currentModelViewController = self;
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -1282,7 +1300,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
-    NSLog(@"in dealloc");
+    NSLog(@"Deallocating MapViewController");
+    NSLog(@"MapView retain count - %d", [_mapView retainCount]);
     [radio release];
     
     if (timerGotListing) {
@@ -1291,9 +1310,8 @@ ButtonClickCallbackData callBackData;
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
-    
+
     [copySearchAnnotationList release];
-    [_mapView release];
     [_mapPulldown release];
     [_shareAllButton release];
     [_shareFriendsButton release];
@@ -1315,8 +1333,7 @@ ButtonClickCallbackData callBackData;
     [viewNotification release];
     [viewSearch release];
     [searchBar release];
-    [viewSharingPrefMapPullDown release];
-    
+    [_mapView release]; _mapView = nil;
     [super dealloc];
 }
 
@@ -1479,7 +1496,7 @@ ButtonClickCallbackData callBackData;
     ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-    [smAppDelegate showActivityViewer:self.view];
+    //[smAppDelegate showActivityViewer:self.view];
 }
 
 -(void)getAllEvents
@@ -1666,7 +1683,9 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotonNewsFeed:(id)sende
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    NewsFeedViewController *controller =[[NewsFeedViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 -(IBAction)gotonDeals:(id)sender
@@ -2013,6 +2032,7 @@ ButtonClickCallbackData callBackData;
                     }
                 }
             }
+
         }  
         if (listings.placeArr != nil) {
             NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
@@ -2313,6 +2333,15 @@ ButtonClickCallbackData callBackData;
                 }
             }
         }
+    }
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar 
+{
+    if ([theSearchBar isEqual:searchBar]) {
+        [self searchAnnotations];
+        [searchBar resignFirstResponder];
+        return;
     }
 }
 

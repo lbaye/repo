@@ -62,6 +62,7 @@ NSString *searchText;
     [self loadDummydata];    
     [self reloadScrollview];
     [customView removeFromSuperview];
+    smAppDelegate.currentModelViewController = self;
 }
 
 - (void)viewDidLoad
@@ -111,7 +112,7 @@ NSString *searchText;
         NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
     }
     
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    self.photoPicker = [[[PhotoPickerOriginalImage alloc] init] autorelease];
     self.photoPicker.delegate = self;
     self.picSel = [[UIImagePickerController alloc] init];
 	self.picSel.allowsEditing = YES;
@@ -165,17 +166,17 @@ NSString *searchText;
         [msg appendString:@" address,"];
     }
     
-    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
-    {
-        if (msg.length==13)
-        {
-            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
-        }
-        else
-        {
-            [msg appendString:@" comments"];
-        }
-    }
+//    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
+//    {
+//        if (msg.length==13)
+//        {
+//            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
+//        }
+//        else
+//        {
+//            [msg appendString:@" comments"];
+//        }
+//    }
 
     for (int i=0; i<[selectedFriends count]; i++)
     {
@@ -196,7 +197,6 @@ NSString *searchText;
         [UtilityClass showAlert:@"Social Maps" :msg];
     }
     else {
-        NSLog(@"upload photo %@ %@ %@ %@",photo.title,photo.description,photo.comment,photo.image);
         [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];
@@ -298,7 +298,7 @@ NSString *searchText;
 
 - (void) photoPickerDone:(bool)status image:(UIImage*)img
 {
-    NSLog(@"PersonalInformation:photoPickerDone, status=%d", status);
+    NSLog(@"PersonalInformation:photoPickerDone, status=%d  %@", status,img);
     if (status == TRUE) 
     {
         [photoImageView setImage:img];
