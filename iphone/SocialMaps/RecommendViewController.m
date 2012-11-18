@@ -49,6 +49,14 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
 }
 
+- (void)viewWillAppear:(BOOL)animated 
+{
+    [super viewWillAppear:animated];
+    
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    smAppDelegate.currentModelViewController = self;
+}
+
 - (void)initScrollView:(NSMutableArray*)friendList
 {
     for (UIView* view in [scrollViewFriends subviews]) { 

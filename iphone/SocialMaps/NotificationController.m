@@ -145,6 +145,9 @@ NSMutableArray *unreadMesg;
         msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
     
     smAppDelegate.currentModelViewController = self;
+    
+    if (self.selectedType == Request)
+        [self showFriendRequests:nil];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
