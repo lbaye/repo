@@ -20,6 +20,7 @@
 @synthesize newsFeedView,totalNotifCount,newsFeedScroller;
 AppDelegate *smAppDelegate;
 int newsFeedscrollHeight, reloadNewsFeedCounter=0;
+UILabel *statusLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,6 +34,12 @@ int newsFeedscrollHeight, reloadNewsFeedCounter=0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    newsFeedView.scrollView.delegate=self;
+//    statusLabel=[[UILabel alloc] initWithFrame:CGRectMake(120, -30, 80, 15)];
+//    statusLabel.backgroundColor=[UIColor clearColor];
+//    statusLabel.text=@"refresh...";
+//    statusLabel.textColor=[UIColor darkGrayColor];
+//    [newsFeedScroller addSubview:statusLabel];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -100,7 +107,7 @@ int newsFeedscrollHeight, reloadNewsFeedCounter=0;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-//        NSLog(@"did scroll %f",scrollView.contentOffset.y);
+//    NSLog(@"did scroll %f",newsFeedView.scrollView.contentOffset.y);
     if (scrollView==newsFeedScroller)
     {
         if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
@@ -113,6 +120,19 @@ int newsFeedscrollHeight, reloadNewsFeedCounter=0;
             }
         }
     }
+    else if (scrollView==newsFeedView.scrollView)
+    {
+        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+        {
+            reloadNewsFeedCounter++;
+            if (reloadNewsFeedCounter==1) {
+                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+                [smAppDelegate showActivityViewer:self.view];
+                [newsFeedView reload];
+            }
+        }
+    }
+    
 }
 
 -(IBAction)backButton:(id)sender

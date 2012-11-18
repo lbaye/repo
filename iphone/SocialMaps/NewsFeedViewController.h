@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NewsFeedViewController : UIViewController
+@interface NewsFeedViewController : UIViewController<UIScrollViewDelegate>
 {
     IBOutlet UIWebView *newsFeedView;
     IBOutlet UILabel *totalNotifCount;
