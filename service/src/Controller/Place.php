@@ -321,10 +321,32 @@ class Place extends Base
             $this->_initRepository($type);
             $place = $this->LocationMarkRepository->find($id);
             $postData = $this->request->request->all();
+            if (empty($postData['recipients'])) {
+                $this->response->setContent(json_encode(array('message' => "Recipient is empty.")));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
 
             if ($recommendType == "venue") {
                 $metaType = "venue";
                 $staticMsg = appMessage::RECOMMEND_VENUE_MESSAGE;
+                if (empty($postData['metaTitle']) OR empty($postData['metaContent'])) {
+                    $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
+                    $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                    return $this->response;
+                }
+
+                if (empty($postData['subject'])) {
+                    $postData['subject'] = $postData['metaTitle'];
+                }
+
+                if (empty($postData['content'])) {
+                    $postData['content'] = $this->_createPushMessage($postData['subject'], $staticMsg);
+                }
+
+                if (!empty($postData['metaContent']['note'])) {
+                    $postData['content'] .= ". " . $postData['metaContent']['note'];
+                }
             } elseif ($recommendType == "place") {
                 $metaType = "place";
                 $staticMsg = appMessage::RECOMMEND_PLACE_MESSAGE;
@@ -340,26 +362,15 @@ class Place extends Base
                 return $this->response;
             }
 
-            if (empty($postData['recipients']) OR empty($postData['metaTitle']) OR empty($postData['metaContent'])) {
-                $this->response->setContent(json_encode(array('message' => "Required field is empty.")));
-                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
-                return $this->response;
-            }
-            if (empty($postData['subject'])) {
-                $postData['subject'] = $postData['metaTitle'];
-            }
-
-            if (empty($postData['content'])) {
-                $postData['content'] = $this->_createPushMessage($postData['subject'], $staticMsg);
-            }
-
-            if (!empty($postData['metaContent']['content'])) {
-                $postData['content'] .= ". " . $postData['metaContent']['content'];
-            }
-
             $recipients = $postData['recipients'];
             if (!empty($place)) {
                 $createMetaData = array("id" => $place->getId(), "category" => $place->getCategory(), "title" => $place->getTitle(), "address" => $place->getLocation()->toArray());
+                $postData['subject'] = $place->getTitle();
+                $postData['content'] = $this->_createPushMessage($postData['subject'], $staticMsg);
+
+                if (!empty($postData['metaContent']['note'])) {
+                    $postData['content'] .= ". " . $postData['metaContent']['note'];
+                }
             } else {
                 $createMetaData = array("id" => $id, "content" => $postData['metaContent']);
             }
