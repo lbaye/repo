@@ -28,11 +28,10 @@ class UserActivities extends Base {
         $this->geotagRepository = $this->dm->getRepository('Document\Geotag');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
-
-        $this->_ensureLoggedIn();
     }
 
     public function getActivities($type) {
+        $this->_ensureLoggedIn();
         return $this->getActivitiesByUser($this->user, $type);
     }
 
@@ -61,7 +60,8 @@ class UserActivities extends Base {
                         'activities' => $activities,
                         'userRepo' => $this->userRepository,
                         'photoRepo' => $this->photoRepository,
-                        'geotagRepo' => $this->geotagRepository
+                        'geotagRepo' => $this->geotagRepository,
+                        'currentUser' => $user
                     ));
             }
         }
