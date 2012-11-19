@@ -451,6 +451,7 @@
 		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
+		B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */ = {isa = PBXBuildFile; fileRef = B04EFA3016591358002C2D6B /* EachFriendInList.m */; };
 		B07777CE163E3A0A00969699 /* DirectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07777CC163E3A0A00969699 /* DirectionViewController.xib */; };
 		B07777D4163E6D9900969699 /* transport1.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D0163E6D9800969699 /* transport1.png */; };
 		B07777D5163E6D9900969699 /* transport2.png in Resources */ = {isa = PBXBuildFile; fileRef = B07777D1163E6D9800969699 /* transport2.png */; };
@@ -1116,6 +1117,8 @@
 		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		B032F99A162C52C0002AFCDB /* icon_48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_48x48.png; path = Images/icon_48x48.png; sourceTree = SOURCE_ROOT; };
 		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
+		B04EFA2F16591358002C2D6B /* EachFriendInList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EachFriendInList.h; sourceTree = "<group>"; };
+		B04EFA3016591358002C2D6B /* EachFriendInList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EachFriendInList.m; sourceTree = "<group>"; };
 		B07777CA163E3A0A00969699 /* DirectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionViewController.h; sourceTree = "<group>"; };
 		B07777CB163E3A0A00969699 /* DirectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionViewController.m; sourceTree = "<group>"; };
 		B07777CC163E3A0A00969699 /* DirectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectionViewController.xib; sourceTree = "<group>"; };
@@ -1360,6 +1363,8 @@
 				B08B6C5D1646A2F800279EDD /* ImageInfo.m */,
 				B08B6C5E1646A2F900279EDD /* UIImageView+Cached.h */,
 				B08B6C5F1646A2F900279EDD /* UIImageView+Cached.m */,
+				B04EFA2F16591358002C2D6B /* EachFriendInList.h */,
+				B04EFA3016591358002C2D6B /* EachFriendInList.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -2514,6 +2519,7 @@
 				B0B73C1A1654BBB300DDF6E5 /* RecommendViewController.m in Sources */,
 				B0B73C1F1654F38100DDF6E5 /* UITextView+Rounded.m in Sources */,
 				B0B73C221654F5CE00DDF6E5 /* UITextView+PlaceHolder.m in Sources */,
+				B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

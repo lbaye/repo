@@ -23,6 +23,7 @@
 #import "PlaceListViewController.h"
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
+#import "FriendListViewController.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -465,7 +466,10 @@ PullableView *pullUpView;
 
 -(IBAction)gotoFriends:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release]; 
 }
 
 -(IBAction)gotonNewsFeed:(id)sende

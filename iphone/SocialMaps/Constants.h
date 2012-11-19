@@ -61,6 +61,7 @@ extern NSString * const NOTIF_GET_ALL_GEOTAG_DONE;
 extern NSString * const NOTIF_GET_PLACES_DONE;
 extern NSString * const NOTIF_DELETE_USER_CIRCLE_DONE;
 extern NSString * const NOTIF_RENAME_USER_CIRCLE_DONE;
+extern NSString * const NOTIF_GET_FRIEND_LIST_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;
