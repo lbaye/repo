@@ -8,12 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum _FILTER_BY {
+    AtoZ = 0,
+    Distance,
+    Circle
+} FILTER_BY;
+
+@class EachFriendInList;
+
 @interface FriendListViewController : UIViewController {
     
     IBOutlet UIScrollView *scrollViewFriendList;
-    NSMutableArray *friendList;
+    IBOutlet UISearchBar  *searchBarFriendList;
+    
+    NSMutableArray *eachFriendList;
+    NSMutableArray *circleList;
+    NSMutableArray *filteredList;
     
 }
+
 - (IBAction)actionBackMe:(id)sender;
 
 @end

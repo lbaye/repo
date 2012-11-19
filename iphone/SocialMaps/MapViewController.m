@@ -45,6 +45,7 @@
 #import "DDAnnotation.h"
 #import "NewsFeedViewController.h"
 #import "RecommendViewController.h"
+#import "FriendListViewController.h"
 
 @interface MapViewController ()
 
@@ -1678,7 +1679,10 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoFriends:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];   
 }
 
 -(IBAction)gotonNewsFeed:(id)sende

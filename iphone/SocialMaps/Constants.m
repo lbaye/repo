@@ -76,6 +76,8 @@ NSString * const NOTIF_GET_ALL_GEOTAG_DONE=@"com.genweb2.socialmaps.getallgeotag
 NSString * const NOTIF_GET_PLACES_DONE= @"com.genweb2.socialmaps.getplacesdone";
 NSString * const NOTIF_DELETE_USER_CIRCLE_DONE= @"com.genweb2.socialmaps.deleteusercircledone";
 NSString * const NOTIF_RENAME_USER_CIRCLE_DONE= @"com.genweb2.socialmaps.renameeusercircledone";
+NSString * const NOTIF_GET_FRIEND_LIST_DONE= @"com.genweb2.socialmaps.getfriendslistdone";
+
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
 //NSString * const FB_APPID = @"474672942546031";  // SMTest2

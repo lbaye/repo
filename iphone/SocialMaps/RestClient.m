@@ -31,6 +31,7 @@
 #import "MeetUpRequest.h"
 #import "AppDelegate.h"
 #import "Place.h"
+#import "EachFriendInList.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -6746,6 +6747,78 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/friends", WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
+            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
+            
+            NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
+            
+            for (NSDictionary *dicFriends in friendList) {
+                NSLog(@"friendDic = %@", dicFriends);
+                
+                EachFriendInList *eachFriend = [[EachFriendInList alloc] init];
+                
+                eachFriend.friendId = [dicFriends objectForKey:@"id"];
+                eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
+                eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
+                eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
+                
+                for (NSDictionary *dicCircle in circleList) {
+                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
+                    if ([frndIdList containsObject:eachFriend.friendId]) {
+                        if (!eachFriend.friendCircle) 
+                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
+                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
+                    }
+                }
+                
+                [eachFriendsList addObject:eachFriend];
+            }
+                 
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getFriendList");
     [request startAsynchronous];
 }
 

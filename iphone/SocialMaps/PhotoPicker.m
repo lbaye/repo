@@ -151,6 +151,7 @@
 }
 
 - (UIImage*) scaleImage:(UIImage*) img toSize:(CGSize)newSize {
+    newSize = img.size;
     UIGraphicsBeginImageContext(newSize);
     [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
     UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
