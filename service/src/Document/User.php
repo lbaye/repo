@@ -952,7 +952,6 @@ class User {
         return $this->pushSettings;
     }
 
-
     /*********************************************
      * Additional wrapper/helper function
      ********************************************/
@@ -967,6 +966,14 @@ class User {
         } else {
             return 'none';
         }
+    }
+
+    public function isFriend(\Document\User $stranger) {
+        $friends = $this->getFriends();
+        if (!empty($friends))
+            return in_array($stranger->getId(), $friends);
+        else
+            return false;
     }
 
     /**
@@ -997,19 +1004,23 @@ class User {
         $this->blockedUsers = $user;
     }
 
-    public function isVisibleTo($app_user) {
+    public function isVisibleTo(\Document\User $app_user) {
         $settings = $this->getLocationSettings();
 
         // Check whether location sharing is turned on or off
         if (@strtolower($settings[self::PREF_FIELD_STATUS]) == self::STATUS_OFF)
             return false;
 
+        // Check Location sharing type
+        if (!$this->isSharedLocation($app_user))
+            return false;
+
         // Ensure user is not in within_restricted_fench?
-        if ($this->insideGeoFence($settings))
+        if ($this->insideGeoFence($app_user, $settings))
             return false;
 
         //type_of_relationship = determine_relationship_between target_user, app_user
-        $stranger = $this->isStranger($app_user);
+        $stranger = !$this->isFriend($app_user);
 
         //
         //if type_of_relationship == "stranger"
@@ -1030,17 +1041,46 @@ class User {
         return true;
     }
 
-    private function insideGeoFence($settings) {
+    private function isSharedLocation(\Document\User $appUser) {
+        $sharingType = (int) $this->getShareLocation();
+
+        switch ($sharingType) {
+            case \Helper\ShareConstant::SHARING_FRIENDS:
+                return $this->isFriend($appUser);
+
+            case \Helper\ShareConstant::SHARING_NO_ONE:
+                return false;
+
+            case \Helper\ShareConstant::SHARING_CUSTOM:
+                return $this->isCustomSettingAllows($appUser);
+
+            # TODO: Implement circles
+
+            default:
+                return true;
+        }
+    }
+
+    private function isCustomSettingAllows($appUser) {
+        # TODO: implement rules based on custom settings
+        return true;
+    }
+
+    private function insideGeoFence(\Document\User $appUser, $settings) {
         $geo_fences = @$settings[self::PREF_FIELD_GEO_FENCES];
 
         if (!empty($geo_fences)) {
             foreach ($geo_fences as $geo_fence) {
                 $radius = $geo_fence['radius'];
-                $distance = $this->checkDistance($this->getCurrentLocation(), $geo_fence);
+                if (empty($radius)) $radius = 0;
 
-                if ($distance < (float)($radius)) {
+                $restrictedDistanceInKm = ((float) $radius) * 1000;
+
+                // Convert distance from meter to kilo meter
+                $actualDistanceInKm = $this->checkDistance($appUser->getCurrentLocation(), $geo_fence) / 1000;
+
+                if ($actualDistanceInKm < $restrictedDistanceInKm)
                     return true;
-                }
             }
         }
 
@@ -1056,16 +1096,6 @@ class User {
         $target_lng = $current_location['lng'];
 
         return \Helper\Location::distance($lat, $lng, $target_lat, $target_lng);
-    }
-
-    private function isStranger($app_user) {
-        $friend_ids = @$this->getFriends();
-        if (!empty($friend_ids)) {
-            if (!in_array($app_user->getId(), $friend_ids))
-                return false;
-        }
-
-        return true;
     }
 
     public function setPlatformSharing(array $platforms)

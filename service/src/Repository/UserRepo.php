@@ -867,7 +867,9 @@ class UserRepo extends Base
         return array();
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20,$key=null) {
+    public function searchWithPrivacyPreference(
+        $keyword = null, $location = array(), $limit = 20,$key=null) {
+
         $people_around = $this->search($keyword, $location, $limit, $key);
         $visible_people = array();
 
