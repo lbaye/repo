@@ -89,8 +89,8 @@ class SendPushNotification extends Base
 
         #$countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
 
-        $notificationHash['badge'] = 0;
-        $notificationHash['tabCounts'] = "0:0"; #$notifications_friendrequest.":" . $message;
+    //    $notificationHash['badge'] = 0;
+    //    $notificationHash['tabCounts'] = "0:0"; #$notifications_friendrequest.":" . $message;
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 
