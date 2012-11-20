@@ -891,6 +891,8 @@ class User {
                 return $circle->getFriends();
             }
         }
+
+        return array();
     }
 
     public function getCircleFriends(array $inCircles = null) {
