@@ -1125,7 +1125,7 @@ class UserRepo extends Base
 
         return array(
            "badge" => $pending_friend_request_count + $unread_message_count,
-           "tabCounts" => "{$pending_friend_request_count}|{$unread_message_count}|0"
+           "tabCounts" => "{$unread_message_count}|{$pending_friend_request_count}|0"
         );
     }
 }
