@@ -50,7 +50,12 @@ list:
 
 friends:
   pattern: /me/friends
-  defaults: { _controller: Controller\User::getFriendList}
+  defaults: { _controller: Controller\User::getFriends}
+  requirements: { _method: GET}
+
+friends_of_friend:
+  pattern: /{id}/friends
+  defaults: { _controller: Controller\User::getFriends}
   requirements: { _method: GET}
 
 
