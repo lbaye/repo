@@ -16,11 +16,15 @@
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
 #import "FriendsProfileViewController.h"
+#import "NotificationController.h"
+#import "UtilityClass.h"
 
 #define     IMAGE_THUMB_WIDTH       65
 #define     IMAGE_THUMB_HEIGHT      65
 
 @implementation FriendListViewController
+
+@synthesize userId;
 
 - (void)viewDidLoad
 {
@@ -28,26 +32,42 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendsList:) name:NOTIF_GET_FRIEND_LIST_DONE object:nil];
     
-    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     circleList = [[NSMutableArray alloc] init];
     filteredList = [[NSMutableArray alloc] init];
     
 }
 
+- (void) selectUserId:(NSString *)_userId {
+    
+    self.userId = _userId;
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken andFriendId:self.userId];
+    [smAppDelegate showActivityViewer:self.view];
+}
+
+-(void) displayNotificationCount 
+{
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
 - (void)viewWillAppear:(BOOL)animated 
 {
-    AppDelegate *smAppdelegate = [[UIApplication sharedApplication] delegate];
-    smAppdelegate.currentModelViewController = self;
+    smAppDelegate.currentModelViewController = self;
+    [self displayNotificationCount];
 }
 
 - (void) gotFriendsList:(NSNotification *)notif 
 {
     eachFriendList = [notif object];
     [self sortByAtoZ];
-    
+    [smAppDelegate hideActivityViewer];
 }
 
 - (void)viewDidUnload
@@ -56,6 +76,8 @@
     scrollViewFriendList = nil;
     [searchBarFriendList release];
     searchBarFriendList = nil;
+    [totalNotifCount release];
+    totalNotifCount = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -68,6 +90,42 @@
 
 - (IBAction)actionBackMe:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)moveSearchBarAnimation:(int)moveby
+{
+    if (moveby > 0) {
+        scrollViewFriendList.contentInset = UIEdgeInsetsMake(43,0.0,0,0.0);
+    } else {
+        scrollViewFriendList.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
+    }
+    
+    CGRect viewFrame = searchBarFriendList.frame;
+    viewFrame.origin.y += moveby;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3];    
+    [searchBarFriendList setFrame:viewFrame];  
+    [UIView commitAnimations];    
+}
+
+- (IBAction)actionShowSearchBar:(id)sender 
+{
+    if (searchBarFriendList.frame.origin.y > 44) {
+        [self moveSearchBarAnimation:-44];
+        [self searchBarCancelButtonClicked:searchBarFriendList];
+    } else {
+        [self moveSearchBarAnimation:44];
+        [searchBarFriendList becomeFirstResponder];
+    }
+}
+
+- (IBAction)gotoNotification:(id)sender 
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 - (void)clearScrollView
@@ -94,11 +152,16 @@
     [labelName setNumberOfLines:0];
     labelName.textAlignment = UITextAlignmentCenter;
     labelName.backgroundColor = [UIColor clearColor];
-    labelName.text = [[eachFriend.friendName componentsSeparatedByString:@" "] objectAtIndex:0]; 
+    NSLog(@"friend name = %@", eachFriend.friendName);
+    labelName.text = eachFriend.friendName; 
     imgView.userInteractionEnabled = YES;
     thumbView.tag = tag;
     imgView.tag = 840;
-    [imgView loadFromURL:[NSURL URLWithString:eachFriend.friendAvater]];
+    NSLog(@"url = %@", eachFriend.friendAvater);
+    
+    if ([eachFriend.friendAvater isKindOfClass:[NSString class]])
+        [imgView loadFromURL:[NSURL URLWithString:eachFriend.friendAvater]];
+    
     imgView.clipsToBounds = NO;
     CGColorSpaceRef cmykSpace = CGColorSpaceCreateDeviceCMYK();
     CGFloat cmykValue[] = {.38, .02, .98, .05, 1};      
@@ -179,6 +242,29 @@
     scrollViewFriendList.contentSize = CGSizeMake(scrollViewFriendList.frame.size.width, posY);
 }
 
+- (NSString*)getLabelTextFromDistance:(int)distance
+{
+    NSString *labelText;
+    
+    if (distance < 1000) {
+        if(distance < 500) {
+            labelText = @"<500m";
+            NSLog(@"<500%d", distance);
+        }
+        else {
+            labelText = @"<1Km";
+            NSLog(@"<1%d", distance);
+        }
+        
+    } else {
+        labelText = @"1km+";
+        NSLog(@"1km+%d", distance);
+    }
+    
+    return labelText;
+
+}
+
 - (void) refreshScrollView:(FILTER_BY)filter_by :(NSMutableArray*)searchArray {
     
     int posX = 20;
@@ -186,6 +272,7 @@
     int GAP = 5;
     
     [self clearScrollView];
+    previousLabelText = @"";
     
     for (int i = 0; i < [searchArray count]; i++) {
         
@@ -196,8 +283,11 @@
         {
             if (filter_by == AtoZ)
                 [self addHeaderlabel:firstLetter:posY];
-            else  if (filter_by == Distance)
-                [self addHeaderlabel:@"<500m" :posY];
+            else  if (filter_by == Distance) {
+                NSString *labelText = [self getLabelTextFromDistance:[eachFriend.friendDistance intValue]];
+                [self addHeaderlabel:labelText: posY];
+                previousLabelText = labelText;
+            }
             else if (filter_by == Circle)
                 [self addHeaderlabel:@"Friends" :posY];
 
@@ -219,27 +309,15 @@
             } 
             else  if (filter_by == Distance)
             {
-                int currentLabelHeaderDistance = [self getHeaderDistance:[eachFriend.friendDistance intValue]];
+                NSString *labelText = [self getLabelTextFromDistance:[eachFriend.friendDistance intValue]];
                 
-                BOOL willAddLabel = [self willAddNewLabelForDistance:currentLabelHeaderDistance previousDistance:[eachFriendPrevious.friendDistance intValue]];
-
-                if (willAddLabel && [eachFriendPrevious.friendDistance intValue] <= 499)
-                {
-                    NSString *labelText;
-                    
-                    if (currentLabelHeaderDistance > 999)
-                        labelText = @"1km+";
-                    else if (currentLabelHeaderDistance <= 999)
-                        labelText = [NSString stringWithFormat:@"<%.1fkm", currentLabelHeaderDistance/1000.0];
-                    else
-                        labelText = [NSString stringWithFormat:@"<%dm", (int)currentLabelHeaderDistance];
-                    
+                if (![previousLabelText isEqualToString:labelText]) {
                     posY += GAP + IMAGE_THUMB_HEIGHT;
                     [self addHeaderlabel:labelText: posY];
                     posX = 20;
                     posY += 30;
+                    previousLabelText = labelText;
                 }
-                
             }
         }
         
@@ -361,6 +439,10 @@
     [eachFriendList removeAllObjects];
     [eachFriendList addObjectsFromArray:sortedArray];
     
+    for (EachFriendInList *eachFriend in eachFriendList) {
+        NSLog(@"%@ name - %@", eachFriend.friendDistance , eachFriend.friendName);
+    }
+    
     [self refreshScrollView:Distance :([filteredList count]) ? filteredList : eachFriendList];
 }
 
@@ -397,6 +479,7 @@
     [circleList release];
     [scrollViewFriendList release];
     [searchBarFriendList release];
+    [totalNotifCount release];
     [super dealloc];
 }
 @end

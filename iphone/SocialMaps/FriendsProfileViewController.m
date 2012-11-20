@@ -26,6 +26,7 @@
 #import "FriendsPhotosViewController.h"
 #import "PlaceListViewController.h"
 #import "Globals.h"
+#import "FriendListViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -938,7 +939,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     }
     else if (imageIndex==1)
     {       
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."]; 
+        FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller selectUserId:userInfo.userId];
+        [controller release];  
     }
     else if (imageIndex==2)
     {

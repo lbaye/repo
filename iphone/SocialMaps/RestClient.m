@@ -6750,9 +6750,9 @@ AppDelegate *smAppDelegate;
     [request startAsynchronous];
 }
 
--(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue
+-(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andFriendId:(NSString*)friendId
 {
-    NSString *route = [NSString stringWithFormat:@"%@/me/friends", WS_URL];
+    NSString *route = [NSString stringWithFormat:@"%@/%@/friends", WS_URL, friendId];
     NSURL *url = [NSURL URLWithString:route];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];

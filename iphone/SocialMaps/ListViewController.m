@@ -470,6 +470,7 @@ PullableView *pullUpView;
     FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    [controller selectUserId:smAppDelegate.userId];
     [controller release]; 
 }
 
