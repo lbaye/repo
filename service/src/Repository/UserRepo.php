@@ -1100,7 +1100,6 @@ class UserRepo extends Base
     }
 
     public function generateNotificationCount($user_id)
-
     {
 
         $user = $this->find($user_id);

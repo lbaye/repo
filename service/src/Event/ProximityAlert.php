@@ -109,7 +109,9 @@ class ProximityAlert extends Base {
     private function informUser(\Document\User $user, $friends) {
         $this->debug('Informing user - ' . $user->getFirstName() . ' about his nearby friends');
         $this->sendNotification(
-            $user, $this->createGroupNotificationMessage($friends));
+            $user, $this->addNotificationsCounts(
+                $user, $this->createGroupNotificationMessage($friends))
+        );
     }
 
     private function informFriends(\Document\User $user, $friends) {
@@ -124,8 +126,14 @@ class ProximityAlert extends Base {
             # Create in-app notification
             # Send push notification
             $this->sendNotification(
-                $friend, $this->createNotificationMessage($user, $friend));
+                $friend, $this->addNotificationsCounts(
+                    $friend, $this->createNotificationMessage($user, $friend)));
         }
+    }
+
+    private function addNotificationsCounts(\Document\User $user, array $messages) {
+        $countHash = $this->userRepository->generateNotificationCount($user->getId());
+        return array_merge($messages, $countHash);
     }
 
     private function sendNotification(\Document\User $user, array $notification) {
@@ -146,16 +154,14 @@ class ProximityAlert extends Base {
             $to['lat'], $to['lng']); // In METER
 
         $message = $user->getFirstName() . ' is ' . ceil($distance) . 'm away';
-        $notificationCountHash = $this->userRepository->getNotificationsCount($user->getId());
-        $hash = array(
+
+        return array(
             'title' => $message,
             'photoUrl' => $user->getAvatar(),
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
             'message' => $message
         );
-
-        return array_merge($hash,$notificationCountHash);
     }
 
     private function createGroupNotificationMessage(\Doctrine\ODM\MongoDB\Cursor $friendsCursor) {
@@ -179,8 +185,6 @@ class ProximityAlert extends Base {
 
         return array(
             'title' => $message,
-            'badge' => 1,
-            'tabCounts' => '0|0|0',
             'objectType' => 'proximity_alert',
             'message' => $message
         );
