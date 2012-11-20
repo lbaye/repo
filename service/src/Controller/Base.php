@@ -248,9 +248,12 @@ abstract class Base {
         return $this->_generateErrorResponse($e->getMessage(), $e->getCode());
     }
 
-    protected function _getFriendList($user, array $fields = array('id', 'firstName', 'lastName', 'avatar')) {
+    protected function _getFriendList(\Document\User $user, array $fields = array('id', 'firstName', 'lastName', 'avatar')) {
         $friends = $user->getFriends();
-        return $this->_getUserSummaryList($friends, $fields);
+        if (!empty($friends))
+            return $this->_getUserSummaryList($friends, $fields);
+        else
+            return array();
     }
 
     protected function _getUserSummaryList(array $userIds, array $fields = array('id', 'firstName', 'lastName', 'avatar')) {
