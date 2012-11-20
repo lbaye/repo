@@ -19,7 +19,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
 
         <ImageView
             android:id="@+id/place_icon_image"
@@ -66,105 +68,110 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip" >
 
         <Button
             android:id="@+id/event_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/event_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
+        
 
         <Button
             android:id="@+id/plan_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/plan_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
+        
 
         <Button
             android:id="@+id/direction_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/direction_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/recommend_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/recommended_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="10dip"
-        android:orientation="horizontal" >
+        android:padding="10dip"
+        android:orientation="horizontal"
+         >
 
         <Button
             android:id="@+id/review_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/review_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+           android:textStyle="normal"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/save_place_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/save_place_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/meet_up_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
             android:layout_marginRight="10dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/meet_up_label"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/check_in_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dip"
-            android:background="@drawable/common_btn_selector"
+            android:background="@drawable/selector_btn_light"
             android:text="@string/check_in"
             android:textSize="10dip"
-            android:textStyle="bold" >
-        </Button>
+            android:textStyle="normal"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>

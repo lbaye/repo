@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.util.LangUtils;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -155,6 +157,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 				Intent uploadPhotoIntent = new Intent(context,
 						PhotoListActivity.class);
+				uploadPhotoIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(uploadPhotoIntent);
 				finish();
 
@@ -216,10 +219,9 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 					// photoIcon.recycle();
 				}
 
-				photoIcon = Utility
-						.resizeBitmap((Bitmap) data.getExtras().get("data"),
-								Constant.profileCoverWidth,
-								Constant.profileCoverHeight);
+				photoIcon = Utility.resizeBitmap(
+						(Bitmap) data.getExtras().get("data"),
+						Constant.profileCoverWidth, 0, true);
 
 				ivPhoto.setImageBitmap(photoIcon);
 
@@ -243,8 +245,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 					photoIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
 									this.getContentResolver(), data.getData()),
-							Constant.profileCoverWidth,
-							Constant.profileCoverHeight);
+							Constant.profileCoverWidth, 0, true);
 					ivPhoto.setImageBitmap(photoIcon);
 
 				} catch (FileNotFoundException e) {
@@ -266,6 +267,15 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 				}
 				// ivProfilePicture.setImageURI(imageUri);
 			}
+		}
+
+		else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
+				&& resultCode == RESULT_OK) {
+			address = data.getStringExtra("ADDRESS");
+			latitude = data.getDoubleExtra("LAT", 0.0);
+			longitude = data.getDoubleExtra("LNG", 0.0);
+
+			displayAddress(null, address);
 		}
 	}
 
@@ -618,13 +628,20 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		switch (status) {
 		case Constant.STATUS_CREATED:
 			// Log.d("Login", status+":"+response);
-			//Toast.makeText(context, "Photo uploaded successfully.",	Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Photo uploaded successfully.",
+					Toast.LENGTH_SHORT).show();
+
+			PhotoListActivity.isUploadNewPhoto = true;
 
 			Intent uploadPhotoIntent = new Intent(context,
 					PhotoListActivity.class);
+
+			uploadPhotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// uploadPhotoIntent.putExtra("IS_UPLOAD_NEW_PHOTO",5);
 			startActivity(uploadPhotoIntent);
+
 			finish();
-			
+
 			break;
 
 		default:

@@ -132,7 +132,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <!-- <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -168,6 +168,26 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
+                        android:hint="@string/requiredText"
+                        android:inputType="textPersonName" />
+                </LinearLayout>  --> 
+                
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="@string/userNameLabel"
+                        android:textColor="@drawable/black" />
+
+                    <EditText
+                        android:id="@+id/etUserName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp" 
                         android:hint="@string/requiredText"
                         android:inputType="textPersonName" />
                 </LinearLayout>
@@ -213,7 +233,7 @@
                 android:visibility="gone"
                 android:paddingLeft="10dp" >
 
-                <LinearLayout
+                <!-- <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -230,7 +250,45 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:inputType="textPersonName" />
+                </LinearLayout> --> 
+                
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="@string/firstNameLabel"
+                        android:textColor="@drawable/black" />
+
+                    <EditText
+                        android:id="@+id/etFirstName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:inputType="textPersonName" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="@string/lastNameLabel"
+                        android:textColor="@drawable/black" />
+
+                    <EditText
+                        android:id="@+id/etLastName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:inputType="textPersonName" />
+                </LinearLayout> 
 
                 <LinearLayout
                     android:layout_width="fill_parent"

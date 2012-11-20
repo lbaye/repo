@@ -147,7 +147,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 		Log.i("EventNewActivity:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
 
@@ -441,7 +441,8 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 			restClient.AddParam("title", eventName);
 			restClient.AddParam("eventShortSummary", eventSummary);
 			restClient.AddParam("description", eventDescription);
-			restClient.AddParam("time", eventDateString+" "+Utility.getTimezoneOffset());
+			restClient.AddParam("time",
+					eventDateString + " " + Utility.getTimezoneOffset());
 			restClient.AddParam("lat", eventLat + "");
 			restClient.AddParam("lng", eventLng + "");
 			restClient.AddParam("address", eventAddress);
@@ -923,8 +924,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				mDateTimePicker.updateDate(calendar.get(Calendar.YEAR),
 						calendar.get(Calendar.MONTH),
 						calendar.get(Calendar.DAY_OF_MONTH));
-				mDateTimePicker.updateTime(
-						calendar.get(Calendar.HOUR_OF_DAY),
+				mDateTimePicker.updateTime(calendar.get(Calendar.HOUR_OF_DAY),
 						calendar.get(Calendar.MINUTE));
 			}
 		}
@@ -939,7 +939,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 						// TODO Auto-generated method stub
 
 						String selectedDateTime = "";
-						
+
 						int month = mDateTimePicker.get(Calendar.MONTH) + 1;
 						String monthString = "" + month;
 						if (month < 10) {
@@ -955,7 +955,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 						selectedDateTime = mDateTimePicker.get(Calendar.YEAR)
 								+ "-" + monthString + "-" + dayString;
 
-						int hour = mDateTimePicker.get(Calendar.HOUR_OF_DAY)+1;
+						int hour = mDateTimePicker.get(Calendar.HOUR_OF_DAY) + 1;
 						String hourString = "" + hour;
 						if (hour < 10) {
 							hourString = "0" + hour;
@@ -971,18 +971,15 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 								+ minuteString + ":00";
 
 						Log.e("Selected date time", selectedDateTime);
-						
-						if(Utility.getTimeDifference(selectedDateTime)>0)
-						{
+
+						if (Utility.getTimeDifference(selectedDateTime) > 0) {
 							eventDateString = selectedDateTime;
-							mDateTimeDialog.dismiss();							
-						}
-						else
-						{
-							Toast.makeText(context, "Invalid date and time.", Toast.LENGTH_SHORT).show();
+							mDateTimeDialog.dismiss();
+						} else {
+							Toast.makeText(context, "Invalid date and time.",
+									Toast.LENGTH_SHORT).show();
 						}
 
-						
 					}
 				});
 

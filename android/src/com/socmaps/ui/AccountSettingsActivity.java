@@ -37,16 +37,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.Facebook;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
-import com.socmaps.fb.BaseRequestListener;
-import com.socmaps.fb.FBUtility;
-import com.socmaps.fb.SessionEvents;
-import com.socmaps.fb.SessionEvents.AuthListener;
-import com.socmaps.fb.SessionEvents.LogoutListener;
-import com.socmaps.fb.SessionStore;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -96,8 +88,9 @@ public class AccountSettingsActivity extends Activity implements
 	Button btnBack, btnNotification;
 
 	Handler mHandler;
-	//FbAPIsAuthListener fbAPIsAuthListener;
-	//FbAPIsLogoutListener fbAPIsLogoutListener;
+
+	// FbAPIsAuthListener fbAPIsAuthListener;
+	// FbAPIsLogoutListener fbAPIsLogoutListener;
 
 	@Override
 	public void onAttachedToWindow() {
@@ -116,13 +109,14 @@ public class AccountSettingsActivity extends Activity implements
 		setExpandListener();
 		setViewOnClickListener();
 
-		/*// Create the Facebook Object using the app id.
-		FBUtility.mFacebook = new Facebook(Constant.FB_APP_ID);
-		FBUtility.mAsyncRunner = new AsyncFacebookRunner(FBUtility.mFacebook);
-		// restore session if one exists
-		SessionStore.restore(FBUtility.mFacebook, context);
-		SessionEvents.addAuthListener(fbAPIsAuthListener);
-		SessionEvents.addLogoutListener(fbAPIsLogoutListener);*/
+		/*
+		 * // Create the Facebook Object using the app id. FBUtility.mFacebook =
+		 * new Facebook(Constant.FB_APP_ID); FBUtility.mAsyncRunner = new
+		 * AsyncFacebookRunner(FBUtility.mFacebook); // restore session if one
+		 * exists SessionStore.restore(FBUtility.mFacebook, context);
+		 * SessionEvents.addAuthListener(fbAPIsAuthListener);
+		 * SessionEvents.addLogoutListener(fbAPIsLogoutListener);
+		 */
 
 	}
 
@@ -143,8 +137,8 @@ public class AccountSettingsActivity extends Activity implements
 			avatar.recycle();
 		}
 
-		//SessionEvents.removeAuthListener(fbAPIsAuthListener);
-		//SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
+		// SessionEvents.removeAuthListener(fbAPIsAuthListener);
+		// SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
 	}
 
 	private void setViewOnClickListener() {
@@ -375,8 +369,8 @@ public class AccountSettingsActivity extends Activity implements
 		 * imperialBtn=(RadioButton)findViewById(R.id.imperial_radio);
 		 */
 
-		//fbAPIsAuthListener = new FbAPIsAuthListener();
-		//fbAPIsLogoutListener = new FbAPIsLogoutListener();
+		// fbAPIsAuthListener = new FbAPIsAuthListener();
+		// fbAPIsLogoutListener = new FbAPIsLogoutListener();
 
 	}
 
@@ -1053,13 +1047,13 @@ public class AccountSettingsActivity extends Activity implements
 
 	private void executeLogout() {
 
-		//AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(FBUtility.mFacebook);
-		//asyncRunner.logout(context, new LogoutRequestListener());
-		
-		
+		// AsyncFacebookRunner asyncRunner = new
+		// AsyncFacebookRunner(FBUtility.mFacebook);
+		// asyncRunner.logout(context, new LogoutRequestListener());
+
 		Log.e("Account settings", "You have logged out! ");
 		Utility.setFacebookImage(context, null);
-		
+
 		Intent intent = new Intent(context, HomeActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("LOGOUT", true);
@@ -1067,57 +1061,48 @@ public class AccountSettingsActivity extends Activity implements
 
 	}
 
-	/*private class LogoutRequestListener extends BaseRequestListener {
-		// @Override
-		@Override
-		public void onComplete(String response, final Object state) {
-			mHandler.post(new Runnable() {
-				// @Override
-				@Override
-				public void run() {
-
-					SessionEvents.onLogoutFinish();
-				}
-			});
-		}
-	}
-
-	public class FbAPIsAuthListener implements AuthListener {
-
-		// @Override
-		@Override
-		public void onAuthSucceed() {
-
-		}
-
-		// @Override
-		@Override
-		public void onAuthFail(String error) {
-			Log.e("HomeActivity", "Login Failed: " + error);
-		}
-	}
-
-
-	public class FbAPIsLogoutListener implements LogoutListener {
-		// @Override
-		@Override
-		public void onLogoutBegin() {
-			Log.e("Account settings", "Logging out...");
-		}
-
-		// @Override
-		@Override
-		public void onLogoutFinish() {
-			Log.e("Account settings", "You have logged out! ");
-			Utility.setFacebookImage(context, null);
-
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.putExtra("LOGOUT", true);
-			startActivity(intent);
-
-		}
-	}*/
+	/*
+	 * private class LogoutRequestListener extends BaseRequestListener { //
+	 * @Override
+	 * 
+	 * @Override public void onComplete(String response, final Object state) {
+	 * mHandler.post(new Runnable() { // @Override
+	 * 
+	 * @Override public void run() {
+	 * 
+	 * SessionEvents.onLogoutFinish(); } }); } }
+	 * 
+	 * public class FbAPIsAuthListener implements AuthListener {
+	 * 
+	 * // @Override
+	 * 
+	 * @Override public void onAuthSucceed() {
+	 * 
+	 * }
+	 * 
+	 * // @Override
+	 * 
+	 * @Override public void onAuthFail(String error) { Log.e("HomeActivity",
+	 * "Login Failed: " + error); } }
+	 * 
+	 * 
+	 * public class FbAPIsLogoutListener implements LogoutListener { //
+	 * @Override
+	 * 
+	 * @Override public void onLogoutBegin() { Log.e("Account settings",
+	 * "Logging out..."); }
+	 * 
+	 * // @Override
+	 * 
+	 * @Override public void onLogoutFinish() { Log.e("Account settings",
+	 * "You have logged out! "); Utility.setFacebookImage(context, null);
+	 * 
+	 * Intent intent = new Intent(context, HomeActivity.class);
+	 * intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	 * intent.putExtra("LOGOUT", true); startActivity(intent);
+	 * 
+	 * } }
+	 */
 
 	private void updatePassword() {
 		// TODO Auto-generated method stub

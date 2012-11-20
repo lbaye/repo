@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -65,7 +66,9 @@ public class MessageComposeActivity extends Activity {
 
 		setContentView(R.layout.message_compose_activity);
 
-		initialize();
+		initialize(); 
+		
+		//MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		// generate list
 		generateList();
@@ -241,7 +244,7 @@ public class MessageComposeActivity extends Activity {
 		circleListContainer = (LinearLayout) findViewById(R.id.circleListContainer);
 
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
-		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
+		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles); 
 
 	}
 
@@ -493,7 +496,9 @@ public class MessageComposeActivity extends Activity {
 
 			// etNewMessage.setText("");
 			Toast.makeText(MessageGroupActivity.group,
-					"Message sent successfully.", Toast.LENGTH_SHORT).show();
+					"Message sent successfully.", Toast.LENGTH_SHORT).show(); 
+			
+			
 
 			MessageGroupActivity.group.back();
 
@@ -527,15 +532,27 @@ public class MessageComposeActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 
+	} 
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy(); 
+		hideKeyBoard();
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-
 		}
 		return false;
 
+	} 
+	
+	private void hideKeyBoard()
+	{
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(etNewMessage.getWindowToken(), 0);
 	}
 
 	private class ButtonActionListener implements OnClickListener {
@@ -548,8 +565,11 @@ public class MessageComposeActivity extends Activity {
 			} else if (v == btnCircleSelect) {
 				showCircleList();
 			} else if (v == btnSend) {
-				validateNewMessage();
-			} else if (v == btnCancel) {
+				hideKeyBoard();
+				validateNewMessage(); 
+				//MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			} else if (v == btnCancel) { 
+				hideKeyBoard();
 				MessageGroupActivity.group.back();
 			} else if (v == btnSelectAll) {
 				selectAll();

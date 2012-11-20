@@ -26,7 +26,31 @@
                 android:layout_centerVertical="true"
                 android:text="Title"
                 android:textColor="#000000"
-                android:textSize="14dip"
+                android:textSize="12dip"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/btnDeleteCircle"
+                android:layout_width="60dip"
+                android:layout_height="30dip"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btnRenameCircle"
+                android:background="@drawable/selector_btn_light"
+                android:text="@string/deleteLabel"
+                android:textSize="12dip"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/btnRenameCircle"
+                android:layout_width="60dip"
+                android:layout_height="30dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_toLeftOf="@+id/ivArrowRight"
+                android:background="@drawable/selector_btn_light"
+                android:text="@string/renameLabel"
+                android:textSize="12dip"
                 android:textStyle="normal" />
 
             <ImageView
@@ -70,7 +94,7 @@
                 <LinearLayout
                     android:id="@+id/llCircleFriendsList"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"                  
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
                 </LinearLayout>
             </ScrollView>

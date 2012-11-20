@@ -190,6 +190,9 @@ public class RegistrationActivity extends Activity {
 				} else if (etLastName.getText().toString().length() == 0) {
 					flag = false;
 					etLastName.setError("Last name can not be empty.");
+				} else if (etUserName.getText().toString().length() == 0) { 
+					flag = false; 
+					etUserName.setError("User name can not be empty");
 				}
 
 				if (flag) {
@@ -318,7 +321,8 @@ public class RegistrationActivity extends Activity {
 
 		RestClient client = new RestClient(Constant.smRegistrationUrl);
 
-		// client.AddHeader("GData-Version", "2");
+		// client.AddHeader("GData-Version", "2"); 
+		Log.d("userName", etUserName.getText().toString());
 
 		client.AddParam("email", email);
 		client.AddParam("password", password);

@@ -513,6 +513,7 @@
     <string name="shareWithLabel">Share with:</string>
     <string name="deletePhotoLabel">Delete Photo</string>
     <string name="deleteLabel">Delete</string>
+    <string name="renameLabel">Rename</string>
     <string name="okLabel">OK</string>
     <string name="descriptionLabel">Description</string>
     <string name="delete_event_label">Delete this event</string>

@@ -153,14 +153,18 @@ public class FriendRequestNotificationActivity extends Activity {
 								senderName.setText(friendRequests[i]
 										.getSenderName());
 							}
-							if (friendRequests[i].getDate() != null) {
-								sentTime.setText(friendRequests[i].getDate());
+							if (friendRequests[i].getSentTime() != null) {
+
+								sentTime.setText(Utility
+										.getFormattedDisplayDate(friendRequests[i]
+												.getSentTime()));
 							}
 							if (friendRequests[i].getMessage() != null) {
-								senderMessage
-										.setText("\""
-												+ friendRequests[i]
-														.getMessage() + "\"");
+								if (!friendRequests[i].getMessage().equals("")) {
+									senderMessage.setText("\""
+											+ friendRequests[i].getMessage()
+											+ "\"");
+								}
 							}
 
 							// accept_friend_request_btn

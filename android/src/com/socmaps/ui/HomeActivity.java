@@ -1,10 +1,5 @@
 package com.socmaps.ui;
 
-import static com.socmaps.pushNotification.CommonUtilities.DISPLAY_MESSAGE_ACTION;
-import static com.socmaps.pushNotification.CommonUtilities.EXTRA_MESSAGE;
-import static com.socmaps.pushNotification.CommonUtilities.SENDER_ID;
-import static com.socmaps.pushNotification.CommonUtilities.SERVER_URL;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -75,6 +70,7 @@ import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
+import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.fb.BaseDialogListener;
 import com.socmaps.fb.FBUtility;
@@ -87,6 +83,7 @@ import com.socmaps.images.ImageDownloader;
 import com.socmaps.notificationBroadcast.BroadcastListener;
 import com.socmaps.notificationBroadcast.BroadcastService;
 import com.socmaps.notificationBroadcast.NotificationCountBroadcastReciever;
+import com.socmaps.pushNotification.CommonUtilities;
 import com.socmaps.pushNotification.ServerUtilities;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
@@ -103,10 +100,10 @@ import com.socmaps.widget.PermissionRadioGroupListener;
 
 public class HomeActivity extends MapActivity implements
 		ILocationUpdateIndicator, BubleTapHandle, OnCheckedChangeListener,
-		OnClickListener, BroadcastListener {
+		OnClickListener {
 
 	private NotificationCountBroadcastReciever broadcastReceiver;
-	private Intent countServiceIntent;
+	// private Intent countServiceIntent;
 	private final int MENU_ITEM_PEOPLE = Menu.FIRST + 1;
 	private final int MENU_ITEM_PROFILE = Menu.FIRST + 2;
 	private final int MENU_ITEM_DEAL = Menu.FIRST + 3;
@@ -236,11 +233,24 @@ public class HomeActivity extends MapActivity implements
 
 		setOnCheckChangeListener();
 
+		setDefaultValue();
+
 		addPermissionRadioGroup();
 
 		registerPushNotification();
 
 		facebookAuthentication();
+		
+		handleNavigationFromNotificationBar(getIntent());
+	}
+
+	private void setDefaultValue() {
+		// TODO Auto-generated method stub
+		if (StaticValues.myInfo != null) {
+			btnNotification.setText(""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getTotalCount());
+		}
 	}
 
 	public void initialize() {
@@ -418,13 +428,17 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
-			Log.e("GCM", newMessage);
-		}
-	};
+	/*
+	 * private final BroadcastReceiver mHandleMessageReceiver = new
+	 * BroadcastReceiver() {
+	 * 
+	 * @Override public void onReceive(Context context, Intent intent) {
+	 * 
+	 * PushData pushData = (PushData)intent.getSerializableExtra("intent");
+	 * 
+	 * //String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
+	 * Log.e("GCM: HOME", pushData.getMessage()); } };
+	 */
 
 	private void checkNotNull(Object reference, String name) {
 		if (reference == null) {
@@ -435,19 +449,21 @@ public class HomeActivity extends MapActivity implements
 
 	private void registerPushNotification() {
 		// TODO Auto-generated method stub
-		checkNotNull(SERVER_URL, "SERVER_URL");
-		checkNotNull(SENDER_ID, "SENDER_ID");
+		checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
+		checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
 		// Make sure the device has the proper dependencies.
 		GCMRegistrar.checkDevice(this);
 		// Make sure the manifest was properly set - comment out this line
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
-		registerReceiver(mHandleMessageReceiver, new IntentFilter(
-				DISPLAY_MESSAGE_ACTION));
+
+		// registerReceiver(mHandleMessageReceiver, new
+		// IntentFilter(DISPLAY_MESSAGE_ACTION));
 		final String regId = GCMRegistrar.getRegistrationId(this);
 		if (regId.equals("")) {
 			// Automatically registers application on startup.
-			GCMRegistrar.register(getApplicationContext(), SENDER_ID);
+			GCMRegistrar.register(getApplicationContext(),
+					CommonUtilities.SENDER_ID);
 		} else {
 			// Device is already registered on GCM, check server.
 			if (GCMRegistrar.isRegisteredOnServer(this)) {
@@ -524,8 +540,16 @@ public class HomeActivity extends MapActivity implements
 		if (mRegisterTask != null) {
 			mRegisterTask.cancel(true);
 		}
-		stopService(countServiceIntent);// delete this line for production
-		unregisterReceiver(mHandleMessageReceiver);
+		// stopService(countServiceIntent);// delete this line for production
+
+		try {
+			unregisterReceiver(broadcastReceiver);
+		} catch (IllegalArgumentException e) {
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 		GCMRegistrar.onDestroy(getApplicationContext());
 
 		SessionEvents.removeAuthListener(fbAPIsAuthListener);
@@ -1298,6 +1322,86 @@ public class HomeActivity extends MapActivity implements
 		return false;
 	}
 
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		Log.i("Home:onPause memory before",
+				"" + Debug.getNativeHeapAllocatedSize());
+
+		gpsService.stopListener();
+		// unregisterReceiver(broadcastReceiver);
+		unregisterReceiver(broadcastReceiver);
+		StaticValues.highlightAnnotationItem = null;
+		StaticValues.isHighlightAnnotation = false;
+
+		// clearMap(0, true);
+
+		listMasterContent.clear();
+		listContent.clear();
+		listDisplayableContent.clear();
+
+		System.gc();
+
+		Log.i("Home:onPause memory after",
+				"" + Debug.getNativeHeapAllocatedSize());
+
+	}
+	
+	public void handleNavigationFromNotificationBar(Intent intent)
+	{
+		Bundle extras = intent.getExtras();
+		Log.i("dbg", "onNewIntent");
+
+		if (extras != null) {
+			if (extras.containsKey("pushData")) {
+				Log.i("dbg", "containsKey(PushData)");
+				PushData pushData = (PushData) extras.get("pushData");
+				if (pushData != null) {
+					// Log.i("Home:PushData:Type", pushData.getObjectType());
+					if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
+						Intent intent2 = new Intent(context,
+								MessageActivity.class);
+						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
+						Intent intent2 = new Intent(context,
+								MessageActivity.class);
+						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_EVENT)) {
+						Intent intent2 = new Intent(context,
+								EventListActivity.class);
+						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
+						Intent intent2 = new Intent(context,
+								NotificationActivity.class);
+						intent2.putExtra("selectedTab",
+								Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
+						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_MEETUP)) {
+						Intent intent2 = new Intent(context,
+								MessageActivity.class);
+						intent2.putExtra("selectedTab",
+								Constant.PUSH_NOTIFICATION_MEETUP);
+						startActivity(intent2);
+					}
+				}
+			}
+
+		}
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		
+		handleNavigationFromNotificationBar(intent);
+	}
+
 	/** Register for the updates when Activity is in foreground */
 	@Override
 	protected void onResume() {
@@ -1332,11 +1436,40 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		startGpsService();
-		initializeNotificationCountBroadcast();
+
+		initializeNotificationBroadcast();
 
 		Log.i("Home:onResume memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
+		
+		//handleNavigationFromNotificationBar(getIntent());
 
+	}
+
+	private void initializeNotificationBroadcast() {
+		// TODO Auto-generated method stub
+		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
+		broadcastReceiver.setCallback(new NotificationBroadcastListener());
+		registerReceiver(broadcastReceiver, new IntentFilter(
+				CommonUtilities.DISPLAY_MESSAGE_ACTION));
+	}
+
+	private class NotificationBroadcastListener implements BroadcastListener {
+		@Override
+		public void updateNotificationCountBuble(Intent intent) {
+
+			PushData pushData = (PushData) intent
+					.getSerializableExtra("pushData");
+
+			Utility.updateNotificationCountFromPush(pushData);
+			if(StaticValues.myInfo!=null)
+			{
+				btnNotification.setText(""+StaticValues.myInfo.getNotificationCount()
+						.getTotalCount());
+			}
+			
+
+		}
 	}
 
 	public void highlightAnnotation() {
@@ -1406,18 +1539,17 @@ public class HomeActivity extends MapActivity implements
 		isSearchEnabled = false;
 	}
 
-	private void initializeNotificationCountBroadcast() {
-
-		// For production following is not necessary
-		countServiceIntent = new Intent(this, BroadcastService.class);
-		startService(countServiceIntent);
-		// .......................................................
-
-		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
-		broadcastReceiver.setCallback(this);
-		registerReceiver(broadcastReceiver, new IntentFilter(
-				BroadcastService.BROADCAST_ACTION));
-	}
+	/*
+	 * private void initializeNotificationCountBroadcast() {
+	 * 
+	 * // For production following is not necessary //countServiceIntent = new
+	 * Intent(this, BroadcastService.class); //startService(countServiceIntent);
+	 * // .......................................................
+	 * 
+	 * broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
+	 * broadcastReceiver.setCallback(this); registerReceiver(broadcastReceiver,
+	 * new IntentFilter( BroadcastService.BROADCAST_ACTION)); }
+	 */
 
 	@Override
 	public void onAttachedToWindow() {
@@ -1441,38 +1573,13 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	/** Stop the updates when Activity is paused */
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		Log.i("Home:onPause memory before",
-				"" + Debug.getNativeHeapAllocatedSize());
-
-		gpsService.stopListener();
-		unregisterReceiver(broadcastReceiver);
-		StaticValues.highlightAnnotationItem = null;
-		StaticValues.isHighlightAnnotation = false;
-
-		// clearMap(0, true);
-
-		listMasterContent.clear();
-		listContent.clear();
-		listDisplayableContent.clear();
-
-		System.gc();
-
-		Log.i("Home:onPause memory after",
-				"" + Debug.getNativeHeapAllocatedSize());
-
-	}
-
 	public void facebookAuthentication() {
 
 		Log.i("HomeActivity", "facebookAuthentication");
 
-		//initInviteFriends();
-		
+		// initInviteFriends();
+		// askForFacebookAccount();
+
 		if (StaticValues.myInfo != null
 				&& !Utility.getFacebookInvitationDisplayStatus(context)
 				&& StaticValues.myInfo.getLogInCount() == 1) {
@@ -2546,9 +2653,10 @@ public class HomeActivity extends MapActivity implements
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
-			Intent peopleIntent = new Intent(getApplicationContext(),
-					PhotoListActivity.class);
-			startActivity(peopleIntent);
+
+			Intent messageIntent = new Intent(getApplicationContext(),
+					FriendListActivity.class);
+			startActivity(messageIntent);
 
 			// Toast.makeText(context, "Coming soon.",
 			// Toast.LENGTH_SHORT).show();
@@ -2558,7 +2666,13 @@ public class HomeActivity extends MapActivity implements
 					MessageActivity.class);
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
+			Intent messageIntent = new Intent(getApplicationContext(),
+					NewsFeedActivity.class);
+			startActivity(messageIntent);
+
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemPeople) {
 
@@ -2706,14 +2820,6 @@ public class HomeActivity extends MapActivity implements
 			}
 
 		}
-
-	}
-
-	@Override
-	public void updateNotificationCountBuble(Intent intent) {
-
-		String counter = intent.getStringExtra("counter");
-		// btnNotification.setText(counter);
 
 	}
 

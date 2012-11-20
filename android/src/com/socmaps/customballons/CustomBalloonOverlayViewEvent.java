@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 import com.readystatesoftware.mapviewballoons.R;
@@ -54,8 +53,6 @@ public class CustomBalloonOverlayViewEvent<Item extends OverlayItem> extends
 		btnDetails = (Button) v.findViewById(R.id.btnDetails);
 		btnDirection = (Button) v.findViewById(R.id.btnDirection);
 
-		
-
 	}
 
 	@Override
@@ -84,8 +81,7 @@ public class CustomBalloonOverlayViewEvent<Item extends OverlayItem> extends
 		} else {
 			tvDate.setVisibility(View.GONE);
 		}
-		
-		
+
 		btnDetails.setOnClickListener(new OnClickListener() {
 
 			@Override

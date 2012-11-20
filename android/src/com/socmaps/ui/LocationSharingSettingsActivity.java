@@ -247,14 +247,14 @@ public class LocationSharingSettingsActivity extends Activity implements
 	}
 
 	/*
-	 * private void generatePlaceView() { //placeList =
+	 * private void generatePlaceView() { //circleList =
 	 * StaticValues.searchResult.getPlaces(); //llPlaceList.removeAllViews();
 	 * 
 	 * String timeLimitTitle =
 	 * getString(R.string.locationSharingInvisibleRadiusTitle);
 	 * 
-	 * for (int i = 0; i < placeList.size(); i++) { Place place =
-	 * placeList.get(i); if (place != null) { LinearLayout placeItemView = new
+	 * for (int i = 0; i < circleList.size(); i++) { Place place =
+	 * circleList.get(i); if (place != null) { LinearLayout placeItemView = new
 	 * LocationPreferenceItemView( context, place.getId(), place.getName(), 0,
 	 * timeLimitTitle); placeItemViewList.add(placeItemView);
 	 * llPlaceList.addView(placeItemView); } } }

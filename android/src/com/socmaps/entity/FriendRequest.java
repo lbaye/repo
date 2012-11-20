@@ -16,7 +16,7 @@ public class FriendRequest {
 	private String senderName;
 	private String recipientId;
 	private String accepted;
-	private String date;
+	private TimeEntity sentTime;
 
 	public void setRequestId(String requestId) {
 		this.requestId = requestId;
@@ -66,12 +66,20 @@ public class FriendRequest {
 		return accepted;
 	}
 
-	public void setDate(String date) {
+	/*public void setDate(String date) {
 		this.date = date;
 	}
 
 	public String getDate() {
 		return date;
+	}*/
+
+	public TimeEntity getSentTime() {
+		return sentTime;
+	}
+
+	public void setSentTime(TimeEntity sentTime) {
+		this.sentTime = sentTime;
 	}
 
 }

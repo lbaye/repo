@@ -154,7 +154,6 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			 * getCategoryPosition(place.getCategory()); }
 			 */
 
-			
 			if (place.getVicinity() != null) {
 				strAddress = place.getVicinity();
 				txtPlaceAddress.setText(strAddress);
@@ -337,8 +336,14 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Places update successful.",
-					Toast.LENGTH_SHORT).show();
+
+			if (isUpdate) {
+				Toast.makeText(context, "Places update successfully.",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(context, "Places delete successfully.",
+						Toast.LENGTH_SHORT).show();
+			}
 
 			finish();
 			break;
@@ -550,10 +555,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				}
 
 				// avatar = (Bitmap) data.getExtras().get("data");
-				placeIcon = Utility
-						.resizeBitmap((Bitmap) data.getExtras().get("data"),
-								Constant.profileCoverWidth,
-								Constant.profileCoverHeight);
+				placeIcon = Utility.resizeBitmap(
+						(Bitmap) data.getExtras().get("data"),
+						Constant.profileCoverWidth, 0, true);
 
 				ivPlace.setImageBitmap(placeIcon);
 
@@ -577,8 +581,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 					placeIcon = Utility.resizeBitmap(
 							MediaStore.Images.Media.getBitmap(
 									this.getContentResolver(), data.getData()),
-							Constant.profileCoverWidth,
-							Constant.profileCoverHeight);
+							Constant.profileCoverWidth, 0, true);
 					ivPlace.setImageBitmap(placeIcon);
 
 				} catch (FileNotFoundException e) {

@@ -3,12 +3,7 @@ package com.socmaps.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,13 +24,20 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnScrollChangedListener;
 import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +68,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	LinearLayout age_layout, relationship_layout, living_in_layout,
 			work_at_layout, layEditCoverPic, layEditStatus, layEditProfilePic;
 
-	RelativeLayout relativeLayoutForGeoTag, relativeLayoutForUploadPhoto;
+	RelativeLayout relativeLayoutForGeoTag, relativeLayoutForUploadPhoto; 
+	RelativeLayout relativeLayoutForStatus;
 
 	int responseStatus = 0;
 	String responseString = "";
@@ -89,6 +93,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	String status, age, city, workStatus;
 
 	boolean isChanged = false;
+
+	private WebView wViewNewsFeed;
+	private ScrollView scrollViewMyInfo;
+	private ProgressBar progressBar;
 
 	// LinearLayout ll1, listItemParent, ll3, ll4, ll5;
 
@@ -177,7 +185,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
 
 		relativeLayoutForGeoTag = (RelativeLayout) findViewById(R.id.relativeLayoutForGeoTag);
-		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto);
+		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto); 
+		
+		relativeLayoutForStatus = (RelativeLayout) findViewById(R.id.relativeLayoutForStatus);
 
 		age_layout.setOnClickListener(this);
 		relationship_layout.setOnClickListener(this);
@@ -186,11 +196,52 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		layEditCoverPic.setOnClickListener(this);
 		layEditStatus.setOnClickListener(this);
 		layEditProfilePic.setOnClickListener(this);
+		
+		relativeLayoutForStatus.setOnClickListener(this);
 
 		relativeLayoutForGeoTag.setOnClickListener(this);
 		relativeLayoutForUploadPhoto.setOnClickListener(this);
 
 		tvRelationshipStatus = (TextView) findViewById(R.id.tvRelationshipStatus);
+
+		// newsfeed portion
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		wViewNewsFeed = (WebView) findViewById(R.id.wViewNewsFeed);
+		wViewNewsFeed.setBackgroundColor(Color.parseColor("#00000000"));
+
+		WebSettings webSettings = wViewNewsFeed.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginsEnabled(false);
+		webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
+
+		webSettings.setSupportMultipleWindows(false);
+
+		webSettings.setSupportZoom(true);
+		wViewNewsFeed.setVerticalScrollBarEnabled(true);
+		wViewNewsFeed.setHorizontalScrollBarEnabled(false);
+		wViewNewsFeed.getSettings().setBuiltInZoomControls(false);
+
+		// Our application's main page will be loaded
+		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/507e47f0781d6ec93000000e/newsfeed.html
+		wViewNewsFeed.loadUrl(Constant.smServerUrl
+				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?");
+
+		wViewNewsFeed.setWebViewClient(new MyWebViewClient());
+		
+		wViewNewsFeed.setWebChromeClient(new WebChromeClient() {
+
+			@Override
+			public void onProgressChanged(WebView view, int progress) {
+
+				progressBar.setVisibility(View.VISIBLE);
+
+				if (progress == 100)
+					progressBar.setVisibility(View.INVISIBLE);
+			}
+
+		});
+
+		scrollViewMyInfo = (ScrollView) findViewById(R.id.scrollViewMyInfo);
 
 	}
 
@@ -363,7 +414,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		else if (v == btnEvent) {
 			Intent i = new Intent(context, EventListActivity.class);
-			startActivity(i);
+			startActivity(i); 
+			//finish();
 		}
 
 		else if (v == places_icon_image) {
@@ -392,6 +444,11 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		case R.id.work_at_layout:
 			showTextInputDialog(R.id.work_at_layout, workStatus,
 					getString(R.string.servicelabel));
+			break; 
+			
+		case R.id.relativeLayoutForStatus: 
+			showTextInputDialog(R.id.btnEditStatus, status,
+					getString(R.string.status));
 			break;
 
 		case R.id.btnEditStatus:
@@ -438,11 +495,17 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(getApplicationContext(),
 				PhotoListActivity.class);
 		startActivity(intent);
-		finish();
+		//finish();
 	}
 
 	private void showFriends() {
-		Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
+		
+		
+		Intent messageIntent = new Intent(getApplicationContext(),
+				FriendListActivity.class);
+		startActivity(messageIntent);
+		
+		//Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
 	}
 
 	private void showPlaces() {
@@ -450,7 +513,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Toast.LENGTH_SHORT).show();
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
 		startActivity(intentToGoPlace);
-		finish();
+		//finish();
 	}
 
 	private void showMeetUp() {
@@ -459,7 +522,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		Intent intentToShowMeetUp = new Intent(context,
 				MeetupRequestNewActivity.class);
 		startActivity(intentToShowMeetUp);
-		finish();
+		//finish();
 	}
 
 	public void spinnerShowRelationshipOption() {
@@ -1083,16 +1146,49 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Toast.makeText(getApplicationContext(), "Coming Soon",
 		// Toast.LENGTH_SHORT).show();
 
-		//finish();
+		// finish();
 		Intent intentForGeoTag = new Intent(context, GeoTagActivity.class);
 		startActivity(intentForGeoTag);
 	}
 
 	private void uploadPhoto() {
 
-		finish();
+		//finish();
 		Intent intent = new Intent(context, PhotoUploadNewPhotoActivity.class);
 		startActivity(intent);
+
+	}
+
+	private class MyWebViewClient extends WebViewClient {
+		@Override
+		public void onPageFinished(final WebView view, final String url) {
+			Log.d("web status", "onPageFinished");
+
+			wViewNewsFeed
+					.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+
+		}
+
+		@Override
+		public void onPageStarted(final WebView view, final String url,
+				final Bitmap favicon) {
+			Log.d("web status", "onPageStarted");
+
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(final WebView view,
+				final String url) {
+
+			// Log.d("clicked data is ", url);
+			//
+			// final Intent intent = new Intent(Intent.ACTION_VIEW,
+			// Uri.parse(url));
+			// startActivity(intent);
+
+			view.loadUrl(url);
+			return true;
+		}
 
 	}
 

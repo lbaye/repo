@@ -75,19 +75,21 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	//private ImageLoader imageLoader;
 	ImageDownloader imageDownloader;
 
-	String source = "";
+	String source = ""; 
+	String s="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_details_layout);
+		setContentView(R.layout.event_details_layout); 
 
 		source = getIntent().getStringExtra("source");
 		Object selectedItem = getIntent().getSerializableExtra("selectedEvent");
 		if (selectedItem != null) {
 			selectedEvent = (Event) (selectedItem);
-			selectedItem = null;
+			selectedItem = null; 
+			Log.d("EVENT CHECK2", selectedEvent.getEventId()+" "+selectedEvent.getEventTitle()+" "+selectedEvent.getEvent_type()+" "+selectedEvent.getMyResponse());
 		}
 
 		initialize();
@@ -241,7 +243,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			} else
 				inviteFrndPanel.setVisibility(View.GONE);
 			// delete edit panel show hide
-			if (selectedEvent.getEvent_type().equalsIgnoreCase("my_event")) {
+			if (selectedEvent.getEvent_type()==null)
+			{
+				deleteEditPanel.setVisibility(View.GONE);
+			} else if (selectedEvent.getEvent_type().equalsIgnoreCase("my_event")) {
 				deleteEditPanel.setVisibility(View.VISIBLE);
 			} else
 				deleteEditPanel.setVisibility(View.GONE);
@@ -415,21 +420,33 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		super.onResume();
 	}
 
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 
 			if (source != null) {
 				if (source.equalsIgnoreCase("map")) {
-					finish();
-				} else {
-					Intent intent = new Intent(context, EventListActivity.class);
-					finish();
+					//finish(); 
+					
+					StaticValues.isHighlightAnnotation = true;
+					StaticValues.highlightAnnotationItem = selectedEvent;
+					
+					Intent intent = new Intent(context, HomeActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
+				} else {
+					/*Intent intent = new Intent(context, EventListActivity.class);
+					finish();
+					startActivity(intent);*/ 
+					
+					finish();
 				}
 			} else {
-				Intent intent = new Intent(context, EventListActivity.class);
+				/*Intent intent = new Intent(context, EventListActivity.class);
 				finish();
-				startActivity(intent);
+				startActivity(intent);*/ 
+				
+				finish();
 			}
 
 		}
@@ -461,24 +478,27 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			finish();
 			startActivity(intent);
 		} else if (v == showOnMapImage) {
-			
-			/*Intent intent = new Intent(context, ShowItemOnMap.class);
-			intent.putExtra("FLAG", Constant.FLAG_EVENT);
-			intent.putExtra("selectedItem", selectedEvent);
-			intent.putExtra("lng", selectedEvent.getLongitude());
-			startActivity(intent);*/
-			
+
+			/*
+			 * Intent intent = new Intent(context, ShowItemOnMap.class);
+			 * intent.putExtra("FLAG", Constant.FLAG_EVENT);
+			 * intent.putExtra("selectedItem", selectedEvent);
+			 * intent.putExtra("lng", selectedEvent.getLongitude());
+			 * startActivity(intent);
+			 */
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = selectedEvent;
-			finish();
+			//finish(); 
+
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			
 		} else if (v == inviteMoreFriendBtn) {
 			showPeoplePicker(pickerInviteMore);
 		} else if (v == backBtn) {
-			Intent intent = new Intent(context, EventListActivity.class);
 			finish();
-			startActivity(intent);
-
 		}
 	}
 
@@ -487,12 +507,14 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		adb.setTitle("Delete event");
 		adb.setMessage("Are you sure you want to delete this event?");
 		adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				deleteEvent();
 				dialog.cancel();
 			}
 		});
 		adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}

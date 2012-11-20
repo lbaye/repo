@@ -4,47 +4,50 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
-    android:orientation="vertical"
-    android:padding="0dip"
     android:gravity="center"
-     >
+    android:orientation="vertical"
+    android:padding="0dip" >
 
     <LinearLayout
         android:id="@+id/proficPicContainer"
-        android:layout_width="70dip"
-        android:layout_height="70dip"
-        android:gravity="center"
+        android:layout_width="72dip"
+        android:layout_height="82dip"
         android:background="@color/transparent"
-         >
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/proficPicContainer2"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:background="@color/transparent" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/highlightGreen"
+                android:padding="1dp" >
+
+                <ImageView
+                    android:id="@+id/profilePic"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_centerInParent="true"
+                    android:background="@color/white"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/user_default" />
+            </TableRow>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtFriendName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/highlightGreen"
-            android:padding="1dip" >
-
-            <ImageView
-                android:id="@+id/profilePic"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@color/white"
-                android:scaleType="fitCenter"
-                android:src="@drawable/user_default"
-                android:layout_centerInParent="true" />
-
-            <Button
-                android:id="@+id/btnSearch"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignBottom="@+id/profilePic"
-                android:layout_alignRight="@+id/profilePic"
-                android:background="@drawable/btn_search"
-                android:scaleType="fitXY" />
-
-        </RelativeLayout>
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="12dp" />
     </LinearLayout>
-
-
 
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.socmaps.ui;
 
+import android.app.Activity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,10 +28,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.socmaps.entity.Event;
+import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.listrow.EventRowFactory;
@@ -44,15 +49,17 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class EventListActivity extends Activity implements OnClickListener,
+public class EventListActivityOther extends Activity implements OnClickListener,
 		BroadcastListener {
 	private Context context;
 	private EditText searchEditText;
 	private Button btnBack, btnSearch, btnNotification;
 
-	private Button btnDoSearch, btnNewEvent, btnFilterByDate,
+	private Button btnDoSearch; /*btnNewEvent, btnFilterByDate,
 			btnFilterByDistance, btnFilterByFriendsEvent, btnFilterByMyEvent,
-			btnFilterByPublicEvent;
+			btnFilterByPublicEvent;*/ 
+	LinearLayout separator; 
+	private TextView tvtitle;
 	private ListView eventList;
 	// private ContentListAdapter contentAdapter;
 	private ListArrayAdapter contentAdapter;
@@ -67,13 +74,25 @@ public class EventListActivity extends Activity implements OnClickListener,
 	// public static boolean isUpdateList = false;
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
-	int colorButtonNormal, colorButtonSelected;
+	int colorButtonNormal, colorButtonSelected; 
+	
+	String userID = null; 
+	public People people;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_list_layout);
+		setContentView(R.layout.event_list_layout_other); 
+		
+		Object obj = getIntent().getSerializableExtra("user");
+		if (obj != null) {
+			people = (People) (obj);
+			obj = null;
+			userID = people.getId();
+			Log.d("CHECK VALUE at Event", "ID: " + people.getId()+"~"+userID);
+		} 
+		
 
 		init();
 		setListParameters();
@@ -89,37 +108,41 @@ public class EventListActivity extends Activity implements OnClickListener,
 		btnNotification.setOnClickListener(this);
 		btnSearch.setOnClickListener(this);
 
-		btnNewEvent.setOnClickListener(this);
+		//btnNewEvent.setOnClickListener(this);
 		btnDoSearch.setOnClickListener(this);
 
-		btnFilterByDate.setOnClickListener(this);
+		/*btnFilterByDate.setOnClickListener(this);
 		btnFilterByDistance.setOnClickListener(this);
 		btnFilterByFriendsEvent.setOnClickListener(this);
 		btnFilterByMyEvent.setOnClickListener(this);
-		btnFilterByPublicEvent.setOnClickListener(this);
+		btnFilterByPublicEvent.setOnClickListener(this);*/
 	}
 
 	private void init() {
 		// TODO Auto-generated method stub
-		context = EventListActivity.this;
+		context = EventListActivityOther.this;
 
 		colorButtonNormal = getResources().getColor(R.color.transparent);
 		colorButtonSelected = getResources().getColor(R.color.gray_light);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnNotification = (Button) findViewById(R.id.btnNotification);
-		btnSearch = (Button) findViewById(R.id.btnSearch);
+		btnSearch = (Button) findViewById(R.id.btnSearch); 
 
 		searchEditText = (EditText) findViewById(R.id.etFriendSearch);
-		searchEditText.addTextChangedListener(filterTextWatcher);
+		searchEditText.addTextChangedListener(filterTextWatcher); 
+		
+		separator = (LinearLayout) findViewById(R.id.separator); 
+		tvtitle = (TextView) findViewById(R.id.tvtitle);
+		tvtitle.setText(people.getFirstName()+"'s"+" events");
 
 		btnDoSearch = (Button) findViewById(R.id.btnDoSearch);
-		btnNewEvent = (Button) findViewById(R.id.btnNewEvent);
-		btnFilterByDate = (Button) findViewById(R.id.btnFilterByDate);
+		//btnNewEvent = (Button) findViewById(R.id.btnNewEvent);
+		/*btnFilterByDate = (Button) findViewById(R.id.btnFilterByDate);
 		btnFilterByDistance = (Button) findViewById(R.id.btnFilterByDistance);
 		btnFilterByFriendsEvent = (Button) findViewById(R.id.btnFilterByFriendsEvent);
 		btnFilterByMyEvent = (Button) findViewById(R.id.btnFilterByMyEvent);
-		btnFilterByPublicEvent = (Button) findViewById(R.id.btnFilterByPublicEvent);
+		btnFilterByPublicEvent = (Button) findViewById(R.id.btnFilterByPublicEvent);*/
 
 		eventList = (ListView) findViewById(R.id.event_list);
 		events = new ArrayList<Event>();
@@ -264,9 +287,13 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			RestClient getAccountSettingsClient = new RestClient(
-					Constant.smGetEventUrl);
+			// TODO Auto-generated method stub 
+			
+			RestClient getAccountSettingsClient;
+			getAccountSettingsClient = new RestClient(Constant.smServerUrl+"/users"+"/"+userID+"/events");
+			
+			
+			//RestClient getAccountSettingsClient = new RestClient(Constant.smGetEventUrl);
 			getAccountSettingsClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -310,7 +337,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 			resetFilterEditText();
 			this.resetAdapterItems();
 
-			btnFilterByDate.setBackgroundColor(colorButtonSelected);
+			//btnFilterByDate.setBackgroundColor(colorButtonSelected);
 			contentAdapter.notifyDataSetChanged();
 
 			break;
@@ -338,16 +365,13 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
-		@Override
 		public void afterTextChanged(Editable s) {
 		}
 
-		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
 		}
 
-		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			contentAdapter.getFilter().filter(s);
@@ -365,17 +389,17 @@ public class EventListActivity extends Activity implements OnClickListener,
 	 * EventDetailsActivity.class); startActivity(eventDetailsIntent); }
 	 */
 
-	public void clearFilterButtonSelection() {
+	/*public void clearFilterButtonSelection() {
 		btnFilterByDate.setBackgroundColor(colorButtonNormal);
 		btnFilterByDistance.setBackgroundColor(colorButtonNormal);
 		btnFilterByFriendsEvent.setBackgroundColor(colorButtonNormal);
 		btnFilterByMyEvent.setBackgroundColor(colorButtonNormal);
 		btnFilterByPublicEvent.setBackgroundColor(colorButtonNormal);
-	}
+	}*/
 
 	@Override
 	public void onClick(View v) {
-		if (v == btnFilterByDistance) {
+		/*if (v == btnFilterByDistance) {
 			this.resetAdapterItems();
 			sortDataByDistance();
 			btnFilterByDistance.setBackgroundColor(colorButtonSelected);
@@ -405,14 +429,14 @@ public class EventListActivity extends Activity implements OnClickListener,
 			btnFilterByPublicEvent.setBackgroundColor(colorButtonSelected);
 			contentAdapter.notifyDataSetChanged();
 
-		}
+		}*/
 
-		if (v == btnNewEvent) {
+		/*if (v == btnNewEvent) {
 			Intent eventIntent = new Intent(getApplicationContext(),
 					EventNewActivity.class);
 			finish();
 			startActivity(eventIntent);
-		}
+		}*/
 		if (v == btnBack) {
 			finish();
 		}
@@ -424,7 +448,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 	private void resetAdapterItems() {
 		this.events.clear();
-		clearFilterButtonSelection();
+		//clearFilterButtonSelection();
 		this.events.addAll(this.dateWiseSortedEvents);
 		contentAdapter.setObjects(this.events);
 	}
@@ -488,12 +512,10 @@ public class EventListActivity extends Activity implements OnClickListener,
 			return mContext;
 		}
 
-		@Override
 		public int getCount() {
 			return mObjects.size();
 		}
 
-		@Override
 		public Event getItem(int position) {
 			return mObjects.get(position);
 		}
@@ -502,7 +524,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			return mObjects.indexOf(item);
 		}
 
-		@Override
 		public long getItemId(int position) {
 			return position;
 		}
@@ -516,7 +537,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			return this.mObjects;
 		}
 
-		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			return EventRowFactory.getView(LayoutInflater.from(context),
@@ -528,7 +548,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			this.mDropDownResource = resource;
 		}
 
-		@Override
 		public Filter getFilter() {
 			if (mFilter == null) {
 				mFilter = new ArrayFilter();
@@ -687,23 +706,28 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onItemClick(Event event) {
 			// TODO Auto-generated method stub
-			//finish();
+			
+			
+			Log.d("EVENT CHECK", event.getEventId()+" "+ event.getEventTitle()+" "+event.getEvent_type()+" "+event.getMyResponse());
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
-			eventDetailsIntent.putExtra("selectedEvent", event);
-			startActivity(eventDetailsIntent);
+			eventDetailsIntent.putExtra("selectedEvent", event); 
+			startActivity(eventDetailsIntent); 
+			//finish();
 		}
 
 		@Override
 		public void onArrowButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			//finish();
+			
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
-			eventDetailsIntent.putExtra("selectedEvent", event);
-			startActivity(eventDetailsIntent);
+			eventDetailsIntent.putExtra("selectedEvent", event); 
+			startActivity(eventDetailsIntent); 
+			
+			//finish();
 
 		}
 
@@ -730,11 +754,9 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onShowOnMapButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			/*
-			 * Intent intent = new Intent(context, ShowItemOnMap.class);
-			 * intent.putExtra("FLAG", Constant.FLAG_EVENT);
-			 * startActivity(intent);
-			 */
+			/*Intent intent = new Intent(context, ShowItemOnMap.class);
+			intent.putExtra("FLAG", Constant.FLAG_EVENT);
+			startActivity(intent);*/
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = event;
 			finish();
@@ -743,3 +765,4 @@ public class EventListActivity extends Activity implements OnClickListener,
 	}
 
 }
+

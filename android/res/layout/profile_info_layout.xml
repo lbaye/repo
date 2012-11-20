@@ -47,6 +47,7 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/scrollViewMyInfo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scrollbars="none" >
@@ -86,7 +87,7 @@
                         android:layout_marginTop="5dip"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/profile_brush_icon" />
+                        android:src="@drawable/profile_pen_icon"  />
                 </LinearLayout>
 
                 <LinearLayout
@@ -134,7 +135,7 @@
                                     android:layout_marginTop="5dip"
                                     android:adjustViewBounds="true"
                                     android:scaleType="fitXY"
-                                    android:src="@drawable/profile_brush_icon" />
+                                    />
                             </LinearLayout>
                         </FrameLayout>
 
@@ -158,7 +159,8 @@
                                 android:textSize="14dip"
                                 android:textStyle="bold" />
 
-                            <RelativeLayout
+                            <RelativeLayout 
+                                android:id="@+id/relativeLayoutForStatus"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content" >
 
@@ -187,7 +189,7 @@
                                         android:layout_height="25dip"
                                         android:layout_alignParentBottom="true"
                                         android:layout_toRightOf="@+id/tvStatusMessage"
-                                        android:src="@drawable/profile_pen_icon" />
+                                         />
                                 </LinearLayout>
                             </RelativeLayout>
                         </LinearLayout>
@@ -210,16 +212,16 @@
                             android:text=""
                             android:textColor="@android:color/white"
                             android:textSize="12dip"
-                            android:textStyle="normal" 
-                            android:visibility="gone"/>
+                            android:textStyle="normal"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/btnNavigateToMap"
                             android:layout_width="25dip"
                             android:layout_height="25dip"
+                            android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="2dip"
-                            android:layout_alignParentRight="true"
                             android:adjustViewBounds="true"
                             android:scaleType="fitXY"
                             android:src="@drawable/show_on_map"
@@ -408,8 +410,7 @@
                     android:orientation="horizontal"
                     android:visibility="visible" >
 
-                    <LinearLayout 
-                        
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -497,7 +498,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -540,8 +540,7 @@
                             android:textStyle="normal" />
                     </LinearLayout>
 
-                    <LinearLayout 
-                        
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -582,10 +581,9 @@
                             android:textColor="@color/black"
                             android:textSize="12dip"
                             android:textStyle="normal" />
-                    </LinearLayout> 
-                    
-                    <LinearLayout 
-                        
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
@@ -627,9 +625,6 @@
                             android:textSize="12dip"
                             android:textStyle="normal" />
                     </LinearLayout>
-
-                   
-
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -669,7 +664,7 @@
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
 
-                <RelativeLayout 
+                <RelativeLayout
                     android:id="@+id/relativeLayoutForUploadPhoto"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
@@ -699,6 +694,26 @@
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" 
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip">
+
+                <WebView
+                    android:id="@+id/wViewNewsFeed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" 
+                      android:layout_centerInParent="true"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Place;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.ui.R;
@@ -75,16 +76,20 @@ public class PlaceRowFactoryForSavedPlace {
 		// ******************************************************************current
 		// position
 
-		if (place.getAddress() != null) {
-			holder.addressText.setText(place.getAddress());
+		if (place.getVicinity() != null) {
+			holder.addressText.setText(place.getVicinity());
 			holder.addressText.setVisibility(View.VISIBLE);
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
+		
+		if(StaticValues.myPoint!=null)
+		{
+			holder.distanceText.setText(Utility.getFormatedDistance(Utility.calculateDistance(StaticValues.myPoint, new GeoPoint((int)(place.getLatitude()*1E6), (int)(place.getLongitude()*1E6)) ), StaticValues.myInfo.getSettings().getUnit()));
+		}
 
-		holder.distanceText.setText(Utility.getFormatedDistance(place
-				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+		
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 

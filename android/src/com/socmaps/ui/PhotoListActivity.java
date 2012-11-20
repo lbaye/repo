@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +20,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.socmaps.entity.People;
 import com.socmaps.entity.Photo;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
@@ -34,13 +37,16 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 	private Context context;
 	private Button btnSearch, btnNotification, btnBack, btnUploadNewPhoto,
-			btnDeletePhotos;
+			btnDeletePhotos, btnMyPhotos;
+
+	private ImageView ivSeperator;
+	private TextView tvPhotos;
 
 	ProgressDialog mProgressDialog;
 
 	private LinearLayout listContainer;
 	private List<Photo> photoList;
-	LinearLayout buttonContainerBottom;
+	LinearLayout buttonContainerBottom, buttonContainerTop;
 	private LayoutInflater inflater;
 
 	HashMap<String, Boolean> selectedPhoto;
@@ -49,18 +55,54 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 	int responseStatus = 0;
 
 	ImageDownloader imageDownloader;
+	String userID = null;
+	public People people;
+
+	public static boolean isUploadNewPhoto = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.photo_list_layout);
+
+		Object obj = getIntent().getSerializableExtra("user");
+		if (obj != null) {
+			people = (People) (obj);
+			obj = null;
+			userID = people.getId();
+			Log.d("CHECK VALUE", "ID: " + people.getId() + "~" + userID);
+		}
+
 		initialize();
+
+		getPhotos();
+
+		Log.d("onCreate", "PhotoListActivity");
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// Log.d("onResume PhotoListActivity",
+		// getIntent().getIntExtra("IS_UPLOAD_NEW_PHOTO", 0) + " ");
+
+		if (isUploadNewPhoto) {
+
+			getPhotos();
+			Log.d("PhotoListActivity onResume", "get New Photo ");
+		}
+
+		Log.d("onResume", "PhotoListActivity");
 
 	}
 
 	private void initialize() {
 
 		context = PhotoListActivity.this;
+
+		isUploadNewPhoto = false;
 
 		btnSearch = (Button) findViewById(R.id.btnSearch);
 		btnSearch.setOnClickListener(this);
@@ -71,13 +113,19 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
+		btnMyPhotos = (Button) findViewById(R.id.btnMyPhotos);
+
 		btnUploadNewPhoto = (Button) findViewById(R.id.btnUploadNewPhoto);
 		btnUploadNewPhoto.setOnClickListener(this);
 
 		btnDeletePhotos = (Button) findViewById(R.id.btnDeletePhotos);
 		btnDeletePhotos.setOnClickListener(this);
 
+		ivSeperator = (ImageView) findViewById(R.id.ivSeparator);
+		tvPhotos = (TextView) findViewById(R.id.tvPhotos);
+
 		listContainer = (LinearLayout) findViewById(R.id.listContainer);
+		buttonContainerTop = (LinearLayout) findViewById(R.id.buttonContainerTop);
 		buttonContainerBottom = (LinearLayout) findViewById(R.id.buttonContainerBottom);
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -86,6 +134,32 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		imageDownloader = new ImageDownloader();
 		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+
+		if (userID != null) {
+			btnUploadNewPhoto.setVisibility(View.GONE);
+			btnDeletePhotos.setVisibility(View.GONE);
+			ivSeperator.setVisibility(View.GONE);
+			buttonContainerTop.setGravity(Gravity.LEFT);
+			btnMyPhotos.setText(people.getFirstName() + "'s" + " " + "photos");
+		}
+
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		if (v == btnBack) {
+			finish();
+		} else if (v == btnUploadNewPhoto) {
+
+			Intent uploadPhotoIntent = new Intent(context,
+					PhotoUploadNewPhotoActivity.class);
+			startActivity(uploadPhotoIntent);
+			// finish();
+
+		} else if (v == btnDeletePhotos) {
+			initiateDeletePhotos();
+		}
 	}
 
 	private void generateView() {
@@ -146,19 +220,25 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (selectedPhoto.get(id)) {
-					photoContainer.setBackgroundResource(R.color.transparent);
-					selectedPhoto.put(id, false);
-				} else {
-					photoContainer
-							.setBackgroundResource(R.color.highlightGreen);
-					selectedPhoto.put(id, true);
-				}
 
-				if (getSelectedPhotoNumber() > 0) {
-					buttonContainerBottom.setVisibility(View.VISIBLE);
+				if (userID != null) {
+
 				} else {
-					buttonContainerBottom.setVisibility(View.GONE);
+					if (selectedPhoto.get(id)) {
+						photoContainer
+								.setBackgroundResource(R.color.transparent);
+						selectedPhoto.put(id, false);
+					} else {
+						photoContainer
+								.setBackgroundResource(R.color.highlightGreen);
+						selectedPhoto.put(id, true);
+					}
+
+					if (getSelectedPhotoNumber() > 0) {
+						buttonContainerBottom.setVisibility(View.VISIBLE);
+					} else {
+						buttonContainerBottom.setVisibility(View.GONE);
+					}
 				}
 
 			}
@@ -229,7 +309,16 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smPhotoUrl);
+
+			RestClient restClient;
+			if (userID == null) {
+				restClient = new RestClient(Constant.smPhotoUrl);
+			} else {
+				restClient = new RestClient(Constant.smServerUrl + "/photos"
+						+ "/users" + "/" + userID);
+			}
+
+			// RestClient restClient = new RestClient(Constant.smPhotoUrl);
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -270,7 +359,11 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			if (photoList != null) {
 				generateView();
 			}
+			break;
 
+		case Constant.STATUS_SUCCESS_NODATA:
+			Toast.makeText(context, "No Photos are Found", Toast.LENGTH_SHORT)
+					.show();
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -297,31 +390,8 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		getPhotos();
-
-	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if (v == btnBack) {
-			finish();
-		} else if (v == btnUploadNewPhoto) {
-
-			Intent uploadPhotoIntent = new Intent(context,
-					PhotoUploadNewPhotoActivity.class);
-			startActivity(uploadPhotoIntent);
-			finish();
-
-		} else if (v == btnDeletePhotos) {
-			initiateDeletePhotos();
-		}
+		isUploadNewPhoto = false;
+		Log.w("onPause()", "PhotoListActivity");
 	}
 
 	public void initiateDeletePhotos() {
@@ -340,7 +410,8 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smPhotoUrl + "/deletephotos");
+			RestClient restClient = new RestClient(Constant.smPhotoUrl
+					+ "/deletephotos");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -396,6 +467,8 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			photoList.clear();
 			photoList = tempPhotoList;
 
+			Toast.makeText(getApplicationContext(),
+					"Photo deleted successfully.", Toast.LENGTH_LONG).show();
 			generateView();
 
 			break;

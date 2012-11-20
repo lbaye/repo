@@ -73,7 +73,8 @@
             android:scaleType="centerInside"
             android:src="@drawable/icon_camera" />
 
-        <TextView
+        <TextView 
+            android:id="@+id/tvPhotos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dip"
@@ -94,7 +95,7 @@
         <Button
             android:id="@+id/btnMyPhotos"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" 
             android:padding="10dip"
             android:layout_marginRight="15dip"
             android:textColor="@color/gray_dark"
@@ -104,10 +105,11 @@
             android:background="@color/transparent" />
         
         <ImageView 
+            android:id="@+id/ivSeparator"
             android:layout_width="1dip"
             android:layout_height="40dip"
             android:src="@drawable/seperator"
-            android:scaleType="fitXY"
+            android:scaleType="fitXY" 
             />
         
         <Button
@@ -122,7 +124,7 @@
             android:text="@string/uploadNewPhoto"
             android:background="@color/transparent" />
         
-    </LinearLayout>
+    </LinearLayout> 
     
     <LinearLayout
         android:id="@+id/buttonContainerBottom"

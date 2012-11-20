@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,7 +16,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.FacebookError;
+import com.facebook.android.Facebook.DialogListener;
+import com.google.android.gcm.GCMRegistrar;
 import com.socmaps.entity.PlatformsPreferences;
+import com.socmaps.fb.BaseDialogListener;
+import com.socmaps.fb.FBUtility;
+import com.socmaps.fb.SessionEvents;
+import com.socmaps.fb.SessionEvents.AuthListener;
+import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -25,7 +38,7 @@ import com.socmaps.util.Utility;
 public class PlatformPreferencesActivity extends Activity implements
 		OnClickListener {
 	CheckBox chkFB, chk4sq, chkGplus;
-	Button btnSave;
+	Button btnSave, btnInvite;
 	Button btnBack, btnNotification;
 	Context context;
 	RadioGroup radioGroupFb, radioGroup4sq, radioGroupGooglePlus;
@@ -34,6 +47,9 @@ public class PlatformPreferencesActivity extends Activity implements
 	int requestCode;
 	String responseString;
 	int responseStatus = 0;
+
+	FbAPIsAuthListener fbAPIsAuthListener;
+	FbAPIsLogoutListener fbAPIsLogoutListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +70,24 @@ public class PlatformPreferencesActivity extends Activity implements
 		} else {
 			setFieldValues(StaticValues.platformsPreferences);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		SessionEvents.removeAuthListener(fbAPIsAuthListener);
+		SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
+
+		System.gc();
+
+		super.onDestroy();
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		Window window = getWindow();
+		// Eliminates color banding
+		window.setFormat(PixelFormat.RGBA_8888);
 	}
 
 	private void setFieldValues(PlatformsPreferences platformsPreferences) {
@@ -177,6 +211,10 @@ public class PlatformPreferencesActivity extends Activity implements
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 
 		btnSave = (Button) findViewById(R.id.btnSavePlatforms);
+		btnInvite = (Button) findViewById(R.id.btnInvite);
+
+		fbAPIsAuthListener = new FbAPIsAuthListener();
+		fbAPIsLogoutListener = new FbAPIsLogoutListener();
 
 		/*
 		 * chkFB=(CheckBox) findViewById(R.id.chkFB); chk4sq=(CheckBox)
@@ -192,6 +230,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		btnBack.setOnClickListener(this);
 		btnNotification.setOnClickListener(this);
 		btnSave.setOnClickListener(this);
+		btnInvite.setOnClickListener(this);
 
 	}
 
@@ -311,8 +350,164 @@ public class PlatformPreferencesActivity extends Activity implements
 			startActivity(notificationIntent);
 		} else if (v == btnSave) {
 			updateAllValues();
+		} else if (v == btnInvite) {
+
+			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb")) {
+				initInviteFriends();
+			} else {
+				initInvitationDialog();
+			}
+
 		}
 
+	}
+
+	private void initInvitationDialog() {
+		// TODO Auto-generated method stub
+		FBUtility.mFacebook = new Facebook(Constant.FB_APP_ID);
+		FBUtility.mAsyncRunner = new AsyncFacebookRunner(FBUtility.mFacebook);
+
+		SessionEvents.addAuthListener(fbAPIsAuthListener);
+		SessionEvents.addLogoutListener(fbAPIsLogoutListener);
+
+		FBUtility.mFacebook.authorize((Activity) context,
+				Constant.facebookPermissions, new LoginDialogListener());
+
+	}
+
+	public class FbAPIsAuthListener implements AuthListener {
+
+		// @Override
+		@Override
+		public void onAuthSucceed() {
+
+			initInviteFriends();
+
+		}
+
+		// @Override
+		@Override
+		public void onAuthFail(String error) {
+			Log.e("HomeActivity", "Login Failed: " + error);
+		}
+	}
+
+	/*
+	 * The Callback for notifying the application when log out starts and
+	 * finishes.
+	 */
+	public class FbAPIsLogoutListener implements LogoutListener {
+		// @Override
+		@Override
+		public void onLogoutBegin() {
+			Log.e("HomeActivity", "Logging out...");
+		}
+
+		// @Override
+		@Override
+		public void onLogoutFinish() {
+			Log.e("HomeActivity", "You have logged out! ");
+
+			// mahadi:start login again
+			// btnFBLogin.setVisibility(View.GONE);
+			// btnFBLogin2.setVisibility(View.VISIBLE);
+			Utility.setFacebookImage(context, null);
+			// ivFacebookProfile.setImageDrawable(getResources().getDrawable(
+			// R.drawable.icon_facebook));
+
+			FBUtility.mFacebook.authorize((Activity) context,
+					Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH,
+					new LoginDialogListener());
+		}
+	}
+
+	private final class LoginDialogListener implements DialogListener {
+		// @Override
+		@Override
+		public void onComplete(Bundle values) {
+			Log.e("LoginDialogListener", "onComplete");
+			SessionEvents.onLoginSuccess();
+		}
+
+		// @Override
+		@Override
+		public void onFacebookError(FacebookError error) {
+			Log.e("LoginDialogListener", "onFacebookError");
+			SessionEvents.onLoginError(error.getMessage());
+		}
+
+		// @Override
+		@Override
+		public void onError(DialogError error) {
+			Log.e("LoginDialogListener", "onError");
+			SessionEvents.onLoginError(error.getMessage());
+		}
+
+		// @Override
+		@Override
+		public void onCancel() {
+			Log.e("LoginDialogListener", "onCancel");
+			SessionEvents.onLoginError("Action Canceled");
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+	public void initInviteFriends() {
+		Log.d("Facebook", "Have to invite");
+
+		if (Utility.isConnectionAvailble(context)) {
+
+			showInvitationDialog();
+
+		} else {
+			Toast.makeText(getApplicationContext(),
+					"Internet Connection Unavailable", Toast.LENGTH_SHORT)
+					.show();
+		}
+	}
+
+	public void showInvitationDialog() {
+		Bundle params = new Bundle();
+		params.putString("message", "Checkout the app.");
+		FBUtility.mFacebook.dialog(context, "apprequests", params,
+				new AppRequestsListener());
+	}
+
+	/*
+	 * callback for the apprequests dialog which sends an app request to user's
+	 * friends.
+	 */
+	public class AppRequestsListener extends BaseDialogListener {
+		// @Override
+		@Override
+		public void onComplete(Bundle values) {
+			/*
+			 * Toast toast = Toast.makeText(getApplicationContext(),
+			 * "App request sent", Toast.LENGTH_SHORT); toast.show();
+			 */
+		}
+
+		@Override
+		public void onFacebookError(FacebookError error) {
+			/*
+			 * Toast.makeText(getApplicationContext(), "Facebook Error: " +
+			 * error.getMessage(), Toast.LENGTH_SHORT) .show();
+			 */
+		}
+
+		@Override
+		public void onCancel() {
+			/*
+			 * Toast toast = Toast.makeText(getApplicationContext(),
+			 * "App request cancelled", Toast.LENGTH_SHORT); toast.show();
+			 */
+		}
 	}
 
 }

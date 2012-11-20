@@ -26,12 +26,19 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
+import com.socmaps.entity.PushData;
+import com.socmaps.pushNotification.CommonUtilities;
 import com.socmaps.pushNotification.ServerUtilities;
 
 /**
  * IntentService responsible for handling GCM messages.
  */
 public class GCMIntentService extends GCMBaseIntentService {
+	
+	
+	
+	Intent intent = new Intent(CommonUtilities.DISPLAY_MESSAGE_ACTION);
+	int counter = 0;
 
 	@SuppressWarnings("hiding")
 	private static final String TAG = "GCMIntentService";
@@ -72,15 +79,55 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 		if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {
 			Log.w("C2DM", "Received message");
-			final String payload = intent.getStringExtra("message");
+			//Log.i("GCM objectType", intent.getStringExtra("objectType"));
+			//Log.i("GCM objectId", intent.getStringExtra("objectId"));
+			
+			
+			PushData pushData = new PushData();
+			
+			if(intent.getStringExtra("objectId")!=null)
+			{
+				pushData.setObjectId(intent.getStringExtra("objectId"));				
+			}
+			if(intent.getStringExtra("objectType")!=null)
+			{
+				pushData.setObjectType(intent.getStringExtra("objectType"));
+			}
+			if(intent.getStringExtra("title")!=null)
+			{
+				pushData.setTitle(intent.getStringExtra("title"));
+			}
+			if(intent.getStringExtra("message")!=null)
+			{
+				pushData.setMessage(intent.getStringExtra("message"));
+			}
+			if(intent.getStringExtra("badge")!=null)
+			{
+				//pushData.setBadge(intent.getIntExtra("badge",0));
+				pushData.setBadge( Integer.parseInt(intent.getStringExtra("badge")));
+			}
+			if(intent.getStringExtra("tabCounts")!=null)
+			{
+				pushData.setTabCounts(intent.getStringExtra("tabCounts"));
+			}
+			
+			
+			
 			/*
 			 * final String objectType= intent.getStringExtra("objectType");
 			 * final String objectId= intent.getStringExtra("objectId");
 			 */
 
-			Log.d("C2DM", "dmControl: payload = " + payload);
+			Log.d("C2DM", "dmControl: payload = " + pushData.getMessage());
+			
+			
+			Intent intent2 = new Intent(CommonUtilities.DISPLAY_MESSAGE_ACTION);
+			intent2.putExtra("pushData", pushData);
+			sendBroadcast(intent2);
 
-			generateNotification(context, payload);
+			generateNotification(context, pushData);
+			
+			
 
 			// sendBroadcast(intent);
 
@@ -92,8 +139,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		Log.i(TAG, "Received deleted messages notification");
 		String message = getString(R.string.gcm_deleted, total);
 		displayMessage(context, message);
+		
+		PushData pushData = new PushData();
+		pushData.setMessage(message);
 		// notifies user
-		generateNotification(context, message);
+		generateNotification(context, pushData);
 	}
 
 	@Override
@@ -114,20 +164,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 	/**
 	 * Issues a notification to inform the user that server has sent a message.
 	 */
-	private static void generateNotification(Context context, String message) {
+	private static void generateNotification(Context context, PushData pushData) {
 		int icon = R.drawable.icon;
 		long when = System.currentTimeMillis();
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(icon, message, when);
+		Notification notification = new Notification(icon, pushData.getMessage(), when);
 		String title = context.getString(R.string.app_name);
 		Intent notificationIntent = new Intent(context, HomeActivity.class);
 		// set intent so it does not start a new activity
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		
+		notificationIntent.putExtra("pushData", pushData);
+		
 		PendingIntent intent = PendingIntent.getActivity(context, 0,
 				notificationIntent, 0);
-		notification.setLatestEventInfo(context, title, message, intent);
+		notification.setLatestEventInfo(context, title, pushData.getMessage(), intent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0, notification);
 	}

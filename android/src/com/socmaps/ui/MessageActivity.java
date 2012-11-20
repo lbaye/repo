@@ -1,5 +1,9 @@
 package com.socmaps.ui;
 
+import com.socmaps.util.Constant;
+import com.socmaps.util.Utility;
+
+
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -22,7 +27,8 @@ public class MessageActivity extends TabActivity {
 
 	Button btnBack, btnNotification;
 
-	private TabHost mTabHost;
+	private TabHost mTabHost; 
+	Context context;
 
 	@Override
 	public void onAttachedToWindow() {
@@ -70,6 +76,14 @@ public class MessageActivity extends TabActivity {
 				.toString());
 		setupTab(meetupListIntent, meetupRequestTabIcon,
 				getText(R.string.meetuprequests).toString());
+		
+		if(getIntent().getStringExtra("selectedTab")!=null)
+		{
+			if(getIntent().getStringExtra("selectedTab").equals(Constant.PUSH_NOTIFICATION_MEETUP))
+			{
+				mTabHost.setCurrentTab(1);
+			}
+		}
 
 	}
 
@@ -77,7 +91,10 @@ public class MessageActivity extends TabActivity {
 		return mTabHost;
 	}
 
-	public void initialize() {
+	public void initialize() { 
+		
+		context = MessageActivity.this;
+		
 		buttonActionListener = new ButtonActionListener();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
@@ -169,7 +186,8 @@ public class MessageActivity extends TabActivity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if (v == btnBack) {
-				finish();
+				finish(); 
+				Utility.hideKeyboardContext(context);
 			}
 			if (v == btnNotification) {
 				Intent i = new Intent(getApplicationContext(),

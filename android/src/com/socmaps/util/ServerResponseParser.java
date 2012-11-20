@@ -23,6 +23,7 @@ import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.MyInfo;
+import com.socmaps.entity.NotificationCount;
 import com.socmaps.entity.NotificationPreferences;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Photo;
@@ -331,6 +332,33 @@ public class ServerResponseParser {
 				}
 			}
 
+			if (!results.isNull("notification_count")) {
+				NotificationCount notificationCount = new NotificationCount();
+				JSONObject nObj = results.getJSONObject("notification_count");
+
+				int notifications = 0;
+				int friendRequest = 0;
+				int messageCount = 0;
+
+				if (!nObj.isNull("notifications")) {
+					//notifications = nObj.getInt("notifications");
+					notificationCount.setNotificationCount(notifications);
+				}
+				if (!nObj.isNull("friendRequest")) {
+					friendRequest = nObj.getInt("friendRequest");
+					notificationCount.setFriendRequestCount(friendRequest);
+				}
+				if (!nObj.isNull("messageCount")) {
+					messageCount = nObj.getInt("messageCount");
+					notificationCount.setMessageCount((messageCount));
+				}
+
+				notificationCount.setTotalCount(notifications + friendRequest
+						+ messageCount);
+				
+				myInfo.setNotificationCount(notificationCount);
+			}
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -365,15 +393,17 @@ public class ServerResponseParser {
 					People people = new People();
 					String friendId = fjArray.getString(j);
 
-					try {
-						JSONObject friendInfo = fjArray.getJSONObject(j);
-						Log.d(ServerResponseParser.class.getName(),
-								friendInfo.toString());
-						people.setId(friendInfo.getString("id"));
-					} catch (JSONException e) {
-						Log.w(ServerResponseParser.class.getName(), e);
-						people.setId(fjArray.getString(j));
-					}
+					people.setId(friendId);
+
+					/*
+					 * try { JSONObject friendInfo = fjArray.getJSONObject(j);
+					 * Log.d(ServerResponseParser.class.getName(),
+					 * friendInfo.toString());
+					 * people.setId(friendInfo.getString("id")); } catch
+					 * (JSONException e) {
+					 * Log.w(ServerResponseParser.class.getName(), e);
+					 * people.setId(fjArray.getString(j)); }
+					 */
 
 					friendList.add(people);
 				}
@@ -439,10 +469,10 @@ public class ServerResponseParser {
 
 				String date;
 
-				if (!jObject.isNull("createDate")) {
-					date = jObject.getJSONObject("createDate")
-							.getString("date");
-					friendRequests[i].setDate(date);
+				if (!jObject.isNull("createDate")) {					
+					
+					friendRequests[i].setSentTime(getTimeEntityFromJsonObject(jObject.getJSONObject("createDate")));
+					
 				}
 
 			}

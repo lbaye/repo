@@ -429,9 +429,11 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 		if (peoplesAndPlacesEntity != null) {
 
-			for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
-				listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
-						.get(i));
+			if (peoplesAndPlacesEntity.getPeoples() != null) {
+				for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
+					listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
+							.get(i));
+				}
 			}
 
 		}
@@ -440,10 +442,13 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private void addSecondDegreePeoplesToMasterList() {
 		if (peoplesAndPlacesEntity != null) {
 
-			for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples()
-					.size(); i++) {
-				listMasterContent.add(peoplesAndPlacesEntity
-						.getSecondDegreePeoples().get(i));
+			if (peoplesAndPlacesEntity.getSecondDegreePeoples() != null) {
+
+				for (int i = 0; i < peoplesAndPlacesEntity
+						.getSecondDegreePeoples().size(); i++) {
+					listMasterContent.add(peoplesAndPlacesEntity
+							.getSecondDegreePeoples().get(i));
+				}
 			}
 		}
 	}
@@ -521,8 +526,8 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			// TODO Auto-generated method stub
 
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people; 
-			
+			StaticValues.highlightAnnotationItem = people;
+
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
@@ -592,8 +597,8 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		public void onShowOnMapButtonClick(SecondDegreePeople people) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people; 
-			
+			StaticValues.highlightAnnotationItem = people;
+
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
@@ -830,7 +835,8 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(), "Message not delivered,please try again!!",
+			Toast.makeText(getApplicationContext(),
+					"Message not delivered,please try again!!",
 					Toast.LENGTH_SHORT).show();
 			break;
 

@@ -12,7 +12,7 @@ public class SecondDegreePeople implements Serializable {
 	private String avatar;
 	private double currentLat;
 	private double currentLng;
-	//private MyGeoPoint currentPosition;
+	// private MyGeoPoint currentPosition;
 	private double distance;
 	private String currentAddress;
 	private String lastSeenAt;
@@ -75,13 +75,12 @@ public class SecondDegreePeople implements Serializable {
 		this.currentLng = currentLng;
 	}
 
-	/*public MyGeoPoint getCurrentPosition() {
-		return currentPosition;
-	}
-
-	public void setCurrentPosition(MyGeoPoint currentPosition) {
-		this.currentPosition = currentPosition;
-	}*/
+	/*
+	 * public MyGeoPoint getCurrentPosition() { return currentPosition; }
+	 * 
+	 * public void setCurrentPosition(MyGeoPoint currentPosition) {
+	 * this.currentPosition = currentPosition; }
+	 */
 
 	public double getDistance() {
 		return distance;

@@ -63,10 +63,10 @@
                 <ImageView
                     android:id="@+id/ivCoverPic"
                     android:layout_width="fill_parent"
-                    android:layout_height="150dip" 
-                    android:scaleType="fitXY" 
+                    android:layout_height="150dip"
                     android:background="@color/black"
-                    android:src="@null"/>
+                    android:scaleType="fitXY"
+                    android:src="@null" />
 
                 <LinearLayout
                     android:id="@+id/container_info"
@@ -80,45 +80,44 @@
                         android:layout_marginLeft="10dip"
                         android:layout_marginRight="5dip"
                         android:layout_marginTop="30dip" >
-                        
+
                         <RelativeLayout
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content" >
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
 
-			                <ImageView
-			                    android:id="@+id/ivProfilePic"
-			                    android:layout_width="60dip"
-			                    android:layout_height="60dip"
-			                    android:layout_margin="0dip"
-			                    android:adjustViewBounds="true"
-			                    android:background="@drawable/rounded_border_image_bg"
-			                    android:scaleType="fitCenter"
-			                    android:src="@drawable/thumb" />
-
-				                <LinearLayout
-				                    android:id="@+id/layEditProfilePic" 
-				                    android:layout_alignRight="@+id/ivProfilePic"
-				                    android:layout_alignBottom="@+id/ivProfilePic"
-				                    android:layout_width="wrap_content"
-				                    android:layout_height="wrap_content"
-				                    android:layout_marginBottom="-7dip" 
-				                    android:layout_marginRight="-10dip"
-				                    android:background="@drawable/bg_white_transparent_semi"
-				                    android:visibility="visible" >
+                            <ImageView
+                                android:id="@+id/ivProfilePic"
+                                android:layout_width="60dip"
+                                android:layout_height="60dip"
+                                android:layout_margin="0dip"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/rounded_border_image_bg"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/thumb" />
 
-				                    <TextView
-				                        android:id="@+id/tvFriendshipCheck"
-				                        android:layout_width="wrap_content"
-				                        android:layout_height="wrap_content"
-				                        android:ellipsize="end"
-				                        android:singleLine="true"
-				                        android:text="Friend"
-				                        android:textColor="@color/black"
-				                        android:textSize="10dip"
-				                        android:textStyle="normal" />
+                            <LinearLayout
+                                android:id="@+id/layEditProfilePic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+id/ivProfilePic"
+                                android:layout_alignRight="@+id/ivProfilePic"
+                                android:layout_marginBottom="-7dip"
+                                android:layout_marginRight="-10dip"
+                                android:background="@drawable/bg_white_transparent_semi"
+                                android:visibility="invisible" >
 
-                				</LinearLayout>
-            			</RelativeLayout>
+                                <TextView
+                                    android:id="@+id/tvFriendshipCheck"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
+                                    android:text="Friend"
+                                    android:textColor="@color/black"
+                                    android:textSize="10dip"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -163,13 +162,15 @@
                                     android:layout_toRightOf="@+id/tvStatusMessage"
                                     android:gravity="center" >
 
-                                    <!-- <ImageView
+                                    <!--
+                                         <ImageView
                                         android:id="@+id/btnEditStatus"
                                         android:layout_width="25dip"
                                         android:layout_height="25dip"
                                         android:layout_alignParentBottom="true"
                                         android:layout_toRightOf="@+id/tvStatusMessage"
-                                        android:src="@drawable/profile_pen_icon" /> -->
+                                        android:src="@drawable/profile_pen_icon" />
+                                    -->
                                 </LinearLayout>
                             </RelativeLayout>
                         </LinearLayout>
@@ -212,8 +213,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/btnNavigateToMap"
-                            android:singleLine="true"
                             android:ellipsize="end"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@android:color/white"
                             android:textSize="10dip"
@@ -562,93 +563,90 @@
                             android:textStyle="normal" />
                     </LinearLayout>
 
-                   <!--  check point  -->
-					<LinearLayout 
-					    android:id="@+id/linearLayoutFirstMeetUp"
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:background="@color/transparent"
-					    android:orientation="vertical"
-					    android:padding="2dip"
-					    android:layout_marginRight="10dip"
-					    android:visibility="gone"
-					     >
-					
-					   <FrameLayout android:layout_width="60dip"
-					            android:layout_height="60dip">     
-					   <ImageView
-					            android:id="@+id/interest_icon_image"
-					            android:layout_width="fill_parent"
-					            android:layout_height="fill_parent"
-					            android:src="@drawable/meet_up_icon"
-					            android:layout_margin="0dip"
-					            android:scaleType="fitXY"
-					            android:adjustViewBounds="true" />
-					   
-					   <ImageView android:layout_width="15dip"
-					       android:layout_height="wrap_content"
-					       android:scaleType="fitXY"
-					       android:adjustViewBounds="true"
-					       android:src="@drawable/icon_meet_up"
-					       android:layout_gravity="left|bottom"
-					       android:layout_marginLeft="5dip"
-					       android:layout_marginBottom="5dip"/>
-					   </FrameLayout>
-					
-					    <TextView
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content"
-					        android:textColor="@color/black"
-					        android:textSize="12dip"
-					        android:textStyle="normal"
-					        android:maxHeight="30dip"
-					        android:gravity="center_horizontal"
-					        android:text="Meet Up"
-					        
-					         />
-					
-					</LinearLayout>
+                    <!-- check point -->
 
+                    <LinearLayout
+                        android:id="@+id/linearLayoutFirstMeetUp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:background="@color/transparent"
+                        android:orientation="vertical"
+                        android:padding="2dip"
+                        android:visibility="gone" >
 
-                   <!--  check point finish  -->
+                        <FrameLayout
+                            android:layout_width="60dip"
+                            android:layout_height="60dip" >
+
+                            <ImageView
+                                android:id="@+id/interest_icon_image"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_margin="0dip"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/meet_up_icon" />
+
+                            <ImageView
+                                android:layout_width="15dip"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left|bottom"
+                                android:layout_marginBottom="5dip"
+                                android:layout_marginLeft="5dip"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/icon_meet_up" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:maxHeight="30dip"
+                            android:text="Meet Up"
+                            android:textColor="@color/black"
+                            android:textSize="12dip"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <!-- check point finish -->
 
                 </LinearLayout>
-            </HorizontalScrollView> 
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" 
-                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
-                android:visibility="visible" > 
-                
+                android:gravity="center_horizontal"
+                android:visibility="visible" >
+
                 <RelativeLayout
                     android:id="@+id/relativeLayoutFriendshipStatus"
                     android:layout_width="fill_parent"
-                    android:layout_height="40dip" 
+                    android:layout_height="40dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_gray"
                     android:paddingLeft="10dip"
-                    android:paddingRight="10dip" 
-                    android:visibility="visible" > 
-                    
-                     <TextView
-		                android:id="@+id/tvFriendshipStatus"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content" 
-		                android:layout_alignParentLeft="true"
-		                android:layout_centerVertical="true"
-		                android:text=""
-		                android:textColor="@color/white"
-		                android:textSize="12dip"
-		                android:visibility="visible"  
-		                android:textStyle="bold" 
-		                />
-                    
-                </RelativeLayout> 
-                
+                    android:paddingRight="10dip"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/tvFriendshipStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="12dip"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/relativeLayoutFriend"
                     android:layout_width="fill_parent"
@@ -658,7 +656,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
                     android:paddingLeft="10dip"
-                    android:paddingRight="10dip" 
+                    android:paddingRight="10dip"
                     android:visibility="visible" >
 
                     <TextView
@@ -680,7 +678,7 @@
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
 
-                <RelativeLayout 
+                <RelativeLayout
                     android:id="@+id/relativeLayoutMeetUp"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
@@ -689,7 +687,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
                     android:paddingLeft="10dip"
-                    android:paddingRight="10dip" 
+                    android:paddingRight="10dip"
                     android:visibility="gone" >
 
                     <TextView
@@ -710,17 +708,17 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
-            </LinearLayout> 
-            
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" 
-                android:gravity="center_horizontal"
-                android:layout_marginTop="10dip" 
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:gravity="center_horizontal"
                 android:visibility="visible" >
 
-                <RelativeLayout 
+                <RelativeLayout
                     android:id="@+id/relativeLayoutMessage"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
@@ -750,7 +748,7 @@
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
 
-                <RelativeLayout 
+                <RelativeLayout
                     android:id="@+id/relativeLayoutDirection"
                     android:layout_width="fill_parent"
                     android:layout_height="40dip"
@@ -759,8 +757,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_light"
                     android:paddingLeft="10dip"
-                    android:paddingRight="10dip" 
-                     >
+                    android:paddingRight="10dip" >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -781,7 +778,26 @@
                         android:src="@drawable/photos_icon_small" />
                 </RelativeLayout>
             </LinearLayout>
-                   
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip" >
+
+                <WebView
+                    android:id="@+id/webViewNewsFeed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" 
+                    android:layout_centerInParent="true"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

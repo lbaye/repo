@@ -19,7 +19,7 @@ public class Event implements Serializable {
 	private String myResponse;
 	private boolean isInvited;
 
-	//private MyGeoPoint eventLocation;
+	// private MyGeoPoint eventLocation;
 	private RSVP rsvp;
 	private List<People> guestList;
 	private List<Circle> circleList;
@@ -27,7 +27,7 @@ public class Event implements Serializable {
 	private String permission;
 	private List<String> permittedUserList;
 	private List<String> permittedCircleList;
-	
+
 	double latitude;
 	double longitude;
 	String address;
@@ -136,13 +136,12 @@ public class Event implements Serializable {
 		this.isInvited = isInvited;
 	}
 
-	/*public MyGeoPoint getEventLocation() {
-		return eventLocation;
-	}
-
-	public void setEventLocation(MyGeoPoint eventLocation) {
-		this.eventLocation = eventLocation;
-	}*/
+	/*
+	 * public MyGeoPoint getEventLocation() { return eventLocation; }
+	 * 
+	 * public void setEventLocation(MyGeoPoint eventLocation) {
+	 * this.eventLocation = eventLocation; }
+	 */
 
 	public RSVP getRsvp() {
 		return rsvp;
@@ -191,8 +190,6 @@ public class Event implements Serializable {
 	public void setPermittedCircleList(List<String> permittedCircleList) {
 		this.permittedCircleList = permittedCircleList;
 	}
-
-	
 
 	public double getLatitude() {
 		return latitude;

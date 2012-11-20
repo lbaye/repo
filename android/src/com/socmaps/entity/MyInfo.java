@@ -49,6 +49,8 @@ public class MyInfo {
 	private TimeEntity lastLoginTime;
 
 	private MyGeoPoint currentPosition;
+	
+	private NotificationCount notificationCount = new NotificationCount();
 
 	public void setCoverPhoto(String url) {
 		this.coverPhoto = url;
@@ -322,6 +324,14 @@ public class MyInfo {
 
 	public void setSettings(UserSettings settings) {
 		this.settings = settings;
+	}
+
+	public NotificationCount getNotificationCount() {
+		return notificationCount;
+	}
+
+	public void setNotificationCount(NotificationCount notificationCount) {
+		this.notificationCount = notificationCount;
 	}
 
 }

@@ -10,16 +10,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +99,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	String sendMessageContent = "";
 	String sendMessageResponse = "";
 	int sendMessageStatus = 0;
+	private WebView webViewNewsFeed;
+	private ProgressBar progressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -196,11 +204,51 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
 		tvFriendshipCheck = (TextView) findViewById(R.id.tvFriendshipCheck);
 
-		if (people.getFriendshipStatus().equalsIgnoreCase(
-				Constant.STATUS_FRIENDSHIP_FRIEND)) {
-			layEditProfilePic.setVisibility(View.VISIBLE);
-			lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+		if (people.getFriendshipStatus() != null) {
+			if (people.getFriendshipStatus().equalsIgnoreCase(
+					Constant.STATUS_FRIENDSHIP_FRIEND)) {
+				layEditProfilePic.setVisibility(View.VISIBLE);
+				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+			}
 		}
+
+		// newsfeed portion
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		webViewNewsFeed = (WebView) findViewById(R.id.webViewNewsFeed);
+
+		webViewNewsFeed.setBackgroundColor(Color.parseColor("#00000000"));
+
+		WebSettings webSettings = webViewNewsFeed.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginsEnabled(false);
+		webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
+
+		webSettings.setSupportMultipleWindows(false);
+
+		webViewNewsFeed.getSettings().setSupportZoom(false);
+		webViewNewsFeed.setVerticalScrollBarEnabled(true);
+		webViewNewsFeed.setHorizontalScrollBarEnabled(false);
+		webViewNewsFeed.getSettings().setBuiltInZoomControls(false);
+
+		// Our application's main page will be loaded
+		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=51a610291d73b70b022deaefd7f53e3aa4d746f7
+		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + people.getId()
+				+ "/newsfeed.html?");
+
+		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
+
+		webViewNewsFeed.setWebChromeClient(new WebChromeClient() {
+
+			@Override
+			public void onProgressChanged(WebView view, int progress) {
+
+				progressBar.setVisibility(View.VISIBLE);
+
+				if (progress == 100)
+					progressBar.setVisibility(View.INVISIBLE);
+			}
+
+		});
 
 	}
 
@@ -302,18 +350,20 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
-//			Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
-//					.show(); 
-			
+			// Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
+			// .show();
+
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people; 
-			
+			StaticValues.highlightAnnotationItem = people;
+
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
 		} else if (v == btnEvent) {
-			Intent i = new Intent(context, EventListActivity.class);
+			// finish();
+			Intent i = new Intent(context, EventListActivityOther.class);
+			i.putExtra("user", people);
 			startActivity(i);
 		} else if (v == btnBack) {
 			finish();
@@ -322,17 +372,20 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					NotificationActivity.class);
 			startActivity(notificationIntent);
 		} else if (v == photos_icon_image) {
-			Toast.makeText(
-					getApplicationContext(),
-					people.getFirstName() + "'s"
-							+ " photos will be shown later on",
-					Toast.LENGTH_SHORT).show();
+			showOtherPeoplePhoto();
 		} else if (v == friends_icon_image) {
-			Toast.makeText(
-					getApplicationContext(),
-					people.getFirstName() + "'s"
-							+ " friends will be shown later on",
-					Toast.LENGTH_SHORT).show();
+
+			Intent friendIntent = new Intent(getApplicationContext(),
+					FriendListActivity.class);
+			friendIntent.putExtra("ID", people.getId());
+			startActivity(friendIntent);
+			
+			//
+			// Toast.makeText(
+			// getApplicationContext(),
+			// people.getFirstName() + "'s"
+			// + " friends will be shown later on",
+			// Toast.LENGTH_SHORT).show();
 		} else if (v == places_icon_image) {
 			goToShowPlaces();
 		} else if (v == interest_icon_image) {
@@ -347,7 +400,22 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			goToDirection();
 		}
 
-	} 
+	}
+
+	private void showOtherPeoplePhoto() {
+		/*
+		 * if(!people.getFriendshipStatus().equalsIgnoreCase(Constant.
+		 * STATUS_FRIENDSHIP_FRIEND)) { Toast.makeText(getApplicationContext(),
+		 * "You Are Not Friend of This User", Toast.LENGTH_SHORT).show(); } else
+		 * {
+		 */
+		Intent intent = new Intent(getApplicationContext(),
+				PhotoListActivity.class);
+		intent.putExtra("user", people);
+		startActivity(intent);
+		// finish();
+		// }
+	}
 
 	private void goToShowPlaces() {
 		// Toast.makeText(context, "will be added very soon",
@@ -356,18 +424,19 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Log.d("People Name & ID", people.getFirstName() + " " + people.getId());
 		intentToGoPlace.putExtra("personID", people.getId());
 		startActivity(intentToGoPlace);
-		finish();
+		// finish();
 	}
 
 	private void goToMeetUp() {
 		// Toast.makeText(context, "Not This Time", Toast.LENGTH_SHORT).show();
 
-		Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat())+" "+String.valueOf(people.getCurrentLng()));
-		
+		Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat())
+				+ " " + String.valueOf(people.getCurrentLng()));
+
 		Intent intentToShowMeetUp = new Intent(context,
-				MeetupRequestNewActivity.class); 
+				MeetupRequestNewActivity.class);
 		intentToShowMeetUp.putExtra("destLat", people.getCurrentLat());
-		intentToShowMeetUp.putExtra("destLng", people.getCurrentLng()); 
+		intentToShowMeetUp.putExtra("destLng", people.getCurrentLng());
 		intentToShowMeetUp.putExtra("destAddress", people.getCurrentAddress());
 		startActivity(intentToShowMeetUp);
 	}
@@ -394,68 +463,81 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		if (friendRequestSentList.contains(userId)) {
 			tvFriendshipStatus.setText("Pending");
 		} else {
-			if (friendshipStatus
-					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
-				// tvFriendshipStatus.setVisibility(View.GONE);
-				// relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
-				// tvFriendshipStatus.setText("No Friendship");
 
-				relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra ---
-																// //
-				relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // ---
-																				// extra
-																				// ---
-																				// //
+			if (friendshipStatus != null) {
 
-				relativeLayoutFriend.setVisibility(View.VISIBLE);
-
-			} else if (friendshipStatus
-					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
-				// tvFriendshipStatus.setVisibility(View.GONE);
-				// tvFriendshipStatus.setText("Friend");
-
-				relativeLayoutFriend.setVisibility(View.GONE); // --- extra ---
-																// //
-				relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // ---
-																				// extra
-																				// ---
-																				// //
-
-				relativeLayoutMeetUp.setVisibility(View.VISIBLE);
-			} else {
-				// tvFriendshipStatus.setVisibility(View.VISIBLE);
-				// relativeLayoutFriend.setVisibility(View.GONE);
-				relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
-
-				relativeLayoutFriend.setVisibility(View.INVISIBLE);
-
-				relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra ---
-																// //
-
-				String status = "";
 				if (friendshipStatus
+						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
+					// tvFriendshipStatus.setVisibility(View.GONE);
+					// relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
+					// tvFriendshipStatus.setText("No Friendship");
+
+					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
+																	// ---
+																	// //
+					relativeLayoutFriendshipStatus
+							.setVisibility(View.INVISIBLE); // ---
+															// extra
+															// ---
+															// //
+
+					relativeLayoutFriend.setVisibility(View.VISIBLE);
+
+				} else if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
-					status = getString(R.string.status_friend_request_friend);
-					relativeLayoutMeetUp.setVisibility(View.VISIBLE);
+					// tvFriendshipStatus.setVisibility(View.GONE);
+					// tvFriendshipStatus.setText("Friend");
 
 					relativeLayoutFriend.setVisibility(View.GONE); // --- extra
-																	// --- //
+																	// ---
+																	// //
 					relativeLayoutFriendshipStatus
-							.setVisibility(View.INVISIBLE); // --- extra --- //
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
-					status = getString(R.string.status_friend_request_pending);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
-					status = getString(R.string.status_friend_request_sent);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
-					status = getString(R.string.status_friend_request_declined_by_me);
-				} else if (friendshipStatus
-						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
-					status = getString(R.string.status_friend_request_declined_by_him);
+							.setVisibility(View.INVISIBLE); // ---
+															// extra
+															// ---
+															// //
+
+					relativeLayoutMeetUp.setVisibility(View.VISIBLE);
+				} else {
+					// tvFriendshipStatus.setVisibility(View.VISIBLE);
+					// relativeLayoutFriend.setVisibility(View.GONE);
+					relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
+
+					relativeLayoutFriend.setVisibility(View.INVISIBLE);
+
+					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
+																	// ---
+																	// //
+
+					String status = "";
+					if (friendshipStatus
+							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
+						status = getString(R.string.status_friend_request_friend);
+						relativeLayoutMeetUp.setVisibility(View.VISIBLE);
+
+						relativeLayoutFriend.setVisibility(View.GONE); // ---
+																		// extra
+																		// ---
+																		// //
+						relativeLayoutFriendshipStatus
+								.setVisibility(View.INVISIBLE); // --- extra ---
+																// //
+					} else if (friendshipStatus
+							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
+						status = getString(R.string.status_friend_request_pending);
+					} else if (friendshipStatus
+							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REQUESTED)) {
+						status = getString(R.string.status_friend_request_sent);
+					} else if (friendshipStatus
+							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_ME)) {
+						status = getString(R.string.status_friend_request_declined_by_me);
+					} else if (friendshipStatus
+							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
+						status = getString(R.string.status_friend_request_declined_by_him);
+					}
+					tvFriendshipStatus.setText(status);
 				}
-				tvFriendshipStatus.setText(status);
+
 			}
 		}
 	}
@@ -713,6 +795,39 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					Toast.LENGTH_SHORT).show();
 			break;
 
+		}
+
+	}
+
+	private class MyWebViewClient extends WebViewClient {
+		@Override
+		public void onPageFinished(final WebView view, final String url) {
+			Log.d("web status", "onPageFinished");
+
+			webViewNewsFeed
+					.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+
+		}
+
+		@Override
+		public void onPageStarted(final WebView view, final String url,
+				final Bitmap favicon) {
+			Log.d("web status", "onPageStarted");
+
+		}
+
+		@Override
+		public boolean shouldOverrideUrlLoading(final WebView view,
+				final String url) {
+
+			// Log.d("clicked data is ", url);
+			//
+			// final Intent intent = new Intent(Intent.ACTION_VIEW,
+			// Uri.parse(url));
+			// startActivity(intent);
+
+			view.loadUrl(url);
+			return true;
 		}
 
 	}

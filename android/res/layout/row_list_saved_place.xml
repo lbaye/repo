@@ -15,7 +15,7 @@
     <RelativeLayout
         android:id="@+id/container_info"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent" >
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -24,53 +24,51 @@
             android:layout_marginRight="10dip"
             android:layout_marginTop="20dip"
             android:orientation="horizontal" >
-            
+
             <Button
                 android:id="@+id/btnEditPlace"
                 android:layout_width="70dp"
                 android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
                 android:background="@drawable/selector_btn_green"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="Edit place"
                 android:textColor="@android:color/white"
                 android:textSize="12dip"
-                android:textStyle="normal"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
+                android:textStyle="normal" />
+            <!-- android:background="@drawable/rounder_border_bg_title" -->
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dip"
                 android:layout_toLeftOf="@+id/btnEditPlace"
-                android:layout_marginRight="10dip"                
-                android:background="@drawable/rounder_border_bg_title"
-                android:paddingTop="0dip"
+                android:gravity="center_vertical"
                 android:minHeight="30dp"
-                android:gravity="center_vertical" >
+                android:paddingTop="0dip" >
 
                 <TextView
                     android:id="@+id/first_name_text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="ddd"
+                    android:maxLines="3"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="12dip"
-                    android:textStyle="normal"
-                    android:maxLines="3" />
+                    android:textStyle="normal" />
             </LinearLayout>
-
-            
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="30dip"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
             android:background="@drawable/rounder_border_bg" >
 
             <TextView

@@ -2,20 +2,38 @@ package com.socmaps.widget;
 
 import java.util.List;
 
+import org.json.JSONArray;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
+import com.socmaps.ui.PeopleCircleActivity;
+import com.socmaps.ui.PlaceEditSaveActivity;
 import com.socmaps.ui.R;
+import com.socmaps.util.Constant;
+import com.socmaps.util.DialogsAndToasts;
+import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class PeopleCirclePrefaranceItemView extends LinearLayout implements
@@ -42,6 +60,13 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 	private Circle circle;
 
 	private ImageDownloader imageDownloader;
+
+	private Button btnDeleteCircle, btnRenameCircle;
+	private ProgressDialog m_ProgressDialog;
+	private String deleteCircleResponse = "";
+	private int deleteCircleStatus = 0;
+
+	private String circleName="";
 
 	public PeopleCirclePrefaranceItemView(Context context, Circle circle,
 			ImageDownloader imageDownloader) {
@@ -77,15 +102,21 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 
 		llCircleFriendsList = (LinearLayout) findViewById(R.id.llCircleFriendsList);
 
+		btnDeleteCircle = (Button) findViewById(R.id.btnDeleteCircle);
+		btnDeleteCircle.setOnClickListener(this);
+
+		btnRenameCircle = (Button) findViewById(R.id.btnRenameCircle);
+		btnRenameCircle.setOnClickListener(this);
 	}
 
 	private void setDefaultValues() {
 
 		if (circle != null) {
-			
-			
+
 			tvItemTitle.setText(circle.getName() + " ("
 					+ circle.getFriendList().size() + ")");
+
+			circleName = circle.getName();
 		}
 
 		if (hideHeader || !isToggle) {
@@ -115,6 +146,16 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 
 		}
 
+		if (v == btnDeleteCircle) {
+			deleteCircle();
+
+		}
+
+		if (v == btnRenameCircle) {
+
+			showTextInputDialog(circleName, circleName);
+		}
+
 	}
 
 	public void toggle() {
@@ -139,8 +180,8 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 
 		List<People> friendList = circle.getFriendList();
 
-		Log.w("circle.getFriendList() is", "CircleName: "
-				+ circle.getName() + " : " + friendList.size() + " ????");
+		Log.w("circle.getFriendList() is", "CircleName: " + circle.getName()
+				+ " : " + friendList.size() + " ????");
 
 		llCircleFriendsList.removeAllViews();
 
@@ -165,5 +206,309 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 		}
 
 	}
+
+	/*
+	 * Delete Circle
+	 */
+	private void deleteCircle() {
+		// TODO Auto-generated method stub
+
+		if (Utility.isConnectionAvailble(context)) {
+
+			Thread thread = new Thread(null, deleteThread,
+					"Start delete circle");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog
+					.show(context,
+							context.getResources().getString(
+									R.string.please_wait_text),
+							context.getResources().getString(
+									R.string.sending_request_text), true);
+
+		} else {
+
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
+		}
+
+	}
+
+	private Runnable deleteThread = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smCircleUrl + "/"
+					+ circle.getId());
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			// restClient.AddParam("name", circle.getName());
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.DELETE);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			deleteCircleResponse = restClient.getResponse();
+			deleteCircleStatus = restClient.getResponseCode();
+
+			((Activity) context).runOnUiThread(deleteCircleReturnResponse);
+
+			// handleResponseSendMessage(createCircleStatus,
+			// createCircleResponse);
+
+			// dismiss progress dialog if needed
+			// m_ProgressDialog.dismiss();
+		}
+	};
+
+	private Runnable deleteCircleReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseDeleteCircle(deleteCircleStatus, deleteCircleResponse);
+
+			// dismiss progress dialog if needed
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
+		}
+	};
+
+	public void handleResponseDeleteCircle(int status, String response) {
+		// show proper message through Toast or Dialog
+		Log.w("Delete Circle ", status + ":" + response);
+
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+			// Log.d("Login", status+":"+response);
+			Toast.makeText(context, "Successfully deleted circle.",
+					Toast.LENGTH_SHORT).show();
+
+			try {
+				for (int i = 0; i < StaticValues.myInfo.getCircleList().size(); i++) {
+
+					if (circle.getId().equalsIgnoreCase(
+							StaticValues.myInfo.getCircleList().get(i).getId())) {
+
+						StaticValues.myInfo.getCircleList().remove(i);
+						break;
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			// Refresh Circle list
+			if (PeopleCircleActivity.getIns() != null) {
+				PeopleCircleActivity.getIns().generateCircleView();
+			}
+
+			break;
+
+		default:
+			Toast.makeText(context,
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
+			break;
+
+		}
+
+	}
+
+	// End *******************************************************
+
+	/*
+	 * Rename Circle
+	 */
+
+	// TODO Auto-generated method stub
+	public void showTextInputDialog(final String text, String hint) {
+
+		// Log.w("showTextInputDialog into", " text:" + text);
+
+		// custom dialog
+		final Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
+		dialog.setContentView(R.layout.input_text_dialog_layout);
+
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				Utility.hideKeyboard((Activity) context);
+			}
+		});
+
+		final EditText etInputText = (EditText) dialog
+				.findViewById(R.id.etInputText);
+
+		// if (hint != null) {
+		// etInputText.setHint(hint);
+		// }
+
+		if (text != null && !text.trim().equalsIgnoreCase("")) {
+			etInputText.setText(text);
+		}
+
+		// TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitle);
+
+		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+		// if button is clicked, close the custom dialog
+		btnCancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+
+			}
+		});
+
+		Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+		// if button is clicked, close the custom dialog
+		btnOk.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				String inputText = etInputText.getText().toString().trim();
+
+				Log.w("showTextInputDialog into", "btnOk: " + inputText);
+
+				if (!inputText.equalsIgnoreCase("")) {
+
+					circleName = inputText;
+
+					renameCircle();
+
+					dialog.dismiss();
+				} else {
+
+					Toast.makeText(context, "Please input circle name", 1000)
+							.show();
+				}
+
+			}
+		});
+
+		dialog.show();
+	}
+
+	private void renameCircle() {
+		// TODO Auto-generated method stub
+
+		if (Utility.isConnectionAvailble(context)) {
+
+			Thread thread = new Thread(null, renameCircleThread,
+					"Start rename circle");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog
+					.show(context,
+							context.getResources().getString(
+									R.string.please_wait_text),
+							context.getResources().getString(
+									R.string.sending_request_text), true);
+
+		} else {
+
+			DialogsAndToasts.showNoInternetConnectionDialog(context);
+		}
+
+	}
+
+	private Runnable renameCircleThread = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smCircleUrl + "/"
+					+ circle.getId() + "/rename");
+
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			restClient.AddParam("name", circleName);
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.PUT);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			deleteCircleResponse = restClient.getResponse();
+			deleteCircleStatus = restClient.getResponseCode();
+
+			((Activity) context).runOnUiThread(renameCircleReturnResponse);
+
+			// handleResponseSendMessage(createCircleStatus,
+			// createCircleResponse);
+
+			// dismiss progress dialog if needed
+			// m_ProgressDialog.dismiss();
+		}
+	};
+
+	private Runnable renameCircleReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseRenameCircle(deleteCircleStatus, deleteCircleResponse);
+
+			// dismiss progress dialog if needed
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
+		}
+	};
+
+	public void handleResponseRenameCircle(int status, String response) {
+		// show proper message through Toast or Dialog
+		Log.w("Rename Circle", status + ":" + response);
+
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+			// Log.d("Login", status+":"+response);
+			Toast.makeText(context, "Circle renamed Successfully.",
+					Toast.LENGTH_SHORT).show();
+
+			try {
+				for (int i = 0; i < StaticValues.myInfo.getCircleList().size(); i++) {
+
+					if (circle.getId().equalsIgnoreCase(
+							StaticValues.myInfo.getCircleList().get(i).getId())) {
+
+						StaticValues.myInfo.getCircleList().get(i).setName(circleName);
+						break;
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			// Refresh Circle list
+			if (PeopleCircleActivity.getIns() != null) {
+				PeopleCircleActivity.getIns().generateCircleView();
+			}
+
+			break;
+
+		default:
+			Toast.makeText(context,
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
+			break;
+
+		}
+
+	}
+
+	// End *******************************************************
 
 }

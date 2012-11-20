@@ -40,11 +40,15 @@ public class Constant {
 	// final static public String smServerUrl =
 	// "http://192.168.1.71/social_maps/web";
 	// staging server
-	final static public String smServerUrl = "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
-	//final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
+	 final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+	//final static public String smServerUrl = "http://192.168.1.212:8888";
+
+	// final static public String smServerUrl
+	// ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
 
 	// production server
-	//final static public String smServerUrl = "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
+	// final static public String smServerUrl =
+	// "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
 
 	final static public String smRegistrationUrl = smServerUrl
 			+ "/auth/registration";
@@ -82,16 +86,17 @@ public class Constant {
 	final static public String smFriendList = smServerUrl + "/me/friends";
 	final static public String smCircleUrl = smServerUrl + "/me/circles";
 	final static public String smBlockUrl = smServerUrl + "/me/users/block";
-	final static public String smUnBlockUrl = smServerUrl + "/me/users/un-block";
-	final static public String smBlockUnblockUrl = smServerUrl + "/me/users/block/overwrite"; 
+	final static public String smUnBlockUrl = smServerUrl
+			+ "/me/users/un-block";
+	final static public String smBlockUnblockUrl = smServerUrl
+			+ "/me/users/block/overwrite";
 	final static public String smGeoTag = smServerUrl + "/geotags";
-	
+
 	final static public String smPlaces = smServerUrl + "/me/places";
 	final static public String smCreatePlaces = smServerUrl + "/places";
-	final static public String smUploadPhoto = smServerUrl +"/photos";
-	
+	final static public String smUploadPhoto = smServerUrl + "/photos";
+
 	final static public String smPhotoUrl = smServerUrl + "/photos";
-	
 
 	/*
 	 * GENERAL STATUS CODE: 400 – Bad Request 401 – Unauthorized, Auth-Token
@@ -183,5 +188,11 @@ public class Constant {
 
 	public final static String PEOPLE_SOCIALMAPS = "peoplesocialplaces";
 	public final static String PEOPLE_FACEBOOK = "peoplefacebook";
+	
+	public final static String PUSH_NOTIFICATION_FRIEND_REQUEST = "friend_request";
+	public final static String PUSH_NOTIFICATION_MEETUP = "meetup";
+	public final static String PUSH_NOTIFICATION_EVENT = "event_guest";
+	public final static String PUSH_NOTIFICATION_MESSAGE_NEW = "new_message";
+	public final static String PUSH_NOTIFICATION_MESSAGE_REPLY = "reply_message";
 
 }

@@ -21,7 +21,7 @@ public class People implements Serializable {
 	private String relationshipStatus;
 	private double currentLat;
 	private double currentLng;
-	//private MyGeoPoint currentPosition;
+	// private MyGeoPoint currentPosition;
 	private String regMedia;// sm or fb
 	private int loginCount;
 
@@ -41,7 +41,7 @@ public class People implements Serializable {
 	private String currentAddress;
 
 	private String friendshipStatus;
-	
+
 	private boolean isBlocked;
 
 	public String getCurrentAddress() {
@@ -76,17 +76,16 @@ public class People implements Serializable {
 		return statusMsg;
 	}
 
-	// --- *** --- // 
-	
-	/*public void setCurrentPosition(MyGeoPoint point) {
-		this.currentPosition = point;
-	}
+	// --- *** --- //
 
-	public MyGeoPoint getCurrentPosition() {
-		return currentPosition;
-	}*/
-	
-	// --- *** --- // 
+	/*
+	 * public void setCurrentPosition(MyGeoPoint point) { this.currentPosition =
+	 * point; }
+	 * 
+	 * public MyGeoPoint getCurrentPosition() { return currentPosition; }
+	 */
+
+	// --- *** --- //
 
 	public void setId(String id) {
 		this.id = id;

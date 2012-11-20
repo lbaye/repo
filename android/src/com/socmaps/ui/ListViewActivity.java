@@ -284,6 +284,7 @@ public class ListViewActivity extends Activity implements
 
 	private void populateMasterList() {
 		listMasterContent.clear();
+
 		addPeoplesToMasterList();
 		addSecondDegreePeoplesToMasterList();
 		addPlacesToMasterList();
@@ -328,22 +329,34 @@ public class ListViewActivity extends Activity implements
 	}
 
 	private void addPlacesToMasterList() {
-		for (int i = 0; i < peoplesAndPlacesEntity.getPlaces().size(); i++) {
-			listMasterContent.add(peoplesAndPlacesEntity.getPlaces().get(i));
+
+		if (peoplesAndPlacesEntity.getPlaces() != null) {
+			for (int i = 0; i < peoplesAndPlacesEntity.getPlaces().size(); i++) {
+				listMasterContent
+						.add(peoplesAndPlacesEntity.getPlaces().get(i));
+			}
 		}
 	}
 
 	private void addPeoplesToMasterList() {
-		for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
-			listMasterContent.add(peoplesAndPlacesEntity.getPeoples().get(i));
+
+		if (peoplesAndPlacesEntity.getPeoples() != null) {
+
+			for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
+				listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
+						.get(i));
+			}
 		}
 	}
 
 	private void addSecondDegreePeoplesToMasterList() {
-		for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples()
-				.size(); i++) {
-			listMasterContent.add(peoplesAndPlacesEntity
-					.getSecondDegreePeoples().get(i));
+
+		if (peoplesAndPlacesEntity.getSecondDegreePeoples() != null) {
+			for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples()
+					.size(); i++) {
+				listMasterContent.add(peoplesAndPlacesEntity
+						.getSecondDegreePeoples().get(i));
+			}
 		}
 	}
 
@@ -765,7 +778,11 @@ public class ListViewActivity extends Activity implements
 			finish();
 			startActivity(messageIntent);
 		} else if (v == btnCircleMenuItemNewsfeed) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+			Intent messageIntent = new Intent(getApplicationContext(),
+					NewsFeedActivity.class);
+			startActivity(messageIntent);
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemPeople) {
 

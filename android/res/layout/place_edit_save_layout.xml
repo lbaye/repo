@@ -96,7 +96,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:layout_marginTop="10dip"
+            android:layout_marginBottom="10dip">
 
             <Button
                 android:id="@+id/btnPlaceAddPhoto"
@@ -135,7 +137,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" 
             android:paddingRight="5dip"
-            android:paddingLeft="5dip">
+            android:paddingLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip">
 
             <TextView
                 android:id="@+id/addressLavel"
@@ -146,7 +150,7 @@
                 android:paddingLeft="5dp"
                 android:text="@string/addressLabel"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12dip"
                 android:textStyle="bold" />
 
             <TextView
@@ -158,9 +162,9 @@
                 android:layout_toRightOf="@+id/addressLavel"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
-                android:text="GenWeb2,Dhaka,Bangladesh"
+                android:text=""
                 android:textColor="@color/black"
-                android:textSize="10dp" />
+                android:textSize="12dip" />
 
             <ImageView
                 android:id="@+id/checkedIcon"
@@ -175,7 +179,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="5dip"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="10dip"

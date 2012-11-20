@@ -59,6 +59,7 @@ import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
+import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
 
@@ -144,6 +145,8 @@ public class Utility {
 		}
 
 	}
+	
+	
 
 	public static String getFormatedDistance(double distance, String unit) {
 		String result = "";
@@ -365,7 +368,10 @@ public class Utility {
 
 		Pattern pattern;
 		Matcher matcher;
-		String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-+]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$"; 
+//		String EMAIL_PATTERN = 
+//				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+//						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		pattern = Pattern.compile(EMAIL_PATTERN);
 		matcher = pattern.matcher(email);
 		return matcher.matches();
@@ -635,6 +641,44 @@ public class Utility {
 		}
 
 		return Bitmap.createScaledBitmap(inputBitmap, width, height, true);
+	}
+	
+	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width, int height, boolean keepAspectRatio) {
+		
+		int orgHeight = inputBitmap.getHeight();
+		int orgWidth = inputBitmap.getWidth();
+		
+		if(keepAspectRatio == false)
+		{
+			return resizeBitmap(inputBitmap, width, height);
+		}
+		else
+		{
+			
+			if(height == 0 && width == 0)
+			{
+				return null;
+			}
+			else if(height == 0)
+			{
+				//define new height
+				height = (width*orgHeight)/orgWidth;
+			}
+			else if(width == 0)
+			{
+				//define new width
+				width = (height*orgWidth)/orgHeight;
+			}
+			else
+			{
+				
+			}
+			
+			
+
+			return Bitmap.createScaledBitmap(inputBitmap, width, height, true);
+		}
+		
 	}
 
 	public static Bitmap loadBitmapFromURL(String url) {
@@ -1005,6 +1049,28 @@ public class Utility {
 	    float [] dist = new float[1];
 	    Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
 	    return (double)dist[0];
+	}
+	
+	public static void updateNotificationCountFromPush(PushData pushData)
+	{
+		if(pushData!=null)
+		{
+			if(StaticValues.myInfo!=null)
+			{
+				StaticValues.myInfo.getNotificationCount().setTotalCount(pushData.getBadge());
+				String tabCounts = pushData.getTabCounts();
+				if(!tabCounts.equals(""))
+				{
+					String[] tabCountsArray = tabCounts.split("|");
+					if(tabCountsArray.length == 3)
+					{
+						StaticValues.myInfo.getNotificationCount().setMessageCount(Integer.parseInt(tabCountsArray[0]));
+						StaticValues.myInfo.getNotificationCount().setFriendRequestCount(Integer.parseInt(tabCountsArray[1]));
+						StaticValues.myInfo.getNotificationCount().setNotificationCount(Integer.parseInt(tabCountsArray[2]));
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -38,9 +38,9 @@ import com.socmaps.fb.SessionEvents;
 import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 /*import com.socmaps.fb.BaseRequestListener;
-import com.socmaps.fb.FBUtility;
-import com.socmaps.fb.LoginButton;
-import com.socmaps.fb.SessionStore;*/
+ import com.socmaps.fb.FBUtility;
+ import com.socmaps.fb.LoginButton;
+ import com.socmaps.fb.SessionStore;*/
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
 	CheckBox chkRememberPassword;
 	Button btnLogin, btnCreateAccount;
 	TextView btnForgotPassword;
-	//LoginButton btnFBLogin;
+	// LoginButton btnFBLogin;
 	Button btnFBLogin2;
 	private ProgressDialog m_ProgressDialog;
 	private Runnable requestRunnable, forgotpassRunnable;
@@ -82,8 +82,8 @@ public class LoginActivity extends Activity {
 	FbAPIsLogoutListener fbAPIsLogoutListener;
 	SessionEvents sessionEvents;
 
-	//Facebook mFacebook;
-	//AsyncFacebookRunner mAsyncRunner;
+	// Facebook mFacebook;
+	// AsyncFacebookRunner mAsyncRunner;
 	String facebookId;
 
 	@Override
@@ -135,14 +135,15 @@ public class LoginActivity extends Activity {
 		// getString(R.string.connectWithFbLabel),
 		// getString(R.string.connectWithFbLabel));
 
-		//btnFBLogin.init(this, Constant.AUTHORIZE_ACTIVITY_RESULT_CODE,FBUtility.mFacebook, Constant.facebookPermissions);
+		// btnFBLogin.init(this,
+		// Constant.AUTHORIZE_ACTIVITY_RESULT_CODE,FBUtility.mFacebook,
+		// Constant.facebookPermissions);
 
 		FBUtility.mFacebook = new Facebook(Constant.FB_APP_ID);
 		FBUtility.mAsyncRunner = new AsyncFacebookRunner(FBUtility.mFacebook);
-		
-		sessionEvents.addAuthListener(fbAPIsAuthListener);
-		sessionEvents.addLogoutListener(fbAPIsLogoutListener);
-		
+
+		SessionEvents.addAuthListener(fbAPIsAuthListener);
+		SessionEvents.addLogoutListener(fbAPIsLogoutListener);
 
 		btnFBLogin2.setOnClickListener(new OnClickListener() {
 
@@ -234,8 +235,8 @@ public class LoginActivity extends Activity {
 	}
 
 	public void authenticateFacebook() {
-		FBUtility.mFacebook.authorize(LoginActivity.this, Constant.facebookPermissions,
-				new LoginDialogListener());
+		FBUtility.mFacebook.authorize(LoginActivity.this,
+				Constant.facebookPermissions, new LoginDialogListener());
 
 	}
 
@@ -245,7 +246,6 @@ public class LoginActivity extends Activity {
 
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
-
 
 	private Runnable returnRes = new Runnable() {
 
@@ -309,8 +309,8 @@ public class LoginActivity extends Activity {
 
 		super.onDestroy();
 
-		sessionEvents.removeAuthListener(fbAPIsAuthListener);
-		sessionEvents.removeLogoutListener(fbAPIsLogoutListener);
+		SessionEvents.removeAuthListener(fbAPIsAuthListener);
+		SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
 	}
 
 	public void authenticate() {
@@ -422,7 +422,7 @@ public class LoginActivity extends Activity {
 
 	public void fbLoginSuccess(String response) {
 
-		//String facebookId = FBUtility.userUID;
+		// String facebookId = FBUtility.userUID;
 		String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
 
 		Log.i("facebookAuthToken", facebookAuthToken);
@@ -537,7 +537,8 @@ public class LoginActivity extends Activity {
 				// String accessToken = FBUtility.mFacebook.getAccessToken();
 
 				String facebookId = jsonObject.getString("id");
-				//String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
+				// String facebookAuthToken =
+				// FBUtility.mFacebook.getAccessToken();
 				String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
 
 				// String avatarString = jsonObject.getString("picture");
@@ -715,7 +716,7 @@ public class LoginActivity extends Activity {
 		chkRememberPassword = (CheckBox) findViewById(R.id.chkRememberPassword);
 		btnLogin = (Button) findViewById(R.id.btnLogin);
 		btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
-		//btnFBLogin = (LoginButton) findViewById(R.id.login);
+		// btnFBLogin = (LoginButton) findViewById(R.id.login);
 		btnFBLogin2 = (Button) findViewById(R.id.btnFBLogin2);
 		btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 
@@ -770,8 +771,6 @@ public class LoginActivity extends Activity {
 
 	}
 
-
-
 	public class FbAPIsAuthListener implements AuthListener {
 
 		// @Override
@@ -788,7 +787,6 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	
 	public class FbAPIsLogoutListener implements LogoutListener {
 		// @Override
 		@Override
@@ -866,10 +864,11 @@ public class LoginActivity extends Activity {
 			Toast.makeText(context, fbError.getMessage(), Toast.LENGTH_LONG)
 					.show();
 
-			/*SessionEvents.onLogoutBegin();
-			AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(
-					FBUtility.mFacebook);
-			asyncRunner.logout(context, new LogoutRequestListener());*/
+			/*
+			 * SessionEvents.onLogoutBegin(); AsyncFacebookRunner asyncRunner =
+			 * new AsyncFacebookRunner( FBUtility.mFacebook);
+			 * asyncRunner.logout(context, new LogoutRequestListener());
+			 */
 
 			/*
 			 * FBUtility.mFacebook.authorize(activity,
@@ -896,7 +895,7 @@ public class LoginActivity extends Activity {
 				// @Override
 				@Override
 				public void run() {
-					//sessionEvents.onLogoutFinish();
+					// sessionEvents.onLogoutFinish();
 				}
 			});
 		}
@@ -907,29 +906,29 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onComplete(Bundle values) {
 			Log.e("LoginDialogListener", "onComplete");
-			sessionEvents.onLoginSuccess();
-			//requestUserData();
+			SessionEvents.onLoginSuccess();
+			// requestUserData();
 		}
 
 		// @Override
 		@Override
 		public void onFacebookError(FacebookError error) {
 			Log.e("LoginDialogListener", "onFacebookError");
-			sessionEvents.onLoginError(error.getMessage());
+			SessionEvents.onLoginError(error.getMessage());
 		}
 
 		// @Override
 		@Override
 		public void onError(DialogError error) {
 			Log.e("LoginDialogListener", "onError");
-			sessionEvents.onLoginError(error.getMessage());
+			SessionEvents.onLoginError(error.getMessage());
 		}
 
 		// @Override
 		@Override
 		public void onCancel() {
 			Log.e("LoginDialogListener", "onCancel");
-			sessionEvents.onLoginError("Action Canceled");
+			SessionEvents.onLoginError("Action Canceled");
 		}
 	}
 

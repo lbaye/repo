@@ -479,7 +479,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		if (status == Constant.STATUS_CREATED) {
 
-			Toast.makeText(context, "Successfully Done.", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "Geotag created Successfully.", Toast.LENGTH_SHORT)
 					.show();
 
 			finish(); 

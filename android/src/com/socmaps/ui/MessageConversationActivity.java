@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -441,6 +442,12 @@ public class MessageConversationActivity extends Activity implements
 				}, 500);
 			}
 		}).start();
+	} 
+	
+	private void hideKeyBoard()
+	{
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(etNewMessage.getWindowToken(), 0);
 	}
 
 	private class ButtonActionListener implements OnClickListener {
@@ -449,7 +456,8 @@ public class MessageConversationActivity extends Activity implements
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if (v == btnSend) {
-				// have initialize new message here
+				// have initialize new message here 
+				hideKeyBoard();
 				validateNewMessage();
 			}
 		}

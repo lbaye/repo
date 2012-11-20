@@ -1,5 +1,8 @@
 package com.socmaps.ui;
 
+import com.socmaps.util.Constant;
+import com.socmaps.util.StaticValues;
+
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -68,10 +71,29 @@ public class NotificationActivity extends TabActivity {
 				FriendRequestNotificationActivity.class);
 		Intent notifyIntent = new Intent(NotificationActivity.this,
 				NotifyNotificationActivity.class);
+		
+		String messageCount = "0";
+		String friendRequestCount = "0";
+		String notificationCount = "0";
+		if(StaticValues.myInfo!=null)
+		{
+			messageCount = ""+StaticValues.myInfo.getNotificationCount().getMessageCount();
+			friendRequestCount = ""+StaticValues.myInfo.getNotificationCount().getFriendRequestCount();
+			notificationCount = ""+StaticValues.myInfo.getNotificationCount().getNotificationCount();
+		}
 
-		setupTab(messageIntent, messageTabIcon, "0");
-		setupTab(frIntent, friendRequestTabIcon, "0");
-		setupTab(notifyIntent, notifyTabIcon, "0");
+		setupTab(messageIntent, messageTabIcon, messageCount);
+		setupTab(frIntent, friendRequestTabIcon, friendRequestCount);
+		setupTab(notifyIntent, notifyTabIcon, notificationCount);
+		
+		
+		if(getIntent().getStringExtra("selectedTab")!=null)
+		{
+			if(getIntent().getStringExtra("selectedTab").equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST))
+			{
+				mTabHost.setCurrentTab(1);
+			}
+		}
 
 	}
 

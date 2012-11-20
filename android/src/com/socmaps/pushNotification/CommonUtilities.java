@@ -15,6 +15,8 @@
  */
 package com.socmaps.pushNotification;
 
+import com.socmaps.util.Constant;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -26,7 +28,7 @@ public final class CommonUtilities {
 
 	public static final String DEVICE_TYPE = "android";
 
-	public static final String SERVER_URL = "http://203.76.126.69/stage_social_maps/web/settings/push";
+	public static final String SERVER_URL = Constant.smServerUrl+"/settings/push";
 
 	/**
 	 * Google API project id registered to use GCM.
@@ -36,12 +38,12 @@ public final class CommonUtilities {
 	/**
 	 * Tag used on log messages.
 	 */
-	public static final String TAG = "GCMDemo";
+	public static final String TAG = "GCM Socialmaps";
 
 	/**
 	 * Intent used to display a message in the screen.
 	 */
-	public static final String DISPLAY_MESSAGE_ACTION = "com.google.android.gcm.demo.app.DISPLAY_MESSAGE";
+	public static final String DISPLAY_MESSAGE_ACTION = "com.socmaps.ui.DISPLAY_NOTIFICATION";
 
 	/**
 	 * Intent's extra that contains the message to be displayed.
@@ -64,4 +66,7 @@ public final class CommonUtilities {
 		intent.putExtra(EXTRA_MESSAGE, message);
 		context.sendBroadcast(intent);
 	}
+	
+	
+	
 }
