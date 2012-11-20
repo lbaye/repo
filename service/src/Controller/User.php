@@ -711,45 +711,20 @@ class User extends Base
     }
 
     /**
-     * PUT /me/friends
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-
-    public function getFriendList()
-    {
-        $user = $this->user;
-
-        if ($user instanceof \Document\User) {
-
-            $data = $user->toArrayDetailed();
-            $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
-
-            $this->response->setContent(json_encode($userData));
-            $this->response->setStatusCode(Status::OK);
-        } else {
-            $this->response->setContent(json_encode(array('result' => Response::$statusTexts[404])));
-            $this->response->setStatusCode(Status::NOT_FOUND);
-        }
-
-        return $this->response;
-    }
-
-    /**
-     * PUT /{id}/friends
+     * GET /me/friends
+     * GET /{id}/friends
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
-    public function getFriendsOfFriendList($id)
+    public function getFriends($id = null)
     {
         $this->_ensureLoggedIn();
-        $user = $this->userRepository->find($id);
+
+        if      (is_null($id)) $user = $this->user;
+        else    $user = $this->userRepository->find($id);
 
         if ($user instanceof \Document\User) {
-
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
             $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
