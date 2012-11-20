@@ -53,6 +53,11 @@ friends:
   defaults: { _controller: Controller\User::getFriendList}
   requirements: { _method: GET}
 
+friends_of_friend:
+  pattern: /{id}/friends
+  defaults: { _controller: Controller\User::getFriendsOfFriendList}
+  requirements: { _method: GET}
+
 
 update_block_user:
   pattern: /me/users/un-block
