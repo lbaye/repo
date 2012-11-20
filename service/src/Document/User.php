@@ -887,7 +887,7 @@ class User {
         $circles = $this->getCircles();
 
         foreach ($circles as $circle) {
-            if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
+            if (strtolower($circle->getName()) == 'friends' && $circle->getType() == 'system') {
                 $friends = $circle->getFriends();
                 if (empty($friends)) return array();
                 else return $friends;
