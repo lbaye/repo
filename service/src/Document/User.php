@@ -888,7 +888,9 @@ class User {
 
         foreach ($circles as $circle) {
             if ($circle->getName() == 'friends' && $circle->getType() == 'system') {
-                return $circle->getFriends();
+                $friends = $circle->getFriends();
+                if (empty($friends)) return array();
+                else return $friends;
             }
         }
 
