@@ -70,12 +70,14 @@ class SendPushNotification extends Base
      */
     private function _sendPushNotification(array $userHash, $notification)
     {
-        $notificationHash = array(
+        $hash = array(
             'title' => $notification->title,
             'objectId' => $notification->objectId,
             'objectType' => $notification->objectType
         );
 
+        $notificationCountHash = $this->userRepository->generateNotificationCount($userHash['_id']);
+        $notificationHash = array_merge($hash, $notificationCountHash);
         $this->debug("Sending push notification to user - {$userHash['firstName']} ({$userHash['_id']})");
         $pushSettings = $userHash['pushSettings'];
 

@@ -146,15 +146,16 @@ class ProximityAlert extends Base {
             $to['lat'], $to['lng']); // In METER
 
         $message = $user->getFirstName() . ' is ' . ceil($distance) . 'm away';
-        return array(
+        $notificationCountHash = $this->userRepository->getNotificationsCount($user->getId());
+        $hash = array(
             'title' => $message,
-            'badge' => 1,
-            'tabCounts' => '0|0|0',
             'photoUrl' => $user->getAvatar(),
             'objectId' => $user->getId(),
             'objectType' => 'proximity_alert',
             'message' => $message
         );
+
+        return array_merge($hash,$notificationCountHash);
     }
 
     private function createGroupNotificationMessage(\Doctrine\ODM\MongoDB\Cursor $friendsCursor) {

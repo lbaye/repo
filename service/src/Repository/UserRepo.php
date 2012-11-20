@@ -2,6 +2,7 @@
 
 namespace Repository;
 
+
 use Symfony\Component\HttpFoundation\Response;
 use Document\User as UserDocument;
 use Document\FriendRequest;
@@ -1096,5 +1097,36 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return true;
+    }
+
+    public function generateNotificationCount($user_id)
+
+    {
+
+        $user = $this->find($user_id);
+        $messageRepo = $this->dm->getRepository('Document\Message');
+
+        $friend_requests = $user->getFriendRequest();
+        $pending_friend_request_count = 0;
+
+
+        foreach ($friend_requests as $friend_request) {
+            if ($friend_request->getAccepted() === null)
+                $pending_friend_request_count++;
+        }
+
+        $messages = $messageRepo->getByRecipient($user);
+        $unread_message_count = 0;
+
+        foreach ($messages as $message) {
+            $message->toArray();
+            if ($message['status'] == 'unread')
+                $unread_message_count++;
+        }
+
+        return array(
+           "badge" => $pending_friend_request_count + $unread_message_count,
+           "tabCounts" => "{$pending_friend_request_count}|{$unread_message_count}|0"
+        );
     }
 }
