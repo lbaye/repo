@@ -14,6 +14,7 @@ class Gathering extends Base
 
     const TYPE_MEETUP = 'meetup';
     const TYPE_EVENT = 'event';
+    const TYPE_PLAN = 'plan';
 
     /**
      * @var gatheringRepository
@@ -50,10 +51,19 @@ class Gathering extends Base
         $limit = (int)$this->request->get('limit', 20);
         $this->_initRepository($type);
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
+        $key = $this->config['googlePlace']['apiKey'];
 
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
-            return $this->_generateResponse($this->_toArrayAll($permittedDocs));
+            $data = $this->_toArrayAll($permittedDocs);
+
+            if ($type == self::TYPE_PLAN) {
+                foreach ($data as &$plan_data) {
+                    $plan_data = $this->gatheringRepository->planToArray($plan_data, $key);
+                }
+            }
+
+            return $this->_generateResponse($data);
         } else {
             return $this->_generateResponse(array('message' => 'No meetups found'), Status::NO_CONTENT);
         }

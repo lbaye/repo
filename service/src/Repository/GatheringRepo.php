@@ -269,4 +269,28 @@ class GatheringRepo extends Base
         return $meetUpLIst;
     }
 
+    public function planToArray($data,$key)
+    {
+        $data['planDescription'] = $data['eventShortSummary'];
+        unset($data['rsvp']);
+        unset($data['guestsCanInvite']);
+        unset($data['distance']);
+        unset($data['description']);
+        unset($data['ownerDetail']);
+        unset($data['permission']);
+        unset($data['permittedUsers']);
+        unset($data['permittedCircles']);
+        unset($data['event_type']);
+        unset($data['my_response']);
+        unset($data['eventShortSummary']);
+
+        $lat = $data['location']['lat'];
+        $lng = $data['location']['lng'];
+
+        $data['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+        return $data;
+
+
+    }
+
 }
