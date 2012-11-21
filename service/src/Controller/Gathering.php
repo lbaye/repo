@@ -104,11 +104,13 @@ class Gathering extends Base
     {
         $this->_initRepository($type);
         $gathering = $this->gatheringRepository->find($id);
+        $key = $this->config['googlePlace']['apiKey'];
 
         if (null !== $gathering) {
             if ($gathering->isPermittedFor($this->user)) {
 
                 $data = $gathering->toArrayDetailed();
+
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
                 $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
 
@@ -122,6 +124,9 @@ class Gathering extends Base
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
                 $data['ownerDetail'] = $ownerDetail[0];
+
+                if($type == self::TYPE_PLAN)
+                    $data = $this->gatheringRepository->planToArray($data, $key);
 
                 return $this->_generateResponse($data);
 
@@ -154,6 +159,7 @@ class Gathering extends Base
      */
     public function getByUser($user, $type)
     {
+        $key = $this->config['googlePlace']['apiKey'];
         $this->_initRepository($type);
 
         if (is_string($user)) {
@@ -164,6 +170,13 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
+                if($type == self::TYPE_PLAN)
+                {
+                    foreach($gatherings as &$gathering)
+                    {
+                        $gathering = $this->gatheringRepository->planToArray($gathering,$key);
+                    }
+                }
                 return $this->_generateResponse($gatherings);
             } else {
                 return $this->_generateResponse(null, Status::NO_CONTENT);

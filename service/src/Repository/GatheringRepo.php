@@ -271,7 +271,6 @@ class GatheringRepo extends Base
 
     public function planToArray($data,$key)
     {
-        $data['planDescription'] = $data['eventShortSummary'];
         unset($data['rsvp']);
         unset($data['guestsCanInvite']);
         unset($data['distance']);
@@ -282,7 +281,9 @@ class GatheringRepo extends Base
         unset($data['permittedCircles']);
         unset($data['event_type']);
         unset($data['my_response']);
-        unset($data['eventShortSummary']);
+        unset($data['is_invited']);
+        unset($data['guests']);
+        unset($data['owner']);
 
         $lat = $data['location']['lat'];
         $lng = $data['location']['lng'];
