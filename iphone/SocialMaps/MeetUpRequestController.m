@@ -258,6 +258,7 @@ DDAnnotation *annotation;
     dateString = [dateFormatter stringFromDate:[UtilityClass convertDate:dateString tz_type:@"3" tz:@"UTC"]];
     
     [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] address:labelAddress.text time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)actionSelectAll:(id)sender {
