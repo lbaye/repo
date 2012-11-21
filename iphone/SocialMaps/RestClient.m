@@ -4409,10 +4409,13 @@ AppDelegate *smAppDelegate;
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];
                 msg.lastReply = [item valueForKey:@"replies"];
-                msg.msgStatus=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.msgStatus = [self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.metaType = [self getNestedKeyVal:item key1:@"metaType" key2:nil key3:nil];
+                msg.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
+                msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
+                msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"msg.notifAvater %@", msg.notifAvater);
-                NSLog(@"msg.lastReply %@", msg.lastReply);
+                NSLog(@"longitude = %@", msg.lng);
                 
                 [messageInbox addObject:msg];
             }

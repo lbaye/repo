@@ -14,7 +14,11 @@
     NSString    *notifID;
     NSDictionary *recipients;
     NSDictionary *lastReply;
-    NSString* msgStatus;
+    NSString    *msgStatus;
+    NSString    *metaType;
+    NSString    *address;
+    NSString    *lat;
+    NSString    *lng;
 }
 
 @property (atomic) bool showDetail;
@@ -22,6 +26,10 @@
 @property (nonatomic, retain) NSString *notifID;
 @property (nonatomic, retain) NSDictionary *recipients;
 @property (nonatomic, retain) NSDictionary *lastReply;
-@property(nonatomic,retain) NSString* msgStatus;
+@property (nonatomic,retain) NSString* msgStatus;
+@property (nonatomic, retain) NSString *metaType;
+@property (nonatomic, retain) NSString *address;
+@property (nonatomic, retain) NSString *lat;
+@property (nonatomic, retain) NSString *lng;
 
 @end

@@ -17,5 +17,9 @@
 @synthesize    senderAvater;
 @synthesize    senderImage;
 @synthesize    msgId;
+@synthesize    metaType;
+@synthesize    lat;
+@synthesize    lng;
+@synthesize    address;
 
 @end
