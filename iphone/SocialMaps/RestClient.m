@@ -1090,6 +1090,8 @@ AppDelegate *smAppDelegate;
             }
             
             aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            smAppDelegate.shareLocationOption = [aUserInfo.shareLocationOption intValue] - 1;
             
 //            NSLog(@"getAccountSettings: %@",jsonObjects);
             

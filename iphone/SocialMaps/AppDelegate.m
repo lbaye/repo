@@ -80,6 +80,7 @@
 @synthesize smLogin,geotagList;
 @synthesize currentModelViewController;
 @synthesize isAppInBackgound;
+@synthesize shareLocationOption;
 
 static AppDelegate *sharedInstance=nil;
 
