@@ -95,7 +95,7 @@ public class LoginActivity extends Activity {
 
 		mHandler = new Handler();
 
-		if (Utility.isLoggedIn(getApplicationContext())) {
+		if (Utility.isRememberedLoginInfo(getApplicationContext())) {
 			try {
 
 				String savedEmail = Utility.getEmail(getApplicationContext());
@@ -435,7 +435,7 @@ public class LoginActivity extends Activity {
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(), LoginActivity.this);
+					StaticValues.myInfo.getAuthToken(),response, LoginActivity.this);
 
 			// save the image here
 
@@ -486,17 +486,16 @@ public class LoginActivity extends Activity {
 			StaticValues.myInfo = myInfo;
 
 			if (chkRememberPassword.isChecked()) {
-				Utility.storePreferences(etEmail.getText().toString().trim(),
-						etPassword.getText().toString(), true,
+				Utility.storeLoginInfo(etEmail.getText().toString().trim(),
+						etPassword.getText().toString(),
 						getApplicationContext());
 			} else {
-				Utility.storePreferences(null, null, false,
-						getApplicationContext());
+				Utility.storeLoginInfo(null, null, getApplicationContext());
 			}
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(), LoginActivity.this);
+					StaticValues.myInfo.getAuthToken(),response, LoginActivity.this);
 
 			finish();
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);

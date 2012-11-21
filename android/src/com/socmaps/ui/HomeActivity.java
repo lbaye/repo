@@ -1351,6 +1351,22 @@ public class HomeActivity extends MapActivity implements
 	
 	public void handleNavigationFromNotificationBar(Intent intent)
 	{
+		if(StaticValues.myInfo == null)
+		{
+			if(Utility.getUserData(context)!=null)
+			{
+				StaticValues.myInfo = ServerResponseParser
+						.parseUserProfileInfo(Utility.getUserData(context), false);
+			}
+			
+			if(StaticValues.myInfo == null)
+			{
+				Toast.makeText(context, "An unknown error occured.", Toast.LENGTH_SHORT).show();
+				finish();
+			}
+			
+		}
+		
 		Bundle extras = intent.getExtras();
 		Log.i("dbg", "onNewIntent");
 
@@ -1359,17 +1375,29 @@ public class HomeActivity extends MapActivity implements
 				Log.i("dbg", "containsKey(PushData)");
 				PushData pushData = (PushData) extras.get("pushData");
 				if (pushData != null) {
-					// Log.i("Home:PushData:Type", pushData.getObjectType());
+					Log.i("Home:PushData:Type", pushData.getObjectType());
 					if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
-						Intent intent2 = new Intent(context,
+						/*Intent intent2 = new Intent(context,
 								MessageActivity.class);
-						startActivity(intent2);
+						startActivity(intent2);*/
+						
+						Intent i = new Intent(context,
+								MessageConversationFromNotificationActivity.class);
+						i.putExtra("itemThreadId", pushData.getObjectId());
+						i.putExtra("itemMessageId",  pushData.getObjectId());
+
+						startActivity(i);
+						
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
-						Intent intent2 = new Intent(context,
+						/*Intent intent2 = new Intent(context,
 								MessageActivity.class);
-						startActivity(intent2);
+						startActivity(intent2);*/
+						Intent i = new Intent(context,
+								MessageConversationFromNotificationActivity.class);
+						i.putExtra("itemThreadId", pushData.getObjectId());
+						i.putExtra("itemMessageId",  pushData.getObjectId());
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_EVENT)) {
 						Intent intent2 = new Intent(context,
@@ -1390,6 +1418,10 @@ public class HomeActivity extends MapActivity implements
 								Constant.PUSH_NOTIFICATION_MEETUP);
 						startActivity(intent2);
 					}
+				}
+				else
+				{
+					Log.i("Home:PushData:Type", "PushData is null");
 				}
 			}
 

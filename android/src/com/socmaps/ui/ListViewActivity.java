@@ -95,6 +95,18 @@ public class ListViewActivity extends Activity implements
 
 	}
 
+	/** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setCheckBoxSelection();
+		populateMasterList();
+
+		updateContentList(listMasterContent);
+		updateDisplayList(listContent);
+
+	}
+
 	private void setListParameters() {
 
 		View footerView = new View(context);
@@ -214,18 +226,6 @@ public class ListViewActivity extends Activity implements
 		super.onContentChanged();
 	}
 
-	/** Register for the updates when Activity is in foreground */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		setCheckBoxSelection();
-		populateMasterList();
-
-		updateContentList(listMasterContent);
-		updateDisplayList(listContent);
-
-	}
-
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -285,10 +285,12 @@ public class ListViewActivity extends Activity implements
 	private void populateMasterList() {
 		listMasterContent.clear();
 
-		addPeoplesToMasterList();
-		addSecondDegreePeoplesToMasterList();
-		addPlacesToMasterList();
-		sortMasterListData();
+		if (peoplesAndPlacesEntity != null) {
+			addPeoplesToMasterList();
+			addSecondDegreePeoplesToMasterList();
+			addPlacesToMasterList();
+			sortMasterListData();
+		}
 	}
 
 	private void sortMasterListData() {
@@ -771,7 +773,12 @@ public class ListViewActivity extends Activity implements
 			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
+			Intent friendIntent = new Intent(getApplicationContext(),
+					FriendListActivity.class);
+			startActivity(friendIntent);
+			// Toast.makeText(context, "Coming soon.",
+			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemMessages) {
 			Intent messageIntent = new Intent(context, MessageActivity.class);

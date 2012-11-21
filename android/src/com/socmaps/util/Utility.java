@@ -503,21 +503,34 @@ public class Utility {
 		return null;
 	}
 
-	public static void storePreferences(String email, String password,
-			boolean isLoggedInKey, Context context) {
+	public static void storeLoginInfo(String email, String password,Context context) {
 		PreferenceConnector.writeString(context, "email", email);
 		PreferenceConnector.writeString(context, "password", password);
-		PreferenceConnector.writeBoolean(context, "isLoggedInKey",
-				isLoggedInKey);
+		PreferenceConnector.writeBoolean(context, "isRememberd",true);
+		
 	}
 
-	public static void storeSession(String id, String authToken, Context context) {
+	public static void storeSession(String id, String authToken, String userData, Context context) {
 		PreferenceConnector.writeString(context, "id", id);
 		PreferenceConnector.writeString(context, "authToken", authToken);
+		PreferenceConnector.writeString(context, "userData", userData);
+		PreferenceConnector.writeBoolean(context, "isLoggedInKey",true);
+	}
+	
+	public static void destroySession(Context context)
+	{
+		PreferenceConnector.writeString(context, "id", null);
+		PreferenceConnector.writeString(context, "authToken", null);
+		PreferenceConnector.writeString(context, "userData", null);
+		PreferenceConnector.writeBoolean(context, "isLoggedInKey",false);
 	}
 
 	public static boolean isLoggedIn(Context context) {
 		return PreferenceConnector.readBoolean(context, "isLoggedInKey", false);
+	}
+	
+	public static boolean isRememberedLoginInfo(Context context) {
+		return PreferenceConnector.readBoolean(context, "isRememberd", false);
 	}
 
 	public static boolean isBetaAuthenticated(Context context) {
@@ -531,6 +544,10 @@ public class Utility {
 
 	public static String getAuthToken(Context context) {
 		return PreferenceConnector.readString(context, "authToken", null);
+	}
+	
+	public static String getUserData(Context context) {
+		return PreferenceConnector.readString(context, "userData", null);
 	}
 
 	public static String getUserId(Context context) {
@@ -1021,6 +1038,17 @@ public class Utility {
 
 		List<People> friendList = StaticValues.myInfo.getFriendList();
 		for (People peopleItem : friendList) {
+			if (peopleItem.getId().equals(peopleId)) {
+				return peopleItem;
+			}
+		}
+
+		return null;
+	}
+	
+	public static People getPeopleById(String peopleId, List<People> peopleList) {
+		
+		for (People peopleItem : peopleList) {
 			if (peopleItem.getId().equals(peopleId)) {
 				return peopleItem;
 			}

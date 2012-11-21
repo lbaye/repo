@@ -501,9 +501,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	private void showFriends() {
 		
 		
-		Intent messageIntent = new Intent(getApplicationContext(),
+		Intent friendIntent = new Intent(getApplicationContext(),
 				FriendListActivity.class);
-		startActivity(messageIntent);
+		//friendIntent.putExtra("PERSON_ID","");
+		startActivity(friendIntent);
 		
 		//Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
 	}

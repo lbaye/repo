@@ -146,7 +146,7 @@
     <string name="countrylabel">Country</string>
     <string name="servicelabel">Service</string>
     <string name="relationshipstatuslabel">Relationship Status</string>
-    <string name="splashSliderLength">100</string>
+    <string name="splashSliderLength">400</string>
     <string name="forgotPassDesc">Enter your email to reset your password:</string>
     <string name="cancel">Cancel</string>
     <string name="requiredText">Required</string>

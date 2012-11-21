@@ -377,7 +377,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 			Intent friendIntent = new Intent(getApplicationContext(),
 					FriendListActivity.class);
-			friendIntent.putExtra("ID", people.getId());
+			friendIntent.putExtra("PERSON_ID", people.getId());
 			startActivity(friendIntent);
 			
 			//

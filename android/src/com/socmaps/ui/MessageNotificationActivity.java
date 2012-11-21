@@ -183,8 +183,14 @@ public class MessageNotificationActivity extends Activity {
 
 										@Override
 										public void onClick(View arg0) {
-											getMessageDetails(messageId,
-													threadId);
+											//getMessageDetails(messageId,threadId);
+											
+											Intent i = new Intent(context,
+													MessageConversationFromNotificationActivity.class);
+											i.putExtra("itemThreadId", threadId);
+											i.putExtra("itemMessageId", messageId);
+
+											startActivity(i);
 										}
 									});
 
@@ -262,7 +268,7 @@ public class MessageNotificationActivity extends Activity {
 
 	}
 
-	public void getMessageDetails(String messageId, String threadId) {
+	/*public void getMessageDetails(String messageId, String threadId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			itemMessageId = messageId;
@@ -330,6 +336,6 @@ public class MessageNotificationActivity extends Activity {
 
 		startActivity(i);
 
-	}
+	}*/
 
 }

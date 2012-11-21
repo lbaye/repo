@@ -250,8 +250,7 @@ public class ServerResponseParser {
 				myInfo.setCurrentLng(results.getJSONObject("currentLocation")
 						.getDouble("lng"));
 
-				myInfo.setCurrentPosition(getGeoPointFromjsonObject(results
-						.getJSONObject("currentLocation")));
+				//myInfo.setCurrentPosition(getGeoPointFromjsonObject(results.getJSONObject("currentLocation")));
 
 			}
 
@@ -314,19 +313,7 @@ public class ServerResponseParser {
 				JSONArray fjArray = results.getJSONArray("friends");
 				if (fjArray != null) {
 
-					List<People> friendList = new ArrayList<People>();
-
-					// Friend[] friends = new Friend[fjArray.length()];
-					for (int i = 0; i < fjArray.length(); i++) {
-
-						JSONObject fObj = fjArray.getJSONObject(i);
-
-						People friend = parsePeople(fObj);
-
-						friendList.add(friend);
-
-					}
-					myInfo.setFriendList(friendList);
+					myInfo.setFriendList(parsePeoples(fjArray));
 					// accountSettingsEntity.setFriend(friends);
 
 				}
@@ -341,7 +328,7 @@ public class ServerResponseParser {
 				int messageCount = 0;
 
 				if (!nObj.isNull("notifications")) {
-					//notifications = nObj.getInt("notifications");
+					// notifications = nObj.getInt("notifications");
 					notificationCount.setNotificationCount(notifications);
 				}
 				if (!nObj.isNull("friendRequest")) {
@@ -355,7 +342,7 @@ public class ServerResponseParser {
 
 				notificationCount.setTotalCount(notifications + friendRequest
 						+ messageCount);
-				
+
 				myInfo.setNotificationCount(notificationCount);
 			}
 
@@ -367,6 +354,28 @@ public class ServerResponseParser {
 		}
 
 		return myInfo;
+	}
+
+	public static List<People> parsePeoples(JSONArray jArray) {
+		List<People> friendList = new ArrayList<People>();
+
+		// Friend[] friends = new Friend[fjArray.length()];
+
+		try {
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject fObj = jArray.getJSONObject(i);
+
+				People friend = parsePeople(fObj);
+
+				friendList.add(friend);
+
+			}
+		} catch (JSONException e) {
+			// TODO: handle exception
+		}
+		return friendList;
+
 	}
 
 	public static Circle parseCircleEntity(JSONObject jObj) {
@@ -469,10 +478,12 @@ public class ServerResponseParser {
 
 				String date;
 
-				if (!jObject.isNull("createDate")) {					
-					
-					friendRequests[i].setSentTime(getTimeEntityFromJsonObject(jObject.getJSONObject("createDate")));
-					
+				if (!jObject.isNull("createDate")) {
+
+					friendRequests[i]
+							.setSentTime(getTimeEntityFromJsonObject(jObject
+									.getJSONObject("createDate")));
+
 				}
 
 			}
@@ -1030,6 +1041,31 @@ public class ServerResponseParser {
 
 		return places;
 	}
+
+	/*
+	 * public static ArrayList<People> parseFriendsOfFriends(String response) {
+	 * 
+	 * ArrayList<People> people = new ArrayList<People>(); JSONObject peopleObj;
+	 * try {
+	 * 
+	 * JSONObject jsonObject = new JSONObject(response);
+	 * 
+	 * if (!jsonObject.isNull("friends")) {
+	 * 
+	 * JSONArray arrayFriends = jsonObject.getJSONArray("friends");
+	 * 
+	 * for (int i = 0; i < arrayFriends.length(); i++) {
+	 * 
+	 * peopleObj = arrayFriends.getJSONObject(i);
+	 * people.add(parsePeople(peopleObj)); }
+	 * 
+	 * } } catch (NullPointerException e) { return null; } catch (JSONException
+	 * e) { // TODO Auto-generated catch block e.printStackTrace(); return null;
+	 * 
+	 * } catch (Exception e) { // TODO: handle exception return null; }
+	 * 
+	 * return people; }
+	 */
 
 	public static Place parseSavedPlace(JSONObject placeObj) {
 		Place place = new Place();
@@ -1609,6 +1645,7 @@ public class ServerResponseParser {
 
 			JSONObject circleObj = ja.getJSONObject(i);
 			Circle circle = parseCircleEntity(circleObj);
+			
 			if (!circle.getName().equalsIgnoreCase("second_degree")) {
 				Log.d("ServerResponseParse", circle.toString());
 				circles.add(circle);

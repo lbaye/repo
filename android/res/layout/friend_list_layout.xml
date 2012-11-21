@@ -56,6 +56,14 @@
             android:scaleType="fitXY" />
     </RelativeLayout>
 
+    <include
+        android:id="@+id/searchPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutHeader"
+        layout="@layout/search_panel" />
+
+    <!--
     <RelativeLayout
         android:id="@+id/searchContainer"
         android:layout_width="fill_parent"
@@ -86,6 +94,7 @@
             android:text="Ok" >
         </Button>
     </RelativeLayout>
+    -->
 
     <LinearLayout
         android:id="@+id/filterPanel"

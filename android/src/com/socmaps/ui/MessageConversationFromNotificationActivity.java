@@ -72,6 +72,9 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	ImageLoader imageLoader;
 
+	String itemThreadId;
+	String itemMessageId;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,15 +82,71 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		initialize();
 
-		int responseStatus = getIntent().getIntExtra("messageStatus", 404);
-		String responseText = getIntent().getStringExtra("messageResponse");
+		itemThreadId = getIntent().getStringExtra("itemThreadId");
+		itemMessageId = getIntent().getStringExtra("itemMessageId");
 
-		lastUpdatedOn = Utility.getUnixTimestamp();
-		handleResponseMessage(responseStatus, responseText);
-
-		getRepliesPeriodically();
+		// handleResponseMessage(responseStatus, responseText);
+		getMessageDetails();
 
 	}
+
+	public void getMessageDetails() {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+
+			if (itemMessageId != null && !itemMessageId.equalsIgnoreCase("")) {
+				Thread thread = new Thread(null, messagesDetailsThread,
+						"Start get message details");
+				thread.start();
+
+				// show progress dialog if needed
+				m_ProgressDialog = ProgressDialog.show(context, getResources()
+						.getString(R.string.please_wait_text), getResources()
+						.getString(R.string.sending_request_text), true);
+			} else {
+				Toast.makeText(context, "Message ID not found.",
+						Toast.LENGTH_SHORT).show();
+				finish();
+			}
+
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
+			finish();
+		}
+	}
+
+	private Runnable messagesDetailsThread = new Runnable() {
+		@Override
+		public void run() {
+			RestClient restClient = new RestClient(Constant.smMessagesUrl + "/"
+					+ itemMessageId);
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.GET);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			messageResponse = restClient.getResponse();
+			messageStatus = restClient.getResponseCode();
+
+			runOnUiThread(messageDetailsReturnResponse);
+		}
+	};
+
+	private Runnable messageDetailsReturnResponse = new Runnable() {
+
+		@Override
+		public void run() {
+			m_ProgressDialog.dismiss();
+			handleResponseMessage(messageStatus, messageResponse);
+			
+		}
+
+	};
 
 	public void getRepliesPeriodically() {
 		final int delay = 30;
@@ -220,6 +279,10 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
 
 		if (status == Constant.STATUS_SUCCESS) {
+
+			lastUpdatedOn = Utility.getUnixTimestamp();
+			getRepliesPeriodically();
+
 			try {
 
 				messageListContainer.removeAllViews();

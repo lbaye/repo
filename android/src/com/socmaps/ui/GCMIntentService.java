@@ -118,7 +118,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			 * final String objectId= intent.getStringExtra("objectId");
 			 */
 
-			Log.d("C2DM", "dmControl: payload = " + pushData.getMessage());
+			Log.d("GCM: onMessage", "Type: " + pushData.getObjectType());
 			
 			
 			Intent intent2 = new Intent(CommonUtilities.DISPLAY_MESSAGE_ACTION);

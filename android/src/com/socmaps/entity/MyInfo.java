@@ -48,7 +48,7 @@ public class MyInfo {
 
 	private TimeEntity lastLoginTime;
 
-	private MyGeoPoint currentPosition;
+	//private MyGeoPoint currentPosition;
 	
 	private NotificationCount notificationCount = new NotificationCount();
 
@@ -310,13 +310,13 @@ public class MyInfo {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	public MyGeoPoint getCurrentPosition() {
+	/*public MyGeoPoint getCurrentPosition() {
 		return currentPosition;
 	}
 
 	public void setCurrentPosition(MyGeoPoint currentPosition) {
 		this.currentPosition = currentPosition;
-	}
+	}*/
 
 	public UserSettings getSettings() {
 		return settings;

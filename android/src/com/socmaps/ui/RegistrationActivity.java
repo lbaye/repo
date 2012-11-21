@@ -386,7 +386,7 @@ public class RegistrationActivity extends Activity {
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(),
+					StaticValues.myInfo.getAuthToken(),response,
 					RegistrationActivity.this);
 
 			finish();

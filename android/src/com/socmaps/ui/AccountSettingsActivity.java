@@ -1053,6 +1053,7 @@ public class AccountSettingsActivity extends Activity implements
 
 		Log.e("Account settings", "You have logged out! ");
 		Utility.setFacebookImage(context, null);
+		Utility.destroySession(context);
 
 		Intent intent = new Intent(context, HomeActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
