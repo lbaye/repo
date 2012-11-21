@@ -16,7 +16,8 @@ class UserRepo extends Base
 
     protected $loggerName = 'Repository::UserRepo';
 
-    public function bindObservers() {
+    public function bindObservers()
+    {
         $this->addObserver(new \Document\UsersObserver($this->dm, $this));
     }
 
@@ -751,7 +752,7 @@ class UserRepo extends Base
         $baseDir = ROOTDIR . "/images/avatar/";
         if (!file_exists($baseDir))
             mkdir($baseDir, 0777, true);
-        
+
         $filePath = "/images/avatar/" . $user->getId();
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
@@ -785,7 +786,7 @@ class UserRepo extends Base
         if ($coverPhotoUrl !== false) {
             $user->setCoverPhoto($coverPhotoUrl);
         } else {
-            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR .$filePath);
+            ImageHelper::saveImageFromBase64($coverPhoto, ROOTDIR . $filePath);
             $user->setCoverPhoto($filePath . "?" . $timeStamp);
         }
 
@@ -815,7 +816,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function search($keyword = null, $location = array(), $limit = 20,$key=null)
+    public function search($keyword = null, $location = array(), $limit = 20, $key = null)
     {
         $exclude = array();
         $blockUserList = array();
@@ -868,7 +869,8 @@ class UserRepo extends Base
         return array();
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20,$key=null) {
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null)
+    {
         $people_around = $this->search($keyword, $location, $limit, $key);
         $visible_people = array();
 
@@ -886,10 +888,10 @@ class UserRepo extends Base
     public function getFbConnectedUsers($start = 0, $limit = 50)
     {
         $query = $this->createQueryBuilder()
-                      ->field('facebookAuthToken')->exists(true)
-                      ->hydrate(false)
-                      ->skip($start)
-                      ->limit($limit);
+            ->field('facebookAuthToken')->exists(true)
+            ->hydrate(false)
+            ->skip($start)
+            ->limit($limit);
 
         $users = $query->getQuery()->execute();
         return (!empty($users)) ? $users : array();
@@ -1049,7 +1051,7 @@ class UserRepo extends Base
 
     }
 
-    public function renameCustomCircle($id,$data)
+    public function renameCustomCircle($id, $data)
     {
         $circles = $this->currentUser->getCircles();
 
@@ -1068,7 +1070,8 @@ class UserRepo extends Base
         return true;
     }
 
-    public function removeOldNotifications(UserDocument $user) {
+    public function removeOldNotifications(UserDocument $user)
+    {
         $notifications = $user->getNotification();
 
         if (count($notifications) > 0) {
@@ -1076,11 +1079,11 @@ class UserRepo extends Base
             $this->dm->persist($user);
             $this->dm->flush();
         }
-        
+
         return true;
     }
 
-     public function removeFriendFromMyCircle($id)
+    public function removeFriendFromMyCircle($id)
     {
         $circles = $this->currentUser->getCircles();
         $friendId = $this->_trimInvalidUsers($id);
@@ -1124,9 +1127,9 @@ class UserRepo extends Base
         }
 
         return array(
-           "badge" => $pending_friend_request_count + $unread_message_count,
-           "tabCounts" => "{$unread_message_count}|{$pending_friend_request_count}|0",
-           "sound" => "default"
+            "badge" => $pending_friend_request_count + $unread_message_count,
+            "tabCounts" => "{$unread_message_count}|{$pending_friend_request_count}|0",
+            "sound" => "default"
         );
     }
 }
