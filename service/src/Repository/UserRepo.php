@@ -1109,26 +1109,19 @@ class UserRepo extends Base
         $messageRepo = $this->dm->getRepository('Document\Message');
 
         $friend_requests = $user->getFriendRequest();
-        $pending_friend_request_count = 0;
-
+        $pending_friend_requests_count = 0;
 
         foreach ($friend_requests as $friend_request) {
             if ($friend_request->getAccepted() === null)
-                $pending_friend_request_count++;
+                $pending_friend_requests_count++;
         }
 
-        $messages = $messageRepo->getByRecipient($user);
-        $unread_message_count = 0;
-
-        foreach ($messages as $message) {
-            $message->toArray();
-            if ($message['status'] == 'unread')
-                $unread_message_count++;
-        }
+        $unread_messages = $messageRepo->getUnreadMessagesByRecipient($user);
+        $unread_messages_count = count($unread_messages);
 
         return array(
-            "badge" => $pending_friend_request_count + $unread_message_count,
-            "tabCounts" => "{$unread_message_count}|{$pending_friend_request_count}|0",
+            "badge" => $pending_friend_requests_count + $unread_messages_count,
+            "tabCounts" => "{$unread_messages_count}|{$pending_friend_requests_count}|0",
             "sound" => "default"
         );
     }

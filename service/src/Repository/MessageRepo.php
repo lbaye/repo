@@ -8,13 +8,11 @@ use Repository\UserRepo as UserRepository;
 use Document\Message as MessageDocument;
 use Helper\Security as SecurityHelper;
 
-class MessageRepo extends Base
-{
+class MessageRepo extends Base {
 
     private $userRepository;
 
-    private function getUserRepository()
-    {
+    private function getUserRepository() {
         if ($this->userRepository === null) {
             $this->userRepository = $this->dm->getRepository('Document\User');
         }
@@ -22,8 +20,7 @@ class MessageRepo extends Base
         return $this->userRepository;
     }
 
-    public function getByUser(UserDocument $user)
-    {
+    public function getByUser(UserDocument $user) {
         $messages = $this->dm->createQueryBuilder()
                 ->find('Document\Message')
                 ->field('sender')
@@ -35,8 +32,7 @@ class MessageRepo extends Base
         return $this->_toArrayAll($messages);
     }
 
-    public function getByRecipient(UserDocument $user)
-    {
+    public function getByRecipient(UserDocument $user) {
         $messages = $this->dm->createQueryBuilder()
                 ->find('Document\Message')
                 ->field('recipients')
@@ -48,8 +44,19 @@ class MessageRepo extends Base
         return $messages;
     }
 
-    public function getRepliesSince($thread, $since)
-    {
+    public function getUnreadMessagesByRecipient(UserDocument $user) {
+        $messages = $this->dm->createQueryBuilder()
+                ->find('Document\Message')
+                ->field('recipients')->equals($user->getId())
+                ->field('status')->equals('unread')
+                ->sort('updateDate', 'desc')
+                ->getQuery()
+                ->execute();
+
+        return $messages;
+    }
+
+    public function getRepliesSince($thread, $since) {
         $replies = $this->dm->createQueryBuilder()
                 ->find('Document\Message')
 
@@ -65,8 +72,7 @@ class MessageRepo extends Base
         return $this->_toArrayAll($replies);
     }
 
-    public function insert(MessageDocument $message)
-    {
+    public function insert(MessageDocument $message) {
         if (!$message->isValid()) {
             throw new \InvalidArgumentException('Invalid Message data', 406);
         }
@@ -87,26 +93,23 @@ class MessageRepo extends Base
         return $message;
     }
 
-    private function addToThread(MessageDocument $message)
-    {
+    private function addToThread(MessageDocument $message) {
         $message->getThread()->getReplies()->add($message);
         $this->dm->persist($message->getThread());
         $this->dm->flush();
     }
 
-    public function updateStatus(MessageDocument $message, $userId)
-    {
+    public function updateStatus(MessageDocument $message, $userId) {
         $users = $message->getReadBy();
 
-        $message->setReadBy(array_unique(array_merge($users,array($userId))));
+        $message->setReadBy(array_unique(array_merge($users, array($userId))));
         $this->dm->persist($message);
         $this->dm->flush();
 
         return true;
     }
 
-    public function updateRecipients(MessageDocument $message, array $recipients)
-    {
+    public function updateRecipients(MessageDocument $message, array $recipients) {
         $this->setRecipients(array('recipients' => $recipients), $message);
         $this->dm->persist($message);
         $this->dm->flush();
@@ -114,8 +117,7 @@ class MessageRepo extends Base
         return true;
     }
 
-    public function map(array $data, UserDocument $sender, MessageDocument $message = null)
-    {
+    public function map(array $data, UserDocument $sender, MessageDocument $message = null) {
         $now = new \DateTime();
 
         if (is_null($message)) {
@@ -146,8 +148,7 @@ class MessageRepo extends Base
     }
 
     private function setThreadDependentProperties(
-        array &$formFields, array $data, MessageDocument $message)
-    {
+        array &$formFields, array $data, MessageDocument $message) {
 
         if (!empty($data['thread'])) {
             $thread = $this->find($data['thread']);
@@ -163,26 +164,24 @@ class MessageRepo extends Base
         }
     }
 
-    private function setRecipients(array $data, MessageDocument &$message, $sender = null)
-    {
+    private function setRecipients(array $data, MessageDocument &$message, $sender = null) {
         if (!empty($data['recipients'])) {
             $recipients = $data['recipients'];
             $recipientsObjects = array($sender);
 
             foreach ($recipients as $recipient)
                 $recipientsObjects[] = $this->getUserRepository()->find($recipient);
-                $message->setRecipients(array_filter($recipientsObjects) );
+            $message->setRecipients(array_filter($recipientsObjects));
         }
     }
 
-    protected function _toArrayAll($results)
-    {
+    protected function _toArrayAll($results) {
         $docsAsArr = array();
         foreach ($results as $message) {
             $messageArr = $message->toArray();
             $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-            foreach($messageArr['recipients'] AS &$recipient){
+            foreach ($messageArr['recipients'] AS &$recipient) {
                 $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
             }
 
@@ -192,19 +191,18 @@ class MessageRepo extends Base
         return $docsAsArr;
     }
 
-     public function getByRecipientCount(UserDocument $user)
-        {
-            $messages = $this->dm->createQueryBuilder()
-                    ->find('Document\Message')
-                    ->field('recipients')
-                    ->equals($user->getId())
-                    ->field('readBy')
-                    ->notEqual($user->getId())
-                    ->sort('updateDate', 'desc')
-                    ->getQuery()
-                    ->execute();
+    public function getByRecipientCount(UserDocument $user) {
+        $messages = $this->dm->createQueryBuilder()
+                ->find('Document\Message')
+                ->field('recipients')
+                ->equals($user->getId())
+                ->field('readBy')
+                ->notEqual($user->getId())
+                ->sort('updateDate', 'desc')
+                ->getQuery()
+                ->execute();
 
-            return $messages;
-        }
+        return $messages;
+    }
 
 }
