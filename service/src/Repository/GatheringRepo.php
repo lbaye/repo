@@ -271,27 +271,15 @@ class GatheringRepo extends Base
 
     public function planToArray($data,$key)
     {
-        unset($data['rsvp']);
-        unset($data['guestsCanInvite']);
-        unset($data['distance']);
-        unset($data['description']);
-        unset($data['ownerDetail']);
-        unset($data['permission']);
-        unset($data['permittedUsers']);
-        unset($data['permittedCircles']);
-        unset($data['event_type']);
-        unset($data['my_response']);
-        unset($data['is_invited']);
-        unset($data['guests']);
-        unset($data['owner']);
+        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['description'], $data['ownerDetail'],
+        $data['permission'], $data['permittedUsers'], $data['permittedCircles'], $data['event_type'], $data['my_response'],
+        $data['is_invited'], $data['guests'], $data['owner']);
 
         $lat = $data['location']['lat'];
         $lng = $data['location']['lng'];
 
         $data['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
         return $data;
-
-
     }
 
 }
