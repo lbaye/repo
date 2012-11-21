@@ -189,9 +189,12 @@ class User extends Base
         if ($this->user instanceof \Document\User) {
 
             $data = $this->user->toArrayDetailed();
-
             $data['avatar'] = \Helper\Url::buildAvatarUrl($data);
             $data['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($data);
+
+            $notificationCounts = $this->userRepository->generateNotificationCount($this->user->getId());
+            $notificationCounts = explode("|", $notificationCounts['tabCounts']);
+            $data['notification_count'] = array('notifications' => $notificationCounts[2], 'friendRequest' => $notificationCounts[1], 'messageCount' => $notificationCounts[0]);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);

@@ -70,25 +70,16 @@ class SendPushNotification extends Base
      */
     private function _sendPushNotification(array $userHash, $notification)
     {
-        $notificationHash = array(
+        $hash = array(
             'title' => $notification->title,
             'objectId' => $notification->objectId,
             'objectType' => $notification->objectType
         );
 
+        $notificationCountHash = $this->userRepository->generateNotificationCount($userHash['_id']);
+        $notificationHash = array_merge($hash, $notificationCountHash);
         $this->debug("Sending push notification to user - {$userHash['firstName']} ({$userHash['_id']})");
         $pushSettings = $userHash['pushSettings'];
-
-        # TODO: Badge count is intentionally disabled.
-        #$notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
-        #$notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
-
-        #$message = count($this->messageRepository->getByRecipientCount($user));
-
-        #$countTotal = (int)$notifications_friendrequest_extract[0]+(int)$notifications_friendrequest_extract[1]+ $message;
-
-        $notificationHash['badge'] = 0;
-        $notificationHash['tabCounts'] = "0:0"; #$notifications_friendrequest.":" . $message;
 
         $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 

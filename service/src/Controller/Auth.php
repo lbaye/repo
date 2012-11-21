@@ -38,7 +38,7 @@ class Auth extends Base
         $data = $this->request->request->all();
 
 
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
         }
 
@@ -82,8 +82,8 @@ class Auth extends Base
 
             $notifications = 0;
             $friendRequest = 0;
-            $messageCount  = 0;
-            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
+            $messageCount = 0;
+            $userData['notification_count'] = array('notifications' => $notifications, 'friendRequest' => $friendRequest, 'messageCount' => $messageCount);
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(201);
@@ -105,7 +105,6 @@ class Auth extends Base
     }
 
 
-
     /**
      * POST /auth/login
      *
@@ -115,7 +114,7 @@ class Auth extends Base
     {
         $data = $this->request->request->all();
 
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
         }
         $user = $this->userRepository->validateLogin($data);
@@ -125,21 +124,16 @@ class Auth extends Base
         if ($user instanceof \Document\User) {
             $this->userRepository->updateLoginCount($user->getId());
             $this->user = $user;
-            $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
-            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
-            $message = count($this->messageRepository->getByRecipientCount($user));
-
             $userData = $user->toArrayDetailed();
 
             $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
             $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
 
-            $userData['friends'] = $this->_getFriendList($user,array('id', 'firstName', 'lastName', 'avatar','status','coverPhoto', 'distance','address','regMedia'));
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
 
-            $notifications = (int) $notifications_friendrequest_extract[0];
-            $friendRequest = (int) $notifications_friendrequest_extract[1];
-            $messageCount  = $message;
-            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
+            $notificationCounts = $this->userRepository->generateNotificationCount($user->getId());
+            $notificationCounts = explode("|", $notificationCounts['tabCounts']);
+            $userData['notification_count'] = array('notifications' => $notificationCounts[2], 'friendRequest' => $notificationCounts[1], 'messageCount' => $notificationCounts[0]);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -163,7 +157,7 @@ class Auth extends Base
 
         $this->debug('Request parameters - ' . json_encode(array_keys($data)));
 
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
             $this->debug('Email is set with the parameter.');
         }
@@ -203,7 +197,7 @@ class Auth extends Base
             }
 
             $notifications_friendrequest = $this->userRepository->getNotificationsCount($user->getId());
-            $notifications_friendrequest_extract = explode(":",$notifications_friendrequest);
+            $notifications_friendrequest_extract = explode(":", $notifications_friendrequest);
             $message = count($this->messageRepository->getByRecipientCount($user));
 
             $userData = $user->toArrayDetailed();
@@ -211,10 +205,10 @@ class Auth extends Base
             $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
 
-            $notifications = (int) $notifications_friendrequest_extract[0];
-            $friendRequest = (int) $notifications_friendrequest_extract[1];
-            $messageCount  = $message;
-            $userData['notification_count'] = array('notifications' => $notifications,'friendRequest' => $friendRequest,'messageCount' => $messageCount);
+            $notifications = (int)$notifications_friendrequest_extract[0];
+            $friendRequest = (int)$notifications_friendrequest_extract[1];
+            $messageCount = $message;
+            $userData['notification_count'] = array('notifications' => $notifications, 'friendRequest' => $friendRequest, 'messageCount' => $messageCount);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -297,10 +291,10 @@ class Auth extends Base
             $this->response->setContent(json_encode(array('message' => "No user found with this email.")));
             $this->response->setStatusCode(400);
         } else {
-            $userId        = $user->getId();
+            $userId = $user->getId();
             $passwordToken = $this->userRepository->getPasswordToken($userId);
 
-            $url           = $this->config['web']['root'] ."/auth/pass/token/" . $passwordToken;
+            $url = $this->config['web']['root'] . "/auth/pass/token/" . $passwordToken;
             $this->userRepository->updateForgetPasswordToken($userId, $passwordToken);
             $message = "Please click the link to reset your password {$url} ";
 
@@ -333,7 +327,7 @@ class Auth extends Base
             throw new \Exception\ResourceNotFoundException();
         } else {
 
-            return new RedirectResponse($this->config['web']['root']."/pass_socialmaps/index.php");
+            return new RedirectResponse($this->config['web']['root'] . "/pass_socialmaps/index.php");
 
         }
     }
@@ -362,7 +356,7 @@ class Auth extends Base
             $this->response->setStatusCode(Status::OK);
         }
 
-        $userId   = $user->getId();
+        $userId = $user->getId();
         $password = $this->userRepository->resetPassword($data, $userId);
         $this->response->setContent(json_encode(array('password' => $password)));
         $this->response->setStatusCode(Status::OK);
