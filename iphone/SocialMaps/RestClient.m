@@ -6709,7 +6709,7 @@ AppDelegate *smAppDelegate;
     [request addRequestHeader:authToken value:authTokenValue];
     
     [request addPostValue:place.name forKey:@"metaTitle"];
-    [request addPostValue:note forKey:@"metaContent[content]"];
+    [request addPostValue:note forKey:@"metaContent[note]"];
     [request addPostValue:place.address forKey:@"metaContent[address]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.latitude] forKey:@"metaContent[lat]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.longitude] forKey:@"metaContent[lng]"];
