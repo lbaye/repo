@@ -45,6 +45,8 @@ public class MessageActivity extends TabActivity {
 		setContentView(R.layout.message_activity);
 
 		initialize();
+		
+		
 
 		setupTabHost();
 
@@ -148,6 +150,7 @@ public class MessageActivity extends TabActivity {
 	protected void onResume() {
 		super.onResume();
 
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	@Override

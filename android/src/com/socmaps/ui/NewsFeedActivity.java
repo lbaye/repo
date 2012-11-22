@@ -1,6 +1,8 @@
 package com.socmaps.ui;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,12 +18,14 @@ import android.widget.ProgressBar;
 
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
+import com.socmaps.util.Utility;
 
 public class NewsFeedActivity extends Activity implements OnClickListener {
 
+	Context context;
 	private WebView webViewNewsFeed;
 	private ProgressBar progressBar;
-	private Button btnBack;
+	private Button btnBack, btnNotification;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +40,18 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void initUI() {
 		// TODO Auto-generated method stub
+		context = this;
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
+		
+		btnNotification = (Button) findViewById(R.id.btnNotification);
+		btnNotification.setOnClickListener(this);
 
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		webViewNewsFeed = (WebView) findViewById(R.id.webViewNewsFeed);
@@ -136,6 +145,11 @@ public class NewsFeedActivity extends Activity implements OnClickListener {
 		if (v == btnBack) {
 
 			finish();
+		}
+		else if(v == btnNotification)
+		{
+			Intent intent = new Intent(context, NotificationActivity.class);
+			startActivity(intent);
 		}
 
 	}

@@ -74,6 +74,8 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 
 		initialize();
+		
+		
 
 		getPhotos();
 
@@ -88,6 +90,8 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		// Log.d("onResume PhotoListActivity",
 		// getIntent().getIntExtra("IS_UPLOAD_NEW_PHOTO", 0) + " ");
 
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		if (isUploadNewPhoto) {
 
 			getPhotos();

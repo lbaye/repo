@@ -18,17 +18,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +37,6 @@ import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.ui.ListViewActivity.ListComparator;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -50,7 +46,7 @@ import com.socmaps.util.Utility;
 
 public class FriendListActivity extends Activity implements OnClickListener {
 
-	private enum Audio {
+	private enum SelectedTab {
 		ATOZ, DISTANCE, CIRCLES
 	}
 
@@ -61,34 +57,39 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	}
 
 	private Context context;
-	private Button btnBack, searchBtn, doSearchBtn, aToZBtn, distanceBtn,
-			circleBtn;
+	private Button btnBack, aToZBtn, distanceBtn, circleBtn, btnNotification;
 
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
-	//boolean isSearchEnabled = false;
+	// boolean isSearchEnabled = false;
 	private EditText etSearchField;
-	private EditText searchQueryEditText;
 	private RelativeLayout searchPanel;
 	private LinearLayout listContainer;
+
 	private List<People> originalFriendList;
 	private List<People> tempFriendList;
+
+	private List<People> tempFriendListDistance;
+
 	private LayoutInflater inflater;
-	private int selectedTab = Audio.ATOZ.ordinal();
+	private int selectedTab;
 
 	HashMap<String, Boolean> selectedPhoto;
 	private ProgressDialog m_ProgressDialog;
 	private String friendsResponse;
 	private int friendsStatus;
-	ImageDownloader imageDownloader;
+	private ImageDownloader imageDownloader;
 
-	String personID = null;
+	private String personID = null;
 
 	// String selectedId = null;
 
-	private View selectedView;
-	private List<Circle> circleList;
+	// private View selectedView;
 
-	private int tabIdentity = 0;
+	private List<Circle> mainCircleList;
+
+	private List<Circle> tempCircleList;
+
+	private int colorButtonSelected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		initialize();
 
-		personID = getIntent().getStringExtra("PERSON_ID");
+		// personID = getIntent().getStringExtra("PERSON_ID");
 
 		if (personID != null) {
 
@@ -109,24 +110,24 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 			getFriendList();
 
-			generateListViewForAToZ();
+			updateContentList(originalFriendList);
 
-			circleList = StaticValues.myInfo.getCircleList();
+			updateCircleContentList(mainCircleList);
+
+			generateListViewForAToZ();
 
 			Log.w("FriendListActivity onCreate", "personID is null");
 
 		}
-		
-		
 
-		// showHideSearchPanel(false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		reSetView();
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		// reSetView();
 
 	}
 
@@ -134,14 +135,23 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		context = FriendListActivity.this;
 
-		personID = getIntent().getStringExtra("ID");
+		personID = getIntent().getStringExtra("PERSON_ID");
 		if (personID != null)
 			Log.d("Person ID", personID);
-		
-		tabIdentity=3;
+
+		selectedTab = SelectedTab.ATOZ.ordinal();
+
+		colorButtonSelected = getResources().getColor(R.color.gray_light);
+
+		tempFriendList = new ArrayList<People>();
+		originalFriendList = new ArrayList<People>();
+		tempFriendListDistance = new ArrayList<People>();
+		mainCircleList = new ArrayList<Circle>();
+		tempCircleList = new ArrayList<Circle>();
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
+		btnToggleSearchPanel.setVisibility(View.INVISIBLE);
 
 		btnDoSearch = (Button) findViewById(R.id.btnDoSearch);
 		btnDoSearch.setOnClickListener(this);
@@ -153,12 +163,12 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
-		searchBtn = (Button) findViewById(R.id.btnSearch);
-		// doSearchBtn = (Button) findViewById(R.id.doSearchBtn);
+		btnNotification = (Button) findViewById(R.id.btnNotification);
+		btnNotification.setOnClickListener(this);
 
 		aToZBtn = (Button) findViewById(R.id.atozBtn);
 		aToZBtn.setOnClickListener(this);
-		aToZBtn.setBackgroundColor(Color.GRAY);
+		aToZBtn.setBackgroundColor(colorButtonSelected);
 
 		distanceBtn = (Button) findViewById(R.id.distanceFilterBtn);
 		distanceBtn.setOnClickListener(this);
@@ -166,8 +176,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		circleBtn = (Button) findViewById(R.id.circleFilterBtn);
 		circleBtn.setOnClickListener(this);
 
-		searchQueryEditText = (EditText) findViewById(R.id.etFriendSearch);
-		// searchPanel = (RelativeLayout) findViewById(R.id.searchContainer);
 		listContainer = (LinearLayout) findViewById(R.id.list_container);
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -187,27 +195,34 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			finish();
 		}
 
-		else if (v == circleBtn) {
+		else if (v == circleBtn && selectedTab != SelectedTab.CIRCLES.ordinal()) {
 
 			generateListViewForCircles();
 
 			resetButtonBackgroundColor(v);
 
-			tabIdentity = 7;
+			selectedTab = SelectedTab.CIRCLES.ordinal();
 
-		} else if (v == aToZBtn) {
+		} else if (v == aToZBtn && selectedTab != SelectedTab.ATOZ.ordinal()) {
 
 			generateListViewForAToZ();
 
 			resetButtonBackgroundColor(v);
-			tabIdentity = 3;
+			selectedTab = SelectedTab.ATOZ.ordinal();
 
-		} else if (v == distanceBtn) {
+		} else if (v == distanceBtn
+				&& selectedTab != SelectedTab.DISTANCE.ordinal()) {
 
 			generateListViewForDistance();
 
 			resetButtonBackgroundColor(v);
-			tabIdentity = 5;
+			selectedTab = SelectedTab.DISTANCE.ordinal();
+
+		} else if (v == btnNotification) {
+			Intent notificationIntent = new Intent(context,
+					NotificationActivity.class);
+
+			startActivity(notificationIntent);
 
 		}
 
@@ -217,11 +232,11 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
-			//isSearchEnabled = true;
+			// isSearchEnabled = true;
 			doSearch();
 
 		} else if (v == btnClearSearch) {
-			//isSearchEnabled = false;
+			// isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
 
@@ -235,17 +250,24 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		aToZBtn.setBackgroundColor(Color.TRANSPARENT);
 		distanceBtn.setBackgroundColor(Color.TRANSPARENT);
 
-		v.setBackgroundColor(Color.GRAY);
+		v.setBackgroundColor(colorButtonSelected);
 
 	}
 
 	private void generateListViewForAToZ() {
 
 		listContainer.removeAllViews();
+		// Log.w("generateListViewForAToZ() a to z", tempFriendList.size()
+		// + " before sort size of tempFriendList");
 
-		tempFriendList = sortDataAlphabetically(tempFriendList);
+		sortDataAlphabetically();
 
-		if (tempFriendList.size() > 0) {
+		if (tempFriendList != null) {
+
+			Log.i("generateListViewForAToZ() a to z", tempFriendList.size()
+					+ "After sort size of tempFriendList");
+
+			// if (tempFriendList.size() > 0) {
 			String startingChar = "";
 
 			LinearLayout itemRow = getAFreshRow();
@@ -278,6 +300,8 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			}
 			addAlreadyCreatedRow(itemRow);
 		}
+
+		// }
 	}
 
 	public View getItemViewFriend(final People people) {
@@ -328,23 +352,28 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (selectedPhoto.get(id)) {
-					proficPicContainer
-							.setBackgroundResource(R.color.transparent);
-					selectedPhoto.put(id, false);
-				} else {
-					proficPicContainer
-							.setBackgroundResource(R.color.highlightGreen);
-					selectedPhoto.put(id, true);
-					// selectedId = id;
-				}
-				selectedView = v;
+
+				/*
+				 * if (selectedPhoto.get(id)) { proficPicContainer
+				 * .setBackgroundResource(R.color.transparent);
+				 * selectedPhoto.put(id, false); } else { proficPicContainer
+				 * .setBackgroundResource(R.color.highlightGreen);
+				 * selectedPhoto.put(id, true); // selectedId = id; }
+				 * selectedView = v;
+				 */
 
 				// go user profile
-				Intent profileInt = new Intent(FriendListActivity.this,
-						ProfileActivity2.class);
-				profileInt.putExtra("otherUser", people);
-				startActivity(profileInt);
+
+				if (people.getId().equals(StaticValues.myInfo.getId())) {
+					Intent intent = new Intent(context, ProfileActivity.class);
+					startActivity(intent);
+				} else {
+					Intent profileInt = new Intent(FriendListActivity.this,
+							ProfileActivity2.class);
+					profileInt.putExtra("otherUser", people);
+					startActivity(profileInt);
+
+				}
 
 			}
 		});
@@ -352,18 +381,18 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		return v;
 	}
 
-	private void reSetView() {
-		// TODO Auto-generated method stub
-		if (selectedView != null) {
-
-			// final RelativeLayout proficPicContainer = (RelativeLayout)
-			// selectedView
-			// .findViewById(R.id.proficPicContainer2);
-			// proficPicContainer.setBackgroundResource(R.color.transparent);
-
-			selectedView.setBackgroundResource(R.color.transparent);
-		}
-	}
+	// private void reSetView() {
+	// // TODO Auto-generated method stub
+	// if (selectedView != null) {
+	//
+	// // final RelativeLayout proficPicContainer = (RelativeLayout)
+	// // selectedView
+	// // .findViewById(R.id.proficPicContainer2);
+	// // proficPicContainer.setBackgroundResource(R.color.transparent);
+	//
+	// selectedView.setBackgroundResource(R.color.transparent);
+	// }
+	// }
 
 	private LinearLayout getAFreshRow() {
 
@@ -412,42 +441,44 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	private void showHideSearchPanel(boolean flag) {
-
-		if (flag)
-			searchPanel.setVisibility(View.VISIBLE);
-		else
-			searchPanel.setVisibility(View.GONE);
-
-	}
-
 	// get friend list from server
 	private void getFriendList() {
 
-		originalFriendList = StaticValues.myInfo.getFriendList();
+		for (People people : StaticValues.myInfo.getFriendList()) {
 
-		// tempFriendList = sortDataAlphabetically(originalFriendList);
+			originalFriendList.add(people);
 
-		// // for testing
-		// for (int i = 0; i < 10; i++) {
-		// People frnd = new People();
-		// frnd.setFirstName("Name");
-		// frnd.setId("a" + i);
-		// originalFriendList.add(frnd);
-		// }
-		// for (int i = 0; i < 10; i++) {
-		// People frnd = new People();
-		// frnd.setFirstName("Name");
-		// frnd.setId("b" + i);
-		// originalFriendList.add(frnd);
-		// }
-		// for (int i = 0; i < 10; i++) {
-		// People frnd = new People();
-		// frnd.setFirstName("Name");
-		// frnd.setId("c" + i);
-		// originalFriendList.add(frnd);
-		// }
-		// for testing
+		}
+
+		for (Circle circle : StaticValues.myInfo.getCircleList()) {
+
+			mainCircleList.add(circle);
+		}
+
+	}
+
+	public void updateContentList(List<People> list) {
+
+		if (list != null) {
+
+			tempFriendList.clear();
+			tempFriendList.addAll(list);
+
+			tempFriendListDistance.clear();
+			tempFriendListDistance.addAll(list);
+		}
+
+	}
+
+	public void updateCircleContentList(List<Circle> list) {
+
+		if (list != null) {
+
+			tempCircleList.clear();
+			tempCircleList.addAll(list);
+
+		}
+
 	}
 
 	/*
@@ -538,8 +569,8 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 					originalFriendList = ServerResponseParser
 							.parsePeoples(jArrayFriends);
-					
-					tempFriendList=originalFriendList;
+
+					updateContentList(originalFriendList);
 
 					generateListViewForAToZ();
 
@@ -550,8 +581,10 @@ public class FriendListActivity extends Activity implements OnClickListener {
 					JSONArray jArrayCircles = jsonObject
 							.getJSONArray("circles");
 
-					circleList = ServerResponseParser
+					mainCircleList = ServerResponseParser
 							.getCircleList(jArrayCircles);
+
+					updateCircleContentList(mainCircleList);
 
 				}
 
@@ -576,15 +609,10 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	private List<People> sortDataAlphabetically(List<People> friends) {
-		Collections.sort(friends, new ListComparatorName());
-		return friends;
-	}
-
-	private List<People> sortDataWithDistance(List<People> friends) {
-		Collections.sort(friends, new ListComparatorName());
-		return friends;
-	}
+	// private List<People> sortDataWithDistance(List<People> friends) {
+	// Collections.sort(friends, new ListComparatorName());
+	// return friends;
+	// }
 
 	class ListComparatorName implements Comparator<People> {
 
@@ -611,11 +639,11 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		listContainer.removeAllViews();
 
-		if (circleList.size() > 0) {
+		if (tempCircleList != null) {
 
-			for (int i = 0; i < circleList.size(); i++) {
+			for (int i = 0; i < tempCircleList.size(); i++) {
 
-				List<People> circleFriendList = circleList.get(i)
+				List<People> circleFriendList = tempCircleList.get(i)
 						.getFriendList();
 
 				if (circleFriendList.size() > 0) {
@@ -627,38 +655,43 @@ public class FriendListActivity extends Activity implements OnClickListener {
 					int counter = 0;
 					for (int j = 0; j < circleFriendList.size(); j++) {
 
-						People people = Utility.getPeopleById(circleFriendList
-								.get(j).getId(), originalFriendList);
+						if (originalFriendList != null) {
 
-						if (people != null) {
-							if (isHeaderCircle(startingCircleName, circleList
-									.get(i).getName())) {
-								if (j > 0) {
-									addAlreadyCreatedRow(itemRow);
+							People people = Utility.getPeopleById(
+									circleFriendList.get(j).getId(),
+									originalFriendList);
+
+							if (people != null) {
+								if (isHeaderCircle(startingCircleName,
+										tempCircleList.get(i).getName())) {
+									if (j > 0) {
+										addAlreadyCreatedRow(itemRow);
+
+									}
+									counter = 0;
+									itemRow = getAFreshRow();
+									startingCircleName = tempCircleList.get(i)
+											.getName() + "";
+									addHeader(startingCircleName);
 
 								}
-								counter = 0;
-								itemRow = getAFreshRow();
-								startingCircleName = circleList.get(i)
-										.getName() + "";
-								addHeader(startingCircleName);
+								if (counter % 4 == 0 && j > 0) {
+									addAlreadyCreatedRow(itemRow);
+									counter = 0;
+									itemRow = getAFreshRow();
+								}
 
+								selectedPhoto.put(circleFriendList.get(j)
+										.getId(), false);
+
+								// itemRow.addView(getItemViewFriend(circleFriendList
+								// .get(j)));
+
+								itemRow.addView(getItemViewFriend(people));
+
+								counter++;
 							}
-							if (counter % 4 == 0 && j > 0) {
-								addAlreadyCreatedRow(itemRow);
-								counter = 0;
-								itemRow = getAFreshRow();
-							}
 
-							selectedPhoto.put(circleFriendList.get(j).getId(),
-									false);
-
-							// itemRow.addView(getItemViewFriend(circleFriendList
-							// .get(j)));
-
-							itemRow.addView(getItemViewFriend(people));
-
-							counter++;
 						}
 
 						// String firstNameTemp = circleFriendList.get(j)
@@ -679,17 +712,17 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		sortMasterListDistance();
 
-		//tempFriendList = originalFriendList;
+		// tempFriendList = originalFriendList;
 
-		if (originalFriendList.size() > 0) {
+		if (tempFriendListDistance != null) {
 			String startingDistance = "";
 
 			LinearLayout itemRow = getAFreshRow();
 
 			int counter = 0;
-			for (int i = 0; i < originalFriendList.size(); i++) {
+			for (int i = 0; i < tempFriendListDistance.size(); i++) {
 
-				People people = originalFriendList.get(i);
+				People people = tempFriendListDistance.get(i);
 
 				// String distance = Utility.getFormatedDistance(Utility
 				// .calculateDistance(StaticValues.myPoint, new GeoPoint(
@@ -725,9 +758,9 @@ public class FriendListActivity extends Activity implements OnClickListener {
 					itemRow = getAFreshRow();
 				}
 
-				selectedPhoto.put(originalFriendList.get(i).getId(), false);
+				selectedPhoto.put(tempFriendListDistance.get(i).getId(), false);
 
-				itemRow.addView(getItemViewFriend(originalFriendList.get(i)));
+				itemRow.addView(getItemViewFriend(tempFriendListDistance.get(i)));
 				counter++;
 
 			}
@@ -741,21 +774,32 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		if (distances >= 0 && distances <= 500) {
 
-			distanceLabel = "0 to 500 m";
+			distanceLabel = "< 500 m";
 
 		} else if (distances > 500 && distances <= 1000) {
-			distanceLabel = "500 m to 1 km";
+			distanceLabel = "< 1 km";
 		} else if (distances > 1000) {
 
-			distanceLabel = "1+ km";
+			distanceLabel = "1 km +";
 
 		}
 
 		return distanceLabel;
 	}
 
+	private void sortDataAlphabetically() {
+
+		if (this.tempFriendList != null) {
+			Collections.sort(tempFriendList, new ListComparatorName());
+		}
+
+	}
+
 	private void sortMasterListDistance() {
-		Collections.sort(this.originalFriendList, new ListComparator());
+
+		if (this.tempFriendListDistance != null) {
+			Collections.sort(this.tempFriendListDistance, new ListComparator());
+		}
 	}
 
 	/*
@@ -804,16 +848,18 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	private void doSearch() {
 
-		if (tabIdentity == 3) {
+		if (selectedTab == SelectedTab.ATOZ.ordinal()) {
 
-			// It is for A to Z filtaring
+			// It is for A to Z search
 			List<Object> dataList = new ArrayList<Object>();
 			dataList.addAll(originalFriendList);
 
-			List<Object> list = Utility.getSearchResult(dataList,
-					etSearchField.getText().toString().trim());
+			List<Object> list = Utility.getSearchResult(dataList, etSearchField
+					.getText().toString().trim());
 
 			tempFriendList.clear();
+
+			Log.w("doSearch() a to z", list.size() + " size of list");
 
 			for (Object obj : list) {
 				tempFriendList.add((People) obj);
@@ -821,25 +867,48 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 			generateListViewForAToZ();
 
-		} else if (tabIdentity == 5) {
+		} else if (selectedTab == SelectedTab.DISTANCE.ordinal()) {
 
-		} else if (tabIdentity == 7) {
+			// It is for distance search
+
+			List<Object> dataList = new ArrayList<Object>();
+			dataList.addAll(originalFriendList);
+
+			List<Object> list = Utility.getSearchResult(dataList, etSearchField
+					.getText().toString().trim());
+
+			tempFriendListDistance.clear();
+
+			Log.w("doSearch() distance", list.size() + " size of list");
+
+			for (Object obj : list) {
+				tempFriendListDistance.add((People) obj);
+			}
+
+			generateListViewForDistance();
+
+		} else if (selectedTab == SelectedTab.CIRCLES.ordinal()) {
+			// It is for circle search
+
+			List<Circle> dataList = new ArrayList<Circle>();
+			dataList.addAll(mainCircleList);
+
+			List<Circle> list = Utility.getSearchResultFromCircle(dataList,
+					originalFriendList, etSearchField.getText().toString()
+							.trim());
+
+			tempCircleList.clear();
+
+			Log.w("doSearch() circle", list.size() + " size of list");
+
+			for (Object obj : list) {
+				tempCircleList.add((Circle) obj);
+			}
+
+			generateListViewForCircles();
 
 		}
 
-		// updateDisplayList(listContent);
-
-		// List<Object> list=tempFriendList;
-
-		// List<Object> list = (Utility.getSearchResult(tempFriendList,
-		// etSearchField.getText().toString().trim()));
-		//
-		// listContent.clear();
-		// listContent.addAll(list);
-		//
-		// updateDisplayList(listContent);
-
-		// tempFriendList,originalFriendList,circleList
 	}
 
 	@Override

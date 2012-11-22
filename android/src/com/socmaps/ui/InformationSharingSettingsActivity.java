@@ -59,11 +59,18 @@ public class InformationSharingSettingsActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.information_sharing_layout);
+		
 		initialize();
+		
+		
+		
+		
 		setViewOnClickListener();
 		setExpandListener();
 
 	}
+	
+	
 
 	@Override
 	public void onAttachedToWindow() {
@@ -81,6 +88,8 @@ public class InformationSharingSettingsActivity extends Activity implements
 		} else {
 			setFieldValues(StaticValues.informationSharingPreferences);
 		}
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void startDialogAndBgThread() {

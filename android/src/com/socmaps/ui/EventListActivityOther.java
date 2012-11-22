@@ -95,6 +95,10 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		
 
 		init();
+		
+		
+		
+		
 		setListParameters();
 		setViewOnClickListener();
 
@@ -191,6 +195,8 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		super.onResume();
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 		/*
 		 * if (isUpdateList) { isUpdateList = !isUpdateList; fetchDataForList();
 		 * // resetFilterEditText();

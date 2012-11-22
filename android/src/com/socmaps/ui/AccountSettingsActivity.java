@@ -106,6 +106,9 @@ public class AccountSettingsActivity extends Activity implements
 		setContentView(R.layout.account_settings);
 
 		initialize();
+		
+		
+		
 		setExpandListener();
 		setViewOnClickListener();
 
@@ -128,6 +131,8 @@ public class AccountSettingsActivity extends Activity implements
 			startDialogAndBgThread();
 		else
 			setFieldValue(StaticValues.myInfo);
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	@Override

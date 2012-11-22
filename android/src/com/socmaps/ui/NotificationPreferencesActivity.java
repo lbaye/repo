@@ -67,6 +67,9 @@ public class NotificationPreferencesActivity extends Activity implements
 		setContentView(R.layout.notification_preferences_layout);
 
 		initialize();
+		
+		
+		
 		setExpandListener();
 
 		updateUI();
@@ -77,6 +80,9 @@ public class NotificationPreferencesActivity extends Activity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		if (StaticValues.notificationPreferences == null) {
 			startDialogAndBgThread();
 		} else {

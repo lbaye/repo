@@ -57,6 +57,9 @@ public class PlatformPreferencesActivity extends Activity implements
 		setContentView(R.layout.platform_preferences_layout);
 
 		initialize();
+		
+		
+		
 		setViewOnClickListener();
 
 	}
@@ -65,6 +68,9 @@ public class PlatformPreferencesActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		if (StaticValues.platformsPreferences == null) {
 			startDialogAndBgThread();
 		} else {

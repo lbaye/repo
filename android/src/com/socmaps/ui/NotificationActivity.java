@@ -2,6 +2,7 @@ package com.socmaps.ui;
 
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
+import com.socmaps.util.Utility;
 
 import android.app.TabActivity;
 import android.content.Context;
@@ -43,6 +44,8 @@ public class NotificationActivity extends TabActivity {
 		setContentView(R.layout.notification_activity);
 
 		initialize();
+		
+		
 
 		setupTabHost();
 
@@ -160,6 +163,8 @@ public class NotificationActivity extends TabActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
 

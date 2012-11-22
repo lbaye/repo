@@ -131,9 +131,18 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_new_layout);
+		setContentView(R.layout.event_new_layout); 
+		
+		eventLat = getIntent().getDoubleExtra("destLat", 0);
+		eventLng = getIntent().getDoubleExtra("destLng", 0); 
+		eventAddress = getIntent().getStringExtra("destAddress"); 
+		
+		Log.d("Received Place GTag", String.valueOf(eventLat)+" "+ String.valueOf(eventLng));
 
 		initialize();
+		
+		
+		
 		setExpandListener();
 
 		addLocationRadioGroup();
@@ -142,11 +151,15 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		generateFriendList();
 		showFriendList();
 	}
+	
+
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		Log.i("EventNewActivity:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
@@ -269,8 +282,16 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
 
-		locationRadioGroupView
-				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		/*locationRadioGroupView
+				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);*/ 
+		
+		if(eventLat != 0 && eventLng != 0) 
+		{
+			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
+			getDefaultLocationAddress();
+		}
+		else
+			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
@@ -1285,8 +1306,18 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				
 
 			}
-		}
+		} 
 
+	} 
+	
+	private void getDefaultLocationAddress() 
+	{
+		if (eventLat != 0 && eventLng != 0) {
+
+			Utility.getAddressByCoordinate(eventLat, eventLng,
+					new LocationAddressHandler());
+
+		}
 	}
 
 	/*

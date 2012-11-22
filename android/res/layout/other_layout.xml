@@ -632,7 +632,7 @@
                     android:background="@drawable/btn_bg_gray"
                     android:paddingLeft="10dip"
                     android:paddingRight="10dip"
-                    android:visibility="visible" >
+                    android:visibility="invisible" >
 
                     <TextView
                         android:id="@+id/tvFriendshipStatus"
@@ -657,7 +657,7 @@
                     android:background="@drawable/btn_bg_light"
                     android:paddingLeft="10dip"
                     android:paddingRight="10dip"
-                    android:visibility="visible" >
+                    android:visibility="invisible" >
 
                     <TextView
                         android:layout_width="wrap_content"

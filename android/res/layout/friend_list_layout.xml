@@ -93,9 +93,78 @@
             android:layout_toRightOf="@+id/etFriendSearch"
             android:text="Ok" >
         </Button>
-    </RelativeLayout>
+    </RelativeLayout>
     -->
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:background="@color/offwhite"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <Button
+            android:id="@+id/atozBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dip"
+            android:background="@color/transparent"
+            android:padding="5dip"
+            android:text="@string/atoz"
+            android:textColor="@color/black"
+            android:textSize="11dip" />
+
+        <ImageView
+            android:layout_width="0dip"
+            android:layout_height="40dip"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/distanceFilterBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:padding="5dip"
+            android:text="@string/distance_filter_label"
+            android:textColor="@color/black"
+            android:textSize="11dip" />
+
+        <ImageView
+            android:layout_width="0dip"
+            android:layout_height="40dip"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:src="@drawable/seperator" />
+
+        <Button
+            android:id="@+id/circleFilterBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dip"
+            android:background="@color/transparent"
+            android:padding="5dip"
+            android:text="@string/circlesLabel"
+            android:textColor="@color/black"
+            android:textSize="11dip" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/filterPanelSeperator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@+id/filterPanel"
+        android:background="@color/gray_light" />
+
+    <!--
     <LinearLayout
         android:id="@+id/filterPanel"
         android:layout_width="fill_parent"
@@ -163,7 +232,8 @@
                 android:textColor="@color/black"
                 android:textSize="11dip" />
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout>
+    -->
 
     <ScrollView
         android:layout_width="fill_parent"

@@ -106,6 +106,8 @@ public class LocationSharingSettingsActivity extends Activity implements
 		setContentView(R.layout.location_sharing_preferences_layout);
 
 		initialize();
+		
+		
 
 		generateDummyPlatformList();
 
@@ -116,6 +118,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		super.onResume();
 		if (StaticValues.myInfo == null)
 			startDialogAndBgThread();

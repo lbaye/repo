@@ -76,12 +76,17 @@ public class EventListActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.event_list_layout);
 
 		init();
+		
+		
+		
 		setListParameters();
 		setViewOnClickListener();
 
 		fetchDataForList();
 
 	}
+	
+
 
 	private void setViewOnClickListener() {
 
@@ -168,6 +173,9 @@ public class EventListActivity extends Activity implements OnClickListener,
 		super.onResume();
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		/*
 		 * if (isUpdateList) { isUpdateList = !isUpdateList; fetchDataForList();
 		 * // resetFilterEditText();

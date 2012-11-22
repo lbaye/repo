@@ -106,6 +106,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.profile_info_layout);
 
 		initialize();
+		
+		
 
 		// onLoad();
 		setDefaultValues();
@@ -118,6 +120,14 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		Window window = getWindow();
 		// Eliminates color banding
 		window.setFormat(PixelFormat.RGBA_8888);
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void initialize() {

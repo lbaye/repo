@@ -232,8 +232,7 @@ public class HomeActivity extends MapActivity implements
 		initialize();
 
 		setOnCheckChangeListener();
-
-		setDefaultValue();
+		
 
 		addPermissionRadioGroup();
 
@@ -241,17 +240,20 @@ public class HomeActivity extends MapActivity implements
 
 		facebookAuthentication();
 		
-		handleNavigationFromNotificationBar(getIntent());
+		handleNavigationFromNotificationBar(getIntent());		
+		initializeNotificationBroadcast();
 	}
 
-	private void setDefaultValue() {
+	/*private void setDefaultNotificationValue() {
 		// TODO Auto-generated method stub
-		if (StaticValues.myInfo != null) {
+		if (StaticValues.myInfo != null && btnNotification !=null) {
 			btnNotification.setText(""
 					+ StaticValues.myInfo.getNotificationCount()
 							.getTotalCount());
 		}
-	}
+	}*/
+	
+	
 
 	public void initialize() {
 
@@ -1331,8 +1333,10 @@ public class HomeActivity extends MapActivity implements
 				"" + Debug.getNativeHeapAllocatedSize());
 
 		gpsService.stopListener();
+		
+		
 		// unregisterReceiver(broadcastReceiver);
-		unregisterReceiver(broadcastReceiver);
+		
 		StaticValues.highlightAnnotationItem = null;
 		StaticValues.isHighlightAnnotation = false;
 
@@ -1469,12 +1473,13 @@ public class HomeActivity extends MapActivity implements
 
 		startGpsService();
 
-		initializeNotificationBroadcast();
+		
 
 		Log.i("Home:onResume memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
 		
 		//handleNavigationFromNotificationBar(getIntent());
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
 
@@ -1494,11 +1499,13 @@ public class HomeActivity extends MapActivity implements
 					.getSerializableExtra("pushData");
 
 			Utility.updateNotificationCountFromPush(pushData);
-			if(StaticValues.myInfo!=null)
+			/*if(StaticValues.myInfo!=null)
 			{
 				btnNotification.setText(""+StaticValues.myInfo.getNotificationCount()
 						.getTotalCount());
-			}
+			}*/
+			
+			Utility.updateNotificationBubbleCounter(btnNotification);
 			
 
 		}
@@ -1876,6 +1883,98 @@ public class HomeActivity extends MapActivity implements
 						.getAddress());
 				startActivity(intentForMeetup);
 			}
+		}); 
+		
+		// -- for event when Place Pop Up appear -- // 
+		
+		Button event_btn = (Button) d.findViewById(R.id.event_btn); 
+		event_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+				Log.d("PLACE MEET UP",
+						String.valueOf(item.getPlace().getLatitude())
+								+ " "
+								+ String.valueOf(item.getPlace().getLongitude()));
+
+				Intent intentForMeetup = new Intent(context,
+						EventNewActivity.class);
+				intentForMeetup.putExtra("destLat", item.getPlace()
+						.getLatitude());
+				intentForMeetup.putExtra("destLng", item.getPlace()
+						.getLongitude());
+				intentForMeetup.putExtra("destAddress", item.getPlace()
+						.getAddress());
+				startActivity(intentForMeetup);
+			}
+		}); 
+		
+		// -- for recommandation when Place Pop Up appear -- // 
+		
+		Button recommend_btn = (Button) d.findViewById(R.id.recommend_btn); 
+		recommend_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+				Place place = item.getPlace();
+				
+				Intent intent = new Intent(context, RecommendationActivity.class);  
+				intent.putExtra("place", place);
+				startActivity(intent);
+			}
+		}); 
+		
+		Button plan_btn = (Button) d.findViewById(R.id.plan_btn); 
+		plan_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(context, "Plan feature is coming soon", Toast.LENGTH_SHORT).show();
+			}
+		}); 
+		
+		Button review_btn = (Button) d.findViewById(R.id.review_btn); 
+		review_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(context, "Review feature is coming soon", Toast.LENGTH_SHORT).show();
+			}
+		});  
+		
+		
+		
+		Button direction_btn = (Button) d.findViewById(R.id.direction_btn); 
+		direction_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+				Place place = item.getPlace();
+				
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("destLat", place.getLatitude());
+				intent.putExtra("destLng", place.getLongitude());
+				intent.putExtra("destAddress", place.getAddress());
+				startActivity(intent);
+			}
+		});
+		
+		Button check_in_btn = (Button) d.findViewById(R.id.check_in_btn); 
+		check_in_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(context, "Check In feature is coming soon", Toast.LENGTH_SHORT).show();
+			}
 		});
 
 		d.show();
@@ -1993,6 +2092,7 @@ public class HomeActivity extends MapActivity implements
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
 		Button addFrndBtn = (Button) d.findViewById(R.id.add_frnd_btn);
 		Button directionBtn = (Button) d.findViewById(R.id.directions_btn);
+		Button profileBtn = (Button) d.findViewById(R.id.profile_btn);
 
 		TextView tvFriendshipStatus = (TextView) d
 				.findViewById(R.id.tvFriendshipStatus);
@@ -2052,6 +2152,18 @@ public class HomeActivity extends MapActivity implements
 				showFrndRequestDialog(item);
 			}
 		});
+		
+		profileBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, ProfileActivity2.class);
+				intent.putExtra("otherUser", item.getUser());
+				startActivity(intent);
+			}
+		});
+		
 		sendMessageBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -2682,7 +2794,8 @@ public class HomeActivity extends MapActivity implements
 
 		else if (v == btnCircleMenuItemDeals) {
 
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show(); 
+			
 
 		} else if (v == btnCircleMenuItemFriends) {
 

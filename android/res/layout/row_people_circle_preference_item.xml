@@ -24,10 +24,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Title"
-                android:textColor="#000000"
+                android:text=""
+                android:ellipsize="end"
+                android:textColor="@color/black"
                 android:textSize="12dip"
-                android:textStyle="normal" />
+                android:singleLine="true"
+                android:textStyle="normal" 
+                 android:layout_toLeftOf="@+id/btnDeleteCircle"/>
 
             <Button
                 android:id="@+id/btnDeleteCircle"

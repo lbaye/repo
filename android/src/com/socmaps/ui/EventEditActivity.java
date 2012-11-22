@@ -214,14 +214,21 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			if (eventAddress != null && !eventAddress.equals("")) {
 				displayAddress(null, eventAddress);
 			}
+			
+			
+			
 
 		}
 	}
+	
+
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
 

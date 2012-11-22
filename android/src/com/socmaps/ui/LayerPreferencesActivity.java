@@ -43,8 +43,13 @@ public class LayerPreferencesActivity extends Activity implements
 		setContentView(R.layout.layer_preferences_layout);
 
 		initialize();
+		
+		
+		
 		setViewOnClickListener();
 	}
+	
+	
 
 	@Override
 	protected void onResume() {
@@ -55,6 +60,8 @@ public class LayerPreferencesActivity extends Activity implements
 		} else {
 			setFieldValues(StaticValues.layersPreferences);
 		}
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void setFieldValues(LayersPreferences layersPreferences) {

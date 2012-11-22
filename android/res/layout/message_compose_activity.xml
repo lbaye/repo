@@ -191,7 +191,7 @@
                     android:layout_margin="5dip"
                     android:background="@color/transparent"
                     android:padding="10dip"
-                    android:text="@string/addAllLabel"
+                    android:text="@string/selectAllLabel"
                     android:textColor="@color/black"
                     android:textSize="12dip" />
             </LinearLayout>

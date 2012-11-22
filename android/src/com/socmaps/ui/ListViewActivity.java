@@ -90,20 +90,31 @@ public class ListViewActivity extends Activity implements
 		setContentView(R.layout.list_view_layout);
 
 		initialize();
+		
+		
+		
 		getIntentData();
 		setListParameters();
 
 	}
+	
+
+	
 
 	/** Register for the updates when Activity is in foreground */
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
+		
 		setCheckBoxSelection();
 		populateMasterList();
 
 		updateContentList(listMasterContent);
 		updateDisplayList(listContent);
+		
+		
 
 	}
 

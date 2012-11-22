@@ -143,16 +143,31 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (place != null) {
 
-			/*
-			 * if (place.getName() != null) { placeName = place.getName(); } if
-			 * (place.getDescription() != null) { placeDiscription =
-			 * place.getDescription(); }
-			 * 
-			 * if (place.getCategory() != null) { categoryItem =
-			 * place.getCategory(); } if (place.getCategory() != null &&
-			 * place.getCategory() != "") { catagoryPosition =
-			 * getCategoryPosition(place.getCategory()); }
-			 */
+			// if (isHome) {
+
+			Log.i("updateUI() PlaceEditSaveActivity>>>",
+					"Name: " + place.getName() + " Phopt: "
+							+ place.getStreetViewImage() + " Address:"
+							+ place.getVicinity() + " Category:"
+							+ place.getCategory() + " lat:"
+							+ place.getLatitude() + " Lon:"
+							+ place.getLongitude());
+
+			// } else {
+
+			if (place.getName() != null) {
+				placeName = place.getName();
+			}
+			if (place.getDescription() != null) {
+				placeDiscription = place.getDescription();
+			}
+
+			if (place.getCategory() != null) {
+				categoryItem = place.getCategory();
+			}
+			if (place.getCategory() != null && place.getCategory() != "") {
+				catagoryPosition = getCategoryPosition(place.getCategory());
+			}
 
 			if (place.getVicinity() != null) {
 				strAddress = place.getVicinity();
@@ -168,15 +183,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				il.download(photoUrl, ivPlace);
 			}
 
-			Log.i("updateUI() PlaceEditSaveActivity>>>",
-					"Name: " + place.getName() + " Phopt: "
-							+ place.getStreetViewImage() + " Address:"
-							+ place.getAddress() + " Category:"
-							+ place.getCategory() + " lat:"
-							+ place.getLatitude() + " Lon:"
-							+ place.getLongitude());
-
 		}
+
+		// }
 
 	}
 
@@ -252,14 +261,42 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
-			Thread thread = new Thread(null, updatePlacesThread,
-					"Start update place to server");
-			thread.start();
+			if (isUpdate) {
 
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+				if (!placeName.trim().equals("") && placeName != null) {
+
+					Thread thread = new Thread(null, updatePlacesThread,
+							"Start update place to server");
+					thread.start();
+
+					// show progress dialog if needed
+					m_ProgressDialog = ProgressDialog
+							.show(context,
+									getResources().getString(
+											R.string.please_wait_text),
+									getResources().getString(
+											R.string.sending_request_text),
+									true);
+
+				} else {
+
+					Toast.makeText(context, "Please enter place name",
+							Toast.LENGTH_SHORT).show();
+
+				}
+
+			} else {
+
+				Thread thread = new Thread(null, updatePlacesThread,
+						"Start update place to server");
+				thread.start();
+
+				// show progress dialog if needed
+				m_ProgressDialog = ProgressDialog.show(context, getResources()
+						.getString(R.string.please_wait_text), getResources()
+						.getString(R.string.sending_request_text), true);
+
+			}
 
 		} else {
 
@@ -338,10 +375,10 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			// Log.d("Login", status+":"+response);
 
 			if (isUpdate) {
-				Toast.makeText(context, "Places update successfully.",
+				Toast.makeText(context, "Place updated successfully.",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(context, "Places delete successfully.",
+				Toast.makeText(context, "Place deleted successfully.",
 						Toast.LENGTH_SHORT).show();
 			}
 
@@ -666,24 +703,21 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 				Log.w("showTextInputDialog into", "btnOk: " + inputText);
 
-				if (!inputText.equalsIgnoreCase("")) {
+				switch (id) {
 
-					switch (id) {
+				case R.id.btnPlaceNameEdit:
+					placeName = inputText;
+					break;
 
-					case R.id.btnPlaceNameEdit:
-						placeName = inputText;
-						break;
+				case R.id.btnPlaceDisEdit:
+					placeDiscription = inputText;
+					break;
 
-					case R.id.btnPlaceDisEdit:
-						placeDiscription = inputText;
-						break;
-
-					default:
-						break;
-					}
-
-					dialog.dismiss();
+				default:
+					break;
 				}
+
+				dialog.dismiss();
 
 			}
 		});
@@ -778,8 +812,11 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 						categoryItem = categoryArray[position].trim()
 								.toLowerCase().replace(" ", "_");
 
-						Toast.makeText(getApplicationContext(), categoryItem,
-								Toast.LENGTH_SHORT).show();
+						// Toast.makeText(getApplicationContext(), categoryItem,
+						// Toast.LENGTH_SHORT).show();
+
+						catagoryPosition = position;
+
 						dialog.dismiss();
 					}
 

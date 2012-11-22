@@ -51,12 +51,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MessageEntity;
+import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.PushData;
@@ -85,6 +87,19 @@ public class Utility {
 		} else if (item instanceof SecondDegreePeople) {
 
 			SecondDegreePeople temp = (SecondDegreePeople) item;
+			String name = "";
+
+			if (temp.getFirstName() != null) {
+				name = temp.getFirstName();
+			}
+
+			if (temp.getLastName() != null) {
+				name += " " + temp.getLastName();
+			}
+			return name.trim().toLowerCase();
+		} else if (item instanceof MyInfo) {
+
+			MyInfo temp = (MyInfo) item;
 			String name = "";
 
 			if (temp.getFirstName() != null) {
@@ -145,8 +160,68 @@ public class Utility {
 		}
 
 	}
-	
-	
+
+	public static List<Circle> getSearchResultFromCircle(
+			List<Circle> masterList, List<People> orgFriendList, String key) {
+		
+		final List<Circle> newCircles = new ArrayList<Circle>();
+		
+		if (key == null || key.length() == 0) {
+			return masterList;
+		} else {
+			String prefixString = key.toString().toLowerCase();
+			final int count = masterList.size();
+			
+
+			for (int i = 0; i < masterList.size(); i++) {
+				Circle circle = masterList.get(i);
+
+				List<People> newFriendList = new ArrayList<People>();
+
+				List<People> friends = circle.getFriendList();
+				if (friends != null) {
+					for (int j = 0; j < friends.size(); j++) {
+						People people = friends.get(j);
+
+						people = Utility.getPeopleById(people.getId(),
+								orgFriendList);
+						if (people != null) {
+							final String valueText = getFieldText(people);
+
+							if (valueText.startsWith(prefixString)) {
+								newFriendList.add(people);
+							} else {
+								final String[] words = valueText.split(" ");
+								final int wordCount = words.length;
+
+								// Start at index 0, in case valueText
+								// starts with
+								// space(s)
+								for (int k = 0; k < wordCount; k++) {
+									if (words[k].startsWith(prefixString)) {
+										newFriendList.add(people);
+										break;
+									}
+								}
+							}
+						}
+
+					}
+
+					if (newFriendList.size() > 0) {
+						circle.setFriendList(newFriendList);
+						newCircles.add(circle);
+					}
+
+				}
+
+			}
+
+			
+		}
+		return newCircles;
+
+	}
 
 	public static String getFormatedDistance(double distance, String unit) {
 		String result = "";
@@ -368,10 +443,10 @@ public class Utility {
 
 		Pattern pattern;
 		Matcher matcher;
-		String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$"; 
-//		String EMAIL_PATTERN = 
-//				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-//						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+		// String EMAIL_PATTERN =
+		// "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		// + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		pattern = Pattern.compile(EMAIL_PATTERN);
 		matcher = pattern.matcher(email);
 		return matcher.matches();
@@ -503,32 +578,33 @@ public class Utility {
 		return null;
 	}
 
-	public static void storeLoginInfo(String email, String password,Context context) {
+	public static void storeLoginInfo(String email, String password,
+			Context context) {
 		PreferenceConnector.writeString(context, "email", email);
 		PreferenceConnector.writeString(context, "password", password);
-		PreferenceConnector.writeBoolean(context, "isRememberd",true);
-		
+		PreferenceConnector.writeBoolean(context, "isRememberd", true);
+
 	}
 
-	public static void storeSession(String id, String authToken, String userData, Context context) {
+	public static void storeSession(String id, String authToken,
+			String userData, Context context) {
 		PreferenceConnector.writeString(context, "id", id);
 		PreferenceConnector.writeString(context, "authToken", authToken);
 		PreferenceConnector.writeString(context, "userData", userData);
-		PreferenceConnector.writeBoolean(context, "isLoggedInKey",true);
+		PreferenceConnector.writeBoolean(context, "isLoggedInKey", true);
 	}
-	
-	public static void destroySession(Context context)
-	{
+
+	public static void destroySession(Context context) {
 		PreferenceConnector.writeString(context, "id", null);
 		PreferenceConnector.writeString(context, "authToken", null);
 		PreferenceConnector.writeString(context, "userData", null);
-		PreferenceConnector.writeBoolean(context, "isLoggedInKey",false);
+		PreferenceConnector.writeBoolean(context, "isLoggedInKey", false);
 	}
 
 	public static boolean isLoggedIn(Context context) {
 		return PreferenceConnector.readBoolean(context, "isLoggedInKey", false);
 	}
-	
+
 	public static boolean isRememberedLoginInfo(Context context) {
 		return PreferenceConnector.readBoolean(context, "isRememberd", false);
 	}
@@ -545,7 +621,7 @@ public class Utility {
 	public static String getAuthToken(Context context) {
 		return PreferenceConnector.readString(context, "authToken", null);
 	}
-	
+
 	public static String getUserData(Context context) {
 		return PreferenceConnector.readString(context, "userData", null);
 	}
@@ -659,43 +735,32 @@ public class Utility {
 
 		return Bitmap.createScaledBitmap(inputBitmap, width, height, true);
 	}
-	
-	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width, int height, boolean keepAspectRatio) {
-		
+
+	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width,
+			int height, boolean keepAspectRatio) {
+
 		int orgHeight = inputBitmap.getHeight();
 		int orgWidth = inputBitmap.getWidth();
-		
-		if(keepAspectRatio == false)
-		{
+
+		if (keepAspectRatio == false) {
 			return resizeBitmap(inputBitmap, width, height);
-		}
-		else
-		{
-			
-			if(height == 0 && width == 0)
-			{
+		} else {
+
+			if (height == 0 && width == 0) {
 				return null;
+			} else if (height == 0) {
+				// define new height
+				height = (width * orgHeight) / orgWidth;
+			} else if (width == 0) {
+				// define new width
+				width = (height * orgWidth) / orgHeight;
+			} else {
+
 			}
-			else if(height == 0)
-			{
-				//define new height
-				height = (width*orgHeight)/orgWidth;
-			}
-			else if(width == 0)
-			{
-				//define new width
-				width = (height*orgWidth)/orgHeight;
-			}
-			else
-			{
-				
-			}
-			
-			
 
 			return Bitmap.createScaledBitmap(inputBitmap, width, height, true);
 		}
-		
+
 	}
 
 	public static Bitmap loadBitmapFromURL(String url) {
@@ -1045,9 +1110,9 @@ public class Utility {
 
 		return null;
 	}
-	
+
 	public static People getPeopleById(String peopleId, List<People> peopleList) {
-		
+
 		for (People peopleItem : peopleList) {
 			if (peopleItem.getId().equals(peopleId)) {
 				return peopleItem;
@@ -1056,48 +1121,58 @@ public class Utility {
 
 		return null;
 	}
-	
+
 	public static boolean isValidString(String value) {
 		if (value != null)
 			if (!value.equals(""))
 				return true;
 		return false;
 	}
-	
+
 	public static double calculateDistance(GeoPoint p1, GeoPoint p2) {
-	    double lat1 = ((double)p1.getLatitudeE6()) / 1e6;
-	    double lng1 = ((double)p1.getLongitudeE6()) / 1e6;
-	    double lat2 = ((double)p2.getLatitudeE6()) / 1e6;
-	    double lng2 = ((double)p2.getLongitudeE6()) / 1e6;
-	    
-	    return calculateDistance(lat1, lng1, lat2, lng2);
+		double lat1 = ((double) p1.getLatitudeE6()) / 1e6;
+		double lng1 = ((double) p1.getLongitudeE6()) / 1e6;
+		double lat2 = ((double) p2.getLatitudeE6()) / 1e6;
+		double lng2 = ((double) p2.getLongitudeE6()) / 1e6;
+
+		return calculateDistance(lat1, lng1, lat2, lng2);
 	}
-	
-	public static double calculateDistance(double sourceLat, double sourceLng, double destLat, double destLng) {
-	    float [] dist = new float[1];
-	    Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
-	    return (double)dist[0];
+
+	public static double calculateDistance(double sourceLat, double sourceLng,
+			double destLat, double destLng) {
+		float[] dist = new float[1];
+		Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
+		return (double) dist[0];
 	}
-	
-	public static void updateNotificationCountFromPush(PushData pushData)
-	{
-		if(pushData!=null)
-		{
-			if(StaticValues.myInfo!=null)
-			{
-				StaticValues.myInfo.getNotificationCount().setTotalCount(pushData.getBadge());
+
+	public static void updateNotificationCountFromPush(PushData pushData) {
+		if (pushData != null) {
+			if (StaticValues.myInfo != null) {
+				StaticValues.myInfo.getNotificationCount().setTotalCount(
+						pushData.getBadge());
 				String tabCounts = pushData.getTabCounts();
-				if(!tabCounts.equals(""))
-				{
+				if (!tabCounts.equals("")) {
 					String[] tabCountsArray = tabCounts.split("|");
-					if(tabCountsArray.length == 3)
-					{
-						StaticValues.myInfo.getNotificationCount().setMessageCount(Integer.parseInt(tabCountsArray[0]));
-						StaticValues.myInfo.getNotificationCount().setFriendRequestCount(Integer.parseInt(tabCountsArray[1]));
-						StaticValues.myInfo.getNotificationCount().setNotificationCount(Integer.parseInt(tabCountsArray[2]));
+					if (tabCountsArray.length == 3) {
+						StaticValues.myInfo.getNotificationCount()
+								.setMessageCount(
+										Integer.parseInt(tabCountsArray[0]));
+						StaticValues.myInfo.getNotificationCount()
+								.setFriendRequestCount(
+										Integer.parseInt(tabCountsArray[1]));
+						StaticValues.myInfo.getNotificationCount()
+								.setNotificationCount(
+										Integer.parseInt(tabCountsArray[2]));
 					}
 				}
 			}
+		}
+	}
+	
+	public static void updateNotificationBubbleCounter(Button btnNotification) {
+		// TODO Auto-generated method stub
+		if (StaticValues.myInfo != null && btnNotification !=null) {
+			btnNotification.setText(""+ StaticValues.myInfo.getNotificationCount().getTotalCount());
 		}
 	}
 

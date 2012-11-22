@@ -40,7 +40,7 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
-		Log.i("UserData", Utility.getUserData(getApplicationContext()));
+		Log.i("UserData", "" + Utility.getUserData(getApplicationContext()));
 
 		initialize();
 
@@ -92,11 +92,17 @@ public class SplashActivity extends Activity {
 
 							if (i == loopCount) {
 								isTimeOver = true;
-								if(isRequestingToServer)
-								{
-									parseUserData(Utility.getUserData(getApplicationContext()));
+
+								if (!Utility
+										.isLoggedIn(getApplicationContext())) {
+									splashHandler.sendEmptyMessage(0);
 								}
-								
+
+								else if (isRequestingToServer) {
+									parseUserData(Utility
+											.getUserData(getApplicationContext()));
+								}
+
 								/*
 								 * if (isRequestingToServer == false) {
 								 * splashHandler.sendEmptyMessage(0); }
@@ -124,9 +130,9 @@ public class SplashActivity extends Activity {
 		// TODO Auto-generated method stub
 
 		Log.i("Splash: getUserInfo", "Requesting to server.");
-		
+
 		isRequestingToServer = true;
-		
+
 		RestClient client = new RestClient(Constant.smServerUrl + "/me");
 		client.AddHeader("Auth-Token",
 				Utility.getAuthToken(getApplicationContext()));

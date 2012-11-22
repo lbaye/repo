@@ -1,5 +1,7 @@
 package com.socmaps.ui;
 
+import com.socmaps.util.Utility;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -30,6 +32,14 @@ public class SettingsActivity extends Activity {
 		Window window = getWindow();
 		// Eliminates color banding
 		window.setFormat(PixelFormat.RGBA_8888);
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void initialize() {

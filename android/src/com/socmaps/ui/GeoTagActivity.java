@@ -136,6 +136,9 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		setContentView(R.layout.geo_tag_test);
 
 		initialize();
+		
+		
+		
 		// setExpandListener();
 
 		addLocationRadioGroup();
@@ -143,11 +146,15 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		generateFriendList();
 		showFriendList();
 	}
+	
+
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		Log.i("EventNewActivity:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());

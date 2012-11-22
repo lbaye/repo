@@ -96,6 +96,8 @@
         <activity android:name=".PhotoUploadNewPhotoActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name="EventListActivityOther" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".NewsFeedActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".RecommendationActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        
         
         <service android:name="com.socmaps.notificationBroadcast.BroadcastService" />
         <!--

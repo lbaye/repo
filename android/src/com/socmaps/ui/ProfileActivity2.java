@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -30,16 +33,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.maps.GeoPoint;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class ProfileActivity2 extends Activity implements OnClickListener {
+
 	Context context;
 
 	Button btnBack, btnNotification;
@@ -74,6 +80,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	String strRelationshipStatus;
 
 	public People people;
+	private People peopleUpdate;
 
 	String getAvater, getCoverPhoto, getRegMedia, getFirstName, getLastName,
 			userName, getStatusMsg, getStreetAdd, getLastLog, getAge,
@@ -102,22 +109,30 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	private WebView webViewNewsFeed;
 	private ProgressBar progressBar;
 
+	private String friendsResponse;
+	private int friendsStatus;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.other_user_profile);
 		setContentView(R.layout.other_layout);
 
 		Object obj = getIntent().getSerializableExtra("otherUser");
 		if (obj != null) {
 			people = (People) (obj);
 			obj = null;
+			
+			
+			
 			Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
 		}
 
 		initialize();
-		setDefaultValues();
-		setButtonForDisplay();
+		
+		
+
+		getFriendInfo();
 
 	}
 
@@ -126,6 +141,14 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Window window = getWindow();
 		// Eliminates color banding
 		window.setFormat(PixelFormat.RGBA_8888);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void initialize() {
@@ -204,13 +227,13 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
 		tvFriendshipCheck = (TextView) findViewById(R.id.tvFriendshipCheck);
 
-		if (people.getFriendshipStatus() != null) {
-			if (people.getFriendshipStatus().equalsIgnoreCase(
-					Constant.STATUS_FRIENDSHIP_FRIEND)) {
-				layEditProfilePic.setVisibility(View.VISIBLE);
-				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
-			}
-		}
+		/*
+		 * if (people.getFriendshipStatus() != null) { if
+		 * (people.getFriendshipStatus().equalsIgnoreCase(
+		 * Constant.STATUS_FRIENDSHIP_FRIEND)) {
+		 * layEditProfilePic.setVisibility(View.VISIBLE);
+		 * lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE); } }
+		 */
 
 		// newsfeed portion
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -252,100 +275,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 	}
 
-	public void setDefaultValues() {
-
-		imageDownloader.clearCache();
-
-		if (people.getAvatar() != null) {
-
-			ivProfilePic.setImageResource(R.drawable.thumb);
-			imageDownloader.download(people.getAvatar(), ivProfilePic);
-		}
-
-		if (people.getCoverPhoto() != null) {
-
-			ivCoverPic.setImageResource(R.drawable.img_blank);
-			imageDownloader.download(people.getCoverPhoto(), ivCoverPic);
-		}
-		if (people.getRegMedia() != null) {
-			if (people.getRegMedia().equals("fb")) {
-				ivRegMedia.setVisibility(View.VISIBLE);
-			}
-		}
-
-		String name = "";
-		if (people.getFirstName() != null) {
-			name = people.getFirstName() + " ";
-		}
-		if (people.getLastName() != null) {
-			name += people.getLastName();
-		}
-		tvName.setText(name);
-
-		if (people.getStatusMsg() != null) {
-			if (people.getStatusMsg().equalsIgnoreCase("status"))
-				tvStatusMessage.setVisibility(View.GONE);
-			else
-				tvStatusMessage.setText(people.getStatusMsg());
-		} else {
-			tvStatusMessage.setVisibility(View.GONE);
-		}
-
-		if (people.getStreetAddress() != null) {
-			// tvAddress.setText(people.getStreetAddress());
-			tvAddress.setText(people.getCurrentAddress()); /*
-															 * use
-															 * getCurrentAddress
-															 * to show
-															 * OtherProfile
-															 * "my address"
-															 * field
-															 */
-		}
-
-		/* extra work : may be discard later on */
-		if (people.getStreetAddress() == null) {
-			tvAddress.setVisibility(View.INVISIBLE);
-		}
-		/* finished */
-
-		if (Utility.getFormatedDistance(people.getDistance()) != null) {
-			// tvDistance.setText(Utility.getFormatedDistance(people.getDistance()));
-			tvDistance.setText(Utility.getFormatedDistance(
-					people.getDistance(), StaticValues.myInfo.getSettings()
-							.getUnit()));
-		}
-
-		if (people.getLastLogIn() != null) {
-			tvTime.setText(Utility.getFormattedDisplayDate(people
-					.getLastLogIn()));
-		}
-
-		if (people.getAge() > 0) {
-			tvAge.setText(people.getAge() + " years");
-		}
-		if (people.getAge() == 0) {
-			tvAge.setText(" ");
-		}
-
-		if (people.getRelationshipStatus() != null) {
-			tvRelationshipStatus.setText(people.getRelationshipStatus());
-		}
-
-		if (people.getCity() != null) {
-			tvCity.setText(people.getCity());
-		}
-
-		if (people.getWorkStatus() != null) {
-			tvCompany.setText(people.getWorkStatus());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -354,7 +283,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			// .show();
 
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
+			StaticValues.highlightAnnotationItem = peopleUpdate;
 
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -363,7 +292,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		} else if (v == btnEvent) {
 			// finish();
 			Intent i = new Intent(context, EventListActivityOther.class);
-			i.putExtra("user", people);
+			i.putExtra("user", peopleUpdate);
 			startActivity(i);
 		} else if (v == btnBack) {
 			finish();
@@ -377,9 +306,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 			Intent friendIntent = new Intent(getApplicationContext(),
 					FriendListActivity.class);
-			friendIntent.putExtra("PERSON_ID", people.getId());
+			friendIntent.putExtra("PERSON_ID", peopleUpdate.getId());
 			startActivity(friendIntent);
-			
+
 			//
 			// Toast.makeText(
 			// getApplicationContext(),
@@ -391,11 +320,11 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		} else if (v == interest_icon_image) {
 			goToMeetUp();
 		} else if (v == relativeLayoutFriend) {
-			showFrndRequestDialog(people);
+			showFrndRequestDialog(peopleUpdate);
 		} else if (v == relativeLayoutMeetUp) {
 			goToMeetUp();
 		} else if (v == relativeLayoutMessage) {
-			showMessageDialog(people);
+			showMessageDialog(peopleUpdate);
 		} else if (v == relativeLayoutDirection) {
 			goToDirection();
 		}
@@ -411,7 +340,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		 */
 		Intent intent = new Intent(getApplicationContext(),
 				PhotoListActivity.class);
-		intent.putExtra("user", people);
+		intent.putExtra("user", peopleUpdate);
 		startActivity(intent);
 		// finish();
 		// }
@@ -421,8 +350,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		// Toast.makeText(context, "will be added very soon",
 		// Toast.LENGTH_SHORT).show();
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
-		Log.d("People Name & ID", people.getFirstName() + " " + people.getId());
-		intentToGoPlace.putExtra("personID", people.getId());
+		Log.d("People Name & ID", peopleUpdate.getFirstName() + " "
+				+ peopleUpdate.getId());
+		intentToGoPlace.putExtra("personID", peopleUpdate.getId());
 		startActivity(intentToGoPlace);
 		// finish();
 	}
@@ -430,14 +360,16 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	private void goToMeetUp() {
 		// Toast.makeText(context, "Not This Time", Toast.LENGTH_SHORT).show();
 
-		Log.d("LAT LNG Meetup People", String.valueOf(people.getCurrentLat())
-				+ " " + String.valueOf(people.getCurrentLng()));
+		Log.d("LAT LNG Meetup People",
+				String.valueOf(peopleUpdate.getCurrentLat()) + " "
+						+ String.valueOf(peopleUpdate.getCurrentLng()));
 
 		Intent intentToShowMeetUp = new Intent(context,
 				MeetupRequestNewActivity.class);
-		intentToShowMeetUp.putExtra("destLat", people.getCurrentLat());
-		intentToShowMeetUp.putExtra("destLng", people.getCurrentLng());
-		intentToShowMeetUp.putExtra("destAddress", people.getCurrentAddress());
+		intentToShowMeetUp.putExtra("destLat", peopleUpdate.getCurrentLat());
+		intentToShowMeetUp.putExtra("destLng", peopleUpdate.getCurrentLng());
+		intentToShowMeetUp.putExtra("destAddress",
+				peopleUpdate.getCurrentAddress());
 		startActivity(intentToShowMeetUp);
 	}
 
@@ -447,16 +379,17 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		Intent intentToGoDirection = new Intent(context,
 				DirectionActivity.class);
-		intentToGoDirection.putExtra("destLat", people.getCurrentLat());
-		intentToGoDirection.putExtra("destLng", people.getCurrentLng());
-		intentToGoDirection.putExtra("destAddress", people.getCurrentAddress());
+		intentToGoDirection.putExtra("destLat", peopleUpdate.getCurrentLat());
+		intentToGoDirection.putExtra("destLng", peopleUpdate.getCurrentLng());
+		intentToGoDirection.putExtra("destAddress",
+				peopleUpdate.getCurrentAddress());
 
 		startActivity(intentToGoDirection);
 	}
 
 	private void setButtonForDisplay() {
-		String userId = people.getId();
-		String friendshipStatus = people.getFriendshipStatus();
+		String userId = peopleUpdate.getId();
+		String friendshipStatus = peopleUpdate.getFriendshipStatus();
 		Log.d("User ID & Friendship Status Check", userId + " "
 				+ friendshipStatus);
 
@@ -831,4 +764,192 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 
 	}
+
+	private void getFriendInfo() {
+		if (Utility.isConnectionAvailble(getApplicationContext())) {
+			Thread thread = new Thread(null, friendsThread,
+					"Start get friend's info from server");
+			thread.start();
+
+			// show progress dialog if needed
+			m_ProgressDialog = ProgressDialog.show(context, getResources()
+					.getString(R.string.please_wait_text), getResources()
+					.getString(R.string.fetching_data_text), true);
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
+		}
+	}
+
+	private Runnable friendsThread = new Runnable() {
+		@Override
+		public void run() {
+			RestClient restClient;
+			restClient = new RestClient(Constant.smServerUrl + "/users/"
+					+ people.getId());
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.GET);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			friendsResponse = restClient.getResponse();
+			friendsStatus = restClient.getResponseCode();
+
+			runOnUiThread(friendsResponseFromServer);
+		}
+	};
+
+	private Runnable friendsResponseFromServer = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			handleResponseFriends(friendsStatus, friendsResponse);
+
+			// dismiss progress dialog if needed
+			m_ProgressDialog.dismiss();
+		}
+	};
+
+	public void handleResponseFriends(int status, String response) {
+
+		Log.w("Got friends response from server", status + ":" + response);
+		switch (status) {
+		case Constant.STATUS_SUCCESS:
+
+			// JSONObject jsonObject = new JSONObject(response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+
+				if (jsonObject != null) {
+					peopleUpdate = (People) ServerResponseParser
+							.parsePeople(jsonObject);
+					Log.d("Update People", peopleUpdate.getFirstName() + " "
+							+ peopleUpdate.getLastName());
+
+					if (peopleUpdate != null) {
+						setDefaultValues();
+						setButtonForDisplay();
+					}
+
+				}
+
+			} catch (JSONException e) {
+
+			}
+			break;
+
+		default:
+			Toast.makeText(getApplicationContext(),
+					"An unknown error occured. Please try again!!",
+					Toast.LENGTH_SHORT).show();
+			break;
+		}
+	}
+
+	public void setDefaultValues() {
+
+		if (peopleUpdate.getFriendshipStatus() != null) {
+			if (peopleUpdate.getFriendshipStatus().equalsIgnoreCase(
+					Constant.STATUS_FRIENDSHIP_FRIEND)) {
+				layEditProfilePic.setVisibility(View.VISIBLE);
+				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+			}
+		}
+
+		imageDownloader.clearCache();
+
+		if (peopleUpdate.getAvatar() != null) {
+
+			ivProfilePic.setImageResource(R.drawable.thumb);
+			imageDownloader.download(peopleUpdate.getAvatar(), ivProfilePic);
+		}
+
+		if (peopleUpdate.getCoverPhoto() != null) {
+
+			ivCoverPic.setImageResource(R.drawable.img_blank);
+			imageDownloader.download(peopleUpdate.getCoverPhoto(), ivCoverPic);
+		}
+		if (peopleUpdate.getRegMedia() != null) {
+			if (peopleUpdate.getRegMedia().equals("fb")) {
+				ivRegMedia.setVisibility(View.VISIBLE);
+			}
+		}
+
+		String name = "";
+		if (peopleUpdate.getFirstName() != null) {
+			name = peopleUpdate.getFirstName() + " ";
+		}
+		if (peopleUpdate.getLastName() != null) {
+			name += peopleUpdate.getLastName();
+		}
+		tvName.setText(name);
+
+		if (peopleUpdate.getStatusMsg() != null) {
+			if (peopleUpdate.getStatusMsg().equalsIgnoreCase("status"))
+				tvStatusMessage.setVisibility(View.GONE);
+			else
+				tvStatusMessage.setText(peopleUpdate.getStatusMsg());
+		} else {
+			tvStatusMessage.setVisibility(View.GONE);
+		}
+
+		if (peopleUpdate.getStreetAddress() != null) {
+			// tvAddress.setText(people.getStreetAddress());
+			tvAddress.setText(peopleUpdate.getCurrentAddress()); /*
+																 * use
+																 * getCurrentAddress
+																 * to show
+																 * OtherProfile
+																 * "my address"
+																 * field
+																 */
+		}
+
+		/* extra work : may be discard later on */
+		if (peopleUpdate.getStreetAddress() == null) {
+			tvAddress.setVisibility(View.INVISIBLE);
+		}
+		/* finished */
+
+		if (Utility.getFormatedDistance(peopleUpdate.getDistance()) != null) {
+			// tvDistance.setText(Utility.getFormatedDistance(people.getDistance()));
+			//tvDistance.setText(Utility.getFormatedDistance(peopleUpdate.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+			tvDistance.setText(Utility.getFormatedDistance
+				     (Utility.calculateDistance
+				       (StaticValues.myPoint, new GeoPoint((int)(peopleUpdate.getCurrentLat()*1E6), (int)(peopleUpdate.getCurrentLng()*1E6))), 
+				       StaticValues.myInfo.getSettings().getUnit()));
+		}
+
+		if (peopleUpdate.getLastLogIn() != null) {
+			tvTime.setText(Utility.getFormattedDisplayDate(peopleUpdate
+					.getLastLogIn()));
+		}
+
+		if (peopleUpdate.getAge() > 0) {
+			tvAge.setText(peopleUpdate.getAge() + " years");
+		}
+		if (peopleUpdate.getAge() == 0) {
+			tvAge.setText(" ");
+		}
+
+		if (peopleUpdate.getRelationshipStatus() != null) {
+			tvRelationshipStatus.setText(peopleUpdate.getRelationshipStatus());
+		}
+
+		if (peopleUpdate.getCity() != null) {
+			tvCity.setText(peopleUpdate.getCity());
+		}
+
+		if (peopleUpdate.getWorkStatus() != null) {
+			tvCompany.setText(peopleUpdate.getWorkStatus());
+		}
+	}
+
 }

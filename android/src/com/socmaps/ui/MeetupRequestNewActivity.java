@@ -99,6 +99,8 @@ public class MeetupRequestNewActivity extends Activity {
 		Log.d("Received Place GTag", String.valueOf(requestLat)+" "+ String.valueOf(requestLng));
 
 		initialize();
+		
+		
 
 		addLocationRadioGroup();
 
@@ -110,6 +112,8 @@ public class MeetupRequestNewActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
 
