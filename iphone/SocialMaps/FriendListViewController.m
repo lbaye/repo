@@ -400,7 +400,12 @@
 {
     searchBar.text = @"";
     [filteredList removeAllObjects];
-    [self refreshScrollView:searchBarFriendList.selectedScopeButtonIndex :eachFriendList];
+    
+    if (searchBarFriendList.selectedScopeButtonIndex == 2) 
+        [self refreshScrollViewforCircle:eachFriendList];
+    else
+        [self refreshScrollView:searchBarFriendList.selectedScopeButtonIndex :eachFriendList];
+    
     [searchBar resignFirstResponder];
 }
 
