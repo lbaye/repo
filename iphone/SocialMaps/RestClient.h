@@ -22,6 +22,7 @@
 #import "UserCircle.h"
 #import "Photo.h"
 #import "Geotag.h"
+#import "Plan.h"
 
 @class Place;
 
@@ -108,4 +109,10 @@
 -(void) deleteCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleId;
 -(void) renameCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleID:(NSString *)circleName;
 - (void) recommendPlace:(Place*)place:(NSString *)authToken:(NSString *)authTokenValue withNote:(NSString*)note andRecipients:(NSMutableArray*)recipients;
+-(void)createPlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getAllplans:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)deletePlans:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)planId;
+-(void)updatePlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue;
+-(void)getFriendsAllplans:(NSString *)userId:(NSString *)authToken:(NSString *)authTokenValue;
+
 @end

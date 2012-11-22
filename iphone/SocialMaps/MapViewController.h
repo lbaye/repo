@@ -17,7 +17,7 @@
 #import "MapAnnotationEvent.h"
 #import "PullableView.h"
 #import "CustomRadioButton.h"
-
+#import "Plan.h"
 #define METERS_PER_MILE 1609.344
 
 typedef enum _SHARING_TYPES {
@@ -132,15 +132,11 @@ typedef enum _SHARING_TYPES {
 -(IBAction)gotoSettings:(id)sender;
 //
 - (void) resetShareButton:(SHARING_TYPES)newSel;
--(void)searchResult;
-//-(void)appImageDidLoad:(NSIndexPath *)indexPath;
--(void)appImageDidLoad:(NSString *)userId;
 -(void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows;
 -(void) mapAnnotationChanged:(id <MKAnnotation>) anno;
 -(void) displayNotificationCount;
 - (void) getSortedDisplayList;
 - (void) mapAnnotationInfoUpdated:(id <MKAnnotation>) anno;
-- (IBAction)actionSearchButton:(id)sender;
 - (IBAction)actionShowHideSearchBtn:(id)sender;
 -(IBAction)addCircleView:(id)sender;
 -(IBAction)removeCircleView:(id)sender;
@@ -154,5 +150,6 @@ typedef enum _SHARING_TYPES {
 -(void)loadAnnotationForEvents;
 -(IBAction)connectWithFB:(id)sender;
 -(IBAction)closeConnectWithFB:(id)sender;
+- (void) showPinOnMapViewForPlan:(Plan*)plan;
 
 @end

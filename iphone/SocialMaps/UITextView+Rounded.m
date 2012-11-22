@@ -23,4 +23,12 @@
     self.layer.borderWidth = 1.0;
 }
 
+- (void) makeRoundCornerWithColor:(UIColor *)color
+{
+    [self.layer setCornerRadius:8.0f];
+    [self.layer setBorderWidth:0.5];
+    [self.layer setBorderColor:color.CGColor];
+    [self.layer setMasksToBounds:YES];
+}
+
 @end

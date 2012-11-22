@@ -29,8 +29,7 @@
     IBOutlet UIView *detailView;
     
     BOOL isDragging_msg,isDecliring_msg;
-    NSMutableDictionary *dicImages_msg;
-    NSMutableArray *ImgesName; 
+    NSMutableArray *imagesName; 
     
     IBOutlet UIView *mapContainer;
     IBOutlet MKMapView *mapView;
@@ -60,7 +59,7 @@
 @property(nonatomic,retain) IBOutlet UIView *detailView;
 
 @property(nonatomic,retain) NSDictionary *results;
-@property(nonatomic,retain) NSMutableArray *ImgesName;
+@property(nonatomic,retain) NSMutableArray *imagesName;
 
 @property(nonatomic,retain) IBOutlet UIView *mapContainer;
 @property(nonatomic,retain) IBOutlet MKMapView *mapView;

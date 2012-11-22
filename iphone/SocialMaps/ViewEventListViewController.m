@@ -37,10 +37,9 @@
 @synthesize friendsEventButton;
 @synthesize myEventButton;
 @synthesize publicEventButton;
-@synthesize totalNotifCount;
+@synthesize totalNotifCount,dicIcondownloaderEvents;
 
 __strong NSMutableArray *filteredList, *eventListArray;
-__strong NSMutableDictionary *imageDownloadsInProgress;
 __strong NSMutableDictionary *eventListIndex;
 NSString *searchText=@"";
 AppDelegate         *smAppDelegate;
@@ -64,15 +63,13 @@ bool searchFlags=true;
     eventListArray=[[NSMutableArray alloc] init];
     smAppDelegate=[[AppDelegate alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    imageDownloadsInProgress=[[NSMutableDictionary alloc] init];
-    [imageDownloadsInProgress retain];
     eventListIndex=[[NSMutableDictionary alloc] init];
     
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
     
     downloadedImageDict=[[NSMutableDictionary alloc] init];
-    
+    dicIcondownloaderEvents = [[NSMutableDictionary alloc] init];
     [super viewDidLoad];
     EventList *eventList=[[EventList alloc] init];
     NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
@@ -418,23 +415,6 @@ bool searchFlags=true;
     {
         [radio setUserInteractionEnabled:NO];
     }
-    /*
-    cell.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    cell.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    cell.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    cell1.eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    cell1.eventDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    cell1.eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.8];
-    [cell.eventName.layer setCornerRadius:3.0f];
-    [cell.eventDate.layer setCornerRadius:3.0f];
-    [cell.eventAddress.layer setCornerRadius:3.0f];
-    [cell.eventDistance.layer setCornerRadius:3.0f];
-    [cell.eventDetail.layer setCornerRadius:3.0f];
-    [cell1.eventName.layer setCornerRadius:3.0f];
-    [cell1.eventDate.layer setCornerRadius:3.0f];
-    [cell1.eventAddress.layer setCornerRadius:3.0f];
-    [cell1.eventDistance.layer setCornerRadius:3.0f];
-    [cell1.eventDetail.layer setCornerRadius:3.0f];*/
     // Configure the cell...
     cell.eventDate.text = [NSString stringWithFormat:@"event date"];
 //    cell.eventDetail.text = [NSString stringWithFormat:@"1"];
@@ -536,7 +516,7 @@ bool searchFlags=true;
         
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",event.eventImageUrl);
-        if (!event.eventImage)
+        if (![dicImages_msg objectForKey:event.eventID])
         {
             NSLog(@"!userFriends.userProfileImage");
             if (self.eventListTableView.dragging == NO && self.eventListTableView.decelerating == NO)
@@ -556,10 +536,10 @@ bool searchFlags=true;
             cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];                
         }
         
-        if ([downloadedImageDict objectForKey:event.eventID])
+        if ([dicImages_msg objectForKey:event.eventID])
         {
-            cell.eventImage.image=[downloadedImageDict objectForKey:event.eventID];                
-            cell1.eventImage.image=[downloadedImageDict objectForKey:event.eventID];      
+            cell.eventImage.image=[dicImages_msg objectForKey:event.eventID];                
+            cell1.eventImage.image=[dicImages_msg objectForKey:event.eventID];      
         }
         else
         {
@@ -584,7 +564,7 @@ bool searchFlags=true;
     cell1.eventImage.contentMode = UIViewContentModeScaleAspectFit;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
-    NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
+    NSLog(@"dicImages_msg c: %@ %d",dicImages_msg,[dicImages_msg count]);
 //    cell.eventImage.image = eventPhoto;
     if (event.isInvited==false)
     {
@@ -636,15 +616,15 @@ bool searchFlags=true;
 
 - (void)startIconDownload:(Event *)event forIndexPath:(NSIndexPath *)indexPath
 {
-    EventImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:event.eventID];
+    EventImageDownloader *iconDownloader = [dicIcondownloaderEvents objectForKey:event.eventID];
     if (iconDownloader == nil)
     {
         iconDownloader = [[EventImageDownloader alloc] init];
         iconDownloader.event = event;
         iconDownloader.indexPathInTableView = indexPath;
         iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:event.eventID];
-        NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
+        [dicIcondownloaderEvents setObject:iconDownloader forKey:event.eventID];
+        NSLog(@"imageDownloadsInProgress %@",dicIcondownloaderEvents);
         [iconDownloader startDownload];
         //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
         NSLog(@"start downloads ... %@ %d",event.eventID, indexPath.row);
@@ -673,7 +653,7 @@ bool searchFlags=true;
 // called by our ImageDownloader when an icon is ready to be displayed
 - (void)appImageDidLoad:(NSString *)eventID
 {
-    EventImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:eventID];
+    EventImageDownloader *iconDownloader = [dicIcondownloaderEvents objectForKey:eventID];
     if (iconDownloader != nil)
     {
         Event *event = [eventListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
@@ -683,7 +663,7 @@ bool searchFlags=true;
         EventListRsvpTableCell *cell1 = (EventListRsvpTableCell *)[self.eventListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
         
         // Display the newly loaded image
-        [downloadedImageDict setValue:iconDownloader.event.eventImage forKey:eventID];
+        [dicImages_msg setValue:iconDownloader.event.eventImage forKey:eventID];
         cell.eventImage.image = iconDownloader.event.eventImage;
         cell1.eventImage.image = iconDownloader.event.eventImage;
         //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
@@ -823,7 +803,7 @@ bool searchFlags=true;
         }
     searchFlags=false;
     
-    NSLog(@"filteredList %@ %d  %d  imageDownloadsInProgress: %@",filteredList,[filteredList count],[eventListArray count], imageDownloadsInProgress);
+    NSLog(@"filteredList %@ %d  %d  imageDownloadsInProgress: %@",filteredList,[filteredList count],[eventListArray count], dicIcondownloaderEvents);
     [self.eventListTableView reloadData];
 }
 //searchbar delegate method end

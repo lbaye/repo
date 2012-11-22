@@ -1,225 +1,563 @@
 //
-//  UploadNewPhotoViewController.m
+//  CreatePlanViewController.m
 //  SocialMaps
 //
-//  Created by Abdullah Md. Zubair on 10/29/12.
+//  Created by Abdullah Md. Zubair on 11/19/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
-#import "UploadNewPhotoViewController.h"
-#import "NotificationController.h"
+#import <QuartzCore/QuartzCore.h>
+#import "CreatePlanViewController.h"
+#import "UITextView+Rounded.h"
+#import "CustomRadioButton.h"
+#import "ActionSheetPicker.h"
 #import "UtilityClass.h"
-#include <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 #import "LocationItemPlace.h"
-#import "ActionSheetPicker.h"
-#import <Foundation/Foundation.h>
+#import "DDAnnotationView.h"
+#import "DDAnnotation.h"
 #import "RestClient.h"
-#import "Globals.h"
+#import "UserCircle.h"
 #import "UserFriends.h"
-#import "SelectCircleTableCell.h"
 #import "Globals.h"
+#import "SelectCircleTableCell.h"
+#import "NotificationController.h"
 
-@interface UploadNewPhotoViewController ()
--(void)searchResult;
--(void) reloadScrollview;
+@interface CreatePlanViewController ()
+
 @end
 
-@implementation UploadNewPhotoViewController
-@synthesize photoImageView,mainScrollView,upperView,lowerView,labelNotifCount,addressLabel,photoPicker,addressDetailLabel,picSel;
-@synthesize photo,commentView;
+@implementation CreatePlanViewController
+@synthesize descriptionTextView,addressLabel,dateLabel,dateButton,customView,mapView,mapContainerView;
 @synthesize circleTableView;
-@synthesize frndsScrollView,customView,segmentControl,friendSearchbar;
+@synthesize frndsScrollView;
+@synthesize segmentControl,friendSearchbar,plan,totalNotifCount,planEditFlag,editIndexPath,titleLabel,saveButton;
 
-bool isBgTaskRunning;
-
+NSMutableArray *neearMeAddressArr, *myPlaceArr, *placeNameArr;
 AppDelegate *smAppDelegate;
-NSMutableArray *neearMeAddressArr;
-NSString *curAddress;
+DDAnnotation *annotation;
 RestClient *rc;
-NSMutableArray *selectedFriends;
-NSMutableArray *selectedCircleCheckArr;
-NSMutableArray *circleList, *ImgesName, *friendListArr, *friendsIDArr, *friendsNameArr;
+NSMutableArray *permittedUserArr; 
+NSMutableArray *permittedCircleArr;
+NSMutableArray *selectedCustomCircleCheckArr;
+NSMutableArray *customSelectedFriendsIndex;
+NSMutableArray *FriendList, *circleList, *selectedFriends, *selectedCircleCheckArr;
+BOOL isBgDlRunning;
+
+NSMutableArray *ImgesName;    
 NSString *searchTexts;
-NSMutableArray *FriendList;
-NSString *searchText;
+NSMutableArray *friendsNameArr;
+NSMutableArray *friendsIDArr;
+NSMutableArray *friendListArr;
+CustomRadioButton *radio;
+CustomRadioButton *shareRadio;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
     }
     return self;
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    isBgTaskRunning=true;
-    [self loadDummydata];    
-    [self reloadScrollview];
-    [customView removeFromSuperview];
-    smAppDelegate.currentModelViewController = self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [upperView removeFromSuperview];
-    [lowerView removeFromSuperview];
-    upperView.frame=CGRectMake(0,  0, upperView.frame.size.width, upperView.frame.size.height) ;
-    lowerView.frame=CGRectMake(0,  upperView.frame.size.height, lowerView.frame.size.width, lowerView.frame.size.height) ;
-    [mainScrollView setContentSize:CGSizeMake(320, upperView.frame.size.height+lowerView.frame.size.height)];
-    [mainScrollView addSubview:upperView];
-    [mainScrollView addSubview:lowerView];
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
-    rc=[[RestClient alloc] init];
-    photo=[[Photo alloc] init];
-    selectedFriends=[[NSMutableArray alloc] init];
-    selectedCircleCheckArr = [[NSMutableArray alloc] init];
-    // test kCGColorSpaceDeviceCMYK
-    CGColorSpaceRef cmykSpace = CGColorSpaceCreateDeviceCMYK();
-    CGFloat cmykValue[] = {.38, .02, .98, .05, 1};      // blue
-    CGColorRef colorCMYK = CGColorCreate(cmykSpace, cmykValue);
-    CGColorSpaceRelease(cmykSpace);
-    NSLog(@"colorCMYK: %@", colorCMYK);
-    photoImageView.layer.borderWidth=5.0;
-    photoImageView.layer.cornerRadius=5.0;
-    photoImageView.layer.borderColor = [[UIColor colorWithCGColor:colorCMYK] CGColor];
-    
-    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 77, 280, 21) numButtons:3 labels:[NSArray arrayWithObjects:@"Current location",@"Places near to me",@"Checked in venue",nil]  default:0 sender:self tag:2000];
-    radio.delegate = self;
-
-    CustomRadioButton *shareRadio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(25, 335, 280, 21) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circles",@"Public",@"Custom",nil]  default:0 sender:self tag:2001];
-    shareRadio.delegate = self;
-
-    NSArray *subviews = [self.friendSearchbar subviews];
-    NSLog(@"%@",subviews);
-    UIButton *cancelButton = [subviews objectAtIndex:2];
-    cancelButton.tintColor = [UIColor grayColor];
-    [lowerView addSubview:radio];
-    [lowerView addSubview:shareRadio];
-    smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    plan=[[Plan alloc] init];
     neearMeAddressArr=[[NSMutableArray alloc] init];
+    myPlaceArr=[[NSMutableArray alloc] init];
+    placeNameArr=[[NSMutableArray alloc] init];
+    permittedUserArr = [[NSMutableArray alloc] init]; 
+    permittedCircleArr = [[NSMutableArray alloc] init]; 
+    selectedCustomCircleCheckArr=[[NSMutableArray alloc] init];
+    customSelectedFriendsIndex =[[NSMutableArray alloc] init];
+    FriendList=[[NSMutableArray alloc] init];
+    circleList=[[NSMutableArray alloc] init];
+    selectedFriends=[[NSMutableArray alloc] init]; 
+    selectedCircleCheckArr=[[NSMutableArray alloc] init];
+    ImgesName = [[NSMutableArray alloc] init];    
+    searchTexts=[[NSString alloc] initWithString:@""];
+    friendsNameArr=[[NSMutableArray alloc] init];
+    friendsIDArr=[[NSMutableArray alloc] init];
+    FriendList=[[NSMutableArray alloc] init];
+    friendListArr=[[NSMutableArray alloc] init];
+    [customView.layer setCornerRadius:8.0f];
+    [customView.layer setBorderWidth:1.0];
+    [customView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [customView.layer setMasksToBounds:YES];
+    [self loadDummydata];
+    [self reloadScrollview];
+    smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [descriptionTextView makeRoundCornerWithColor:[UIColor lightTextColor]];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 115, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
+    radio.delegate = self;
+    
+    shareRadio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(25, 387, 280, 21) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circles",@"Public",@"Custom",nil]  default:0 sender:self tag:2001];
+    shareRadio.delegate = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coordinateChanged_:) name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyPlaces:) name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createPlanDone:) name:NOTIF_CREATE_PLAN_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlanDone:) name:NOTIF_UPDATE_PLANS_DONE object:nil];
+    
+    rc=[[RestClient alloc] init];
+    [self.view addSubview:radio];
+    [self.view addSubview:shareRadio];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    isBgDlRunning=TRUE;
+	annotation.title = @"Drag to Move Pin";
+	annotation.subtitle = [NSString	stringWithFormat:@"Current Location"];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+    [self.mapView setRegion:adjustedRegion animated:YES];
+    
+	[self.mapView setCenterCoordinate:annotation.coordinate];
+    
+	[self.mapView addAnnotation:annotation];
+    
+    [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
+    
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
         [neearMeAddressArr addObject:aPlaceItem.placeInfo.name];
         NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
     }
-    
-    self.photoPicker = [[[PhotoPickerOriginalImage alloc] init] autorelease];
-    self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;
-    
-    [commentView.layer setCornerRadius:8.0f];
-    [commentView.layer setBorderWidth:0.5];
-    [commentView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-    [commentView.layer setMasksToBounds:YES];
-    
-    [customView.layer setCornerRadius:8.0f];
-    [customView.layer setBorderWidth:1.0];
-    [customView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-    [customView.layer setMasksToBounds:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadPhotoDone:) name:NOTIF_DO_UPLOAD_PHOTO object:nil];
-    curAddress=[[NSString alloc] init];
-    [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
-    
-    [self reloadScrollview];
+    if (isPlanFromVenue==TRUE)
+    {
+        NSLog(@"plan.planAddress %@",globalPlan.planAddress);
+        [self setPlanAddress:globalPlan];
+    }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self displayNotificationCount];
+    [customView removeFromSuperview];
+    [mapContainerView removeFromSuperview];
     [circleTableView setHidden:YES];
     [frndsScrollView setHidden:NO];
     [friendSearchbar setHidden:NO];
-}
-
--(IBAction)myPhotos:(id)sender
-{
-    NSLog(@"my photo");
-    [self dismissModalViewControllerAnimated:YES];
-}
-
--(IBAction)addTakePhotos:(id)sender
-{
-    NSLog(@"add take photo");
-    [commentView resignFirstResponder];
-    [self.photoPicker getPhoto:self];
-}
-
--(IBAction)uploadPhotos:(id)sender
-{
-    photo.title=@"Test";
-    photo.comment=commentView.text;
-    [commentView resignFirstResponder];
-    NSMutableString *msg=[[NSMutableString alloc] initWithString:@"Please select"];
-    
-    if (photo.image == NULL) {
-        [msg appendString:@" image,"];
-    }
-    
-    if ([addressLabel.text isEqualToString:@"Loading current address..."]) 
+    isBgDlRunning=TRUE;
+    if ([planEditFlag isEqualToString:@"yes"])
     {
-        [msg appendString:@" address,"];
+        [self setAddressDateShare:globalPlan];
+    }
+}
+
+- (void) radioButtonClicked:(int)indx sender:(id)sender {
+    NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
+    [descriptionTextView resignFirstResponder];
+    
+    if ([sender tag] == 2000) {
+        switch (indx) {
+            case 3:
+                [self.view addSubview:mapContainerView];
+                break;
+            case 1:
+                if ([placeNameArr count]==0) {
+                    [UtilityClass showAlert:@"Social Maps" :@"You have no saved place"];
+                }
+                else
+                {
+                [ActionSheetPicker displayActionPickerWithView:sender data:placeNameArr selectedIndex:0 target:self action:@selector(myPlacesWasSelected::) title:@"My places"];
+                }
+                break;
+            case 2:
+                [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Places near to me"];
+                break;
+            case 0:
+                [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
+                break;
+            default:
+                break;
+        }
+    }
+    else if ([sender tag]==2001) 
+    {
+        switch (indx) {
+            case 4:
+                NSLog(@"index %d",indx);
+                plan.planPermission=@"custom";
+                [self.view addSubview:customView];
+                break;
+            case 3:
+                NSLog(@"index %d",indx);
+                plan.planPermission=@"public";
+                break;
+            case 2:
+                NSLog(@"index %d",indx);
+                plan.planPermission=@"circles";                
+                break;
+            case 1:
+                NSLog(@"index %d",indx);
+                plan.planPermission=@"friends";                
+                break;
+            case 0:
+                NSLog(@"index %d",indx);
+                plan.planPermission=@"private";                
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+-(void)getCurrentAddress
+{
+    addressLabel.text = @"";
+    annotation.subtitle=addressLabel.text;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        addressLabel.text=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            annotation.subtitle=addressLabel.text;
+            plan.planAddress=addressLabel.text;
+            plan.planGeolocation.latitude=smAppDelegate.currPosition.latitude;
+            plan.planGeolocation.longitude=smAppDelegate.currPosition.longitude;
+        });
+    });
+}
+
+-(void)getAddressFromMap
+{
+    addressLabel.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+-(IBAction)saveMapLocation:(id)sender
+{
+    [mapContainerView removeFromSuperview];
+    [self performSelector:@selector(getAddressFromMap) withObject:nil afterDelay:0.1];
+}
+
+-(IBAction)cancelMapLocation:(id)sender
+{
+    [mapContainerView removeFromSuperview];
+}
+
+-(IBAction)savePlan:(id)sender
+{
+    NSMutableString *validation=[[NSMutableString alloc] initWithString:@"Please select"];
+    if ([dateLabel.text isEqualToString:@""])
+    {
+        [validation appendString:@" date,"];
     }
     
-//    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
-//    {
-//        if (msg.length==13)
-//        {
-//            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
-//        }
-//        else
-//        {
-//            [msg appendString:@" comments"];
-//        }
-//    }
+    if ([addressLabel.text isEqualToString:@""])
+    {
+        [validation appendString:@" address,"];
+    }
+    
+    if ([descriptionTextView.text isEqualToString:@"Plan description..."] || [descriptionTextView.text isEqualToString:@""]) 
+    {
+        [validation appendString:@" description,"];
+    }
+    
+    if ([validation length]<=13)
+    {
+        loadNewPlan=TRUE;
+        if ([planEditFlag isEqualToString:@"yes"])
+        {
+            plan.planId=globalPlan.planId;
+            [rc updatePlan:plan :@"Auth-Token" :smAppDelegate.authToken];
+            [smAppDelegate showActivityViewer:self.view];
+            [smAppDelegate.window setUserInteractionEnabled:NO];
+        }
+        else 
+        {
+            [rc createPlan:plan :@"Auth-Token" :smAppDelegate.authToken];
+            [smAppDelegate showActivityViewer:self.view];
+            [smAppDelegate.window setUserInteractionEnabled:NO];
+        }
+    }
+    else
+    {
+        [UtilityClass showAlert:@"" :validation];
+    }
+}
 
+-(IBAction)cancelPlan:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];    
+}
+
+-(IBAction)saveCustom:(id)sender
+{
+    [permittedUserArr removeAllObjects]; 
+    [permittedCircleArr removeAllObjects]; 
+    for (int i=0; i<[selectedCircleCheckArr count]; i++) 
+    {
+        NSLog(@" %@",((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleName) ;
+        NSLog(@"selectedCustomCircleCheckArr %@ circleList %@",selectedCircleCheckArr,circleListGlobalArray);
+        
+        [permittedCircleArr addObject:((UserCircle *)[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row]).circleID];
+    }
+    
     for (int i=0; i<[selectedFriends count]; i++)
     {
-        [photo.permittedUsers addObject:((UserFriends *)[selectedFriends objectAtIndex:i]).userId];
+        //        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
+        [permittedUserArr addObject:((UserFriends *)[selectedFriends objectAtIndex:i]).userId];
     }
-    for (int i=0; i<[selectedCircleCheckArr count]; i++)
-    {
-        UserCircle *circle=[circleListGlobalArray objectAtIndex:((NSIndexPath *)[selectedCircleCheckArr objectAtIndex:i]).row];
-        NSString *circleId=circle.circleID;
-        [photo.permittedCircles addObject:circleId];
-        [circle release];
-        [circleId release];
-    }
-    NSLog(@"photo.permittedUsers: %@,photo.permittedCircles: %@",photo.permittedUsers,photo.permittedCircles);
-    
-    if (msg.length>13)
-    {
-        [UtilityClass showAlert:@"Social Maps" :msg];
-    }
-    else {
-        [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate.window setUserInteractionEnabled:NO];
-        willLoadPhotoData = TRUE;
-    }
+    NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
+    plan.permittedUsers=permittedUserArr;
+    plan.permittedCircles=permittedCircleArr;
+    [customView removeFromSuperview];
 }
 
--(IBAction)cancel:(id)sender
+-(IBAction)cancelCustom:(id)sender
 {
-    NSLog(@"cancel");
-    [commentView resignFirstResponder];
+    [selectedCustomCircleCheckArr removeAllObjects];
+    [customSelectedFriendsIndex removeAllObjects];
+    [customView removeFromSuperview];
+}
+
+-(IBAction)selecDate:(id)sender
+{
+    [descriptionTextView resignFirstResponder];
+    [ActionSheetPicker displayActionPickerWithView:sender datePickerMode:UIDatePickerModeDateAndTime selectedDate:[NSDate date] target:self action:@selector(dateWasSelected::) title:@"Date"]; 
+
+}
+
+-(IBAction)back:(id)sender
+{
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (IBAction)actionNotificationButton:(id)sender {
+-(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
+{
+    int selectedLocation=[selectedIndex intValue];
+    NSLog(@"selectedLocation %d",selectedLocation);
+    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
+    NSLog(@"aPlaceItem.placeInfo.name %@  %@ %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.location.latitude,aPlaceItem.placeInfo.location.longitude);
+    addressLabel.text=[NSString stringWithFormat:@"%@, %@",aPlaceItem.placeInfo.name,aPlaceItem.placeInfo.vicinity];
+    plan.planGeolocation.latitude=aPlaceItem.placeInfo.location.latitude;
+    plan.planGeolocation.longitude=aPlaceItem.placeInfo.location.longitude;
+    plan.planAddress=addressLabel.text;
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        totalNotifCount.text = @"";
+    else
+        totalNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
+-(void)myPlacesWasSelected:(NSNumber *)selectedIndex:(id)element
+{
+    int selectedLocation= [selectedIndex intValue];
+    NSLog(@"sel ind %d %@",[selectedIndex intValue],[myPlaceArr objectAtIndex:selectedLocation]);
+    Places *place=[myPlaceArr objectAtIndex:selectedLocation];
+    addressLabel.text=[NSString stringWithFormat:@"%@, %@",place.name,place.address];;
+    plan.planAddress=addressLabel.text;
+    plan.planGeolocation.latitude=place.location.latitude;
+    plan.planGeolocation.longitude=place.location.longitude;
+}
+
+-(void)setPlanAddress:(Plan *)aPlan
+{
+    addressLabel.text=aPlan.planAddress;
+    plan.planAddress=aPlan.planAddress;
+    plan.planGeolocation.latitude=aPlan.planGeolocation.latitude;
+    plan.planGeolocation.longitude=aPlan.planGeolocation.longitude;
+    [radio setSelIndex:2];
+    [radio gotoButton:[placeNameArr indexOfObject:aPlan.planAddress]];
+}
+
+-(void)setAddressDateShare:(Plan *)aPlan
+{
+    descriptionTextView.text=aPlan.planDescription;
+    [self setPlanAddress:aPlan];
+    if ([aPlan.planPermission isEqualToString: @"private"])
+    {
+        [shareRadio gotoButton:0];
+        plan.planPermission=@"private";
+    } 
+    else if ([aPlan.planPermission isEqualToString: @"friends"])
+    {
+        [shareRadio gotoButton:1];
+        plan.planPermission=@"friends";
+    }
+    else if ([aPlan.planPermission isEqualToString: @"circles"])
+    {
+        [shareRadio gotoButton:2];
+        plan.planPermission=@"circles";
+    }
+    else if ([aPlan.planPermission isEqualToString: @"public"])
+    {
+        [shareRadio gotoButton:3];
+        plan.planPermission=@"public";
+    }
+    else if ([aPlan.planPermission isEqualToString: @"custom"])            
+    {
+        [shareRadio gotoButton:4];
+        plan.planPermission=@"custom";
+    }
+    plan.planeDate=globalPlan.planeDate;
+    dateLabel.text=globalPlan.planeDate;
+    titleLabel.text=@"Update plan";
+    [saveButton setTitle:@"Update" forState:UIControlStateNormal];
+}
+
+- (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
+{
+    NSString *dateString;
+    NSDate *date =selectedDate;
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
+    dateString = [dateFormatter stringFromDate:date];    
+    dateLabel.text=dateString;
+    plan.planeDate=dateString;
+    //selectedDate=dateString 2012-09-12 08.50;
+}
+
+// NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
+- (void)coordinateChanged_:(NSNotification *)notification
+{	
+	annotation = notification.object;
+	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+    annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+}
+
+- (void)getMyPlaces:(NSNotification *)notif
+{
+    myPlaceArr=[notif object];
+    for (int i=0; i<[myPlaceArr count]; i++)
+    {
+        Places *place=[myPlaceArr objectAtIndex:i];
+        [placeNameArr addObject:place.name];
+    }
+    NSLog(@"got all places %@",placeNameArr);
+}
+
+- (void)createPlanDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)updatePlanDone:(NSNotification *)notif
+{
+    [UtilityClass showAlert:@"" :@"Plan updated successfully"];
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(IBAction)gotoNotification:(id)sender
+{
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"notificationViewController"];
 	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    
 }
 
-- (IBAction)backButtonAction:(id)sender
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    [self dismissModalViewControllerAnimated:YES];
+    NSLog(@"textview should begin");
+    //    [titleTextField resignFirstResponder];
+    [UtilityClass beganEditing:(UIControl *)textView];
+    if (!(textView.textColor == [UIColor blackColor])) 
+    {
+        if ([textView.text isEqualToString:@"Plan description..."]) {
+            textView.text = @"";
+        }
+        textView.textColor = [UIColor blackColor];
+    }
+    return YES;
+}
+
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    else
+        return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    [UtilityClass endEditing];
+    if (!(textView.textColor == [UIColor lightGrayColor])) {
+        //        textView.text = @"Your comments...";
+        textView.textColor = [UIColor lightGrayColor];
+    }
+    plan.planDescription=descriptionTextView.text;
+    [descriptionTextView resignFirstResponder];
+}
+
+#pragma mark -
+#pragma mark MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
+{
+	
+	if (oldState == MKAnnotationViewDragStateDragging) 
+    {
+		annotation = (DDAnnotation *)annotationView.annotation;
+        //        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
+        //        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
+        
+		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+        annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+	}
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;		
+	}
+	
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) 
+    {
+		draggablePinView.annotation = annotation;
+	}
+    else 
+    {
+		// Use class method to create DDAnnotationView (on iOS 3) or built-in draggble MKPinAnnotationView (on iOS 4).
+		draggablePinView = [DDAnnotationView annotationViewWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier mapView:self.mapView];
+        
+		if ([draggablePinView isKindOfClass:[DDAnnotationView class]]) 
+        {
+			// draggablePinView is DDAnnotationView on iOS 3.
+		} else
+        {
+			// draggablePinView instance will be built-in draggable MKPinAnnotationView when running on iOS 4.
+		}
+	}		
+	
+	return draggablePinView;
+}
+
+//reload map
+-(void) reloadMap:(DDAnnotation *)annotation
+{
+    //    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
+    [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
+    [self.mapView setRegion:mapView.region animated:TRUE];
+}
+
+-(void)getLoc:(DDAnnotation *)annotation
+{
+    [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
 -(IBAction)segmentChanged:(id)sender
@@ -236,166 +574,17 @@ NSString *searchText;
     }
 }
 
-- (void) radioButtonClicked:(int)indx sender:(id)sender {
-    NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
-    [commentView resignFirstResponder];
-    
-    if ([sender tag] == 2000) {
-        switch (indx) {
-            case 2:
-                [UtilityClass showAlert:@"Social Maps" :@"You have no checked in venue"];
-                break;
-            case 1:
-                [ActionSheetPicker displayActionPickerWithView:sender data:neearMeAddressArr selectedIndex:0 target:self action:@selector(placeWasSelected::) title:@"Places near to me"];
-                break;
-            case 0:
-                [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0];
-                break;
-            default:
-                break;
-        }
-    }
-    else if ([sender tag]==2001) 
-    {
-        switch (indx) {
-            case 4:
-                NSLog(@"index %d",indx);
-            photo.permission=@"custom";
-            [self.view addSubview:customView];
-                break;
-            case 3:
-                NSLog(@"index %d",indx);
-            photo.permission=@"public";
-                break;
-            case 2:
-                NSLog(@"index %d",indx);
-            photo.permission=@"circles";                
-                break;
-            case 1:
-                NSLog(@"index %d",indx);
-            photo.permission=@"friends";                
-                break;
-            case 0:
-                NSLog(@"index %d",indx);
-            photo.permission=@"private";                
-                break;
-            default:
-                break;
-        }
-    }
-}
 
--(IBAction)saveCustom:(id)sender
-{
-    [customView removeFromSuperview];
-}
 
--(IBAction)cancelCustom:(id)sender
-{
-    [customView removeFromSuperview];
-}
 
-- (void) photoPickerDone:(bool)status image:(UIImage*)img
-{
-    NSLog(@"PersonalInformation:photoPickerDone, status=%d  %@", status,img);
-    if (status == TRUE) 
-    {
-        [photoImageView setImage:img];
-        NSData *imgdata = UIImagePNGRepresentation(img);
-        NSString *imgBase64Data = [imgdata base64EncodedString];
-        photo.image=imgBase64Data;
-    } 
-    [photoPicker.view removeFromSuperview];
-}
 
--(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
-{
-    int selectedLocation=[selectedIndex intValue];
-    NSLog(@"selectedLocation %d",selectedLocation);
-    LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:selectedLocation];
-    addressLabel.text=aPlaceItem.placeInfo.name;
-    addressDetailLabel.text=aPlaceItem.itemAddress;
-    photo.address=aPlaceItem.itemAddress;
-    photo.location.latitude=aPlaceItem.placeInfo.location.latitude;
-    photo.location.longitude=aPlaceItem.placeInfo.location.longitude;
-}
 
--(void)getCurrentAddress
-{
-    addressDetailLabel.text=@"";
-//    if ((![curAddress isEqualToString:@""]) && (curAddress))
-//    {
-//        addressLabel.text=curAddress;
-//        NSLog(@"use existing add");
-//    }
-//    else 
-//    {
-        NSLog(@"load new add");
-        addressLabel.text = @"Loading current address...";
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            NSString *address=[UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
-            if ((![address isEqual:[NSNull null]]) ||(address != NULL))
-            {
-                curAddress=address;
-            }
-            photo.address=curAddress;
-            photo.location.latitude=smAppDelegate.currPosition.latitude;
-            photo.location.longitude=smAppDelegate.currPosition.longitude;
-            addressLabel.text=curAddress;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"get current address.");
-            });
-        });
-//    }
-}
 
-- (void)uploadPhotoDone:(NSNotification *)notif
-{
-    NSLog(@"[notif object] %@",[notif object]);
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
-{
-    [UtilityClass beganEditing:(UIControl *)textView];
-    if (!(textView.textColor == [UIColor blackColor])) {
-        if ([textView.text isEqualToString:@"Image description..."])
-        {
-            textView.text = @"";
-        }
-
-        textView.textColor = [UIColor blackColor];
-    }
-    return YES;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if ([text isEqualToString:@"\n"]) {
-        [textView resignFirstResponder];
-        return NO;
-    }
-    else
-        return YES;
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-    [UtilityClass endEditing];
-    if (!(textView.textColor == [UIColor lightGrayColor])) {
-//        textView.text = @"Your comments...";
-        textView.textColor = [UIColor lightGrayColor];
-    }
-    photo.comment=commentView.text;
-}
 
 -(void) reloadScrollview
 {
-    NSLog(@"upload create scroll init");
-    if (isBgTaskRunning==true)
+    NSLog(@"upload create scroll init %i, %d",isBgDlRunning,[FriendList count]);
+    if (isBgDlRunning==TRUE)
     {
         int x=0; //declared for imageview x-axis point    
         NSArray* subviews = [NSArray arrayWithArray: frndsScrollView.subviews];
@@ -413,7 +602,7 @@ NSString *searchText;
         }  
         
         frndsScrollView.contentSize=CGSizeMake([FriendList count]*80, 100);        
-        NSLog(@"event create isBgTaskRunning %i, %d",isBgTaskRunning,[FriendList count]);
+        NSLog(@"event create isBgTaskRunning %i, %d",isBgDlRunning,[FriendList count]);
         for(int i=0; i<[FriendList count];i++)               
         {
             if(i< [FriendList count]) 
@@ -493,7 +682,7 @@ NSString *searchText;
 
 -(void)DownLoad:(NSNumber *)path
 {
-    if (isBgTaskRunning==true)
+    if (isBgDlRunning==TRUE)
     {
         //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
@@ -640,6 +829,7 @@ NSString *searchText;
 
 -(void)loadDummydata
 {
+    isBgDlRunning=TRUE;
     circleList=[[NSMutableArray alloc] init];
     [circleList removeAllObjects];
     UserCircle *circle=[[UserCircle alloc]init];
@@ -655,7 +845,7 @@ NSString *searchText;
     friendsIDArr=[[NSMutableArray alloc] init];
     FriendList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-
+    
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
         frnds=[[UserFriends alloc] init];
@@ -673,6 +863,7 @@ NSString *searchText;
         [friendListArr addObject:frnds];
     }    
     FriendList=[friendListArr mutableCopy];
+    NSLog(@"frnd count %d",[FriendList count]);
     //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
@@ -732,11 +923,11 @@ NSString *searchText;
     // searchBarTextDidBeginEditing is called whenever 
     // focus is given to the UISearchBar
     // call our activate method so that we can do some 
- 
-        searchTexts=friendSearchbar.text;
-        [UtilityClass beganEditing:(UIControl *)friendSearchbar];
-        
- 
+    
+    searchTexts=friendSearchbar.text;
+    [UtilityClass beganEditing:(UIControl *)friendSearchbar];
+    
+    
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView commitAnimations];
@@ -757,13 +948,13 @@ NSString *searchText;
 {
     // Clear the search text
     // Deactivate the UISearchBar
-        friendSearchbar.text=@"";
-        searchTexts=@"";    
-        [FriendList removeAllObjects];
-        FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
-        [self reloadScrollview];
-        [friendSearchbar resignFirstResponder];
-        NSLog(@"3");
+    friendSearchbar.text=@"";
+    searchTexts=@"";    
+    [FriendList removeAllObjects];
+    FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
+    [self reloadScrollview];
+    [friendSearchbar resignFirstResponder];
+    NSLog(@"3");
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
@@ -818,11 +1009,14 @@ NSString *searchText;
     [self reloadScrollview];
 }
 
-
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    isBgTaskRunning=false;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
+    isBgDlRunning=FALSE;
+    isPlanFromVenue=FALSE;
 }
 
 - (void)viewDidUnload

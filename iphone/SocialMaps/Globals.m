@@ -25,5 +25,10 @@ BOOL useLocalData;
 BOOL willLoadPhotoData;
 BOOL loadGeotagServiceData;
 BOOL showFrndsEvents;
+NSMutableDictionary *dicImages_msg;
+Plan *globalPlan;
+BOOL isPlanFromVenue;
+BOOL loadNewPlan;
+BOOL pointOnMapFlag;
 
 @end
