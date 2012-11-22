@@ -25,12 +25,13 @@
               .name
                 %h4= $photo->getOwner()->getName()
               .time
-                11m ago
+                = $activity->toHumanizeDate()
               .comment
                 = stripcslashes($photo->getDescription())
 
             .row(style='height:110px; margin-top: 5px;')
-              .image
+              - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\')'
+              .image(style=$imagePathCss)
                 %img(src= $photo->getUriMedium())
               .icon.icon_zoom
 
@@ -44,12 +45,6 @@
                     Likes
                   - else
                     Like
-                &nbsp;
-                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId()
-                                        data-objecttype=$activity->getObjectType())
-                  = $activity->getCommentsCount() . ''
-                  Comments
-
             .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
@@ -61,7 +56,10 @@
               .name
                 %h4= $activity->getOwner()->getName()
               .time
-                11m ago
+                - if ($activity->getCreatedAt() != null)
+                  = $activity->toHumanizeDate()
+                - else
+                  unknown
 
               .comment
                 - if ($activity->getOwner()->getId() == $currentUser->getId())
@@ -76,13 +74,19 @@
 
             .row
               .buttons
-                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
+                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                     data-objecttype=$activity->getObjectType()
+                                     data-liked=$liked data-likes=$rowLikesId)
                   = $activity->getLikesCount()
-                  Likes
-                &nbsp;
-                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
-                  = $activity->getCommentsCount()
-                  Comments
+                  - if ($activity->getLikesCount() > 1)
+                    Likes
+                  - else
+                    Like
+            %br/
+            %br/
+            %br/
+            %br/
+            .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
   - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'

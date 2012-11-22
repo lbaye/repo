@@ -147,6 +147,11 @@ class UserActivity implements ParticipativeDoc {
         return $this->likes;
     }
 
+    public function toHumanizeDate() {
+        $now = new \DateTime();
+        return \Helper\Util::toHumanizeDate($now->getTimestamp(), $this->createdAt->getTimestamp());
+    }
+
     public function toArray() {
         # Build hash object from the basic fields
         $exportableFields = array(

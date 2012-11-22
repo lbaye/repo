@@ -53,10 +53,10 @@
     NewsfeedApp.prototype.tapOnLike = function(el) {
       if (this.isDisabled(el)) {
         this.showMessage('success', 'You have already liked it!');
+        return this.loadLikes(el);
       } else {
-        this.likeThis(el);
+        return this.likeThis(el);
       }
-      return this.loadLikes(el);
     };
 
     NewsfeedApp.prototype.tapOnComment = function(el) {
@@ -83,6 +83,8 @@
       uri = '/newsfeed/' + el.attr('data-objectid') + '/like';
       this.sendRequestTo(uri).success(function(r) {
         return that.processServerResponse(el, r);
+      }).complete(function(r) {
+        return that.loadLikes(el);
       });
       this.incrementCount(this.$(el), 1);
       return this.disableButton(this.$(el));

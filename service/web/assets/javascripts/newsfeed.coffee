@@ -26,10 +26,9 @@ class NewsfeedApp
     tapOnLike: (el) ->
         if @isDisabled(el)
             @showMessage 'success', 'You have already liked it!'
+            @loadLikes(el)
         else
             @likeThis(el)
-
-        @loadLikes(el)
 
     tapOnComment: (el) ->
         alert 'Comment'
@@ -48,8 +47,8 @@ class NewsfeedApp
     likeThis: (el) ->
         that = @
         uri = '/newsfeed/' + el.attr('data-objectid') + '/like'
-        @sendRequestTo(uri).
-            success (r) -> that.processServerResponse(el, r)
+        @sendRequestTo(uri).success((r) -> that.processServerResponse(el, r))
+                           .complete((r) -> that.loadLikes(el))
 
         @incrementCount @$(el), 1
         @disableButton @$(el)

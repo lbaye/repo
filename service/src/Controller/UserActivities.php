@@ -45,9 +45,11 @@ class UserActivities extends Base {
 
         $activities = $this->userActivitiesRepo->getByUser($user);
 
-        if (count($activities) == 0)
-            return $this->_generateResponse(array());
-        else {
+        if (count($activities) == 0) {
+            $this->response->setContent('');
+            $this->response->headers->set('Content-Type', 'text/html');
+            return $this->response;
+        } else {
             $items = array();
             foreach ($activities as $activity) $items[] = $activity->toArray();
 
