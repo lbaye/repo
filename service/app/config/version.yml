@@ -1,0 +1,4 @@
+about:
+  version: '0.0.9'
+  serviceStatus: 'maintainance'
+  allowedKeys: '123456|abcdef|011235'
