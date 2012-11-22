@@ -52,6 +52,7 @@ class IOS extends Notifier
                 'alert' => $data['title'],
                 'badge' => $data['badge'],
                 'tabCounts' => $data['tabCounts'],
+                'sound' => 'default',
                 "custom_data" => array(
                     'objectType' => $data['objectType'],
                     'objectId' => isset($data['objectId']) ? $data['objectId'] : null,
