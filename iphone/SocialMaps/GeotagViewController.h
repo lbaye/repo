@@ -45,7 +45,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     
     BOOL isDragging_msg;
     BOOL isDecliring_msg;
-    NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName;
     
     CGFloat animatedDistance;

@@ -46,6 +46,7 @@
 #import "NewsFeedViewController.h"
 #import "RecommendViewController.h"
 #import "FriendListViewController.h"
+#import "CreatePlanViewController.h"
 
 @interface MapViewController ()
 
@@ -424,6 +425,26 @@ ButtonClickCallbackData callBackData;
     [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
 }
 
+-(void) startMoveAndAddPinForPlan:(Plan*)plan
+{
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [plan.planGeolocation.latitude doubleValue];
+    theCoordinate.longitude = [plan.planGeolocation.longitude doubleValue];
+    NSLog(@"plan %@ %@",plan.planGeolocation.latitude,plan.planGeolocation.longitude);
+    DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+    annotation.title = [NSString stringWithFormat:@"%@", plan.planDescription];
+    [_mapView addAnnotation:annotation];
+    [_mapView selectAnnotation:annotation animated:NO];
+    
+    MKMapRect r = [self.mapView visibleMapRect];
+    MKMapPoint pt = MKMapPointForCoordinate(theCoordinate);
+    r.origin.x = pt.x - r.size.width / 2;
+    r.origin.y = pt.y - r.size.height  / 2;
+    [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
+}
+
 - (void) removeAnnotation:(DDAnnotation*)annotation
 {
     [_mapView removeAnnotation:annotation];
@@ -433,6 +454,13 @@ ButtonClickCallbackData callBackData;
 {
     [circleView removeFromSuperview];
     [self performSelector:@selector(startMoveAndAddPin:) withObject:place afterDelay:.8];
+}
+
+- (void) showPinOnMapViewForPlan:(Plan*)plan 
+{
+    NSLog(@"mapview");
+    [circleView removeFromSuperview];
+    [self performSelector:@selector(startMoveAndAddPinForPlan:) withObject:plan afterDelay:1.8];
 }
 
 // MapAnnotation delegate methods
@@ -617,7 +645,18 @@ ButtonClickCallbackData callBackData;
 
 - (void)planselected:(id <MKAnnotation>)anno
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    globalPlan=[[Plan alloc] init];
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    CreatePlanViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"createPlanViewController"];
+    isPlanFromVenue=TRUE;    
+    LocationItemPlace *locItemPlace = (LocationItemPlace*)anno;
+    globalPlan.planAddress=[NSString stringWithFormat:@"%@, %@",locItemPlace.placeInfo.name, locItemPlace.placeInfo.vicinity];
+    globalPlan.planGeolocation.latitude=locItemPlace.placeInfo.location.latitude;
+    globalPlan.planGeolocation.longitude=locItemPlace.placeInfo.location.longitude;
+    initialHelpView.plan=globalPlan;
+    NSLog(@"plan %@",initialHelpView.plan);
+    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
 }
 
 - (void)recommendSelected:(id <MKAnnotation>)anno
@@ -1146,6 +1185,7 @@ ButtonClickCallbackData callBackData;
 //    [_mapPulldown removeFromSuperview];
 //    [_mapPullupMenu removeFromSuperview];
    //[self initPullView];
+    pointOnMapFlag = FALSE;
     smAppDelegate.currentModelViewController = self;
 }
 

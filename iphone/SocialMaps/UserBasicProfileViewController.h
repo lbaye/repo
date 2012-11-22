@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"
+#import "Plan.h"
 
 @interface UserBasicProfileViewController : UIViewController<UIPickerViewDataSource, 
 UIPickerViewDelegate,
@@ -100,5 +101,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)nameButtonAction:(id)sender;
 -(IBAction)goToZoomView:(id)sender;
 -(IBAction)closeZoomView:(id)sender;
+- (void) showPinOnMapViewPlan:(Plan *)plan;
 
 @end

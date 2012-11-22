@@ -27,6 +27,7 @@
 #import "PlaceListViewController.h"
 #import "Globals.h"
 #import "FriendListViewController.h"
+#import "FriendsPlanListViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -120,11 +121,12 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
-    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
+    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
+    [ImgesName addObject:@"sm_icon@2x"];
     [ImgesName addObject:@"sm_icon@2x"];
     
     userItemScrollView.delegate = self;
@@ -986,11 +988,33 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         [controller release];
         }
     }
+    else if (imageIndex==5)
+    {
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+        FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"];    
+        initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        initialHelpView.userInfo=userInfo;
+        [self presentModalViewController:initialHelpView animated:YES];
+    }
 }
 
 - (void) showPinOnMapView:(Place*)place 
 {
     [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
+}
+
+- (void) showPinOnMapViewPlan:(Plan *)plan 
+{
+    NSLog(@"profile");
+    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
+    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+}
+
+- (void) dismissModalView {
+    
     [self dismissModalViewControllerAnimated:NO];
 }
 

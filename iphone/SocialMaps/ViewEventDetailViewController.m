@@ -24,7 +24,7 @@
 @synthesize editEventButton;
 @synthesize deleteEventButton;    
 @synthesize inviteEventButton,totalNotifCount;               
-@synthesize addressScollview,ImgesName,results;
+@synthesize addressScollview,imagesName,results;
 
 NSMutableArray *imageArr, *nameArr, *idArr;
 bool menuOpen=NO;
@@ -56,15 +56,6 @@ CustomRadioButton *radio;
 
 -(void)initView
 {
-//    [eventName.layer setCornerRadius:3.0f];
-//    [eventDate.layer setCornerRadius:3.0f];
-//    [eventAddress.layer setCornerRadius:3.0f];
-//    [eventDistance.layer setCornerRadius:3.0f];
-//    [eventShortDetail.layer setCornerRadius:3.0f];    
-//    
-//    eventName.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
-//    eventDate.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
-//    eventShortDetail.backgroundColor = [UIColor colorWithWhite:0 alpha:.4];
     
     descriptionView.text=globalEvent.eventDescription;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
@@ -93,12 +84,7 @@ CustomRadioButton *radio;
     descriptionView.text=globalEvent.eventDescription;
     NSLog(@"event prop: %@ %i  %@",globalEvent.owner,globalEvent.isInvited,globalEvent.guestList);
     
-//    if (globalEvent.isInvited==FALSE)
-//    {
-//        rsvpView.hidden=YES;
-//    }
-//    else
-//        rsvpView.hidden=NO;
+
     
     //mapview data
     if ([self.mapView.annotations count]>0)
@@ -195,7 +181,9 @@ CustomRadioButton *radio;
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
-    
+    imagesName = [[NSMutableArray alloc] init];
+    nameArr=[[NSMutableArray alloc] init];
+    idArr=[[NSMutableArray alloc] init];
     smAppDelegate.currentModelViewController = self;
 }
 
@@ -209,10 +197,6 @@ CustomRadioButton *radio;
     
     notfCounter=0;
     detNotfCounter=0;
-    ImgesName = [[NSMutableArray alloc] init];
-    dicImages_msg = [[NSMutableDictionary alloc] init];
-    nameArr=[[NSMutableArray alloc] init];
-    idArr=[[NSMutableArray alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventDetailDone:) name:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
     
     guestScrollView.delegate = self;
@@ -269,16 +253,24 @@ CustomRadioButton *radio;
 
 -(void)loadImageView
 {
+    if ([dicImages_msg objectForKey:globalEvent.eventID])
+    {
+        eventImgView.image=[dicImages_msg objectForKey:globalEvent.eventID];
+    }
+    else
+    {
     UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:globalEvent.eventImageUrl]]];
     if (img)
     {
         eventImgView.image=img;
+        [dicImages_msg setObject:img forKey:globalEvent.eventID];
     }
     else
     {
         eventImgView.image=[UIImage imageNamed:@"blank.png"];
     }
     NSLog(@"image setted after download. %@",img);
+    }
 }
 
 - (void)viewDidUnload
@@ -491,7 +483,7 @@ CustomRadioButton *radio;
 
 -(void) reloadScrolview
 {
-    NSLog(@"event detail in scroll init %d",[ImgesName count]);
+    NSLog(@"event detail in scroll init %d",[imagesName count]);
     if (isBackgroundTaskRunning==TRUE)  
     {
     NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
@@ -510,28 +502,28 @@ CustomRadioButton *radio;
             // [view removeFromSuperview];
         }
     }
-    guestScrollView.contentSize=CGSizeMake([ImgesName count]*65, 65);
-    for(int i=0; i<[ImgesName count];i++)       
+    guestScrollView.contentSize=CGSizeMake([imagesName count]*65, 65);
+    for(int i=0; i<[imagesName count];i++)       
         
     {
-        if(i< [ImgesName count]) 
+        if(i< [imagesName count]) 
         { 
             UIImageView *imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            if([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]) 
+            if([dicImages_msg objectForKey:[imagesName objectAtIndex:i]]) 
             { 
                 //If image available in dictionary, set it to imageview 
-                imgView.image = [dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]; 
+                imgView.image = [dicImages_msg objectForKey:[imagesName objectAtIndex:i]]; 
             } 
             else 
             { 
-                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
+                if((!isDragging_msg && !isDecliring_msg) &&([dicImages_msg objectForKey:[imagesName objectAtIndex:i]]==nil))
                     
                 {
                     NSLog(@"downloading called");
                     //If scroll view moves set a placeholder image and start download image. 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
 //                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
-//                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:i]]; 
+//                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[imagesName objectAtIndex:i]]; 
                     imgView.image = [UIImage imageNamed:@""];
                 }
                 else 
@@ -592,7 +584,7 @@ CustomRadioButton *radio;
     {
     NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
-    NSString *Link = [ImgesName objectAtIndex:index];
+    NSString *Link = [imagesName objectAtIndex:index];
     //Start download image from url
         UIImage *img;
         if ([Link isEqual:[NSNull null]]) {
@@ -601,11 +593,11 @@ CustomRadioButton *radio;
         else {
             img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
         }
-    if((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
+    if((img) && ([dicImages_msg objectForKey:[imagesName objectAtIndex:index]]==NULL))
     {
         //If download complete, set that image to dictionary
-        [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
-        NSLog(@"img: %@    %@",img,[ImgesName objectAtIndex:index]);
+        [dicImages_msg setObject:img forKey:[imagesName objectAtIndex:index]];
+        NSLog(@"img: %@    %@",img,[imagesName objectAtIndex:index]);
         [self reloadScrolview];
 //        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
         
@@ -689,18 +681,58 @@ CustomRadioButton *radio;
 
 - (void)getEventDetailDone:(NSNotification *)notif
 {
-    globalEvent=[notif object];
     detNotfCounter++;
+    globalEvent=[notif object];
     NSLog(@"Detail globalEvent: %@ %@",globalEvent.eventID,globalEvent.eventDate.date);
-    ImgesName = [[NSMutableArray alloc] init];   
     
     NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
+        
+    if (detNotfCounter==1)
+    {
+        UserFriends *frnd;
+        [imagesName removeAllObjects];
+        [nameArr removeAllObjects];
+        [idArr removeAllObjects];
+        
+        for (int i=0; i<[globalEvent.guestList count]; i++)
+        {
+            frnd=[[UserFriends alloc] init];
+            frnd=[globalEvent.guestList objectAtIndex:i];
+            NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
+            if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
+            {
+                //            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+                NSLog(@"img url null %d",i);
+            }
+            else
+            {
+                NSLog(@"img url not null %d",i);            
+            }
+            [imagesName addObject:frnd.imageUrl];
+            [nameArr addObject:frnd.userName];
+            [idArr addObject:frnd.userId];
+        }
+
+        NSLog(@"reloading view");
+        [self initView];
+        [self reloadScrolview];
+    }
+//    [self.view setNeedsDisplay];
+    NSLog(@"detNotfCounter: %d  globalEvent.guestList: %@ %d",detNotfCounter, globalEvent.guestList,[imagesName count]);
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self hideActivity];
+    NSLog(@"guestScrollView size %@ %@",NSStringFromCGSize(guestScrollView.contentSize),imagesName);
+//    [self reloadScrolview];    
+}
+
+-(void)loadScrollData
+{
     UserFriends *frnd;
-    [dicImages_msg removeAllObjects];
-    [ImgesName removeAllObjects];
+    [imagesName removeAllObjects];
     [nameArr removeAllObjects];
     [idArr removeAllObjects];
-
+    
     for (int i=0; i<[globalEvent.guestList count]; i++)
     {
         frnd=[[UserFriends alloc] init];
@@ -708,46 +740,23 @@ CustomRadioButton *radio;
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
         if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
         {
-//            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            //            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
             NSLog(@"img url null %d",i);
         }
         else
         {
             NSLog(@"img url not null %d",i);            
         }
-        [ImgesName addObject:frnd.imageUrl];
+        [imagesName addObject:frnd.imageUrl];
         [nameArr addObject:frnd.userName];
         [idArr addObject:frnd.userId];
     }
-    
-    if (detNotfCounter==1)
-    {
-//        [self reloadScrolview];
-        NSLog(@"reloading view");
-        [self initView];
-    }
-    [self.view setNeedsDisplay];
-    NSLog(@"detNotfCounter: %d  globalEvent.guestList: %@",detNotfCounter, globalEvent.guestList);
-    [smAppDelegate hideActivityViewer];
-    [self hideActivity];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
 
-//    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-//    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-//    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:modalViewControllerTwo animated:YES];
-//    NSLog(@"GOT SERVICE DATA.. :D");
-    
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-//    [self presentModalViewController:controller animated:YES];
-    
 }
 
 -(void)hideActivity
 {
     NSArray* subviews = [NSArray arrayWithArray: self.view.subviews];
-    UIActivityIndicatorView *indView;
     for (UIView* view in subviews) 
     {
         if([view isKindOfClass :[UIActivityIndicatorView class]])
@@ -765,7 +774,7 @@ CustomRadioButton *radio;
     isBackgroundTaskRunning=FALSE;
 //    [self viewDidUnload];
 //    dicImages_msg=nil;
-//    ImgesName=nil;
+//    imagesName=nil;
 //    nameArr=nil;
 //    guestScrollView=nil;
     detNotfCounter=0;

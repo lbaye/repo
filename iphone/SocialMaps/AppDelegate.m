@@ -24,6 +24,7 @@
 #import "NotifMessage.h"
 #import "ViewEventListViewController.h"
 #import "NotificationController.h"
+#import "Globals.h"
 
 @implementation AppDelegate
 
@@ -114,7 +115,7 @@ static AppDelegate *sharedInstance=nil;
             [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 		}
 	}
-    
+    dicImages_msg = [[NSMutableDictionary alloc] init];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     facebookLogin = FALSE;
     smLogin = FALSE;

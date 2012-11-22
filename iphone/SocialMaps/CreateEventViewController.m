@@ -221,7 +221,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     
     frndListScrollView.delegate = self;
     customScrollView.delegate=self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
     filteredList2=[[NSMutableArray alloc] init];
@@ -453,7 +452,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
     editFlag=false;
-    dicImages_msg=nil;
     ImgesName=nil;
     frndListScrollView=nil;
 
@@ -1204,7 +1202,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 -(void) reloadScrolview
 {
-    NSLog(@"event create scroll init");
+    NSLog(@"event create scroll init %@",dicImages_msg);
     if (isBackgroundTaskRunning==true)
     {
         int x=0; //declared for imageview x-axis point    
@@ -1258,13 +1256,15 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
+                    NSLog(@"[dicImages_msg objectForKey:userFrnd.imageUrl] %@",[dicImages_msg objectForKey:userFrnd.imageUrl]);
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==NULL))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
                         [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                        imgView.image = [UIImage imageNamed:@"blank.png"];             
+                        NSLog(@"create downloading called");
                     }
                     else 
                     { 

@@ -1,15 +1,16 @@
 //
-//  UITextView+Rounded.h
+//  UILabel+Decoration.h
 //  SocialMaps
 //
-//  Created by Warif Rishi on 11/15/12.
+//  Created by Abdullah Md. Zubair on 11/19/12.
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface UITextView (Rounded)
+@interface UILabel (Decoration)
 
-- (void) makeRoundCorner;
+- (void) setLabelGlowEffect;
 - (void) makeRoundCornerWithColor:(UIColor *)color;
+
 @end

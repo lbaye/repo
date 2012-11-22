@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Event.h"
+#import "Plan.h"
 
 extern NSMutableArray *userFriendslistArray;
 extern NSMutableDictionary *userFriendslistIndex;
@@ -23,6 +24,11 @@ extern BOOL useLocalData;
 extern BOOL willLoadPhotoData;
 extern BOOL loadGeotagServiceData;
 extern BOOL showFrndsEvents;
+extern NSMutableDictionary *dicImages_msg;
+extern Plan *globalPlan;
+extern BOOL isPlanFromVenue;
+extern BOOL loadNewPlan;
+extern BOOL pointOnMapFlag;
 
 @interface Globals : NSObject 
 
