@@ -195,6 +195,7 @@ class User extends Base
             $notificationCounts = $this->userRepository->generateNotificationCount($this->user->getId());
             $notificationCounts = explode("|", $notificationCounts['tabCounts']);
             $data['notification_count'] = array('notifications' => $notificationCounts[2], 'friendRequest' => $notificationCounts[1], 'messageCount' => $notificationCounts[0]);
+            $data['friends'] = $this->_getFriendList($this->user, array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
 
             $this->response->setContent(json_encode($data));
             $this->response->setStatusCode(Status::OK);
