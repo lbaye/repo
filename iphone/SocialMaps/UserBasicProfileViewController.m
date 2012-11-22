@@ -813,7 +813,7 @@ int scrollHeight,reloadCounter=0;
     //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
     //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
     [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
-    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
 }
 
 - (void) dismissModalView {

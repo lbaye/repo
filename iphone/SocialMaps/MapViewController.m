@@ -442,7 +442,7 @@ ButtonClickCallbackData callBackData;
     r.origin.y = pt.y - r.size.height  / 2;
     [self.mapView setVisibleMapRect:r animated:YES];
     
-//    [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
+    [self performSelector:@selector(removeAnnotation:) withObject:annotation afterDelay:5];
 }
 
 - (void) removeAnnotation:(DDAnnotation*)annotation
@@ -460,7 +460,7 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"mapview");
     [circleView removeFromSuperview];
-    [self performSelector:@selector(startMoveAndAddPinForPlan:) withObject:plan afterDelay:.8];
+    [self performSelector:@selector(startMoveAndAddPinForPlan:) withObject:plan afterDelay:1.8];
 }
 
 // MapAnnotation delegate methods
