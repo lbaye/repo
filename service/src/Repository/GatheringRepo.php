@@ -12,7 +12,7 @@ use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 
-class GatheringRepo extends Base
+class GatheringRepo extends Base implements Likable
 {
 
     public function getByUser(UserDocument $user)
@@ -273,7 +273,7 @@ class GatheringRepo extends Base
 
         return $meetUpLIst;
     }
-
+    
     public function planToArray($data,$key)
     {
 
@@ -290,5 +290,30 @@ class GatheringRepo extends Base
 
         return $data;
     }
+    
+    public function like($gathering, $user) {
+        return $this->dm->createQueryBuilder('Document\Gathering')
+                ->update()
+                ->field('likes')->addToSet($user->getId())
+                ->field('id')->equals($gathering->getId())
+                ->getQuery()
+                ->execute();
+    }
 
+    public function unlike($gathering, $user) {
+        return $this->dm->createQueryBuilder('Document\Gathering')
+                ->update()
+                ->field('likes')->pull($user->getId())
+                ->field('id')->equals($gathering->getId())
+                ->getQuery()
+                ->execute();
+    }
+
+    public function hasLiked($gathering, $user) {
+        if ($gathering->getLikesCount() > 0)
+            return in_array($user->getId(), $gathering->getLikes());
+
+        return false;
+    }
+    
 }

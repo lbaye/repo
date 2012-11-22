@@ -23,3 +23,8 @@ user_newsfeed_html:
   pattern: /{userId}/newsfeed.html
   defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: html }
   requirements: { _method: GET }
+
+like_a_feed:
+  pattern: /newsfeed/{id}/like
+  defaults: { _controller: Controller\UserActivities::likeById, type: json }
+  requirements: { _method: PUT }

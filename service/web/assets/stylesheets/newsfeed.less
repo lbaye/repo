@@ -13,7 +13,7 @@ ul {
     li {
         clear: both;
         margin: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         min-height: 60px;
 
         .row {
@@ -75,6 +75,7 @@ ul {
                 text-align: right;
                 padding: 5px;
                 padding-top: 0;
+                cursor: pointer;
 
                 a {
                     width: 70px;
@@ -91,14 +92,14 @@ ul {
                     z-index: 400;
                 }
 
-                .link_like {
+                .disabled {
                     background: #888;
-
                 }
 
-                .link_comment {
+                .enabled {
                     background: #94C11C;
                 }
+
             }
         }
 
@@ -109,6 +110,13 @@ ul {
                     max-width: 230px;
                     max-height: 27px;
                     overflow: hidden;
+                }
+
+                .buttons {
+                    margin-top: 20px;
+                    position: relative;
+                    margin-top: 28px;
+                    float: right;
                 }
             }
         }
@@ -133,5 +141,19 @@ ul {
             }
         }
     }
+}
+
+.notice-panel {
+    padding: 5px;
+    position: fixed;
+    opacity: 0.8;
+    bottom: 0;
+    left: 0;
+    background: #ffffe0;
+    border:  1px solid orange;
+    width: 99%;
+    z-index: 1111;
+    font-size: 120%;
+    font-weight: bold;  
 }
 

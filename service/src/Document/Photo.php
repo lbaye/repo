@@ -10,8 +10,7 @@ use Document\User as User;
 /**
  * @ODM\Document(collection="photos",repositoryClass="Repository\PhotosRepo")
  */
-class Photo extends Content
-{
+class Photo extends Content implements ParticipativeDoc {
     /** @ODM\Id */
     protected $id;
 
@@ -49,66 +48,55 @@ class Photo extends Content
     /**
      * @ODM\EmbedMany(targetDocument="PhotoComment")
      */
-    protected $photoComment = array();
+    protected $photoComments = array();
 
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
     }
 
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
     /**
      * @param \Document\Location $location
      */
-    public function setLocation($location)
-    {
+    public function setLocation($location) {
         $this->location = $location;
     }
 
     /**
      * @return \Document\Location
      */
-    public function getLocation()
-    {
+    public function getLocation() {
         return $this->location;
     }
 
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
     }
 
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
-    public function setMetadata($metadata)
-    {
+    public function setMetadata($metadata) {
         $this->metadata = $metadata;
     }
 
-    public function getMetadata()
-    {
+    public function getMetadata() {
         return $this->metadata;
     }
 
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
     }
 
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
 
-    public function isValid()
-    {
+    public function isValid() {
         try {
             Validator::create()->notEmpty()->assert($this->getUriThumb());
 
@@ -119,12 +107,13 @@ class Photo extends Content
         return true;
     }
 
-    public function toArray()
-    {
+    public function toArray() {
         $hash = array();
 
         $fields = array('id', 'description', 'title', 'permission', 'permittedUsers', 'permittedCircles');
-        foreach ($fields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
+        foreach ($fields as $field) $hash[$field] = $this->{
+        'get' . ucfirst($field)
+        }();
 
         $hash['imageThumb'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUriThumb()));
         $hash['imageMedium'] = \Helper\Url::buildPhotoUrl(array('photo' => $this->getUriMedium()));
@@ -145,63 +134,59 @@ class Photo extends Content
         return $hash;
     }
 
-    public function setUriLarge($uriLarge)
-    {
+    public function setUriLarge($uriLarge) {
         $this->uriLarge = $uriLarge;
     }
 
-    public function getUriLarge()
-    {
+    public function getUriLarge() {
         return $this->uriLarge;
     }
 
-    public function setUriMedium($uriMedium)
-    {
+    public function setUriMedium($uriMedium) {
         $this->uriMedium = $uriMedium;
     }
 
-    public function getUriMedium()
-    {
+    public function getUriMedium() {
         return $this->uriMedium;
     }
 
-    public function setUriThumb($uriThumb)
-    {
+    public function setUriThumb($uriThumb) {
         $this->uriThumb = $uriThumb;
     }
 
-    public function getUriThumb()
-    {
+    public function getUriThumb() {
         return $this->uriThumb;
     }
 
-    public function addLikesUser($userId)
-    {
+    public function addLikesUser($userId) {
         $this->likes[] = $userId;
     }
 
-    public function setLikesUser(array $users)
-    {
+    public function setLikesUser(array $users) {
         $this->likes = $users;
     }
 
-    public function getLikes()
-    {
+    public function getLikes() {
         return $this->likes;
     }
 
-    public function addPhotoComment($photoComment)
-    {
-        $this->photoComment[] = $photoComment;
+    public function addPhotoComment($photoComment) {
+        $this->photoComments[] = $photoComment;
     }
 
-    public function setPhotoComment($photoComment)
-    {
-        $this->photoComment = $photoComment;
+    public function setPhotoComments($photoComment) {
+        $this->photoComments = $photoComment;
     }
 
-    public function getPhotoComment()
-    {
-        return $this->photoComment;
+    public function getPhotoComments() {
+        return $this->photoComments;
+    }
+
+    public function getLikesCount() {
+        return count($this->likes);
+    }
+
+    public function getCommentsCount() {
+        return count($this->photoComments);
     }
 }

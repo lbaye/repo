@@ -56,15 +56,31 @@ class UserActivities extends Base {
             else {
                 return $this->render(
                     array(
-                        'baseUrl' => Dependencies::$rootUrl,
-                        'activities' => $activities,
-                        'userRepo' => $this->userRepository,
-                        'photoRepo' => $this->photoRepository,
-                        'geotagRepo' => $this->geotagRepository,
-                        'currentUser' => $user
+                         'baseUrl' => Dependencies::$rootUrl,
+                         'activities' => $activities,
+                         'userRepo' => $this->userRepository,
+                         'photoRepo' => $this->photoRepository,
+                         'geotagRepo' => $this->geotagRepository,
+                         'activityRepo' => $this->userActivitiesRepo,
+                         'currentUser' => $user,
+                         'authToken' => $user->getAuthToken()
                     ));
             }
         }
     }
-    
+
+    public function likeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+        $this->_ensureLoggedIn();
+
+        $activity = $this->userActivitiesRepo->find($id);
+        if (is_null($activity)) return $this->_generate404();
+
+        if ($this->userActivitiesRepo->like($activity, $this->user))
+            return $this->_generateResponse(
+                array('status' => 'true', 'message' => 'You have liked it'));
+        else
+            return $this->_generateResponse(
+                array('status' => 'false', 'message' => 'You have failed to like it'));
+    }
+
 }

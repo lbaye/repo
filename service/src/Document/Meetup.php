@@ -30,7 +30,6 @@ class Meetup extends Gathering
         return true;
     }
 
-
     public function toArray()
     {
         $result = parent::toArray();

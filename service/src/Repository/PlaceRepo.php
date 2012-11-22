@@ -9,7 +9,7 @@ use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
-class PlaceRepo extends Base
+class PlaceRepo extends Base implements Likable
 {
     protected function bindObservers() {
         $this->addObserver(new \Document\PlacesObserver($this->dm));
@@ -126,5 +126,39 @@ class PlaceRepo extends Base
         $docs = $qb->getQuery()->execute();
 
         return $this->_toArrayAll($docs);
+    }
+
+    public function like($place, $user) {
+        $docName = $this->determineDocName($place);
+        return $this->dm->createQueryBuilder("Document\\$docName")
+                ->update()
+                ->field('likes')->addToSet($user->getId())
+                ->field('id')->equals($place->getId())
+                ->getQuery()
+                ->execute();
+    }
+
+    public function unlike($place, $user) {
+        $docName = $this->determineDocName($place);
+        return $this->dm->createQueryBuilder("Document\\$docName")
+                ->update()
+                ->field('likes')->pull($user->getId())
+                ->field('id')->equals($place->getId())
+                ->getQuery()
+                ->execute();
+    }
+
+    public function hasLiked($place, $user) {
+        if ($place->getLikesCount() > 0)
+            return in_array($user->getId(), $place->getLikes());
+
+        return false;
+    }
+
+    private function determineDocName(\Document\Place $place) {
+        if ($place->getObjectType() == 'geotag')
+            return 'Geotag';
+        else
+            return 'Place';
     }
 }

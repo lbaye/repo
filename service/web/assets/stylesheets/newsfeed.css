@@ -12,7 +12,7 @@ ul {
 ul li {
   clear: both;
   margin: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   min-height: 60px;
 }
 ul li .row {
@@ -68,6 +68,7 @@ ul li .row .buttons {
   text-align: right;
   padding: 5px;
   padding-top: 0;
+  cursor: pointer;
 }
 ul li .row .buttons a {
   width: 70px;
@@ -83,10 +84,10 @@ ul li .row .buttons a {
   border-radius: 5px;
   z-index: 400;
 }
-ul li .row .buttons .link_like {
+ul li .row .buttons .disabled {
   background: #888;
 }
-ul li .row .buttons .link_comment {
+ul li .row .buttons .enabled {
   background: #94C11C;
 }
 ul li .activity .row .comment {
@@ -94,6 +95,12 @@ ul li .activity .row .comment {
   max-width: 230px;
   max-height: 27px;
   overflow: hidden;
+}
+ul li .activity .row .buttons {
+  margin-top: 20px;
+  position: relative;
+  margin-top: 28px;
+  float: right;
 }
 ul li .photo .row .image {
   position: absolute;
@@ -107,4 +114,17 @@ ul li .photo .row .image {
 }
 ul li .photo .row .image img {
   width: 300px;
+}
+.notice-panel {
+  padding: 5px;
+  position: fixed;
+  opacity: 0.8;
+  bottom: 0;
+  left: 0;
+  background: #ffffe0;
+  border: 1px solid orange;
+  width: 99%;
+  z-index: 1111;
+  font-size: 120%;
+  font-weight: bold;
 }

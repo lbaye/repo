@@ -2,15 +2,15 @@
 %html
   %head
     %title Hello
+
     - $url = $baseUrl . '/assets/stylesheets/newsfeed.css'
     %link(rel='stylesheet' href=$url)
-
-    %script(type='text/javascript')
-      function likedThis() { alert('oppss!'); }
 
 %body
   %ul(style='width:320px')
     - foreach($activities as $activity)
+      - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
+
       %li
         - if ($activity->getObjectType() === 'photo')
           - $photo = $photoRepo->find($activity->getObjectId())
@@ -30,6 +30,19 @@
               .image
                 %img(src= $photo->getUriMedium())
               .icon.icon_zoom
+
+            .row
+              .buttons
+                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType() data-liked=$liked)
+                  = $activity->getLikesCount()
+                  Likes
+                &nbsp;
+                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
+                  = $activity->getCommentsCount() . ''
+                  Comments
+
+            /.row.list_likes
+
 
         - else
           .activity
@@ -51,7 +64,24 @@
                     "
                     at
                     %small= $geotag->getLocation()->getAddress()
-                    
+
+            .row
+              .buttons
+                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
+                  = $activity->getLikesCount()
+                  Likes
+                &nbsp;
+                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
+                  = $activity->getCommentsCount()
+                  Comments
 
 
+  - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'
+  %script(type='text/javascript' src=$jqScriptUrl)
   
+  - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js'
+  %script(type='text/javascript' src=$scriptUrl)
+
+  %script(type='text/javascript')
+    window.appInst.setBaseUrl("#{$baseUrl}");
+    window.appInst.setAuthToken("#{$authToken}");

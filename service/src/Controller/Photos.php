@@ -316,10 +316,10 @@ class Photos extends Base
             return $this->_generateUnauthorized();
         }
         $i = 0;
-        foreach ($photoComment->getPhotoComment() as $property) {
+        foreach ($photoComment->getPhotoComments() as $property) {
 
             if ($property->getId() == $commentId) {
-                $photoComment->getPhotoComment()->removeElement($property);
+                $photoComment->getPhotoComments()->removeElement($property);
                 $this->dm->flush($photoComment);
                 $i = 1;
                 $this->response->setContent(json_encode(array('message' => 'Deleted successfully.')));
@@ -337,7 +337,7 @@ class Photos extends Base
     public function getCommentsByPhotoId($id)
     {
         $photoComment = $this->photoRepo->find($id);
-        $photos = $photoComment->getPhotoComment();
+        $photos = $photoComment->getPhotoComments();
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
 

@@ -14,6 +14,7 @@ use Document\Location as Location;
  */
 class Geotag extends Landmark
 {
+
     function __construct() {
         $this->setType('geotag');
     }
@@ -25,4 +26,5 @@ class Geotag extends Landmark
 
         return $result;
     }
+
 }

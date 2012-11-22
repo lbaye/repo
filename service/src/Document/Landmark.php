@@ -15,7 +15,7 @@ use Document\Location as Location;
  * @ODM\DiscriminatorField(fieldName="type")
  * @ODM\DiscriminatorMap({"place"="Document\Place", "geotag"="Document\Geotag"})
  */
-class Landmark extends Content
+class Landmark extends Content implements ParticipativeDoc
 {
     /** @ODM\String */
     protected $title;
@@ -31,6 +31,9 @@ class Landmark extends Content
 
     /** @ODM\String */
     protected $objectType;
+
+    /** @ODM\Hash */
+    protected $likes = array();
 
     /**
      * @ODM\EmbedOne(targetDocument="Location")
@@ -137,6 +140,30 @@ class Landmark extends Content
         }
 
         return true;
+    }
+
+    public function setLikes($likes) {
+        $this->likes = $likes;
+    }
+
+    public function getLikes() {
+        return $this->likes;
+    }
+
+    public function setObjectType($objectType) {
+        $this->objectType = $objectType;
+    }
+
+    public function getObjectType() {
+        return $this->objectType;
+    }
+
+    public function getCommentsCount() {
+        return 0;
+    }
+
+    public function getLikesCount() {
+        return count($this->likes);
     }
 
 }

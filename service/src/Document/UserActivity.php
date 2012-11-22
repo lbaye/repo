@@ -10,7 +10,7 @@ use Document\User as User;
 /**
  * @ODM\Document(collection="user_activities",repositoryClass="Repository\UserActivityRepo")
  */
-class UserActivity {
+class UserActivity implements ParticipativeDoc {
 
     const ACTIVITY_PHOTO = 'photo';
     const ACTIVITY_REVIEW = 'review';
@@ -33,8 +33,11 @@ class UserActivity {
     /** @ODM\Hash */
     protected $likes = array();
 
-    /** @ODM\Hash */
-    protected $comments = array();
+    /** @ODM\Int */
+    protected $likesCount = 0;
+
+    /** @ODM\Int */
+    protected $commentsCount = 0;
 
     /** @ODM\Date */
     protected $createdAt;
@@ -61,14 +64,6 @@ class UserActivity {
 
     public function getId() {
         return $this->id;
-    }
-
-    public function setLikes($likes) {
-        $this->likes = $likes;
-    }
-
-    public function getLikes() {
-        return $this->likes;
     }
 
     public function setLocation($location) {
@@ -117,14 +112,6 @@ class UserActivity {
                $this->getOwner();
     }
 
-    public function setComments($comments) {
-        $this->comments = $comments;
-    }
-
-    public function getComments() {
-        return $this->comments;
-    }
-
     public function setCreatedAt($createdAt) {
         $this->createdAt = $createdAt;
     }
@@ -133,15 +120,41 @@ class UserActivity {
         return $this->createdAt;
     }
 
+    public function setCommentsCount($commentsCount) {
+        $this->commentsCount = $commentsCount;
+    }
+
+    public function getCommentsCount() {
+        return $this->commentsCount;
+    }
+
+    public function setLikesCount($likesCount) {
+        $this->likesCount = $likesCount;
+    }
+
+    public function getLikesCount() {
+        if ($this->likesCount > 0)
+            return $this->likesCount;
+        else
+            return count($this->likes);
+    }
+
+    public function setLikes($likes) {
+        $this->likes = $likes;
+    }
+
+    public function getLikes() {
+        return $this->likes;
+    }
+
     public function toArray() {
-
         # Build hash object from the basic fields
-        $exportableFields = array('id', 'objectId', 'objectType', 'title', 'likes', 'createdAt');
+        $exportableFields = array(
+            'id', 'objectId', 'objectType', 'title', 'likesCount',
+            'commentsCount', 'createdAt', 'likes'
+        );
         $hash = array();
-        foreach ($exportableFields as $field) $hash[$field] = $this->{'get' . ucfirst($field)}();
-
-        # Add likes related fields
-        $hash['likesCount'] = count($this->getLikes());
+        foreach ($exportableFields as $field) $hash[$field] = $this->{ 'get' . ucfirst($field) }();
 
         return $hash;
     }

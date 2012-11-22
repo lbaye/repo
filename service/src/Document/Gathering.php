@@ -13,7 +13,7 @@ use Helper\Location as LocationHelper;
  * @abstract
  * @ODM\InheritanceType("COLLECTION_PER_CLASS")
  */
-abstract class Gathering extends Content
+abstract class Gathering extends Content implements ParticipativeDoc
 {
 
 
@@ -63,7 +63,9 @@ abstract class Gathering extends Content
         'maybe' => array(),
     );
 
-    //<editor-fold desc="Setters">
+    /** @ODM\Hash */
+    protected $likes = array();
+
     public function setTitle($title)
     {
         $this->title = $title;
@@ -289,5 +291,19 @@ abstract class Gathering extends Content
         }
     }
 
+    public function setLikes($likes) {
+        $this->likes = $likes;
+    }
 
+    public function getLikes() {
+        return $this->likes;
+    }
+
+    public function getCommentsCount() {
+        return 0;
+    }
+
+    public function getLikesCount() {
+        return count($this->likes);
+    }
 }
