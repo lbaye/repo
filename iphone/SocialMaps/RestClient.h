@@ -109,6 +109,7 @@
 -(void) deleteCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleId;
 -(void) renameCircleByCircleId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)circleID:(NSString *)circleName;
 - (void) recommendPlace:(Place*)place:(NSString *)authToken:(NSString *)authTokenValue withNote:(NSString*)note andRecipients:(NSMutableArray*)recipients;
+-(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andFriendId:(NSString*)friendId;
 -(void)createPlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getAllplans:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)deletePlans:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)planId;

@@ -31,6 +31,7 @@
 #import "MeetUpRequest.h"
 #import "AppDelegate.h"
 #import "Place.h"
+#import "EachFriendInList.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -1089,6 +1090,8 @@ AppDelegate *smAppDelegate;
             }
             
             aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            smAppDelegate.shareLocationOption = [aUserInfo.shareLocationOption intValue] - 1;
             
 //            NSLog(@"getAccountSettings: %@",jsonObjects);
             
@@ -4018,7 +4021,7 @@ AppDelegate *smAppDelegate;
             NSLog(@"sendMessage successful:status=%d", responseStatus);
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
             //getmeetuprequestdone
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
+            // [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];
@@ -4408,10 +4411,13 @@ AppDelegate *smAppDelegate;
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];
                 msg.lastReply = [item valueForKey:@"replies"];
-                msg.msgStatus=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.msgStatus = [self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.metaType = [self getNestedKeyVal:item key1:@"metaType" key2:nil key3:nil];
+                msg.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
+                msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
+                msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"msg.notifAvater %@", msg.notifAvater);
-                NSLog(@"msg.lastReply %@", msg.lastReply);
+                NSLog(@"longitude = %@", msg.lng);
                 
                 [messageInbox addObject:msg];
             }
@@ -6705,7 +6711,7 @@ AppDelegate *smAppDelegate;
     [request addRequestHeader:authToken value:authTokenValue];
     
     [request addPostValue:place.name forKey:@"metaTitle"];
-    [request addPostValue:note forKey:@"metaContent[content]"];
+    [request addPostValue:note forKey:@"metaContent[note]"];
     [request addPostValue:place.address forKey:@"metaContent[address]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.latitude] forKey:@"metaContent[lat]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.longitude] forKey:@"metaContent[lng]"];
@@ -6746,6 +6752,78 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andFriendId:(NSString*)friendId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/%@/friends", WS_URL, friendId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
+            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
+            
+            NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
+            
+            for (NSDictionary *dicFriends in friendList) {
+                NSLog(@"friendDic = %@", dicFriends);
+                
+                EachFriendInList *eachFriend = [[EachFriendInList alloc] init];
+                
+                eachFriend.friendId = [dicFriends objectForKey:@"id"];
+                eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
+                eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
+                eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
+                
+                for (NSDictionary *dicCircle in circleList) {
+                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
+                    if ([frndIdList containsObject:eachFriend.friendId]) {
+                        if (!eachFriend.friendCircle) 
+                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
+                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
+                    }
+                }
+                
+                [eachFriendsList addObject:eachFriend];
+            }
+                 
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getFriendList");
     [request startAsynchronous];
 }
 

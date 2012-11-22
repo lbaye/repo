@@ -20,6 +20,7 @@
 #import "MeetUpRequestListView.h"
 #import "NotificationController.h"
 #import "SelectCircleTableCell.h"
+#import "DirectionViewController.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -582,6 +583,22 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
         
+        if (msgReply.metaType) {
+            if (![cell viewWithTag:10001]) {
+                UIButton *buttonGotoDirection = [UIButton buttonWithType:UIButtonTypeCustom];
+                [buttonGotoDirection setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [buttonGotoDirection setTitle:@"Get Direction" forState:UIControlStateNormal];
+                [buttonGotoDirection.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+                [buttonGotoDirection addTarget:self action:@selector(actionGotoDirectionButton:) forControlEvents:UIControlEventTouchUpInside];
+                [cell addSubview:buttonGotoDirection];
+                [buttonGotoDirection setBackgroundImage:[UIImage imageNamed:@"btn_bg_green_small"] forState:UIControlStateNormal];
+                buttonGotoDirection.tag = 10001;
+            }
+            [cell viewWithTag:10001].frame = CGRectMake(txtMsg.frame.origin.x + (txtMsg.frame.size.width - 90) / 2, rowHeight - 40, 90, 30);
+        } else {
+            [[cell viewWithTag:10001] removeFromSuperview];
+        }
+        
         return cell;
     }
     
@@ -793,6 +810,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.senderName = [components objectAtIndex:0];
     messageReply.senderID = msg.notifSenderId;
     messageReply.senderAvater = msg.notifAvater;
+    messageReply.address = msg.address;
+    messageReply.metaType = msg.metaType;
+    messageReply.lat = msg.lat;
+    messageReply.lng = msg.lng;
     //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     //messageReply.senderImage = cell.imageView.image;
     [messageReplyList removeAllObjects];
@@ -857,7 +878,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     cellRowHeight = senderStringSize.height + msgRows*15 + 15;
     
-    return (cellRowHeight < CELL_HEIGHT) ? CELL_HEIGHT: cellRowHeight;
+    CGFloat cellHeight = (cellRowHeight < CELL_HEIGHT) ? CELL_HEIGHT: cellRowHeight;
+    
+    if (msgReply.metaType)
+        cellHeight += 40; 
+    
+    return cellHeight;
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -1635,6 +1661,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     
+}
+
+- (void)actionGotoDirectionButton:(id)sender
+{
+    DirectionViewController *controller = [[DirectionViewController alloc] initWithNibName: @"DirectionViewController" bundle:nil];
+    CLLocationCoordinate2D theCoordinate;
+	theCoordinate.latitude = [[(MessageReply*)[messageReplyList objectAtIndex:0] lat] floatValue];
+    theCoordinate.longitude = [[(MessageReply*)[messageReplyList objectAtIndex:0] lng] floatValue];
+    controller.coordinateTo = theCoordinate;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 - (IBAction)actionAddMoreButton:(id)sender {

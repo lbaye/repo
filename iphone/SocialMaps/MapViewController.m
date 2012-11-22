@@ -45,6 +45,7 @@
 #import "DDAnnotation.h"
 #import "NewsFeedViewController.h"
 #import "RecommendViewController.h"
+#import "FriendListViewController.h"
 #import "CreatePlanViewController.h"
 
 @interface MapViewController ()
@@ -933,8 +934,7 @@ ButtonClickCallbackData callBackData;
 
     isFirstTimeDownloading = NO;
     
-    //NSLog(@"sharing option %d", [smAppDelegate.userAccountPrefs.shareLocationOption intValue]);
-    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:0 sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
@@ -958,39 +958,8 @@ ButtonClickCallbackData callBackData;
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
     
-    /*
-    switch (indx) {
-        case 0:
-            //All users
-            break;
-        case 1:
-            //Friends only
-            break;
-        case 2:
-            //No one
-            break;
-        case 3:
-            //Circles only
-            break;
-        case 4:
-            //Custom...
-            break;
-        default:
-            break;
-    }
-     */
+    smAppDelegate.shareLocationOption = indx;
 }
-
-/*
-- (id)initWithCoder:(NSCoder *)decoder
-{
-    if (self = [super initWithCoder:decoder])
-    {
-
-    }
-    return self;
-}
-*/
 
 // Gesture recognizer for map drag event
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -1718,7 +1687,11 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoFriends:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller selectUserId:smAppDelegate.userId];
+    [controller release];   
 }
 
 -(IBAction)gotonNewsFeed:(id)sende
@@ -2206,8 +2179,8 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.meetUpRequests removeAllObjects];
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
-    
-    [radio gotoButton:[smAppDelegate.userAccountPrefs.shareLocationOption intValue] - 1];
+    NSLog(@"userAccountPref %d", smAppDelegate.shareLocationOption);
+    [radio gotoButton:smAppDelegate.shareLocationOption];;
      
     [self displayNotificationCount];
 }

@@ -126,6 +126,7 @@
 @property (atomic) bool deviceTokenChanged;
 @property (atomic) bool facebookLogin;
 @property (atomic) bool smLogin;
+@property (nonatomic, assign) int shareLocationOption;
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;

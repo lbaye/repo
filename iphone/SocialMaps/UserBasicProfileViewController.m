@@ -22,6 +22,7 @@
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
 #import "PlaceListViewController.h"
+#import "FriendListViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -769,7 +770,11 @@ int scrollHeight,reloadCounter=0;
     }
     else if (imageIndex==1)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+        FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller selectUserId:smAppDelegate.userId];
+        [controller release];         
     }
     else if (imageIndex==2)
     {
