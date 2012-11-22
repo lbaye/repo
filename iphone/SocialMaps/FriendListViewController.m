@@ -60,7 +60,7 @@
     smAppDelegate.currentModelViewController = self;
     [self displayNotificationCount];
     
-    
+    [self clearScrollView];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken andFriendId:self.userId];
     [smAppDelegate showActivityViewer:self.view];
