@@ -51,6 +51,7 @@ NSMutableArray *friendsIDArr;
 NSMutableArray *friendListArr;
 CustomRadioButton *radio;
 CustomRadioButton *shareRadio;
+int createCounter=0, updateCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -263,6 +264,7 @@ CustomRadioButton *shareRadio;
         if ([planEditFlag isEqualToString:@"yes"])
         {
             plan.planId=globalPlan.planId;
+            plan.planDescription=descriptionTextView.text;
             [rc updatePlan:plan :@"Auth-Token" :smAppDelegate.authToken];
             [smAppDelegate showActivityViewer:self.view];
             [smAppDelegate.window setUserInteractionEnabled:NO];
@@ -412,9 +414,11 @@ CustomRadioButton *shareRadio;
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
-    dateString = [dateFormatter stringFromDate:date];    
-    dateLabel.text=dateString;
+    dateString = [dateFormatter stringFromDate:date];        
     plan.planeDate=dateString;
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm"];    
+    dateString = [dateFormatter stringFromDate:date];            
+    dateLabel.text=dateString;
     //selectedDate=dateString 2012-09-12 08.50;
 }
 
@@ -441,14 +445,23 @@ CustomRadioButton *shareRadio;
 {
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    if (createCounter==0)
+    {
+        [UtilityClass showAlert:@"" :@"Plan created successfuly"];
+    }
+    createCounter++;
     [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updatePlanDone:(NSNotification *)notif
 {
-    [UtilityClass showAlert:@"" :@"Plan updated successfully"];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    updateCounter++;
+    if (updateCounter==1) 
+    {
+        [UtilityClass showAlert:@"" :@"Plan updated successfully"];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -1013,6 +1026,8 @@ CustomRadioButton *shareRadio;
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MY_PLACES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_PLANS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CREATE_PLAN_DONE object:nil];
 	// NOTE: This is optional, DDAnnotationCoordinateDidChangeNotification only fired in iPhone OS 3, not in iOS 4.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     isBgDlRunning=FALSE;

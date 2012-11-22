@@ -20,5 +20,6 @@
 
 -(IBAction)backButtonAction:(id)sender;
 -(IBAction)gotoNotification:(id)sender;
+- (void)deletePlan:(NSNotification *)notif;
 
 @end

@@ -235,7 +235,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
     planListArr=[notif object];
     if ([planListArr count]==0)
     {
-        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ have no plans",userInfo.lastName]];
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ has no plans",userInfo.lastName]];
     }
     [planListTableView reloadData];
     [smAppDelegate hideActivityViewer];
@@ -309,6 +309,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated

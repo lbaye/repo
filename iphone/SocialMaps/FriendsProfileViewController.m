@@ -438,13 +438,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
         float distance=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
         userInfo.distance=(int)distance;
-        if (distance > 99999)
+        if (distance > 999)
         {
-            distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+            distanceLabel.text = [NSString stringWithFormat:@"%.2f km", distance/1000];
         }
         else
         {
-            distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)distance];
+            distanceLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
         }
     }
     if (userInfo.age>0) {
@@ -556,7 +556,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     {
         [meetUpButton setEnabled:NO];
     }
-    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?r=%@",WS_URL,userInfo.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?&r=%@",WS_URL,userInfo.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];

@@ -144,6 +144,15 @@
     NSLog(@"selected image %@",img);
     regPhoto = scaledImage;
     
+//    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
+//    NSLog(@"After image selection: width=%f, height=%f",
+//          selectedImage.size.width, selectedImage.size.height);
+//    UIImage *scaledImage = selectedImage;
+//    NSLog(@"After image scaled: width=%f, height=%f",
+//          scaledImage.size.width, scaledImage.size.height);    
+//    regPhoto = scaledImage;
+    
+    
     [self dismissModalViewControllerAnimated:NO];
     // Call delegate method photoPickerDone:(bool)status image:(UIImage*)img
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(photoPickerDone:image:)]) {

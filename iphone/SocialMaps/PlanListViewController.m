@@ -29,6 +29,7 @@ NSMutableArray *planListArr;
 AppDelegate *smAppDelegate;
 RestClient *rc;
 NSMutableDictionary *dicIcondownloaderPlans;
+int delCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -44,6 +45,8 @@ NSMutableDictionary *dicIcondownloaderPlans;
     [super viewWillAppear:animated];
     if (loadNewPlan==TRUE)
     {
+        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate.window setUserInteractionEnabled:NO];
         [rc getAllplans:@"Auth-Token" :smAppDelegate.authToken];
     }
 }
@@ -249,10 +252,14 @@ NSMutableDictionary *dicIcondownloaderPlans;
 
 - (void)deletePlan:(NSNotification *)notif
 {
-    [UtilityClass showAlert:@"" :@"deleted successfully"];
+    if (delCounter==0) 
+    {
+        [UtilityClass showAlert:@"" :@"deleted successfully"];
+    }
     [planListTableView reloadData];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
+    delCounter++;
 }
 
 -(IBAction)backButtonAction:(id)sender
@@ -313,6 +320,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    loadNewPlan=FALSE;
     [super viewWillDisappear:animated];
     NSArray *allDownloads = [dicIcondownloaderPlans allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
@@ -323,6 +331,8 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_ALL_PLANS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_PLANS_DONE object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

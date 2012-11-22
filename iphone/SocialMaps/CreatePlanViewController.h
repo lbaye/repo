@@ -63,5 +63,7 @@
 -(IBAction)cancelMapLocation:(id)sender;
 -(IBAction)segmentChanged:(id)sender;
 -(IBAction)gotoNotification:(id)sender;
+- (void)updatePlanDone:(NSNotification *)notif;
+- (void)createPlanDone:(NSNotification *)notif;
 
 @end
