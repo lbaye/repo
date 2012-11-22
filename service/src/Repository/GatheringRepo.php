@@ -56,7 +56,7 @@ class GatheringRepo extends Base
         return $gatheringObj;
     }
 
-    public function update($data, $gathering)
+    public function update($data, $gathering, $type = null)
     {
         if (   !$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup
@@ -64,7 +64,7 @@ class GatheringRepo extends Base
             throw new \Exception\ResourceNotFoundException();
         }
 
-        $gathering = $this->map($data, $gathering->getOwner(), $gathering);
+        $gathering = $this->map($data, $gathering->getOwner(), $gathering, $type);
         return $this->updateObject($gathering);
     }
 

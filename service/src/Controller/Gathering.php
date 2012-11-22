@@ -340,7 +340,7 @@ class Gathering extends Base
                 $this->inviteNewGuests($type, $gathering, $postData['guests']);
             }
 
-            $place = $this->gatheringRepository->update($postData, $gathering);
+            $place = $this->gatheringRepository->update($postData, $gathering, $type);
 
             if (!empty($postData['eventImage'])) {
                 $this->debug('Updating event image');
