@@ -48,6 +48,13 @@ class UserActivityRepo extends Base implements Likable {
             return $this->unlikeLocally($activity, $user);
     }
 
+    public function getLikes($activity) {
+        if ($this->canLikeRemotely($activity))
+            return $this->getLikesRemotely($activity);
+        else
+            return $activity->getLikes();
+    }
+
     public function map(array $data, User $owner, UserActivity $activity = null) {
 
         if (is_null($activity))
@@ -140,5 +147,10 @@ class UserActivityRepo extends Base implements Likable {
             return in_array($user->getId(), $activity->getLikes());
 
         return false;
+    }
+
+    private function getLikesRemotely($activity) {
+        $objectRepo = $this->getObjectRepo($activity);
+        return $objectRepo->find($activity->getObjectId())->getLikes();
     }
 }

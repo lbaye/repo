@@ -115,6 +115,36 @@ ul li .photo .row .image {
 ul li .photo .row .image img {
   width: 300px;
 }
+ul li .list_of_likes {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+ul li .list_of_likes h4 {
+  padding: 5px;
+  background: #f0f0f0;
+  margin: 0;
+}
+ul li .list_of_likes table {
+  width: 100%;
+}
+ul li .list_of_likes table tr td h5 {
+  margin: 0;
+  margin-bottom: 5px;
+  font-size: 110%;
+  font-weight: bold;
+}
+ul li .list_of_likes table tr td p {
+  margin: 0;
+  color: #888;
+}
+ul li .list_of_likes table tr td img {
+  height: 25px;
+  width: 25px;
+}
+ul li .list_of_likes table tr td a {
+  color: #888;
+  font-weight: bold;
+}
 .notice-panel {
   padding: 5px;
   position: fixed;

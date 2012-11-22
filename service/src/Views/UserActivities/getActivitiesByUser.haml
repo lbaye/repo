@@ -3,13 +3,16 @@
   %head
     %title Hello
 
-    - $url = $baseUrl . '/assets/stylesheets/newsfeed.css'
+    - $updateTime = filemtime($baseDir . '/assets/stylesheets/newsfeed.css')
+    - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
     %link(rel='stylesheet' href=$url)
 
 %body
   %ul(style='width:320px')
     - foreach($activities as $activity)
       - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
+      - $rowLikesId = $activity->getId() . '_likes'
+      - $rowCommentsId = $activity->getId() . '_comments'
 
       %li
         - if ($activity->getObjectType() === 'photo')
@@ -33,15 +36,21 @@
 
             .row
               .buttons
-                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType() data-liked=$liked)
+                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                     data-objecttype=$activity->getObjectType()
+                                     data-liked=$liked data-likes=$rowLikesId)
                   = $activity->getLikesCount()
-                  Likes
+                  - if ($activity->getLikesCount() > 1)
+                    Likes
+                  - else
+                    Like
                 &nbsp;
-                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId() data-objecttype=$activity->getObjectType())
+                %a.link_comment.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                        data-objecttype=$activity->getObjectType())
                   = $activity->getCommentsCount() . ''
                   Comments
 
-            /.row.list_likes
+            .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
         - else
@@ -78,8 +87,9 @@
 
   - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'
   %script(type='text/javascript' src=$jqScriptUrl)
-  
-  - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js'
+
+  - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
+  - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
   %script(type='text/javascript' src=$scriptUrl)
 
   %script(type='text/javascript')

@@ -1,0 +1,27 @@
+%h4
+  = $activity->getLikesCount()
+  - if ($activity->getLikesCount() > 1)
+    people
+  - else
+    person
+  like this.
+
+%table(cellspacing=5)
+  - foreach ($activityRepo->getLikes($activity) as $userId)
+    - $user = $userRepo->find($userId)
+    %tr
+      %td
+        %img(src=$user->getAvatar())
+      %td
+        %h5= $user->getName()
+        - $status = $user->getStatus()
+        - if (empty($status))
+          %p
+            Status was not updated!
+        - else
+          %p= $user->getStatus()
+
+  %tr
+    %td(colspan="2" align="right")
+      %a.link_close(href='javascript:;' data-type='likes' data-objectid=$activity->getId()) Close
+        

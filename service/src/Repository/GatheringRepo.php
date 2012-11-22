@@ -315,5 +315,10 @@ class GatheringRepo extends Base implements Likable
 
         return false;
     }
-    
+
+    public function getLikes($object) {
+        return $object->getLikes();
+    }
+
+
 }

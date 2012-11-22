@@ -42,27 +42,50 @@
       this.$('.link_like').click(function() {
         return that.tapOnLike(that.$(this));
       });
-      return this.$('.link_comment').click(function() {
+      this.$('.link_comment').click(function() {
         return that.tapOnComment(that.$(this));
+      });
+      return this.$('.link_close').live('click', function() {
+        return that.tapOnCloseLikesPanel(that.$(this));
       });
     };
 
     NewsfeedApp.prototype.tapOnLike = function(el) {
-      var that;
       if (this.isDisabled(el)) {
-        return this.showMessage('success', 'You have already liked it!');
+        this.showMessage('success', 'You have already liked it!');
       } else {
-        that = this;
-        this.sendRequestTo(el.attr('data-objectid')).success(function(r) {
-          return that.processServerResponse(el, r);
-        });
-        this.incrementCount(this.$(el), 1);
-        return this.disableButton(this.$(el));
+        this.likeThis(el);
       }
+      return this.loadLikes(el);
     };
 
     NewsfeedApp.prototype.tapOnComment = function(el) {
       return alert('Comment');
+    };
+
+    NewsfeedApp.prototype.tapOnCloseLikesPanel = function(el) {
+      return this.$('#' + el.attr('data-objectid') + '_' + el.attr('data-type')).hide();
+    };
+
+    NewsfeedApp.prototype.loadLikes = function(el) {
+      var listEl, objectId, that;
+      that = this;
+      listEl = this.$('#' + el.attr('data-likes'));
+      objectId = el.attr('data-objectid');
+      return this.sendRequestTo('/newsfeed/' + objectId + '/likes.html', 'GET').success(function(r) {
+        return that.$('#' + objectId + '_likes').html(r).show();
+      });
+    };
+
+    NewsfeedApp.prototype.likeThis = function(el) {
+      var that, uri;
+      that = this;
+      uri = '/newsfeed/' + el.attr('data-objectid') + '/like';
+      this.sendRequestTo(uri).success(function(r) {
+        return that.processServerResponse(el, r);
+      });
+      this.incrementCount(this.$(el), 1);
+      return this.disableButton(this.$(el));
     };
 
     NewsfeedApp.prototype.processServerResponse = function(el, response) {
@@ -72,12 +95,15 @@
       }
     };
 
-    NewsfeedApp.prototype.sendRequestTo = function(objectId) {
+    NewsfeedApp.prototype.sendRequestTo = function(uri, method) {
       var url;
-      url = this.getBaseUrl() + '/newsfeed/' + objectId + '/like';
+      if (method == null) {
+        method = 'PUT';
+      }
+      url = this.getBaseUrl() + uri;
       return this.$.ajax({
         url: url,
-        type: 'PUT',
+        type: method,
         headers: {
           'Auth-Token': this.getAuthToken()
         }

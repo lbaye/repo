@@ -119,4 +119,8 @@ class PhotosRepo extends Base implements Likable {
 
         return false;
     }
+
+    public function getLikes($photo) {
+        return $photo->getLikes();
+    }
 }

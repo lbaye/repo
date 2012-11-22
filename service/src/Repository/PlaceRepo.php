@@ -155,7 +155,11 @@ class PlaceRepo extends Base implements Likable
         return false;
     }
 
-    private function determineDocName(\Document\Place $place) {
+    public function getLikes($place) {
+        return $place->getLikes();
+    }
+
+    protected function determineDocName($place) {
         if ($place->getObjectType() == 'geotag')
             return 'Geotag';
         else

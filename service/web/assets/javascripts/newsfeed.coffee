@@ -21,32 +21,49 @@ class NewsfeedApp
         that = @
         @$('.link_like').click -> that.tapOnLike(that.$(@))
         @$('.link_comment').click -> that.tapOnComment(that.$(@))
+        @$('.link_close').live 'click', -> that.tapOnCloseLikesPanel(that.$(@))
 
     tapOnLike: (el) ->
         if @isDisabled(el)
             @showMessage 'success', 'You have already liked it!'
         else
-            that = @
-            @sendRequestTo(el.attr('data-objectid')).
-                success (r) -> that.processServerResponse(el, r)
+            @likeThis(el)
 
-            @incrementCount @$(el), 1
-            @disableButton @$(el)
+        @loadLikes(el)
 
     tapOnComment: (el) ->
         alert 'Comment'
 
+    tapOnCloseLikesPanel: (el) ->
+        @$('#' + el.attr('data-objectid') + '_' + el.attr('data-type')).hide();
+
+    loadLikes: (el) ->
+        that = @
+        listEl = @$('#' + el.attr('data-likes'))
+        objectId = el.attr('data-objectid')
+
+        @sendRequestTo('/newsfeed/' + objectId + '/likes.html', 'GET').
+            success (r) -> that.$('#' + objectId + '_likes').html(r).show()
+
+    likeThis: (el) ->
+        that = @
+        uri = '/newsfeed/' + el.attr('data-objectid') + '/like'
+        @sendRequestTo(uri).
+            success (r) -> that.processServerResponse(el, r)
+
+        @incrementCount @$(el), 1
+        @disableButton @$(el)
 
     processServerResponse: (el, response) ->
         @showMessage 'success', response.message
         if 'false' == response.status
             @incrementCount(el, -1)
 
-    sendRequestTo: (objectId) ->
-        url = @getBaseUrl() + '/newsfeed/' + objectId + '/like'
+    sendRequestTo: (uri, method = 'PUT') ->
+        url = @getBaseUrl() + uri
         @$.ajax
             url: url
-            type: 'PUT'
+            type: method
             headers:
                 'Auth-Token': @getAuthToken()
 

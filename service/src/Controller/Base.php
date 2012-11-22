@@ -405,6 +405,13 @@ abstract class Base {
         $view = new \Symfony\Component\Templating\PhpEngine(
             new \Symfony\Component\Templating\TemplateNameParser(), $loader);
 
+        $vars = array_merge(
+            $vars, array(
+                        'baseUrl' => \Helper\Dependencies::$rootUrl,
+                        'userRepo' => $this->userRepository,
+                        'baseDir' => ROOTDIR,
+                   ));
+
         return $view->render($fileName, $vars);
     }
 
