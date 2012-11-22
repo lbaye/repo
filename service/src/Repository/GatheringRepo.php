@@ -10,6 +10,7 @@ use Document\User as UserDocument;
 use Repository\UserRepo as UserRepository;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
+use Helper\Constants as Constants;
 
 class GatheringRepo extends Base
 {
@@ -116,7 +117,7 @@ class GatheringRepo extends Base
         $this->dm->flush();
     }
 
-    public function map(array $data, UserDocument $owner, \Document\Gathering $gathering = null)
+    public function map(array $data, UserDocument $owner, \Document\Gathering $gathering = null, $type = null)
     {
         if(is_null($gathering)){
             $gathering = $this->getDocumentObj();
@@ -132,6 +133,10 @@ class GatheringRepo extends Base
             if (isset($data[$field]) && !is_null($data[$field])) {
                 $gathering->{"set{$field}"}($data[$field]);
             }
+        }
+
+        if($type == Constants::TYPE_PLAN && isset($data['description'])){
+            $gathering->setEventShortSummary($data['description']);
         }
 
         if(isset($data['guests']) && is_array($data['guests'])){
@@ -271,14 +276,18 @@ class GatheringRepo extends Base
 
     public function planToArray($data,$key)
     {
-        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['description'], $data['ownerDetail'],
-        $data['permission'], $data['permittedUsers'], $data['permittedCircles'], $data['event_type'], $data['my_response'],
-        $data['is_invited'], $data['guests'], $data['owner']);
 
         $lat = $data['location']['lat'];
         $lng = $data['location']['lng'];
+        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['description'], $data['ownerDetail'],
+        $data['event_type'], $data['my_response'],
+        $data['is_invited'], $data['guests'], $data['owner']);
 
-        $data['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+        $data['image'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+        $data['description'] = $data['eventShortSummary'];
+
+        unset($data['eventShortSummary'], $data['eventImage']);
+
         return $data;
     }
 
