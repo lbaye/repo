@@ -1,4 +1,4 @@
 about:
   version: '0.0.9'
   serviceStatus: 'production'
-  allowedKeys: '123456|abcdef|011235'
+  allowedKeys: 'discover2012'
