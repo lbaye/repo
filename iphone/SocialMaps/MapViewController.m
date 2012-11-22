@@ -1648,9 +1648,10 @@ ButtonClickCallbackData callBackData;
 -(IBAction)gotoFriends:(id)sender
 {
     FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    [controller selectUserId:smAppDelegate.userId];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-    [controller selectUserId:smAppDelegate.userId];
+   
     [controller release];   
 }
 

@@ -106,7 +106,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [textViewNewMsg.layer setBorderWidth:0.5];
     [textViewNewMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewNewMsg.layer setMasksToBounds:YES];
-    [smAppDelegate showActivityViewer:self.view];
+    //[smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
     rc=[[RestClient alloc] init];
@@ -116,7 +116,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     NSLog(@"friendsId: %@",friendsId);
-    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
+    //[rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
@@ -149,6 +149,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [profileImageView.layer setCornerRadius:5.0];
     
     smAppDelegate.currentModelViewController = self;
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
 }
 
 -(void)reloadProfileScrollView
@@ -940,9 +943,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     else if (imageIndex==1)
     {       
         FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        [controller selectUserId:userInfo.userId];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
-        [controller selectUserId:userInfo.userId];
         [controller release];  
     }
     else if (imageIndex==2)

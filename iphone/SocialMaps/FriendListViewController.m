@@ -18,6 +18,7 @@
 #import "FriendsProfileViewController.h"
 #import "NotificationController.h"
 #import "UtilityClass.h"
+#import "UserBasicProfileViewController.h"
 
 #define     IMAGE_THUMB_WIDTH       65
 #define     IMAGE_THUMB_HEIGHT      65
@@ -43,9 +44,6 @@
     
     self.userId = _userId;
     
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken andFriendId:self.userId];
-    [smAppDelegate showActivityViewer:self.view];
 }
 
 -(void) displayNotificationCount 
@@ -61,6 +59,11 @@
 {
     smAppDelegate.currentModelViewController = self;
     [self displayNotificationCount];
+    
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken andFriendId:self.userId];
+    [smAppDelegate showActivityViewer:self.view];
 }
 
 - (void) gotFriendsList:(NSNotification *)notif 
@@ -189,10 +192,22 @@
 -(void) handleTapGesture:(UIGestureRecognizer *)sender 
 {
     NSMutableArray *selectedArray = ([filteredList count])? filteredList :eachFriendList;
-    FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
-    controller.friendsId = [[selectedArray objectAtIndex:sender.view.tag] friendId];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
+    
+    
+    NSString *friendId = [[selectedArray objectAtIndex:sender.view.tag] friendId];
+    
+    if ([smAppDelegate.userId isEqualToString:friendId]) {
+        UserBasicProfileViewController *controller = [[UserBasicProfileViewController alloc] init];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+    } else {
+        FriendsProfileViewController *controllerFriend = [[FriendsProfileViewController alloc] init];
+        controllerFriend.friendsId = friendId;
+        controllerFriend.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controllerFriend animated:YES];
+    }
+    
 }
 
 - (void)refreshScrollViewforCircle:(NSMutableArray*)searchArray

@@ -770,9 +770,9 @@ int scrollHeight,reloadCounter=0;
     else if (imageIndex==1)
     {
         FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        [controller selectUserId:smAppDelegate.userId];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
-        [controller selectUserId:smAppDelegate.userId];
         [controller release];         
     }
     else if (imageIndex==2)
