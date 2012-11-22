@@ -53,6 +53,8 @@ class Gathering extends Base
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
         $key = $this->config['googlePlace']['apiKey'];
 
+        //TODO: query is not returning description for plans
+
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
             $data = $this->_toArrayAll($permittedDocs);
@@ -195,6 +197,7 @@ class Gathering extends Base
      */
     public function create($type)
     {
+        $key = $this->config['googlePlace']['apiKey'];
         $formData = $this->request->request->all();
         $this->_initRepository($type);
 
@@ -208,7 +211,7 @@ class Gathering extends Base
                 $formData['time'] = date('Y-m-d h:i:s a', time());
 
             # Store gathering object
-            $gathering = $this->storeGathering($formData, $this->user);
+            $gathering = $this->storeGathering($formData, $this->user, $type);
 
         } catch (\Exception $e) {
             return $this->_generateException($e);
@@ -221,6 +224,9 @@ class Gathering extends Base
         $data = $gathering->toArrayDetailed();
         if (!empty($data['eventImage'])) $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
 
+        if($type == self::TYPE_PLAN)
+            $data = $this->gatheringRepository->planToArray($data, $key);
+
         return $this->_generateResponse($data, Status::CREATED);
     }
 
@@ -232,9 +238,9 @@ class Gathering extends Base
         return true;
     }
 
-    private function storeGathering(array $postData, \Document\User $user)
+    private function storeGathering(array $postData, \Document\User $user, $type = null)
     {
-        $gathering = $this->gatheringRepository->map($postData, $user);
+        $gathering = $this->gatheringRepository->map($postData, $user, null, $type);
         $this->gatheringRepository->insert($gathering);
 
         if (!empty($postData['eventImage']))
@@ -290,6 +296,7 @@ class Gathering extends Base
      */
     public function update($id, $type)
     {
+        $key = $this->config['googlePlace']['apiKey'];
         $this->_initRepository($type);
 
         $postData = $this->request->request->all();
@@ -355,6 +362,8 @@ class Gathering extends Base
         if (!empty($data['eventImage'])) {
             $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
         }
+        if($type == self::TYPE_PLAN)
+            $data = $this->gatheringRepository->planToArray($data,$key);
 
         return $this->_generateResponse($data);
     }
