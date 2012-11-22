@@ -147,7 +147,7 @@ abstract class Gathering extends Content
     {
         $fieldsToExpose = array(
             'id', 'title', 'description', 'eventShortSummary','eventImage',
-            'time', 'rsvp','guestsCanInvite', 'createDate'
+            'time', 'rsvp','guestsCanInvite', 'createDate', 'permission', 'permittedUsers', 'permittedCircles'
         );
 
         $result = array();
