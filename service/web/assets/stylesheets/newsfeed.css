@@ -11,7 +11,10 @@ ul {
   padding: 0;
 }
 ul li {
+  background: red;
   clear: both;
+  margin: 5px;
+  padding: 5px;
 }
 ul li .row {
   clear: both;
