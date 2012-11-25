@@ -155,7 +155,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [smAppDelegate showActivityViewer:self.view];
     [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
     
-    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?&r=%@",WS_URL,friendsId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&r=%@",WS_URL,friendsId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
     [friendsId retain];
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
