@@ -12,8 +12,10 @@ ul {
 }
 ul li {
   clear: both;
-  margin: 5px;
-  padding: 5px;
+  margin: 0;
+  padding: 0;
+  marign-bottom: 15px;
+  min-height: 80px;
 }
 ul li .row {
   clear: both;
