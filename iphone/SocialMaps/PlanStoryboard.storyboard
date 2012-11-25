@@ -196,7 +196,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="GLi-I2-9B6">
-                                <rect key="frame" x="2000" y="73" width="280" height="314"/>
+                                <rect key="frame" x="20" y="73" width="280" height="314"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="NcY-NL-Dis">
@@ -332,7 +332,7 @@
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
                             <view contentMode="scaleToFill" id="Cb6-Nj-71m">
-                                <rect key="frame" x="1000" y="117" width="320" height="290"/>
+                                <rect key="frame" x="0.0" y="117" width="320" height="290"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="x93-53-XoQ">

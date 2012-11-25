@@ -243,7 +243,7 @@ int delCounter=0;
     planListArr=[notif object];
     if ([planListArr count]==0)
     {
-        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"you have no plans"]];
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"You have no plans"]];
     }
     [planListTableView reloadData];
     [smAppDelegate hideActivityViewer];
@@ -254,7 +254,7 @@ int delCounter=0;
 {
     if (delCounter==0) 
     {
-        [UtilityClass showAlert:@"" :@"deleted successfully"];
+        [UtilityClass showAlert:@"" :@"Deleted successfully"];
     }
     [planListTableView reloadData];
     [smAppDelegate hideActivityViewer];

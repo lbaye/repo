@@ -460,6 +460,7 @@ int createCounter=0, updateCounter=0;
     updateCounter++;
     if (updateCounter==1) 
     {
+        NSLog(@"update counter: %d",updateCounter);
         [UtilityClass showAlert:@"" :@"Plan updated successfully"];
     }
     [self dismissModalViewControllerAnimated:YES];
