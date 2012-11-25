@@ -21,7 +21,10 @@
           .photo
             .row
               .avatar
-                %img(src=$photo->getOwner()->getAvatar())
+                - $avatarPath = $photo->getOwner()->getAvatar()
+                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                %img(src=$avatarPath)
               .name
                 %h4= $photo->getOwner()->getName()
               .time
@@ -57,7 +60,10 @@
           .activity
             .row
               .avatar
-                %img(src=$activity->getOwner()->getAvatar())
+                - $avatarPath = $activity->getOwner()->getAvatar()
+                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                %img(src=$avatarPath)
               .name
                 %h4= $activity->getOwner()->getName()
               .time

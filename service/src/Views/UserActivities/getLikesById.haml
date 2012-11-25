@@ -11,7 +11,9 @@
     - $user = $userRepo->find($userId)
     %tr
       %td
-        %img(src=$user->getAvatar())
+        - $avatarPath = $user->getAvatar()
+        - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+        %img(src=$avatarPath)
       %td
         %h5= $user->getName()
         - $status = $user->getStatus()

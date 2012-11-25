@@ -144,10 +144,14 @@
     };
 
     NewsfeedApp.prototype.incrementCount = function(el, count) {
-      var existingCount, label;
+      var existingCount, label, newCount, _ref;
       label = el.text();
       existingCount = parseInt(label.trim().split(/\s*/)[0], 10);
-      return el.text((existingCount + count) + ' Likes');
+      newCount = existingCount + count;
+      label = (_ref = newCount > 1) != null ? _ref : {
+        ' Likes': ' Like'
+      };
+      return el.text(newCount + label);
     };
 
     NewsfeedApp.prototype.isDisabled = function(el) {

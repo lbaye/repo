@@ -92,7 +92,10 @@ class NewsfeedApp
     incrementCount: (el, count) ->
         label = el.text()
         existingCount = parseInt(label.trim().split(/\s*/)[0], 10)
-        el.text((existingCount + count) + ' Likes');
+        newCount = existingCount + count;
+
+        label = newCount > 1 ? ' Likes' : ' Like'
+        el.text(newCount + label);
 
     isDisabled: (el) ->
         el.attr('data-ui-enabled') == 'false' || el.hasClass('disabled')
