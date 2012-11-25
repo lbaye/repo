@@ -40,7 +40,7 @@
                 %img(src= $photoFullPath)
               .icon.icon_zoom
 
-            .row
+            .row-float
               .buttons
                 %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                      data-objecttype=$activity->getObjectType()
@@ -80,7 +80,7 @@
                     is now friend with
                     = $friend->getName()
 
-            .row
+            .row-float
               .buttons
                 %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                      data-objecttype=$activity->getObjectType()
@@ -90,10 +90,6 @@
                     Likes
                   - else
                     Like
-            %br/
-            %br/
-            %br/
-            %br/
             .row.list_of_likes(id=$rowLikesId style='display:none')
 
 

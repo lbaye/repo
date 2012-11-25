@@ -1,8 +1,9 @@
 body {
     margin:  0px;
-    padding:  2px;
+    padding:  0px;
     font-family: helvetica;
     font-size: 12px;
+    margin-top: 10px;
 }
 
 ul {
@@ -12,10 +13,7 @@ ul {
 
     li {
         clear: both;
-        margin: 5px;
-        margin-bottom: 15px;
-        min-height: 60px;
-
+        
         .row {
             clear: both;
             display: block;
@@ -70,37 +68,38 @@ ul {
                 -moz-border-radius: 5px;
                 border-radius: 5px;
             }
+        }
 
-            .buttons {
-                text-align: right;
-                padding: 5px;
-                padding-top: 0;
-                cursor: pointer;
+        .row-float {
+            right: 0;
+            clear: both;
+        }
 
-                a {
-                    width: 70px;
-                    height: 25px;
-                    text-decoration: none;
-                    position: relative;
-                    top: 5px;
-                    padding: 3px 5px 3px 5px;
-                    color: #fff;
-                    font-size: 90%;
-                    -webkit-border-radius: 5px;
-                    -moz-border-radius: 5px;
-                    border-radius: 5px;
-                    z-index: 400;
-                }
+        .buttons {
+            text-align: right;
+            cursor: pointer;
 
-                .disabled {
-                    background: #888;
-                }
-
-                .enabled {
-                    background: #94C11C;
-                }
-
+            a {
+                width: 70px;
+                height: 25px;
+                text-decoration: none;
+                padding: 3px 5px 3px 5px;
+                color: #fff;
+                font-size: 90%;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                z-index: 400;
             }
+
+            .disabled {
+                background: #888;
+            }
+
+            .enabled {
+                background: #94C11C;
+            }
+
         }
 
         .activity {

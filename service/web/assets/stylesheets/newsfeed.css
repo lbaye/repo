@@ -1,8 +1,9 @@
 body {
   margin: 0px;
-  padding: 2px;
+  padding: 0px;
   font-family: helvetica;
   font-size: 12px;
+  margin-top: 10px;
 }
 ul {
   list-style-type: none;
@@ -11,9 +12,6 @@ ul {
 }
 ul li {
   clear: both;
-  margin: 5px;
-  margin-bottom: 15px;
-  min-height: 60px;
 }
 ul li .row {
   clear: both;
@@ -64,18 +62,18 @@ ul li .row .comment {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-ul li .row .buttons {
+ul li .row-float {
+  right: 0;
+  clear: both;
+}
+ul li .buttons {
   text-align: right;
-  padding: 5px;
-  padding-top: 0;
   cursor: pointer;
 }
-ul li .row .buttons a {
+ul li .buttons a {
   width: 70px;
   height: 25px;
   text-decoration: none;
-  position: relative;
-  top: 5px;
   padding: 3px 5px 3px 5px;
   color: #fff;
   font-size: 90%;
@@ -84,10 +82,10 @@ ul li .row .buttons a {
   border-radius: 5px;
   z-index: 400;
 }
-ul li .row .buttons .disabled {
+ul li .buttons .disabled {
   background: #888;
 }
-ul li .row .buttons .enabled {
+ul li .buttons .enabled {
   background: #94C11C;
 }
 ul li .activity .row .comment {
