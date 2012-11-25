@@ -24,6 +24,8 @@
 #import "UIImageView+Cached.h"
 #import "CachedImages.h"
 #import "NewsFeedViewController.h"
+#import "FriendListViewController.h"
+#import "Globals.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -409,6 +411,7 @@ PullableView *pullUpView;
 
 - (IBAction)gotoUserBasicProfile:(id)sender
 {
+    profileFromList=TRUE;
     UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
     prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:prof animated:YES];
@@ -466,7 +469,11 @@ PullableView *pullUpView;
 
 -(IBAction)gotoFriends:(id)sender
 {
-    [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+    FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+    [controller selectUserId:smAppDelegate.userId];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+    [controller release]; 
 }
 
 -(IBAction)gotonNewsFeed:(id)sende
@@ -529,7 +536,7 @@ PullableView *pullUpView;
                 controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                
+                profileFromList=TRUE;
             }
         }                
     }

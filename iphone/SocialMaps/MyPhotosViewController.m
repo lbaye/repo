@@ -44,7 +44,6 @@ AppDelegate *smAppdelegate;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    dicImages_msg=[[NSMutableDictionary alloc] init];
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
     filteredList2=[[NSMutableArray alloc] init];

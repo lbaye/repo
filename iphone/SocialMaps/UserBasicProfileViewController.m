@@ -22,6 +22,7 @@
 #import "MeetUpRequestController.h"
 #import "ViewEventListViewController.h"
 #import "PlaceListViewController.h"
+#import "FriendListViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -106,11 +107,12 @@ int scrollHeight,reloadCounter=0;
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
-    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
+    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
+    [ImgesName addObject:@"sm_icon@2x"];
     [ImgesName addObject:@"sm_icon@2x"];
     
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
@@ -140,7 +142,7 @@ int scrollHeight,reloadCounter=0;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
     [zoomView removeFromSuperview];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?t=%@",WS_URL,smAppDelegate.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.userId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
 
 //    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
 //    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
@@ -768,7 +770,11 @@ int scrollHeight,reloadCounter=0;
     }
     else if (imageIndex==1)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];        
+        FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        [controller selectUserId:smAppDelegate.userId];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];         
     }
     else if (imageIndex==2)
     {
@@ -792,6 +798,27 @@ int scrollHeight,reloadCounter=0;
         [controller release];
 
     }
+    else if (imageIndex==5)
+    {
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+        UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"planListViewController"];    
+        initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:initialHelpView animated:YES];
+    }
+}
+
+- (void) showPinOnMapViewPlan:(Plan *)plan 
+{
+    NSLog(@"profile");
+    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
+    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+}
+
+- (void) dismissModalView {
+    
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 - (void) showPinOnMapView:(Place*)place 

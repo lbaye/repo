@@ -26,6 +26,8 @@
 #import "FriendsPhotosViewController.h"
 #import "PlaceListViewController.h"
 #import "Globals.h"
+#import "FriendListViewController.h"
+#import "FriendsPlanListViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -105,7 +107,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [textViewNewMsg.layer setBorderWidth:0.5];
     [textViewNewMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewNewMsg.layer setMasksToBounds:YES];
-    [smAppDelegate showActivityViewer:self.view];
+    //[smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
     isBackgroundTaskRunning=TRUE;
     rc=[[RestClient alloc] init];
@@ -115,15 +117,16 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     NSLog(@"friendsId: %@",friendsId);
-    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
+    //[rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
     
-    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up", nil];
+    nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
+    [ImgesName addObject:@"sm_icon@2x"];
     [ImgesName addObject:@"sm_icon@2x"];
     
     userItemScrollView.delegate = self;
@@ -148,6 +151,14 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [profileImageView.layer setCornerRadius:5.0];
     
     smAppDelegate.currentModelViewController = self;
+    
+    [smAppDelegate showActivityViewer:self.view];
+    [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
+    
+    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&r=%@",WS_URL,friendsId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+    NSLog(@"urlStr %@",urlStr);
+    [friendsId retain];
+    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
 }
 
 -(void)reloadProfileScrollView
@@ -432,13 +443,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
         float distance=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
         userInfo.distance=(int)distance;
-        if (distance > 99999)
+        if (distance > 999)
         {
-            distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)distance/1000];
+            distanceLabel.text = [NSString stringWithFormat:@"%.2f km", distance/1000];
         }
         else
         {
-            distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)distance];
+            distanceLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
         }
     }
     if (userInfo.age>0) {
@@ -550,10 +561,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     {
         [meetUpButton setEnabled:NO];
     }
-    NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?r=%@",WS_URL,userInfo.userId,[UtilityClass convertNSDateToUnix:[NSDate date]]];
-    NSLog(@"urlStr %@",urlStr);
     
-    [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -938,7 +946,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     }
     else if (imageIndex==1)
     {       
-        [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."]; 
+        FriendListViewController *controller = [[FriendListViewController alloc] initWithNibName:@"FriendListViewController" bundle:nil];
+        [controller selectUserId:userInfo.userId];
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];  
     }
     else if (imageIndex==2)
     {
@@ -978,11 +990,33 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         [controller release];
         }
     }
+    else if (imageIndex==5)
+    {
+        UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+        FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"];    
+        initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        initialHelpView.userInfo=userInfo;
+        [self presentModalViewController:initialHelpView animated:YES];
+    }
 }
 
 - (void) showPinOnMapView:(Place*)place 
 {
     [self.presentingViewController performSelector:@selector(showPinOnMapView:) withObject:place];
+    [self dismissModalViewControllerAnimated:NO];
+}
+
+- (void) showPinOnMapViewPlan:(Plan *)plan 
+{
+    NSLog(@"profile");
+    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
+    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+}
+
+- (void) dismissModalView {
+    
     [self dismissModalViewControllerAnimated:NO];
 }
 

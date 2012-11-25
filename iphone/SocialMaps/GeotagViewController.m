@@ -124,7 +124,7 @@ int geoCounter=0;
     
     ImgesName = [[NSMutableArray alloc] init];    
     
-    
+
     
     searchTexts=[[NSString alloc] initWithString:@""];
     
@@ -214,7 +214,6 @@ int geoCounter=0;
     
     frndListScrollView.delegate = self;
     customScrollView.delegate=self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
     filteredList2=[[NSMutableArray alloc] init];
@@ -452,7 +451,6 @@ int geoCounter=0;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DDAnnotationCoordinateDidChangeNotification" object:nil];
     globalEditEvent=NULL;
     editFlag=false;
-    dicImages_msg=nil;
     ImgesName=nil;
     frndListScrollView=nil;
     

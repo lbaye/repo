@@ -37,7 +37,6 @@ AppDelegate *smAppDelegate;
 NSMutableArray *neearMeAddressArr;
 NSString *curAddress;
 RestClient *rc;
-NSMutableDictionary *dicImages_frnd;
 NSMutableArray *selectedFriends;
 NSMutableArray *selectedCircleCheckArr;
 NSMutableArray *circleList, *ImgesName, *friendListArr, *friendsIDArr, *friendsNameArr;
@@ -427,18 +426,18 @@ NSString *searchText;
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
                 } 
-                else if([dicImages_frnd valueForKey:userFrnd.imageUrl]) 
+                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
                 { 
                     //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_frnd valueForKey:userFrnd.imageUrl]; 
+                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
                 } 
                 else 
                 { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_frnd objectForKey:userFrnd.imageUrl]==nil))
+                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_frnd setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
+                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:userFrnd.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }
@@ -507,7 +506,7 @@ NSString *searchText;
         if(img)
         {
             //If download complete, set that image to dictionary
-            [dicImages_frnd setObject:img forKey:userFrnd.imageUrl];
+            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
             [self reloadScrollview];
         }
         // Now, we need to reload scroll view to load downloaded image
@@ -656,7 +655,6 @@ NSString *searchText;
     friendsIDArr=[[NSMutableArray alloc] init];
     FriendList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    dicImages_frnd = [[NSMutableDictionary alloc] init];
 
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
@@ -799,7 +797,7 @@ NSString *searchText;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_frnd);
+        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_msg);
         
         for (UserFriends *sTemp in friendListArr)
         {
@@ -816,7 +814,7 @@ NSString *searchText;
         }
     }
     
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_frnd);
+    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",FriendList,friendListArr,[FriendList count],[friendListArr count], dicImages_msg);
     [self reloadScrollview];
 }
 

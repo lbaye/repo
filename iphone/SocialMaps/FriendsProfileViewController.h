@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Plan.h"
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"
@@ -115,4 +115,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)getDirection:(id)sender;
 -(IBAction)closeZoomView:(id)sender;
 -(IBAction)goToZoomView:(id)sender;
+- (void) showPinOnMapViewPlan:(Plan *)plan ;
+
 @end

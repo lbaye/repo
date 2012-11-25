@@ -31,6 +31,7 @@
 #import "MeetUpRequest.h"
 #import "AppDelegate.h"
 #import "Place.h"
+#import "EachFriendInList.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -1089,6 +1090,8 @@ AppDelegate *smAppDelegate;
             }
             
             aUserInfo = [self parseAccountSettings:[jsonObjects objectForKey:@"result"] user:nil];
+            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            smAppDelegate.shareLocationOption = [aUserInfo.shareLocationOption intValue] - 1;
             
 //            NSLog(@"getAccountSettings: %@",jsonObjects);
             
@@ -1216,7 +1219,7 @@ AppDelegate *smAppDelegate;
             // Load image if present
             if (user.avatar != nil && ![user.avatar isEqualToString:@""]) {
                 NSLog(@"<<<<<<<<<<<<< Getting image for %@", user.userId);
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.avatar]];
                     UIImage *image = [UIImage imageWithData:imageData];
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -4018,7 +4021,7 @@ AppDelegate *smAppDelegate;
             NSLog(@"sendMessage successful:status=%d", responseStatus);
             //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
             //getmeetuprequestdone
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
+            // [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];
@@ -4408,10 +4411,13 @@ AppDelegate *smAppDelegate;
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];
                 msg.lastReply = [item valueForKey:@"replies"];
-                msg.msgStatus=[self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.msgStatus = [self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                msg.metaType = [self getNestedKeyVal:item key1:@"metaType" key2:nil key3:nil];
+                msg.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
+                msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
+                msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"msg.notifAvater %@", msg.notifAvater);
-                NSLog(@"msg.lastReply %@", msg.lastReply);
+                NSLog(@"longitude = %@", msg.lng);
                 
                 [messageInbox addObject:msg];
             }
@@ -6705,7 +6711,7 @@ AppDelegate *smAppDelegate;
     [request addRequestHeader:authToken value:authTokenValue];
     
     [request addPostValue:place.name forKey:@"metaTitle"];
-    [request addPostValue:note forKey:@"metaContent[content]"];
+    [request addPostValue:note forKey:@"metaContent[note]"];
     [request addPostValue:place.address forKey:@"metaContent[address]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.latitude] forKey:@"metaContent[lat]"];
     [request addPostValue:[NSString stringWithFormat:@"%f", place.longitude] forKey:@"metaContent[lng]"];
@@ -6746,6 +6752,465 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andFriendId:(NSString*)friendId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/%@/friends", WS_URL, friendId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
+            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
+            
+            NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
+            
+            for (NSDictionary *dicFriends in friendList) {
+                NSLog(@"friendDic = %@", dicFriends);
+                
+                EachFriendInList *eachFriend = [[EachFriendInList alloc] init];
+                
+                eachFriend.friendId = [dicFriends objectForKey:@"id"];
+                eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
+                eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
+                eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
+                
+                for (NSDictionary *dicCircle in circleList) {
+                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
+                    if ([frndIdList containsObject:eachFriend.friendId]) {
+                        if (!eachFriend.friendCircle) 
+                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
+                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
+                    }
+                }
+                
+                [eachFriendsList addObject:eachFriend];
+            }
+                 
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getFriendList");
+    [request startAsynchronous];
+}
+
+-(void)createPlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/plans",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    SearchLocation *searchLocation=[[SearchLocation alloc] init];
+    searchLocation.peopleArr = [[NSMutableArray alloc] init];
+    searchLocation.placeArr  = [[NSMutableArray alloc] init];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:plan.planDescription forKey:@"description"];
+    [request addPostValue:plan.planAddress forKey:@"address"];
+    [request addPostValue:plan.planeDate forKey:@"time"];
+    [request addPostValue:plan.planGeolocation.latitude forKey:@"lat"];
+    [request addPostValue:plan.planGeolocation.longitude forKey:@"lng"];
+    [request addPostValue:plan.planPermission forKey:@"permission"];
+    if ([plan.planPermission isEqualToString:@"custom"])
+    {
+        for (int i=0; i<[plan.permittedUsers count]; i++)
+        {
+            [request addPostValue:[plan.permittedUsers objectAtIndex:i] forKey:@"permittedusers[]"];
+        }
+        
+        for (int i=0; i<[plan.permittedCircles count]; i++)
+        {
+            [request addPostValue:[plan.permittedCircles objectAtIndex:i] forKey:@"permittedcircles[]"];
+        }
+
+    }
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            [jsonObjects objectForKey:@"message"];            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_PLAN_DONE object:[jsonObjects objectForKey:@"message"]];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_PLAN_DONE object:@"Geotag creation failed."];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_PLAN_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getLocation");
+    [request startAsynchronous];
+}
+
+-(void)getAllplans:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/me/plans",WS_URL];
+    NSURL *url = [NSURL URLWithString:route];
+    Plan *aPlan = [[Plan alloc] init];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        NSMutableArray *planListArr=[[NSMutableArray alloc] init];
+    
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            for (NSDictionary *item in jsonObjects)
+            {
+                Plan *aPlan=[[Plan alloc] init];
+                [aPlan setPlanId:[item objectForKey:@"id"]];
+                Date *date=[[Date alloc] init];
+                date.date=[self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
+                date.timezone=[self getNestedKeyVal:item key1:@"time" key2:@"timezone" key3:nil];
+                date.timezoneType=[self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];
+                [aPlan setPlaneDate:date.date];
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+                [aPlan setPlanGeolocation:loc];
+                [aPlan setPlanAddress:[self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil]];
+                [aPlan setPlanDistance:[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil]];
+//                [aPlan setEventImageUrl:[self getNestedKeyVal:item key1:@"eventImage" key2:nil key3:nil]];
+                [aPlan setPlanDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
+                [aPlan setPlanImageUrl:[self getNestedKeyVal:item key1:@"image" key2:nil key3:nil]];
+//                [aPlan setEventDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
+                [aPlan setPlanPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
+                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+                
+                if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
+                {
+                    NSLog(@"Date comapre %@",date.date);
+                } 
+                [planListArr addObject:aPlan];
+            }
+            NSLog(@"client planListArr :%@",planListArr);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_PLANS_DONE object:planListArr];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_PLANS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_PLANS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn start get all events for map");
+    [request startAsynchronous];
+}
+
+-(void)deletePlans:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)planId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/plans/%@",WS_URL,planId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"DELETE"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            NSString *msg=[jsonObjects objectForKey:@"message"];
+            NSLog(@"msg %@",msg);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_PLANS_DONE object:msg];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_PLANS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_PLANS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt delete plan");
+    [request startAsynchronous];
+}
+
+-(void)updatePlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/plans/%@",WS_URL,plan.planId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"PUT"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:plan.planDescription forKey:@"description"];
+    [request addPostValue:plan.planAddress forKey:@"address"];
+    [request addPostValue:plan.planeDate forKey:@"time"];
+    [request addPostValue:plan.planGeolocation.latitude forKey:@"lat"];
+    [request addPostValue:plan.planGeolocation.longitude forKey:@"lng"];
+    [request addPostValue:plan.planPermission forKey:@"permission"];
+    NSLog(@"plan.planId %@ plan.planDescription %@ plan.planeDate %@",plan.planId,plan.planDescription,plan.planeDate);
+    if ([plan.planPermission isEqualToString:@"custom"])
+    {
+        for (int i=0; i<[plan.permittedUsers count]; i++)
+        {
+            [request addPostValue:[plan.permittedUsers objectAtIndex:i] forKey:@"permittedusers[]"];
+        }
+        
+        for (int i=0; i<[plan.permittedCircles count]; i++)
+        {
+            [request addPostValue:[plan.permittedCircles objectAtIndex:i] forKey:@"permittedcircles[]"];
+        }
+        
+    }
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            
+            [jsonObjects objectForKey:@"message"];            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_PLANS_DONE object:[jsonObjects objectForKey:@"message"]];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_PLANS_DONE object:@"Plan update failed."];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_PLANS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn update plan");
+    [request startAsynchronous];
+}
+
+-(void)getFriendsAllplans:(NSString *)userId:(NSString *)authToken:(NSString *)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/users/%@/plans",WS_URL,userId];
+    NSURL *url = [NSURL URLWithString:route];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSLog(@"route: %@",route);
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        NSMutableArray *planListArr=[[NSMutableArray alloc] init];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            if ([jsonObjects isKindOfClass:[NSDictionary class]])
+            {
+                // treat as a dictionary, or reassign to a dictionary ivar
+                NSLog(@"dict");
+            }
+            else if ([jsonObjects isKindOfClass:[NSArray class]])
+            {
+                // treat as an array or reassign to an array ivar.
+                NSLog(@"Arr");
+            }
+            for (NSDictionary *item in jsonObjects)
+            {
+                Plan *aPlan=[[Plan alloc] init];
+                [aPlan setPlanId:[item objectForKey:@"id"]];
+                Date *date=[[Date alloc] init];
+                date.date=[self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
+                date.timezone=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                date.timezoneType=[self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                [aPlan setPlaneDate:date.date];
+                Geolocation *loc=[[Geolocation alloc] init];
+                loc.latitude=[self getNestedKeyVal:item key1:@"location" key2:@"lat" key3:nil];
+                loc.longitude=[self getNestedKeyVal:item key1:@"location" key2:@"lng" key3:nil];
+                [aPlan setPlanGeolocation:loc];
+                [aPlan setPlanAddress:[self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil]];
+                [aPlan setPlanDistance:[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil]];
+                //                [aPlan setEventImageUrl:[self getNestedKeyVal:item key1:@"eventImage" key2:nil key3:nil]];
+                [aPlan setPlanDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
+                [aPlan setPlanImageUrl:[self getNestedKeyVal:item key1:@"image" key2:nil key3:nil]];
+                //                [aPlan setEventDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
+                [aPlan setPlanPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
+                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
+                
+                if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
+                {
+                    NSLog(@"Date comapre %@",date.date);
+                } 
+                [planListArr addObject:aPlan];
+            }
+            NSLog(@"client planListArr :%@",planListArr);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIENDS_PLANS_DONE object:planListArr];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn start get all events for map");
     [request startAsynchronous];
 }
 
