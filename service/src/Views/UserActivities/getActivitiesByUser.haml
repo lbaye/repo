@@ -30,9 +30,11 @@
                 = stripcslashes($photo->getDescription())
 
             .row(style='height:110px; margin-top: 5px;')
+
               - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\')'
               .image(style=$imagePathCss)
-                %img(src= $photo->getUriMedium())
+                - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                %img(src= $photoFullPath)
               .icon.icon_zoom
 
             .row
