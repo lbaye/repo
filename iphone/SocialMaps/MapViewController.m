@@ -1186,6 +1186,7 @@ ButtonClickCallbackData callBackData;
 //    [_mapPullupMenu removeFromSuperview];
    //[self initPullView];
     pointOnMapFlag = FALSE;
+    profileFromList = FALSE;
     smAppDelegate.currentModelViewController = self;
 }
 

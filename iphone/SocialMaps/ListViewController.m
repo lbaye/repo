@@ -25,6 +25,7 @@
 #import "CachedImages.h"
 #import "NewsFeedViewController.h"
 #import "FriendListViewController.h"
+#import "Globals.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -410,6 +411,7 @@ PullableView *pullUpView;
 
 - (IBAction)gotoUserBasicProfile:(id)sender
 {
+    profileFromList=TRUE;
     UserBasicProfileViewController *prof=[[UserBasicProfileViewController alloc] init];
     prof.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:prof animated:YES];
@@ -534,7 +536,7 @@ PullableView *pullUpView;
                 controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                
+                profileFromList=TRUE;
             }
         }                
     }

@@ -30,5 +30,6 @@ Plan *globalPlan;
 BOOL isPlanFromVenue;
 BOOL loadNewPlan;
 BOOL pointOnMapFlag;
+BOOL profileFromList;
 
 @end

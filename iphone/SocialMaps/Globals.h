@@ -29,6 +29,7 @@ extern Plan *globalPlan;
 extern BOOL isPlanFromVenue;
 extern BOOL loadNewPlan;
 extern BOOL pointOnMapFlag;
+extern BOOL profileFromList;
 
 @interface Globals : NSObject 
 

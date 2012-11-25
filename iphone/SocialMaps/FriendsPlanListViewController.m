@@ -87,7 +87,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
     }
     //    [self decorateTableCell:cell];
     Plan *plan=[planListArr objectAtIndex:indexPath.row];
-    cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",smAppDelegate.userAccountPrefs.lastName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
+    cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",userInfo.lastName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
     cell.addressLabel.text=plan.planAddress;
     CGSize lblStringSize1 = [plan.planAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0f]];
     
@@ -259,8 +259,11 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     NSLog(@"tag %d",[sender tag]);
     pointOnMapFlag=TRUE;
-    [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:[planListArr objectAtIndex:[sender tag]]];
-    [self dismissModalViewControllerAnimated:NO];
+    if (profileFromList==TRUE)
+    {
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:[planListArr objectAtIndex:[sender tag]]];
+        [self dismissModalViewControllerAnimated:NO];
+    }
 }
 
 -(IBAction)editPlanAction:(id)sender
