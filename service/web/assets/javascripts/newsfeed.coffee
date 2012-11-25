@@ -16,12 +16,12 @@ class NewsfeedApp
             el = that.$(@)
             that.disableButton el
 
-
     bindButtonsEvents: ->
         that = @
         @$('.link_like').click -> that.tapOnLike(that.$(@))
         @$('.link_comment').click -> that.tapOnComment(that.$(@))
         @$('.link_close').live 'click', -> that.tapOnCloseLikesPanel(that.$(@))
+        @$(window.document).bind 'mousedown', (e) -> false
 
     tapOnLike: (el) ->
         if @isDisabled(el)

@@ -45,8 +45,11 @@
       this.$('.link_comment').click(function() {
         return that.tapOnComment(that.$(this));
       });
-      return this.$('.link_close').live('click', function() {
+      this.$('.link_close').live('click', function() {
         return that.tapOnCloseLikesPanel(that.$(this));
+      });
+      return this.$(window.document).bind('mousedown', function(e) {
+        return false;
       });
     };
 

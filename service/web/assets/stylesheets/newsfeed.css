@@ -77,7 +77,6 @@ ul li .tools {
   text-align: right;
   cursor: pointer;
   list-style-type: none;
-  background: #f0f0f0;
   display: block;
   height: 25px;
   padding-right: 10px;
@@ -107,6 +106,9 @@ ul li .activity .row .comment {
 
   max-height: 27px;
   overflow: hidden;
+}
+ul li .activity .row .tools {
+  margin-top: 30px;
 }
 ul li .photo .row .image {
   position: absolute;
