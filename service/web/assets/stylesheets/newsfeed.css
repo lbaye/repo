@@ -92,7 +92,8 @@ ul li .row .buttons .enabled {
 }
 ul li .activity .row .comment {
   width: auto;
-  max-width: 230px;
+  /*max-width: 230px;*/
+
   max-height: 27px;
   overflow: hidden;
 }
@@ -106,14 +107,12 @@ ul li .photo .row .image {
   position: absolute;
   margin-top: -20px;
   z-index: 100;
-  width: auto;
-  padding: 5px;
   overflow: hidden;
   height: 120px;
-  width: 290px;
+  width: 100%;
 }
 ul li .photo .row .image img {
-  width: 290px;
+  width: auto;
 }
 ul li .list_of_likes {
   margin-top: 10px;
