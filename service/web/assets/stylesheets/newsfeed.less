@@ -5,6 +5,7 @@ body {
     font-size: 12px;
     margin-top: 10px;
 }
+.clearfix { clear: both; }
 
 ul {
     list-style-type: none;
@@ -15,7 +16,7 @@ ul {
         clear: both;
         margin: 0;
         padding: 0;
-        marign-bottom: 15px;
+        margin-bottom: 15px;
         min-height: 80px;
 
         .row {
@@ -75,13 +76,18 @@ ul {
         }
 
         .row-float {
-            right: 0;
             clear: both;
         }
 
-        .buttons {
+        .tools {
+            clear: both;
             text-align: right;
             cursor: pointer;
+            list-style-type: none;
+            background: #f0f0f0;
+            display: block;
+            height: 25px;
+            padding-right: 10px;
 
             a {
                 width: 70px;
@@ -94,6 +100,7 @@ ul {
                 -moz-border-radius: 5px;
                 border-radius: 5px;
                 z-index: 400;
+                line-height: 25px;
             }
 
             .disabled {
@@ -113,13 +120,6 @@ ul {
                     /*max-width: 230px;*/
                     max-height: 27px;
                     overflow: hidden;
-                }
-
-                .buttons {
-                    margin-top: 20px;
-                    position: relative;
-                    margin-top: 28px;
-                    float: right;
                 }
             }
         }
@@ -143,7 +143,6 @@ ul {
         }
 
         .list_of_likes {
-            margin-top: 10px;
             border: 1px solid #ccc;
 
             h4 {

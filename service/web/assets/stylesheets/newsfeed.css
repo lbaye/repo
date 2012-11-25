@@ -5,6 +5,9 @@ body {
   font-size: 12px;
   margin-top: 10px;
 }
+.clearfix {
+  clear: both;
+}
 ul {
   list-style-type: none;
   margin: 0;
@@ -14,7 +17,7 @@ ul li {
   clear: both;
   margin: 0;
   padding: 0;
-  marign-bottom: 15px;
+  margin-bottom: 15px;
   min-height: 80px;
 }
 ul li .row {
@@ -67,14 +70,19 @@ ul li .row .comment {
   border-radius: 5px;
 }
 ul li .row-float {
-  right: 0;
   clear: both;
 }
-ul li .buttons {
+ul li .tools {
+  clear: both;
   text-align: right;
   cursor: pointer;
+  list-style-type: none;
+  background: #f0f0f0;
+  display: block;
+  height: 25px;
+  padding-right: 10px;
 }
-ul li .buttons a {
+ul li .tools a {
   width: 70px;
   height: 25px;
   text-decoration: none;
@@ -85,11 +93,12 @@ ul li .buttons a {
   -moz-border-radius: 5px;
   border-radius: 5px;
   z-index: 400;
+  line-height: 25px;
 }
-ul li .buttons .disabled {
+ul li .tools .disabled {
   background: #888;
 }
-ul li .buttons .enabled {
+ul li .tools .enabled {
   background: #94C11C;
 }
 ul li .activity .row .comment {
@@ -98,12 +107,6 @@ ul li .activity .row .comment {
 
   max-height: 27px;
   overflow: hidden;
-}
-ul li .activity .row .buttons {
-  margin-top: 20px;
-  position: relative;
-  margin-top: 28px;
-  float: right;
 }
 ul li .photo .row .image {
   position: absolute;
@@ -117,7 +120,6 @@ ul li .photo .row .image img {
   width: 100%;
 }
 ul li .list_of_likes {
-  margin-top: 10px;
   border: 1px solid #ccc;
 }
 ul li .list_of_likes h4 {
