@@ -44,7 +44,7 @@ class GatheringRepo extends Base implements Likable
 
     public function insert($gatheringObj)
     {
-        $valid  = $gatheringObj->isValid();
+        $valid = $gatheringObj->isValid();
 
         if ($valid !== true) {
             throw new \InvalidArgumentException('Invalid data', 406);
@@ -273,21 +273,15 @@ class GatheringRepo extends Base implements Likable
 
         return $meetUpLIst;
     }
-    
-    public function planToArray($data,$key)
-    {
 
+    public function planToArray($data, $key)
+    {
         $lat = $data['location']['lat'];
         $lng = $data['location']['lng'];
-        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['description'], $data['ownerDetail'],
-        $data['event_type'], $data['my_response'],
+        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['ownerDetail'],
+        $data['event_type'], $data['my_response'], $data['eventShortSummary'], $data['eventImage'],
         $data['is_invited'], $data['guests'], $data['owner']);
-
         $data['image'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
-        $data['description'] = $data['eventShortSummary'];
-
-        unset($data['eventShortSummary'], $data['eventImage']);
-
         return $data;
     }
     
@@ -319,6 +313,5 @@ class GatheringRepo extends Base implements Likable
     public function getLikes($object) {
         return $object->getLikes();
     }
-
 
 }
