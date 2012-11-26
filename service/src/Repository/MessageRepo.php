@@ -48,7 +48,7 @@ class MessageRepo extends Base {
         $messages = $this->dm->createQueryBuilder()
                 ->find('Document\Message')
                 ->field('recipients')->equals($user->getId())
-                ->field('status')->equals('unread')
+                ->field('readBy')->notIn($user->getId())
                 ->sort('updateDate', 'desc')
                 ->getQuery()
                 ->execute();
