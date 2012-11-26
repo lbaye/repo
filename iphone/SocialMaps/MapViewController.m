@@ -1188,6 +1188,8 @@ ButtonClickCallbackData callBackData;
     pointOnMapFlag = FALSE;
     profileFromList = FALSE;
     smAppDelegate.currentModelViewController = self;
+    
+    [self displayNotificationCount];
 }
 
 -(void)viewDidAppear:(BOOL)animated

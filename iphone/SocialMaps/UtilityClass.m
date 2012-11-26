@@ -228,22 +228,20 @@ CGFloat animatedDistance;
 }
 
 +(int) getNotificationCount {
+    
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     int ignoreCount = 0;
+    
     if (smAppDelegate.msgRead == TRUE)
         ignoreCount += [[self getUnreadMessage:smAppDelegate.messages] count];
     
     if (smAppDelegate.notifRead == TRUE)
         ignoreCount += [smAppDelegate.notifications count];
     
-    int totalNotif = smAppDelegate.friendRequests.count+
-    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount;
-    
-//    int totalNotif = smAppDelegate.friendRequests.count+
-//    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
-
+    int totalNotif = smAppDelegate.friendRequests.count + [self getUnreadMessage:smAppDelegate.messages].count + smAppDelegate.notifications.count + smAppDelegate.meetUpRequests.count - smAppDelegate.ignoreCount;
     
     NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
+    
     return totalNotif;
 }
 

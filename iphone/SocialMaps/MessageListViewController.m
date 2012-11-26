@@ -159,8 +159,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)viewDidUnload
 {
     NSLog(@"called View did unload");
-    [replyTimer invalidate];
-    replyTimer = nil;
+    
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     msgListTableView = nil;
@@ -838,8 +842,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
     } else {
-        [replyTimer invalidate];
-        replyTimer = nil;
+        if (replyTimer) {
+            [replyTimer invalidate];
+            replyTimer = nil;
+        }
     }
 }
 
