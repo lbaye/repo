@@ -272,6 +272,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 {
     NSLog(@"meet up request");
     MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.selectedfriendId = userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
@@ -984,10 +985,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         }
         else 
         {
-        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
-        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentModalViewController:controller animated:YES];
-        [controller release];
+            MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+            controller.selectedfriendId = userInfo.userId;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
         }
     }
     else if (imageIndex==5)
