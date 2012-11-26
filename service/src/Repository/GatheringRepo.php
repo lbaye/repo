@@ -44,7 +44,7 @@ class GatheringRepo extends Base
 
     public function insert($gatheringObj)
     {
-        $valid  = $gatheringObj->isValid();
+        $valid = $gatheringObj->isValid();
 
         if ($valid !== true) {
             throw new \InvalidArgumentException('Invalid data', 406);
@@ -58,9 +58,10 @@ class GatheringRepo extends Base
 
     public function update($data, $gathering, $type = null)
     {
-        if (   !$gathering instanceof \Document\Event
+        if (!$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup
-            && !$gathering instanceof \Document\Plan) {
+            && !$gathering instanceof \Document\Plan
+        ) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -70,9 +71,10 @@ class GatheringRepo extends Base
 
     public function addGuests($newGuests, $gathering)
     {
-        if (   !$gathering instanceof \Document\Event
+        if (!$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup
-            && !$gathering instanceof \Document\Plan) {
+            && !$gathering instanceof \Document\Plan
+        ) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -88,14 +90,15 @@ class GatheringRepo extends Base
 
     public function addCircles($newCircles, $gathering)
     {
-        if (   !$gathering instanceof \Document\Event
+        if (!$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup
-            && !$gathering instanceof \Document\Plan) {
+            && !$gathering instanceof \Document\Plan
+        ) {
             throw new \Exception\ResourceNotFoundException();
         }
 
         $circles = $gathering->getInvitedCircles();
-        foreach($newCircles as $circle) array_push($circles, $circle);
+        foreach ($newCircles as $circle) array_push($circles, $circle);
 
         $gathering->setInvitedCircles($circles);
 
@@ -119,7 +122,7 @@ class GatheringRepo extends Base
 
     public function map(array $data, UserDocument $owner, \Document\Gathering $gathering = null, $type = null)
     {
-        if(is_null($gathering)){
+        if (is_null($gathering)) {
             $gathering = $this->getDocumentObj();
 
             $gathering->setCreateDate(new \DateTime());
@@ -127,37 +130,33 @@ class GatheringRepo extends Base
             $gathering->setUpdateDate(new \DateTime());
         }
 
-        $setIfExistFields = array('title', 'description', 'duration','message','eventShortSummary', 'time', 'guestsCanInvite');
+        $setIfExistFields = array('title', 'description', 'duration', 'message', 'eventShortSummary', 'time', 'guestsCanInvite');
 
-        foreach($setIfExistFields as $field) {
+        foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
                 $gathering->{"set{$field}"}($data[$field]);
             }
         }
 
-        if($type == Constants::TYPE_PLAN && isset($data['description'])){
-            $gathering->setEventShortSummary($data['description']);
-        }
-
-        if(isset($data['guests']) && is_array($data['guests'])){
+        if (isset($data['guests']) && is_array($data['guests'])) {
             $users = $this->trimInvalidUsers($data['guests']);
             $users[] = $owner->getId();
             $gathering->setGuests($users);
-        }else{
+        } else {
             $guests[] = $owner->getId();
             $gathering->setGuests($guests);
         }
 
-        if(isset($data['invitedCircles']) && is_array($data['invitedCircles'])){
+        if (isset($data['invitedCircles']) && is_array($data['invitedCircles'])) {
             $gathering->setInvitedCircles($data['invitedCircles']);
         }
 
-        if(isset($data['permission'])){
+        if (isset($data['permission'])) {
             $gathering->share($data['permission'], @$data['permittedUsers'], @$data['permittedCircles']);
         }
 
-        if(isset($data['lat']) && isset($data['lng'])){
-           $gathering->setLocation(new \Document\Location($data));
+        if (isset($data['lat']) && isset($data['lng'])) {
+            $gathering->setLocation(new \Document\Location($data));
         }
 
         $gathering->setOwner($owner);
@@ -213,11 +212,12 @@ class GatheringRepo extends Base
         return $gatheringItems;
     }
 
-     public function updateWhoWillAttend($data, $gathering)
+    public function updateWhoWillAttend($data, $gathering)
     {
-        if (   !$gathering instanceof \Document\Event
+        if (!$gathering instanceof \Document\Event
             && !$gathering instanceof \Document\Meetup
-            && !$gathering instanceof \Document\Plan) {
+            && !$gathering instanceof \Document\Plan
+        ) {
             throw new \Exception\ResourceNotFoundException();
         }
 
@@ -233,7 +233,7 @@ class GatheringRepo extends Base
         return $gathering;
     }
 
-    public function saveEventImage($id , $eventImage)
+    public function saveEventImage($id, $eventImage)
     {
         $user = $this->find($id);
 
@@ -250,8 +250,8 @@ class GatheringRepo extends Base
             $user->setEventImage($eventImageUrl);
         } else {
 
-            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR .$filePath);
-            $user->setEventImage($filePath. "?". $timeStamp);
+            ImageHelper::saveImageFromBase64($eventImage, ROOTDIR . $filePath);
+            $user->setEventImage($filePath . "?" . $timeStamp);
         }
 
         $this->dm->persist($user);
@@ -274,20 +274,14 @@ class GatheringRepo extends Base
         return $meetUpLIst;
     }
 
-    public function planToArray($data,$key)
+    public function planToArray($data, $key)
     {
-
         $lat = $data['location']['lat'];
         $lng = $data['location']['lng'];
-        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['description'], $data['ownerDetail'],
-        $data['event_type'], $data['my_response'],
+        unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['ownerDetail'],
+        $data['event_type'], $data['my_response'], $data['eventShortSummary'], $data['eventImage'],
         $data['is_invited'], $data['guests'], $data['owner']);
-
         $data['image'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
-        $data['description'] = $data['eventShortSummary'];
-
-        unset($data['eventShortSummary'], $data['eventImage']);
-
         return $data;
     }
 

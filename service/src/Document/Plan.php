@@ -36,7 +36,7 @@ class Plan extends Gathering
     public function toArray()
     {
         $result = parent::toArray();
-        unset($result['description'], $result['guests']);
+        unset($result['guests']);
 
         return $result;
     }

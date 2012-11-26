@@ -53,8 +53,6 @@ class Gathering extends Base
         $gatheringObjs = $this->gatheringRepository->getAll($limit, $start);
         $key = $this->config['googlePlace']['apiKey'];
 
-        //TODO: query is not returning description for plans
-
         if (!empty($gatheringObjs)) {
             $permittedDocs = $this->_filterByPermission($gatheringObjs);
             $data = $this->_toArrayAll($permittedDocs);
@@ -500,24 +498,24 @@ class Gathering extends Base
     protected function _toArrayAll(array $results)
     {
         $gatheringItems = array();
-        foreach ($results as $place) {
-            $gatheringItem = $place->toArray();
-            $gatheringItem['event_type'] = $this->_checkGatheringType($place->getOwner());
+        foreach ($results as $gathering) {
+            $gatheringItem = $gathering->toArray();
+            $gatheringItem['event_type'] = $this->_checkGatheringType($gathering->getOwner());
 
-            if ($this->user == $place->getOwner()) {
+            if ($this->user == $gathering->getOwner()) {
                 $gatheringItem['my_response'] = 'yes';
             } else {
-                $gatheringItem['my_response'] = $place->getUserResponse($this->user->getId());
+                $gatheringItem['my_response'] = $gathering->getUserResponse($this->user->getId());
             }
 
-            if (in_array($this->user->getId(), $place->getGuests()))
+            if (in_array($this->user->getId(), $gathering->getGuests()))
                 $gatheringItem['is_invited'] = true;
 
             if (!empty($gatheringItem['eventImage'])) {
 
                 $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
             }
-            $ownerDetail = $this->_getUserSummaryList(array($place->getOwner()->getId()));
+            $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
 
             $gatheringItems[] = $gatheringItem;
