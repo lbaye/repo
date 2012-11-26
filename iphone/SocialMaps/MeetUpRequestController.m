@@ -114,7 +114,7 @@ DDAnnotation *annotation;
     [textViewPersonalMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewPersonalMsg.layer setMasksToBounds:YES];
     
-    labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
+    labelAddress.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
     
     self.currentAddress = @"";
     selectedPlaceIndex = 0;
@@ -327,6 +327,7 @@ DDAnnotation *annotation;
 
 - (void)setAddressLabelFromLatLon
 {
+    labelAddress.text = @"Retrieving address ...";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         labelAddress.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
         //dispatch_async(dispatch_get_main_queue(), ^{
@@ -400,6 +401,7 @@ DDAnnotation *annotation;
         labelPlaceName.text = aPlaceItem.name;
     } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
         if ([self.currentAddress isEqual:@""]) {
+            labelPlaceName.text = @"Retrieving address ...";
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
                 dispatch_async(dispatch_get_main_queue(), ^{
