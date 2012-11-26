@@ -725,12 +725,18 @@ DDAnnotation *annotation;
     [UIView commitAnimations];    
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
+    if ([text isEqualToString:@"\n"]) {
+        [self actionSavePersonalMsgBtn:nil];
+        
+        //if ([textView.text isEqualToString:@""])
+            //[textView setPlaceHolderText:[textView getPlaceHolderText]];
+        
+        return NO;
+    }
+    else
+        return YES;
 }
 
 //lazy scroller
