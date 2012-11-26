@@ -127,7 +127,7 @@ class Gathering extends Base
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
                 $data['ownerDetail'] = $ownerDetail[0];
 
-                if($type == self::TYPE_PLAN)
+                if ($type == self::TYPE_PLAN)
                     $data = $this->gatheringRepository->planToArray($data, $key);
 
                 return $this->_generateResponse($data);
@@ -172,11 +172,9 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
-                if($type == self::TYPE_PLAN)
-                {
-                    foreach($gatherings as &$gathering)
-                    {
-                        $gathering = $this->gatheringRepository->planToArray($gathering,$key);
+                if ($type == self::TYPE_PLAN) {
+                    foreach ($gatherings as &$gathering) {
+                        $gathering = $this->gatheringRepository->planToArray($gathering, $key);
                     }
                 }
                 return $this->_generateResponse($gatherings);
@@ -224,7 +222,7 @@ class Gathering extends Base
         $data = $gathering->toArrayDetailed();
         if (!empty($data['eventImage'])) $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
 
-        if($type == self::TYPE_PLAN)
+        if ($type == self::TYPE_PLAN)
             $data = $this->gatheringRepository->planToArray($data, $key);
 
         return $this->_generateResponse($data, Status::CREATED);
@@ -362,8 +360,8 @@ class Gathering extends Base
         if (!empty($data['eventImage'])) {
             $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
         }
-        if($type == self::TYPE_PLAN)
-            $data = $this->gatheringRepository->planToArray($data,$key);
+        if ($type == self::TYPE_PLAN)
+            $data = $this->gatheringRepository->planToArray($data, $key);
 
         return $this->_generateResponse($data);
     }
@@ -634,19 +632,18 @@ class Gathering extends Base
         return $this->_generateResponse($data);
     }
 
-    private function addGuestsFromCircleIds($circleIds, $gathering){
+    private function addGuestsFromCircleIds($circleIds, $gathering)
+    {
+        $circles = $this->user->getCircles();
+        $guests = array();
 
-            $circles = $this->user->getCircles();
-            $guests = array();
+        foreach ($circles as $circle) {
+            if (!in_array($circle->getId(), $circleIds))
+                continue;
+            $guests = array_merge($guests, $circle->getFriends());
+        }
 
-            foreach($circles as $circle){
-
-                if(!in_array($circle->getId(), $circleIds))
-                    continue;
-            $guests =  array_merge($guests, $circle->getFriends());
-            }
-        $guests = array_unique($guests);
-        $this->gatheringRepository->addGuests($guests, $gathering);
+        $this->gatheringRepository->addGuests(array_unique($guests), $gathering);
     }
 }
 
