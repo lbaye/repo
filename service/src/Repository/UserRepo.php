@@ -8,6 +8,7 @@ use Document\User as UserDocument;
 use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
+use Helper\Constants as Constants;
 
 class UserRepo extends Base
 {
@@ -849,7 +850,12 @@ class UserRepo extends Base
 
             $blockUserList = $this->currentUser->getBlockedUsers();
             foreach ($users as &$user) {
-                $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+                if($user['currentLocation']['lat'] == 0 && $user['currentLocation']['lng'] == 0 ){
+                    $user['distance'] = Constants::DISTANCE_UPPER_LIMIT;
+                } else {
+                    $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
+
+                }
                 if (in_array($user['id'], $blockUserList)) {
                     $user['blockStatus'] = "blocked";
                 } else {
