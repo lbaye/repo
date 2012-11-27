@@ -50,7 +50,7 @@
     // Delete account
     SettingsMaster *deleteView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Delete Account..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
     */
-    SettingsMaster *logoutView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Logout" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag - 1];
+    SettingsMaster *logoutView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Log out of Socialmaps" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag - 1];
     
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if ([smAppDelegate.fbId isEqualToString:@""]) {
@@ -291,10 +291,13 @@
     if (parent.tag >= 1999 && parent.tag <= 2004) {
         [btn removeTarget:self action:@selector(accSettingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn addTarget:self action:@selector(accSettingResetButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
         switch (parent.tag) {
             case 1999:
                 // Logout
-                [self addConfirmView:parent.tag msg:@"Confirm logout?" incr:ROW_HEIGHT];
+                [self addConfirmView:parent.tag msg:[NSString stringWithFormat:@"Log out %@?", smAppDelegate.userAccountPrefs.firstName] incr:ROW_HEIGHT];
                 break;
             case 2000:
                 // Erase data
