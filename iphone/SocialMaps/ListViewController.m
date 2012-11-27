@@ -448,6 +448,21 @@ PullableView *pullUpView;
     [self presentModalViewController:initialHelpView animated:YES];
 }
 
+- (void) showPinOnMapViewPlan:(Plan *)plan 
+{
+    NSLog(@"in listview plan %@",plan);
+    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
+    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:1.5];
+}
+
+- (void) dismissModalView
+{
+    
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 -(IBAction)removeCircleView:(id)sender
 {
     [circleView removeFromSuperview];
@@ -532,11 +547,11 @@ PullableView *pullUpView;
             NSLog(@"in search");
             if (![((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
             {
+                profileFromList=TRUE;
                 FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
                 controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                profileFromList=TRUE;
             }
         }                
     }
@@ -545,6 +560,7 @@ PullableView *pullUpView;
         if ([[copyDisplayListArray objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
         {
             NSLog(@"not in search");
+            profileFromList=TRUE;
             if (![((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
             {
             FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];

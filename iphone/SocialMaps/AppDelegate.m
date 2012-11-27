@@ -412,7 +412,7 @@ static AppDelegate *sharedInstance=nil;
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
     [activityView.layer setCornerRadius:4.0f];
     [activityView.layer setMasksToBounds:YES];
-    
+    activityView.tag=11111111;
     activityView.backgroundColor = [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:25.0/255.0 alpha:0.7];
 	[activityView startAnimating];
     [activityView hidesWhenStopped];

@@ -103,7 +103,8 @@ bool searchFlags=true;
     [publicEventButton setBackgroundColor:[UIColor clearColor]];
     
     RestClient *rc=[[RestClient alloc] init];
-    [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
+    [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];
+    [rc release];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [filteredList removeAllObjects];
     [eventListArray removeAllObjects];

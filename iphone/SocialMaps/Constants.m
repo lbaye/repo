@@ -47,6 +47,7 @@ NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdo
 NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";
 NSString * const NOTIF_SET_RSVP_EVENT_DONE= @"com.genweb2.socialmaps.setrsvpeventdone";
 NSString * const NOTIF_UPDATE_EVENT_DONE= @"com.genweb2.socialmaps.updateeventdone";
+NSString * const NOTIF_INVITE_FRIENDS_EVENT_DONE= @"com.genweb2.socialmaps.invitefriendseventdone";
 NSString * const NOTIF_GET_MY_PLACES_DONE= @"com.genweb2.socialmaps.getmyplacesdone";
 NSString * const NOTIF_GET_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.getmeetuprequestdone";
 NSString * const NOTIF_GET_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.getbasicprofiledone";

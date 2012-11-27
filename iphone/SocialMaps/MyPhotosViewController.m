@@ -23,7 +23,6 @@
 @implementation MyPhotosViewController
 @synthesize photoScrollView,customScrollView,zoomView,labelNotifCount;
 @synthesize prevButton,nextButton;
-NSMutableDictionary *dicImages_msg;
 NSMutableArray *selectedFriendsIndex, *filteredList1, *filteredList2, *customSelectedFriendsIndex;
 
 BOOL isBackgroundTaskRunning,isDragging_msg,isDecliring_msg;

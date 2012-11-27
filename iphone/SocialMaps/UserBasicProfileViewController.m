@@ -23,6 +23,7 @@
 #import "ViewEventListViewController.h"
 #import "PlaceListViewController.h"
 #import "FriendListViewController.h"
+#import "Globals.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -143,9 +144,6 @@ int scrollHeight,reloadCounter=0;
     [statusContainer removeFromSuperview];
     [zoomView removeFromSuperview];
     NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.userId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
-
-//    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
-//    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
@@ -809,11 +807,17 @@ int scrollHeight,reloadCounter=0;
 
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
-    NSLog(@"profile");
+    NSLog(@"profile %@",plan);
     //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
-    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
-    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
-    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"];
+    if (profileFromList==TRUE) {
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
+    }
+    else {
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.5];
+    }
 }
 
 - (void) dismissModalView {

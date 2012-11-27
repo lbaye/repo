@@ -492,6 +492,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             case 4:
                 NSLog(@"custom");
                 event.permission=@"custom";
+                [self.view addSubview:customSelectionView];
                 break;
             case 3:
                 NSLog(@"public");

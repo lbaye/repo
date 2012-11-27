@@ -1008,16 +1008,26 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
-    NSLog(@"profile");
     //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
     //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
-    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
-    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    if (profileFromList==TRUE)
+    {
+        NSLog(@"profile from list %@",plan);        
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
+    }
+    else
+    {
+        NSLog(@"profile from map %@",plan);        
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    }
+
 }
 
-- (void) dismissModalView {
-    
-    [self dismissModalViewControllerAnimated:NO];
+- (void) dismissModalView
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

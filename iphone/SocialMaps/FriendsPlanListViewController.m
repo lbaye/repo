@@ -75,16 +75,16 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     static NSString *CellIdentifier = @"planListTableCell";
     
-    PlanListTableCell *cell = [planListTableView
+    PlanListTableCell *cell = (PlanListTableCell *)[tableView
                                dequeueReusableCellWithIdentifier:CellIdentifier];
     
     int nodeCount = [planListArr count];
-    if (cell == nil)
-    {
-        cell = [[PlanListTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-    }
+//    if (cell == nil)
+//    {
+//        cell = [[PlanListTableCell alloc]
+//                initWithStyle:UITableViewCellStyleDefault 
+//                reuseIdentifier:CellIdentifier];
+//    }
     //    [self decorateTableCell:cell];
     Plan *plan=[planListArr objectAtIndex:indexPath.row];
     cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",userInfo.lastName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
@@ -259,7 +259,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     NSLog(@"tag %d",[sender tag]);
     pointOnMapFlag=TRUE;
-    if (profileFromList==TRUE)
+//    if (profileFromList==TRUE)
     {
         [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:[planListArr objectAtIndex:[sender tag]]];
         [self dismissModalViewControllerAnimated:NO];

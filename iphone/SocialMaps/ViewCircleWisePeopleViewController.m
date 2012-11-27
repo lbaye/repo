@@ -53,6 +53,7 @@
 
 -(void)emailMenuButtonPressed:(UIMenuController*)menuController;
 -(void)sendEmailForEntryAtIndexPath:(NSIndexPath*)indexPath;
+-(void)loadCircleData;
 
 @end
 
@@ -728,6 +729,26 @@ int renameCircleOndex;
     [self.circleSelectTableView reloadData];
     NSLog(@"self.circleSelectTableView %@",self.circleSelectTableView);
     [self.circleCreateView setNeedsDisplay];    
+    [self loadCircleData];
+}
+
+-(void)loadCircleData
+{
+    //load circle global data
+    [circleListGlobalArray removeAllObjects];
+    for (int i=0; i<[circleListDetailGlobalArray count];i++)
+    {
+        UserCircle *circleDetail=[circleListDetailGlobalArray objectAtIndex:i];
+        
+        UserCircle *circle=[[UserCircle alloc] init];
+        circle.circleID=circleDetail.circleID;
+        circle.circleName=circleDetail.circleName;
+        circle.type = circleDetail.type;
+        
+        circle.friends=circleDetail.friends;
+        [circleListGlobalArray addObject:circle];
+        NSLog(@"circle.circleID: %@",circle.circleID);
+    }
 }
 
 -(IBAction)saveRenameCircle:(id)sender
@@ -798,6 +819,7 @@ int renameCircleOndex;
     NSRange range = NSMakeRange(0, [circleListDetailGlobalArray count]-1);
     NSIndexSet *section = [NSIndexSet indexSetWithIndexesInRange:range];                                     
     [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+    [self loadCircleData];
  
 }
 
@@ -837,6 +859,7 @@ int renameCircleOndex;
     [self.circleTableView  performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
     [self.circleTableView setNeedsDisplay];
     [self.circleTableView reloadData];
+    [self loadCircleData];
 }
 
 - (void)deleteCircleDone:(NSNotification *)notif
@@ -846,6 +869,7 @@ int renameCircleOndex;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.circleTableView reloadData];
     [UtilityClass showAlert:@"" :@"Circle deleted successfully"];
+    [self loadCircleData];
 }
 
 - (void)renameCircleDone:(NSNotification *)notif
@@ -853,6 +877,7 @@ int renameCircleOndex;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.circleTableView reloadData];
+    [self loadCircleData];
 }
 
 -(void)addToCircle:(id)sender

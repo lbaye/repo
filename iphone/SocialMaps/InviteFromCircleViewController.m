@@ -196,8 +196,7 @@ bool searchFlag4=true;
     static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
     
-    LocationItemPeople *people=[[LocationItemPeople alloc] init];
-    people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+    LocationItemPeople *people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
     //    CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -472,6 +471,7 @@ bool searchFlag4=true;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [userIDs release];
     }
 }
 
