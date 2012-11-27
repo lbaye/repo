@@ -469,8 +469,10 @@ class UserRepo extends Base
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
-        if ($frequest)
+        if ($frequest){
             $this->announcement(self::EVENT_ADDED_FRIEND, array('object' => $frequest));
+            return $frequest->getId();
+        }
     }
 
     public function addDefaultCircles($id)

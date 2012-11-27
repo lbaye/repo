@@ -3,6 +3,7 @@ namespace Helper;
  
 class AppMessage {
     const FRIEND_REQUEST = 'friend_request';
+    const ACCEPTED_FRIEND_REQUEST = 'accepted_request';
     const MEETUP_REQUEST = 'meetup';
     const EVENT_GUEST_REQUEST = 'event_guest';
     const NEW_MESSAGE = 'new_message';
@@ -22,7 +23,8 @@ class AppMessage {
         self::REPLY_MESSAGE => 'New reply from %s',
         self::RECOMMEND_VENUE_MESSAGE => '%s has recommended you at %s',
         self::RECOMMEND_PLACE_MESSAGE => '%s has recommended you at %s',
-        self::RECOMMEND_GEOTAG_MESSAGE => '%s has recommended you at %s'
+        self::RECOMMEND_GEOTAG_MESSAGE => '%s has recommended you at %s',
+        self::ACCEPTED_FRIEND_REQUEST => '%s has accepted your friend request'
     );
 
     public static function getMessage($key) {
