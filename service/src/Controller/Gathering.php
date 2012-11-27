@@ -112,7 +112,7 @@ class Gathering extends Base
                 $data = $gathering->toArrayDetailed();
 
                 $data['my_response'] = $gathering->getUserResponse($this->user->getId());
-                $data['is_invited'] = in_array($this->user->getId(), $data['guests']);
+                $data['is_invited'] = in_array($this->user->getId(), $gathering->getGuests());
 
                 $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
                 $guests['circles'] = $data['guests']['circles'];
