@@ -176,10 +176,12 @@
     [btn addTarget:self action:@selector(collapsePlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *rowView = (UIView*) [sender superview];
+    
     CGRect rowFrame = CGRectMake(rowView.frame.origin.x, rowView.frame.origin.y, 
                                  rowView.frame.size.width, rowView.frame.size.height*2);
     CGRect chkboxFrame = CGRectMake(0, rowView.frame.size.height+7, 
                                     rowView.frame.size.width, rowView.frame.size.height-7);
+     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, rowView.frame.size.height, 310, 7);
     UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
@@ -187,16 +189,22 @@
     lineImage.tag   = 1002;  
     [rowView addSubview:lineImage];
     
-    NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
-    NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
-                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
-                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
+    //NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
+    //NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
+                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
+                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
     
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
-    chkBox.tag = 1001;
-    chkBox.backgroundColor = [UIColor clearColor];
-    chkBox.delegate = self;
-    [rowView addSubview:chkBox];
+    //CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
+    //chkBox.tag = 1001;
+    //chkBox.backgroundColor = [UIColor clearColor];
+    //chkBox.delegate = self;
+    //[rowView addSubview:chkBox];
+    
+    UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    buttonInviteFBFriend.frame = chkboxFrame;
+    buttonInviteFBFriend.tag = 1001;
+    [buttonInviteFBFriend addTarget:self action:@selector(actionInviteFriendButton:) forControlEvents:UIControlEventTouchUpInside];
+    [rowView addSubview:buttonInviteFBFriend];
     
     // New scrool view content size    
     settingsScrollView.contentSize = CGSizeMake(310, settingsScrollView.frame.size.height+rowView.frame.size.height);
@@ -208,7 +216,12 @@
     rowFrame = CGRectMake(layersView.frame.origin.x, layersView.frame.origin.y+chkboxFrame.size.height, layersView.frame.size.width, 
                          layersView.frame.size.height);
     layersView.frame = rowFrame;
+    
+}
 
+- (void)actionInviteFriendButton:(id)sender
+{
+    NSLog(@"Invite Facebook Friends");
 }
 
 - (void)actionTestFriendListButton
