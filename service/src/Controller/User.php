@@ -436,10 +436,8 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         try {
-            $frequestId = $this->userRepository->acceptFriendRequest($friendId, $response);
-
-            if (!empty($frequestId))
-                $this->notifyUser($friendId, $frequestId);
+            $this->userRepository->acceptFriendRequest($friendId, $response);
+            $this->notifyUser($friendId);
 
             $circles = $this->user->getCircles();
 
@@ -459,12 +457,12 @@ class User extends Base
         return $this->response;
     }
 
-    private function notifyUser($friendId, $frequestId)
+    private function notifyUser($friendId)
     {
         $this->_sendPushNotification(
             array($friendId),
             AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getFirstName()),
-            AppMessage::ACCEPTED_FRIEND_REQUEST, $frequestId
+            AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getId()
         );
     }
 
