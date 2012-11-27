@@ -120,6 +120,9 @@ class Gathering extends Base
 
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
+                } else {
+                    $data['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $data['location']['lat'] . "," . $data['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
@@ -170,9 +173,15 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
-                if ($type == self::TYPE_PLAN) {
-                    foreach ($gatherings as &$gathering) {
+                foreach ($gatherings as &$gathering) {
+                    if ($type == self::TYPE_PLAN) {
                         $gathering = $this->gatheringRepository->planToArray($gathering, $key);
+                    } else {
+                        if (!empty($gathering['eventImage'])) {
+                            $gathering['eventImage'] = \Helper\Url::buildEventPhotoUrl($gathering);
+                        } else {
+                            $gathering['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $gathering['location']['lat'] . "," . $gathering['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                        }
                     }
                 }
                 return $this->_generateResponse($gatherings);
@@ -495,6 +504,7 @@ class Gathering extends Base
 
     protected function _toArrayAll(array $results)
     {
+        $key = $this->config['googlePlace']['apiKey'];
         $gatheringItems = array();
         foreach ($results as $gathering) {
             $gatheringItem = $gathering->toArray();
@@ -510,8 +520,10 @@ class Gathering extends Base
                 $gatheringItem['is_invited'] = true;
 
             if (!empty($gatheringItem['eventImage'])) {
-
                 $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
+            } else {
+                $gatheringItem['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $gatheringItem['location']['lat'] . "," . $gatheringItem['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+
             }
             $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
