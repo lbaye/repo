@@ -605,9 +605,10 @@ class Gathering extends Base
                 if (!empty($postData['guests']))
                     $this->gatheringRepository->addGuests($postData['guests'], $gathering);
 
-                if (!empty($postData['circleId']))
+                if (!empty($postData['circleId'])) {
                     $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-
+                    $this->gatheringRepository->addCircles($postData['circleId'], $gathering);
+                }
                 return $this->_generateResponse(array('message' => 'New guests has been added'));
             } else {
                 return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
@@ -618,9 +619,10 @@ class Gathering extends Base
                 $this->gatheringRepository->addGuests($postData['guests'], $gathering);
             }
 
-            if (!empty($postData['circleId']))
+            if (!empty($postData['circleId'])) {
                 $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-
+                $this->gatheringRepository->addCircles($postData['circleId'], $gathering);
+            }
             $data = $gathering->toArrayDetailed();
             $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
             $guests['circles'] = $data['guests']['circles'];
