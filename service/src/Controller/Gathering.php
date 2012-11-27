@@ -121,8 +121,7 @@ class Gathering extends Base
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
                 } else {
-                    $data['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $data['location']['lat'] . "," . $data['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
-
+                    $data['eventImage'] = \Helper\Url::buildStreetViewImage($data['location']['lat'], $data['location']['lng'], $key);
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
@@ -180,7 +179,8 @@ class Gathering extends Base
                         if (!empty($gathering['eventImage'])) {
                             $gathering['eventImage'] = \Helper\Url::buildEventPhotoUrl($gathering);
                         } else {
-                            $gathering['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $gathering['location']['lat'] . "," . $gathering['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                            $gathering['eventImage'] = \Helper\Url::buildStreetViewImage($gathering['location']['lat'], $gathering['location']['lng'], $key);
+
                         }
                     }
                 }
@@ -522,8 +522,7 @@ class Gathering extends Base
             if (!empty($gatheringItem['eventImage'])) {
                 $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
             } else {
-                $gatheringItem['eventImage'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $gatheringItem['location']['lat'] . "," . $gatheringItem['location']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
-
+                $gatheringItem['eventImage'] = \Helper\Url::buildStreetViewImage($gatheringItem['location']['lat'], $gatheringItem['location']['lat'], $key);
             }
             $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
