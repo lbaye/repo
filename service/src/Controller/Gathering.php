@@ -617,9 +617,9 @@ class Gathering extends Base
                 if (!empty($postData['guests']))
                     $this->gatheringRepository->addGuests($postData['guests'], $gathering);
 
-                if (!empty($postData['circleId'])) {
-                    $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-                    $this->gatheringRepository->addCircles($postData['circleId'], $gathering);
+                if (!empty($postData['circleIds'])) {
+                    $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
+                    $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
                 }
                 return $this->_generateResponse(array('message' => 'New guests has been added'));
             } else {
@@ -631,9 +631,9 @@ class Gathering extends Base
                 $this->gatheringRepository->addGuests($postData['guests'], $gathering);
             }
 
-            if (!empty($postData['circleId'])) {
-                $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-                $this->gatheringRepository->addCircles($postData['circleId'], $gathering);
+            if (!empty($postData['circleIds'])) {
+                $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
+                $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
             }
             $data = $gathering->toArrayDetailed();
             $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
