@@ -120,6 +120,8 @@ class Gathering extends Base
 
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
+                } else {
+                    $data['eventImage'] = \Helper\Url::buildStreetViewImage($data['location']['lat'], $data['location']['lng'], $key);
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
@@ -170,9 +172,16 @@ class Gathering extends Base
             $gatherings = $this->gatheringRepository->getByUser($user);
 
             if ($gatherings) {
-                if ($type == self::TYPE_PLAN) {
-                    foreach ($gatherings as &$gathering) {
+                foreach ($gatherings as &$gathering) {
+                    if ($type == self::TYPE_PLAN) {
                         $gathering = $this->gatheringRepository->planToArray($gathering, $key);
+                    } else {
+                        if (!empty($gathering['eventImage'])) {
+                            $gathering['eventImage'] = \Helper\Url::buildEventPhotoUrl($gathering);
+                        } else {
+                            $gathering['eventImage'] = \Helper\Url::buildStreetViewImage($gathering['location']['lat'], $gathering['location']['lng'], $key);
+
+                        }
                     }
                 }
                 return $this->_generateResponse($gatherings);
@@ -495,6 +504,7 @@ class Gathering extends Base
 
     protected function _toArrayAll(array $results)
     {
+        $key = $this->config['googlePlace']['apiKey'];
         $gatheringItems = array();
         foreach ($results as $gathering) {
             $gatheringItem = $gathering->toArray();
@@ -510,8 +520,9 @@ class Gathering extends Base
                 $gatheringItem['is_invited'] = true;
 
             if (!empty($gatheringItem['eventImage'])) {
-
                 $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
+            } else {
+                $gatheringItem['eventImage'] = \Helper\Url::buildStreetViewImage($gatheringItem['location']['lat'], $gatheringItem['location']['lat'], $key);
             }
             $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];
@@ -605,9 +616,10 @@ class Gathering extends Base
                 if (!empty($postData['guests']))
                     $this->gatheringRepository->addGuests($postData['guests'], $gathering);
 
-                if (!empty($postData['circleId']))
-                    $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-
+                if (!empty($postData['circleIds'])) {
+                    $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
+                    $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
+                }
                 return $this->_generateResponse(array('message' => 'New guests has been added'));
             } else {
                 return $this->_generateUnauthorized('You do not have permission to edit this ' . $type);
@@ -618,9 +630,10 @@ class Gathering extends Base
                 $this->gatheringRepository->addGuests($postData['guests'], $gathering);
             }
 
-            if (!empty($postData['circleId']))
-                $this->addGuestsFromCircleIds($postData['circleId'], $gathering);
-
+            if (!empty($postData['circleIds'])) {
+                $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
+                $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
+            }
             $data = $gathering->toArrayDetailed();
             $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
             $guests['circles'] = $data['guests']['circles'];
