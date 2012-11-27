@@ -436,8 +436,11 @@ class User extends Base
         $this->_ensureLoggedIn();
 
         try {
+            $frequestId = $this->userRepository->acceptFriendRequest($friendId, $response);
 
-            $this->userRepository->acceptFriendRequest($friendId, $response);
+            if (!empty($frequestId))
+                $this->notifyUser($friendId, $frequestId);
+
             $circles = $this->user->getCircles();
 
             $result = array();
@@ -453,8 +456,18 @@ class User extends Base
             $this->response->setStatusCode($e->getCode());
         }
 
-
         return $this->response;
+    }
+
+    private function notifyUser($friendId, $frequestId)
+    {
+        $friend = $this->userRepository->find($friendId);
+
+        $this->_sendPushNotification(
+            array($friendId),
+            AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $friend->getFirstName()),
+            AppMessage::ACCEPTED_FRIEND_REQUEST, $frequestId
+        );
     }
 
     /**
@@ -725,7 +738,7 @@ class User extends Base
     {
         $this->_ensureLoggedIn();
 
-        if      (is_null($id)) $user = $this->user;
+        if (is_null($id)) $user = $this->user;
         else    $user = $this->userRepository->find($id);
 
         if ($user instanceof \Document\User) {
