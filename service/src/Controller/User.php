@@ -461,11 +461,9 @@ class User extends Base
 
     private function notifyUser($friendId, $frequestId)
     {
-        $friend = $this->userRepository->find($friendId);
-
         $this->_sendPushNotification(
             array($friendId),
-            AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $friend->getFirstName()),
+            AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getFirstName()),
             AppMessage::ACCEPTED_FRIEND_REQUEST, $frequestId
         );
     }
