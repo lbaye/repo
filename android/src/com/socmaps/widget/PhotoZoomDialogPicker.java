@@ -13,21 +13,18 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.socmaps.entity.Photo;
 import com.socmaps.images.ImageDownloader;
@@ -82,19 +79,8 @@ public class PhotoZoomDialogPicker extends Dialog implements
 		initialize();
 
 		generateViewList();
-		// downloadImage(position);
 
-//		new Handler().postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//
-//				displayItems();
-//			}
-//		}, 2000);
-
-		 displayItems();
-
-		// photoContainer.getChildAt(position).setVisibility(View.VISIBLE);
+		displayItems();
 
 		showHideButton(isShow);
 
@@ -110,7 +96,6 @@ public class PhotoZoomDialogPicker extends Dialog implements
 			photoContainer.addView(itemViewList.get(i));
 
 		}
-		// tvLoading.setVisibility(View.GONE);
 
 		photoContainer.setVisibility(View.VISIBLE);
 
@@ -279,15 +264,16 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 			if (dX > 0) {
 
-//				Toast.makeText(context.getApplicationContext(), "Right Swipe",
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context.getApplicationContext(),
+				// "Right Swipe",
+				// Toast.LENGTH_SHORT).show();
 
 				showPrevScreen();
 
 			} else {
 
-//				Toast.makeText(context.getApplicationContext(), "Left Swipe",
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context.getApplicationContext(), "Left Swipe",
+				// Toast.LENGTH_SHORT).show();
 				showNextScreen();
 
 			}
@@ -302,13 +288,13 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 			if (dY > 0) {
 
-//				Toast.makeText(context.getApplicationContext(), "Up Swipe",
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context.getApplicationContext(), "Up Swipe",
+				// Toast.LENGTH_SHORT).show();
 
 			} else {
 
-//				Toast.makeText(context.getApplicationContext(), "Down Swipe",
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context.getApplicationContext(), "Down Swipe",
+				// Toast.LENGTH_SHORT).show();
 
 			}
 

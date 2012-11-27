@@ -321,19 +321,19 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		// TODO Auto-generated method stub
 
 		String permission = selectedEvent.getPermission();
-		PermissionRadioGroup.SelectedItem preSelectedItem = PermissionRadioGroup.SelectedItem.NONE;
+		Constant.Permission preSelectedItem = Constant.Permission.NONE;
 
 		if (permission != null) {
 			if (permission.equalsIgnoreCase(Constant.PERMISSION_CIRCLES)) {
-				preSelectedItem = PermissionRadioGroup.SelectedItem.CIRCLES;
+				preSelectedItem = Constant.Permission.CIRCLES;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_CUSTOM)) {
-				preSelectedItem = PermissionRadioGroup.SelectedItem.CUSTOM;
+				preSelectedItem = Constant.Permission.CUSTOM;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_FRIENDS)) {
-				preSelectedItem = PermissionRadioGroup.SelectedItem.FRIENDS;
+				preSelectedItem = Constant.Permission.FRIENDS;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_NONE)) {
-				preSelectedItem = PermissionRadioGroup.SelectedItem.NONE;
+				preSelectedItem = Constant.Permission.NONE;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_PUBLIC)) {
-				preSelectedItem = PermissionRadioGroup.SelectedItem.PUBLIC;
+				preSelectedItem = Constant.Permission.PUBLIC;
 			}
 		}
 
@@ -1252,7 +1252,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 		@Override
 		public void onPermissionChanged(RadioGroup group, RadioButton radio,
-				PermissionRadioGroup.SelectedItem selectedItem) {
+				Constant.Permission selectedItem) {
 			// TODO Auto-generated method stub
 
 			permissionValue = "";

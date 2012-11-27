@@ -92,11 +92,15 @@ public class Constant {
 			+ "/me/users/block/overwrite";
 	final static public String smGeoTag = smServerUrl + "/geotags";
 
-	final static public String smPlaces = smServerUrl + "/me/places";
+	final static public String smPlaces = smServerUrl + "/me/places"; 
 	final static public String smCreatePlaces = smServerUrl + "/places";
 	final static public String smUploadPhoto = smServerUrl + "/photos";
 
-	final static public String smPhotoUrl = smServerUrl + "/photos";
+	final static public String smPhotoUrl = smServerUrl + "/photos"; 
+	
+	final static public String smPlanUrl = smServerUrl + "/plans";
+	
+	final static public String smLocationSharingUrl = smServerUrl+"/settings/sharing_privacy_mode";
 
 	/*
 	 * GENERAL STATUS CODE: 400 – Bad Request 401 – Unauthorized, Auth-Token
@@ -194,5 +198,13 @@ public class Constant {
 	public final static String PUSH_NOTIFICATION_EVENT = "event_guest";
 	public final static String PUSH_NOTIFICATION_MESSAGE_NEW = "new_message";
 	public final static String PUSH_NOTIFICATION_MESSAGE_REPLY = "reply_message";
+	
+	public final static String META_TYPE_VENUE = "venue";
+	public final static String META_TYPE_PLACE = "place";
+	public final static String META_TYPE_GEOTAG = "geotag";
+	
+	public final static int MAX_ITEM_DISTANCE = 50000000;//meter
+	
+	public static enum Permission  {NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM};
 
 }

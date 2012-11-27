@@ -179,10 +179,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 		notificationIntent.putExtra("pushData", pushData);
 		
 		PendingIntent intent = PendingIntent.getActivity(context, 0,
-				notificationIntent, 0);
+				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(context, title, pushData.getMessage(), intent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0, notification);
+		
+		Log.i("generateNotification: Type", pushData.getObjectType());
+		
 	}
 
 }

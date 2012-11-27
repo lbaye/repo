@@ -42,6 +42,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * This helper class download images from the Internet and binds those with the
@@ -121,12 +122,20 @@ public class ImageDownloader {
 				break;
 
 			case CORRECT:
-				task = new BitmapDownloaderTask(imageView);
-				DownloadedDrawable downloadedDrawable = new DownloadedDrawable(
-						task);
-				imageView.setImageDrawable(downloadedDrawable);
-				imageView.setMinimumHeight(156);
-				task.execute(url);
+
+				try {
+					task = new BitmapDownloaderTask(imageView);
+					DownloadedDrawable downloadedDrawable = new DownloadedDrawable(
+							task);
+					imageView.setImageDrawable(downloadedDrawable);
+					imageView.setMinimumHeight(156);
+					task.execute(url);
+				} catch (RejectedExecutionException e) {
+					// TODO: handle exception
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
 				break;
 			}
 		}
@@ -216,6 +225,8 @@ public class ImageDownloader {
 						entity.consumeContent();
 
 						return bitmap;
+					} catch (IllegalStateException e) {
+					} catch (Exception e) {
 					} finally {
 						if (inputStream != null) {
 							inputStream.close();

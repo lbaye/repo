@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -298,7 +299,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	public View getListItem(MessageEntity mEntity) {
+	public View getListItem(final MessageEntity mEntity) {
 		View v;
 
 		String senderId = mEntity.getSenderId();
@@ -360,6 +361,31 @@ public class MessageConversationActivity extends Activity implements
 					R.drawable.user_default);
 
 		}
+
+		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
+
+		if (mEntity.getMetaContent() != null) {
+			if (mEntity.getMetaContent().getType()
+					.equals(Constant.META_TYPE_VENUE)) {
+				btnDirection.setVisibility(View.VISIBLE);
+			}
+		}
+
+		btnDirection.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("destLat", mEntity.getMetaContent()
+						.getLatitude());
+				intent.putExtra("destLng", mEntity.getMetaContent()
+						.getLongitude());
+				intent.putExtra("destAddress", mEntity.getMetaContent()
+						.getAddress());
+				startActivity(intent);
+			}
+		});
 
 		return v;
 	}
@@ -442,10 +468,9 @@ public class MessageConversationActivity extends Activity implements
 				}, 500);
 			}
 		}).start();
-	} 
-	
-	private void hideKeyBoard()
-	{
+	}
+
+	private void hideKeyBoard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(etNewMessage.getWindowToken(), 0);
 	}
@@ -456,7 +481,7 @@ public class MessageConversationActivity extends Activity implements
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if (v == btnSend) {
-				// have initialize new message here 
+				// have initialize new message here
 				hideKeyBoard();
 				validateNewMessage();
 			}

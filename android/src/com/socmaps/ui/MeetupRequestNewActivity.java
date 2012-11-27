@@ -84,23 +84,32 @@ public class MeetupRequestNewActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader; 
+	ImageLoader imageLoader;
+
+	public People selectedPeople;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.meetup_new_layout); 
-		
+		setContentView(R.layout.meetup_new_layout);
+
 		requestLat = getIntent().getDoubleExtra("destLat", 0);
-		requestLng = getIntent().getDoubleExtra("destLng", 0); 
-		requestAddress = getIntent().getStringExtra("destAddress"); 
-		
-		
-		Log.d("Received Place GTag", String.valueOf(requestLat)+" "+ String.valueOf(requestLng));
+		requestLng = getIntent().getDoubleExtra("destLng", 0);
+		requestAddress = getIntent().getStringExtra("destAddress");
+
+		Log.d("Received Place GTag",
+				String.valueOf(requestLat) + " " + String.valueOf(requestLng));
+
+		Object obj = getIntent().getSerializableExtra("selectedPeople");
+		if (obj != null) {
+			selectedPeople = (People) (obj);
+			obj = null;
+			Log.d("CHECK VALUE", "Name: " + selectedPeople.getFirstName() + " "
+					+ selectedPeople.getLastName());
+			Log.d("people ID Check", selectedPeople.getId());
+		}
 
 		initialize();
-		
-		
 
 		addLocationRadioGroup();
 
@@ -112,7 +121,7 @@ public class MeetupRequestNewActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
@@ -186,13 +195,13 @@ public class MeetupRequestNewActivity extends Activity {
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
 
-		if(requestLat != 0 && requestLng != 0) 
-		{
-			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
+		if (requestLat != 0 && requestLng != 0) {
+			locationRadioGroupView
+					.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
 			getDefaultLocationAddress();
-		}
-		else
-			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		} else
+			locationRadioGroupView
+					.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
@@ -406,6 +415,7 @@ public class MeetupRequestNewActivity extends Activity {
 		String firstName = fEntity.getFirstName();
 		String lastName = fEntity.getLastName();
 		final String id = fEntity.getId();
+		Log.d("fEntity ID Check", id);
 		String avatarUrl = fEntity.getAvatar();
 
 		String name = "";
@@ -417,9 +427,13 @@ public class MeetupRequestNewActivity extends Activity {
 			name += lastName;
 		}
 
-		selectedFriends.put(id, false);
+		// selectedFriends.put(id, false);
 
-		nameView.setText(name); 
+		/*
+		 * Work has to do for PreSelected Friend
+		 */
+
+		nameView.setText(name);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
@@ -451,9 +465,16 @@ public class MeetupRequestNewActivity extends Activity {
 				selectedFriends.put(id, !isSelected);
 
 			}
-		}); 
-		
-		
+		});
+
+		if (selectedPeople != null) {
+			if (id.equals(selectedPeople.getId())) {
+				proficPicContainer
+						.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, true);
+			}
+
+		}
 
 		return v;
 	}
@@ -489,9 +510,7 @@ public class MeetupRequestNewActivity extends Activity {
 					selectedCircles.put(id, false);
 				}
 			}
-		});  
-		
-		
+		});
 
 		return v;
 	}
@@ -731,10 +750,9 @@ public class MeetupRequestNewActivity extends Activity {
 			}
 		}
 
-	} 
-	
-	private void getDefaultLocationAddress() 
-	{
+	}
+
+	private void getDefaultLocationAddress() {
 		if (requestLat != 0 && requestLng != 0) {
 
 			Utility.getAddressByCoordinate(requestLat, requestLng,

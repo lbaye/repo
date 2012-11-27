@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -106,8 +107,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		setContentView(R.layout.location_sharing_preferences_layout);
 
 		initialize();
-		
-		
 
 		generateDummyPlatformList();
 
@@ -118,9 +117,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		super.onResume();
 		if (StaticValues.myInfo == null)
 			startDialogAndBgThread();
@@ -392,20 +391,77 @@ public class LocationSharingSettingsActivity extends Activity implements
 			place.setLatitude(lat);
 			place.setLongitude(lng);
 
-			placeList.add(place);
-			// add to list
-
-			String radiusTitle = getString(R.string.locationSharingInvisibleRadiusTitle);
-
-			if (place != null) {
-				LinearLayout placeItemView = new LocationPreferenceItemView(
-						context, place.getId(), place.getVicinity(), 0,
-						radiusTitle);
-				placeItemViewList.add(placeItemView);
-				llPlaceList.addView(placeItemView);
-			}
+			showInputDialog(place);
 
 		}
+	}
+	
+	public void addNewLocation(Place place)
+	{
+		
+		// add to list
+
+		String radiusTitle = getString(R.string.locationSharingInvisibleRadiusTitle);
+
+		if (place != null) {
+			placeList.add(place);
+			LinearLayout placeItemView = new LocationPreferenceItemView(
+					context, place.getId(), place.getName(), 0,
+					radiusTitle);
+			placeItemViewList.add(placeItemView);
+			llPlaceList.addView(placeItemView);
+		}
+	}
+
+	public void showInputDialog(final Place place) {
+		// custom dialog
+		final Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
+		dialog.setContentView(R.layout.input_text_dialog_layout);
+
+		final EditText etInputText = (EditText) dialog
+				.findViewById(R.id.etInputText);
+		TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitle);
+
+		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+		// if button is clicked, close the custom dialog
+		btnCancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+		// if button is clicked, close the custom dialog
+		btnOk.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				String inputText = etInputText.getText().toString().trim();
+
+				if (!inputText.equalsIgnoreCase("")) {
+					place.setName(inputText);
+					addNewLocation(place);
+					
+					Utility.hideKeyboard((Activity) context);
+					dialog.dismiss();
+				}
+				
+			}
+
+		});
+
+		String title = "Name";
+		String hint = "Enter location name";
+		String text = "";
+
+		tvTitle.setText(title);
+		etInputText.setHint(hint);
+		if (!text.equalsIgnoreCase("")) {
+			etInputText.setText(text);
+		}
+
+		dialog.show();
 	}
 
 	public void showPeoplePicker(String pickerName) {

@@ -18,6 +18,10 @@ public class MessageEntity {
 	private String senderAvatar;
 	private String thread;
 	private int replyCount;
+	private MetaContent metaContent;
+	
+	
+	
 
 	private TimeEntity updateTimeEntity;
 
@@ -150,6 +154,14 @@ public class MessageEntity {
 
 	public void setUpdateTimeEntity(TimeEntity timeEntity) {
 		this.updateTimeEntity = timeEntity;
+	}
+
+	public MetaContent getMetaContent() {
+		return metaContent;
+	}
+
+	public void setMetaContent(MetaContent metaContent) {
+		this.metaContent = metaContent;
 	}
 
 }

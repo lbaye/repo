@@ -37,6 +37,7 @@ import com.google.android.maps.GeoPoint;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
+import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -54,7 +55,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus,
 			btnNavigateToMap, btnEvent;
 	ImageView photos_icon_image, friends_icon_image, places_icon_image,
-			interest_icon_image;
+			interest_icon_image, plan_icon_image;
 
 	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge,
 			tvCity, tvCompany, tvRelationshipStatus;
@@ -62,7 +63,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	LinearLayout age_layout, relationship_layout, living_in_layout,
 			work_at_layout;
 	LinearLayout layEditProfilePic;
-	LinearLayout lenearLayoutFirstMeetUp;
+	LinearLayout lenearLayoutFirstMeetUp, linearLayoutFirstPlan;
 
 	int responseStatus = 0;
 	String responseString = "";
@@ -122,16 +123,10 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		if (obj != null) {
 			people = (People) (obj);
 			obj = null;
-			
-			
-			
 			Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
 		}
 
 		initialize();
-		
-		
-
 		getFriendInfo();
 
 	}
@@ -185,7 +180,10 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		places_icon_image.setOnClickListener(this);
 
 		interest_icon_image = (ImageView) findViewById(R.id.interest_icon_image);
-		interest_icon_image.setOnClickListener(this);
+		interest_icon_image.setOnClickListener(this); 
+		
+		plan_icon_image = (ImageView) findViewById(R.id.plan_icon_image); 
+		plan_icon_image.setOnClickListener(this);
 
 		// ------------ for last part end ---------- //
 
@@ -221,7 +219,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		relativeLayoutDirection.setOnClickListener(this);
 
 		lenearLayoutFirstMeetUp = (LinearLayout) findViewById(R.id.linearLayoutFirstMeetUp);
-
+		linearLayoutFirstPlan = (LinearLayout) findViewById(R.id.linearLayoutFirstPlan);
+		
+		
 		tvFriendshipStatus = (TextView) findViewById(R.id.tvFriendshipStatus);
 
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
@@ -256,7 +256,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=51a610291d73b70b022deaefd7f53e3aa4d746f7
 		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + people.getId()
-				+ "/newsfeed.html?");
+				+ "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
 
 		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
 
@@ -327,8 +327,21 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			showMessageDialog(peopleUpdate);
 		} else if (v == relativeLayoutDirection) {
 			goToDirection();
+		} else if (v == plan_icon_image) { 
+			goToShowPlanList();
 		}
 
+	} 
+	
+	private void goToShowPlanList() 
+	{
+		//Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(context, PlanListActivity.class); 
+		intent.putExtra("personID", peopleUpdate.getId()); 
+		intent.putExtra("firstName", peopleUpdate.getFirstName()); 
+		intent.putExtra("lastName", peopleUpdate.getLastName()); 
+		Log.d("Person Id", peopleUpdate.getId());
+		startActivity(intent);
 	}
 
 	private void showOtherPeoplePhoto() {
@@ -366,10 +379,10 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		Intent intentToShowMeetUp = new Intent(context,
 				MeetupRequestNewActivity.class);
-		intentToShowMeetUp.putExtra("destLat", peopleUpdate.getCurrentLat());
+		/*intentToShowMeetUp.putExtra("destLat", peopleUpdate.getCurrentLat());
 		intentToShowMeetUp.putExtra("destLng", peopleUpdate.getCurrentLng());
-		intentToShowMeetUp.putExtra("destAddress",
-				peopleUpdate.getCurrentAddress());
+		intentToShowMeetUp.putExtra("destAddress",peopleUpdate.getCurrentAddress());*/ 
+		intentToShowMeetUp.putExtra("selectedPeople", people);
 		startActivity(intentToShowMeetUp);
 	}
 
@@ -408,11 +421,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
 																	// ---
 																	// //
-					relativeLayoutFriendshipStatus
-							.setVisibility(View.INVISIBLE); // ---
-															// extra
-															// ---
-															// //
+					//relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); 
+					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
+															
 
 					relativeLayoutFriend.setVisibility(View.VISIBLE);
 
@@ -424,11 +435,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					relativeLayoutFriend.setVisibility(View.GONE); // --- extra
 																	// ---
 																	// //
-					relativeLayoutFriendshipStatus
-							.setVisibility(View.INVISIBLE); // ---
-															// extra
-															// ---
-															// //
+					//relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // ---/ 
+					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
 
 					relativeLayoutMeetUp.setVisibility(View.VISIBLE);
 				} else {
@@ -436,7 +444,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					// relativeLayoutFriend.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
 
-					relativeLayoutFriend.setVisibility(View.INVISIBLE);
+					//relativeLayoutFriend.setVisibility(View.INVISIBLE); 
+					relativeLayoutFriend.setVisibility(View.GONE);
 
 					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
 																	// ---
@@ -452,8 +461,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 																		// extra
 																		// ---
 																		// //
-						relativeLayoutFriendshipStatus
-								.setVisibility(View.INVISIBLE); // --- extra ---
+						//relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE); // --- extra --- 
+						relativeLayoutFriendshipStatus.setVisibility(View.GONE);
 																// //
 					} else if (friendshipStatus
 							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
@@ -828,7 +837,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 				JSONObject jsonObject = new JSONObject(response);
 
 				if (jsonObject != null) {
-					peopleUpdate = (People) ServerResponseParser
+					peopleUpdate = ServerResponseParser
 							.parsePeople(jsonObject);
 					Log.d("Update People", peopleUpdate.getFirstName() + " "
 							+ peopleUpdate.getLastName());
@@ -859,7 +868,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			if (peopleUpdate.getFriendshipStatus().equalsIgnoreCase(
 					Constant.STATUS_FRIENDSHIP_FRIEND)) {
 				layEditProfilePic.setVisibility(View.VISIBLE);
-				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
+				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE); 
+				//linearLayoutFirstPlan.setVisibility(View.VISIBLE);
 			}
 		}
 
@@ -867,12 +877,16 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		if (peopleUpdate.getAvatar() != null) {
 
-			ivProfilePic.setImageResource(R.drawable.thumb);
-			imageDownloader.download(peopleUpdate.getAvatar(), ivProfilePic);
+			//ivProfilePic.setImageResource(R.drawable.thumb);
+			//imageDownloader.download(peopleUpdate.getAvatar(), ivProfilePic);
 		}
 
 		if (peopleUpdate.getCoverPhoto() != null) {
+			
+			//ImageLoader imageLoader = new ImageLoader(context);
+			//imageLoader.DisplayImage(peopleUpdate.getCoverPhoto(), ivCoverPic, R.drawable.img_blank);
 
+			Log.i("CoverPic", peopleUpdate.getCoverPhoto());
 			ivCoverPic.setImageResource(R.drawable.img_blank);
 			imageDownloader.download(peopleUpdate.getCoverPhoto(), ivCoverPic);
 		}
@@ -920,11 +934,16 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		if (Utility.getFormatedDistance(peopleUpdate.getDistance()) != null) {
 			// tvDistance.setText(Utility.getFormatedDistance(people.getDistance()));
-			//tvDistance.setText(Utility.getFormatedDistance(peopleUpdate.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+
+			/*tvDistance
+					.setText(Utility.getFormatedDistance(peopleUpdate
+							.getDistance(), StaticValues.myInfo.getSettings()
+							.getUnit()));*/ 
+			
 			tvDistance.setText(Utility.getFormatedDistance
-				     (Utility.calculateDistance
-				       (StaticValues.myPoint, new GeoPoint((int)(peopleUpdate.getCurrentLat()*1E6), (int)(peopleUpdate.getCurrentLng()*1E6))), 
-				       StaticValues.myInfo.getSettings().getUnit()));
+					(Utility.calculateDistance
+							(StaticValues.myPoint, new GeoPoint((int)(peopleUpdate.getCurrentLat()*1E6), (int)(peopleUpdate.getCurrentLng()*1E6))), 
+							StaticValues.myInfo.getSettings().getUnit()));
 		}
 
 		if (peopleUpdate.getLastLogIn() != null) {

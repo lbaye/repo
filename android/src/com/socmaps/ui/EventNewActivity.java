@@ -1146,7 +1146,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		@Override
 		public void onPermissionChanged(RadioGroup group, RadioButton radio,
-				PermissionRadioGroup.SelectedItem selectedItem) {
+				Constant.Permission selectedItem) {
 			// TODO Auto-generated method stub
 
 			permissionValue = "";

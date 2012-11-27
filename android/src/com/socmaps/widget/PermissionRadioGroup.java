@@ -13,30 +13,30 @@ import android.view.LayoutInflater;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-
+import com.socmaps.util.Constant.Permission;
 import com.socmaps.ui.R;
 
 public class PermissionRadioGroup extends RelativeLayout implements
 		RadioGroup.OnCheckedChangeListener {
 
-	public static enum SelectedItem {
-		PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM
-	}
+	/*public static enum Permission {
+		NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM
+	}*/
 
 	Context context;
 	PermissionRadioGroupListener permissionRadioGroupListener;
 	RadioGroup rgPermission;
 	RadioButton rbPublic, rbFriends, rbNone, rbCircles, rbCustom;
-	SelectedItem preSelectedItem;
+	Permission preSelectedItem;
 
 	public PermissionRadioGroup(Context context,
 			PermissionRadioGroupListener permissionRadioGroupListener) {
-		this(context, permissionRadioGroupListener, SelectedItem.NONE);
+		this(context, permissionRadioGroupListener, Permission.NONE);
 	}
 
 	public PermissionRadioGroup(Context context,
 			PermissionRadioGroupListener permissionRadioGroupListener,
-			SelectedItem preSelectedItem) {
+			Permission preSelectedItem) {
 		super(context);
 		this.permissionRadioGroupListener = permissionRadioGroupListener;
 		this.context = context;
@@ -66,7 +66,7 @@ public class PermissionRadioGroup extends RelativeLayout implements
 
 	}
 
-	public void setValue(SelectedItem item) {
+	public void setValue(Permission item) {
 		if (item != null) {
 			switch (item) {
 			case PUBLIC:
@@ -96,18 +96,18 @@ public class PermissionRadioGroup extends RelativeLayout implements
 		// TODO Auto-generated method stub
 		RadioButton radio = (RadioButton) group.findViewById(checkedId);
 
-		SelectedItem selectedItem = SelectedItem.NONE;
+		Permission selectedItem = Permission.NONE;
 
 		if (radio == rbPublic) {
-			selectedItem = SelectedItem.PUBLIC;
+			selectedItem = Permission.PUBLIC;
 		} else if (radio == rbFriends) {
-			selectedItem = SelectedItem.FRIENDS;
+			selectedItem = Permission.FRIENDS;
 		} else if (radio == rbNone) {
-			selectedItem = SelectedItem.NONE;
+			selectedItem = Permission.NONE;
 		} else if (radio == rbCircles) {
-			selectedItem = SelectedItem.CIRCLES;
+			selectedItem = Permission.CIRCLES;
 		} else if (radio == rbCustom) {
-			selectedItem = SelectedItem.CUSTOM;
+			selectedItem = Permission.CUSTOM;
 		}
 
 		permissionRadioGroupListener.onPermissionChanged(group, radio,

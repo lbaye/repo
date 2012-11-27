@@ -624,7 +624,51 @@
                             android:textColor="@color/black"
                             android:textSize="12dip"
                             android:textStyle="normal" />
+                    </LinearLayout> 
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:background="@color/transparent"
+                        android:orientation="vertical"
+                        android:padding="2dip" >
+
+                        <FrameLayout
+                            android:layout_width="60dip"
+                            android:layout_height="60dip" >
+
+                            <ImageView
+                                android:id="@+id/btnPlan"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_margin="0dip"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/icon" />
+
+                            <ImageView
+                                android:layout_width="15dip"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left|bottom"
+                                android:layout_marginBottom="5dip"
+                                android:layout_marginLeft="5dip"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/events_icon_small" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:maxHeight="30dip"
+                            android:text="Plan"
+                            android:textColor="@color/black"
+                            android:textSize="12dip"
+                            android:textStyle="normal" />
                     </LinearLayout>
+                    
                 </LinearLayout>
             </HorizontalScrollView>
 

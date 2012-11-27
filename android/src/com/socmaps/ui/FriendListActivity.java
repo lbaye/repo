@@ -151,7 +151,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
-		btnToggleSearchPanel.setVisibility(View.INVISIBLE);
+		btnToggleSearchPanel.setVisibility(View.VISIBLE);
 
 		btnDoSearch = (Button) findViewById(R.id.btnDoSearch);
 		btnDoSearch.setOnClickListener(this);
@@ -890,20 +890,22 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		} else if (selectedTab == SelectedTab.CIRCLES.ordinal()) {
 			// It is for circle search
 
-			List<Circle> dataList = new ArrayList<Circle>();
-			dataList.addAll(mainCircleList);
+//			List<Circle> dataList = new ArrayList<Circle>();
+//			dataList.addAll(mainCircleList);
 
-			List<Circle> list = Utility.getSearchResultFromCircle(dataList,
+			List<Circle> list = Utility.getSearchResultFromCircle(mainCircleList,
 					originalFriendList, etSearchField.getText().toString()
 							.trim());
 
 			tempCircleList.clear();
 
 			Log.w("doSearch() circle", list.size() + " size of list");
+			
+			tempCircleList.addAll(list);
 
-			for (Object obj : list) {
-				tempCircleList.add((Circle) obj);
-			}
+//			for (Object obj : list) {
+//				tempCircleList.add((Circle) obj);
+//			}
 
 			generateListViewForCircles();
 

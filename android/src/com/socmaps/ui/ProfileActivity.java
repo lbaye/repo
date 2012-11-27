@@ -61,7 +61,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	ImageView btnEditProfilePic, btnEditCoverPic, btnEditStatus,
 			btnNavigateToMap;
 	ImageView photos_icon_image, friends_icon_image, btnEvent,
-			places_icon_image, meetup_icon_image;
+			places_icon_image, meetup_icon_image, btnPlan;
 	TextView tvName, tvStatusMessage, tvAddress, tvTime, tvDistance, tvAge,
 			tvCity, tvCompany, tvRelationshipStatus;
 
@@ -174,7 +174,10 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		places_icon_image.setOnClickListener(this);
 
 		meetup_icon_image = (ImageView) findViewById(R.id.meetup_icon_image);
-		meetup_icon_image.setOnClickListener(this);
+		meetup_icon_image.setOnClickListener(this); 
+		
+		btnPlan = (ImageView) findViewById(R.id.btnPlan); 
+		btnPlan.setOnClickListener(this);
 
 		tvName = (TextView) findViewById(R.id.tvName);
 		tvStatusMessage = (TextView) findViewById(R.id.tvStatusMessage);
@@ -234,7 +237,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/507e47f0781d6ec93000000e/newsfeed.html
 		wViewNewsFeed.loadUrl(Constant.smServerUrl
-				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?");
+				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?authToken="+StaticValues.myInfo.getAuthToken());
 
 		wViewNewsFeed.setWebViewClient(new MyWebViewClient());
 		
@@ -434,6 +437,11 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		else if (v == meetup_icon_image) {
 			showMeetUp();
+		} 
+		
+		else if (v == btnPlan) 
+		{
+			showPlanList();
 		}
 
 		switch (v.getId()) {
@@ -498,6 +506,13 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			break;
 		}
 
+	} 
+	
+	private void showPlanList() 
+	{
+		Intent intent = new Intent(getApplicationContext(), PlanListActivity.class); 
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 	}
 
 	private void showPhotos() {

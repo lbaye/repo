@@ -86,6 +86,7 @@ import com.socmaps.notificationBroadcast.NotificationCountBroadcastReciever;
 import com.socmaps.pushNotification.CommonUtilities;
 import com.socmaps.pushNotification.ServerUtilities;
 import com.socmaps.util.Constant;
+import com.socmaps.util.Constant.Permission;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
@@ -181,13 +182,15 @@ public class HomeActivity extends MapActivity implements
 
 	PermissionRadioGroup permissionRadioGroupView;
 	LinearLayout shareWithRadioGroupContainer;
-	String permissionValue = "";
+	Permission locationSharingPermission;
 	String shareWithPickerName = "sharewith";
+	ShareWithSelectionListener shareWithSelectionListener;
+	
 
-	List<String> shareWithSelectedFriendList;
-	List<String> shareWithSelectedCircleList;
-	List<String> shareWithSelectedCircleFriendList;
-	List<String> shareWithSelectedFriendListAll;
+	//List<String> shareWithSelectedFriendList;
+	//List<String> shareWithSelectedCircleList;
+	//List<String> shareWithSelectedCircleFriendList;
+	//List<String> shareWithSelectedFriendListAll;
 
 	RelativeLayout circleMenu;
 	LinearLayout btnCloseCircleMenu;
@@ -333,6 +336,8 @@ public class HomeActivity extends MapActivity implements
 
 		topDrawerListener = new TopDrawerListener();
 		bottomDrawerListener = new BottomDrawerListener();
+		shareWithSelectionListener = new ShareWithSelectionListener();
+		
 
 		// geoMapView = (MapView) findViewById(R.id.myGMap);
 
@@ -449,7 +454,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	private void registerPushNotification() {
+	/*private void registerPushNotification() {
 		// TODO Auto-generated method stub
 		checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
 		checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
@@ -463,6 +468,67 @@ public class HomeActivity extends MapActivity implements
 		// IntentFilter(DISPLAY_MESSAGE_ACTION));
 		final String regId = GCMRegistrar.getRegistrationId(this);
 		if (regId.equals("")) {
+			// Automatically registers application on startup.
+			GCMRegistrar.register(getApplicationContext(),
+					CommonUtilities.SENDER_ID);
+		} else {
+			// Device is already registered on GCM, check server.
+			if (GCMRegistrar.isRegisteredOnServer(this)) {
+				// Skips registration.
+				// mDisplay.append(getString(R.string.already_registered) +
+				// "\n");
+				Log.e("GCM", getString(R.string.already_registered));
+			} else {
+				// Try to register again, but not in the UI thread.
+				// It's also necessary to cancel the thread onDestroy(),
+				// hence the use of AsyncTask instead of a raw thread.
+				final Context context = this;
+				mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						boolean registered = ServerUtilities.register(context,
+								regId);
+						// At this point all attempts to register with the app
+						// server failed, so we need to unregister the device
+						// from GCM - the app will try to register again when
+						// it is restarted. Note that GCM will send an
+						// unregistered callback upon completion, but
+						// GCMIntentService.onUnregistered() will ignore it.
+						if (!registered) {
+							GCMRegistrar.unregister(context);
+						}
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						mRegisterTask = null;
+					}
+
+				};
+				mRegisterTask.execute(null, null, null);
+			}
+		}
+	}*/
+	
+	private void registerPushNotification() {
+		// TODO Auto-generated method stub
+		checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
+		checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
+		// Make sure the device has the proper dependencies.
+		GCMRegistrar.checkDevice(this);
+		// Make sure the manifest was properly set - comment out this line
+		// while developing the app, then uncomment it when it's ready.
+		GCMRegistrar.checkManifest(this);
+
+		// registerReceiver(mHandleMessageReceiver, new
+		// IntentFilter(DISPLAY_MESSAGE_ACTION));
+		final String regId = GCMRegistrar.getRegistrationId(this);
+		
+		boolean forceRegister = true;
+		
+		if (regId.equals("") || forceRegister) {
 			// Automatically registers application on startup.
 			GCMRegistrar.register(getApplicationContext(),
 					CommonUtilities.SENDER_ID);
@@ -1251,8 +1317,22 @@ public class HomeActivity extends MapActivity implements
 
 	private void addPermissionRadioGroup() {
 		// TODO Auto-generated method stub
-		permissionRadioGroupView = new PermissionRadioGroup(context,
-				new ShareWithSelectionListener());
+
+		
+		
+		locationSharingPermission = Permission.values()[StaticValues.myInfo.getSettings().getShareLocation()];
+		if(locationSharingPermission.ordinal() <1)
+		{
+			locationSharingPermission = Permission.PUBLIC;
+		}
+		
+		Log.i("Permission value:login", locationSharingPermission.ordinal()+":"+StaticValues.myInfo.getSettings().getShareLocation());
+		
+		
+		Permission orgvalue = locationSharingPermission;
+		
+		
+		permissionRadioGroupView = new PermissionRadioGroup(context,shareWithSelectionListener, locationSharingPermission);
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
@@ -1934,7 +2014,14 @@ public class HomeActivity extends MapActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast.makeText(context, "Plan feature is coming soon", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(context, "Plan feature is coming soon", Toast.LENGTH_SHORT).show(); 
+				
+				Intent intent = new Intent(context, PlanCreateActivity.class); 
+				intent.putExtra("destLat", item.getPlace().getLatitude()); 
+				intent.putExtra("destLng", item.getPlace().getLongitude()); 
+				intent.putExtra("destAddress", item.getPlace().getAddress()); 
+				
+				startActivity(intent);
 			}
 		}); 
 		
@@ -2188,14 +2275,16 @@ public class HomeActivity extends MapActivity implements
 				Log.d("LAT LNG Meetup People",
 						String.valueOf(item.getUser().getCurrentLat())
 								+ " "
-								+ String.valueOf(item.getUser().getCurrentLng()));
+								+ String.valueOf(item.getUser().getCurrentLng())); 
+				
+				People people = item.getUser();
 
 				Intent intent = new Intent(context,
 						MeetupRequestNewActivity.class);
-				intent.putExtra("destLat", item.getUser().getCurrentLat());
+				/*intent.putExtra("destLat", item.getUser().getCurrentLat());
 				intent.putExtra("destLng", item.getUser().getCurrentLng());
-				intent.putExtra("destAddress", item.getUser()
-						.getCurrentAddress());
+				intent.putExtra("destAddress", item.getUser().getCurrentAddress()); */
+				intent.putExtra("selectedPeople", people);
 				startActivity(intent);
 				/*
 				 * Dialog msgDialog = DialogsAndToasts
@@ -2910,12 +2999,18 @@ public class HomeActivity extends MapActivity implements
 
 		@Override
 		public void onPermissionChanged(RadioGroup group, RadioButton radio,
-				PermissionRadioGroup.SelectedItem selectedItem) {
+				Permission selectedItem) {
 			// TODO Auto-generated method stub
 
-			permissionValue = "";
+			if(locationSharingPermission != selectedItem)
+			{
+				locationSharingPermission = selectedItem;
+				
+				updateLocationSharingPermission();
+			}
+			
 
-			switch (selectedItem) {
+			/*switch (selectedItem) {
 			case PUBLIC:
 				permissionValue = Constant.PERMISSION_PUBLIC;
 				break;
@@ -2935,20 +3030,55 @@ public class HomeActivity extends MapActivity implements
 			default:
 				permissionValue = Constant.PERMISSION_NONE;
 				break;
-			}
+			}*/
 		}
 	}
+	
+	
+	public void updateLocationSharingPermission() {
+		
+		Thread thread = new Thread(sharingUpdateRunnable);
+		
+		thread.start();		
+	}
+	
+	Runnable sharingUpdateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smLocationSharingUrl);
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+			
+			restClient.AddParam("shareLocation", ""+locationSharingPermission.ordinal());
 
-	public void showPeoplePicker(String pickerName) {
+			try {
+				restClient.Execute(RestClient.RequestMethod.PUT);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			//restClient.getResponse();
+			if(restClient.getResponseCode() == Constant.STATUS_SUCCESS)
+			{
+				StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
+			}
+			
+			Log.i("LocationSharing update", restClient.getResponseCode()+":"+restClient.getResponse());
+		}
+	};
+
+	/*public void showPeoplePicker(String pickerName) {
 		// custom dialog
 		Dialog peoplePicker = new PeoplePicker(context,
 				new ShareWithPeoplePickerListener(), pickerName,
 				shareWithSelectedFriendList, shareWithSelectedCircleList);
 
 		peoplePicker.show();
-	}
+	}*/
 
-	public class ShareWithPeoplePickerListener implements PeoplePickerListener {
+	/*public class ShareWithPeoplePickerListener implements PeoplePickerListener {
 
 		@Override
 		public void onSelect(String pickerName,
@@ -2966,7 +3096,7 @@ public class HomeActivity extends MapActivity implements
 
 		}
 
-	}
+	}*/
 
 	public void showFirstTimeDialog(final Context c) {
 
@@ -3116,130 +3246,5 @@ public class HomeActivity extends MapActivity implements
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
-	/*
-	 * public void getFbFriendList() {
-	 * 
-	 * String fbReqUrl = Constant.fbFriendListUrl +
-	 * AppStaticStorages.accountSettingsEntity .getFacebookAuthToken();
-	 * 
-	 * 
-	 * Log.e("Friend List URL", fbReqUrl); RestClient client = new
-	 * RestClient(fbReqUrl);
-	 * 
-	 * try { client.Execute(RestClient.RequestMethod.GET); } catch (Exception e)
-	 * { e.printStackTrace(); }
-	 * 
-	 * responseStringFb = client.getResponse(); responseStatusFb =
-	 * client.getResponseCode();
-	 * 
-	 * runOnUiThread(returnResFb);
-	 * 
-	 * }
-	 * 
-	 * private Runnable returnResFb = new Runnable() {
-	 * 
-	 * public void run() {
-	 * 
-	 * // have to do something here //
-	 * Toast.makeText(getApplicationContext(),pInfo.getUserName(), //
-	 * Toast.LENGTH_SHORT).show();
-	 * 
-	 * handleResponseFb(responseStatusFb, responseStringFb);
-	 * 
-	 * m_ProgressDialog.dismiss(); } };
-	 * 
-	 * public void handleResponseFb(int status, String response) {
-	 * 
-	 * // remove parseFbFriendListResponse(response);
-	 * 
-	 * Log.d("Login", status + ":" + response); switch (status) { case
-	 * Constant.STATUS_SUCCESS: // Log.d("Login", status+":"+response);
-	 * parseFbFriendListResponse(response); break;
-	 * 
-	 * default: Toast.makeText(getApplicationContext(),
-	 * "An unknown error occured.", Toast.LENGTH_SHORT).show(); break;
-	 * 
-	 * } }
-	 * 
-	 * public void parseFbFriendListResponse(String response) { // response = //
-	 * "{   \"data\": [      {         \"name\": \"Shahriar Mohammed Ferdous\",         \"id\": \"501640703\"      },      {         \"name\": \"Ameen Chowdhury\",         \"id\": \"524089177\"      },      {         \"name\": \"Sabirat Rubya Bittamoni\",         \"id\": \"525679233\"      },      {         \"name\": \"Marufa Rahmi Tasneema\",         \"id\": \"529469967\"      },      {         \"name\": \"Samiul Monir\",         \"id\": \"531488824\"      },      {         \"name\": \"Moshlehuddin Mazumder\",         \"id\": \"532037478\"      },      {         \"name\": \"Partho Biswas\",         \"id\": \"1782404717\"      },      {         \"name\": \"Rakib U Shimul\",         \"id\": \"1789248965\"      },      {         \"name\": \"Mahbub Alam\",         \"id\": \"1840713486\"      },      {         \"name\": \"Dinesh Kumar Yadav\",         \"id\": \"100000004361699\"      }   ],   \"paging\": {      \"next\": \"https://graph.facebook.com/532013246/friends?access_token=AAAAAAITEghMBAMZCv6cm9E3Rww2OpjrTN8PAofNytSzoVWmV6Pvq8gcDfvl4SZBqbHCnZAYL9Rj4QAarMk4OtkIECmgkLrmjZA9QGMEKpgZDZD&limit=5000&offset=5000&__after_id=100004050156512\"   }}"
-	 * ;
-	 * 
-	 * try { JSONObject jObj = new JSONObject(response);
-	 * 
-	 * JSONArray jArray = jObj.getJSONArray("data");
-	 * 
-	 * FacebookFriendEntity[] fbFriendEntityArrayList = new
-	 * FacebookFriendEntity[jArray .length()];
-	 * 
-	 * for (int i = 0; i < jArray.length(); i++) { JSONObject itemObj =
-	 * jArray.getJSONObject(i);
-	 * 
-	 * String friendId = itemObj.getString("id"); String friendName =
-	 * itemObj.getString("name"); String profilePic =
-	 * "http://graph.facebook.com/" + friendId + "/picture";
-	 * 
-	 * fbFriendEntityArrayList[i] = new FacebookFriendEntity();
-	 * 
-	 * fbFriendEntityArrayList[i].setId(friendId);
-	 * fbFriendEntityArrayList[i].setName(friendName);
-	 * fbFriendEntityArrayList[i].setProfilePic(profilePic);
-	 * 
-	 * // Log.d(friendId, friendName); }
-	 * 
-	 * showInvitationDialog(fbFriendEntityArrayList);
-	 * 
-	 * } catch (JSONException e) {
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * public void showInvitationDialog( FacebookFriendEntity[]
-	 * fbFriendEntityArrayList) {
-	 * 
-	 * if (!inviteFbFriendsDialog.isShowing()) { // custom dialog
-	 * inviteFbFriendsDialog = new Dialog(HomeActivity.this,
-	 * R.style.CustomDialogTheme); inviteFbFriendsDialog
-	 * .setContentView(R.layout.facebook_invite_friends);
-	 * 
-	 * LinearLayout friendListContainer = (LinearLayout) inviteFbFriendsDialog
-	 * .findViewById(R.id.friend_list_container); LayoutInflater inflater =
-	 * (LayoutInflater) context
-	 * .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	 * 
-	 * friendListContainer.removeAllViews(); for (int i = 0; i <
-	 * fbFriendEntityArrayList.length; i++) { View v =
-	 * inflater.inflate(R.layout.facebook_invite_item_row, null);
-	 * 
-	 * final ImageView profilePic = (ImageView) v
-	 * .findViewById(R.id.profilePic); TextView friendName = (TextView) v
-	 * .findViewById(R.id.friendName); CheckBox chkInviteFriend = (CheckBox) v
-	 * .findViewById(R.id.chkInviteFriend);
-	 * 
-	 * friendName.setText(fbFriendEntityArrayList[i].getName());
-	 * 
-	 * profilePic.setImageResource(R.drawable.icon);
-	 * 
-	 * 
-	 * 
-	 * friendListContainer.addView(v); }
-	 * 
-	 * Button btnCancel = (Button) inviteFbFriendsDialog
-	 * .findViewById(R.id.btnCancel); // if button is clicked, close the custom
-	 * dialog btnCancel.setOnClickListener(new OnClickListener() { public void
-	 * onClick(View v) { Log.e("InviteDialog", "Dismissed");
-	 * inviteFbFriendsDialog.dismiss(); } });
-	 * 
-	 * Button btnInvite = (Button) inviteFbFriendsDialog
-	 * .findViewById(R.id.btnInvite); // if button is clicked, close the custom
-	 * dialog btnInvite.setOnClickListener(new OnClickListener() { public void
-	 * onClick(View v) {
-	 * 
-	 * } });
-	 * 
-	 * inviteFbFriendsDialog.show(); }
-	 * 
-	 * }
-	 */
+	
 }

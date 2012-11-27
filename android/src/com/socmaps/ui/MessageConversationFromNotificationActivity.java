@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -132,6 +133,9 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 			messageResponse = restClient.getResponse();
 			messageStatus = restClient.getResponseCode();
+			
+			
+			
 
 			runOnUiThread(messageDetailsReturnResponse);
 		}
@@ -339,7 +343,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public View getListItem(MessageEntity mEntity) {
+	public View getListItem(final MessageEntity mEntity) {
 		View v;
 
 		String senderId = mEntity.getSenderId();
@@ -348,8 +352,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		if (userId.equalsIgnoreCase(senderId)) {
 			v = inflater.inflate(R.layout.message_conversation_item_left, null);
 		} else {
-			v = inflater
-					.inflate(R.layout.message_conversation_item_right, null);
+			v = inflater.inflate(R.layout.message_conversation_item_right, null);
 		}
 
 		TextView senderName = (TextView) v.findViewById(R.id.senderName);
@@ -401,6 +404,30 @@ public class MessageConversationFromNotificationActivity extends Activity {
 					R.drawable.user_default);
 
 		}
+		
+		Button btnDirection = (Button)v.findViewById(R.id.btnDirection);
+		
+		if(mEntity.getMetaContent()!=null)
+		{
+			if(mEntity.getMetaContent().getType().equals(Constant.META_TYPE_VENUE))
+			{
+				btnDirection.setVisibility(View.VISIBLE);
+			}
+		}
+		
+		
+		btnDirection.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("destLat", mEntity.getMetaContent().getLatitude());
+				intent.putExtra("destLng", mEntity.getMetaContent().getLongitude());
+				intent.putExtra("destAddress", mEntity.getMetaContent().getAddress());
+				startActivity(intent);
+			}
+		});
 
 		return v;
 	}

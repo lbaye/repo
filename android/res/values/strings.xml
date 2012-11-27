@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="map_api_key">0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw</string>
+    <string name="map_api_key">0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA</string>
     <!--
     hasan.mahadi: "0prmApk3Xe_F-FvVvg6OoEj7t6lo6iI9yq1k1qA"
     GENWEB2 KEY: "0prmApk3Xe_ErirjTS0lzMu3WuxvqqvyVQAz1qw"
     Masum="0prmApk3Xe_FQyx0KgBnMJaxCS_yeC8jf6Qyglg"
-    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
+    modak.plabon="0PikUOPdseVupj0_kmKvOSRvvFPB5s3bebEhOiA"
     -->
 
     <string name="app_name">Socialmaps</string>
@@ -595,6 +595,7 @@
     <string name="fbInviteDialogDesc">This is your first login to Socialmaps app, to get a better experience, we recommand you to invite Facebook friends:</string>
     <string name="detailsLabel">Details</string>
     <string name="directionLabel">Direction</string>
+    <string name="getDirectionLabel">Get direction</string>
     <string name="errorMessageGallery">An error occured during select image from Gallery. Please try again with Camera.</string>
 
     <string-array name="geoTagListOption">

@@ -21,6 +21,7 @@ import com.socmaps.entity.InformationSharingPreferences;
 import com.socmaps.entity.LayersPreferences;
 import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.MessageEntity;
+import com.socmaps.entity.MetaContent;
 import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.NotificationCount;
@@ -28,6 +29,7 @@ import com.socmaps.entity.NotificationPreferences;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Photo;
 import com.socmaps.entity.Place;
+import com.socmaps.entity.Plan;
 import com.socmaps.entity.PlatformsPreferences;
 import com.socmaps.entity.RSVP;
 import com.socmaps.entity.SearchResult;
@@ -180,14 +182,32 @@ public class ServerResponseParser {
 				myInfo.setAuthToken(results.getString("authToken"));
 			// Log.i("authToken", results.getString("authToken"));
 
-			if (!results.isNull("settings")) {
-				UserSettings userSettings = new UserSettings();
+			
+			
+			UserSettings userSettings = new UserSettings();
+			
+			if (!results.isNull("settings")) {				
 				userSettings.setUnit(results.getJSONObject("settings")
 						.getString("unit"));
 				userSettings.setVisibility(results.getJSONObject("settings")
-						.getBoolean("visible"));
-				myInfo.setSettings(userSettings);
+						.getBoolean("visible"));				
 			}
+			
+			if(!results.isNull("shareLocation"))
+			{
+				userSettings.setShareLocation(results.getInt("shareLocation"));
+			}
+			if(!results.isNull("shareProfilePicture"))
+			{
+				userSettings.setShareProfilePicture(results.getInt("shareProfilePicture"));
+			}
+			if(!results.isNull("shareNewsFeed"))
+			{
+				userSettings.setShareNewsFeed(results.getInt("shareNewsFeed"));
+			}
+			myInfo.setSettings(userSettings);
+			
+			
 
 			if (!results.isNull("gender"))
 				myInfo.setGender(results.getString("gender"));
@@ -541,21 +561,56 @@ public class ServerResponseParser {
 
 			String updateDate;
 			if (!jObject.isNull("updateDate")) {
+				
+				mEntity.setUpdateTimeEntity(getTimeEntityFromJsonObject(jObject.getJSONObject("updateDate")));
+				
+				
+				
 				updateDate = jObject.getJSONObject("updateDate").getString(
 						"date");
 				mEntity.setUpdateDate(updateDate);
 
-				TimeEntity timeEntity = new TimeEntity();
-				timeEntity.setDateTimeValue(jObject.getJSONObject("updateDate")
-						.getString("date"));
-				timeEntity.setTimeZoneType(jObject.getJSONObject("updateDate")
-						.getInt("timezone_type"));
-				timeEntity.setTimeZone(jObject.getJSONObject("updateDate")
-						.getString("timezone"));
-
-				mEntity.setUpdateTimeEntity(timeEntity);
-
 			}
+			
+			MetaContent metaContent = new MetaContent();
+			if(!jObject.isNull("metaType"))
+			{
+				metaContent.setType(jObject.getString("metaType"));
+			}
+			
+			if(!jObject.isNull("metaContent"))
+			{
+				JSONObject mcObject = jObject.getJSONObject("metaContent");
+				
+				if(!mcObject.isNull("id"))
+				{
+					metaContent.setId(mcObject.getString("id"));
+				}
+				if(!mcObject.isNull("content"))
+				{
+					JSONObject contentObject = mcObject.getJSONObject("content");
+					if(!contentObject.isNull("note"))
+					{
+						metaContent.setNote(contentObject.getString("note"));
+					}
+					if(!contentObject.isNull("address"))
+					{
+						metaContent.setAddress(contentObject.getString("address"));
+					}
+					
+					if(!contentObject.isNull("lat"))
+					{
+						metaContent.setLatitude(contentObject.getDouble("lat"));
+					}
+					
+					if(!contentObject.isNull("lng"))
+					{
+						metaContent.setLongitude(contentObject.getDouble("lng"));
+					}
+				}
+			}
+			
+			mEntity.setMetaContent(metaContent);
 
 			int replyCount;
 			if (!jObject.isNull("reply_count")) {
@@ -1735,8 +1790,8 @@ public class ServerResponseParser {
 		if (!jsonObject.isNull("eventShortSummary")) {
 			event.setShortSummary(jsonObject.getString("eventShortSummary"));
 			// Log.i("Event", jsonObject.getString("eventShortSummary"));
-		}
-
+		} 
+		
 		if (!jsonObject.isNull("eventImage")) {
 			event.setEventImageUrl(jsonObject.getString("eventImage"));
 			// Log.i("Event", jsonObject.getString("eventImage"));
@@ -2034,6 +2089,139 @@ public class ServerResponseParser {
 		}
 
 		return fbResponseEntity;
+	} 
+	
+	
+	// --------------- for Plan -------------------------- // 
+	
+	public static Plan parseGetPlanDetailsResult(String result) {
+
+		//Event event = new Event(); 
+		Plan plan = new Plan();
+		JSONObject jo;
+		try {
+			jo = new JSONObject(result);
+			//plan = parseIndividualEvent(jo, plan); 
+			plan = parseIndividualPlan(jo, plan);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return plan;
+
+	}
+
+	public static ArrayList<Plan> parseGetPlanListResult(String result) {
+		ArrayList<Plan> plans = new ArrayList<Plan>();
+
+		try {
+			JSONArray jArray = new JSONArray(result);
+			for (int i = 0; i < jArray.length(); i++) {
+				//Event event = new Event(); 
+				Plan plan = new Plan();
+				//parseIndividualEvent(jArray.getJSONObject(i), plan); 
+				parseIndividualPlan(jArray.getJSONObject(i), plan);
+				plans.add(plan);
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return plans;
+	}
+
+	private static Plan parseIndividualPlan(JSONObject jsonObject, Plan plan)
+			throws JSONException {
+		// TODO Auto-generated method stub
+		if (!jsonObject.isNull("id")) { 
+			plan.setPlanId(jsonObject.getString("id"));
+			//event.setEventId(jsonObject.getString("id"));
+			// Log.i("Event", jsonObject.getString("id"));
+		}
+
+		if (!jsonObject.isNull("title")) {
+			plan.setPlanTitle(jsonObject.getString("title"));
+			// Log.i("Event", jsonObject.getString("title"));
+		}
+
+		if (!jsonObject.isNull("description")) {
+			plan.setDescription(jsonObject.getString("description"));
+			// Log.i("Event", jsonObject.getString("description"));
+		}
+ 
+		
+		if (!jsonObject.isNull("image")) { 
+			plan.setPlanImageUrl(jsonObject.getString("image"));
+			//event.setEventImageUrl(jsonObject.getString("eventImage"));
+			// Log.i("Event", jsonObject.getString("eventImage"));
+		}
+
+		if (!jsonObject.isNull("time")) {
+			//event.setEventTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time"))); 
+			plan.setPlanTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time")));
+		}
+
+		if (!jsonObject.isNull("createDate")) {
+			//event.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate"))); 
+			plan.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate")));
+		}
+
+		if (!jsonObject.isNull("distance")) { 
+			plan.setDistance(jsonObject.getDouble("distance"));
+		}
+		
+		if (!jsonObject.isNull("location")) {
+			/*
+			 * event.setEventLocation(getGeoPointFromjsonObject(jsonObject
+			 * .getJSONObject("location")));
+			 */
+
+			JSONObject jo = jsonObject.getJSONObject("location");
+
+			if (!jo.isNull("lat"))
+				plan.setLatitude(jo.getDouble("lat"));
+				//event.setLatitude(jo.getDouble("lat"));
+			if (!jo.isNull("lng")) 
+				plan.setLongitude(jo.getDouble("lng"));
+				//event.setLongitude(jo.getDouble("lng"));
+			if (!jo.isNull("address")) 
+				plan.setAddress(jo.getString("address"));
+				//event.setAddress(jo.getString("address"));
+
+		}
+		if (!jsonObject.isNull("guests")) {
+
+			JSONObject guestObj = jsonObject.getJSONObject("guests");
+			if (!guestObj.isNull("users")) {
+				//event.setGuestList(getGuestList(guestObj.getJSONArray("users"))); 
+				plan.setGuestList(getGuestList(guestObj.getJSONArray("users")));
+			}
+
+			if (!guestObj.isNull("circles")) {
+				//event.setCircleList(getCircleList(guestObj.getJSONArray("circles"))); 
+				plan.setCircleList(getCircleList(guestObj.getJSONArray("circles")));
+			}
+
+		}
+
+		if (!jsonObject.isNull("permission")) {
+			//event.setPermission(jsonObject.getString("permission"));
+			plan.setPermission(jsonObject.getString("permission"));
+		}
+
+		if (!jsonObject.isNull("permittedUsers")) {
+
+			//event.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers"))); 
+			plan.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers")));
+		}
+		if (!jsonObject.isNull("permittedCircles")) {
+			//event.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles"))); 
+			plan.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles")));
+		}
+
+		//return event; 
+		return plan;
 	}
 
 }

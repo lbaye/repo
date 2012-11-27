@@ -163,15 +163,14 @@ public class Utility {
 
 	public static List<Circle> getSearchResultFromCircle(
 			List<Circle> masterList, List<People> orgFriendList, String key) {
-		
+
 		final List<Circle> newCircles = new ArrayList<Circle>();
-		
+
 		if (key == null || key.length() == 0) {
 			return masterList;
 		} else {
 			String prefixString = key.toString().toLowerCase();
 			final int count = masterList.size();
-			
 
 			for (int i = 0; i < masterList.size(); i++) {
 				Circle circle = masterList.get(i);
@@ -209,15 +208,23 @@ public class Utility {
 					}
 
 					if (newFriendList.size() > 0) {
-						circle.setFriendList(newFriendList);
-						newCircles.add(circle);
+
+						Circle circleNew = new Circle();
+
+						circleNew.setName(circle.getName());
+						circleNew.setId(circle.getId());
+						circleNew.setFriendList(newFriendList);
+
+						// circle.setFriendList(newFriendList);
+						// newCircles.add(circle);
+
+						newCircles.add(circleNew);
 					}
 
 				}
 
 			}
 
-			
 		}
 		return newCircles;
 
@@ -1168,11 +1175,13 @@ public class Utility {
 			}
 		}
 	}
-	
+
 	public static void updateNotificationBubbleCounter(Button btnNotification) {
 		// TODO Auto-generated method stub
-		if (StaticValues.myInfo != null && btnNotification !=null) {
-			btnNotification.setText(""+ StaticValues.myInfo.getNotificationCount().getTotalCount());
+		if (StaticValues.myInfo != null && btnNotification != null) {
+			btnNotification.setText(""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getTotalCount());
 		}
 	}
 

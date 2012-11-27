@@ -19,6 +19,7 @@ import com.socmaps.entity.Place;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
+import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
@@ -121,8 +122,17 @@ public class PlaceRowFactory {
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
 
-		holder.distanceText.setText(Utility.getFormatedDistance(place
-				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+		if(place.getDistance()<Constant.MAX_ITEM_DISTANCE)
+		{
+			holder.distanceText.setText(Utility.getFormatedDistance(
+					place.getDistance(), StaticValues.myInfo
+							.getSettings().getUnit()));
+		}
+		else
+		{
+			holder.distanceText.setVisibility(View.INVISIBLE);
+			holder.showOnMap.setVisibility(View.INVISIBLE);
+		}
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 

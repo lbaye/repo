@@ -321,9 +321,15 @@ public class MeetupRequestListActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				StaticValues.selectedMeetupRequest = meetupRequest;
+				/*StaticValues.selectedMeetupRequest = meetupRequest;
 				Intent intent = new Intent(context, ShowItemOnMap.class);
 				intent.putExtra("FLAG", Constant.FLAG_MEETUP);
+				startActivity(intent);*/
+				
+				Intent intent = new Intent(context, DirectionActivity.class);
+				intent.putExtra("destLat", meetupRequest.getLat());
+				intent.putExtra("destLng", meetupRequest.getLng());
+				intent.putExtra("destAddress", meetupRequest.getAddress());
 				startActivity(intent);
 			}
 		});

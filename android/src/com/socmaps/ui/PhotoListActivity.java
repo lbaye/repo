@@ -74,8 +74,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 
 		initialize();
-		
-		
 
 		getPhotos();
 
@@ -91,7 +89,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		// getIntent().getIntExtra("IS_UPLOAD_NEW_PHOTO", 0) + " ");
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		if (isUploadNewPhoto) {
 
 			getPhotos();
@@ -260,6 +258,20 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
+
+				// String[] URLS = new String[photoList.size()];
+				//
+				// for (int i = 0; i < photoList.size(); i++) {
+				// URLS[i] = photoList.get(i).getImageLarge();
+				//
+				// }
+				//
+				// Intent zoomIntent = new Intent(context,
+				// PhotoZoomActivity.class);
+				// zoomIntent.putExtra("PHOTO_ZOOM_POSITION",
+				// photoList.indexOf(photo));
+				// zoomIntent.putExtra("PHOTO_URLS", URLS);
+				// startActivity(zoomIntent);
 
 			}
 		});

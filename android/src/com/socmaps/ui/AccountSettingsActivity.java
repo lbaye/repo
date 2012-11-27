@@ -106,9 +106,7 @@ public class AccountSettingsActivity extends Activity implements
 		setContentView(R.layout.account_settings);
 
 		initialize();
-		
-		
-		
+
 		setExpandListener();
 		setViewOnClickListener();
 
@@ -131,7 +129,7 @@ public class AccountSettingsActivity extends Activity implements
 			startDialogAndBgThread();
 		else
 			setFieldValue(StaticValues.myInfo);
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
@@ -171,16 +169,17 @@ public class AccountSettingsActivity extends Activity implements
 		@Override
 		public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-			if (checkedId == R.id.metric_btn) {
-				if (!("Metrics").equalsIgnoreCase(StaticValues.myInfo
-						.getSettings().getUnit())) {
-					updateUserSettings(Constant.UNIT_METRIC);
-				}
-			} else if (checkedId == R.id.imperial_btn) {
-				if (!("Imperial").equalsIgnoreCase(StaticValues.myInfo
-						.getSettings().getUnit())) {
-					updateUserSettings(Constant.UNIT_IMPERIAL);
-				}
+			if (checkedId == R.id.metric_btn
+					&& !StaticValues.myInfo.getSettings().getUnit()
+							.equalsIgnoreCase(Constant.UNIT_METRIC)) {
+
+				updateUserSettings(Constant.UNIT_METRIC);
+
+			} else if (checkedId == R.id.imperial_btn
+					&& !StaticValues.myInfo.getSettings().getUnit()
+							.equalsIgnoreCase(Constant.UNIT_IMPERIAL)) {
+
+				updateUserSettings(Constant.UNIT_IMPERIAL);
 			}
 		}
 
@@ -644,14 +643,13 @@ public class AccountSettingsActivity extends Activity implements
 									this.getContentResolver(), data.getData()),
 							Constant.thumbWidth, Constant.thumbHeight);
 					ivProfilePicture.setImageBitmap(avatar);
-				}
-				catch(OutOfMemoryError e)
-				{
+				} catch (OutOfMemoryError e) {
 					Log.e("Gallery image", "OutOfMemoryError");
-					Toast.makeText(context, getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
-				}
-				catch (FileNotFoundException e) {
+				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -1069,6 +1067,7 @@ public class AccountSettingsActivity extends Activity implements
 
 	/*
 	 * private class LogoutRequestListener extends BaseRequestListener { //
+	 * 
 	 * @Override
 	 * 
 	 * @Override public void onComplete(String response, final Object state) {
@@ -1093,6 +1092,7 @@ public class AccountSettingsActivity extends Activity implements
 	 * 
 	 * 
 	 * public class FbAPIsLogoutListener implements LogoutListener { //
+	 * 
 	 * @Override
 	 * 
 	 * @Override public void onLogoutBegin() { Log.e("Account settings",

@@ -91,12 +91,16 @@
         <activity android:name=".DirectionActivity" android:screenOrientation="portrait" android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PlaceEditSaveActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>       
         <activity android:name=".PlacesListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden" ></activity>
-        <activity android:name="GeoTagActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".GeoTagActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PhotoListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden" android:launchMode="singleTop"></activity>
         <activity android:name=".PhotoUploadNewPhotoActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name="EventListActivityOther" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".EventListActivityOther" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".NewsFeedActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".RecommendationActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".PlanCreateActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".PhotoZoomActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity> 
+        <activity android:name=".PlanListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".PlanEditActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         
         
         <service android:name="com.socmaps.notificationBroadcast.BroadcastService" />

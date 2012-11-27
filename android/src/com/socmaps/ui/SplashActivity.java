@@ -1,6 +1,5 @@
 package com.socmaps.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -247,7 +246,6 @@ public class SplashActivity extends Activity {
 	};
 
 	private Handler splashHandler = new Handler() {
-		@SuppressLint("ParserError")
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {

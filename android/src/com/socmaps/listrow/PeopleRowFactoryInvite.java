@@ -14,6 +14,7 @@ import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
+import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
@@ -144,9 +145,17 @@ public class PeopleRowFactoryInvite {
 			// holder.avatar.setImageResource(R.drawable.icon);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
-		holder.distanceText.setText(Utility.getFormatedDistance(
-				((People) peopleObj).getDistance(), StaticValues.myInfo
-						.getSettings().getUnit()));
+		if(people.getDistance()<Constant.MAX_ITEM_DISTANCE)
+		{
+			holder.distanceText.setText(Utility.getFormatedDistance(
+					people.getDistance(), StaticValues.myInfo
+							.getSettings().getUnit()));
+		}
+		else
+		{
+			holder.distanceText.setVisibility(View.INVISIBLE);
+			holder.showOnMap.setVisibility(View.INVISIBLE);
+		}
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 

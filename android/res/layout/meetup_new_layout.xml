@@ -309,33 +309,33 @@
                         android:id="@+id/btnCancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:background="@null"
                         android:paddingTop="5dip"
                         android:paddingRight="5dip"
                         android:paddingBottom="5dip"
                         android:layout_marginLeft="10dip"
-                        android:gravity="left|center_vertical"
                         android:text="@string/cancel"
                         android:textColor="@color/black"
                         android:textSize="12dip"
-                        android:textStyle="normal" />
+                        android:textStyle="normal" 
+                        android:layout_marginRight="10dip"/>
 
                     <ImageView
                         android:layout_width="2dip"
                         android:layout_height="30dip"
                         android:scaleType="centerInside"
-                        android:src="@drawable/seperator" />
+                        android:src="@drawable/seperator"
+                        android:visibility="gone" />
 
                     <CheckBox
                         android:id="@+id/chkSendDirection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:checked="false"
                         android:text="Send direction"
                         android:textColor="@color/gray_dark"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:layout_width="2dip"
@@ -347,17 +347,15 @@
                         android:id="@+id/btnSend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:background="@null"
                         android:paddingTop="5dip"
                         android:paddingLeft="5dip"
                         android:paddingBottom="5dip"
-                        android:layout_marginRight="10dip"
-                        android:gravity="right|center_vertical"
                         android:text="@string/sendRequestLabel"
                         android:textColor="@color/black"
                         android:textSize="12dip"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:layout_marginLeft="10dip" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

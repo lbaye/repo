@@ -4,22 +4,22 @@ import java.util.List;
 
 public class MeetupRequest {
 
-	private String Id;
-	private String title;
-	private String message;
+	private String Id = "";
+	private String title = "";
+	private String message = "";
 	private TimeEntity time;
 	private boolean sendDirection;
 	private TimeEntity createDate;
-	private String ownerId;
-	private String ownerFirstName;
-	private String ownerLastName;
-	private String ownerAvatar;
-	private double lat;
-	private double lng;
-	private double distance;
-	private String address;
-	private String type;
-	private String myResponse;
+	private String ownerId = "";
+	private String ownerFirstName = "";
+	private String ownerLastName = "";
+	private String ownerAvatar = "";
+	private double lat = 0;
+	private double lng = 0;
+	private double distance = 0;
+	private String address = "";
+	private String type = "";
+	private String myResponse = "";
 	private boolean isInvited;
 	private RSVP rsvp;
 	private List<People> guestList;
