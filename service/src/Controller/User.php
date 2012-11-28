@@ -738,7 +738,7 @@ class User extends Base
         if ($user instanceof \Document\User) {
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia', 'coverPhoto'));
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
