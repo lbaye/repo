@@ -127,44 +127,10 @@ abstract class Base {
     }
 
     protected function getStreamHandler() {
-        if (is_null($this->loggerStreamHandler)) {
-            $config = $this->config['logging'];
-            $level = Logger::DEBUG;
-            $file = "%s/logs/web_%s.log";
-
-            if (isset($config['level']) && !empty($config['level']))
-                $level = $this->decideLoggingLevel($config['level']);
-
-            if (isset($config['file']) && !empty($config['file']))
-                $file = $config['file'];
-
-            $this->loggerStreamHandler =
-                    new StreamHandler(sprintf($file, ROOTDIR . '/../', APPLICATION_ENV), $level);
-        }
+        if (is_null($this->loggerStreamHandler))
+            $this->loggerStreamHandler = \Helper\Util::getStreamHandler($this->config);
 
         return $this->loggerStreamHandler;
-    }
-
-    private function decideLoggingLevel($level) {
-        switch (strtoupper($level)) {
-            case 'DEBUG':
-                return Logger::DEBUG;
-            case 'WARN':
-                return Logger::WARNING;
-            case 'WARNING':
-                return Logger::WARNING;
-            case 'ERROR':
-                return Logger::ERROR;
-            case 'INFO':
-                return Logger::INFO;
-            case 'CRITICAL':
-                return Logger::CRITICAL;
-            case 'NOTICE':
-                return Logger::NOTICE;
-
-            default:
-                return \Logger::INFO;
-        }
     }
 
     protected function addTask($eventName, $data) {

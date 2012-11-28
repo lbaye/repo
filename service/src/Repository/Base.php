@@ -161,11 +161,17 @@ class Base extends DocumentRepository implements DocumentObserver {
     }
 
     protected function _buildCoverPhotoUrl($data) {
-        return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['coverPhoto']);
+        if (isset($data['coverPhoto']))
+            return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['coverPhoto']);
+        else
+            return null;
     }
 
     protected function _buildAvatarUrl($data) {
-        return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
+        if (isset($data['avatar']))
+            return $this->_buildAbsoluteUrl($this->config['web']['root'], $data['avatar']);
+        else
+            return null;
     }
 
     protected function _trimInvalidUsers($data) {

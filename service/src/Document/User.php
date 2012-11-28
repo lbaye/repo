@@ -12,10 +12,14 @@ use Helper\ShareConstant;
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  * @ODM\Index(keys={"notification"="desc"})
+ * @ODM\Index(keys={"_id"="desc", "visible"="asc"})
  */
 class User {
     const SALT = 'socialmaps';
     const STATUS_OFF = 'off';
+
+    const BLOCKED = 'blocked';
+    const UNBLOCKED = 'unblocked';
 
     /** @ODM\Id */
     protected $id;

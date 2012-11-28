@@ -10,20 +10,17 @@ use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 
-class UserRepo extends Base
-{
+class UserRepo extends Base {
     const MAX_NOTIFICATIONS = 20;
     const EVENT_ADDED_FRIEND = 'added_friend';
 
     protected $loggerName = 'Repository::UserRepo';
 
-    public function bindObservers()
-    {
+    public function bindObservers() {
         $this->addObserver(new \Document\UsersObserver($this->dm, $this));
     }
 
-    public function validateLogin($data)
-    {
+    public function validateLogin($data) {
         if (empty($data)) {
             return false;
         }
@@ -31,9 +28,9 @@ class UserRepo extends Base
         $user = $this->map($data);
 
         $user = $this->findOneBy(array(
-            'email' => $data['email'],
-            'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
-        ));
+                                      'email' => $data['email'],
+                                      'password' => SecurityHelper::hash($user->getPassword(), $user->getSalt())
+                                 ));
 
         if (!is_null($user)) {
             return $user;
@@ -42,8 +39,7 @@ class UserRepo extends Base
         return false;
     }
 
-    public function validateFbLogin($data)
-    {
+    public function validateFbLogin($data) {
         if (empty($data)) {
             return false;
         }
@@ -57,20 +53,17 @@ class UserRepo extends Base
         return false;
     }
 
-    public function getByEmail($email)
-    {
+    public function getByEmail($email) {
         $user = $this->findOneBy(array('email' => $email));
         return is_null($user) ? false : $user;
     }
 
-    public function getByAuthToken($authToken)
-    {
+    public function getByAuthToken($authToken) {
         $user = $this->findOneBy(array('authToken' => $authToken));
         return is_null($user) ? false : $user;
     }
 
-    public function getAll($start, $limit)
-    {
+    public function getAll($start, $limit) {
         $results = $this->createQueryBuilder('Document\User')->limit($limit)->skip($start)->getQuery()->execute();
 
         if (count($results) == 0) {
@@ -85,27 +78,24 @@ class UserRepo extends Base
         return $users;
     }
 
-    public function getNearBy($lat, $lng, $limit = 20)
-    {
+    public function getNearBy($lat, $lng, $limit = 20) {
         $users = $this->createQueryBuilder()
-            ->field('currentLocation')->near($lat, $lng)
-            ->field('id')->notIn($this->currentUser->getblockedBy())
-            ->field('visible')->equals(true)
-            ->limit($limit)
-            ->getQuery()
-            ->execute();
+                ->field('currentLocation')->near($lat, $lng)
+                ->field('id')->notIn($this->currentUser->getblockedBy())
+                ->field('visible')->equals(true)
+                ->limit($limit)
+                ->getQuery()
+                ->execute();
 
         return (count($users)) ? $this->_toArrayAll($users) : array();
     }
 
-    public function getAllByIds(array $ids, $asArray = true)
-    {
+    public function getAllByIds(array $ids, $asArray = true) {
         $users = $this->createQueryBuilder('Document\User')->field('id')->in($ids)->getQuery()->execute();
         return $asArray ? $this->_toArrayAll($users) : $users;
     }
 
-    public function insert($data)
-    {
+    public function insert($data) {
         $user = $this->map($data);
 
         $isFacebookRegistration = !empty($data['facebookAuthToken']) AND (!empty($data['facebookId']));
@@ -121,7 +111,8 @@ class UserRepo extends Base
         }
 
         if ($this->exists($data)) {
-            throw new \Exception\ResourceAlreadyExistsException(($isFacebookRegistration) ? $data['facebookId'] : $data['email']);
+            throw new \Exception\ResourceAlreadyExistsException(($isFacebookRegistration) ? $data['facebookId']
+                        : $data['email']);
         }
 
         if ($isFacebookRegistration) {
@@ -160,8 +151,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function exists($data)
-    {
+    public function exists($data) {
         $qb = $this->createQueryBuilder('Document\User');
 
         if (isset($data['facebookId'])) {
@@ -180,8 +170,7 @@ class UserRepo extends Base
         return false;
     }
 
-    public function checkFbUser($data)
-    {
+    public function checkFbUser($data) {
         if (isset($data['facebookId'])) {
             $existFacebookId = $this->findOneBy(array('facebookId' => $data['facebookId']));
             return is_null($existFacebookId) ? false : true;
@@ -189,8 +178,7 @@ class UserRepo extends Base
 
     }
 
-    public function update($data, $id)
-    {
+    public function update($data, $id) {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
             if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
@@ -224,8 +212,7 @@ class UserRepo extends Base
         return $this->updateObject($user);
     }
 
-    public function addCircle(array $data)
-    {
+    public function addCircle(array $data) {
         $circle = new \Document\Circle($data);
 
         if (!empty($data['friends'])) {
@@ -250,8 +237,7 @@ class UserRepo extends Base
         return $circle;
     }
 
-    public function updateCircle($id, array $data)
-    {
+    public function updateCircle($id, array $data) {
         $circles = $this->currentUser->getCircles();
 
 
@@ -286,8 +272,7 @@ class UserRepo extends Base
 
     }
 
-    public function sendFriendRequests($data, $friendId)
-    {
+    public function sendFriendRequests($data, $friendId) {
         $friend = $this->find($friendId);
         if (is_null($friend)) throw new \Exception\ResourceNotFoundException($friendId);
 
@@ -319,8 +304,7 @@ class UserRepo extends Base
         return $friendRequest;
     }
 
-    public function map(array $data, UserDocument $user = null)
-    {
+    public function map(array $data, UserDocument $user = null) {
         if (is_null($user)) {
             $user = new UserDocument();
         }
@@ -365,7 +349,9 @@ class UserRepo extends Base
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
-                $user->{"set{$field}"}($data[$field]);
+                $user->{
+                "set{$field}"
+                }($data[$field]);
             }
         }
 
@@ -375,8 +361,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function settingsMap(array $data, UserDocument $user = null)
-    {
+    public function settingsMap(array $data, UserDocument $user = null) {
         $setIfExistFields = array(
             'id',
             'firstName',
@@ -401,7 +386,9 @@ class UserRepo extends Base
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
-                $user->{"set{$field}"}($data[$field]);
+                $user->{
+                "set{$field}"
+                }($data[$field]);
             }
         }
 
@@ -412,8 +399,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function addNotification($userId, array $data)
-    {
+    public function addNotification($userId, array $data) {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -431,8 +417,7 @@ class UserRepo extends Base
         return $notification;
     }
 
-    public function acceptFriendRequest($userId, $response)
-    {
+    public function acceptFriendRequest($userId, $response) {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -469,14 +454,13 @@ class UserRepo extends Base
         $this->dm->persist($this->currentUser);
         $this->dm->flush();
 
-        if ($frequest){
+        if ($frequest) {
             $this->announcement(self::EVENT_ADDED_FRIEND, array('object' => $frequest));
             return $frequest->getId();
         }
     }
 
-    public function addDefaultCircles($id)
-    {
+    public function addDefaultCircles($id) {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -503,8 +487,7 @@ class UserRepo extends Base
         $this->dm->flush();
     }
 
-    public function updateNotification($notificationId)
-    {
+    public function updateNotification($notificationId) {
         $notifications = $this->currentUser->getNotification();
 
         foreach ($notifications as &$notification) {
@@ -521,8 +504,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function updateAccountSettings($data)
-    {
+    public function updateAccountSettings($data) {
         if (isset($data['email']) && ($data['email'] != $this->currentUser->getEmail())) {
             if ($this->exists($data)) {
                 throw new \Exception\ResourceAlreadyExistsException($data['email']);
@@ -547,8 +529,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function getPasswordToken($userId)
-    {
+    public function getPasswordToken($userId) {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -563,8 +544,7 @@ class UserRepo extends Base
         return $user->getForgetPasswordToken();
     }
 
-    public function generatePassword($length = 8)
-    {
+    public function generatePassword($length = 8) {
         $password = "";
         $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $maxlength = strlen($possible);
@@ -586,8 +566,7 @@ class UserRepo extends Base
         return $password;
     }
 
-    public function updateFriendsCircleList($friendId)
-    {
+    public function updateFriendsCircleList($friendId) {
         $user = $this->find($friendId);
 
         if (is_null($user)) {
@@ -610,8 +589,7 @@ class UserRepo extends Base
         return $circle;
     }
 
-    protected function _toArrayAll($results, $filterFields = false)
-    {
+    protected function _toArrayAll($results, $filterFields = false) {
         $users = array();
         foreach ($results as $user) {
             $userArr = ($filterFields) ? $user->toArrayFiltered($this->currentUser) : $user->toArray();
@@ -626,14 +604,12 @@ class UserRepo extends Base
         return $users;
     }
 
-    public function getByPasswordToken($passwordToken)
-    {
+    public function getByPasswordToken($passwordToken) {
         $user = $this->findOneBy(array('forgetPasswordToken' => $passwordToken));
         return is_null($user) ? false : $user;
     }
 
-    public function resetPassword($data, $userId)
-    {
+    public function resetPassword($data, $userId) {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -652,8 +628,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function changePassword($data)
-    {
+    public function changePassword($data) {
         $user = $this->findOneBy(array('password' => SecurityHelper::hash($data['oldPassword'], \Document\User::SALT)));
 
         if (is_null($user)) {
@@ -672,8 +647,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function checkOldPassword($password)
-    {
+    public function checkOldPassword($password) {
         if (empty($password)) {
             return false;
         }
@@ -687,8 +661,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function updateLoginCount($id)
-    {
+    public function updateLoginCount($id) {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -705,8 +678,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function updateFacebookAuthToken($id, $facebookAuthToken)
-    {
+    public function updateFacebookAuthToken($id, $facebookAuthToken) {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -722,8 +694,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken)
-    {
+    public function insertFacebookAuthInfo($id, $facebookAuthId, $facebookAuthToken) {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -740,8 +711,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function saveAvatarImage($id, $avatar)
-    {
+    public function saveAvatarImage($id, $avatar) {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -773,8 +743,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function saveCoverPhoto($id, $coverPhoto)
-    {
+    public function saveCoverPhoto($id, $coverPhoto) {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -800,8 +769,7 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function updateForgetPasswordToken($userId, $passwordToken)
-    {
+    public function updateForgetPasswordToken($userId, $passwordToken) {
         $userDetail = $this->find($userId);
         $data = array();
         $user = $this->map($data, $userDetail);
@@ -819,66 +787,85 @@ class UserRepo extends Base
         return $user;
     }
 
-    public function search($keyword = null, $location = array(), $limit = 20, $key = null)
-    {
-        $exclude = array();
-        $blockUserList = array();
-        $exclude[] = $this->currentUser->getId();
+    public function search($keyword = null, $location = array(), $limit = 20, $key = null) {
+        $excludedUserIds = array($this->currentUser->getId());
 
-        if ($this->currentUser->getBlockedBy()) {
-            $exclude = array_merge($exclude, $this->currentUser->getBlockedBy());
-        }
+        if ($this->currentUser->getBlockedBy())
+            $excludedUserIds = array_merge($excludedUserIds, $this->currentUser->getBlockedBy());
 
-        $query = $this->createQueryBuilder()
-            ->field('id')->notIn($exclude)
-            ->field('visible')->equals(true)
-            ->limit($limit);
+        $query = $this->createQueryBuilder('Document\User')
+                ->select('_id', 'firstName', 'lastName', 'currentLocation', 'email',
+                         'status', 'avatar', 'coverPhoto', 'distance',
+                         'age', 'gender', 'lastSeenAt', 'relationshipStatus',
+                         'workStatus', 'dateOfBirth', 'regMedia')
+                ->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->hydrate(false)
+                ->limit($limit);
 
-//        if (!is_null($keyword)) {
-//            $query->addOr($query->expr()->field('firstName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-//            $query->addOr($query->expr()->field('lastName')->equals(new \MongoRegex('/' . $keyword . '.*/i')));
-//        } else {
-//            // @TODO : Changing to near temporarily for testing with more users
-//           // $query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
-//            $query->field('currentLocation')->near($location['lat'], $location['lng']);
-//        }
+        $users = $query->getQuery()->execute();
+        $filteredUsers = array();
 
-        $result = $query->getQuery()->execute();
-
-        if (count($result)) {
-
-            $friends = $this->currentUser->getFriends();
-            $users = $this->_toArrayAll($result, true);
-
-            $blockUserList = $this->currentUser->getBlockedUsers();
-            foreach ($users as &$user) {
-                if($user['currentLocation']['lat'] == 0 && $user['currentLocation']['lng'] == 0 ){
-                    $user['distance'] = Constants::DISTANCE_UPPER_LIMIT;
-                } else {
-                    $user['distance'] = \Helper\Location::distance($location['lat'], $location['lng'], $user['currentLocation']['lat'], $user['currentLocation']['lng']);
-
-                }
-                if (in_array($user['id'], $blockUserList)) {
-                    $user['blockStatus'] = "blocked";
-                } else {
-                    $user['blockStatus'] = "unblocked";
-                }
-                if (!isset($user['coverPhoto']) || empty($user['coverPhoto'])) {
-                    if (!empty($user['currentLocation']['lat']) && !empty($user['currentLocation']['lng'])) {
-                        $streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $user['currentLocation']['lat'] . "," . $user['currentLocation']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
-                        $user['coverPhoto'] = $streetViewImage;
-                    }
-                }
+        if (!empty($users)) {
+            foreach ($users as $userHash) {
+                $this->prepareUserData($userHash, $location, $key);
+                $filteredUsers[] = $userHash;
             }
 
-            return $users;
+            return $filteredUsers;
         }
 
         return array();
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null)
-    {
+    private function prepareUserData(&$userHash, &$location, &$key) {
+        # Set user database id to "id" field
+        $id = $userHash['_id']->__toString();
+        $userHash['id'] = &$id;
+        unset($userHash['_id']);
+
+        # Retrieve user object
+        $userObj = $this->find($userHash['id']);
+
+        # Pull authenticated user and visiting user's relationship
+        $userHash['friendship'] = $this->currentUser->getFriendship($userObj);
+
+        # Setting up absolute urls for user avatar and cover photo
+        $userHash['avatar'] = $this->_buildAvatarUrl($userHash);
+        $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
+
+        # Set street view image if no cover photo is set
+        $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);
+        $currentLocationFound = isset($userHash['currentLocation'])         &&
+                                !empty($userHash['currentLocation']['lat']) &&
+                                !empty($userHash['currentLocation']['lng']) &&
+                                0 != $userHash['currentLocation']['lat']    &&
+                                0 != $userHash['currentLocation']['lng'];
+
+        if ($currentLocationFound && $noCoverPhotoSet)
+            $userHash['coverPhoto'] =
+                    \Helper\Url::buildStreetViewImage($key, $userHash['currentLocation']);
+
+
+        # Calculate distance if current location is set
+        if (!$currentLocationFound)
+            $userHash['distance'] = Constants::DISTANCE_UPPER_LIMIT;
+
+        else
+            $userHash['distance'] = \Helper\Location::distance(
+                $location['lat'], $location['lng'],
+                $userHash['currentLocation']['lat'],
+                $userHash['currentLocation']['lng']);
+
+        # Flag as "Blocked" if user is in blocked users list
+        $blockedUsers = $this->currentUser->getBlockedUsers();
+        if (in_array($userHash['id'], $blockedUsers))
+            $userHash['blockStatus'] = UserDocument::BLOCKED;
+        else
+            $userHash['blockStatus'] = UserDocument::UNBLOCKED;
+    }
+
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null) {
         $people_around = $this->search($keyword, $location, $limit, $key);
         $visible_people = array();
 
@@ -893,20 +880,18 @@ class UserRepo extends Base
         return $visible_people;
     }
 
-    public function getFbConnectedUsers($start = 0, $limit = 50)
-    {
+    public function getFbConnectedUsers($start = 0, $limit = 50) {
         $query = $this->createQueryBuilder()
-            ->field('facebookAuthToken')->exists(true)
-            ->hydrate(false)
-            ->skip($start)
-            ->limit($limit);
+                ->field('facebookAuthToken')->exists(true)
+                ->hydrate(false)
+                ->skip($start)
+                ->limit($limit);
 
         $users = $query->getQuery()->execute();
         return (!empty($users)) ? $users : array();
     }
 
-    public function removeFriendFromCircle($id, array $data)
-    {
+    public function removeFriendFromCircle($id, array $data) {
         $circles = $this->currentUser->getCircles();
         $friends = $this->_trimInvalidUsers($data['friends']);
 
@@ -926,8 +911,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function addFriendToMultipleCircle($id, array $data)
-    {
+    public function addFriendToMultipleCircle($id, array $data) {
         $circles = $this->currentUser->getCircles();
 
         $user = $this->_trimInvalidUsers(array($id));
@@ -967,8 +951,7 @@ class UserRepo extends Base
 
     }
 
-    public function getNotificationsCount($id)
-    {
+    public function getNotificationsCount($id) {
         $user = $this->find($id);
         $friendRequests = $user->getFriendRequest();
 
@@ -992,8 +975,7 @@ class UserRepo extends Base
         return $countTotal = count($notificationResult) . ":" . count($friendResult);
     }
 
-    public function unBlockUsers($id, array $data)
-    {
+    public function unBlockUsers($id, array $data) {
 
         if (empty($data['users'])) {
             throw new \InvalidArgumentException('Invalid request', 406);
@@ -1010,8 +992,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function unBlockAllUsers($id, array $data)
-    {
+    public function unBlockAllUsers($id, array $data) {
 
         if (empty($data['users'])) {
             throw new \InvalidArgumentException('Invalid request', 406);
@@ -1027,8 +1008,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function deleteCustomCircle($id)
-    {
+    public function deleteCustomCircle($id) {
         $circles = $this->currentUser->getCircles();
 
         $result = array();
@@ -1059,8 +1039,7 @@ class UserRepo extends Base
 
     }
 
-    public function renameCustomCircle($id, $data)
-    {
+    public function renameCustomCircle($id, $data) {
         $circles = $this->currentUser->getCircles();
 
         foreach ($circles as $circle) {
@@ -1078,8 +1057,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function removeOldNotifications(UserDocument $user)
-    {
+    public function removeOldNotifications(UserDocument $user) {
         $notifications = $user->getNotification();
 
         if (count($notifications) > 0) {
@@ -1091,8 +1069,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function removeFriendFromMyCircle($id)
-    {
+    public function removeFriendFromMyCircle($id) {
         $circles = $this->currentUser->getCircles();
         $friendId = $this->_trimInvalidUsers($id);
 
@@ -1110,8 +1087,7 @@ class UserRepo extends Base
         return true;
     }
 
-    public function generateNotificationCount($user_id)
-    {
+    public function generateNotificationCount($user_id) {
 
         $user = $this->find($user_id);
         $messageRepo = $this->dm->getRepository('Document\Message');

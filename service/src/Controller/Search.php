@@ -39,10 +39,12 @@ class Search extends Base {
 
         $this->extUserRepo = $this->dm->getRepository('Document\ExternalUser');
 
+        $this->createLogger('Controller::Search');
         $this->_ensureLoggedIn();
     }
 
     public function all() {
+        $this->debug('Preparing search result');
         $data = $this->request->request->all();
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
@@ -53,26 +55,23 @@ class Search extends Base {
 
             return $this->_generateResponse($results);
         } else {
+            $this->warn('Invalid request with missing required fields');
             return $this->_generateMissingFieldsError();
         }
     }
 
     protected function people($data) {
+        $this->debug('Retrieving all people');
         $location = array('lat' => (float)$data['lat'], 'lng' => (float)$data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
         $key = $this->config['googlePlace']['apiKey'];
-        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD,$key);
-        $friends = $this->user->getFriends();
-
-        array_walk($people, function(&$person) use ($friends, $data) {
-                $person['external'] = false;
-
-            });
+        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD, $key);
 
         return $people;
     }
 
     protected function places($data) {
+        $this->debug('Retrieving all places');
         $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
         $keywords = isset($data['keyword']) ? $data['keyword'] : null;
 
@@ -84,6 +83,7 @@ class Search extends Base {
     }
 
     protected function findPlaces($keywords, $location) {
+        $this->debug('Finding places with CachedGooglePlaces API');
         return \Service\Location\PlacesServiceFactory::
                 getInstance($this->dm, $this->config, \Service\Location\PlacesServiceFactory::CACHED_GOOGLE_PLACES)
                 ->search($location, $keywords);
@@ -109,12 +109,12 @@ class Search extends Base {
         $users = array_values(
             $this->dm->createQueryBuilder('Document\ExternalUser')
                     ->field('smFriends')->equals($this->user->getId())
-                    #->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
+            #->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
                     ->hydrate(false)
                     ->skip(0)
                     ->limit(200)
                     ->getQuery()->execute()->toArray());
-        
+
         foreach ($users as &$user) {
             $user['distance'] = \Helper\Location::distance(
                 $location['lat'], $location['lng'],

@@ -4,3 +4,5 @@ gem 'cucumber'
 gem 'rspec'
 gem 'i18n'
 gem 'active_support'
+gem 'thor'
+

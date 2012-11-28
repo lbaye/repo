@@ -121,7 +121,7 @@ class Gathering extends Base
                 if (!empty($data['eventImage'])) {
                     $data['eventImage'] = \Helper\Url::buildEventPhotoUrl($data);
                 } else {
-                    $data['eventImage'] = \Helper\Url::buildStreetViewImage($data['location']['lat'], $data['location']['lng'], $key);
+                    $data['eventImage'] = \Helper\Url::buildStreetViewImage($key, $data['location']);
                 }
 
                 $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
@@ -179,7 +179,7 @@ class Gathering extends Base
                         if (!empty($gathering['eventImage'])) {
                             $gathering['eventImage'] = \Helper\Url::buildEventPhotoUrl($gathering);
                         } else {
-                            $gathering['eventImage'] = \Helper\Url::buildStreetViewImage($gathering['location']['lat'], $gathering['location']['lng'], $key);
+                            $gathering['eventImage'] = \Helper\Url::buildStreetViewImage($key, $gathering['location']);
 
                         }
                     }
@@ -522,7 +522,7 @@ class Gathering extends Base
             if (!empty($gatheringItem['eventImage'])) {
                 $gatheringItem['eventImage'] = \Helper\Url::buildEventPhotoUrl($gatheringItem);
             } else {
-                $gatheringItem['eventImage'] = \Helper\Url::buildStreetViewImage($gatheringItem['location']['lat'], $gatheringItem['location']['lat'], $key);
+                $gatheringItem['eventImage'] = \Helper\Url::buildStreetViewImage($key, $gatheringItem['location']);
             }
             $ownerDetail = $this->_getUserSummaryList(array($gathering->getOwner()->getId()));
             $gatheringItem['ownerDetail'] = $ownerDetail[0];

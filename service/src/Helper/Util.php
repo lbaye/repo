@@ -2,7 +2,12 @@
 
 namespace Helper;
 
+use Monolog\Logger as Logger,
+    Monolog\Handler\StreamHandler as StreamHandler;
+
 class Util {
+    static $streamHandlers = array();
+
     public static function debug($obj, $depth) {
         \Doctrine\Common\Util\Debug::dump($obj, $depth);
     }
@@ -59,6 +64,49 @@ class Util {
         }
         else {
             return "few seconds ago";
+        }
+    }
+
+    public static function getStreamHandler($config) {
+        if (isset(self::$streamHandlers[APPLICATION_ENV]))
+            return self::$streamHandlers[APPLICATION_ENV];
+
+        return self::$streamHandlers[APPLICATION_ENV] = self::createStreamHandler($config);
+    }
+
+    private static function createStreamHandler($config) {
+        $config = $config['logging'];
+        $level = Logger::DEBUG;
+        $file = "%s/logs/web_%s.log";
+
+        if (isset($config['level']) && !empty($config['level']))
+            $level = self::decideLoggingLevel($config['level']);
+
+        if (isset($config['file']) && !empty($config['file']))
+            $file = $config['file'];
+
+        return new StreamHandler(sprintf($file, ROOTDIR . '/../', APPLICATION_ENV), $level);
+    }
+
+    private static function decideLoggingLevel($level) {
+        switch (strtoupper($level)) {
+            case 'DEBUG':
+                return Logger::DEBUG;
+            case 'WARN':
+                return Logger::WARNING;
+            case 'WARNING':
+                return Logger::WARNING;
+            case 'ERROR':
+                return Logger::ERROR;
+            case 'INFO':
+                return Logger::INFO;
+            case 'CRITICAL':
+                return Logger::CRITICAL;
+            case 'NOTICE':
+                return Logger::NOTICE;
+
+            default:
+                return \Logger::INFO;
         }
     }
 }

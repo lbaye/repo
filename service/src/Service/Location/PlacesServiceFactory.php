@@ -2,6 +2,8 @@
 
 namespace Service\Location;
 
+use Monolog\Logger as Logger;
+
 /**
  * Provide factory methods for managing places instance.
  */
@@ -26,13 +28,17 @@ class PlacesServiceFactory {
     }
 
     private static function buildNewInstance($type) {
+        $logger = new Logger('PlaceServiceFactory::' . $type);
+        $logger->pushHandler(\Helper\Util::getStreamHandler(self::$mConfiguration));
+
         switch ($type) {
             case self::GOOGLE_PLACES:
-                return new GooglePlacesService(self::$mConfiguration['googlePlace']['apiKey']);
+                return new GooglePlacesService(
+                    $logger, self::$mConfiguration['googlePlace']['apiKey']);
 
             case self::CACHED_GOOGLE_PLACES:
                 return new CachedGooglePlacesService(
-                    self::$mDocumentManager->getRepository('Document\CachedPlacesData'),
+                    $logger, self::$mDocumentManager->getRepository('Document\CachedPlacesData'),
                     self::buildNewInstance(self::GOOGLE_PLACES)
                 );
 

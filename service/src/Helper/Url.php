@@ -58,10 +58,11 @@ class Url
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['photo']);
     }
 
-    public static function buildStreetViewImage($lat, $lng, $key, $size = "320x165")
-    {
-        return "http://maps.googleapis.com/maps/api/streetview?size=". $size .  "&location="
-            . $lat . "," .$lng .
-            "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+    public static function buildStreetViewImage($key, array $position, $size = "320x165") {
+        $lat = $position['lat'];
+        $lng = $position['lng'];
+        return "http://maps.googleapis.com/maps/api/streetview?size=" .
+               $size .  "&location=" . $lat . "," .$lng .
+               "&fov=90&heading=235&pitch=10&sensor=false&key=". $key;
     }
 }
