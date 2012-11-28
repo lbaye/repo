@@ -1,0 +1,76 @@
+!!!
+%html
+  %head
+    %title MiniFeed
+
+    - $updateTime = filemtime($baseDir . '/assets/stylesheets/minifeed.css')
+    - $url = $baseUrl . '/assets/stylesheets/minifeed.css?' . $updateTime
+    %link(rel='stylesheet' href=$url)
+
+%body
+  %ul
+    - foreach($activities as $activity)
+      %li
+        - if ($activity->getObjectType() === 'photo')
+          - $photo = $photoRepo->find($activity->getObjectId())
+          .photo
+            .row
+              .avatar
+                - $avatarPath = $photo->getOwner()->getAvatar()
+                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                %img(src=$avatarPath)
+              .name
+                %h4= $photo->getOwner()->getName()
+              .time
+                = $activity->toHumanizeDate()
+
+              - $description = $photo->getDescription()
+              - if (!empty($description))
+                .comment
+                  = stripcslashes($photo->getDescription())
+
+            .row(style='height:100px; margin-top: 5px;')
+
+              - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
+              .image(style=$imagePathCss)
+                - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                %img(src= $photoFullPath)
+              .icon.icon_zoom
+
+        - else
+          .activity
+            .row
+              .avatar
+                - $avatarPath = $activity->getOwner()->getAvatar()
+                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                %img(src=$avatarPath)
+              .name
+                %h4= $activity->getOwner()->getName()
+              .time
+                - if ($activity->getCreatedAt() != null)
+                  = $activity->toHumanizeDate()
+
+              .comment
+                - if ($activity->getOwner()->getId() == $currentUser->getId())
+                  - if ($activity->getObjectType() === 'geotag')
+                    - $geotag = $geotagRepo->find($activity->getObjectId())
+
+                    has tagged "
+                    %strong= stripcslashes($activity->getTitle())
+                    "
+                    at
+                    %small= $geotag->getLocation()->getAddress()
+
+                  - if ($activity->getObjectType() === 'friend')
+                    - $friend = $userRepo->find($activity->getObjectId())
+                    is now friend with
+                    = $friend->getName()
+            %div.clearfix
+
+            .row
+              .tools
+
+
+
