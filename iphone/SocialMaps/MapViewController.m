@@ -1170,15 +1170,11 @@ ButtonClickCallbackData callBackData;
     if (useLocalData==false)
     {
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate.window setUserInteractionEnabled:YES];
     }
     
     if(loadGeotagServiceData==true)
     {
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate.window setUserInteractionEnabled:YES];
         NSLog(@"call geotag service");
     }
     
@@ -1908,17 +1904,10 @@ ButtonClickCallbackData callBackData;
     
     return distanceFromMe;
 }
+
 - (void)gotListings:(NSNotification *)notif
 {
-//    NSLog(@"In gotListings");
-    
-    //by Rishi
-    //if (viewSearch.frame.origin.y > 44) {
-      //  return;
-    //}
-    
-    //[smAppDelegate.peopleList removeAllObjects];
-
+    NSLog(@"got listing");
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
@@ -2146,23 +2135,24 @@ ButtonClickCallbackData callBackData;
             }
 
         }
+        if (smAppDelegate.gotListing == FALSE) {
+            smAppDelegate.gotListing = TRUE;
+            [smAppDelegate.window setUserInteractionEnabled:YES];
+            [smAppDelegate hideActivityViewer];
+        }
+        [self getSortedDisplayList];
+        
+        //by Rishi
+        if (!isFirstTimeDownloading) { 
+            //for first time
+            [self loadAnnotationForEvents];
+            [self loadAnnotationForGeotag];
+            [self loadAnnotations:YES];
+            [self.view setNeedsDisplay];
+            isFirstTimeDownloading = YES;
+        }
     }
-    if (smAppDelegate.gotListing == FALSE) {
-        smAppDelegate.gotListing = TRUE;
-        [smAppDelegate.window setUserInteractionEnabled:YES];
-        [smAppDelegate hideActivityViewer];
-    }
-    [self getSortedDisplayList];
-
-    //by Rishi
-    if (!isFirstTimeDownloading) { 
-        //for first time
-        [self loadAnnotationForEvents];
-        [self loadAnnotationForGeotag];
-        [self loadAnnotations:YES];
-        [self.view setNeedsDisplay];
-        isFirstTimeDownloading = YES;
-    }
+    
     
     //isDownloadingLocation = NO;
 }
@@ -2205,8 +2195,6 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
     [self loadAnnotations:NO];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
 }
 
 -(void)getAllGeotagsForMapView:(NSNotification *)notif 
@@ -2215,8 +2203,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"got all geotag for map %@",smAppDelegate.geotagList);
     [self loadAnnotationForGeotag];
     [self loadAnnotations:NO];    
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
     loadGeotagServiceData=false;
 }
 
