@@ -29,6 +29,11 @@ user_newsfeed_html:
   defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: html }
   requirements: { _method: GET }
 
+user_minifeed_html:
+  pattern: /{userId}/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeedByUserId, type: html }
+  requirements: { _method: GET }
+
 like_a_feed:
   pattern: /newsfeed/{id}/like
   defaults: { _controller: Controller\UserActivities::likeById, type: json }

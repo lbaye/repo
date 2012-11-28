@@ -40,6 +40,11 @@ class UserActivities extends Base {
         return $this->getMiniFeedByUser($this->user, $type);
     }
 
+    public function getMiniFeedByUserId($type) {
+        $userId = $this->request->get('userId');
+        return $this->getMiniFeedByUser($this->userRepository->find($userId), $type);
+    }
+
     public function getActivitiesByUserId($type) {
         $userId = $this->request->get('userId');
         return $this->getActivitiesByUser($this->userRepository->find($userId), $type);

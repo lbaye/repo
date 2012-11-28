@@ -27,8 +27,13 @@ class Reviews extends Base
     {
         $postData = $this->request->request->all();
         $review = $this->reviewRepo->map($postData, $this->user);
+        try {
         $this->reviewRepo->insert($review);
-
+        } catch (\Exception $e){
+            $this->response->setContent(json_encode(array('message' => 'Invalid request. Set all the required parameters.')));
+            $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+            return $this->response;
+        }
         return $this->_generateResponse($review->toArray(), Status::CREATED);
     }
 
