@@ -439,14 +439,12 @@ class User extends Base
             $this->userRepository->acceptFriendRequest($friendId, $response);
             $this->notifyUser($friendId);
 
-            $circles = $this->user->getCircles();
+            $user = $this->user;
+            $data = $user->toArrayDetailed();
+            $userData['circles'] = $data['circles'];
+            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
 
-            $result = array();
-            foreach ($circles as $circle) {
-                $result[] = $circle->toArray();
-            }
-
-            $this->response->setContent(json_encode($result));
+            $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
 
         } catch (\Exception $e) {
