@@ -1,0 +1,14 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    border: 1px solid silver;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 5px 5px 5px 5px;
+}
