@@ -1167,15 +1167,11 @@ ButtonClickCallbackData callBackData;
     if (useLocalData==false)
     {
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate.window setUserInteractionEnabled:YES];
     }
     
     if(loadGeotagServiceData==true)
     {
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate.window setUserInteractionEnabled:YES];
         NSLog(@"call geotag service");
     }
     
@@ -1197,7 +1193,7 @@ ButtonClickCallbackData callBackData;
     [super viewDidAppear:animated];
     //[self initPullView];
     if (!timerGotListing) {
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
     pullDownView.hidden = NO;
@@ -1904,6 +1900,7 @@ ButtonClickCallbackData callBackData;
     
     return distanceFromMe;
 }
+
 - (void)gotListings:(NSNotification *)notif
 {
     NSLog(@"got listing");
@@ -2194,8 +2191,6 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
     [self loadAnnotations:NO];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
 }
 
 -(void)getAllGeotagsForMapView:(NSNotification *)notif 
@@ -2204,8 +2199,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"got all geotag for map %@",smAppDelegate.geotagList);
     [self loadAnnotationForGeotag];
     [self loadAnnotations:NO];    
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
     loadGeotagServiceData=false;
 }
 
