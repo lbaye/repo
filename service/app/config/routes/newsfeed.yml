@@ -14,6 +14,11 @@ my_newsfeed_html:
   defaults: { _controller: Controller\UserActivities::getActivities, type: html }
   requirements: { _method: GET }
 
+my_minifeed_html:
+  pattern: /me/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeed, type: html }
+  requirements: { _method: GET }
+
 user_newsfeed:
   pattern: /{userId}/newsfeed
   defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: json }

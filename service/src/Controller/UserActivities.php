@@ -35,9 +35,45 @@ class UserActivities extends Base {
         return $this->getActivitiesByUser($this->user, $type);
     }
 
+    public function getMiniFeed($type){
+        $this->_ensureLoggedIn();
+        return $this->getMiniFeedByUser($this->user, $type);
+    }
+
     public function getActivitiesByUserId($type) {
         $userId = $this->request->get('userId');
         return $this->getActivitiesByUser($this->userRepository->find($userId), $type);
+    }
+
+    public function getMiniFeedByUser(
+        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE) {
+
+        $activities = $this->userActivitiesRepo->getByUser($user);
+
+        if (count($activities) == 0) {
+            $this->response->setContent('');
+            $this->response->headers->set('Content-Type', 'text/html');
+            return $this->response;
+        } else {
+            $items = array();
+            foreach ($activities as $activity) $items[] = $activity->toArray();
+
+            if (self::DEFAULT_CONTENT_TYPE === $type)
+                return $this->_generateResponse($items);
+            else {
+                return $this->render(
+                    array(
+                        'activities' => $activities,
+                        'userRepo' => $this->userRepository,
+                        'photoRepo' => $this->photoRepository,
+                        'geotagRepo' => $this->geotagRepository,
+                        'activityRepo' => $this->userActivitiesRepo,
+                        'currentUser' => $user,
+                        'authToken' => $user->getAuthToken()
+                    ));
+            }
+        }
+
     }
 
     public function getActivitiesByUser(
