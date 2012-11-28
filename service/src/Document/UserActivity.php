@@ -149,7 +149,11 @@ class UserActivity implements ParticipativeDoc {
 
     public function toHumanizeDate() {
         $now = new \DateTime();
-        return \Helper\Util::toHumanizeDate($now->getTimestamp(), $this->createdAt->getTimestamp());
+
+        if ($this->createdAt != null)
+            return \Helper\Util::toHumanizeDate($now->getTimestamp(), $this->createdAt->getTimestamp());
+        else
+            return '';
     }
 
     public function toArray() {
