@@ -98,10 +98,17 @@ class Photos extends Base
             $tPath = ROOTDIR . $fileThumbPath;
             $mPath = ROOTDIR . $fileMediumPath;
             $lPath = ROOTDIR . $fileLargePath;
-            ImageHelper::saveResizeImageFromBase64($imageData, $tPath, $mPath, $lPath,
+            $created = ImageHelper::saveResizeImageFromBase64($imageData, $tPath, $mPath, $lPath,
                 $thumbWidth, $thumbHeight,
                 $mediumWidth, $mediumHeight,
                 $largeWidth, $largeHeight);
+            if (!$created)
+            {
+                $this->response->setContent(json_encode(array('message' => 'Problem occured while creating the image(Possibly Invalid format).')));
+                $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
+                return $this->response;
+            }
+
             $uriThumb = $fileThumbPath . "?" . $timeStamp;
             $uriMedium = $fileMediumPath . "?" . $timeStamp;
             $uriLarge = $fileLargePath . "?" . $timeStamp;

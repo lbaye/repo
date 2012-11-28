@@ -15,20 +15,24 @@ class Image
     }
 
     public static function saveResizeImageFromBase64($base64Str, $tPath, $mPath, $lPath,
-                                                     $thumbWidth,$thumbHeight,
-                                                     $mediumWidth,$mediumHeight,
-                                                     $largeWidth,$largeHeight)
+                                                     $thumbWidth, $thumbHeight,
+                                                     $mediumWidth, $mediumHeight,
+                                                     $largeWidth, $largeHeight)
     {
         $img = imagecreatefromstring(base64_decode($base64Str));
 
+        if (empty($img))
+            return false;
+
         if ($img != false) {
-            self::imageResize($thumbWidth, $thumbHeight, $img,$tPath);
-            self::imageResize($mediumWidth, $mediumHeight, $img,$mPath);
-            self::imageResize($largeWidth, $largeHeight, $img,$lPath,1);
+            self::imageResize($thumbWidth, $thumbHeight, $img, $tPath);
+            self::imageResize($mediumWidth, $mediumHeight, $img, $mPath);
+            self::imageResize($largeWidth, $largeHeight, $img, $lPath, 1);
+            return true;
         }
     }
 
-    public function imageResize($maxWidth, $maxHeight, $image,$filePath,$original=null)
+    public function imageResize($maxWidth, $maxHeight, $image, $filePath, $original = null)
     {
         // Get current dimensions
         $oldWidth = imagesx($image);
