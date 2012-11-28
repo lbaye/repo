@@ -433,6 +433,8 @@ NSMutableArray *unreadMesg;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 
+        [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];
+
     } else if ([name isEqualToString:@"Decline"]) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient declineFriendRequest:req.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];

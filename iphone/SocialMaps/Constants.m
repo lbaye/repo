@@ -21,6 +21,8 @@
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
 NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
 //NSString * const WS_URL = @"http://192.168.1.212:8888";
+//NSString * const WS_URL = @"192.168.1.229/web";
+//NSString * const WS_URL = @"http://192.168.1.19/social_maps/web";
 
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";

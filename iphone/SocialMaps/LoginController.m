@@ -422,17 +422,20 @@
         else 
             [self performSegueWithIdentifier: @"showMapView" sender: self];
     } else {
-        [CustomAlert setBackgroundColor:[UIColor redColor] 
-                        withStrokeColor:[UIColor redColor]];
-        CustomAlert *loginAlert = [[CustomAlert alloc]
-                                   initWithTitle:@"Cannot Register"
-                                   message:@"Please contact provider"
-                                   delegate:nil
-                                   cancelButtonTitle:@"Done"
-                                   otherButtonTitles:nil];
-        
-        [loginAlert show];
-        [loginAlert autorelease];
+        if (smAppDelegate.smLogin==FALSE)
+        {
+            [CustomAlert setBackgroundColor:[UIColor redColor] 
+                            withStrokeColor:[UIColor redColor]];
+            CustomAlert *loginAlert = [[CustomAlert alloc]
+                                       initWithTitle:@"Cannot Register"
+                                       message:@"Please contact provider"
+                                       delegate:nil
+                                       cancelButtonTitle:@"Done"
+                                       otherButtonTitles:nil];
+            
+            [loginAlert show];
+            [loginAlert autorelease];            
+        }
     }
 }
 

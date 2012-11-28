@@ -113,7 +113,6 @@ bool searchFlags=true;
     [self.eventListTableView reloadData];
     
     [smAppDelegate showActivityViewer:self.view];
-
 }
 
 -(void)viewDidDisappear:(BOOL)animated

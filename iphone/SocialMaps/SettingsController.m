@@ -18,6 +18,9 @@
 #import "FriendListViewController.h"
 #import "NotificationController.h"
 #import "UtilityClass.h"
+#import "FacebookHelper.h"
+#import "UserDefault.h"
+#import "FacebookHelper.h"
 
 @implementation SettingsController
 @synthesize settingsScrollView;
@@ -29,6 +32,10 @@
 @synthesize backButton;
 //@synthesize defPlatforms;
 @synthesize smAppDelegate,totalNotifCount;
+UserDefault *userDefault;
+FacebookHelper *fbHelper;
+Facebook *facebookApi;
+int connectFBCounter=0, fbLoginCallbackCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,7 +90,11 @@
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
     
     [self displayNotificationCount];
-    
+    userDefault=[[UserDefault alloc] init];
+    facebookApi = [[FacebookHelper sharedInstance] facebook];
+    fbHelper=[[FacebookHelper alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
     //UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
     //buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
@@ -108,8 +119,66 @@
     [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
 }
 
+- (void)getConnectwithFB:(NSNotification *)notif
+{
+    NSLog(@"(smAppDelegate.facebookLogin: %i smAppDelegate.smLogin: %i",smAppDelegate.facebookLogin,smAppDelegate.smLogin);
+    if ((smAppDelegate.smLogin==TRUE) && fbLoginCallbackCounter==0)
+    {
+
+        NSLog(@"");
+        RestClient *rc=[[RestClient alloc] init];
+        [smAppDelegate showActivityViewer:self.view];
+        NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
+        [fbHelper inviteFriends:nil];
+        NSLog(@"invite friends from callback if");
+        if ([smAppDelegate.fbId isEqualToString:@""])
+        {
+            smAppDelegate.fbId=[userDefault readFromUserDefaults:@"FBUserId"];
+        }
+        
+        NSLog(@"smAppDelegate.fbId %@",smAppDelegate.fbId);
+        if (smAppDelegate.fbAccessToken) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :smAppDelegate.fbAccessToken];
+            NSLog(@"got access token");
+        }
+        else if ([userDefault readFromUserDefaults:@"FBAccessTokenKey"]) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :[userDefault readFromUserDefaults:@"FBAccessTokenKey"]];
+            NSLog(@"got accees token from user default");
+        }
+        else
+        {
+            [smAppDelegate hideActivityViewer];
+            //            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
+        }
+    }
+    fbLoginCallbackCounter++;
+}
+
+- (void)connectFBDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+    NSLog(@"Connected with fb :D %@",[notif object]);
+    if (connectFBCounter==0)
+    {
+        [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    }
+    connectFBCounter++;
+}
+
+-(IBAction)connectWithFB:(id)sender
+{
+
+}
+
 - (void)viewDidUnload
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [self setSettingsScrollView:nil];
     [self setPlatformView:nil];
     [self setLayersView:nil];
@@ -200,10 +269,23 @@
     //chkBox.delegate = self;
     //[rowView addSubview:chkBox];
     
-    UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonInviteFBFriend.frame = chkboxFrame;
     buttonInviteFBFriend.tag = 1001;
+    userDefault=[[UserDefault alloc] init];
+    if ((![userDefault readFromUserDefaults:@"connectWithFBDone"]) && (smAppDelegate.smLogin==TRUE) && (![facebookApi isSessionValid]))
+    {
+        [buttonInviteFBFriend setTitle:@"Connect with facebook" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [buttonInviteFBFriend setTitle:@"Invite facebook friends" forState:UIControlStateNormal];
+    }
     [buttonInviteFBFriend addTarget:self action:@selector(actionInviteFriendButton:) forControlEvents:UIControlEventTouchUpInside];
+    [buttonInviteFBFriend setBackgroundImage:[UIImage imageNamed:@"img_settings_list_bg_solid.png"] forState:UIControlStateNormal];
+    [buttonInviteFBFriend setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
+    [buttonInviteFBFriend.titleLabel setFont: [UIFont fontWithName:@"Helvetica" size:14.0]];
     [rowView addSubview:buttonInviteFBFriend];
     
     // New scrool view content size    
@@ -222,6 +304,51 @@
 - (void)actionInviteFriendButton:(id)sender
 {
     NSLog(@"Invite Facebook Friends");
+    UIButton *inviteButton=(UIButton *)([self.view viewWithTag:1001]);
+    [inviteButton setTitle:@"Invite facebook friends" forState:UIControlStateNormal];
+    if ((![userDefault readFromUserDefaults:@"connectWithFBDone"]) && (smAppDelegate.smLogin==TRUE))
+    {
+        NSLog(@"do connect fb");
+
+        //    [smAppDelegate showActivityViewer:self.view];
+        if ([facebookApi isSessionValid])
+        {
+            [fbHelper inviteFriends:nil];
+            NSLog(@"invite friends valid session");
+        }
+        else
+        {
+            NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                    @"email",
+                                    @"user_likes", 
+                                    @"user_photos", 
+                                    @"publish_checkins", 
+                                    @"photo_upload", 
+                                    @"user_location",
+                                    @"user_birthday",
+                                    @"user_about_me",
+                                    @"publish_stream",
+                                    @"read_stream",
+                                    @"friends_status",
+                                    @"user_checkins",
+                                    @"friends_checkins",
+                                    nil];
+            [facebookApi authorize:permissions];
+            //    smAppDelegate.facebookLogin=TRUE;
+            [permissions release];
+        }
+        [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+        [userDefault writeToUserDefaults:@"connectWithFBDone" withString:@"FBConnectedDone"];
+    }
+//    if (smAppDelegate.smLogin==true)
+//    {
+//        [UtilityClass showAlert:@"" :@"Please connect with facebook"];
+//    }
+    else
+    {
+        [fbHelper inviteFriends:NULL];
+        NSLog(@"invite friends in else");
+    }
 }
 
 - (void)actionTestFriendListButton

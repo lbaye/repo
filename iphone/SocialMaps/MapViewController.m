@@ -1043,6 +1043,9 @@ ButtonClickCallbackData callBackData;
     //by Rishi
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
     [locationManager stopUpdatingLocation];
@@ -1387,6 +1390,7 @@ ButtonClickCallbackData callBackData;
         [permissions release];
     }
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+    [userDefault writeToUserDefaults:@"connectWithFBDone" withString:@"FBConnectedDone"];
     [connectToFBView removeFromSuperview];
 }
 

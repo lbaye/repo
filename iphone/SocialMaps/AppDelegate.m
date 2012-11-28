@@ -25,7 +25,7 @@
 #import "ViewEventListViewController.h"
 #import "NotificationController.h"
 #import "Globals.h"
-
+#import "FriendsProfileViewController.h"
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -336,6 +336,15 @@ static AppDelegate *sharedInstance=nil;
             }
             
             [self.currentModelViewController presentModalViewController:controller animated:YES];
+        }
+        else if (newNotif.notifType == PushNotificationAcceptedRequest) 
+        {
+            RestClient *rc=[[RestClient alloc] init];
+            [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
+//            FriendsProfileViewController *frndProfile = [[FriendsProfileViewController alloc] init];
+//            frndProfile.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+//            frndProfile.friendsId=[newNotif.objectIds objectAtIndex:0];
+//            [self.currentModelViewController presentModalViewController:frndProfile animated:YES];
         }
        
     }

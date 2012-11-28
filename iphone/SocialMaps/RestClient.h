@@ -115,5 +115,5 @@
 -(void)deletePlans:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)planId;
 -(void)updatePlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getFriendsAllplans:(NSString *)userId:(NSString *)authToken:(NSString *)authTokenValue;
-
+-(void) getUserFriendList:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andUserId:(NSString*)userId;
 @end

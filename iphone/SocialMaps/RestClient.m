@@ -2417,7 +2417,7 @@ AppDelegate *smAppDelegate;
     
     for (int i=0; i<[circlesIdArr count]; i++)
     {
-        [request addPostValue:[circlesIdArr objectAtIndex:i] forKey:@"circleId[]"];
+        [request addPostValue:[circlesIdArr objectAtIndex:i] forKey:@"circleIds[]"];
     }
     
     // Handle successful REST call
@@ -6894,7 +6894,7 @@ AppDelegate *smAppDelegate;
         {
             NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
             NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
-            
+            [friendListGlobalArray removeAllObjects];
             NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
             
             for (NSDictionary *dicFriends in friendList) {
@@ -6906,6 +6906,24 @@ AppDelegate *smAppDelegate;
                 eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
                 eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
                 eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
+                
+                //user frnd global starts
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:dicFriends key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:dicFriends key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:dicFriends key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:dicFriends key1:@"avatar" key2:nil key3:nil];
+                frnd.distance = [[self getNestedKeyVal:dicFriends key1:@"distance" key2:nil key3:nil] doubleValue];
+                frnd.coverImageUrl = [self getNestedKeyVal:dicFriends key1:@"coverPhoto" key2:nil key3:nil];
+                frnd.address =[NSString stringWithFormat:@"%@, %@",[self getNestedKeyVal:dicFriends key1:@"address" key2:@"street" key3:nil],[self getNestedKeyVal:dicFriends key1:@"address" key2:@"city" key3:nil]];
+                frnd.statusMsg = [self getNestedKeyVal:dicFriends key1:@"status" key2:nil key3:nil];
+                frnd.regMedia = [self getNestedKeyVal:dicFriends key1:@"regMedia" key2:nil key3:nil];
+                
+                [friendListGlobalArray addObject:frnd];
+                NSLog(@"globalfrnd.userId: %@ %@ %lf %@ %@ %@ %@",frnd.userId,frnd.imageUrl,frnd.distance,frnd.coverImageUrl,frnd.address,frnd.statusMsg,frnd.regMedia);
+                //user friends global ends
+                
                 
                 for (NSDictionary *dicCircle in circleList) {
                     NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
@@ -7322,6 +7340,98 @@ AppDelegate *smAppDelegate;
     
     //[request setDelegate:self];
     NSLog(@"asyn start get all events for map");
+    [request startAsynchronous];
+}
+
+-(void) getUserFriendList:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andUserId:(NSString*)userId
+{
+    NSString *route = [NSString stringWithFormat:@"%@/%@/friends", WS_URL, userId];
+    NSURL *url = [NSURL URLWithString:route];
+    
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"GET"];
+    [request addRequestHeader:authTokenKey value:authTokenValue];
+    
+    // Handle successful REST call
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        // NSData *responseData = [request responseData];
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
+        {
+            NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
+            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
+            
+            NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
+            [friendListGlobalArray removeAllObjects];
+            for (NSDictionary *dicFriends in friendList)
+            {
+                NSLog(@"friendDic = %@", dicFriends);
+                
+                EachFriendInList *eachFriend = [[EachFriendInList alloc] init];
+                
+                eachFriend.friendId = [dicFriends objectForKey:@"id"];
+                eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
+                eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
+                eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
+                
+                for (NSDictionary *dicCircle in circleList)
+                {
+                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
+                    if ([frndIdList containsObject:eachFriend.friendId])
+                    {
+                        if (!eachFriend.friendCircle) 
+                        {
+                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
+                        }
+                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
+                    }
+                }
+                [eachFriendsList addObject:eachFriend];
+                //user frnd global starts
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:dicFriends key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:dicFriends key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:dicFriends key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:dicFriends key1:@"avatar" key2:nil key3:nil];
+                frnd.distance = [[self getNestedKeyVal:dicFriends key1:@"distance" key2:nil key3:nil] doubleValue];
+                frnd.coverImageUrl = [self getNestedKeyVal:dicFriends key1:@"coverPhoto" key2:nil key3:nil];
+                frnd.address =[NSString stringWithFormat:@"%@, %@",[self getNestedKeyVal:dicFriends key1:@"address" key2:@"street" key3:nil],[self getNestedKeyVal:dicFriends key1:@"address" key2:@"city" key3:nil]];
+                frnd.statusMsg = [self getNestedKeyVal:dicFriends key1:@"status" key2:nil key3:nil];
+                frnd.regMedia = [self getNestedKeyVal:dicFriends key1:@"regMedia" key2:nil key3:nil];
+                
+                [friendListGlobalArray addObject:frnd];
+                NSLog(@"globalfrnd.userId: %@ %@ %lf %@ %@ %@ %@",frnd.userId,frnd.imageUrl,frnd.distance,frnd.coverImageUrl,frnd.address,frnd.statusMsg,frnd.regMedia);
+                //user friends global ends
+            }
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
+        } 
+        else 
+        {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
+    }];
+    
+    //[request setDelegate:self];
+    NSLog(@"asyn srt getFriendList");
     [request startAsynchronous];
 }
 

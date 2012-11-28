@@ -144,6 +144,12 @@
     NSLog(@"selected image %@",img);
     regPhoto = scaledImage;
     
+    
+    UIGraphicsBeginImageContext(scaledImage.size);
+    [img drawInRect:CGRectMake(0,0,scaledImage.size.width,scaledImage.size.height)];
+    regPhoto = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
 //    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 //    NSLog(@"After image selection: width=%f, height=%f",
 //          selectedImage.size.width, selectedImage.size.height);
