@@ -863,6 +863,12 @@ class UserRepo extends Base {
             $userHash['blockStatus'] = UserDocument::BLOCKED;
         else
             $userHash['blockStatus'] = UserDocument::UNBLOCKED;
+
+        if (isset($userHash['dateOfBirth']) && !empty($userHash['dateOfBirth'])) {
+            $newTime = new \DateTime();
+            $newTime->setTimestamp($userHash['dateOfBirth']->sec);
+            $userHash['dateOfBirth'] = $newTime;
+        }
     }
 
     public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null) {
