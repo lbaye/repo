@@ -176,7 +176,7 @@ abstract class Base {
         return $arrayItems;
     }
 
-    protected function _generateResponse($hash, $code = Status::OK, $options = array()) {
+    public function _generateResponse($hash, $code = Status::OK, $options = array()) {
         if (!empty($hash)) {
             $this->response->setContent(
                 $this->serializer->serialize($hash, $options)
@@ -406,6 +406,11 @@ abstract class Base {
     private function simplifyControllerName($name) {
         $parts = explode('\\', $name);
         return $parts[count($parts) - 1];
+    }
+
+    protected function cacheAndReturn($cacheKey, \Closure $closure) {
+        die("Cache: $cacheKey");
+        return $closure->__invoke();
     }
 
 }
