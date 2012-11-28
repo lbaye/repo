@@ -67,6 +67,7 @@ public class PeopleRowFactory {
 
 		// *****************************************************************check
 		// the user type sm/fb
+		holder.sourceImage.setVisibility(View.GONE);
 		if (people.getRegMedia() != null) {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {

@@ -308,23 +308,6 @@ public class ServerResponseParser {
 
 					myInfo.setCircleList(getCircleList(cjArray));
 
-					/*
-					 * List<Circle> circleList = new ArrayList<Circle>(); //
-					 * Circle[] circles = new Circle[cjArray.length()]; for (int
-					 * i = 0; i < cjArray.length(); i++) {
-					 * 
-					 * JSONObject cObj = cjArray.getJSONObject(i);
-					 * 
-					 * Circle circle = parseCircleEntity(cObj); if
-					 * (!circle.getName().equalsIgnoreCase("second_degree"))
-					 * circleList.add(circle);
-					 * 
-					 * }
-					 * 
-					 * myInfo.setCircleList(circleList); //
-					 * accountSettingsEntity.setCircle(circles);
-					 */
-
 				}
 			}
 
@@ -373,6 +356,44 @@ public class ServerResponseParser {
 			myInfo = null;
 		}
 
+		return myInfo;
+	}
+	
+	public static MyInfo parseCircleAndFriends(String response)
+	{
+		MyInfo myInfo = new MyInfo();
+		
+		try {
+			JSONObject result = new JSONObject(response);
+			
+			if (!result.isNull("circles")) {
+				// parse circles
+				JSONArray cjArray = result.getJSONArray("circles");
+				if (cjArray != null) {
+
+					myInfo.setCircleList(getCircleList(cjArray));
+
+				}
+			}
+
+			if (!result.isNull("friends")) {
+				// parse circles
+				JSONArray fjArray = result.getJSONArray("friends");
+				if (fjArray != null) {
+
+					myInfo.setFriendList(parsePeoples(fjArray));
+					// accountSettingsEntity.setFriend(friends);
+
+				}
+			}
+			
+			
+		} catch(JSONException e){
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return myInfo;
 	}
 
@@ -1499,8 +1520,7 @@ public class ServerResponseParser {
 					people.setCurrentLat(jo.getDouble("lat"));
 				if (!jo.isNull("lng"))
 					people.setCurrentLng(jo.getDouble("lng"));
-				if (!jo.isNull("address"))
-					people.setCurrentAddress(jo.getString("address"));
+				//if (!jo.isNull("address"))people.setCurrentAddress(jo.getString("address"));
 			}
 			if (!peopleJSONObj.isNull("address")) {
 
@@ -1533,7 +1553,7 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("distance")) {
 				people.setDistance(peopleJSONObj.getDouble("distance"));
-				// Log.i("distance", temp.getDouble("distance") + "");
+				Log.i("distance", peopleJSONObj.getDouble("distance") + ":"+people.getFirstName());
 			}
 			if (!peopleJSONObj.isNull("isFriend")) {
 				people.setIsFrnd(peopleJSONObj.getBoolean("isFriend"));
@@ -1563,6 +1583,7 @@ public class ServerResponseParser {
 			if (!peopleJSONObj.isNull("lastSeenAt")) {
 
 				people.setCurrentAddress(peopleJSONObj.getString("lastSeenAt"));
+				Log.i("lastSeenAt", peopleJSONObj.getString("lastSeenAt"));
 
 			}
 

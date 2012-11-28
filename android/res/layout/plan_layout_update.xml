@@ -132,32 +132,39 @@
                 
             <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip">
 
                     <TextView
                         android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dip"
                         android:gravity="left"
-                        android:text="Date: "
-                        android:textColor="@drawable/black" 
-                        android:paddingLeft="10dip"/>
+                        android:text="@string/dateLabel"
+                        android:textColor="@drawable/black"
+                        android:textSize="12dip"
+                        android:textStyle="bold"/>
 
                     <Button
                         android:id="@+id/btnSelectDate"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp" 
-                        android:background="@null"
+                        android:layout_width="80dip"
+                        android:layout_height="35dip" 
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" 
+                        android:background="@drawable/selector_btn_light"
                         android:text="@string/selectdate" 
-                        android:visibility="gone"/>
+                        android:textSize="12dip"
+                        android:visibility="visible"/>
 
                     <TextView
                         android:id="@+id/tvShowSelectedDate"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@drawable/black" 
-                        android:visibility="visible"/>
+                        android:layout_height="40dip"
+                        android:textColor="@drawable/black"
+                        android:textSize="12dip"
+                        android:visibility="visible" />
                 </LinearLayout> 
                 
             <TextView 
@@ -167,7 +174,8 @@
                 android:textSize="12dip"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:layout_marginTop="15dip"
+                android:layout_marginTop="10dip" 
+                android:layout_marginBottom="10dip"
                 android:paddingLeft="10dip"
                 
                 /> 

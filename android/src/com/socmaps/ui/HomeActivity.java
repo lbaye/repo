@@ -701,12 +701,12 @@ public class HomeActivity extends MapActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleGetSearchResultResponse(responseStatus, responseString);
-			responseString = null;
+			//responseString = null;
 		}
 	};
 
 	public void handleGetSearchResultResponse(int status, String response) {
-		// Log.d("Get Search result", status + ":" + response);
+		 Log.d("Get Search result", status + ":" + response);
 		// userList.clear();
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -1493,6 +1493,13 @@ public class HomeActivity extends MapActivity implements
 								NotificationActivity.class);
 						intent2.putExtra("selectedTab",
 								Constant.PUSH_NOTIFICATION_FRIEND_REQUEST);
+						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
+						Intent intent2 = new Intent(context,
+								NotificationActivity.class);
+						intent2.putExtra("peopleId",
+								pushData.getObjectId());
 						startActivity(intent2);
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MEETUP)) {

@@ -627,8 +627,18 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 					Toast.LENGTH_SHORT).show();
 			// EventListActivity.isUpdateList = true;
 			//Intent intent = new Intent(context, EventListActivity.class);
-			finish();
-			//startActivity(intent);
+			//finish();
+			//startActivity(intent); 
+			
+			for(int i=0 ; i< plans.size() ; i++)
+			{
+				if(plans.get(i).getPlanId().equalsIgnoreCase(seletedPlan.getPlanId()))
+				{
+					plans.remove(i);
+				}
+			}
+			
+			contentAdapter.notifyDataSetChanged();
 
 		} else {
 			Toast.makeText(context, "Failed. Please try again.",

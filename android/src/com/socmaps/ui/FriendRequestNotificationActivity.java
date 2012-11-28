@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.FriendRequest;
+import com.socmaps.entity.MyInfo;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class FriendRequestNotificationActivity extends Activity {
@@ -289,11 +291,22 @@ public class FriendRequestNotificationActivity extends Activity {
 			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Friend request accepted.",
 					Toast.LENGTH_SHORT).show();
+			if (response != null && !response.equals("")) {
+				MyInfo myInfo = ServerResponseParser
+						.parseCircleAndFriends(response);
+
+				if (myInfo != null) {
+					StaticValues.myInfo.setCircleList(myInfo.getCircleList());
+					StaticValues.myInfo.setFriendList(myInfo.getFriendList());
+				}
+
+			}
+
 			break;
 
 		default:
 			Toast.makeText(context,
-					"An unknown error occured. Please try again!!",
+					"An unknown error occured. Please try again!!!",
 					Toast.LENGTH_SHORT).show();
 			break;
 

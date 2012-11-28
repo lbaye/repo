@@ -40,8 +40,9 @@ public class Constant {
 	// final static public String smServerUrl =
 	// "http://192.168.1.71/social_maps/web";
 	// staging server
-	 final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+	 //final static public String smServerUrl ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
 	//final static public String smServerUrl = "http://192.168.1.212:8888";
+	final static public String smServerUrl = "http://192.168.1.19/social_maps/web";
 
 	// final static public String smServerUrl
 	// ="http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
@@ -194,10 +195,12 @@ public class Constant {
 	public final static String PEOPLE_FACEBOOK = "peoplefacebook";
 	
 	public final static String PUSH_NOTIFICATION_FRIEND_REQUEST = "friend_request";
+	public final static String PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT = "accepted_request";
 	public final static String PUSH_NOTIFICATION_MEETUP = "meetup";
 	public final static String PUSH_NOTIFICATION_EVENT = "event_guest";
 	public final static String PUSH_NOTIFICATION_MESSAGE_NEW = "new_message";
 	public final static String PUSH_NOTIFICATION_MESSAGE_REPLY = "reply_message";
+	public final static String PUSH_NOTIFICATION_PROXIMITY_ALERT = "proximity_alert";
 	
 	public final static String META_TYPE_VENUE = "venue";
 	public final static String META_TYPE_PLACE = "place";

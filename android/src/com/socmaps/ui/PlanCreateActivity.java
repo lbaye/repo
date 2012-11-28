@@ -87,6 +87,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 	
 	double eventLat = 0, eventLng = 0; 
 	String eventAddress = ""; 
+	String description = "";
 	
 	String shareWithPickerName = "sharewith"; 
 	
@@ -119,7 +120,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
-		Log.i("EventNewActivity:onResume memory before",
+		Log.i("PlanNewActivity:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
 
 	}
@@ -168,7 +169,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		btnCancel.setOnClickListener(buttonActionListener);  
 		
 		tvDate = (TextView) findViewById(R.id.tvDate); 
-		tvDate.setOnClickListener(buttonActionListener);
+		//tvDate.setOnClickListener(buttonActionListener);
 		
 		btnDate = (Button) findViewById(R.id.btnSelectDate); 
 		btnDate.setOnClickListener(buttonActionListener); 
@@ -179,7 +180,9 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
+		
+		
 	} 
 	
 	private class ButtonActionListener implements OnClickListener
@@ -632,14 +635,20 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		boolean validated = true;
 		String messageText = ""; 
 		
+		description = etMessage.getText().toString().trim(); 
+		
 		if (eventLat == 0 && eventLng == 0) {
 			validated = false;
 			messageText = "Location not found. Please select or pick a location.";
 		} 
 		else if (eventDateString.equals("")) {
 			validated = false;
-			messageText = "Please enter event date.";
+			messageText = "Please enter plan date.";
 		} 
+		else if (description.equals("")) { 
+			validated = false;
+			messageText = "Please enter description.";
+		}
 		
 		if (validated) {
 			initiateSendEventData();
@@ -650,7 +659,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 	
 	public void initiateSendEventData() {
 		Thread thread = new Thread(null, sendPlanThread,
-				"Start send event data");
+				"Start send plan data");
 		thread.start();
 
 		// show progress dialog if needed
@@ -667,7 +676,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context)); 
 			
-			String description = etMessage.getText().toString().trim(); 
+			//description = etMessage.getText().toString().trim(); 
 			Log.d("Description", description);
 
 			restClient.AddParam("description", description); 

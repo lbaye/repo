@@ -698,5 +698,6 @@
     <string name="myPhotos">My photos</string>
     <string name="uploadNewPhoto">Upload new photo...</string>
     <string name="deleteSelectedPhotos">Delete selected photos</string>
+     <string name="dateLabel">Date:</string>
 
 </resources>

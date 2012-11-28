@@ -291,7 +291,25 @@ public class MyInfo {
 	}
 
 	public void setFriendList(List<People> friendList) {
-		this.friendList = friendList;
+		//this.friendList = friendList;
+		
+		if(this.friendList!=null)
+		{
+			if(friendList!=null)
+			{
+				this.friendList.clear();
+				for(People people:friendList)
+				{
+					this.friendList.add(people);
+				}
+			}
+			
+			
+		}
+		else
+		{
+			this.friendList = friendList;
+		}	
 	}
 
 	public List<Circle> getCircleList() {
@@ -299,7 +317,24 @@ public class MyInfo {
 	}
 
 	public void setCircleList(List<Circle> circleList) {
-		this.circleList = circleList;
+		if(this.circleList!=null)
+		{
+			if(circleList!=null)
+			{
+				this.circleList.clear();
+				for(Circle circle:circleList)
+				{
+					this.circleList.add(circle);
+				}
+			}
+			
+			
+		}
+		else
+		{
+			this.circleList = circleList;
+		}		
+		
 	}
 
 	public TimeEntity getLastLoginTime() {

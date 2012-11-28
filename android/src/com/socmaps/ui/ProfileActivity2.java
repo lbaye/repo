@@ -82,6 +82,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 	public People people;
 	private People peopleUpdate;
+	private String peopleId;
 
 	String getAvater, getCoverPhoto, getRegMedia, getFirstName, getLastName,
 			userName, getStatusMsg, getStreetAdd, getLastLog, getAge,
@@ -118,16 +119,23 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.other_layout);
+		
+		initialize();
 
 		Object obj = getIntent().getSerializableExtra("otherUser");
+		peopleId = getIntent().getStringExtra("peopleId");
 		if (obj != null) {
 			people = (People) (obj);
+			peopleId = people.getId();
 			obj = null;
-			Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
-		}
+			//Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
+		} 
 
-		initialize();
-		getFriendInfo();
+		if(peopleId!=null)
+		{
+			getFriendInfo();
+		}
+		
 
 	}
 
@@ -255,7 +263,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=51a610291d73b70b022deaefd7f53e3aa4d746f7
-		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + people.getId()
+		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" +peopleId
 				+ "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
 
 		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
@@ -382,7 +390,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		/*intentToShowMeetUp.putExtra("destLat", peopleUpdate.getCurrentLat());
 		intentToShowMeetUp.putExtra("destLng", peopleUpdate.getCurrentLng());
 		intentToShowMeetUp.putExtra("destAddress",peopleUpdate.getCurrentAddress());*/ 
-		intentToShowMeetUp.putExtra("selectedPeople", people);
+		intentToShowMeetUp.putExtra("selectedPeople", peopleUpdate);
 		startActivity(intentToShowMeetUp);
 	}
 
@@ -796,7 +804,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		public void run() {
 			RestClient restClient;
 			restClient = new RestClient(Constant.smServerUrl + "/users/"
-					+ people.getId());
+					+peopleId);
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 

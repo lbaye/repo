@@ -98,7 +98,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		initialize();
 
-		// personID = getIntent().getStringExtra("PERSON_ID");
+		personID = StaticValues.myInfo.getId();
 
 		if (personID != null) {
 
@@ -570,10 +570,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 					originalFriendList = ServerResponseParser
 							.parsePeoples(jArrayFriends);
 
-					updateContentList(originalFriendList);
-
-					generateListViewForAToZ();
-
 				}
 
 				if (!jsonObject.isNull("circles")) {
@@ -584,9 +580,18 @@ public class FriendListActivity extends Activity implements OnClickListener {
 					mainCircleList = ServerResponseParser
 							.getCircleList(jArrayCircles);
 
-					updateCircleContentList(mainCircleList);
-
 				}
+
+				if (originalFriendList != null && mainCircleList != null
+						&& personID.equals(StaticValues.myInfo.getId())) {
+					StaticValues.myInfo.setFriendList(originalFriendList);
+					StaticValues.myInfo.setCircleList(mainCircleList);
+				}
+
+				updateContentList(originalFriendList);
+				updateCircleContentList(mainCircleList);
+
+				generateListViewForAToZ();
 
 			} catch (JSONException e) {
 				// TODO: handle exception
@@ -890,22 +895,22 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		} else if (selectedTab == SelectedTab.CIRCLES.ordinal()) {
 			// It is for circle search
 
-//			List<Circle> dataList = new ArrayList<Circle>();
-//			dataList.addAll(mainCircleList);
+			// List<Circle> dataList = new ArrayList<Circle>();
+			// dataList.addAll(mainCircleList);
 
-			List<Circle> list = Utility.getSearchResultFromCircle(mainCircleList,
-					originalFriendList, etSearchField.getText().toString()
-							.trim());
+			List<Circle> list = Utility.getSearchResultFromCircle(
+					mainCircleList, originalFriendList, etSearchField.getText()
+							.toString().trim());
 
 			tempCircleList.clear();
 
 			Log.w("doSearch() circle", list.size() + " size of list");
-			
+
 			tempCircleList.addAll(list);
 
-//			for (Object obj : list) {
-//				tempCircleList.add((Circle) obj);
-//			}
+			// for (Object obj : list) {
+			// tempCircleList.add((Circle) obj);
+			// }
 
 			generateListViewForCircles();
 
