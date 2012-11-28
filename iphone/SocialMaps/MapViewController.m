@@ -1197,7 +1197,7 @@ ButtonClickCallbackData callBackData;
     [super viewDidAppear:animated];
     //[self initPullView];
     if (!timerGotListing) {
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
     pullDownView.hidden = NO;
@@ -1906,15 +1906,7 @@ ButtonClickCallbackData callBackData;
 }
 - (void)gotListings:(NSNotification *)notif
 {
-//    NSLog(@"In gotListings");
-    
-    //by Rishi
-    //if (viewSearch.frame.origin.y > 44) {
-      //  return;
-    //}
-    
-    //[smAppDelegate.peopleList removeAllObjects];
-
+    NSLog(@"got listing");
     SearchLocation * listings = [notif object];
     if (listings != nil) {
         if (listings.peopleArr != nil) {
@@ -2142,23 +2134,24 @@ ButtonClickCallbackData callBackData;
             }
 
         }
+        if (smAppDelegate.gotListing == FALSE) {
+            smAppDelegate.gotListing = TRUE;
+            [smAppDelegate.window setUserInteractionEnabled:YES];
+            [smAppDelegate hideActivityViewer];
+        }
+        [self getSortedDisplayList];
+        
+        //by Rishi
+        if (!isFirstTimeDownloading) { 
+            //for first time
+            [self loadAnnotationForEvents];
+            [self loadAnnotationForGeotag];
+            [self loadAnnotations:YES];
+            [self.view setNeedsDisplay];
+            isFirstTimeDownloading = YES;
+        }
     }
-    if (smAppDelegate.gotListing == FALSE) {
-        smAppDelegate.gotListing = TRUE;
-        [smAppDelegate.window setUserInteractionEnabled:YES];
-        [smAppDelegate hideActivityViewer];
-    }
-    [self getSortedDisplayList];
-
-    //by Rishi
-    if (!isFirstTimeDownloading) { 
-        //for first time
-        [self loadAnnotationForEvents];
-        [self loadAnnotationForGeotag];
-        [self loadAnnotations:YES];
-        [self.view setNeedsDisplay];
-        isFirstTimeDownloading = YES;
-    }
+    
     
     //isDownloadingLocation = NO;
 }

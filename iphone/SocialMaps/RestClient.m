@@ -1641,6 +1641,13 @@ AppDelegate *smAppDelegate;
 
 -(void)getLocation:(Geolocation *)geolocation:(NSString *)authToken:(NSString *)authTokenValue
 {
+    static BOOL isInProgress = FALSE;
+    
+    if (isInProgress) 
+        return;
+    
+    isInProgress = TRUE;
+    
     NSString *route = [NSString stringWithFormat:@"%@/search",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     
@@ -1802,12 +1809,14 @@ AppDelegate *smAppDelegate;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:searchLocation];
+                    isInProgress = FALSE;
                 });
             });
         } 
         else 
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:nil];
+            isInProgress = FALSE;
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -1816,6 +1825,7 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LISTINGS_DONE object:nil];
+        isInProgress = FALSE;
     }];
     
     //[request setDelegate:self];
@@ -1827,7 +1837,6 @@ AppDelegate *smAppDelegate;
 {
     NSString *route = [NSString stringWithFormat:@"%@/events",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
-    Event *aEvent = [[Event alloc] init];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"GET"];
