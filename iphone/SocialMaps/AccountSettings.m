@@ -17,6 +17,7 @@
 #import "LocationSharingPref.h"
 #import "AppDelegate.h"
 #import "UITextField+Scrolling.h"
+#import "Globals.h"
 
 #define ROW_HEIGHT 62
 
@@ -376,13 +377,11 @@
     NSLog(@"ConfirmView:yesButtonClicked");
     
     SettingsMaster *parent = (SettingsMaster*)((UIButton*)sender).superview.superview;
-    AppDelegate *smAppDelegate;
     
     switch (parent.tag) {
         case 1999:
             // Logout
-            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [[smAppDelegate.window rootViewController] dismissModalViewControllerAnimated:NO];
+            [self resetAllGlobalVariableAndLogout];
             break;
         case 2000:
             // Erase data
@@ -401,6 +400,79 @@
             break;    
         default:
             break;
+    }
+}
+
+- (void)resetAllGlobalVariableAndLogout
+{
+    // Logout
+    AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [dicImages_msg removeAllObjects]; //delete dicImages_msg 
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    smAppDelegate.facebookLogin = FALSE;
+    smAppDelegate.smLogin = FALSE;
+    smAppDelegate.gotListing = FALSE;
+    smAppDelegate.needToCenterMap = TRUE;
+    smAppDelegate.rememberLoginInfo = [prefs boolForKey:@"rememberLoginInfo"];
+    smAppDelegate.email = [prefs stringForKey:@"email"];
+    smAppDelegate.password = [prefs stringForKey:@"password"];
+    smAppDelegate.authToken = [prefs stringForKey:@"authToken"];
+    smAppDelegate.userId = [prefs stringForKey:@"userId"];
+    smAppDelegate.fbId = [prefs stringForKey:@"FBUserId"];
+    smAppDelegate.fbAccessToken = [prefs stringForKey:@"FBAccessTokenKey"];
+    smAppDelegate.loginCount = [prefs integerForKey:@"loginCount"];
+    smAppDelegate.deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
+    smAppDelegate.deviceTokenChanged = FALSE;
+    [userFriendslistArray removeAllObjects];
+    [userFriendslistIndex removeAllObjects];
+    
+    // Preferences data structure
+    smAppDelegate.platformPrefs = [[[Platform alloc] init] autorelease];
+    smAppDelegate.layerPrefs    = [[[Layer alloc] init] autorelease];
+    smAppDelegate.informationPrefs = [[[InformationPrefs alloc] init] autorelease];
+    smAppDelegate.userAccountPrefs = [[[UserInfo alloc] init] autorelease];
+    smAppDelegate.userAccountPrefs.icon = nil;
+    smAppDelegate.geofencePrefs = [[[Geofence alloc] init] autorelease];
+    smAppDelegate.locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
+    smAppDelegate.notifPrefs = [[[NotificationPref alloc] init] autorelease];
+    
+    [smAppDelegate.peopleList removeAllObjects];
+    [smAppDelegate.peopleIndex removeAllObjects];
+    [smAppDelegate.placeList removeAllObjects];
+    [smAppDelegate.placeIndex removeAllObjects];
+    [smAppDelegate.dealList removeAllObjects];
+    [smAppDelegate.eventList removeAllObjects];
+    [smAppDelegate.displayList removeAllObjects];
+    [smAppDelegate.geotagList removeAllObjects];
+    
+    smAppDelegate.showPeople = TRUE;
+    smAppDelegate.showDeals  = FALSE;
+    smAppDelegate.showPlaces = FALSE;
+    smAppDelegate.showEvents = FALSE;
+    
+    smAppDelegate.msgRead = FALSE;
+    smAppDelegate.notifRead = FALSE;
+    smAppDelegate.ignoreCount = 0;
+    // Create some dummy data to show
+
+    // Friend requests
+    [smAppDelegate.friendRequests removeAllObjects];
+    
+    // Messages
+    [smAppDelegate.messages removeAllObjects];
+    
+    // Notifications
+    [smAppDelegate.notifications removeAllObjects];
+    
+    // Meet up request
+    [smAppDelegate.meetUpRequests removeAllObjects];
+    
+    [[smAppDelegate.window rootViewController] dismissModalViewControllerAnimated:NO];
+    
+    if (smAppDelegate.timerGotListing) {
+        [smAppDelegate.timerGotListing invalidate];
+        smAppDelegate.timerGotListing = nil;
     }
 }
 

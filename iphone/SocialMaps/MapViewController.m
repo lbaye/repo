@@ -1195,8 +1195,8 @@ ButtonClickCallbackData callBackData;
 {
     [super viewDidAppear:animated];
     //[self initPullView];
-    if (!timerGotListing) {
-        timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
+    if (!smAppDelegate.timerGotListing) {
+        smAppDelegate.timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
     pullDownView.hidden = NO;
@@ -1315,9 +1315,9 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapView retain count - %d", [_mapView retainCount]);
     [radio release];
     
-    if (timerGotListing) {
-        [timerGotListing invalidate];
-        timerGotListing = nil;
+    if (smAppDelegate.timerGotListing) {
+        [smAppDelegate.timerGotListing invalidate];
+        smAppDelegate.timerGotListing = nil;
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
