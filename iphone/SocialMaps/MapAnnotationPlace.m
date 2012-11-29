@@ -8,7 +8,7 @@
 
 #import "MapAnnotationPlace.h"
 #import "LocationItemPlace.h"
-
+#import "UtilityClass.h"
 #define BUTTON_WIDTH 57
 #define BUTTON_HEIGHT 27
 @implementation MapAnnotationPlace
@@ -79,11 +79,8 @@
     [lblAddress release];
         
     // 119, 184, 0 - green
-    NSString *distStr;
-    if (locItemPlace.itemDistance >= 1000)
-        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPlace.itemDistance/1000.0];
-    else
-        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPlace.itemDistance];
+    NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:locItemPlace.placeInfo.location];
+   
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     
     CGRect distFrame = CGRectMake(ANNO_IMG_WIDTH+2, 2+catIconFrame.size.height+1+addrFrame.size.height+1, 

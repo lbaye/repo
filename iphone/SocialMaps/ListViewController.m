@@ -107,15 +107,15 @@ PullableView *pullUpView;
 
     [self initPullView];
     
-//    CGSize labelSize = CGSizeMake(70, 20); 
-//    UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
-//    labelRefresh.text = @"Reloading...";
-//    labelRefresh.textAlignment = UITextAlignmentCenter;
-//    labelRefresh.textColor = [UIColor whiteColor];
-//    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-//    labelRefresh.backgroundColor= [UIColor clearColor];
-//    [itemList addSubview:labelRefresh];
-//    [labelRefresh release];
+    CGSize labelSize = CGSizeMake(70, 20); 
+    UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
+    labelRefresh.text = @"Reloading...";
+    labelRefresh.textAlignment = UITextAlignmentCenter;
+    labelRefresh.textColor = [UIColor whiteColor];
+    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
+    labelRefresh.backgroundColor= [UIColor clearColor];
+    [itemList addSubview:labelRefresh];
+    [labelRefresh release];
     
     copyDisplayListArray = [[NSMutableArray alloc] init];
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];

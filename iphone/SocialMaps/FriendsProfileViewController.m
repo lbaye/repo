@@ -447,24 +447,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     nameLabl.text=[NSString stringWithFormat:@" %@ %@",userInfo.firstName,userInfo.lastName];
     statusMsgLabel.text=@"";
     addressOrvenueLabel.text=userInfo.address.street;
-    if (userInfo.distance>0)
-    {
-        distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
-    }
-    else
-    {
-        NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
-        float distance=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
-        userInfo.distance=(int)distance;
-        if (distance > 999)
-        {
-            distanceLabel.text = [NSString stringWithFormat:@"%.2f km", distance/1000];
-        }
-        else
-        {
-            distanceLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
-        }
-    }
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=userInfo.currentLocationLat;
+        geoLocation.longitude=userInfo.currentLocationLng;
+        distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+   
     if (userInfo.age>0) {
         ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
     }

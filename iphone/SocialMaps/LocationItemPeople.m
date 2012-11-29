@@ -21,7 +21,7 @@
     
     UILabel *lblAddress  = (UILabel*) [cell viewWithTag:2002];
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];
-    //UILabel *lblDist     = (UILabel*) [cell viewWithTag:2004];
+    UILabel *lblDist     = (UILabel*) [cell viewWithTag:2004];
     //UIView *line         = (UIView*) [cell viewWithTag:2005];
     UITextView   *txtMsg = (UITextView*) [cell viewWithTag:2006];
     UIImageView *regMedia = (UIImageView*) [cell viewWithTag:20012];
@@ -170,6 +170,11 @@
 //    lblAddress.frame = tmp;
 //    lblAddress.text = [NSString stringWithFormat:@"%@ %@",userInfo.currentLocationLat,userInfo.currentLocationLng];
 
+    Geolocation *geoLocation=[[Geolocation alloc] init];
+    geoLocation.latitude=userInfo.currentLocationLat;
+    geoLocation.longitude=userInfo.currentLocationLng;
+    lblDist.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+    
 	return cell;
 }
 

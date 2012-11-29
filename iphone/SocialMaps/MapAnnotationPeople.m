@@ -93,11 +93,12 @@
     [msgView release];
     
     // 119, 184, 0 - green
-    NSString *distStr;
-    if (locItemPeople.itemDistance >= 1000)
-        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPeople.itemDistance/1000.0];
-    else
-        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
+    Geolocation *geoLocation=[[Geolocation alloc] init];
+    geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
+    geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
+    NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+
+    
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
@@ -150,6 +151,10 @@
     // TODO: making the height smaller for appstore submission as we are removing the 
     // buttons at the bottom
 //    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
+    Geolocation *geoLocation=[[Geolocation alloc] init];
+    geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
+    geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
+    NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
     CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     detailView.backgroundColor = [UIColor clearColor];
@@ -164,7 +169,7 @@
                            locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, msg==nil?@"":msg, 
-                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           locItemPeople.userInfo.distance==nil?@"":distStr, 
                            @""// Address of current location - use CLGeocoder
                            ] autorelease];
     }
@@ -175,7 +180,7 @@
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, 
                            locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
-                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           locItemPeople.userInfo.distance==nil?@"":distStr, 
                            @"", // Address of current location - use CLGeocoder
                            locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
                            locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 

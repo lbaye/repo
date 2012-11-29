@@ -30,6 +30,7 @@
     UITableViewCell *cell = [super getTableViewCell:tv sender:controller];
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];    
     UIImageView   *catImage = (UIImageView*) [cell viewWithTag:2007];  
+    UILabel *lblDist     = (UILabel*) [cell viewWithTag:2004];
     if (catImage == nil) {
         CGRect catImgFrame = CGRectMake(10+itemIcon.size.width+10, 
                                      cell.frame.size.height/2-28,
@@ -56,6 +57,10 @@
 
         catImage.tag   = 2008;
 		
+        Geolocation *geoLocation=placeInfo.location;
+        lblDist.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+
+        
 		[cell.contentView addSubview:review];
     }
     

@@ -408,7 +408,7 @@ CGFloat animatedDistance;
     CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
     CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
     CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
-    if (distanceFromMe > 99999)
+    if (distanceFromMe > 999)
     {
         distanceText = [NSString stringWithFormat:@"%.2fkm", distanceFromMe/1000];
     }
