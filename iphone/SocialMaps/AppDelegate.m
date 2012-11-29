@@ -82,6 +82,7 @@
 @synthesize currentModelViewController;
 @synthesize isAppInBackgound;
 @synthesize shareLocationOption;
+@synthesize timerGotListing;
 
 static AppDelegate *sharedInstance=nil;
 
