@@ -8,7 +8,7 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-
+#import "Globals.h"
 #import "UtilityClass.h"
 #import "CustomAlert.h"
 #import "AppDelegate.h"
@@ -239,7 +239,10 @@ CGFloat animatedDistance;
         ignoreCount += [smAppDelegate.notifications count];
     
     int totalNotif = smAppDelegate.friendRequests.count + [self getUnreadMessage:smAppDelegate.messages].count + smAppDelegate.notifications.count /*+ smAppDelegate.meetUpRequests.count*/ - smAppDelegate.ignoreCount;
-    
+    if ((notifBadgeFlag==TRUE) && (badgeCount>0))
+    {
+        totalNotif = badgeCount;
+    }
     NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
     
     return totalNotif;

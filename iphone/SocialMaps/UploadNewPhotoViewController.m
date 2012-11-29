@@ -43,6 +43,7 @@ NSMutableArray *circleList, *ImgesName, *friendListArr, *friendsIDArr, *friendsN
 NSString *searchTexts;
 NSMutableArray *FriendList;
 NSString *searchText;
+int uploadPhotoCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -351,11 +352,15 @@ NSString *searchText;
 
 - (void)uploadPhotoDone:(NSNotification *)notif
 {
+    if(uploadPhotoCounter==0)
+    {
     NSLog(@"[notif object] %@",[notif object]);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
     [self dismissModalViewControllerAnimated:YES];
+    }
+    uploadPhotoCounter++;
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView

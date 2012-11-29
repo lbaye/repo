@@ -68,6 +68,7 @@ extern NSString * const NOTIF_GET_ALL_PLANS_DONE;
 extern NSString * const NOTIF_GET_FRIENDS_PLANS_DONE;
 extern NSString * const NOTIF_DELETE_PLANS_DONE;
 extern NSString * const NOTIF_UPDATE_PLANS_DONE;
+extern NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED;
 
 // Font related stuff
 extern NSString * const kFontName;

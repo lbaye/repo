@@ -326,6 +326,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (IBAction)actionRefreshBtn:(id)sender {
     
     [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getInbox:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
@@ -355,6 +356,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     [msgListTableView reloadData];
     [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
 }
 
 -(void) displayNotificationCount {

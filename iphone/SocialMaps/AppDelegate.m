@@ -26,6 +26,9 @@
 #import "NotificationController.h"
 #import "Globals.h"
 #import "FriendsProfileViewController.h"
+#import "MapViewController.h"
+#import "LoadingView.h"
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -246,7 +249,8 @@ static AppDelegate *sharedInstance=nil;
 {
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
     NSLog(@"Received notification: count:%d, data:%@  id:%@ type:%d", newNotif.badgeCount, userInfo, newNotif.objectIds, newNotif.notifType);
-    
+    notifBadgeFlag=TRUE;
+    notifBadgeFlag= newNotif.badgeCount;
     // Temporary - set count to zero
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
@@ -341,12 +345,37 @@ static AppDelegate *sharedInstance=nil;
         {
             RestClient *rc=[[RestClient alloc] init];
             [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
-//            FriendsProfileViewController *frndProfile = [[FriendsProfileViewController alloc] init];
-//            frndProfile.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
-//            frndProfile.friendsId=[newNotif.objectIds objectAtIndex:0];
-//            [self.currentModelViewController presentModalViewController:frndProfile animated:YES];
+            FriendsProfileViewController *frndProfile = [[FriendsProfileViewController alloc] init];
+            frndProfile.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+            frndProfile.friendsId=[newNotif.objectIds objectAtIndex:0];
+            [self.currentModelViewController presentModalViewController:frndProfile animated:YES];
         }
-       
+        else if (newNotif.notifType == PushNotificationProximityAlert)
+        {
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            LocationItemPeople *locItemPeople=[[LocationItemPeople alloc] init];
+            for (int i=0; i<[self.displayList count]; i++)
+            {
+                LocationItemPeople *locItem = (LocationItemPeople*)[self.displayList objectAtIndex:i];
+                if ([[newNotif.objectIds objectAtIndex:0] isEqualToString:locItem.userInfo.userId])
+                {
+                    locItemPeople=locItem;
+                }                
+            }
+
+            
+            if ([self.currentModelViewController isKindOfClass:[MapViewController class]]) 
+            {
+                [(MapViewController *) self.currentModelViewController showAnnotationDetailView:locItemPeople];
+                return;
+            }
+            
+            [controller showAnnotationDetailView:locItemPeople];
+            [self.currentModelViewController presentModalViewController:controller animated:YES];
+            NSLog(@"in proxomity alert");
+        }
     }
 }
 
@@ -409,13 +438,20 @@ static AppDelegate *sharedInstance=nil;
 
 -(void)hideActivityViewer
 {
+    /*
     [activityView stopAnimating];
 	[activityView removeFromSuperview];
 	activityView = nil;
+     */
+    LoadingView *loadingView2 =(LoadingView *)[self.window viewWithTag:11111111];
+    [loadingView2 removeView];
 }
 
 -(void)showActivityViewer:(UIView*) sender
 {
+    LoadingView *loadingView = [LoadingView loadingViewInView:sender];
+	loadingView.tag=11111111;
+/*    
 	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
     
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
@@ -432,6 +468,7 @@ static AppDelegate *sharedInstance=nil;
                                      UIViewAutoresizingFlexibleTopMargin |
                                      UIViewAutoresizingFlexibleBottomMargin);
 	[sender addSubview: activityView];
+ */
 }
 
 // Get User information

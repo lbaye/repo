@@ -151,5 +151,6 @@ typedef enum _SHARING_TYPES {
 -(IBAction)connectWithFB:(id)sender;
 -(IBAction)closeConnectWithFB:(id)sender;
 - (void) showPinOnMapViewForPlan:(Plan*)plan;
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno;
 
 @end

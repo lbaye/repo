@@ -28,6 +28,7 @@
 #import "Globals.h"
 #import "FriendListViewController.h"
 #import "FriendsPlanListViewController.h"
+#import "ODRefreshControl.h"
 
 @interface FriendsProfileViewController ()
 
@@ -113,7 +114,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     NSLog(@"friendsId: %@",friendsId);
@@ -134,6 +136,16 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [newsfeedView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -738,22 +750,22 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [pl drain];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    //    NSLog(@"did scroll %f",scrollView.contentOffset.y);
-    if (scrollView==profileScrollView)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-        {
-            reloadFeedCounter++;
-            if (reloadFeedCounter==1) {
-                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-                [smAppDelegate showActivityViewer:self.view];
-                [newsfeedView reload];
-            }
-        }
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    //    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+//    if (scrollView==profileScrollView)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+//        {
+//            reloadFeedCounter++;
+//            if (reloadFeedCounter==1) {
+//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+//                [smAppDelegate showActivityViewer:self.view];
+//                [newsfeedView reload];
+//            }
+//        }
+//    }
+//}
 
 //handling map view
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation 

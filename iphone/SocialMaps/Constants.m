@@ -86,6 +86,7 @@ NSString * const NOTIF_GET_ALL_PLANS_DONE=@"com.genweb2.socialmaps.getallplandon
 NSString * const NOTIF_DELETE_PLANS_DONE=@"com.genweb2.socialmaps.deleteplandone";
 NSString * const NOTIF_UPDATE_PLANS_DONE=@"com.genweb2.socialmaps.updateplandone";
 NSString * const NOTIF_GET_FRIENDS_PLANS_DONE=@"com.genweb2.socialmaps.getfriendsplandone";
+NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED=@"com.genweb2.socialmaps.friendsrequestaccepteddone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

@@ -26,6 +26,7 @@
 #import "NewsFeedViewController.h"
 #import "FriendListViewController.h"
 #import "Globals.h"
+#import "ODRefreshControl.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -106,19 +107,20 @@ PullableView *pullUpView;
 
     [self initPullView];
     
-    CGSize labelSize = CGSizeMake(70, 20); 
-    UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
-    labelRefresh.text = @"Reloading...";
-    labelRefresh.textAlignment = UITextAlignmentCenter;
-    labelRefresh.textColor = [UIColor whiteColor];
-    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-    labelRefresh.backgroundColor= [UIColor clearColor];
-    [itemList addSubview:labelRefresh];
-    [labelRefresh release];
+//    CGSize labelSize = CGSizeMake(70, 20); 
+//    UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
+//    labelRefresh.text = @"Reloading...";
+//    labelRefresh.textAlignment = UITextAlignmentCenter;
+//    labelRefresh.textColor = [UIColor whiteColor];
+//    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+//    labelRefresh.backgroundColor= [UIColor clearColor];
+//    [itemList addSubview:labelRefresh];
+//    [labelRefresh release];
     
     copyDisplayListArray = [[NSMutableArray alloc] init];
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.itemList];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
 }
 
@@ -137,15 +139,26 @@ PullableView *pullUpView;
     [super viewDidDisappear:animated];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
-        NSLog(@"At the top");
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
-        [self getSortedDisplayList];
-        [itemList reloadData];
-    }
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [self getSortedDisplayList];
+    [itemList reloadData];
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
+//        NSLog(@"At the top");
+//        [smAppDelegate showActivityViewer:self.view];
+//        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
+//        [self getSortedDisplayList];
+//        [itemList reloadData];
+//    }
+//}
 
 -(void)initPullView
 {

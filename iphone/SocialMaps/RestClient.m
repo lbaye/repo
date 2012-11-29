@@ -4936,13 +4936,18 @@ AppDelegate *smAppDelegate;
             
             
             NSLog(@"respondToFriendRequest %@ successful: %@",stat, jsonObjects);
-            
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
+            if ([stat isEqualToString:@"accept"])
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FRIENDS_REQUEST_ACCEPTED object:stat];                
+            }
         } 
         else
         {
             NSLog(@"respondToFriendRequest %@ unsuccessful: status=%d", stat, responseStatus);
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
+            if ([stat isEqualToString:@"accept"])
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
+            }
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4952,7 +4957,10 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^
      {
          NSLog(@"respondToFriendRequest %@ unsuccessful: unknown reason", stat);
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+         if ([stat isEqualToString:@"accept"])
+         {
+             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
+         }
      }];
     
     //[request setDelegate:self];

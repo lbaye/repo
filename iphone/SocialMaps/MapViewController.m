@@ -916,18 +916,7 @@ ButtonClickCallbackData callBackData;
     
     //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
-    if (smAppDelegate.gotListing == FALSE) {
-        [smAppDelegate.window setUserInteractionEnabled:NO];
-        [smAppDelegate showActivityViewer:self.view];
-
-        //by Rishi
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
-        [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
-        //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
-    }
-
+    
     [self initPullView];
     pullDownView.hidden = YES;
     copySearchAnnotationList = [[NSMutableArray alloc] init];
@@ -938,6 +927,17 @@ ButtonClickCallbackData callBackData;
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
+    if (smAppDelegate.gotListing == FALSE) {
+        [smAppDelegate.window setUserInteractionEnabled:NO];
+        [smAppDelegate showActivityViewer:self.view];
+        
+        //by Rishi
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
+        [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
+        [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
+        //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
+    }
     
     //[viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
     

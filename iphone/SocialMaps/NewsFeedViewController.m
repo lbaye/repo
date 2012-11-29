@@ -11,6 +11,7 @@
 #import "RestClient.h"
 #import "UtilityClass.h"
 #import "AppDelegate.h"
+#import "ODRefreshControl.h"
 
 @interface NewsFeedViewController ()
 
@@ -34,13 +35,25 @@ UILabel *statusLabel;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    newsFeedView.scrollView.delegate=self;
+//    newsFeedView.scrollView.delegate=self;
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:newsFeedScroller];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
 //    statusLabel=[[UILabel alloc] initWithFrame:CGRectMake(120, -30, 80, 15)];
 //    statusLabel.backgroundColor=[UIColor clearColor];
 //    statusLabel.text=@"refresh...";
 //    statusLabel.textColor=[UIColor darkGrayColor];
 //    [newsFeedScroller addSubview:statusLabel];
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    double delayInSeconds = 3.0;
+    [newsFeedView reload];
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
 
 - (void)viewDidUnload
@@ -105,35 +118,35 @@ UILabel *statusLabel;
     NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-//    NSLog(@"did scroll %f",newsFeedView.scrollView.contentOffset.y);
-    if (scrollView==newsFeedScroller)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-        {
-            reloadNewsFeedCounter++;
-            if (reloadNewsFeedCounter==1) {
-                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-                [smAppDelegate showActivityViewer:self.view];
-                [newsFeedView reload];
-            }
-        }
-    }
-    else if (scrollView==newsFeedView.scrollView)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-        {
-            reloadNewsFeedCounter++;
-            if (reloadNewsFeedCounter==1) {
-                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-                [smAppDelegate showActivityViewer:self.view];
-                [newsFeedView reload];
-            }
-        }
-    }
-    
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+////    NSLog(@"did scroll %f",newsFeedView.scrollView.contentOffset.y);
+//    if (scrollView==newsFeedScroller)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+//        {
+//            reloadNewsFeedCounter++;
+//            if (reloadNewsFeedCounter==1) {
+//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+//                [smAppDelegate showActivityViewer:self.view];
+//                [newsFeedView reload];
+//            }
+//        }
+//    }
+//    else if (scrollView==newsFeedView.scrollView)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+//        {
+//            reloadNewsFeedCounter++;
+//            if (reloadNewsFeedCounter==1) {
+//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+//                [smAppDelegate showActivityViewer:self.view];
+//                [newsFeedView reload];
+//            }
+//        }
+//    }
+//    
+//}
 
 -(IBAction)backButton:(id)sender
 {

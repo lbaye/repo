@@ -31,5 +31,7 @@ BOOL isPlanFromVenue;
 BOOL loadNewPlan;
 BOOL pointOnMapFlag;
 BOOL profileFromList;
+int badgeCount;
+BOOL notifBadgeFlag;
 
 @end

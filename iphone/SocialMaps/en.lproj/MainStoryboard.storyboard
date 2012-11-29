@@ -2190,6 +2190,14 @@
                                     <outlet property="delegate" destination="xAh-9q-Sej" id="RQV-wu-Wmo"/>
                                 </connections>
                             </tableView>
+                            <webView opaque="NO" contentMode="scaleToFill" id="jAL-eU-MsK">
+                                <rect key="frame" x="13" y="108" width="294" height="352"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="xAh-9q-Sej" id="uYb-LD-OWA"/>
+                                </connections>
+                            </webView>
                         </subviews>
                         <color key="backgroundColor" red="0.95294123888015747" green="0.95294123888015747" blue="0.95294123888015747" alpha="1" colorSpace="deviceRGB"/>
                     </view>
@@ -2203,6 +2211,7 @@
                         <outlet property="notificationItems" destination="2OU-er-a2F" id="Mk5-vi-ZsV"/>
                         <outlet property="reqButton" destination="tua-eR-v16" id="3bt-Sq-X9d"/>
                         <outlet property="reqCount" destination="MvU-Or-hjk" id="0RI-gI-ldy"/>
+                        <outlet property="webView" destination="jAL-eU-MsK" id="GXZ-da-aNO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GY2-DI-b1v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5421,6 +5430,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                 <relationship kind="outlet" name="notificationItems" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="reqButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="reqCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>
         <class className="RegistrationController" superclassName="UIViewController">
@@ -5561,7 +5571,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="O7W-hL-Xr5"/>
         <segue reference="qvJ-bu-e6k"/>
     </inferredMetricsTieBreakers>
 </document>

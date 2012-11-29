@@ -24,6 +24,7 @@
 #import "PlaceListViewController.h"
 #import "FriendListViewController.h"
 #import "Globals.h"
+#import "ODRefreshControl.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -107,7 +108,8 @@ int scrollHeight,reloadCounter=0;
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"thum"];
@@ -134,6 +136,16 @@ int scrollHeight,reloadCounter=0;
     [profileScrollView addSubview:profileView];
     [profileScrollView addSubview:newsfeedView];
     [profileView addSubview:lineView];
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [newsfeedView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -843,22 +855,22 @@ int scrollHeight,reloadCounter=0;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-//    NSLog(@"did scroll %f",scrollView.contentOffset.y);
-    if (scrollView==profileScrollView)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
-        {
-            reloadCounter++;
-            if (reloadCounter==1) {
-            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
-            [smAppDelegate showActivityViewer:self.view];
-            [newsfeedView reload];
-            }
-        }
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+////    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+//    if (scrollView==profileScrollView)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
+//        {
+//            reloadCounter++;
+//            if (reloadCounter==1) {
+//            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
+//            [smAppDelegate showActivityViewer:self.view];
+//            [newsfeedView reload];
+//            }
+//        }
+//    }
+//}
 
 -(void)viewDidDisappear:(BOOL)animated
 {

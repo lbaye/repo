@@ -107,6 +107,10 @@
 		20E3655B1647A08E00F06437 /* Geotag.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3655A1647A08E00F06437 /* Geotag.m */; };
 		20E4A12115D8EB80009A1F6B /* NewsFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E4A12015D8EB80009A1F6B /* NewsFeed.m */; };
 		20E75BE115EA0345000B6B8A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E75BE015EA0343000B6B8A /* Event.m */; };
+		20EFEB3F16674D16001E0D06 /* LoadingView.h in Sources */ = {isa = PBXBuildFile; fileRef = 20EFEB3C16674639001E0D06 /* LoadingView.h */; };
+		20EFEB4016674D16001E0D06 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20EFEB3D1667463A001E0D06 /* LoadingView.m */; };
+		20EFEB4B16677735001E0D06 /* ODRefreshControl.h in Sources */ = {isa = PBXBuildFile; fileRef = 20EFEB49166775D3001E0D06 /* ODRefreshControl.h */; };
+		20EFEB4C16677735001E0D06 /* ODRefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 20EFEB4A166775D3001E0D06 /* ODRefreshControl.m */; };
 		20F03402163FF8FA00AE4685 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F03401163FF8FA00AE4685 /* Photo.m */; };
 		20F1BB361664A8020044C2CF /* img_settings_list_bg_solid.png in Resources */ = {isa = PBXBuildFile; fileRef = 20F1BB351664A8020044C2CF /* img_settings_list_bg_solid.png */; };
 		4F1B8DDD15E40FB0004AC402 /* sm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */; };
@@ -641,6 +645,10 @@
 		20E4A12015D8EB80009A1F6B /* NewsFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeed.m; sourceTree = "<group>"; };
 		20E75BDF15EA0341000B6B8A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		20E75BE015EA0343000B6B8A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		20EFEB3C16674639001E0D06 /* LoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		20EFEB3D1667463A001E0D06 /* LoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		20EFEB49166775D3001E0D06 /* ODRefreshControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ODRefreshControl.h; sourceTree = "<group>"; };
+		20EFEB4A166775D3001E0D06 /* ODRefreshControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ODRefreshControl.m; sourceTree = "<group>"; };
 		20F03400163FF8FA00AE4685 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
 		20F03401163FF8FA00AE4685 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		20F1BB351664A8020044C2CF /* img_settings_list_bg_solid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_settings_list_bg_solid.png; sourceTree = "<group>"; };
@@ -1560,6 +1568,8 @@
 				B07777CA163E3A0A00969699 /* DirectionViewController.h */,
 				B07777CB163E3A0A00969699 /* DirectionViewController.m */,
 				B07777CC163E3A0A00969699 /* DirectionViewController.xib */,
+				20EFEB3C16674639001E0D06 /* LoadingView.h */,
+				20EFEB3D1667463A001E0D06 /* LoadingView.m */,
 				4F4FB0A31601014C00E142A7 /* MeetUpRequestListView.h */,
 				4F4FB0A21601014C00E142A7 /* MeetUpRequestListView.m */,
 				4F4FB0A11601014C00E142A7 /* MeetUpRequestListView.xib */,
@@ -1569,6 +1579,8 @@
 				20C376A2163E525B00F989B3 /* MyPhotosViewController.m */,
 				4FAC302415C5C5DC0014030C /* NotificationController.h */,
 				4FAC302515C5C5DC0014030C /* NotificationController.m */,
+				20EFEB49166775D3001E0D06 /* ODRefreshControl.h */,
+				20EFEB4A166775D3001E0D06 /* ODRefreshControl.m */,
 				20C376A5163E529100F989B3 /* PhotoStoryboard.storyboard */,
 				4F96D4B115D2C01E006104D6 /* PhotoPicker.h */,
 				4F96D4B215D2C01E006104D6 /* PhotoPicker.m */,
@@ -2383,6 +2395,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20EFEB4B16677735001E0D06 /* ODRefreshControl.h in Sources */,
+				20EFEB4C16677735001E0D06 /* ODRefreshControl.m in Sources */,
+				20EFEB3F16674D16001E0D06 /* LoadingView.h in Sources */,
+				20EFEB4016674D16001E0D06 /* LoadingView.m in Sources */,
 				206F5ADC16464DBE005EAF5F /* DirectionViewController.m in Sources */,
 				206F5ADB16464DAD005EAF5F /* Place.m in Sources */,
 				206F5AD916464D7C005EAF5F /* PlaceViewController.m in Sources */,
@@ -2599,7 +2615,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				COPY_PHASE_STRIP = NO;
@@ -2626,7 +2645,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					armv7,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				COPY_PHASE_STRIP = YES;
@@ -2647,7 +2669,10 @@
 		4F98A2E615BB387D000B3124 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2670,7 +2695,10 @@
 		4F98A2E715BB387D000B3124 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				FRAMEWORK_SEARCH_PATHS = (

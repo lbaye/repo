@@ -15,6 +15,7 @@
 #import "RestClient.h"
 #import "MessageListViewController.h"
 #import "UtilityClass.h"
+#import "ODRefreshControl.h"
 
 @implementation NotificationController
 
@@ -30,7 +31,7 @@
 @synthesize notifButton;
 @synthesize msgButton;
 @synthesize reqButton;
-
+@synthesize webView;
 
 #define SECTION_HEADER_HEIGHT   44
 
@@ -54,6 +55,7 @@ NSMutableArray *unreadMesg;
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMessageStatus:) name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendsRequestAccepted:) name:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
     // Dummy cotifications
     int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
@@ -80,6 +82,9 @@ NSMutableArray *unreadMesg;
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
      msgCount.text = @"";
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/%@/minifeed.html?authToken=%@&r=1353821908.182321",smAppDelegate.userId,smAppDelegate.authToken]]]];
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
 }
 
 -(void) displayNotificationCount 
@@ -128,12 +133,14 @@ NSMutableArray *unreadMesg;
 {
     if (selectedType==0)
     {
+        [webView setHidden:YES];
         [msgButton setImage:[UIImage imageNamed:@"icon_message_notification_selected.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
     }
     else if (selectedType==1)
     {
+        [webView setHidden:YES];        
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"icon_friend_request_selected.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
@@ -144,7 +151,7 @@ NSMutableArray *unreadMesg;
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"icon_notify_selected.png"] forState:UIControlStateNormal];
-        
+        [webView setHidden:NO];        
     }
 }
 
@@ -377,7 +384,7 @@ NSMutableArray *unreadMesg;
     else if (selectedType == Request)
         tempLabel.text= @"Friend(s) request(s)";
     else
-        tempLabel.text= @"Notifications";
+        tempLabel.text= @"";
     [tempLabel setFont:[UIFont fontWithName:kFontNameBold size:20]];
     [header addSubview: tempLabel];
     [tempLabel release];
@@ -405,6 +412,24 @@ NSMutableArray *unreadMesg;
     [smAppDelegate.window setUserInteractionEnabled:YES];    
 }
 */
+
+- (void)friendsRequestAccepted:(NSNotification *)notif
+{
+    NSLog(@"friends request accepted");
+    RestClient *restClient=[[RestClient alloc] init];
+    [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];    
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [webView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
+}
+
 // NotifRequestDelegate methods
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);
@@ -433,7 +458,6 @@ NSMutableArray *unreadMesg;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 
-        [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];
 
     } else if ([name isEqualToString:@"Decline"]) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
