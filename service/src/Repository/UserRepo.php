@@ -349,9 +349,7 @@ class UserRepo extends Base {
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
-                $user->{
-                "set{$field}"
-                }($data[$field]);
+                $user->{"set{$field}"}($data[$field]);
             }
         }
 
@@ -386,9 +384,7 @@ class UserRepo extends Base {
 
         foreach ($setIfExistFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
-                $user->{
-                "set{$field}"
-                }($data[$field]);
+                $user->{"set{$field}"}($data[$field]);
             }
         }
 
@@ -399,7 +395,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function addNotification($userId, array $data) {
+    public function addNotification($userId, array $data)
+    {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -417,7 +414,8 @@ class UserRepo extends Base {
         return $notification;
     }
 
-    public function acceptFriendRequest($userId, $response) {
+    public function acceptFriendRequest($userId, $response)
+    {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -529,7 +527,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function getPasswordToken($userId) {
+    public function getPasswordToken($userId)
+    {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -544,7 +543,8 @@ class UserRepo extends Base {
         return $user->getForgetPasswordToken();
     }
 
-    public function generatePassword($length = 8) {
+    public function generatePassword($length = 8)
+    {
         $password = "";
         $possible = "12346789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $maxlength = strlen($possible);
@@ -566,7 +566,8 @@ class UserRepo extends Base {
         return $password;
     }
 
-    public function updateFriendsCircleList($friendId) {
+    public function updateFriendsCircleList($friendId)
+    {
         $user = $this->find($friendId);
 
         if (is_null($user)) {
@@ -589,7 +590,8 @@ class UserRepo extends Base {
         return $circle;
     }
 
-    protected function _toArrayAll($results, $filterFields = false) {
+    protected function _toArrayAll($results, $filterFields = false)
+    {
         $users = array();
         foreach ($results as $user) {
             $userArr = ($filterFields) ? $user->toArrayFiltered($this->currentUser) : $user->toArray();
@@ -604,12 +606,14 @@ class UserRepo extends Base {
         return $users;
     }
 
-    public function getByPasswordToken($passwordToken) {
+    public function getByPasswordToken($passwordToken)
+    {
         $user = $this->findOneBy(array('forgetPasswordToken' => $passwordToken));
         return is_null($user) ? false : $user;
     }
 
-    public function resetPassword($data, $userId) {
+    public function resetPassword($data, $userId)
+    {
         $user = $this->find($userId);
 
         if (is_null($user)) {
@@ -628,7 +632,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function changePassword($data) {
+    public function changePassword($data)
+    {
         $user = $this->findOneBy(array('password' => SecurityHelper::hash($data['oldPassword'], \Document\User::SALT)));
 
         if (is_null($user)) {
@@ -647,7 +652,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function checkOldPassword($password) {
+    public function checkOldPassword($password)
+    {
         if (empty($password)) {
             return false;
         }
@@ -661,7 +667,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function updateLoginCount($id) {
+    public function updateLoginCount($id)
+    {
         $user = $this->find($id);
 
         if (false === $user) {
@@ -678,7 +685,8 @@ class UserRepo extends Base {
         return $user;
     }
 
-    public function updateFacebookAuthToken($id, $facebookAuthToken) {
+    public function updateFacebookAuthToken($id, $facebookAuthToken)
+    {
         $user = $this->find($id);
 
         if (is_null($user)) {
@@ -957,7 +965,8 @@ class UserRepo extends Base {
 
     }
 
-    public function getNotificationsCount($id) {
+    public function getNotificationsCount($id)
+    {
         $user = $this->find($id);
         $friendRequests = $user->getFriendRequest();
 
@@ -981,7 +990,8 @@ class UserRepo extends Base {
         return $countTotal = count($notificationResult) . ":" . count($friendResult);
     }
 
-    public function unBlockUsers($id, array $data) {
+    public function unBlockUsers($id, array $data)
+    {
 
         if (empty($data['users'])) {
             throw new \InvalidArgumentException('Invalid request', 406);
@@ -998,7 +1008,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function unBlockAllUsers($id, array $data) {
+    public function unBlockAllUsers($id, array $data)
+    {
 
         if (empty($data['users'])) {
             throw new \InvalidArgumentException('Invalid request', 406);
@@ -1014,7 +1025,8 @@ class UserRepo extends Base {
         return true;
     }
 
-    public function deleteCustomCircle($id) {
+    public function deleteCustomCircle($id)
+    {
         $circles = $this->currentUser->getCircles();
 
         $result = array();
@@ -1045,7 +1057,8 @@ class UserRepo extends Base {
 
     }
 
-    public function renameCustomCircle($id, $data) {
+    public function renameCustomCircle($id,$data)
+    {
         $circles = $this->currentUser->getCircles();
 
         foreach ($circles as $circle) {
@@ -1071,11 +1084,12 @@ class UserRepo extends Base {
             $this->dm->persist($user);
             $this->dm->flush();
         }
-
+        
         return true;
     }
 
-    public function removeFriendFromMyCircle($id) {
+     public function removeFriendFromMyCircle($id)
+    {
         $circles = $this->currentUser->getCircles();
         $friendId = $this->_trimInvalidUsers($id);
 
