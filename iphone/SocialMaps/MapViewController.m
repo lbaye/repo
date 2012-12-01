@@ -832,8 +832,6 @@ ButtonClickCallbackData callBackData;
     [locationManager startUpdatingLocation];
     _mapView.centerCoordinate = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-    
     // Get Information
     [smAppDelegate getUserInformation:smAppDelegate.authToken];
     
@@ -913,8 +911,6 @@ ButtonClickCallbackData callBackData;
         [userDefault writeToUserDefaults:@"fbinvite" withString:@"fbinvite"];
     }
 
-    
-    //[self displayNotificationCount];
     _mapPullupMenu.hidden = TRUE;
     
     [self initPullView];
@@ -930,16 +926,15 @@ ButtonClickCallbackData callBackData;
     if (smAppDelegate.gotListing == FALSE) {
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
-        
-        //by Rishi
+
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
-        //timerGotListing = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES]; 
     }
     
-    //[viewSharingPrefMapPullDown bringSubviewToFront:self.shareNoneButton];
+	if (!smAppDelegate.timerGotListing) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
+    }
     
 }
 
@@ -1017,17 +1012,18 @@ ButtonClickCallbackData callBackData;
     return unReadMessage;
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (smAppDelegate.timerGotListing && shouldTimerStop) {
+        [smAppDelegate.timerGotListing invalidate];
+        smAppDelegate.timerGotListing = nil;
+    }
+}
+
 -(void)viewDidDisappear:(BOOL)animated
 {
-    //userFriendslistArray=[[NSMutableArray alloc] init];
-    /*
-    if (timerGotListing) {
-        [timerGotListing invalidate];
-        timerGotListing = nil;
-    }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
-     */
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -1039,9 +1035,6 @@ ButtonClickCallbackData callBackData;
 - (void)viewDidUnload
 {
     NSLog(@"MapViewController:viewDidUnload" );
-    
-    //by Rishi
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
@@ -1181,9 +1174,7 @@ ButtonClickCallbackData callBackData;
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
-//    [_mapPulldown removeFromSuperview];
-//    [_mapPullupMenu removeFromSuperview];
-   //[self initPullView];
+
     pointOnMapFlag = FALSE;
     profileFromList = FALSE;
     smAppDelegate.currentModelViewController = self;
@@ -1194,14 +1185,19 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //[self initPullView];
-    if (!smAppDelegate.timerGotListing) {
+    
+    if (!smAppDelegate.timerGotListing) 
+    {
+        NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
+        RestClient *restClient = [[RestClient alloc] init]; 
+        [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         smAppDelegate.timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
     
+    shouldTimerStop = YES;
     pullDownView.hidden = NO;
-    //[self.view bringSubviewToFront:viewSearch];
     userDefault=[[UserDefault alloc] init];
+    
     if ((![userDefault readFromUserDefaults:@"connectWithFB"]) && (smAppDelegate.smLogin==TRUE))
     {
         connectToFBView.layer.borderWidth=2.0;
@@ -1315,13 +1311,6 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapView retain count - %d", [_mapView retainCount]);
     [radio release];
     
-    if (smAppDelegate.timerGotListing) {
-        [smAppDelegate.timerGotListing invalidate];
-        smAppDelegate.timerGotListing = nil;
-    }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_LISTINGS_DONE object:nil];
-
     [copySearchAnnotationList release];
     [_mapPulldown release];
     [_shareAllButton release];
@@ -1351,6 +1340,10 @@ ButtonClickCallbackData callBackData;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     NSLog(@"In prepareForSegue:MapViewController");
+    
+    if ([segue.destinationViewController isKindOfClass:[ListViewController class]])
+        shouldTimerStop = NO;
+        
     LocationItem *selLocation = (LocationItem*) selectedAnno;
     selLocation.currDisplayState = MapAnnotationStateNormal;
 }
@@ -1408,9 +1401,6 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoProfile:(id)sender
 {
-//    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
     [pullUpView setOpened:FALSE animated:TRUE];
     [self.view addSubview:circleView];
 }
@@ -1420,7 +1410,6 @@ ButtonClickCallbackData callBackData;
     UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-//    [self.view addSubview:circleView];
 }
 
 -(IBAction)gotoSettings:(id)sender
