@@ -65,7 +65,7 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *connectToFBView;
     IBOutlet UIView *viewSharingPrefMapPullDown;
     CustomRadioButton *radio;
-                                    
+    BOOL shouldTimerStop;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
