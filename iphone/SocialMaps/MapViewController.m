@@ -1921,7 +1921,9 @@ ButtonClickCallbackData callBackData;
                 // Remove the discarded items
                 for (int i=0; i < sortedIndices.count; i++) {
                     int indx = [[sortedIndices objectAtIndex:i] intValue];
+                    [_mapView removeAnnotation:[smAppDelegate.peopleList objectAtIndex:indx]];
                     [smAppDelegate.peopleList removeObjectAtIndex:indx];
+                    [self.view setNeedsDisplay];
                 }
                 // Now rebuild the index
                 [smAppDelegate.peopleIndex removeAllObjects];
@@ -2019,12 +2021,21 @@ ButtonClickCallbackData callBackData;
                             [self mapAnnotationInfoUpdated:aPerson];
                         */
                         aPerson.itemAddress = item.lastSeenAt;
+                        aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         
-                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus])) {
+                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar])) {
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
                             NSLog(@"lastSeenAt %@", item.lastSeenAt);
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                             aPerson.itemDistance = distanceFromMe;
+                            aPerson.userInfo.relationsipStatus = item.relationsipStatus;
+                            
+                            if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
+
+                                aPerson.userInfo.avatar = item.avatar;
+                                [self downloadImage:aPerson];
+                            }
+                            
                             
                             [self mapAnnotationInfoUpdated:aPerson];
                         }
@@ -2145,6 +2156,38 @@ ButtonClickCallbackData callBackData;
     
     //isDownloadingLocation = NO;
 }
+
+- (void)downloadImage:(LocationItemPeople*)person 
+{
+    if ([person.userInfo.avatar length] > 0) {// Need to retrieve avatar image
+        
+        //__block int itemIndex = smAppDelegate.peopleList.count-1;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:person.userInfo.avatar]];
+            UIImage* image = [[UIImage alloc] initWithData:imageData];
+            [imageData release];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                    person.itemIcon = image;
+                    //
+                    //[image release];
+                
+                    //LocationItem *selLocation = (LocationItem*) selectedAnno;
+                person.currDisplayState = MapAnnotationStateNormal;
+                if (smAppDelegate.showPeople == TRUE) {
+                    [_mapView removeAnnotation:(id <MKAnnotation>)person];
+                    [_mapView addAnnotation:(id <MKAnnotation>)person];
+                }
+                
+                    if (smAppDelegate.showPeople == TRUE)
+                        [self mapAnnotationInfoUpdated:person];
+                
+            });
+        });
+    }
+}
+
 
 // GCD async notifications
 - (void)gotNotifMessages:(NSNotification *)notif {
