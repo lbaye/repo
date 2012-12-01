@@ -8,16 +8,14 @@ use Helper\Location;
 use Helper\Status;
 use Helper\ShareConstant;
 
-class Settings extends Base
-{
+class Settings extends Base {
 
     const ALLOWED_DISTANCE = 100; # Meters
 
     /**
      * Initialize the controller.
      */
-    public function init()
-    {
+    public function init() {
         parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
@@ -25,6 +23,7 @@ class Settings extends Base
         $this->userRepository->setConfig($this->config);
 
         $this->_ensureLoggedIn();
+        $this->createLogger('Controller::Settings');
     }
 
     /**
@@ -33,13 +32,12 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function location()
-    {
-        $data     = $this->request->request->all();
+    public function location() {
+        $data = $this->request->request->all();
         $settings = $this->user->getLocationSettings();
 
         if ($this->request->getMethod() == 'GET') {
-            return $this->_generateResponse(array('result' => $settings));;
+            return $this->_generateResponse(array('result' => $settings));
         }
 
         $settings = array_merge($settings, $data);
@@ -51,7 +49,10 @@ class Settings extends Base
             $this->user->setVisible(true);
         }
 
-        return $this->persistAndReturn($settings);
+        $this->persistAndReturn($settings);
+        $this->requestForCacheUpdate($this->user);
+
+        return $this->response;
     }
 
     /**
@@ -60,9 +61,8 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function geoFence()
-    {
-        $data     = $this->request->request->all();
+    public function geoFence() {
+        $data = $this->request->request->all();
         $settings = $this->user->getGeoFence();
 
         if ($this->request->getMethod() == 'GET') {
@@ -89,9 +89,8 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function notifications()
-    {
-        $data     = $this->request->request->all();
+    public function notifications() {
+        $data = $this->request->request->all();
         $settings = $this->user->getNotificationSettings();
 
         if ($this->request->getMethod() == 'GET') {
@@ -105,11 +104,11 @@ class Settings extends Base
             if ($opt != 'proximity_radius') {
 
                 if (isset($data[$opt . '_sm'])) {
-                    $settings[$opt]['sm'] = (boolean) $data[$opt . '_sm'];
+                    $settings[$opt]['sm'] = (boolean)$data[$opt . '_sm'];
                 }
 
                 if (isset($data[$opt . '_mail'])) {
-                    $settings[$opt]['mail'] = (boolean) $data[$opt . '_mail'];
+                    $settings[$opt]['mail'] = (boolean)$data[$opt . '_mail'];
                 }
             } else {
                 $settings[$opt] = $data[$opt];
@@ -127,9 +126,8 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function platforms()
-    {
-        $data     = $this->request->request->all();
+    public function platforms() {
+        $data = $this->request->request->all();
         $settings = $this->user->getPlatformSettings();
 
         if ($this->request->getMethod() == 'GET') {
@@ -152,9 +150,8 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function layers()
-    {
-        $data     = $this->request->request->all();
+    public function layers() {
+        $data = $this->request->request->all();
         $settings = $this->user->getLayersSettings();
 
         if ($this->request->getMethod() == 'GET') {
@@ -177,9 +174,8 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function push()
-    {
-        $data     = $this->request->request->all();
+    public function push() {
+        $data = $this->request->request->all();
         $settings = $this->user->getPushSettings();
 
         if ($this->request->getMethod() == 'GET') {
@@ -202,10 +198,9 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function accountSettings()
-    {
+    public function accountSettings() {
         $data = $this->request->request->all();
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
         }
 
@@ -253,8 +248,7 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sharingPreference()
-    {
+    public function sharingPreference() {
         $data = $this->request->request->all();
         $settings = $this->user->getSharingPreferenceSettings();
 
@@ -265,7 +259,7 @@ class Settings extends Base
         $settings = array_merge($settings, $data);
         $this->user->setSharingPreferenceSettings($settings);
 
-        return $this->persistAndReturn( $settings);
+        return $this->persistAndReturn($settings);
     }
 
     /**
@@ -273,25 +267,28 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sharingPrivacyMode()
-    {
+    public function sharingPrivacyMode() {
         $data = $this->request->request->all();
         try {
-            if (!empty($data['shareLocation']) && ($data['shareLocation'] == ShareConstant::SHARING_ALL_USERS || $data['shareLocation'] == ShareConstant::SHARING_FRIENDS || $data['shareLocation'] == ShareConstant::SHARING_NO_ONE || $data['shareLocation'] == ShareConstant::SHARING_CIRCLES || $data['shareLocation'] == ShareConstant::SHARING_CUSTOM)) {
-                $this->user->setShareLocation($data['shareLocation']);
-                return $this->persistAndReturn($this->user->getShareLocation());
-            } elseif (!empty($data['shareProfilePicture']) && ($data['shareProfilePicture'] == ShareConstant::SHARING_ALL_USERS || $data['shareProfilePicture'] == ShareConstant::SHARING_FRIENDS || $data['shareProfilePicture'] == ShareConstant::SHARING_NO_ONE || $data['shareProfilePicture'] == ShareConstant::SHARING_CIRCLES || $data['shareProfilePicture'] == ShareConstant::SHARING_CUSTOM)) {
-                $this->user->setShareProfilePicture($data['shareProfilePicture']);
-                return $this->persistAndReturn($this->user->getShareProfilePicture());
-            } elseif (!empty($data['shareNewsFeed']) && ($data['shareNewsFeed'] == ShareConstant::SHARING_ALL_USERS || $data['shareNewsFeed'] == ShareConstant::SHARING_FRIENDS || $data['shareNewsFeed'] == ShareConstant::SHARING_NO_ONE || $data['shareNewsFeed'] == ShareConstant::SHARING_CIRCLES || $data['shareNewsFeed'] == ShareConstant::SHARING_CUSTOM)) {
-                $this->user->setShareNewsFeed($data['shareNewsFeed']);
-                return $this->persistAndReturn($this->user->getShareNewsFeed());
-            } else {
-                $this->response->setContent(json_encode(array('message' => 'Invalid parameter')));
-                $this->response->setStatusCode(Status::NOT_FOUND);
+            $sharableFields = array('shareLocation', 'shareProfilePicture', 'shareNewsFeed');
+            $minValue = 1;
+            $maxValue = 5;
+            $changed = false;
 
+            foreach ($sharableFields as $field) {
+                if (!empty($data[$field]) && ((int) $data[$field]) >= $minValue && ((int) $data[$field]) <= $maxValue) {
+                    $this->user->{'set' . ucfirst($field)}($data[$field]);
+                    $changed = true;
+                }
+            }
+
+            if ($changed) {
+                $this->persistAndReturn(array($data));
+                $this->requestForCacheUpdate($this->user);
                 return $this->response;
             }
+
+            return $this->_generateErrorResponse('Any of these fields - ' . implode(', ', $sharableFields) . ' is set.');
 
         } catch (\Exception\ResourceNotFoundException $e) {
 
@@ -312,13 +309,13 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function currentLocation()
-    {
+    public function currentLocation() {
         $data = $this->request->request->all();
 
         $oldLocation = $this->user->getCurrentLocation();
 
         if ($this->request->getMethod() == 'GET') {
+            $this->debug('Returning current location');
             return $this->returnResponse($oldLocation);
         }
 
@@ -327,6 +324,7 @@ class Settings extends Base
             $newLocation['lat'] = floatval($data['lat']);
             $newLocation['lng'] = floatval($data['lng']);
 
+            $this->debug('Updating current location');
             $this->user->setCurrentLocation($newLocation);
             $this->_updateVisibility($this->user);
             $this->persistOnly();
@@ -335,18 +333,24 @@ class Settings extends Base
             try {
                 $this->_updateLastSeenAt($this->user);
 
-                if ($this->hasMovedAway($oldLocation, $newLocation))
+                if ($this->hasMovedAway($oldLocation, $newLocation)) {
+                    $this->debug('User has moved far away');
                     $this->_sendProximityAlerts($this->user);
+                    $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
+                } else {
+                    $this->debug('User has not moved 100m away');
+                }
 
             } catch (\Exception $e) {
-                // Do nothing
+                $this->error($e->getMessage());
             }
 
-            return $this->persistAndReturn($oldLocation, true);
+            return $this->persistAndReturn($newLocation, true);
 
         } else {
 
-            $this->response->setContent(json_encode(array('message' => 'Invalid location (lat and lng required)')));
+            $this->response->setContent(
+                json_encode(array('message' => 'Invalid location (lat and lng required)')));
             $this->response->setStatusCode(417);
 
             return $this->response;
@@ -361,14 +365,24 @@ class Settings extends Base
         return $distance > self::ALLOWED_DISTANCE;
     }
 
+    private function requestForCacheUpdate(\Document\User $user, $oldLocation = null, $newLocation = null) {
+        $this->debug('Requesting for cache update');
+        $this->addTask(
+            \Helper\Constants::APN_REFRESH_SEARCH_CACHE,
+            json_encode(array(
+                             'userId' => $user->getId(),
+                             'oldLocation' => $oldLocation,
+                             'newLocation' => $newLocation
+                        )));
+    }
+
     /**
      * Update users visibility based on geo-fence settings and current location
      *
      * @param \Document\User $user
      *
      */
-    private function _updateVisibility(\Document\User $user)
-    {
+    private function _updateVisibility(\Document\User $user) {
         $fnc = $user->getGeoFence();
 
         if ($fnc['radius'] > 0) {
@@ -386,40 +400,39 @@ class Settings extends Base
      * @param \Document\User $user
      *
      */
-    private function _updateLastSeenAt(\Document\User $user)
-    {
-        $this->addTask('update_last_seen_address', json_encode(array('user_id' => $user->getId())));
+    private function _updateLastSeenAt(\Document\User $user) {
+        $this->debug('Requesting for address update');
+        $this->addTask(\Helper\Constants::APN_UPDATE_LAST_SEEN_AT,
+                       json_encode(array('user_id' => $user->getId())));
     }
 
-    private function persistAndReturn($result, $already_persisted = false)
-    {
-        if ($already_persisted == false) {
+    private function persistAndReturn($result, $already_persisted = false) {
+        if (!$already_persisted) {
             $this->user->setUpdateDate(new \DateTime());
             $this->dm->persist($this->user);
             $this->dm->flush();
         }
-        
+
         return $this->_generateResponse(array('result' => $result));
     }
 
-    private function persistOnly()
-    {
+    private function persistOnly() {
         $this->user->setUpdateDate(new \DateTime());
         $this->dm->persist($this->user);
         $this->dm->flush();
     }
 
-    private function _sendProximityAlerts(\Document\User $user)
-    {
-        $this->addTask('proximity_alert', json_encode(array(
-            'user_id' => $user->getId(),
-            'timestamp' => time(),
-            'validity' => 7200, // 2 hours
-        )));
+    private function _sendProximityAlerts(\Document\User $user) {
+        $this->debug('Sending proximity alert');
+        $this->addTask(\Helper\Constants::APN_PROXIMITY_ALERT,
+                       json_encode(array(
+                                        'user_id' => $user->getId(),
+                                        'timestamp' => time(),
+                                        'validity' => 7200, // 2 hours
+                                   )));
     }
 
-    private function returnResponse($result)
-    {
+    private function returnResponse($result) {
         return $this->_generateResponse(array('result' => $result));
     }
 
@@ -428,33 +441,33 @@ class Settings extends Base
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAll()
-    {
-        $location          = $this->user->getLocationSettings();
-        $geoFence          = $this->user->getGeoFence();
-        $notification      = $this->user->getNotificationSettings();
-        $platform          = $this->user->getPlatformSettings();
-        $layers            = $this->user->getLayersSettings();
-        $account           = $this->user->toArrayDetailed();
+    public function getAll() {
+        $location = $this->user->getLocationSettings();
+        $geoFence = $this->user->getGeoFence();
+        $notification = $this->user->getNotificationSettings();
+        $platform = $this->user->getPlatformSettings();
+        $layers = $this->user->getLayersSettings();
+        $account = $this->user->toArrayDetailed();
         $sharingPreference = $this->user->getSharingPreferenceSettings();
-        $shareLocation     = $this->user->getShareLocation();
-        $shareProfilePicture     = $this->user->getShareProfilePicture();
-        $shareNewsFeed     = $this->user->getShareNewsFeed();
-        $currentLocation   = $this->user->getCurrentLocation();
+        $shareLocation = $this->user->getShareLocation();
+        $shareProfilePicture = $this->user->getShareProfilePicture();
+        $shareNewsFeed = $this->user->getShareNewsFeed();
+        $currentLocation = $this->user->getCurrentLocation();
 
-        $this->response->setContent(json_encode(array(
-                                                    'location'               => $location,
-                                                    'geoFence'               => $geoFence,
-                                                    'notification'           => $notification,
-                                                    'platform'               => $platform,
-                                                    'layers'                 => $layers,
-                                                    'account'                => $account,
-                                                    'sharingPreference'      => $sharingPreference,
-                                                    'shareLocation'          => $shareLocation,
-                                                    'shareProfilePicture'    => $shareProfilePicture,
-                                                    'shareNewsFeed'          => $shareNewsFeed,
-                                                    'currentLocation'        => $currentLocation
-                                                )));
+        $this->response->setContent(
+            json_encode(array(
+                             'location' => $location,
+                             'geoFence' => $geoFence,
+                             'notification' => $notification,
+                             'platform' => $platform,
+                             'layers' => $layers,
+                             'account' => $account,
+                             'sharingPreference' => $sharingPreference,
+                             'shareLocation' => $shareLocation,
+                             'shareProfilePicture' => $shareProfilePicture,
+                             'shareNewsFeed' => $shareNewsFeed,
+                             'currentLocation' => $currentLocation
+                        )));
         $this->response->setStatusCode(Status::OK);
 
         return $this->response;

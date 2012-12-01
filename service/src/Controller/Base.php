@@ -398,9 +398,10 @@ abstract class Base {
         $caller = $trace[0];
 
         return implode(
-                   DIRECTORY_SEPARATOR, array(ROOTDIR, '..', 'src', 'Views',
-                                             $this->simplifyControllerName(get_class($caller['object'])),
-                                             $caller['function'])) . '.haml';
+                   DIRECTORY_SEPARATOR,
+                   array(ROOTDIR, '..', 'src', 'Views',
+                        $this->simplifyControllerName(get_class($caller['object'])),
+                        $caller['function'])) . '.haml';
     }
 
     private function simplifyControllerName($name) {
@@ -408,9 +409,35 @@ abstract class Base {
         return $parts[count($parts) - 1];
     }
 
-    protected function cacheAndReturn($cacheKey, \Closure $closure) {
-        die("Cache: $cacheKey");
-        return $closure->__invoke();
+    protected function cacheAndReturn($cachePath, \Closure $closure) {
+        if ($this->hasExpired($cachePath))
+            return $this->buildResponseFromCache($cachePath);
+        else
+            return $this->cacheAndBuildResponse($cachePath, $closure);
+    }
+
+    private function hasExpired($cachePath) {
+        return file_exists($cachePath);
+    }
+
+    private function buildResponseFromCache($cachePath) {
+        $this->response->setContent(file_get_contents($cachePath));
+        $this->response->setStatusCode(Status::OK);
+        return $this->response;
+    }
+
+    private function cacheAndBuildResponse($cachePath, \Closure $closure) {
+        $response = $closure->__invoke();
+        $this->ensureDirectoryExistence($cachePath);
+        file_put_contents($cachePath, $response->getContent());
+
+        return $response;
+    }
+
+    private function ensureDirectoryExistence($cachePath) {
+        $directory = dirname($cachePath);
+        if (!file_exists($directory))
+            mkdir($directory, 0777, true);
     }
 
 }

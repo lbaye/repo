@@ -48,8 +48,10 @@ class Search extends Base {
         $data = $this->request->request->all();
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
+            $this->updateUserPulse($this->user);
             $that = &$this;
-            return $this->cacheAndReturn($this->buildCacheKey($data),
+            return $this->cacheAndReturn(
+                $this->buildCachePath(\Helper\Constants::CT_SEARCH, $data),
                 function() use($that, $data) {
                     $results = array();
                     $results['people'] = $that->people($data);
@@ -66,12 +68,21 @@ class Search extends Base {
         }
     }
 
-    private function buildCacheKey($data) {
+    private function updateUserPulse(\Document\User $user) {
+        if (!$user->isOnlineUser()) {
+            $user->setLastPulse(new \DateTime());
+            $this->userRepository->updateObject($user);
+        }
+    }
+
+    private function buildCachePath($type, $data) {
         $lat = round((float) $data['lat'], 3);
         $lng = round((float) $data['lng'], 3);
 
-        $key = $this->user->getId() . DIRECTORY_SEPARATOR . $lat . '_' . $lng;
-        return 'search' . DIRECTORY_SEPARATOR . $key;
+        return implode(DIRECTORY_SEPARATOR,
+                       array(ROOTDIR, '..', 'app', 'cache',
+                            $this->user->getId(), $type,
+                            preg_replace('/\./', '-', $lat . '-' . $lng)));
     }
 
     public function people($data) {

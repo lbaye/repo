@@ -15,11 +15,17 @@ use Helper\ShareConstant;
  * @ODM\Index(keys={"_id"="desc", "visible"="asc"})
  */
 class User {
+
     const SALT = 'socialmaps';
     const STATUS_OFF = 'off';
 
     const BLOCKED = 'blocked';
     const UNBLOCKED = 'unblocked';
+
+    const PREF_FIELD_STATUS = "status";
+    const PREF_FIELD_GEO_FENCES = "geo_fences";
+
+    const MAX_IDLE_TIME_IN_MINS = 30;
 
     /** @ODM\Id */
     protected $id;
@@ -77,6 +83,9 @@ class User {
 
     /** @ODM\String */
     protected $relationshipStatus;
+
+    /** @ODM\Date */
+    private $lastPulse;
 
     /**
      * @ODM\EmbedOne(targetDocument="Address")
@@ -347,23 +356,17 @@ class User {
             'workStatus',
             'regMedia',
             'dateOfBirth',
-            'lastSeenAt'
+            'lastSeenAt',
+            'lastPulse'
         );
 
         $items = array();
         $targetFields = null;
 
-        if ($detail) {
-            $targetFields = $detailFields;
-        } else {
-            $targetFields = $shortFields;
-        }
+        if ($detail) $targetFields = $detailFields;
+        else $targetFields = $shortFields;
 
-        foreach ($targetFields as $field) {
-            $items[$field] = $this->{
-            "get{$field}"
-            }();
-        }
+        foreach ($targetFields as $field) $items[$field] = $this->{ "get{$field}" }();
 
         if ($this->getAddress()) {
             $items['address'] = $this->getAddress()->toArray();
@@ -411,7 +414,8 @@ class User {
             'shareNewsFeed' => $this->getShareNewsFeed(),
             'age' => $this->getAge(),
             'status' => $this->getStatus(),
-            'company' => $this->getCompany()
+            'company' => $this->getCompany(),
+            'online' => $this->isOnlineUser()
         );
 
         if ($this->getCircles()) {
@@ -960,10 +964,6 @@ class User {
         return $this->pushSettings;
     }
 
-    /*********************************************
-     * Additional wrapper/helper function
-     ********************************************/
-
     public function getFriendship(User $user) {
         if (in_array($user->getId(), $this->getFriends())) {
             return 'friend';
@@ -1114,6 +1114,22 @@ class User {
         return $this->platforms;
     }
 
-    const PREF_FIELD_STATUS = "status";
-    const PREF_FIELD_GEO_FENCES = "geo_fences";
+    public function setLastPulse($lastPulse) {
+        $this->lastPulse = $lastPulse;
+    }
+
+    public function getLastPulse() {
+        return $this->lastPulse;
+    }
+
+    public function isOnlineUser() {
+        if ($this->lastPulse) {
+            $nowDt = new \DateTime();
+            $differenceInMins = ($nowDt->getTimestamp() - $this->lastPulse->getTimestamp()) / 60;
+            return $differenceInMins < self::MAX_IDLE_TIME_IN_MINS;
+        }
+
+        return false;
+    }
+
 }
