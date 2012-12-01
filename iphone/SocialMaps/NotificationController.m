@@ -134,13 +134,15 @@ NSMutableArray *unreadMesg;
     if (selectedType==0)
     {
         [webView setHidden:YES];
+        [notificationItems setHidden:NO];
         [msgButton setImage:[UIImage imageNamed:@"icon_message_notification_selected.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
     }
     else if (selectedType==1)
     {
-        [webView setHidden:YES];        
+        [webView setHidden:YES];
+        [notificationItems setHidden:NO];
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"icon_friend_request_selected.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
@@ -151,7 +153,8 @@ NSMutableArray *unreadMesg;
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"icon_notify_selected.png"] forState:UIControlStateNormal];
-        [webView setHidden:NO];        
+        [webView setHidden:NO];
+        [notificationItems setHidden:YES];
     }
 }
 
@@ -374,7 +377,7 @@ NSMutableArray *unreadMesg;
 	
 	UIView *header = [[UIView alloc] initWithFrame:CellFrame];
 
-	header.backgroundColor = [UIColor clearColor];
+	header.backgroundColor = [UIColor lightTextColor];
     UILabel *tempLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0,
                                                                 tableView.frame.size.width,
                                                                 SECTION_HEADER_HEIGHT)];

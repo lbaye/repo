@@ -124,10 +124,15 @@ DDAnnotation *annotation;
     cancelButton.tintColor = [UIColor darkGrayColor];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self displayNotificationCount];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self displayNotificationCount];
     
     //load map data
     CLLocationCoordinate2D theCoordinate;

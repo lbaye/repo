@@ -6333,54 +6333,18 @@ AppDelegate *smAppDelegate;
         
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
         {
-            if ([jsonObjects isKindOfClass:[NSDictionary class]])
-            {
-                // treat as a dictionary, or reassign to a dictionary ivar
-                NSLog(@"dict");
-            }
-            else if ([jsonObjects isKindOfClass:[NSArray class]])
-            {
-                // treat as an array or reassign to an array ivar.
-                NSLog(@"Arr");
-            }
-            NSMutableArray *circleList=[[NSMutableArray alloc] init];
-            for (NSDictionary *item in jsonObjects) 
-            {
-                UserCircle *circle=[[UserCircle alloc] init];
-                circle.circleID=[self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                circle.circleName=[self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
-                
-                if ([[self getNestedKeyVal:item key1:@"type" key2:nil key3:nil] caseInsensitiveCompare:@"system"] == NSOrderedSame)
-                {
-                    circle.type = CircleTypeSystem;
-                }
-                else
-                {
-                    circle.type = CircleTypeCustom;
-                }
-                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
-                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
-                NSLog(@"circle.circleID: %@",circle.circleID);
-                NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
-                for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
-                {
-                    UserFriends *userFrnd=[[UserFriends alloc] init];
-                    userFrnd.userName=[self getNestedKeyVal:frndDic key1:@"firstName" key2:nil key3:nil];
-                    userFrnd.userId=[self getNestedKeyVal:frndDic key1:@"id" key2:nil key3:nil];
-                    userFrnd.imageUrl=[self getNestedKeyVal:frndDic key1:@"avatar" key2:nil key3:nil];
-                    userFrnd.distance=[[self getNestedKeyVal:frndDic key1:@"distance" key2:nil key3:nil] doubleValue];
-                    userFrnd.coverImageUrl=[self getNestedKeyVal:frndDic key1:@"coverPhoto" key2:nil key3:nil];
-                    userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
-                    userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
-                    userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
-                    [userFrnds addObject:userFrnd];
-                }
-                circle.friends=userFrnds;
-                [circleList addObject:circle];        
-            }
-            circleListDetailGlobalArray=circleList;
+                Photo *photo=[[Photo alloc] init];
+//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
+                photo.photoId=[self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
+                photo.description=[self getNestedKeyVal:jsonObjects key1:@"description" key2:nil key3:nil];
+                photo.imageUrl=[self getNestedKeyVal:jsonObjects key1:@"imageLarge" key2:nil key3:nil];
+                photo.location.latitude=[self getNestedKeyVal:jsonObjects key1:@"lat" key2:nil key3:nil];
+                photo.location.longitude=[self getNestedKeyVal:jsonObjects key1:@"lng" key2:nil key3:nil];
+                photo.address=[self getNestedKeyVal:jsonObjects key1:@"address" key2:nil key3:nil];
+                photo.photoThum=[self getNestedKeyVal:jsonObjects key1:@"imageThumb" key2:nil key3:nil];
+                NSLog(@"photo.imageUrl %@",photo.imageUrl);
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:circleList];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:photo];
         } 
         else 
         {

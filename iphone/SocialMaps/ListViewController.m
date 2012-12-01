@@ -75,7 +75,6 @@ PullableView *pullUpView;
 {
     [super viewDidLoad];
     [circleView removeFromSuperview];
-    [self displayNotificationCount];
     listPulldownMenu.backgroundColor = [UIColor clearColor];
     listPullupMenu.backgroundColor   = [UIColor clearColor];
     
@@ -107,7 +106,7 @@ PullableView *pullUpView;
 
     [self initPullView];
     
-    CGSize labelSize = CGSizeMake(70, 20); 
+    CGSize labelSize = CGSizeMake(90, 20); 
     UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
     labelRefresh.text = @"Reloading...";
     labelRefresh.textAlignment = UITextAlignmentCenter;
@@ -128,9 +127,15 @@ PullableView *pullUpView;
 {
     [super viewDidAppear:animated];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     [self loadImagesForOnscreenRows];
     
     smAppDelegate.currentModelViewController = self;
+    [self displayNotificationCount];
 }
 
 - (void) viewDidDisappear:(BOOL)animated

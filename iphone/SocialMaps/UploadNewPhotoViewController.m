@@ -63,6 +63,7 @@ int uploadPhotoCounter=0;
     [self reloadScrollview];
     [customView removeFromSuperview];
     smAppDelegate.currentModelViewController = self;
+    uploadPhotoCounter=0;
 }
 
 - (void)viewDidLoad
@@ -166,17 +167,10 @@ int uploadPhotoCounter=0;
         [msg appendString:@" address,"];
     }
     
-//    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
-//    {
-//        if (msg.length==13)
-//        {
-//            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
-//        }
-//        else
-//        {
-//            [msg appendString:@" comments"];
-//        }
-//    }
+    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
+    {
+        photo.description=@"";
+    }
 
     for (int i=0; i<[selectedFriends count]; i++)
     {
@@ -354,11 +348,18 @@ int uploadPhotoCounter=0;
 {
     if(uploadPhotoCounter==0)
     {
-    NSLog(@"[notif object] %@",[notif object]);
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
-    [self dismissModalViewControllerAnimated:YES];
+        if ([notif.object isKindOfClass:[Photo class]])
+        {
+            NSLog(@"[notif object] %@",[notif object]);
+            [smAppDelegate hideActivityViewer];
+            [smAppDelegate.window setUserInteractionEnabled:YES];
+            [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
+            [self dismissModalViewControllerAnimated:YES];
+        }
+        else
+        {
+            [UtilityClass showAlert:@"" :@"Photo upload failed"];
+        }
     }
     uploadPhotoCounter++;
 }

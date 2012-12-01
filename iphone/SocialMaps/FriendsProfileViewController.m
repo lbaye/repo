@@ -88,7 +88,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
-    [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
     self.picSel = [[UIImagePickerController alloc] init];
@@ -161,7 +160,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
-    
+    [self displayNotificationCount];
     smAppDelegate.currentModelViewController = self;
     
     [smAppDelegate showActivityViewer:self.view];

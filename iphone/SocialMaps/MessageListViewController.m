@@ -116,9 +116,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     tableViewCircle.delegate = self;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self displayNotificationCount];
+}
+
 - (void) viewDidAppear:(BOOL)animated
 {
-    [self displayNotificationCount];
+
     [super viewDidAppear:animated];
     
     if (self.selectedMessage) {

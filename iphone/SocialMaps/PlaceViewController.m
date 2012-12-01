@@ -23,7 +23,6 @@
 {
     [super viewDidLoad];
     
-    [self displayNotificationCount];
     
     photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
     photoPicker.delegate = self;
@@ -141,7 +140,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    [self displayNotificationCount];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.currentModelViewController = self;
 }
