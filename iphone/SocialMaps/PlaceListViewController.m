@@ -42,7 +42,6 @@
     
     [smAppDelegate showActivityViewer:self.view];
     
-    [self displayNotificationCount];
     
     copyListOfItems = [[NSMutableArray alloc] init];
     
@@ -51,7 +50,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self displayNotificationCount];    
     smAppDelegate.currentModelViewController = self;
 }
 

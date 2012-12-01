@@ -33,7 +33,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 {
     [super viewDidLoad];
     
-    [self displayNotificationCount];
     
     NSArray *subviews = [friendSearchbar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:3];
@@ -52,6 +51,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 - (void)viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
+    [self displayNotificationCount];
     
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.currentModelViewController = self;

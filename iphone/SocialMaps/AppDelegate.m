@@ -251,7 +251,8 @@ static AppDelegate *sharedInstance=nil;
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
     NSLog(@"Received notification: count:%d, data:%@  id:%@ type:%d", newNotif.badgeCount, userInfo, newNotif.objectIds, newNotif.notifType);
     notifBadgeFlag=TRUE;
-    notifBadgeFlag= newNotif.badgeCount;
+    badgeCount= newNotif.badgeCount;
+    [self.currentModelViewController viewWillAppear:NO];
     // Temporary - set count to zero
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
@@ -353,6 +354,7 @@ static AppDelegate *sharedInstance=nil;
         }
         else if (newNotif.notifType == PushNotificationProximityAlert)
         {
+            NSLog(@"in proxomity alert");            
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -375,7 +377,15 @@ static AppDelegate *sharedInstance=nil;
             
             [controller showAnnotationDetailView:locItemPeople];
             [self.currentModelViewController presentModalViewController:controller animated:YES];
-            NSLog(@"in proxomity alert");
+        }
+    }
+    else 
+    {
+        //apps not in background
+        if (newNotif.notifType == PushNotificationAcceptedRequest) 
+        {
+            RestClient *rc=[[RestClient alloc] init];
+            [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
         }
     }
 }

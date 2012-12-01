@@ -107,6 +107,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
 }
