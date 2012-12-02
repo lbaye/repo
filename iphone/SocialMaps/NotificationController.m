@@ -112,6 +112,9 @@ NSMutableArray *unreadMesg;
     
     if (self.selectedType == Request)
         [self showFriendRequests:nil];
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
@@ -502,6 +505,14 @@ NSMutableArray *unreadMesg;
 
 - (IBAction)actionBackMe:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)gotFriendRequests:(NSNotification *)notif {
+    NSMutableArray *notifs = [notif object];
+    [smAppDelegate.friendRequests removeAllObjects];
+    [smAppDelegate.friendRequests addObjectsFromArray:notifs];
+    NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
+    [notificationItems reloadData];
 }
 
 @end

@@ -1709,6 +1709,10 @@ AppDelegate *smAppDelegate;
                     NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
 					people.friendshipStatus = friendship;
                     people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                    
+                    if (people.isFriend)
+                        NSLog(@"people name = %@ isFriend = %d", people.firstName, people.isFriend);
+                    
                     people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                     people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
                     people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
@@ -4298,7 +4302,7 @@ AppDelegate *smAppDelegate;
         } else {
             NSLog(@"sendFriendRequest unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Friend request previously sent to this user."];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
