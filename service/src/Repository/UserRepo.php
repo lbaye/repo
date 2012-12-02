@@ -805,7 +805,7 @@ class UserRepo extends Base {
                 ->select('_id', 'firstName', 'lastName', 'currentLocation', 'email',
                          'status', 'avatar', 'coverPhoto', 'distance',
                          'age', 'gender', 'lastSeenAt', 'relationshipStatus',
-                         'workStatus', 'dateOfBirth', 'regMedia')
+                         'workStatus', 'dateOfBirth', 'regMedia', 'address')
                 ->field('id')->notIn($excludedUserIds)
                 ->field('visible')->equals(true)
                 ->hydrate(false)
@@ -831,6 +831,10 @@ class UserRepo extends Base {
         $id = $userHash['_id']->__toString();
         $userHash['id'] = &$id;
         unset($userHash['_id']);
+
+        # unset address _id
+        if (isset($userHash['address']))
+            unset($userHash['address']['_id']);
 
         # Retrieve user object
         $userObj = $this->find($userHash['id']);
