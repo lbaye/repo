@@ -1703,7 +1703,7 @@ AppDelegate *smAppDelegate;
                     people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
                     people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
                     people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
-                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil];
                     people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
                     people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
                     NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
