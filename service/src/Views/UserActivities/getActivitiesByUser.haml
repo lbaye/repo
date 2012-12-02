@@ -23,10 +23,12 @@
               .avatar
                 - $avatarPath = $photo->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-
-                %img(src=$avatarPath)
+                - $userLink = "#user:" . $photo->getOwner()->getId();
+                %a(href= $userLink)
+                  %img(src=$avatarPath)
               .name
-                %h4= $photo->getOwner()->getName()
+                %a(href= $userLink)
+                  %h4= $photo->getOwner()->getName()
               .time
                 = $activity->toHumanizeDate()
 
@@ -40,7 +42,9 @@
               - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
               .image(style=$imagePathCss)
                 - $photoFullPath = $baseUrl . $photo->getUriMedium();
-                %img(src= $photoFullPath)
+                - $photoPath = "#photo:" . $baseUrl . $photo->getUriLarge();
+                %a(href=$photoPath)
+                  %img(src=$photoFullPath)
               .icon.icon_zoom
 
             .row
@@ -62,10 +66,13 @@
               .avatar
                 - $avatarPath = $activity->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+                - $userLink = $activity->getOwner()->getAvatar()
 
-                %img(src=$avatarPath)
+                %a(href= $userLink)
+                  %img(src=$avatarPath)
               .name
-                %h4= $activity->getOwner()->getName()
+                %a(href= $userLink)
+                  %h4= $activity->getOwner()->getName()
               .time
                 - if ($activity->getCreatedAt() != null)
                   = $activity->toHumanizeDate()
@@ -74,9 +81,11 @@
                 - if ($activity->getOwner()->getId() == $currentUser->getId())
                   - if ($activity->getObjectType() === 'geotag')
                     - $geotag = $geotagRepo->find($activity->getObjectId())
+                    - $gettagtext = "#geotag:" . $geotag->getId()
 
                     has tagged "
-                    %strong= stripcslashes($activity->getTitle())
+                    %a(href= $gettagtext)
+                      %strong= stripcslashes($activity->getTitle())
                     "
                     at
                     %small= $geotag->getLocation()->getAddress()
