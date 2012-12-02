@@ -1937,6 +1937,32 @@ ButtonClickCallbackData callBackData;
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
                 
+                
+                 BOOL isExistingFriend = FALSE;
+                 
+                 for (UserFriends *userFriends in friendListGlobalArray) {
+                     if ([userFriends.userId isEqualToString:item.userId]) {
+                         isExistingFriend = TRUE;
+                         break;
+                     }
+                 }
+                 
+                 if (!isExistingFriend) {
+                     UserFriends *frnd = [[UserFriends alloc] init];
+                     frnd.userId = item.userId;
+                     NSString *firstName = item.firstName;
+                     NSString *lastName = item.lastName;
+                     frnd.userName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                     frnd.imageUrl = item.avatar;
+                     frnd.distance = [item.distance intValue];
+                     frnd.coverImageUrl = item.coverPhotoUrl;
+                     frnd.address =  item.city;
+                     frnd.statusMsg = item.statusMsg;
+                     frnd.regMedia = item.regMedia;
+                     [friendListGlobalArray addObject:frnd];
+                     [frnd release];
+                 }
+        
                 if (![smAppDelegate.userId isEqualToString:item.userId]) {
                     // Do we already have this in the list?
                     __block NSNumber *indx;

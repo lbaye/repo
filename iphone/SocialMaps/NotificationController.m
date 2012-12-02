@@ -89,6 +89,12 @@ NSMutableArray *unreadMesg;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [super viewWillDisappear:animated];
+}
+
 -(void) displayNotificationCount 
 {
     int totalNotif= [UtilityClass getNotificationCount];
@@ -117,6 +123,7 @@ NSMutableArray *unreadMesg;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [smAppDelegate showActivityViewer:self.view];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
@@ -237,8 +244,8 @@ NSMutableArray *unreadMesg;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
-    [notifTabArrow release];
+    
+    [notifTabArrow release];    
     [msgCount release];
     [reqCount release];
     [alertCount release];
@@ -522,6 +529,8 @@ NSMutableArray *unreadMesg;
         reqCount.text = @"";
     else
         reqCount.text   = [NSString stringWithFormat:@"%d",requestCount];
+    
+    [smAppDelegate hideActivityViewer];
 }
 
 @end
