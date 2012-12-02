@@ -2023,12 +2023,14 @@ ButtonClickCallbackData callBackData;
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         
-                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar])) {
+                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar] || ![item.workStatus isEqualToString:aPerson.userInfo.workStatus] || ![item.city isEqualToString:aPerson.userInfo.city])) {
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
                             NSLog(@"lastSeenAt %@", item.lastSeenAt);
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                             aPerson.itemDistance = distanceFromMe;
                             aPerson.userInfo.relationsipStatus = item.relationsipStatus;
+                            aPerson.userInfo.workStatus = item.workStatus;
+                            aPerson.userInfo.city = item.city;
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
 
