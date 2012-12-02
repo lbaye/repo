@@ -239,7 +239,6 @@ NSMutableArray *unreadMesg;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [notifTabArrow release];
-    [notifCount release];
     [msgCount release];
     [reqCount release];
     [alertCount release];

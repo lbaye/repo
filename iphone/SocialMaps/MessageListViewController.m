@@ -62,6 +62,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     profileImageList = [[NSMutableArray alloc] init];
     messageReplyList = [[NSMutableArray alloc] init];
     
+    [profileImageList addObject:@""]; //crash fix when no message in list 
     for (int i = 0; i < [smAppDelegate.messages count]; i++) {
         [profileImageList addObject:@""];
     }
