@@ -1703,12 +1703,16 @@ AppDelegate *smAppDelegate;
                     people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
                     people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
                     people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
-                    people.city = [self getNestedKeyVal:item key1:@"city" key2:nil key3:nil];
+                    people.city = [self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil];
                     people.workStatus = [self getNestedKeyVal:item key1:@"workStatus" key2:nil key3:nil];
                     people.external = [[self getNestedKeyVal:item key1:@"external" key2:nil key3:nil] boolValue];
                     NSString *friendship = [self getNestedKeyVal:item key1:@"friendship" key2:nil key3:nil];
 					people.friendshipStatus = friendship;
                     people.isFriend = ![friendship caseInsensitiveCompare:@"friend"];
+                    
+                    if (people.isFriend)
+                        NSLog(@"people name = %@ isFriend = %d", people.firstName, people.isFriend);
+                    
                     people.dateOfBirth = [self getDateFromJsonStruct:item name:@"dateOfBirth"];
                     people.age = [self getNestedKeyVal:item key1:@"age" key2:nil key3:nil];
                     people.currentLocationLng = [self getNestedKeyVal:item key1:@"currentLocation" key2:@"lng" key3:nil];
@@ -4298,7 +4302,7 @@ AppDelegate *smAppDelegate;
         } else {
             NSLog(@"sendFriendRequest unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Friend request previously sent to this user."];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -5109,8 +5113,10 @@ AppDelegate *smAppDelegate;
         
         if (responseStatus == 200) {
             NSLog(@"SharingPrivacySettings status: %@", responseString);
+            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOCATION_SHARING_SETTING_DONE object:sharingOption];
         } else {
             NSLog(@"Failed SharingPrivacySettings: status=%d", responseStatus);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
         }
         
         [jsonParser release], jsonParser = nil;
@@ -5121,6 +5127,7 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^
      {
          NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
      }];
     
     //[request setDelegate:self];

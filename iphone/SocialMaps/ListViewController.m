@@ -126,13 +126,12 @@ PullableView *pullUpView;
 - (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    [self loadImagesForOnscreenRows];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self loadImagesForOnscreenRows];
     
     smAppDelegate.currentModelViewController = self;
     [self displayNotificationCount];

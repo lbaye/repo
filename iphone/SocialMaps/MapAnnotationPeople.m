@@ -11,6 +11,8 @@
 #import "UIImageView+roundedCorner.h"
 #import "UtilityClass.h"
 #import "Constants.h"
+#import "UserFriends.h"
+#import "Globals.h"
 
 @implementation MapAnnotationPeople
 
@@ -211,6 +213,8 @@
     [addFriendBtn setTitleColor:[UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
     
     NSString *friendShipStatus = locItemPeople.userInfo.friendshipStatus;
+    NSLog(@"friendShip Status = %@", friendShipStatus);
+    
     
     if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
         [addFriendBtn setTitle:@"Rejected" forState:UIControlStateNormal];
@@ -229,11 +233,10 @@
         [addFriendBtn setTitle:@"Pending" forState:UIControlStateNormal];
         [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
+    } else if ([friendShipStatus isEqualToString:@"friend"]) { 
+        addFriendBtn.hidden = YES;
     }
     
-    
-   
-
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
     [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
 
