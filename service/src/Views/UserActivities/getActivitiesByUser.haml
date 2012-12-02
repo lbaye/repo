@@ -66,7 +66,7 @@
               .avatar
                 - $avatarPath = $activity->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-                - $userLink = $activity->getOwner()->getAvatar()
+                - $userLink = $activity->getOwner()->getId()
 
                 %a(href= $userLink)
                   %img(src=$avatarPath)
@@ -81,10 +81,10 @@
                 - if ($activity->getOwner()->getId() == $currentUser->getId())
                   - if ($activity->getObjectType() === 'geotag')
                     - $geotag = $geotagRepo->find($activity->getObjectId())
-                    - $gettagtext = "#geotag:" . $geotag->getId()
+                    - $geotagLink = "#geotag:" . $geotag->getId()
 
                     has tagged "
-                    %a(href= $gettagtext)
+                    %a(href= $geotagLink)
                       %strong= stripcslashes($activity->getTitle())
                     "
                     at
