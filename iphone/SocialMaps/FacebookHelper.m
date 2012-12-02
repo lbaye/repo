@@ -165,7 +165,7 @@ UserDefault *userDefault;
         UserFriends *aUserFriend=[[UserFriends alloc] init];
         aUserFriend.userName=name;
         aUserFriend.userId=[NSString stringWithFormat:@"%lld",fbid];
-        aUserFriend.imageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",aUserFriend.userId];
+        aUserFriend.imageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",aUserFriend.userId];
         [userFriendslistIndex setObject:[NSNumber numberWithInt:userFriendslistArray.count]  forKey:aUserFriend.userId]; 
         [userFriendslistArray addObject:aUserFriend];
         

@@ -143,13 +143,17 @@
     UIImage *scaledImage = img;
     NSLog(@"selected image %@",img);
     regPhoto = scaledImage;
-    
+    NSLog(@"before image selection: width=%f, height=%f",
+          regPhoto.size.width, regPhoto.size.height);
     
     UIGraphicsBeginImageContext(scaledImage.size);
     [img drawInRect:CGRectMake(0,0,scaledImage.size.width,scaledImage.size.height)];
     regPhoto = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     regPhoto=[self imageByScalingProportionallyToSize:regPhoto];
+    NSLog(@"After image selection: width=%f, height=%f",
+          regPhoto.size.width, regPhoto.size.height);
+
 //    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
 //    NSLog(@"After image selection: width=%f, height=%f",
 //          selectedImage.size.width, selectedImage.size.height);
