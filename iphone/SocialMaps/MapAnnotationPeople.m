@@ -175,7 +175,7 @@
     }
     else
     {
-        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in: <b>%@</b><br> Work at: <b>%@</b><br></span></body></html>", 
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in: <b>%@</b><br> Work at: <b>%@</b><br></span></body></html>", 
                            locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, 

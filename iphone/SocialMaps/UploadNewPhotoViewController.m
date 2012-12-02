@@ -169,7 +169,7 @@ int uploadPhotoCounter=0;
     
     if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
     {
-        photo.description=@"";
+        photo.comment=@"";
     }
 
     for (int i=0; i<[selectedFriends count]; i++)

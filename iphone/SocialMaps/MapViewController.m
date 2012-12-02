@@ -203,7 +203,7 @@ ButtonClickCallbackData callBackData;
 {
     if ((smAppDelegate.fbId) && (![smAppDelegate.fbId isEqualToString:@""]))
     {
-    NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",smAppDelegate.fbId];
+    NSString *profileImageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",smAppDelegate.fbId];
     UIImage *profileImage=[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:profileImageUrl]]];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs removeObjectForKey:@"FBProfilePic"];
@@ -1189,7 +1189,7 @@ ButtonClickCallbackData callBackData;
     if (!smAppDelegate.timerGotListing) 
     {
         NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
-        RestClient *restClient = [[RestClient alloc] init]; 
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
         smAppDelegate.timerGotListing = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(startGetLocation:) userInfo:nil repeats:YES];
     }
@@ -1206,7 +1206,7 @@ ButtonClickCallbackData callBackData;
         connectToFBView.layer.borderColor=[[UIColor lightTextColor]CGColor];
         [self.view addSubview:connectToFBView];
     }
-    
+    NSLog(@"viewDidAppear finished");
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
