@@ -8,6 +8,7 @@ use Repository\UserRepo as UserRepository;
 use Repository\ExternalUserRepo as ExtUserRepo;
 use Helper\Location;
 use Helper\Status;
+use Service\Search\ApplicationSearchFactory as ApplicationSearchFactory;
 
 class Search extends Base {
     /**
@@ -49,23 +50,28 @@ class Search extends Base {
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
             $this->updateUserPulse($this->user);
-            $that = &$this;
-            return $this->cacheAndReturn(
-                $this->buildCachePath(\Helper\Constants::CT_SEARCH, $data),
-                function() use($that, $data) {
-                    $results = array();
-                    $results['people'] = $that->people($data);
-                    $results['places'] = $that->places($data);
-                    $results['facebookFriends'] = $that->secondDegreeFriends($data);
-
-                    return $that->_generateResponse($results);
-                }
-            );
-
+            return $this->cacheAndReturn($this->buildSearchCachePath($data), 'performSearch', $data);
         } else {
             $this->warn('Invalid request with missing required fields');
             return $this->_generateMissingFieldsError();
         }
+    }
+
+    protected function performSearch($data) {
+        $appSearch = ApplicationSearchFactory::getInstance(
+            ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
+
+        return $appSearch->searchAll($data, array('limit' => self::PEOPLE_THRESHOLD));
+    }
+
+    public function allPeopleList() {
+        $data = $this->request->request->all();
+        $appSearch = ApplicationSearchFactory::
+                getInstance(ApplicationSearchFactory::AS_DEFAULT,
+                            $this->user, $this->dm, $this->config);
+
+        return $this->_generateResponse(
+            $appSearch->searchPeople($data, array('limit' => self::PEOPLE_THRESHOLD)));
     }
 
     private function updateUserPulse(\Document\User $user) {
@@ -75,90 +81,18 @@ class Search extends Base {
         }
     }
 
-    private function buildCachePath($type, $data) {
-        $lat = round((float) $data['lat'], 3);
-        $lng = round((float) $data['lng'], 3);
+    private function buildSearchCachePath($data) {
+        $lat = round((float)$data['lat'], 3);
+        $lng = round((float)$data['lng'], 3);
 
         return implode(DIRECTORY_SEPARATOR,
-                       array(ROOTDIR, '..', 'app', 'cache',
-                            $this->user->getId(), $type,
-                            preg_replace('/\./', '-', $lat . '-' . $lng)));
+                       array(ROOTDIR, '..', 'app', 'cache', 'static_caches', 'search',
+                            $this->user->getAuthToken() . '-' . $lat . '-' . $lng));
     }
 
-    public function people($data) {
-        $this->debug('Retrieving all people');
-        $location = array('lat' => (float)$data['lat'], 'lng' => (float)$data['lng']);
-        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
-        $key = $this->config['googlePlace']['apiKey'];
-        $people = $this->userRepository->searchWithPrivacyPreference($keywords, $location, self::PEOPLE_THRESHOLD, $key);
-
-        return $people;
-    }
-
-    public function places($data) {
-        $this->debug('Retrieving all places');
-        $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
-        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
-
-        try {
-            return $this->findPlaces($keywords, $location);
-        } catch (\Exception $e) {
-            return array("message" => $e->getMessage());
-        }
-    }
-
-    protected function findPlaces($keywords, $location) {
-        $this->debug('Finding places with CachedGooglePlaces API');
-        return \Service\Location\PlacesServiceFactory::
-                getInstance($this->dm, $this->config, \Service\Location\PlacesServiceFactory::CACHED_GOOGLE_PLACES)
-                ->search($location, $keywords);
-    }
 
     /** TODO: Finalize deals search */
     protected function deals($data) {
         return array();
-    }
-
-
-    public function allPeopleList() {
-        $data = $this->request->request->all();
-        $results = $this->people($data);
-
-        return $this->_generateResponse($results);
-    }
-
-    public function secondDegreeFriends($data) {
-        $location = array('lat' => $data['lat'], 'lng' => $data['lng']);
-        $keywords = isset($data['keyword']) ? $data['keyword'] : null;
-
-        $users = array_values(
-            $this->dm->createQueryBuilder('Document\ExternalUser')
-                    ->field('smFriends')->equals($this->user->getId())
-            #->field('createdAt')->gte(new \DateTime(self::MAX_ALLOWED_OLDER_CHECKINS))
-                    ->hydrate(false)
-                    ->skip(0)
-                    ->limit(200)
-                    ->getQuery()->execute()->toArray());
-
-        foreach ($users as &$user) {
-            $user['distance'] = \Helper\Location::distance(
-                $location['lat'], $location['lng'],
-                $user['currentLocation']['lat'], $user['currentLocation']['lng']);
-
-            $mongoDate = $user['createdAt'];
-            $now = new \DateTime();
-            $now->setTimestamp($mongoDate->sec);
-
-            $user['createdAt'] = array(
-                'date' => $now
-            );
-
-            $user['coverPhoto'] = "http://maps.googleapis.com/maps/api/streetview?size=320x130&location="
-                                  . $user['currentLocation']['lat'] . ","
-                                  . $user['currentLocation']['lng'] . "&fov=90&heading=235&pitch=10&sensor=false"
-                                  . "&key={$this->config['googlePlace']['apiKey']}";
-        }
-
-        return $users;
     }
 }

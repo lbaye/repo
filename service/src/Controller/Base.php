@@ -66,6 +66,8 @@ abstract class Base {
 
     private $hamlEnvironment;
 
+    private $cacheRefRepo;
+
     /**
      * Inject the Request object for further use.
      *
@@ -117,6 +119,7 @@ abstract class Base {
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->serializer = \Service\Serializer\Factory::getSerializer('json');
+        $this->cacheRefRepo = $this->dm->getRepository('Document\CacheRef');
     }
 
     protected function createLogger($name) {
@@ -409,29 +412,50 @@ abstract class Base {
         return $parts[count($parts) - 1];
     }
 
-    protected function cacheAndReturn($cachePath, \Closure $closure) {
-        if ($this->hasExpired($cachePath))
+    protected function cacheAndReturn(&$cachePath, $funcName, $params) {
+        if ($this->hasExpired($cachePath)) {
+            $this->cacheAndBuildResponse($cachePath, $funcName, $params);
+            return $this->response;
+        } else {
             return $this->buildResponseFromCache($cachePath);
-        else
-            return $this->cacheAndBuildResponse($cachePath, $closure);
+        }
+
     }
 
-    private function hasExpired($cachePath) {
-        return file_exists($cachePath);
+    private function hasExpired(&$cachePath) {
+        return !file_exists($cachePath);
     }
 
-    private function buildResponseFromCache($cachePath) {
+    private function buildResponseFromCache(&$cachePath) {
         $this->response->setContent(file_get_contents($cachePath));
         $this->response->setStatusCode(Status::OK);
+
         return $this->response;
     }
 
-    private function cacheAndBuildResponse($cachePath, \Closure $closure) {
-        $response = $closure->__invoke();
-        $this->ensureDirectoryExistence($cachePath);
-        file_put_contents($cachePath, $response->getContent());
+    protected function cacheAndBuildResponse(&$cachePath, &$funcName, &$params) {
+        $results = $this->$funcName($params);
+        $this->createCacheReference($cachePath, $params, $results['people']);
 
-        return $response;
+        $this->ensureDirectoryExistence($cachePath);
+        $this->_generateResponse($results);
+        file_put_contents($cachePath, $this->response->getContent());
+
+        return $this->response;
+    }
+
+    private function createCacheReference(&$cachePath, &$params, &$people) {
+        # Collect all participants
+        $userIds = array();
+        foreach ($people as $person) $userIds[] = $person['id'];
+
+        $ref = new \Document\CacheRef();
+        $ref->setCacheFile($cachePath);
+        $ref->setLocation(array('lat' => $params['lat'], 'lng' => $params['lng']));
+        $ref->setParticipants($userIds);
+        $this->cacheRefRepo->insert($ref);
+
+        return true;
     }
 
     private function ensureDirectoryExistence($cachePath) {

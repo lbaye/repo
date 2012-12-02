@@ -116,10 +116,12 @@ class ProximityAlert extends Base
     private function informUser(\Document\User $user, $friends)
     {
         $this->debug('Informing user - ' . $user->getFirstName() . ' about his nearby friends');
+        $message = count($friends) > 1 ?
+                $this->createGroupNotificationMessage($friends) :
+                $this->createNotificationMessage($friends[0], $user);
         $this->sendNotification(
             $user, $this->addNotificationsCounts(
-                $user, $this->createGroupNotificationMessage($friends))
-        );
+                $user, $message));
     }
 
     private function informFriends(\Document\User $user, $friends)

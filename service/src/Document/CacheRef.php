@@ -7,9 +7,9 @@ use Respect\Validation\Validator;
 
 /**
  * @ODM\Document(collection="cacheRefs", repositoryClass="Repository\CacheRefRepo")
- * @ODM\Index(keys={"currentLocation"="2d"})
+ * @ODM\Index(keys={"location"="2d"})
  */
-class CacheRef extends Content {
+class CacheRef {
     /** @ODM\Id */
     protected $id;
 
@@ -17,7 +17,7 @@ class CacheRef extends Content {
     protected $cacheFile;
 
     /** @ODM\Hash */
-    protected $currentLocation = array(
+    protected $location = array(
         'lng' => 0, 'lat' => 0
     );
 
@@ -36,19 +36,19 @@ class CacheRef extends Content {
         return $this->cacheFile;
     }
 
-    public function setCurrentLocation($currentLocation) {
-        $this->currentLocation = $currentLocation;
-    }
-
-    public function getCurrentLocation() {
-        return $this->currentLocation;
-    }
-
     public function setParticipants($participants) {
         $this->participants = $participants;
     }
 
     public function getParticipants() {
         return $this->participants;
+    }
+
+    public function setLocation($location) {
+        $this->location = $location;
+    }
+
+    public function getLocation() {
+        return $this->location;
     }
 }
