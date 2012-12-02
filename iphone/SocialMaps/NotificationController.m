@@ -85,6 +85,8 @@ NSMutableArray *unreadMesg;
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/%@/minifeed.html?authToken=%@&r=1353821908.182321",smAppDelegate.userId,smAppDelegate.authToken]]]];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 }
 
 -(void) displayNotificationCount 
@@ -235,6 +237,7 @@ NSMutableArray *unreadMesg;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [notifTabArrow release];
     [notifCount release];
     [msgCount release];
@@ -513,6 +516,13 @@ NSMutableArray *unreadMesg;
     [smAppDelegate.friendRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
     [notificationItems reloadData];
+    
+    int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
+    
+    if (requestCount == 0)
+        reqCount.text = @"";
+    else
+        reqCount.text   = [NSString stringWithFormat:@"%d",requestCount];
 }
 
 @end
