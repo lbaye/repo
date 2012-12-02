@@ -5113,8 +5113,10 @@ AppDelegate *smAppDelegate;
         
         if (responseStatus == 200) {
             NSLog(@"SharingPrivacySettings status: %@", responseString);
+            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOCATION_SHARING_SETTING_DONE object:sharingOption];
         } else {
             NSLog(@"Failed SharingPrivacySettings: status=%d", responseStatus);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
         }
         
         [jsonParser release], jsonParser = nil;
@@ -5125,6 +5127,7 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^
      {
          NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
      }];
     
     //[request setDelegate:self];

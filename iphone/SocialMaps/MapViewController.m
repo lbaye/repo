@@ -919,7 +919,7 @@ ButtonClickCallbackData callBackData;
 
     isFirstTimeDownloading = NO;
     
-    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:5 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",@"Circles only",@"Custom...",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:3 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
@@ -934,8 +934,9 @@ ButtonClickCallbackData callBackData;
     
 	if (!smAppDelegate.timerGotListing) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedLocationSharingSetting:) name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
     }
-    
 }
 
 - (void)startGetLocation:(NSTimer*)timer
@@ -952,8 +953,34 @@ ButtonClickCallbackData callBackData;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+}
+
+- (void)changedLocationSharingSetting:(NSNotification *)notif
+{
+    NSLog(@"got LocationSharingSetting");
+    NSString  *sharingOption = [notif object];
     
-    smAppDelegate.shareLocationOption = indx;
+    if (sharingOption) {
+        smAppDelegate.shareLocationOption = [sharingOption intValue] - 1;
+        
+        switch (smAppDelegate.shareLocationOption) {
+            case 0:
+                [UtilityClass showAlert:@"" :@"Location sharing is now set for all users"];
+                break;
+            case 1:
+                [UtilityClass showAlert:@"" :@"Location sharing is now set for friends only"];
+                break;
+            default:
+                [UtilityClass showAlert:@"" :@"Location sharing is now turned off for all users"];
+                break;
+        }
+        
+    } else {
+        [radio gotoButton:smAppDelegate.shareLocationOption];
+        [UtilityClass showAlert:@"" :@"Network error"];
+    }
+    
+    
 }
 
 // Gesture recognizer for map drag event
@@ -2238,7 +2265,7 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     NSLog(@"userAccountPref %d", smAppDelegate.shareLocationOption);
-    [radio gotoButton:smAppDelegate.shareLocationOption];;
+    [radio gotoButton:smAppDelegate.shareLocationOption];
      
     [self displayNotificationCount];
 }

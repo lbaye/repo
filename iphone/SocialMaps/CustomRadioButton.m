@@ -159,6 +159,7 @@
 {    
     CGRect radioFrame = CGRectMake(0 + CELL_PADDING+buttonNumber*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-21/2, (self.frame.size.height-21)/2, 21, 21);
     [imageViewDrag setFrame:radioFrame];
+    selIndex = buttonNumber;
 }
 
 - (void) buttonClicked:(id)sender {
