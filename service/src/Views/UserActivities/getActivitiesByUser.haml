@@ -66,7 +66,7 @@
               .avatar
                 - $avatarPath = $activity->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-                - $userLink = $activity->getOwner()->getId()
+                - $userLink =  "#user:" . $activity->getOwner()->getId()
 
                 %a(href= $userLink)
                   %img(src=$avatarPath)
