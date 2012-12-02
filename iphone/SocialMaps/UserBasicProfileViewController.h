@@ -36,7 +36,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 
     
     BOOL isDragging_msg,isDecliring_msg;
-    NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName; 
     BOOL isBackgroundTaskRunning;
     UIImage *coverImage;

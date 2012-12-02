@@ -120,7 +120,6 @@ int scrollHeight,reloadCounter=0;
     
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
@@ -511,41 +510,63 @@ int scrollHeight,reloadCounter=0;
 
 -(void)loadImage
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
-    if (img)
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:userInfo.coverPhoto]);
+    if ([dicImages_msg objectForKey:userInfo.coverPhoto])
     {
-        coverImageView.image=img;
+        coverImageView.image=[dicImages_msg objectForKey:userInfo.coverPhoto];
+        NSLog(@"load from dic");
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
+        if (img)
+        {
+            coverImageView.image=img;
+            [dicImages_msg setObject:img forKey:userInfo.coverPhoto];
+        }
+        else
+        {
+            coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download1. %@",img);
+        [pl drain];
     }
-
-    NSLog(@"image setted after download1. %@",img);
-    [pl drain];
 }
 
 -(void)loadImage2
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    //temp use
-    UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
-    if (img2)
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:userInfo.avatar]);
+    if ([dicImages_msg objectForKey:userInfo.avatar])
     {
-        profileImageView.image=img2;
-        fullImageView.image=img2;
+        profileImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
+        fullImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
+        NSLog(@"load from dic");
     }
     else
     {
-        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
-        profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        //temp use
+        UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
+        if (img2)
+        {
+            profileImageView.image=img2;
+            fullImageView.image=img2;
+            [dicImages_msg setObject:img2 forKey:userInfo.avatar];
+        }
+        else
+        {
+            fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        }
+        
+        NSLog(@"image setted after download2. %@",img2);    
+        [pl drain];
     }
-    
-    NSLog(@"image setted after download2. %@",img2);    
-    [pl drain];
 }
 
 //handling map view
@@ -702,7 +723,7 @@ int scrollHeight,reloadCounter=0;
         if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+//            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image

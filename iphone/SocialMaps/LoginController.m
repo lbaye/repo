@@ -71,6 +71,17 @@
         [loginAlert autorelease];
     }
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ((smAppDelegate.facebookLogin==TRUE)||(smAppDelegate.smLogin==TRUE))
+    {
+        NSLog(@"in view will appear");
+        [self performSegueWithIdentifier: @"showMapView" sender: self];        
+    }
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {

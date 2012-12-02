@@ -424,7 +424,13 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 }
 
 // img_settings_list_bg.png
-- (IBAction)setInfoSharing:(id)sender {
+- (IBAction)setInfoSharing:(id)sender
+{
+    [self performSelector:@selector(setaInfoSharingMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setaInfoSharingMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Information sharing";
     
@@ -436,23 +442,30 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 4001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 4002;
-    [closeButton addTarget:self 
-                    action:@selector(closeSharingInfo:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 4002;
+     [closeButton addTarget:self 
+     action:@selector(closeSharingInfo:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
      */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
+
 }
 
-- (IBAction)setAccountSettings:(id)sender {
+- (IBAction)setAccountSettings:(id)sender 
+{
+    [self performSelector:@selector(setAccountSettingsMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setAccountSettingsMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Account settings";
     
@@ -464,21 +477,22 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 3001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 3002;
-    [closeButton addTarget:self 
-                    action:@selector(closeAccountSettings:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
-    */
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 3002;
+     [closeButton addTarget:self 
+     action:@selector(closeAccountSettings:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
+     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
+
 }
 
 - (IBAction)goBack:(id)sender {
@@ -502,7 +516,13 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
         [self performSegueWithIdentifier:@"backToMap" sender:sender];
 }
 
-- (IBAction)setLocationSharing:(id)sender {
+- (IBAction)setLocationSharing:(id)sender
+{
+    [self performSelector:@selector(setLocationSharingMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setLocationSharingMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
@@ -514,17 +534,17 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 5001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 5002;
-    [closeButton addTarget:self 
-                    action:@selector(closeLocationSharing:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 5002;
+     [closeButton addTarget:self 
+     action:@selector(closeLocationSharing:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
      */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];

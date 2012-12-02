@@ -317,14 +317,17 @@ AppDelegate *smAppdelegate;
                         
                     {
                         //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
+                        [dicImages_msg setObject:[dicImages_msg valueForKey:photo.photoThum] forKey:photo.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+//                        imgView.image = [UIImage imageNamed:@"blank.png"];  
+                        imgView.image = [dicImages_msg valueForKey:photo.photoThum];
+                        NSLog(@"scroll if %@",[dicImages_msg valueForKey:photo.photoThum]);
                     }
                     else 
                     { 
                         // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
+                        imgView.image =[dicImages_msg valueForKey:photo.photoThum];
+                        NSLog(@"scroll else");
                     }               
                 }
                 //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);

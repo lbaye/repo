@@ -1423,10 +1423,32 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoCircle:(id)sender
 {
-    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
-    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
+/*    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+    [[UITabBar appearance] setTintColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_settings_list_bg_solid.png"]]];
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:initialHelpView animated:YES];
+    [[UITabBarItem appearance] setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [UIColor blackColor], UITextAttributeTextColor, 
+      [UIColor whiteColor], UITextAttributeTextShadowColor, 
+      [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset, 
+      [UIFont fontWithName:@"Helvetica" size:12.0], UITextAttributeFont, 
+      nil] forState:UIControlStateNormal];
     
-    initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [[UITabBarItem appearance] setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [UIColor darkGrayColor], UITextAttributeTextColor, 
+      [UIColor whiteColor], UITextAttributeTextShadowColor, 
+      [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset, 
+      [UIFont fontWithName:@"Helvetica" size:12.0], UITextAttributeFont, 
+      nil] forState:UIControlStateHighlighted];
+*/    
+    
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
+    UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+    [[UITabBar appearance] setTintColor:[UIColor lightTextColor]];
+    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }
 

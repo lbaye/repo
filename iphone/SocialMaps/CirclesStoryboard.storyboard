@@ -1,91 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="1kw-4S-2Az">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="kZN-WR-jpz">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
     </dependencies>
     <scenes>
-        <!--View Circle List View Controller - Item-->
+        <!--View Circle List View Controller - By distance-->
         <scene sceneID="9JN-Rm-Iy1">
             <objects>
                 <viewController storyboardIdentifier="viewCircleListViewController" id="1kw-4S-2Az" customClass="ViewCircleListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="v3B-hi-dpO">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="I1N-ch-I6t">
-                                <rect key="frame" x="9" y="60" width="72" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="Invite">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="cancel:" destination="JB6-8Y-JdM" eventType="touchUpInside" id="YG0-FK-LVF"/>
-                                    <action selector="gotoInvites:" destination="1kw-4S-2Az" eventType="touchUpInside" id="GqM-8U-Th1"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="H3b-e0-hzH">
-                                <rect key="frame" x="95" y="60" width="101" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="Circles">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="gotoCircles:" destination="1kw-4S-2Az" eventType="touchUpInside" id="GRc-by-6R8"/>
-                                    <action selector="selectAllpeople:" destination="JB6-8Y-JdM" eventType="touchUpInside" id="9wi-dW-9bz"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="prY-zo-vjB">
-                                <rect key="frame" x="219" y="60" width="93" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                                <state key="normal" title="Block/Unblock">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="gotoBlockUnBlock:" destination="1kw-4S-2Az" eventType="touchUpInside" id="bI5-fb-pXA"/>
-                                    <action selector="selectedUser:" destination="JB6-8Y-JdM" eventType="touchUpInside" id="yKq-z2-6xH"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CTI-50-5NW">
-                                <rect key="frame" x="95" y="59" width="5" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" image="sp2.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BPv-RU-sez">
-                                <rect key="frame" x="196" y="60" width="5" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" image="sp2.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <searchBar contentMode="redraw" barStyle="blackTranslucent" showsCancelButton="YES" id="OiL-LF-Nfg">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -169,7 +97,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="100" sectionHeaderHeight="22" sectionFooterHeight="22" id="j6a-v0-jUB">
-                                <rect key="frame" x="0.0" y="99" width="320" height="361"/>
+                                <rect key="frame" x="0.0" y="59" width="320" height="352"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -209,20 +137,7 @@
                                                     <rect key="frame" x="83" y="20" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ACh-Ah-ybc">
-                                                    <rect key="frame" x="165" y="10" width="60" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Invite">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zUQ-Mp-7bP">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zUQ-Mp-7bP">
                                                     <rect key="frame" x="240" y="10" width="70" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
@@ -278,7 +193,6 @@
                                             <outlet property="firstNameLabel" destination="ecY-qQ-Jhb" id="qAD-oX-ri6"/>
                                             <outlet property="footerView" destination="kcv-tV-z3t" id="iHe-cd-mgf"/>
                                             <outlet property="friendShipStatus" destination="B0f-Pd-wJ4" id="Qei-dq-cCW"/>
-                                            <outlet property="inviteButton" destination="ACh-Ah-ybc" id="rUf-En-81b"/>
                                             <outlet property="messageButton" destination="zUQ-Mp-7bP" id="3e0-6Y-WmT"/>
                                             <outlet property="profilePicImgView" destination="9s7-c0-NQJ" id="IOn-mU-014"/>
                                             <outlet property="regStsImgView" destination="ykc-yh-hJp" id="7Ga-WY-REV"/>
@@ -309,19 +223,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Txw-vZ-HuS">
-                                                    <rect key="frame" x="165" y="10" width="60" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Invite">
-                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bEb-RW-Nc7">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bEb-RW-Nc7">
                                                     <rect key="frame" x="240" y="10" width="70" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
@@ -388,7 +290,6 @@
                                             <outlet property="distanceLabel" destination="rNj-Jk-Er7" id="U9i-bp-4Wy"/>
                                             <outlet property="firstNameLabel" destination="tbo-AK-qkY" id="AdI-bq-3WE"/>
                                             <outlet property="footerView" destination="JAG-uS-7kT" id="YI5-Mr-SAf"/>
-                                            <outlet property="inviteButton" destination="Txw-vZ-HuS" id="LpI-PY-Mzf"/>
                                             <outlet property="messageButton" destination="bEb-RW-Nc7" id="doj-Oo-5uO"/>
                                             <outlet property="profilePicImgView" destination="aT8-Oi-evP" id="sfR-kH-1x3"/>
                                             <outlet property="regStsImgView" destination="JNy-oe-FxK" id="TOJ-sQ-Tre"/>
@@ -402,11 +303,11 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" id="sQJ-Zy-pqd">
-                                <rect key="frame" x="0.0" y="50" width="320" height="160"/>
+                                <rect key="frame" x="1000" y="50" width="320" height="111"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Your message..." id="Hy8-fx-MKE">
-                                        <rect key="frame" x="21" y="26" width="280" height="81"/>
+                                        <rect key="frame" x="21" y="26" width="280" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -494,7 +395,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="YTF-9v-U8U"/>
+                    <tabBarItem key="tabBarItem" title="By distance" id="YTF-9v-U8U"/>
                     <connections>
                         <outlet property="circleListTableView" destination="j6a-v0-jUB" id="jPe-fP-jsz"/>
                         <outlet property="circleSearchBar" destination="OiL-LF-Nfg" id="Guh-ui-c6d"/>
@@ -508,7 +409,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oqw-RQ-Tby" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-911" y="-66"/>
+            <point key="canvasLocation" x="-813" y="-153"/>
         </scene>
         <!--Block Unblock Circle View Controller - Block-->
         <scene sceneID="epG-W0-iUC">
@@ -640,18 +541,6 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="Rn9-0z-lmj">
-                                                    <rect key="frame" x="240" y="10" width="70" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Message">
-                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="FirstName Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="EGS-x3-Xs8">
                                                     <rect key="frame" x="82" y="36" width="152" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -696,7 +585,6 @@
                                             <outlet property="footerView" destination="5Xc-xO-Wik" id="jnP-da-ezf"/>
                                             <outlet property="friendShipStatus" destination="L75-yD-wKp" id="Ntz-Ye-i2r"/>
                                             <outlet property="inviteButton" destination="bWS-Jh-BDv" id="Bb7-hn-wmD"/>
-                                            <outlet property="messageButton" destination="Rn9-0z-lmj" id="ndG-Cz-ixo"/>
                                             <outlet property="profilePicImgView" destination="cLY-tQ-pYo" id="gHU-mY-SWZ"/>
                                             <outlet property="regStsImgView" destination="iF4-m8-h5X" id="jKq-7r-Qtn"/>
                                             <outlet property="showOnMapButton" destination="ttD-C0-kVn" id="JiE-sL-916"/>
@@ -728,19 +616,6 @@
                                                     <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
                                                     <state key="normal" title="Block">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="4eD-c8-z7H">
-                                                    <rect key="frame" x="240" y="9" width="70" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Message">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -821,7 +696,6 @@
                                             <outlet property="footerView" destination="s1m-Su-k5n" id="5wo-Uh-IOl"/>
                                             <outlet property="friendShipStatus" destination="tVa-Jd-IdA" id="jiE-uj-vcF"/>
                                             <outlet property="inviteButton" destination="Hji-Fz-443" id="0rY-le-4KH"/>
-                                            <outlet property="messageButton" destination="4eD-c8-z7H" id="emP-5y-xZb"/>
                                             <outlet property="profilePicImgView" destination="oF3-OC-Nhu" id="FMd-uK-mRQ"/>
                                             <outlet property="regStsImgView" destination="aua-s9-CKA" id="xgz-kJ-2fk"/>
                                             <outlet property="showOnMapButton" destination="EQw-Bc-pLh" id="TVV-NI-gui"/>
@@ -1106,19 +980,6 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lk2-AW-QJy">
-                                                    <rect key="frame" x="240" y="10" width="70" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Message">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="FirstName Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="fkO-gw-4Tj">
                                                     <rect key="frame" x="82" y="45" width="152" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1142,7 +1003,6 @@
                                             <outlet property="firstNameLabel" destination="fkO-gw-4Tj" id="TaA-3L-0sp"/>
                                             <outlet property="friendShipStatus" destination="xwN-sZ-OaV" id="vV6-sj-crx"/>
                                             <outlet property="inviteButton" destination="cdL-sp-e9n" id="gaf-Ou-zPX"/>
-                                            <outlet property="messageButton" destination="lk2-AW-QJy" id="7Fu-qH-enX"/>
                                             <outlet property="profilePicImgView" destination="BUI-t2-N9s" id="5nb-53-T3K"/>
                                             <outlet property="regStsImgView" destination="Nzd-Pa-e5l" id="WBZ-qG-Hqo"/>
                                         </connections>
@@ -1692,32 +1552,6 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xup-YX-gmr">
-                                                    <rect key="frame" x="165" y="9" width="60" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Invite">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="e8g-Qh-bnb">
-                                                    <rect key="frame" x="240" y="9" width="70" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" red="0.57254904510000004" green="0.68627452850000004" blue="0.30196079609999998" alpha="0.80000000000000004" colorSpace="deviceRGB"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="13"/>
-                                                    <state key="normal" title="Message">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="FirstName Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="YSG-D7-IlB">
                                                     <rect key="frame" x="98" y="36" width="153" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1790,8 +1624,6 @@
                                             <outlet property="firstNameLabel" destination="YSG-D7-IlB" id="2hu-PI-AXe"/>
                                             <outlet property="footerView" destination="BE7-aW-LIn" id="TyP-oO-r3B"/>
                                             <outlet property="friendShipStatus" destination="CWG-zW-IaV" id="cDL-Ad-34j"/>
-                                            <outlet property="inviteButton" destination="Xup-YX-gmr" id="uub-1e-00Q"/>
-                                            <outlet property="messageButton" destination="e8g-Qh-bnb" id="mnd-xA-pLu"/>
                                             <outlet property="profilePicImgView" destination="eOE-hk-CfJ" id="Yyz-5s-QUh"/>
                                             <outlet property="regStsImgView" destination="4gJ-6Y-o1W" id="fh7-aF-q6F"/>
                                             <outlet property="showOnMapButton" destination="ym0-rz-PAe" id="J3k-Is-z7K"/>
@@ -1882,6 +1714,7 @@
                         <color key="selectedImageTintColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
+                        <segue destination="1kw-4S-2Az" kind="relationship" relationship="viewControllers" id="raT-3z-deP"/>
                         <segue destination="SxH-nc-hmz" kind="relationship" relationship="viewControllers" id="6Sh-UZ-4ef"/>
                         <segue destination="vVB-Eq-x2M" kind="relationship" relationship="viewControllers" id="YLv-Nt-J5F"/>
                         <segue destination="JB6-8Y-JdM" kind="relationship" relationship="viewControllers" id="D30-EW-gXb"/>
@@ -1889,7 +1722,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgb-XI-uCl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-793" y="688"/>
+            <point key="canvasLocation" x="-1291" y="612"/>
         </scene>
     </scenes>
     <resources>
