@@ -135,10 +135,6 @@ class GatheringRepo extends Base implements Likable
             }
         }
 
-        if($type == Constants::TYPE_PLAN && isset($data['description'])){
-            $gathering->setEventShortSummary($data['description']);
-        }
-
         if(isset($data['guests']) && is_array($data['guests'])){
             $users = $this->trimInvalidUsers($data['guests']);
             $users[] = $owner->getId();
@@ -150,6 +146,7 @@ class GatheringRepo extends Base implements Likable
 
         if(isset($data['invitedCircles']) && is_array($data['invitedCircles'])){
             $gathering->setInvitedCircles($data['invitedCircles']);
+            $this->addGuestsFromCircleIds($owner, $data['invitedCircles'], $gathering);
         }
 
         if(isset($data['permission'])){
@@ -280,7 +277,7 @@ class GatheringRepo extends Base implements Likable
         $lng = $data['location']['lng'];
         unset($data['rsvp'], $data['guestsCanInvite'], $data['distance'], $data['ownerDetail'],
         $data['event_type'], $data['my_response'], $data['eventShortSummary'], $data['eventImage'],
-        $data['is_invited'], $data['guests'], $data['owner']);
+        $data['is_invited'], $data['owner']);
         $data['image'] = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
         return $data;
     }
@@ -312,6 +309,20 @@ class GatheringRepo extends Base implements Likable
 
     public function getLikes($object) {
         return $object->getLikes();
+    }
+
+    public function addGuestsFromCircleIds($user, $circleIds, $gathering)
+    {
+        $circles = $user->getCircles();
+        $guests = array();
+
+        foreach ($circles as $circle) {
+            if (!in_array($circle->getId(), $circleIds))
+                continue;
+            $guests = array_merge($guests, $circle->getFriends());
+        }
+
+        $this->addGuests(array_unique($guests), $gathering);
     }
 
 }

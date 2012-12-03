@@ -616,9 +616,9 @@ class Gathering extends Base
                 if (!empty($postData['guests']))
                     $this->gatheringRepository->addGuests($postData['guests'], $gathering);
 
-                if (!empty($postData['circleIds'])) {
-                    $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
-                    $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
+                if (!empty($postData['invitedCircles'])) {
+                    $this->gatheringRepository->addGuestsFromCircleIds($this->user, $postData['invitedCircles'], $gathering);
+                    $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
                 }
                 return $this->_generateResponse(array('message' => 'New guests has been added'));
             } else {
@@ -631,8 +631,8 @@ class Gathering extends Base
             }
 
             if (!empty($postData['circleIds'])) {
-                $this->addGuestsFromCircleIds($postData['circleIds'], $gathering);
-                $this->gatheringRepository->addCircles($postData['circleIds'], $gathering);
+                $this->gatheringRepository->addGuestsFromCircleIds($this->user, $postData['invitedCircles'], $gathering);
+                $this->gatheringRepository->addCircles($postData['invitedCircles'], $gathering);
             }
             $data = $gathering->toArrayDetailed();
             $guests['users'] = $this->_getUserSummaryList($data['guests']['users']);
@@ -641,20 +641,6 @@ class Gathering extends Base
         }
 
         return $this->_generateResponse($data);
-    }
-
-    private function addGuestsFromCircleIds($circleIds, $gathering)
-    {
-        $circles = $this->user->getCircles();
-        $guests = array();
-
-        foreach ($circles as $circle) {
-            if (!in_array($circle->getId(), $circleIds))
-                continue;
-            $guests = array_merge($guests, $circle->getFriends());
-        }
-
-        $this->gatheringRepository->addGuests(array_unique($guests), $gathering);
     }
 }
 
