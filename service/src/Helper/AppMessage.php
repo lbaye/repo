@@ -16,7 +16,7 @@ class AppMessage {
      * List of notification messages
      */
     static $MESSAGES = array(
-        self::FRIEND_REQUEST => '%s added you as a friend.',
+        self::FRIEND_REQUEST => '%s wants to be your friend.',
         self::MEETUP_REQUEST => '%s wants to meet you %s',
         self::EVENT_GUEST_REQUEST => '%s has invited you in %s',
         self::NEW_MESSAGE => 'New message from %s',
