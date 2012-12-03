@@ -405,6 +405,9 @@
             
             Place *place = [placeList objectAtIndex:indexPath.row];
             
+            if(searching) 
+                place = (Place*)[copyListOfItems objectAtIndex:indexPath.row];
+            
             if (!place.photo) 
                 [imgCover loadFromURL:place.photoURL];
             
