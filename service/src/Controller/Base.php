@@ -413,17 +413,12 @@ abstract class Base {
     }
 
     protected function cacheAndReturn(&$cachePath, $funcName, $params) {
-        if ($this->hasExpired($cachePath)) {
+        if (\Helper\CacheUtil::hasExpired($cachePath)) {
             $this->cacheAndBuildResponse($cachePath, $funcName, $params);
             return $this->response;
         } else {
             return $this->buildResponseFromCache($cachePath);
         }
-
-    }
-
-    private function hasExpired(&$cachePath) {
-        return !file_exists($cachePath);
     }
 
     private function buildResponseFromCache(&$cachePath) {
@@ -435,33 +430,14 @@ abstract class Base {
 
     protected function cacheAndBuildResponse(&$cachePath, &$funcName, &$params) {
         $results = $this->$funcName($params);
-        $this->createCacheReference($cachePath, $params, $results['people']);
+        \Helper\CacheUtil::createCacheReference(
+            $this->cacheRefRepo, $this->user, $cachePath, $params, $results['people']);
 
-        $this->ensureDirectoryExistence($cachePath);
+        \Helper\CacheUtil::ensureDirectoryExistence($cachePath);
         $this->_generateResponse($results);
         file_put_contents($cachePath, $this->response->getContent());
 
         return $this->response;
-    }
-
-    private function createCacheReference(&$cachePath, &$params, &$people) {
-        # Collect all participants
-        $userIds = array();
-        foreach ($people as $person) $userIds[] = $person['id'];
-
-        $ref = new \Document\CacheRef();
-        $ref->setCacheFile($cachePath);
-        $ref->setLocation(array('lat' => $params['lat'], 'lng' => $params['lng']));
-        $ref->setParticipants($userIds);
-        $this->cacheRefRepo->insert($ref);
-
-        return true;
-    }
-
-    private function ensureDirectoryExistence($cachePath) {
-        $directory = dirname($cachePath);
-        if (!file_exists($directory))
-            mkdir($directory, 0777, true);
     }
 
 }

@@ -1123,9 +1123,19 @@ class User {
     }
 
     public function isOnlineUser() {
-        if ($this->lastPulse) {
+        self::isOnline($this->lastPulse);
+    }
+
+    public static function isOnline($lastPulse) {
+        if ($lastPulse instanceof \MongoDate) {
+            $sec = $lastPulse->{'sec'};
+            $lastPulse = new \DateTime();
+            $lastPulse->setTimestamp($sec);
+        }
+        
+        if ($lastPulse) {
             $nowDt = new \DateTime();
-            $differenceInMins = ($nowDt->getTimestamp() - $this->lastPulse->getTimestamp()) / 60;
+            $differenceInMins = ($nowDt->getTimestamp() - $lastPulse->getTimestamp()) / 60;
             return $differenceInMins < self::MAX_IDLE_TIME_IN_MINS;
         }
 

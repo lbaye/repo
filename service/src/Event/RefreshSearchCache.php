@@ -3,6 +3,7 @@
 namespace Event;
 
 use Repository\UserRepo as UserRepository;
+use \Service\Search\ApplicationSearchFactory as AppSearchFactory;
 
 class RefreshSearchCache extends Base {
     /**
@@ -30,45 +31,54 @@ class RefreshSearchCache extends Base {
         $user = $this->userRepository->find($workload->userId);
         if ($user) {
             $this->userRepository->refresh($user);
+            $this->userRepository->setCurrentUser($user);
 
             // cacheOwners = []
-            $participants = array($user->getAuthToken());
+            $newCacheRequiredUserIds = array($user->getId());
 
             // if user is in other's caches
             //   cacheOwners[] = all other caches owner
-            $existingCaches = $this->cacheRefRepo->getReferencesWhereImIn($user);
-            foreach ($existingCaches as $cache) {
-                $this->removeCacheRef($cache);
-            }
-
-            var_dump($participants);
+            $this->loadThoseWhoCachedMe($user, $newCacheRequiredUserIds);
 
             // cacheOwners[] = those who are in user's current location
-            #$this->userRepository->getNearbyUsers($user);
+            // cacheOwners = filter out all offline users
+            $this->loadUsersNearMe($user, $newCacheRequiredUserIds);
 
             // cacheOwners = make this list unique cacheOwners
-            $participants = array_unique($participants);
+            $newCacheRequiredUserIds = array_unique($newCacheRequiredUserIds);
 
-            // cacheOwners = filter out all offline users
-            //
             // request for refreshing cache for cacheOwners
-
-            $this->runTasks();
+            $this->debug('Updating cache for users - ' . implode(',', $newCacheRequiredUserIds));
+            $this->requestForNewCache($newCacheRequiredUserIds);
         }
     }
 
-    private function removeCacheRef($cache) {
-        try {
-            if (!is_null($cache)) {
-                $this->cacheRefRepo->delete($cache['_id']->{'$id'});
-
-                $cacheFile = $cache['cacheFile'];
-                $this->debug('Removing cache path - ' . $cacheFile);
-                @unlink($cacheFile);
-                $this->debug('Cache cleaned up');
-            }
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
+    private function loadUsersNearMe(\Document\User &$user, &$newCacheRequiredUserIds) {
+        $peopleAroundMe = $this->userRepository
+                ->searchNearByPeople(null, $user->getCurrentLocation(),
+                                     array('limit' => \Helper\Constants::PEOPLE_LIMIT,
+                                          'offset' => 0, 'select' => array('id', 'lastPulse')));
+        foreach ($peopleAroundMe as $person) {
+            if (!empty($person['lastPulse']) &&
+                \Document\User::isOnline($person['lastPulse']))
+                $newCacheRequiredUserIds[] = $person['_id']->{'$id'};
         }
+
+    }
+
+    private function loadThoseWhoCachedMe(\Document\User &$user, array &$newCacheRequiredUserIds) {
+        $existingCaches = $this->cacheRefRepo->getReferencesWhereImCached($user);
+        foreach ($existingCaches as $cacheRef) {
+            $newCacheRequiredUserIds[] = $cacheRef['owner']->{'$id'};
+        }
+    }
+
+    private function requestForNewCache(array $userIds) {
+        $this->debug('Requesting for new cache generation');
+
+        foreach ($userIds as $userId)
+            $this->addTaskBackground('create_search_cache', json_encode(array('userId' => $userId)));
+
+        $this->runTasks();
     }
 }

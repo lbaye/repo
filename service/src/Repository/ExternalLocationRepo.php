@@ -48,7 +48,7 @@ class ExternalLocationRepo extends Base
     public function getNearBy($location = array(), $limit = 20)
     {
         $query = $this->createQueryBuilder()
-            ->field('coords')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS)
+            ->field('coords')->withinCenter($location['lng'], $location['lat'], \Helper\Constants::DEFAULT_RADIUS)
             ->limit($limit);
 
         $result = $query->getQuery()->execute();

@@ -12,16 +12,6 @@ use Service\Search\ApplicationSearchFactory as ApplicationSearchFactory;
 
 class Search extends Base {
     /**
-     * Total number of users to return
-     */
-    const PEOPLE_THRESHOLD = 2000;
-
-    /**
-     * Km to radius (km / 111.2)
-     */
-    const DEFAULT_RADIUS = .017985612;
-
-    /**
      * Maximum allowed older checkins to show in the list.
      */
     const MAX_ALLOWED_OLDER_CHECKINS = '12 hours ago';
@@ -50,7 +40,7 @@ class Search extends Base {
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
             $this->updateUserPulse($this->user);
-            return $this->cacheAndReturn($this->buildSearchCachePath($data), 'performSearch', $data);
+            return $this->cacheAndReturn(\Helper\CacheUtil::buildSearchCachePath($data), 'performSearch', $data);
         } else {
             $this->warn('Invalid request with missing required fields');
             return $this->_generateMissingFieldsError();
@@ -61,7 +51,7 @@ class Search extends Base {
         $appSearch = ApplicationSearchFactory::getInstance(
             ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
 
-        return $appSearch->searchAll($data, array('limit' => self::PEOPLE_THRESHOLD));
+        return $appSearch->searchAll($data, array('limit' => \Helper\Constants::PEOPLE_LIMIT));
     }
 
     public function allPeopleList() {
@@ -71,7 +61,7 @@ class Search extends Base {
                             $this->user, $this->dm, $this->config);
 
         return $this->_generateResponse(
-            $appSearch->searchPeople($data, array('limit' => self::PEOPLE_THRESHOLD)));
+            $appSearch->searchPeople($data, array('limit' => \Helper\Constants::PEOPLE_LIMIT)));
     }
 
     private function updateUserPulse(\Document\User $user) {
@@ -80,16 +70,6 @@ class Search extends Base {
             $this->userRepository->updateObject($user);
         }
     }
-
-    private function buildSearchCachePath($data) {
-        $lat = round((float)$data['lat'], 3);
-        $lng = round((float)$data['lng'], 3);
-
-        return implode(DIRECTORY_SEPARATOR,
-                       array(ROOTDIR, '..', 'app', 'cache', 'static_caches', 'search',
-                            $this->user->getAuthToken() . '-' . $lat . '-' . $lng));
-    }
-
 
     /** TODO: Finalize deals search */
     protected function deals($data) {

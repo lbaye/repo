@@ -11,15 +11,20 @@ use Respect\Validation\Validator;
  */
 class CacheRef {
     /** @ODM\Id */
-    protected $id;
+    private $id;
 
     /** @ODM\String */
-    protected $cacheFile;
+    private $cacheFile;
 
     /** @ODM\Hash */
-    protected $location = array(
+    private $location = array(
         'lng' => 0, 'lat' => 0
     );
+
+    /**
+     * @ODM\ReferenceOne(targetDocument="User", simple=true)
+     */
+    private $owner;
 
     /** @ODM\Hash */
     protected $participants = array();
@@ -51,4 +56,14 @@ class CacheRef {
     public function getLocation() {
         return $this->location;
     }
+
+    public function setOwner($owner) {
+        $this->owner = $owner;
+    }
+
+    public function getOwner() {
+        return $this->owner;
+    }
+
+
 }
