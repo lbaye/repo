@@ -68,6 +68,7 @@
     [self addSubview:enableSharing];
 
     if (sharingEnabled == 1) {
+        /*
         int numFriendsInGroup = smAppDelegate.locSharingPrefs.custom.friends.count;
         NSString *subTitle;
         if (numFriendsInGroup <= 1)
@@ -99,21 +100,23 @@
         
         SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
         [self addSubview:strangersSharingView];
-        
-        SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
+        */
+        rowNum = 5;
+        SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
         [self addSubview:locSharingView];
     }
     
     // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
-                                    (ROW_HEIGHT+2)*rowNum);
+                                    (ROW_HEIGHT+2)*(rowNum - 4));
     [self setContentSize:contentSize];   
     
     // Add a line at the bottom
-    UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
+    UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, (rowNum - 4) *(ROW_HEIGHT+2), self.frame.size.width, 1)];
     sep.backgroundColor = [UIColor lightGrayColor];
     sep.tag = 30000;
     [self addSubview:sep];
+
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
