@@ -9,7 +9,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,7 +96,7 @@ public class PeopleCircleFriendsPrefaranceItemView extends LinearLayout
 
 		btnMessagePeopleCicleFriend = (Button) findViewById(R.id.btnMessagePeopleCicleFriend);
 		btnMessagePeopleCicleFriend.setOnClickListener(this);
-		
+
 		btnAddMoveToCircle = (Button) findViewById(R.id.btnAddMoveToCircle);
 		btnAddMoveToCircle.setOnClickListener(this);
 		ivSource = (ImageView) findViewById(R.id.ivSource);

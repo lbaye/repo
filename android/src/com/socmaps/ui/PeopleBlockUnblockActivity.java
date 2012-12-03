@@ -16,36 +16,30 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
 import com.socmaps.listrow.PeopleRowFactoryBlockUnblock;
 import com.socmaps.listrow.RowType;
-import com.socmaps.listrow.SecondDegreePeopleRowFactoryBlockUnblock;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -64,12 +58,13 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel,
 			btnDoSearch, btnClearSearch, btnSeleceUnselectAllUser,
 			btnCancelInvite, topCloseButton, btnBack, btnInvitePeople,
-			btnCirclePeople, btnBlockUnblockPeople, btnSelectedFriends;
+			btnCirclePeople, btnBlockUnblockPeople, btnSelectedFriends,
+			btnPeopleByDistance;
 
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
 
-	private int colorButtonSelected;
+	// private int colorButtonSelected;
 	private List<Object> listMasterContent;
 	private List<Object> listContent;
 	private List<Object> listDisplayableContent;
@@ -123,7 +118,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		context = PeopleBlockUnblockActivity.this;
 
 		selectedArrayList = new HashMap<String, Boolean>();
-		colorButtonSelected = getResources().getColor(R.color.gray_light);
+		// colorButtonSelected = getResources().getColor(R.color.gray_light);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -139,6 +134,9 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
+		btnPeopleByDistance = (Button) findViewById(R.id.btnPeopleByDistance);
+		btnPeopleByDistance.setOnClickListener(this);
+
 		btnInvitePeople = (Button) findViewById(R.id.btnInvitePeople);
 		btnInvitePeople.setOnClickListener(this);
 
@@ -147,7 +145,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 		btnBlockUnblockPeople = (Button) findViewById(R.id.btnBlockUnblockPeople);
 		btnBlockUnblockPeople.setOnClickListener(this);
-		btnBlockUnblockPeople.setBackgroundColor(colorButtonSelected);
+		btnBlockUnblockPeople.setBackgroundColor(Color.LTGRAY);
 
 		contentListView = (ListView) findViewById(R.id.people_block_unblock_list);
 		listMasterContent = new ArrayList<Object>();
@@ -169,9 +167,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		/*
-		 * Search Related
-		 */
+
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
@@ -184,11 +180,16 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			etSearchField.setText("");
 			doSearch();
 			hideKeybord();
-		}
+		} else if (v == btnPeopleByDistance) {
 
-		switch (v.getId()) {
+			Intent circleIntent = new Intent(getApplicationContext(),
+					PeopleListActivity.class);
+			circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(circleIntent);
+			finish();
 
-		case R.id.btnInvitePeople:
+		} else if (v == btnInvitePeople) {
+
 			Intent inviteIntent = new Intent(getApplicationContext(),
 					PeopleInvityActivity.class);
 
@@ -196,23 +197,23 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			startActivity(inviteIntent);
 
 			finish();
-			break;
 
-		case R.id.btnCirclePeople:
+		} else if (v == btnCirclePeople) {
+
 			Intent circleIntent = new Intent(getApplicationContext(),
 					PeopleCircleActivity.class);
 			circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(circleIntent);
 			finish();
-			break;
-		case R.id.btnBlockUnblockPeople:
-			Intent blickUnblockiIntent = new Intent(getApplicationContext(),
-					PeopleBlockUnblockActivity.class);
-			blickUnblockiIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(blickUnblockiIntent);
-			finish();
-			break;
-		case R.id.btnSeleceUnselectAllUser:
+		} else if (v == btnBlockUnblockPeople) {
+
+			// Intent blickUnblockiIntent = new Intent(getApplicationContext(),
+			// PeopleBlockUnblockActivity.class);
+			// blickUnblockiIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// startActivity(blickUnblockiIntent);
+			// finish();
+
+		} else if (v == btnSeleceUnselectAllUser) {
 
 			isAllSelect = !isAllSelect;
 
@@ -246,25 +247,14 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 			}
 
-			break;
-		case R.id.btnCancelInvite:
+		} else if (v == btnCancelInvite) {
 			Intent peopleList = new Intent(getApplicationContext(),
 					PeopleListActivity.class);
 			peopleList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(peopleList);
 			finish();
-			break;
 
-		case R.id.btnBack:
-			Intent backToPeopleList = new Intent(getApplicationContext(),
-					PeopleListActivity.class);
-			backToPeopleList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(backToPeopleList);
-			finish();
-			break;
-
-		case R.id.btnSelectedFriends:
-
+		} else if (v == btnSelectedFriends) {
 			Log.w("PeopleBlockUnblockActivity listDisplayableContent ",
 					"Size : " + listDisplayableContent.size());
 
@@ -288,13 +278,12 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			Log.i("Total Checked:", "" + checkCounter);
 
 			sendSelectedPeopleToServer();
+		} else if (v == btnBack) {
 
-			break;
-
-		default:
-			break;
+			finish();
 
 		}
+
 	}
 
 	/*
@@ -724,16 +713,23 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 		peoplesAndPlacesEntity = StaticValues.searchResult;
 
-		listMasterContent.clear();
+		if (peoplesAndPlacesEntity != null) {
 
-		addPeoplesToMasterList();
+			listMasterContent.clear();
 
-		sortMasterListData();
+			addPeoplesToMasterList();
+
+			sortMasterListData();
+		}
 	}
 
 	private void addPeoplesToMasterList() {
-		for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
-			listMasterContent.add(peoplesAndPlacesEntity.getPeoples().get(i));
+		if (peoplesAndPlacesEntity.getPeoples() != null) {
+
+			for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
+				listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
+						.get(i));
+			}
 		}
 	}
 
@@ -835,13 +831,13 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		public void onShowOnMapButtonClick(People people) {
 			// TODO Auto-generated method stub
 
-//			StaticValues.isHighlightAnnotation = true;
-//			StaticValues.highlightAnnotationItem = people;
-//			finish();
-			
+			// StaticValues.isHighlightAnnotation = true;
+			// StaticValues.highlightAnnotationItem = people;
+			// finish();
+
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people; 
-			
+			StaticValues.highlightAnnotationItem = people;
+
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
@@ -964,7 +960,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 				} else {
 					msgEditText.setError("Please enter your message!!");
 				}
-				
+
 				hideMessageDialogKeybord(msgEditText);
 			}
 		});
@@ -973,11 +969,10 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 				hideMessageDialogKeybord(msgEditText);
 				msgDialog.dismiss();
-				
-				
+
 			}
 		});
 		msgDialog.show();
@@ -1055,7 +1050,8 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			break;
 
 		default:
-			Toast.makeText(getApplicationContext(), "Message not delivered,please try again!!",
+			Toast.makeText(getApplicationContext(),
+					"Message not delivered,please try again!!",
 					Toast.LENGTH_SHORT).show();
 			break;
 
@@ -1085,13 +1081,13 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
 	}
-	
+
 	protected void hideMessageDialogKeybord(EditText msgEditText) {
 		// TODO Auto-generated method stub
-		
+
 		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-		
+
 	}
 
 	/*
@@ -1149,7 +1145,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		//StaticValues.PEOPLE_SELECT_ALL_USERS = false;
+		// StaticValues.PEOPLE_SELECT_ALL_USERS = false;
 
 		Log.w("PeopleBlockUnblockActivity", "onStop");
 

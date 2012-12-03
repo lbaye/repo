@@ -83,7 +83,8 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			return name.trim().toLowerCase();
+			//return name.trim().toLowerCase();
+			return name.trim();
 		} else if (item instanceof SecondDegreePeople) {
 
 			SecondDegreePeople temp = (SecondDegreePeople) item;
@@ -96,7 +97,8 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			return name.trim().toLowerCase();
+			//return name.trim().toLowerCase();
+			return name.trim();
 		} else if (item instanceof MyInfo) {
 
 			MyInfo temp = (MyInfo) item;
@@ -109,16 +111,20 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			return name.trim().toLowerCase();
+			//return name.trim().toLowerCase();
+			return name.trim();
 		} else if (item instanceof Place) {
 			Place temp = ((Place) item);
-			return temp.getName().toString().toLowerCase();
+			//return temp.getName().toString().toLowerCase();
+			return temp.getName().toString();
 		} else if (item instanceof Event) {
 			Event temp = ((Event) item);
-			return temp.getEventTitle().toString().toLowerCase();
+			//return temp.getEventTitle().toString().toLowerCase();
+			return temp.getEventTitle().toString();
 		} else if (item instanceof GeoTag) {
 			GeoTag temp = ((GeoTag) item);
-			return temp.getTitle().toString().toLowerCase();
+			//return temp.getTitle().toString().toLowerCase();
+			return temp.getTitle().toString();
 		} else if (item instanceof String)
 			return item.toString();
 		else
@@ -136,7 +142,7 @@ public class Utility {
 
 			for (int i = 0; i < count; i++) {
 				final Object value = masterList.get(i);
-				final String valueText = getFieldText(value);
+				final String valueText = getFieldText(value).toLowerCase();
 
 				// First match against the whole, non-splitted value
 				if (valueText.startsWith(prefixString)) {
@@ -780,6 +786,8 @@ public class Utility {
 			is = conn.getInputStream();
 			bis = new BufferedInputStream(is, 8192);
 			bm = BitmapFactory.decodeStream(bis);
+		} catch(FileNotFoundException e){
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1120,11 +1128,22 @@ public class Utility {
 
 	public static People getPeopleById(String peopleId, List<People> peopleList) {
 
-		for (People peopleItem : peopleList) {
+		if(peopleList!=null)
+		{
+			for(int i=0;i<peopleList.size();i++)
+			{
+				People people = peopleList.get(i);
+				if(people.getId().equals(peopleId))
+				{
+					return people;
+				}
+			}
+		}
+		/*for (People peopleItem : peopleList) {
 			if (peopleItem.getId().equals(peopleId)) {
 				return peopleItem;
 			}
-		}
+		}*/
 
 		return null;
 	}
@@ -1137,10 +1156,10 @@ public class Utility {
 	}
 
 	public static double calculateDistance(GeoPoint p1, GeoPoint p2) {
-		double lat1 = ((double) p1.getLatitudeE6()) / 1e6;
-		double lng1 = ((double) p1.getLongitudeE6()) / 1e6;
-		double lat2 = ((double) p2.getLatitudeE6()) / 1e6;
-		double lng2 = ((double) p2.getLongitudeE6()) / 1e6;
+		double lat1 = p1.getLatitudeE6() / 1e6;
+		double lng1 = p1.getLongitudeE6() / 1e6;
+		double lat2 = p2.getLatitudeE6() / 1e6;
+		double lng2 = p2.getLongitudeE6() / 1e6;
 
 		return calculateDistance(lat1, lng1, lat2, lng2);
 	}
@@ -1149,7 +1168,7 @@ public class Utility {
 			double destLat, double destLng) {
 		float[] dist = new float[1];
 		Location.distanceBetween(sourceLat, sourceLng, destLat, destLng, dist);
-		return (double) dist[0];
+		return dist[0];
 	}
 
 	public static void updateNotificationCountFromPush(PushData pushData) {

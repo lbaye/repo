@@ -81,7 +81,10 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingBottom="20dip" >
+            android:paddingBottom="20dip"
+            android:paddingTop="15dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip">
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -98,12 +101,24 @@
                     android:textColor="#000000"
                     android:textSize="14dip"
                     android:textStyle="normal" />
+                
+                <Button
+                    android:id="@+id/btnInvite"
+                    android:layout_width="90dip"
+                    android:layout_height="35dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/selector_btn_light"
+                    android:text="@string/inviteFriendsLabel"
+                    android:textSize="12dip"
+                    android:textStyle="normal"
+                    android:layout_alignParentRight="true"                    
+                    android:layout_centerVertical="true" />
 
                 <RelativeLayout
                     android:layout_width="80dip"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" >
+                    android:layout_toLeftOf="@+id/btnInvite"
+                    android:paddingTop="12dip" >
 
                     <RelativeLayout
                         android:id="@+id/radioLayoutFb"
@@ -182,7 +197,8 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/img_settings_list_bg" >
+                android:background="@drawable/img_settings_list_bg" 
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -278,7 +294,8 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/img_settings_list_bg" >
+                android:background="@drawable/img_settings_list_bg" 
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -387,15 +404,7 @@
                 android:gravity="center"
                 android:orientation="horizontal" >
                 
-                <Button
-                    android:id="@+id/btnInvite"
-                    android:layout_width="80dip"
-                    android:layout_height="35dip"
-                    android:layout_marginRight="10dip"
-                    android:background="@drawable/selector_btn_light"
-                    android:text="@string/inviteLabel"
-                    android:textSize="12dip"
-                    android:textStyle="bold" />
+                
 
                 <Button
                     android:id="@+id/btnSavePlatforms"

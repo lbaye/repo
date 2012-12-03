@@ -17,8 +17,10 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -37,13 +39,13 @@ import com.google.android.maps.GeoPoint;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
 public class ProfileActivity2 extends Activity implements OnClickListener {
 
@@ -120,7 +122,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.other_layout);
 		
-		initialize();
+		
 
 		Object obj = getIntent().getSerializableExtra("otherUser");
 		peopleId = getIntent().getStringExtra("peopleId");
@@ -130,11 +132,14 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			obj = null;
 			//Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
 		} 
+		
+		initialize();
 
 		if(peopleId!=null)
 		{
 			getFriendInfo();
 		}
+		
 		
 
 	}
@@ -264,7 +269,10 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=51a610291d73b70b022deaefd7f53e3aa4d746f7
 		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" +peopleId
-				+ "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
+				+ "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken()); 
+		
+		Log.d("Friend NF URL", Constant.smServerUrl + "/" +peopleId+ "/newsfeed.html?authToken=" + StaticValues.myInfo.getAuthToken());
+		
 
 		webViewNewsFeed.setWebViewClient(new MyWebViewClient());
 
@@ -776,7 +784,51 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			// Uri.parse(url));
 			// startActivity(intent);
 
-			view.loadUrl(url);
+			//view.loadUrl(url); 
+			
+			Log.i("URL URL URL ", url); 
+			
+			String subURL = url.substring(6); 
+			if(subURL.startsWith("profile"))
+			{
+				String id = subURL.substring(8); 
+				Log.d("URL", id);
+				if(id.equalsIgnoreCase(peopleId))
+				{
+				
+				} else {
+					
+					People p=new People();
+					p.setId(id);
+					
+					Intent intent = new Intent(context, ProfileActivity2.class); 
+					
+					intent.putExtra("otherUser",p);
+					startActivity(intent);
+					
+				}
+			} else if(subURL.startsWith("image")) {
+				String imageURL = subURL.substring(6); 
+				Log.d("URL", imageURL); 
+				
+				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
+ 						context, imageURL , imageDownloader);
+ 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
+ 						LayoutParams.FILL_PARENT);
+ 				photoZoomPicker.show();
+			} else if(subURL.startsWith("geotag")) { 
+				String geoTagDetail = subURL.substring(7); 
+				String[] geoTag = geoTagDetail.split(":"); 
+				
+				String geoTagName = geoTag[0]; 
+				String geoTagNameFinal = geoTagName.replace("%20", " ");  
+				
+				String geoLat = geoTag[1]; 
+				String geoLng = geoTag[2];  
+				
+				//Toast.makeText(context, geoTagNameFinal + "\t" + geoLat+"" + "\t" + geoLng+"", Toast.LENGTH_LONG).show();
+			}
+			
 			return true;
 		}
 
@@ -802,7 +854,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	private Runnable friendsThread = new Runnable() {
 		@Override
 		public void run() {
-			RestClient restClient;
+			RestClient restClient; 
+			Log.d("sending people id", peopleId);
 			restClient = new RestClient(Constant.smServerUrl + "/users/"
 					+peopleId);
 			restClient.AddHeader(Constant.authTokenParam,
@@ -847,12 +900,15 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 				if (jsonObject != null) {
 					peopleUpdate = ServerResponseParser
 							.parsePeople(jsonObject);
-					Log.d("Update People", peopleUpdate.getFirstName() + " "
-							+ peopleUpdate.getLastName());
 
-					if (peopleUpdate != null) {
+					if (peopleUpdate != null) { 
+						Log.d("Update People", peopleUpdate.getFirstName() + " "
+								+ peopleUpdate.getLastName() + " id: " +  peopleUpdate.getId());
+						
 						setDefaultValues();
 						setButtonForDisplay();
+					} else {
+						Log.d("People Update Response", "Null Received");
 					}
 
 				}

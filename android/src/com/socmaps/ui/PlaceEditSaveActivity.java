@@ -10,8 +10,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -145,13 +145,13 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 			// if (isHome) {
 
-			Log.i("updateUI() PlaceEditSaveActivity>>>",
-					"Name: " + place.getName() + " Phopt: "
-							+ place.getStreetViewImage() + " Address:"
-							+ place.getVicinity() + " Category:"
-							+ place.getCategory() + " lat:"
-							+ place.getLatitude() + " Lon:"
-							+ place.getLongitude());
+//			Log.i("updateUI() PlaceEditSaveActivity>>>",
+//					"Name: " + place.getName() + " Phopt: "
+//							+ place.getStreetViewImage() + " Address:"
+//							+ place.getVicinity() + " Category:"
+//							+ place.getCategory() + " lat:"
+//							+ place.getLatitude() + " Lon:"
+//							+ place.getLongitude());
 
 			// } else {
 
@@ -560,6 +560,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		deleteDialog.setMessage("Are you sure to delete this place");
 		deleteDialog.setPositiveButton("Yes",
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
 						// Delete this place
@@ -570,6 +571,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 		deleteDialog.setNegativeButton("No",
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// Action for 'NO' Button
 						dialog.cancel();

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
+import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.FriendRequest;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.util.Constant;
@@ -40,6 +41,8 @@ public class FriendRequestNotificationActivity extends Activity {
 	String requestResponse = "";
 
 	int requestCount = 0;
+	
+	View selectedView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -138,14 +141,14 @@ public class FriendRequestNotificationActivity extends Activity {
 
 					for (int i = 0; i < friendRequests.length; i++) {
 						if (friendRequests[i] != null) {
-							View v = inflater.inflate(
+							final View itemView = inflater.inflate(
 									R.layout.row_friend_request, null);
 
-							TextView senderName = (TextView) v
+							TextView senderName = (TextView) itemView
 									.findViewById(R.id.sender_name_text_view);
-							TextView sentTime = (TextView) v
+							TextView sentTime = (TextView) itemView
 									.findViewById(R.id.sentTime);
-							TextView senderMessage = (TextView) v
+							TextView senderMessage = (TextView) itemView
 									.findViewById(R.id.senderMessage);
 
 							final String senderId = friendRequests[i]
@@ -173,7 +176,7 @@ public class FriendRequestNotificationActivity extends Activity {
 							// decline_friend_request_btn
 							// ignore_friend_request_btn
 
-							Button acceptButton = (Button) v
+							Button acceptButton = (Button) itemView
 									.findViewById(R.id.btnAcceptRequest);
 							acceptButton
 									.setOnClickListener(new OnClickListener() {
@@ -182,11 +185,12 @@ public class FriendRequestNotificationActivity extends Activity {
 										public void onClick(View v) {
 											// TODO Auto-generated method stub
 											acceptFriendRequest(senderId);
+											selectedView = itemView;
 										}
 
 									});
 
-							Button declineButton = (Button) v
+							Button declineButton = (Button) itemView
 									.findViewById(R.id.btnDeclineRequest);
 							declineButton
 									.setOnClickListener(new OnClickListener() {
@@ -195,11 +199,12 @@ public class FriendRequestNotificationActivity extends Activity {
 										public void onClick(View v) {
 											// TODO Auto-generated method stub
 											declineFriendRequest(senderId);
+											selectedView = itemView;
 										}
 
 									});
 
-							Button ignoreButton = (Button) v
+							Button ignoreButton = (Button) itemView
 									.findViewById(R.id.btnIgnoreRequest);
 							ignoreButton
 									.setOnClickListener(new OnClickListener() {
@@ -208,11 +213,13 @@ public class FriendRequestNotificationActivity extends Activity {
 										public void onClick(View v) {
 											// TODO Auto-generated method stub
 											// ignoreFriendRequest(senderId);
+											selectedView = itemView;
+											selectedView.setVisibility(View.GONE);
 										}
 
 									});
 
-							friendRequestListContainer.addView(v);
+							friendRequestListContainer.addView(itemView);
 						}
 					}
 				}
@@ -289,15 +296,21 @@ public class FriendRequestNotificationActivity extends Activity {
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
+			if(selectedView!=null)
+			{
+				selectedView.setVisibility(View.GONE);
+			}
+			
+			
 			Toast.makeText(context, "Friend request accepted.",
 					Toast.LENGTH_SHORT).show();
 			if (response != null && !response.equals("")) {
-				MyInfo myInfo = ServerResponseParser
+				CirclesAndFriends circlesAndFriends = ServerResponseParser
 						.parseCircleAndFriends(response);
 
-				if (myInfo != null) {
-					StaticValues.myInfo.setCircleList(myInfo.getCircleList());
-					StaticValues.myInfo.setFriendList(myInfo.getFriendList());
+				if (circlesAndFriends != null) {
+					StaticValues.myInfo.setCircleList(circlesAndFriends.getCircles());
+					StaticValues.myInfo.setFriendList(circlesAndFriends.getFriends());
 				}
 
 			}
@@ -379,6 +392,11 @@ public class FriendRequestNotificationActivity extends Activity {
 			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Friend request declined.",
 					Toast.LENGTH_SHORT).show();
+			if(selectedView!=null)
+			{
+				selectedView.setVisibility(View.GONE);
+			}
+			
 			break;
 
 		default:

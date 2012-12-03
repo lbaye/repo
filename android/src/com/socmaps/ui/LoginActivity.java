@@ -435,11 +435,17 @@ public class LoginActivity extends Activity {
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(),response, LoginActivity.this);
+					StaticValues.myInfo.getAuthToken(), response,
+					LoginActivity.this);
+			
+			finish();
+			Intent myIntent = new Intent(LoginActivity.this,
+					HomeActivity.class);
+			startActivity(myIntent);
 
 			// save the image here
 
-			if (StaticValues.myInfo.getAvatar() != null) {
+			/*if (StaticValues.myInfo.getAvatar() != null) {
 				try {
 					ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 					Bitmap fbAvatar = Utility
@@ -452,13 +458,16 @@ public class LoginActivity extends Activity {
 
 					Utility.setFacebookImage(context, eventPhotoString);
 
+
+
+				} catch (Exception e) {
+					// TODO: handle exception
+
+				} finally {
 					finish();
 					Intent myIntent = new Intent(LoginActivity.this,
 							HomeActivity.class);
 					startActivity(myIntent);
-
-				} catch (Exception e) {
-					// TODO: handle exception
 				}
 
 			} else {
@@ -468,7 +477,7 @@ public class LoginActivity extends Activity {
 						HomeActivity.class);
 				startActivity(myIntent);
 
-			}
+			}*/
 
 			// end of save image
 
@@ -495,7 +504,8 @@ public class LoginActivity extends Activity {
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(),response, LoginActivity.this);
+					StaticValues.myInfo.getAuthToken(), response,
+					LoginActivity.this);
 
 			finish();
 			Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -543,7 +553,7 @@ public class LoginActivity extends Activity {
 				// String avatarString = jsonObject.getString("picture");
 
 				String avatarString = "https://graph.facebook.com/"
-						+ facebookId + "/picture?type=normal";
+						+ facebookId + "/picture?type=large";
 
 				String firstName = jsonObject.getString("first_name");
 				String lastName = jsonObject.getString("last_name");

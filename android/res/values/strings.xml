@@ -172,8 +172,13 @@
     <string name="review_label">Reviews</string>
     <string name="save_place_label">Save Place</string>
     <string name="meet_up_label">Meet up</string>
+    <string name="add_friend_label">Add Friend</string>
     <string name="check_in">Check in</string>
     <string name="createNewCircle">Create a new circle\u0020</string>
+    <string name="createLabel">Create</string>
+    <string name="moveLabel">Move</string>
+     
+    
 
     <string-array name="savedFilterOptions">
         <item>Apply a saved filter</item>
@@ -540,6 +545,8 @@
     <string name="socialMapsLabel">Socialmaps</string>
     <string name="facebookLabel">Facebook</string>
     <string name="inviteLabel">Invite</string>
+    <string name="inviteFriendsLabel">Invite Friends</string>
+    <string name="byDistanceLabel">By distance</string>
     <string name="circlesLabel">Circles</string>
     <string name="blockUnblockLabel">Block/Unblock</string>
     <string name="blockLabel">Block</string>

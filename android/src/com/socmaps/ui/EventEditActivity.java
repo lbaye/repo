@@ -87,7 +87,9 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle;
+	TextView tvSelectedLocationTitle; 
+	
+	TextView tvTitle, tvTitleDescription; 
 
 	ImageView ivEventImage;
 
@@ -149,13 +151,17 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		Object selectedItem = getIntent().getSerializableExtra("selectedEvent");
 		if (selectedItem != null) {
 			selectedEvent = (Event) (selectedItem);
-			selectedItem = null;
+			selectedItem = null; 
+			
+			eventLat = selectedEvent.getLatitude(); 
+			eventLng = selectedEvent.getLongitude(); 
+			
+			Log.d("Lat Lng Check", eventLat+"" + " " + eventLng+"");
 		}
 
 		initialize();
 		setExpandListener();
 
-		addLocationRadioGroup();
 		addPermissionRadioGroup();
 
 		generateFriendList();
@@ -189,7 +195,10 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 			eventLat = selectedEvent.getLatitude();
 			eventLng = selectedEvent.getLongitude();
-			eventAddress = selectedEvent.getAddress();
+			eventAddress = selectedEvent.getAddress(); 
+			
+			tvTitle.setText("Venue: " + eventAddress);
+			//tvTitleDescription.setText(eventAddress);
 
 			if (eventImageUrl != null) {
 				if (!eventImageUrl.equalsIgnoreCase("")) {
@@ -212,12 +221,8 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			chkGuestPermission.setChecked(isGuestPermitted);
 
 			if (eventAddress != null && !eventAddress.equals("")) {
-				displayAddress(null, eventAddress);
+				//displayAddress(null, eventAddress);
 			}
-			
-			
-			
-
 		}
 	}
 	
@@ -313,7 +318,10 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
+		
+		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);
 
 	}
 
@@ -343,21 +351,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 	}
 
-	private void addLocationRadioGroup() {
-		// TODO Auto-generated method stub
-		locationRadioGroupView = new LocationRadioGroup(context,
-				new LocationSelectionListener());
-
-		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
-				.findViewById(R.id.selectedLocationInfoPanel);
-		tvSelectedLocationAddress = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationAddress);
-		tvSelectedLocationTitle = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationTitle);
-
-		locationRadioGroupContainer.addView(locationRadioGroupView);
-
-	}
+	
 
 	private void setExpandListener() {
 		// TODO Auto-generated method stub
@@ -1237,13 +1231,6 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 				}
 
 			}
-		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
-				&& resultCode == RESULT_OK) {
-			eventAddress = data.getStringExtra("ADDRESS");
-			eventLat = data.getDoubleExtra("LAT", 0.0);
-			eventLng = data.getDoubleExtra("LNG", 0.0);
-
-			displayAddress(null, eventAddress);
 		}
 	}
 
@@ -1284,134 +1271,6 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			}
 
 		}
-	}
-
-	private class LocationSelectionListener implements
-			LocationRadioGroupListener {
-
-		@Override
-		public void onLocationSelectionChanged(RadioGroup group,
-				RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
-			// TODO Auto-generated method stub
-			selectedLocationInfoPanel.setVisibility(View.GONE);
-			tvSelectedLocationAddress.setText("");
-			eventAddress = "";
-			tvSelectedLocationTitle.setText("");
-			tvSelectedLocationTitle.setVisibility(View.GONE);
-
-			switch (selectedItem) {
-			case CURRENT_LOCATION:
-				getCurrentLocationAddress();
-				break;
-			case MY_PLACES:
-
-				break;
-			case NEAR_TO_ME:
-				getNearByPlaces();
-				break;
-			case POINT_ON_MAP:
-				getLocationFromMap();
-				break;
-			default:
-				break;
-			}
-
-		}
-
-	}
-
-	public void displayAddress(String title, String address) {
-		tvSelectedLocationAddress.setText(address);
-
-		if (title != null) {
-			if (!title.equalsIgnoreCase("")) {
-				tvSelectedLocationTitle.setText(title);
-				tvSelectedLocationTitle.setVisibility(View.VISIBLE);
-			}
-		}
-
-		selectedLocationInfoPanel.setVisibility(View.VISIBLE);
-
-	}
-
-	public void getCurrentLocationAddress() {
-		if (StaticValues.myPoint != null) {
-			if (StaticValues.myPoint != null) {
-				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-				Utility.getAddressByCoordinate(eventLat, eventLng,
-						new LocationAddressHandler());
-
-			}
-		}
-
-	}
-
-	public void getNearByPlaces() {
-		if (StaticValues.searchResult != null) {
-			if (StaticValues.searchResult.getPlaces() != null) {
-				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
-						context, new NearByPlacesPickerhandler(),
-						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
-
-				nearByPlacesPicker.show();
-			}
-		}
-
-	}
-
-	private class LocationAddressHandler extends Handler {
-		@Override
-		public void handleMessage(Message message) {
-			String result = null;
-			switch (message.what) {
-			case 0:
-				// failed to get address
-				break;
-			case 1:
-				Bundle bundle = message.getData();
-				result = bundle.getString("address");
-				break;
-			default:
-				result = null;
-			}
-			// replace by what you need to do
-			if (result != null) {
-				eventAddress = result;
-				displayAddress(null, eventAddress);
-			} else {
-				Log.e("ADDRESS", "Failed to get.");
-			}
-
-		}
-	}
-
-	public void getLocationFromMap() {
-		double currentLat = eventLat;
-		double currentLng = eventLng;
-
-		Intent intent = new Intent(context, LocationPicker.class);
-		intent.putExtra("LAT", currentLat);
-		intent.putExtra("LNG", currentLng);
-		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
-	}
-
-	private class NearByPlacesPickerhandler implements
-			NearByPlacesPickerListener {
-
-		@Override
-		public void onPlaceSelect(String pickerName, Place selectedPlace) {
-			// TODO Auto-generated method stub
-			if (selectedPlace != null) {
-
-				eventLat = selectedPlace.getLatitude();
-				eventLng = selectedPlace.getLongitude();
-				eventAddress = selectedPlace.getVicinity();
-				displayAddress(selectedPlace.getName(), eventAddress);
-
-			}
-		}
-
 	}
 
 	/*

@@ -113,6 +113,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 		editTextCircleName
 				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
+					@Override
 					public void onFocusChange(View v, boolean flag) {
 						if (flag == false) {
 							InputMethodManager inputMethodManager = (InputMethodManager) context
@@ -341,7 +342,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 			try {
 				JSONArray jArray = new JSONArray(response);
 				List<Circle> circles = ServerResponseParser
-						.getCircleList(jArray);
+						.getCircleListWithDetails(jArray);
 				if (circles.size() > 0) {
 					StaticValues.myInfo.setCircleList(circles);
 				}
@@ -499,7 +500,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 		//
 		// circleAddMoveToPickerListener
 		// .onCircleSelect(pickerName, selectedCircle);
-		
+
 		hideKeybord();
 	}
 

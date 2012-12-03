@@ -274,6 +274,12 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 					Utility.parseResponseString(response), Toast.LENGTH_LONG)
 					.show();
 
+			break; 
+			
+		case Constant.STATUS_SUCCESS_NODATA:
+			Toast.makeText(getApplicationContext(),
+					"No plan found.",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		case Constant.STATUS_NOTFOUND:

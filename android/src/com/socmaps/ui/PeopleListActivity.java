@@ -20,8 +20,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -37,7 +37,7 @@ import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
@@ -55,8 +55,9 @@ import com.socmaps.widget.MultiDirectionSlidingDrawer;
 public class PeopleListActivity extends Activity implements OnClickListener,
 		ListItemClickListener, OnCheckedChangeListener {
 
-	Button btnBack, btnInvitePeople, btnCirclePeople, btnBlockUnblockPeople;
-	Button topCloseButton;
+	private Button btnBack, btnPeopleInvite, btnCirclePeople,
+			btnBlockUnblockPeople, btnPeopleByDistance;
+	private Button topCloseButton;
 
 	ListView contentListView;
 
@@ -123,13 +124,17 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
-		btnInvitePeople = (Button) findViewById(R.id.btnInvitePeople);
-		btnInvitePeople.setOnClickListener(this);
+		btnPeopleByDistance = (Button) findViewById(R.id.btnPeopleByDistance);
+		btnPeopleByDistance.setOnClickListener(this);
+		btnPeopleByDistance.setBackgroundColor(Color.LTGRAY);
 
-		btnCirclePeople = (Button) findViewById(R.id.btnCirclePeople);
+		btnPeopleInvite = (Button) findViewById(R.id.btnPeopleInvite);
+		btnPeopleInvite.setOnClickListener(this);
+
+		btnCirclePeople = (Button) findViewById(R.id.btnPeopleCircle);
 		btnCirclePeople.setOnClickListener(this);
 
-		btnBlockUnblockPeople = (Button) findViewById(R.id.btnBlockUnblockPeople);
+		btnBlockUnblockPeople = (Button) findViewById(R.id.btnPeopleBlockUnblock);
 		btnBlockUnblockPeople.setOnClickListener(this);
 
 		contentListView = (ListView) findViewById(R.id.people_list);
@@ -166,11 +171,7 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 
-		/*
-		 * Search Related
-		 */
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
@@ -183,11 +184,8 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			etSearchField.setText("");
 			doSearch();
 			hideKeybord();
-		}
+		} else if (v == btnPeopleInvite) {
 
-		switch (v.getId()) {
-
-		case R.id.btnInvitePeople:
 			Intent inviteIntent = new Intent(getApplicationContext(),
 					PeopleInvityActivity.class);
 
@@ -195,29 +193,22 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			startActivity(inviteIntent);
 
 			finish();
-			break;
 
-		case R.id.btnCirclePeople:
+		} else if (v == btnCirclePeople) {
 			Intent circleIntent = new Intent(getApplicationContext(),
 					PeopleCircleActivity.class);
 			circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(circleIntent);
 			finish();
-			break;
-		case R.id.btnBlockUnblockPeople:
+
+		} else if (v == btnBlockUnblockPeople) {
 			Intent blickUnblockiIntent = new Intent(getApplicationContext(),
 					PeopleBlockUnblockActivity.class);
 			blickUnblockiIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(blickUnblockiIntent);
 			finish();
-			break;
-
-		case R.id.btnBack:
+		} else if (v == btnBack) {
 			finish();
-			break;
-
-		default:
-			break;
 
 		}
 
@@ -257,12 +248,16 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		private ImageLoader imageLoader;
+		// private ImageLoader imageLoader;
+		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			imageLoader = new ImageLoader(context);
+			// imageLoader = new ImageLoader(context);
+
+			imageDownloader = new ImageDownloader();
+			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		}
 
 		@Override
@@ -308,20 +303,31 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
 				return PeopleRowFactory2.getView(LayoutInflater.from(context),
 						items.get(position), context, PeopleListActivity.this,
-						convertView, imageLoader, new PeopleItemListener());
+						convertView, imageDownloader, new PeopleItemListener());
 			}
+
+			// if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
+			// return PeopleRowFactory2.getView(LayoutInflater.from(context),
+			// items.get(position), context, PeopleListActivity.this,
+			// convertView, imageLoader, new PeopleItemListener());
+			// }
 
 			if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
 				return SecondDegreePeopleRowFactory2.getView(
 						LayoutInflater.from(context), items.get(position),
 						context, PeopleListActivity.this, convertView,
-						imageLoader, new SecondDegreePeopleItemListener());
-			} /*
-			 * else if (getItemViewType(position) == RowType.PLACE.ordinal()) {
-			 * return PlaceRowFactory.getView(LayoutInflater.from(context),
-			 * items.get(position), context, PeopleListActivity.this,
-			 * convertView, imageLoader, new ShowOnMapListener()); }
-			 */else {
+						imageDownloader, new SecondDegreePeopleItemListener());
+			}
+
+			// if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal())
+			// {
+			// return SecondDegreePeopleRowFactory2.getView(
+			// LayoutInflater.from(context), items.get(position),
+			// context, PeopleListActivity.this, convertView,
+			// imageDownloader, new SecondDegreePeopleItemListener());
+			// }
+
+			else {
 				return null;
 			}
 

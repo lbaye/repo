@@ -3,7 +3,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#00000000"
+    android:background="#EEEEEE"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true" >
 
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/cancelLabel"
             android:textColor="@color/black"
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/selectAllLabel"
             android:textColor="@color/black"
@@ -71,10 +71,11 @@
             android:src="@drawable/seperator" />
 
         <Button
+            android:id="@+id/btnInviteSelectedUsers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/inviteSelectedUserslabel"
             android:textColor="@color/black"

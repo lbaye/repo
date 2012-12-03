@@ -57,7 +57,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	boolean isSearchEnabled = false;
 
 	public Dialog msgDialog;
-	
+
 	private ProgressDialog m_ProgressDialog;
 
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
@@ -65,19 +65,19 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private RelativeLayout searchPanel;
 
 	private String placesResponse;
-	private int placesStatus; 
-	
+	private int placesStatus;
+
 	String personID = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.places_list_layout); 
-		
-		personID = getIntent().getStringExtra("personID"); 
-		if(personID != null)
-			Log.d("Person ID", personID); 
+		setContentView(R.layout.places_list_layout);
+
+		personID = getIntent().getStringExtra("personID");
+		if (personID != null)
+			Log.d("Person ID", personID);
 
 		initialize();
 
@@ -90,7 +90,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 		getPlacesFromServer();
 		setListParameters();
-		
+
 		Log.w("PlacesListActivity ", "onResume()");
 
 	}
@@ -127,32 +127,24 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		
+
 		Utility.hideKeyboardContext(context);
-		
+
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
-			//hideKeybord();
+			// hideKeybord();
 			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
-			//hideKeybord();
-		}
+			// hideKeybord();
+		} else if (v == btnBack) {
 
-		switch (v.getId()) {
-
-		case R.id.btnBack:
 			finish();
-			break;
-
-		default:
-			break;
-
 		}
 
 	}
@@ -220,27 +212,22 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			
-			if (getItemViewType(position) == RowType.PLACE.ordinal()) { 
-				
-				if(personID == null)
-				{
+			if (getItemViewType(position) == RowType.PLACE.ordinal()) {
+
+				if (personID == null) {
 					return PlaceRowFactoryForSavedPlace.getView(
 							LayoutInflater.from(context), items.get(position),
 							context, PlacesListActivity.this, convertView,
 							imageDownloader, new PlaceItemListener(), 1);
-				} else if(personID != null) 
-				{
+				} else if (personID != null) {
 					return PlaceRowFactoryForSavedPlace.getView(
 							LayoutInflater.from(context), items.get(position),
 							context, PlacesListActivity.this, convertView,
 							imageDownloader, new PlaceItemListener(), 2);
-				} else 
-				{ 
+				} else {
 					return null;
 				}
-			} 
-			else {
+			} else {
 				return null;
 			}
 		}
@@ -332,13 +319,13 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		public void onShowOnMapButtonClick(Place place) {
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = place; 
-			
+			StaticValues.highlightAnnotationItem = place;
+
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			
-			//finish();
+
+			// finish();
 		}
 
 	}
@@ -377,23 +364,20 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private Runnable placesThread = new Runnable() {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub  
+			// TODO Auto-generated method stub
 			RestClient restClient;
-			if(personID == null) 
-			{
-				restClient = new RestClient(Constant.smPlaces); 
-			}
+			if (personID == null) {
+				restClient = new RestClient(Constant.smPlaces);
+			} 
 			else 
 			{
 				restClient = new RestClient(Constant.smServerUrl+"/users"+"/"+personID+"/places");
+				Log.i("PlaceList URL", Constant.smServerUrl+"/users"+"/"+personID+"/places");
 			}
 				
-			
-			//RestClient restClient = new RestClient(Constant.smPlaces);
+
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-
-			// restClient.AddParam("users[]", unblockId);
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.GET);
@@ -426,7 +410,8 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
-			//Toast.makeText(context, "Places response successful.", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context, "Places response successful.",
+			// Toast.LENGTH_SHORT).show();
 
 			listMasterContent.clear();
 			listMasterContent = ServerResponseParser.parseSavedPlaces(response);
@@ -437,7 +422,11 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 			updateDisplayList(listContent);
 
 			break;
-
+		case Constant.STATUS_SUCCESS_NODATA:
+			Toast.makeText(getApplicationContext(),
+					"No place found.",
+					Toast.LENGTH_SHORT).show();
+			break;
 		default:
 			Toast.makeText(getApplicationContext(),
 					"An unknown error occured. Please try again!!",
@@ -452,32 +441,34 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	 * Hide Keybord
 	 */
 
-//	public void hideKeybord() {
-//
-//		// etSearchField
-//		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//		//
-//		// public void onFocusChange(View v, boolean flag) {
-//		// if (flag == false) {
-//		// InputMethodManager inputMethodManager = (InputMethodManager)
-//		// getSystemService(Context.INPUT_METHOD_SERVICE);
-//		// inputMethodManager.hideSoftInputFromWindow(
-//		// v.getWindowToken(), 0);
-//		// }
-//		// }
-//		// });
-//
-//		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-//	}
+	// public void hideKeybord() {
+	//
+	// // etSearchField
+	// // .setOnFocusChangeListener(new View.OnFocusChangeListener() {
+	// //
+	// // public void onFocusChange(View v, boolean flag) {
+	// // if (flag == false) {
+	// // InputMethodManager inputMethodManager = (InputMethodManager)
+	// // getSystemService(Context.INPUT_METHOD_SERVICE);
+	// // inputMethodManager.hideSoftInputFromWindow(
+	// // v.getWindowToken(), 0);
+	// // }
+	// // }
+	// // });
+	//
+	// InputMethodManager mgr = (InputMethodManager)
+	// getSystemService(Context.INPUT_METHOD_SERVICE);
+	// mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
+	// }
 
-//	protected void hideMessageDialogKeybord(EditText msgEditText) {
-//		// TODO Auto-generated method stub
-//
-//		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-//
-//	}
+	// protected void hideMessageDialogKeybord(EditText msgEditText) {
+	// // TODO Auto-generated method stub
+	//
+	// InputMethodManager mgr = (InputMethodManager)
+	// getSystemService(Context.INPUT_METHOD_SERVICE);
+	// mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
+	//
+	// }
 
 	/*
 	 * Search portion

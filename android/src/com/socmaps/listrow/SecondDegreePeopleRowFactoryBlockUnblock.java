@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageLoader;
@@ -138,13 +138,11 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 					}
 				});
 
-		
-
-//		if (StaticValues.PEOPLE_SELECT_ALL_USERS) {
-//			holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
-//		} else if (people.isBlocked()) {
-//			holder.checked.setChecked(people.isBlocked());
-//		}
+		// if (StaticValues.PEOPLE_SELECT_ALL_USERS) {
+		// holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
+		// } else if (people.isBlocked()) {
+		// holder.checked.setChecked(people.isBlocked());
+		// }
 
 		return view;
 	}

@@ -44,18 +44,25 @@ public class LocationPreferenceItemView extends LinearLayout implements
 	private boolean hideTimeLimitPanel = false;
 	private boolean hideRadiusPanel = false;
 	private boolean hidePermissionPanel = true;
+	
+	private double latitude, longitude;
 
 	public boolean isExpanded = false;
 
 	private LinearLayout llTimeLimitPanel, llRadiusPanel, llPermissionPanel;
 
 	private TextView tvTimeLimitTitle, tvRadiusTitle, tvPermissionNeededTitle;
+	
+	
+	
 
 	public LocationPreferenceItemView(Context context, String itemId,
-			String title, int radius, String radiusTitle) {
+			String title, int radius, String radiusTitle, double latitude, double longitude) {
 		this(context, itemId, title, 0, radius, false, true, false, true,
 				false, true);
 
+		this.latitude = latitude;
+		this.longitude = longitude;
 		if (radiusTitle != null) {
 			setRadiusTitle(radiusTitle);
 		}
@@ -276,7 +283,7 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		return radius;
 	}
 
-	public int getTimeLimit() {
+	public int getDuration() {
 		try {
 			timeLimit = Integer.parseInt(etTimeLimitValue.getText().toString()
 					.trim());
@@ -289,6 +296,19 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	public String getItemId() {
 		return itemId;
+	}
+	
+	public String getTitle()
+	{
+		return title;
+	}
+	
+	public double getLatitude()
+	{
+		return latitude;
+	}
+	public double getLongitude() {
+		return longitude;
 	}
 
 	public boolean getPermissionNeeded() {

@@ -1,14 +1,6 @@
 package com.socmaps.listrow;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +9,6 @@ import android.widget.TextView;
 
 import com.socmaps.entity.Place;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -70,23 +61,20 @@ public class PlaceRowFactory {
 			 * 320,150);
 			 */
 			// il.DisplayImage(iconUrl, holder.avatar,R.drawable.img_blank);
-			
+
 			holder.avatar.setImageResource(R.drawable.img_blank);
 			il.download(iconUrl, holder.avatar);
-			/*new FetchImageTask() {
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					if (result != null) {
+			/*
+			 * new FetchImageTask() {
+			 * 
+			 * @Override protected void onPostExecute(Bitmap result) { if
+			 * (result != null) {
+			 * 
+			 * holder.avatar.setImageBitmap(result); } else {
+			 * holder.avatar.setImageResource(R.drawable.img_blank); } }
+			 * }.execute(iconUrl);
+			 */
 
-						holder.avatar.setImageBitmap(result);
-					}
-					else
-					{
-						holder.avatar.setImageResource(R.drawable.img_blank);
-					}
-				}
-			}.execute(iconUrl);*/
-			
 		}
 
 		String url = place.getStreetViewImage();
@@ -97,13 +85,11 @@ public class PlaceRowFactory {
 			 * BitmapManager.INSTANCE.loadBitmap(url, holder.coverPhoto,
 			 * 320,150);
 			 */
-			//il.DisplayImage(url, holder.coverPhoto, R.drawable.img_blank);
-			
+			// il.DisplayImage(url, holder.coverPhoto, R.drawable.img_blank);
+
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.download(url, holder.coverPhoto);
-		}
-		else
-		{
+		} else {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 		}
 
@@ -122,14 +108,11 @@ public class PlaceRowFactory {
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
 
-		if(place.getDistance()<Constant.MAX_ITEM_DISTANCE)
-		{
-			holder.distanceText.setText(Utility.getFormatedDistance(
-					place.getDistance(), StaticValues.myInfo
-							.getSettings().getUnit()));
-		}
-		else
-		{
+		if (place.getDistance() < Constant.MAX_ITEM_DISTANCE) {
+			holder.distanceText
+					.setText(Utility.getFormatedDistance(place.getDistance(),
+							StaticValues.myInfo.getSettings().getUnit()));
+		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);
 			holder.showOnMap.setVisibility(View.INVISIBLE);
 		}
@@ -177,20 +160,13 @@ public class PlaceRowFactory {
 		}
 	}
 
-	/*private static class FetchImageTask extends
-			AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... arg0) {
-			Bitmap b = null;
-			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return b;
-		}
-	}*/
+	/*
+	 * private static class FetchImageTask extends AsyncTask<String, Integer,
+	 * Bitmap> {
+	 * 
+	 * @Override protected Bitmap doInBackground(String... arg0) { Bitmap b =
+	 * null; try { b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
+	 * .getContent()); } catch (MalformedURLException e) { e.printStackTrace();
+	 * } catch (IOException e) { e.printStackTrace(); } return b; } }
+	 */
 }

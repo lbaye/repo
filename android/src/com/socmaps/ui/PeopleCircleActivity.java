@@ -6,8 +6,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,13 +19,12 @@ import android.widget.RelativeLayout;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.util.StaticValues;
 import com.socmaps.widget.PeopleCirclePrefaranceItemView;
 
 public class PeopleCircleActivity extends Activity implements OnClickListener {
 
-	private LinearLayout meetupRequestListContainer;
+	// private LinearLayout meetupRequestListContainer;
 
 	private Context context;
 
@@ -39,11 +38,11 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 
 	private Button btnBack, btnInvitePeople, btnCirclePeople,
-			btnBlockUnblockPeople;
+			btnBlockUnblockPeople, btnPeopleByDistance;
 
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
-	private int colorButtonSelected;
+	// private int selectedBtnColor;
 
 	private LinearLayout llCircleList;
 	private LinearLayout circleItemView;
@@ -84,7 +83,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		imageDownloader = new ImageDownloader();
 		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 
-		colorButtonSelected = getResources().getColor(R.color.gray_light);
+		// selectedBtnColor = getResources().getColor(R.color.gray_light);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -101,12 +100,15 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
+		btnPeopleByDistance = (Button) findViewById(R.id.btnPeopleByDistance);
+		btnPeopleByDistance.setOnClickListener(this);
+
 		btnInvitePeople = (Button) findViewById(R.id.btnInvitePeople);
 		btnInvitePeople.setOnClickListener(this);
 
 		btnCirclePeople = (Button) findViewById(R.id.btnCirclePeople);
 		btnCirclePeople.setOnClickListener(this);
-		btnCirclePeople.setBackgroundColor(colorButtonSelected);
+		btnCirclePeople.setBackgroundColor(Color.LTGRAY);
 
 		btnBlockUnblockPeople = (Button) findViewById(R.id.btnBlockUnblockPeople);
 		btnBlockUnblockPeople.setOnClickListener(this);
@@ -118,10 +120,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		/*
-		 * Search Related
-		 */
+
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
@@ -132,11 +131,16 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
-		}
+		} else if (v == btnPeopleByDistance) {
 
-		switch (v.getId()) {
+			Intent circleIntent = new Intent(getApplicationContext(),
+					PeopleListActivity.class);
+			circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(circleIntent);
+			finish();
 
-		case R.id.btnInvitePeople:
+		} else if (v == btnInvitePeople) {
+
 			Intent inviteIntent = new Intent(getApplicationContext(),
 					PeopleInvityActivity.class);
 
@@ -144,39 +148,32 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 			startActivity(inviteIntent);
 
 			finish();
-			break;
 
-		case R.id.btnCirclePeople:
-			Intent circleIntent = new Intent(getApplicationContext(),
-					PeopleCircleActivity.class);
-			circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(circleIntent);
-			finish();
-			break;
-		case R.id.btnBlockUnblockPeople:
+		} else if (v == btnCirclePeople) {
+
+			// Intent circleIntent = new Intent(getApplicationContext(),
+			// PeopleCircleActivity.class);
+			// circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// startActivity(circleIntent);
+			// finish();
+
+		} else if (v == btnBlockUnblockPeople) {
 			Intent blickUnblockiIntent = new Intent(getApplicationContext(),
 					PeopleBlockUnblockActivity.class);
 			blickUnblockiIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(blickUnblockiIntent);
 			finish();
-			break;
+		} else if (v == btnBack) {
 
-		case R.id.btnBack:
-			Intent backToPeopleList = new Intent(getApplicationContext(),
-					PeopleListActivity.class);
-			backToPeopleList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(backToPeopleList);
+			
 			finish();
-			break;
-
-		default:
-			break;
 
 		}
+
 	}
 
 	public void generateCircleView() {
-		
+
 		List<Circle> circleList = StaticValues.myInfo.getCircleList();
 		llCircleList.removeAllViews();
 		if (circleList != null) {
@@ -184,9 +181,8 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 				Circle circle = circleList.get(i);
 
 				if (circle != null) {
-					llCircleList.addView(
-							new PeopleCirclePrefaranceItemView(
-									context, circle, imageDownloader));
+					llCircleList.addView(new PeopleCirclePrefaranceItemView(
+							context, circle, imageDownloader));
 				}
 			}
 		}

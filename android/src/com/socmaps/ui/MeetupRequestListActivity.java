@@ -50,6 +50,7 @@ public class MeetupRequestListActivity extends Activity {
 	int requestCount = 0;
 
 	ImageLoader imageLoader;
+	View selectedView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -261,6 +262,7 @@ public class MeetupRequestListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedView = itemView;
 				responseToRequest(itemView, requestId, Constant.MY_RESPONSE_YES);
 			}
 		});
@@ -268,6 +270,8 @@ public class MeetupRequestListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
+				selectedView = itemView;
 
 				final AlertDialog.Builder aBuilder = new AlertDialog.Builder(
 						context);
@@ -310,6 +314,7 @@ public class MeetupRequestListActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
+				selectedView = itemView;
 				responseToRequest(itemView, requestId,
 						Constant.MY_RESPONSE_MAYBE);
 
@@ -425,6 +430,10 @@ public class MeetupRequestListActivity extends Activity {
 			}
 
 			Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show();
+			
+			selectedView.setVisibility(View.GONE);
+			
+			
 			break;
 
 		default:

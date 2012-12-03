@@ -13,12 +13,16 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.socmaps.entity.Circle;
+import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.FacebookErrorResponse;
 import com.socmaps.entity.FriendRequest;
 import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.InformationSharingPreferences;
+import com.socmaps.entity.LSFriendsAndCircles;
 import com.socmaps.entity.LayersPreferences;
+import com.socmaps.entity.LocationSharing;
+import com.socmaps.entity.LsValues;
 import com.socmaps.entity.MeetupRequest;
 import com.socmaps.entity.MessageEntity;
 import com.socmaps.entity.MetaContent;
@@ -182,32 +186,26 @@ public class ServerResponseParser {
 				myInfo.setAuthToken(results.getString("authToken"));
 			// Log.i("authToken", results.getString("authToken"));
 
-			
-			
 			UserSettings userSettings = new UserSettings();
-			
-			if (!results.isNull("settings")) {				
+
+			if (!results.isNull("settings")) {
 				userSettings.setUnit(results.getJSONObject("settings")
 						.getString("unit"));
 				userSettings.setVisibility(results.getJSONObject("settings")
-						.getBoolean("visible"));				
+						.getBoolean("visible"));
 			}
-			
-			if(!results.isNull("shareLocation"))
-			{
+
+			if (!results.isNull("shareLocation")) {
 				userSettings.setShareLocation(results.getInt("shareLocation"));
 			}
-			if(!results.isNull("shareProfilePicture"))
-			{
-				userSettings.setShareProfilePicture(results.getInt("shareProfilePicture"));
+			if (!results.isNull("shareProfilePicture")) {
+				userSettings.setShareProfilePicture(results
+						.getInt("shareProfilePicture"));
 			}
-			if(!results.isNull("shareNewsFeed"))
-			{
+			if (!results.isNull("shareNewsFeed")) {
 				userSettings.setShareNewsFeed(results.getInt("shareNewsFeed"));
 			}
 			myInfo.setSettings(userSettings);
-			
-			
 
 			if (!results.isNull("gender"))
 				myInfo.setGender(results.getString("gender"));
@@ -270,7 +268,7 @@ public class ServerResponseParser {
 				myInfo.setCurrentLng(results.getJSONObject("currentLocation")
 						.getDouble("lng"));
 
-				//myInfo.setCurrentPosition(getGeoPointFromjsonObject(results.getJSONObject("currentLocation")));
+				// myInfo.setCurrentPosition(getGeoPointFromjsonObject(results.getJSONObject("currentLocation")));
 
 			}
 
@@ -358,20 +356,19 @@ public class ServerResponseParser {
 
 		return myInfo;
 	}
-	
-	public static MyInfo parseCircleAndFriends(String response)
-	{
-		MyInfo myInfo = new MyInfo();
-		
+
+	public static CirclesAndFriends parseCircleAndFriends(String response) {
+		CirclesAndFriends circlesAndFriends = new CirclesAndFriends();
+
 		try {
 			JSONObject result = new JSONObject(response);
-			
+
 			if (!result.isNull("circles")) {
 				// parse circles
 				JSONArray cjArray = result.getJSONArray("circles");
 				if (cjArray != null) {
 
-					myInfo.setCircleList(getCircleList(cjArray));
+					circlesAndFriends.setCircles(getCircleList(cjArray));
 
 				}
 			}
@@ -381,20 +378,19 @@ public class ServerResponseParser {
 				JSONArray fjArray = result.getJSONArray("friends");
 				if (fjArray != null) {
 
-					myInfo.setFriendList(parsePeoples(fjArray));
+					circlesAndFriends.setFriends(parsePeoples(fjArray));
 					// accountSettingsEntity.setFriend(friends);
 
 				}
 			}
-			
-			
-		} catch(JSONException e){
-			
+
+		} catch (JSONException e) {
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		return myInfo;
+
+		return circlesAndFriends;
 	}
 
 	public static List<People> parsePeoples(JSONArray jArray) {
@@ -444,6 +440,54 @@ public class ServerResponseParser {
 					String friendId = fjArray.getString(j);
 
 					people.setId(friendId);
+
+					/*
+					 * try { JSONObject friendInfo = fjArray.getJSONObject(j);
+					 * Log.d(ServerResponseParser.class.getName(),
+					 * friendInfo.toString());
+					 * people.setId(friendInfo.getString("id")); } catch
+					 * (JSONException e) {
+					 * Log.w(ServerResponseParser.class.getName(), e);
+					 * people.setId(fjArray.getString(j)); }
+					 */
+
+					friendList.add(people);
+				}
+
+				circle.setFriendList(friendList);
+
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return circle;
+	}
+	
+	public static Circle parseCircleEntityDetails(JSONObject jObj) {
+		Circle circle = new Circle();
+
+		try {
+			if (!jObj.isNull("id")) {
+				circle.setId(jObj.getString("id"));
+			}
+			if (!jObj.isNull("name")) {
+				circle.setName(jObj.getString("name"));
+
+			}
+			if (!jObj.isNull("type")) {
+				circle.setType(jObj.getString("type"));
+			}
+
+			if (!jObj.isNull("friends")) {
+				JSONArray fjArray = jObj.getJSONArray("friends");
+				// Friend[] friends = new Friend[fjArray.length()];
+				List<People> friendList = new ArrayList<People>();
+
+				for (int j = 0; j < fjArray.length(); j++) {
+					People people = parsePeople(fjArray.getJSONObject(j));
 
 					/*
 					 * try { JSONObject friendInfo = fjArray.getJSONObject(j);
@@ -582,55 +626,49 @@ public class ServerResponseParser {
 
 			String updateDate;
 			if (!jObject.isNull("updateDate")) {
-				
-				mEntity.setUpdateTimeEntity(getTimeEntityFromJsonObject(jObject.getJSONObject("updateDate")));
-				
-				
-				
+
+				mEntity.setUpdateTimeEntity(getTimeEntityFromJsonObject(jObject
+						.getJSONObject("updateDate")));
+
 				updateDate = jObject.getJSONObject("updateDate").getString(
 						"date");
 				mEntity.setUpdateDate(updateDate);
 
 			}
-			
+
 			MetaContent metaContent = new MetaContent();
-			if(!jObject.isNull("metaType"))
-			{
+			if (!jObject.isNull("metaType")) {
 				metaContent.setType(jObject.getString("metaType"));
 			}
-			
-			if(!jObject.isNull("metaContent"))
-			{
+
+			if (!jObject.isNull("metaContent")) {
 				JSONObject mcObject = jObject.getJSONObject("metaContent");
-				
-				if(!mcObject.isNull("id"))
-				{
+
+				if (!mcObject.isNull("id")) {
 					metaContent.setId(mcObject.getString("id"));
 				}
-				if(!mcObject.isNull("content"))
-				{
-					JSONObject contentObject = mcObject.getJSONObject("content");
-					if(!contentObject.isNull("note"))
-					{
+				if (!mcObject.isNull("content")) {
+					JSONObject contentObject = mcObject
+							.getJSONObject("content");
+					if (!contentObject.isNull("note")) {
 						metaContent.setNote(contentObject.getString("note"));
 					}
-					if(!contentObject.isNull("address"))
-					{
-						metaContent.setAddress(contentObject.getString("address"));
+					if (!contentObject.isNull("address")) {
+						metaContent.setAddress(contentObject
+								.getString("address"));
 					}
-					
-					if(!contentObject.isNull("lat"))
-					{
+
+					if (!contentObject.isNull("lat")) {
 						metaContent.setLatitude(contentObject.getDouble("lat"));
 					}
-					
-					if(!contentObject.isNull("lng"))
-					{
-						metaContent.setLongitude(contentObject.getDouble("lng"));
+
+					if (!contentObject.isNull("lng")) {
+						metaContent
+								.setLongitude(contentObject.getDouble("lng"));
 					}
 				}
 			}
-			
+
 			mEntity.setMetaContent(metaContent);
 
 			int replyCount;
@@ -1118,6 +1156,320 @@ public class ServerResponseParser {
 		return places;
 	}
 
+	public static LocationSharing savedLocationSharingParser(String response) {
+
+		LocationSharing locationSharing = new LocationSharing();
+		JSONObject results;
+
+		try {
+
+			/*
+			 * { "result": { "status": "on", "friends_and_circles": {...},-
+			 * "circles_only": [(0)], "strangers": {...},- "geo_fences": [(0)]
+			 * }- }
+			 */
+
+			results = (new JSONObject(response)).getJSONObject("result");
+
+			if (!results.isNull("status")) {
+				locationSharing.setStatus(results.getString("status"));
+			}
+
+			if (!results.isNull("friends_and_circles")) {
+
+				JSONObject friends_and_circlesJsonObject = results
+						.getJSONObject("friends_and_circles");
+
+				locationSharing
+						.setLSFriendsAndCircles(parseLsFriends(friends_and_circlesJsonObject));
+			}
+
+			// if (!results.isNull("friends")) {
+			//
+			// JSONObject lsFriendsJsonObject = results
+			// .getJSONObject("friends");
+			//
+			// locationSharing
+			// .setLSFriendsAndCircles(parseLsFriends(lsFriendsJsonObject));
+			// }
+
+			if (!results.isNull("strangers")) {
+
+				JSONObject strangersJsonObject = results
+						.getJSONObject("strangers");
+
+				locationSharing
+						.setStrangers(parseLsValues(strangersJsonObject));
+			}
+
+			if (!results.isNull("platforms")) {
+
+				JSONObject platformsJsonObject = results
+						.getJSONObject("platforms");
+
+				locationSharing
+						.setPlatforms(parseLSItemObject(platformsJsonObject));
+			}
+
+			if (!results.isNull("circles_only")) {
+
+				// http://stackoverflow.com/questions/7284663/json-java-check-element-is-a-jsonarray-or-jsonobject
+
+				JSONObject circlesOnlyJsonObject = results
+						.optJSONObject("circles_only");
+
+				if (circlesOnlyJsonObject != null) {
+					locationSharing
+							.setCirclesOnly(parseLSItemObject(circlesOnlyJsonObject));
+				} else {
+
+					JSONArray categories = results.optJSONArray("circles_only");
+					locationSharing
+							.setCirclesOnly(parseLsCirclesOnly(categories));
+
+				}
+
+			}
+
+			if (!results.isNull("geo_fences")) {
+
+				JSONArray geo_fencesJsonArray = results
+						.getJSONArray("geo_fences");
+
+				locationSharing
+						.setGeo_fences(parseLsGeoFences(geo_fencesJsonArray));
+			}
+
+		} catch (NullPointerException e) {
+			return null;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+
+		return locationSharing;
+	}
+
+	// http://stackoverflow.com/questions/10880988/android-sdk-parsing-unknow-json-array-key-name-and-quantity
+	private static HashMap<String, LsValues> parseLsCirclesOnly(
+			JSONArray circlesOnlyJsonArray) {
+
+		HashMap<String, LsValues> circlesOnly = new HashMap<String, LsValues>();
+
+		try {
+
+			for (int i = 0; i < circlesOnlyJsonArray.length(); i++) {
+
+				JSONObject circleOnlyJsonObject = circlesOnlyJsonArray
+						.getJSONObject(i);
+
+				Iterator keys = circleOnlyJsonObject.keys();
+
+				while (keys.hasNext()) {
+					String curentkey = (String) keys.next();
+
+					if (!circleOnlyJsonObject.isNull(curentkey)) {
+
+						circlesOnly.put(curentkey,
+								parseLsValues(circleOnlyJsonObject
+										.getJSONObject(curentkey)));
+					}
+
+				}
+
+			}
+
+		} catch (JSONException e) {
+
+		}
+
+		return circlesOnly;
+
+	}
+
+	private static ArrayList<LsValues> parseLsGeoFences(
+			JSONArray geo_fencesJsonArray) {
+
+		ArrayList<LsValues> geoFencesJsonArray = new ArrayList<LsValues>();
+
+		try {
+
+			for (int i = 0; i < geo_fencesJsonArray.length(); i++) {
+
+				JSONObject geo_fencesJsonObject = geo_fencesJsonArray
+						.getJSONObject(i);
+
+				geoFencesJsonArray.add(parseLsValues(geo_fencesJsonObject));
+
+			}
+
+		} catch (JSONException e) {
+
+		}
+
+		return geoFencesJsonArray;
+	}
+
+	private static HashMap<String, LsValues> parseLSItemObject(
+			JSONObject platformsJsonObject) {
+
+		HashMap<String, LsValues> platform = new HashMap<String, LsValues>();
+
+		try {
+
+			Iterator keys = platformsJsonObject.keys();
+
+			while (keys.hasNext()) {
+				String curentkey = (String) keys.next();
+
+				if (!platformsJsonObject.isNull(curentkey)) {
+
+					platform.put(curentkey, parseLsValues(platformsJsonObject
+							.getJSONObject(curentkey)));
+				}
+
+			}
+
+			// if (!platformsJsonObject.isNull("fb")) {
+			//
+			// JSONObject fbJsonObject = platformsJsonObject
+			// .getJSONObject("fb");
+			//
+			// platform.put("fb", parseLsValues(fbJsonObject));
+			//
+			// }
+			//
+			// if (!platformsJsonObject.isNull("sm")) {
+			//
+			// JSONObject fbJsonObject = platformsJsonObject
+			// .getJSONObject("sm");
+			//
+			// platform.put("sm", parseLsValues(fbJsonObject));
+			//
+			// }
+
+		} catch (JSONException e) {
+
+		}
+
+		return platform;
+	}
+
+	private static LsValues parseLsValues(JSONObject strangersJsonObject) {
+
+		LsValues lsValues = new LsValues();
+
+		try {
+
+			if (!strangersJsonObject.isNull("name")) {
+
+				lsValues.setName(strangersJsonObject.getString("name"));
+
+			}
+
+			if (!strangersJsonObject.isNull("duration")) {
+
+				lsValues.setDuration(strangersJsonObject.getInt("duration"));
+
+			}
+			if (!strangersJsonObject.isNull("radius")) {
+
+				lsValues.setRadius(strangersJsonObject.getInt("radius"));
+
+			}
+
+			if (!strangersJsonObject.isNull("location")) {
+
+				JSONObject locationJsonObject = strangersJsonObject
+						.getJSONObject("location");
+
+				if (!locationJsonObject.isNull("lat")) {
+					lsValues.setLatitude(locationJsonObject.getDouble("lat"));
+
+				}
+
+				if (!locationJsonObject.isNull("lng")) {
+					lsValues.setLongitude(locationJsonObject.getDouble("lng"));
+
+				}
+
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// TODO Auto-generated method stub
+		return lsValues;
+	}
+
+	private static LSFriendsAndCircles parseLsFriends(
+			JSONObject lsFriendsJsonObject) {
+
+		LSFriendsAndCircles lSFriendsAndCircles = new LSFriendsAndCircles();
+		try {
+
+			if (!lsFriendsJsonObject.isNull("friends")) {
+
+				JSONArray permitted_users = lsFriendsJsonObject
+						.getJSONArray("friends");
+
+				ArrayList<String> friends = new ArrayList<String>();
+
+				for (int i = 0; i < permitted_users.length(); i++) {
+
+					friends.add(permitted_users.getString(i));
+
+				}
+
+				lSFriendsAndCircles.setFriends(friends);
+
+			}
+
+			if (!lsFriendsJsonObject.isNull("circles")) {
+
+				JSONArray permitted_circles = lsFriendsJsonObject
+						.getJSONArray("circles");
+
+				ArrayList<String> circles = new ArrayList<String>();
+
+				for (int i = 0; i < permitted_circles.length(); i++) {
+
+					circles.add(permitted_circles.getString(i));
+
+				}
+
+				lSFriendsAndCircles.setCircles(circles);
+
+			}
+
+			if (!lsFriendsJsonObject.isNull("duration")) {
+
+				lSFriendsAndCircles.setDuration(lsFriendsJsonObject
+						.getInt("duration"));
+
+			}
+			if (!lsFriendsJsonObject.isNull("radius")) {
+
+				lSFriendsAndCircles.setRadius(lsFriendsJsonObject
+						.getInt("radius"));
+
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return lSFriendsAndCircles;
+	}
+
 	/*
 	 * public static ArrayList<People> parseFriendsOfFriends(String response) {
 	 * 
@@ -1520,7 +1872,8 @@ public class ServerResponseParser {
 					people.setCurrentLat(jo.getDouble("lat"));
 				if (!jo.isNull("lng"))
 					people.setCurrentLng(jo.getDouble("lng"));
-				//if (!jo.isNull("address"))people.setCurrentAddress(jo.getString("address"));
+				// if
+				// (!jo.isNull("address"))people.setCurrentAddress(jo.getString("address"));
 			}
 			if (!peopleJSONObj.isNull("address")) {
 
@@ -1553,7 +1906,8 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("distance")) {
 				people.setDistance(peopleJSONObj.getDouble("distance"));
-				Log.i("distance", peopleJSONObj.getDouble("distance") + ":"+people.getFirstName());
+				Log.i("distance", peopleJSONObj.getDouble("distance") + ":"
+						+ people.getFirstName());
 			}
 			if (!peopleJSONObj.isNull("isFriend")) {
 				people.setIsFrnd(peopleJSONObj.getBoolean("isFriend"));
@@ -1721,7 +2075,23 @@ public class ServerResponseParser {
 
 			JSONObject circleObj = ja.getJSONObject(i);
 			Circle circle = parseCircleEntity(circleObj);
-			
+
+			if (!circle.getName().equalsIgnoreCase("second_degree")) {
+				Log.d("ServerResponseParse", circle.toString());
+				circles.add(circle);
+			}
+
+		}
+		return circles;
+	}
+	
+	public static List<Circle> getCircleListWithDetails(JSONArray ja) throws JSONException {
+		List<Circle> circles = new ArrayList<Circle>();
+		for (int i = 0; i < ja.length(); i++) {
+
+			JSONObject circleObj = ja.getJSONObject(i);
+			Circle circle = parseCircleEntityDetails(circleObj);
+
 			if (!circle.getName().equalsIgnoreCase("second_degree")) {
 				Log.d("ServerResponseParse", circle.toString());
 				circles.add(circle);
@@ -1811,8 +2181,8 @@ public class ServerResponseParser {
 		if (!jsonObject.isNull("eventShortSummary")) {
 			event.setShortSummary(jsonObject.getString("eventShortSummary"));
 			// Log.i("Event", jsonObject.getString("eventShortSummary"));
-		} 
-		
+		}
+
 		if (!jsonObject.isNull("eventImage")) {
 			event.setEventImageUrl(jsonObject.getString("eventImage"));
 			// Log.i("Event", jsonObject.getString("eventImage"));
@@ -2110,19 +2480,18 @@ public class ServerResponseParser {
 		}
 
 		return fbResponseEntity;
-	} 
-	
-	
-	// --------------- for Plan -------------------------- // 
-	
+	}
+
+	// --------------- for Plan -------------------------- //
+
 	public static Plan parseGetPlanDetailsResult(String result) {
 
-		//Event event = new Event(); 
+		// Event event = new Event();
 		Plan plan = new Plan();
 		JSONObject jo;
 		try {
 			jo = new JSONObject(result);
-			//plan = parseIndividualEvent(jo, plan); 
+			// plan = parseIndividualEvent(jo, plan);
 			plan = parseIndividualPlan(jo, plan);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -2138,9 +2507,9 @@ public class ServerResponseParser {
 		try {
 			JSONArray jArray = new JSONArray(result);
 			for (int i = 0; i < jArray.length(); i++) {
-				//Event event = new Event(); 
+				// Event event = new Event();
 				Plan plan = new Plan();
-				//parseIndividualEvent(jArray.getJSONObject(i), plan); 
+				// parseIndividualEvent(jArray.getJSONObject(i), plan);
 				parseIndividualPlan(jArray.getJSONObject(i), plan);
 				plans.add(plan);
 			}
@@ -2155,9 +2524,9 @@ public class ServerResponseParser {
 	private static Plan parseIndividualPlan(JSONObject jsonObject, Plan plan)
 			throws JSONException {
 		// TODO Auto-generated method stub
-		if (!jsonObject.isNull("id")) { 
+		if (!jsonObject.isNull("id")) {
 			plan.setPlanId(jsonObject.getString("id"));
-			//event.setEventId(jsonObject.getString("id"));
+			// event.setEventId(jsonObject.getString("id"));
 			// Log.i("Event", jsonObject.getString("id"));
 		}
 
@@ -2170,28 +2539,29 @@ public class ServerResponseParser {
 			plan.setDescription(jsonObject.getString("description"));
 			// Log.i("Event", jsonObject.getString("description"));
 		}
- 
-		
-		if (!jsonObject.isNull("image")) { 
+
+		if (!jsonObject.isNull("image")) {
 			plan.setPlanImageUrl(jsonObject.getString("image"));
-			//event.setEventImageUrl(jsonObject.getString("eventImage"));
+			// event.setEventImageUrl(jsonObject.getString("eventImage"));
 			// Log.i("Event", jsonObject.getString("eventImage"));
 		}
 
 		if (!jsonObject.isNull("time")) {
-			//event.setEventTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time"))); 
-			plan.setPlanTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time")));
+			// event.setEventTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time")));
+			plan.setPlanTime(getTimeEntityFromJsonObject(jsonObject
+					.getJSONObject("time")));
 		}
 
 		if (!jsonObject.isNull("createDate")) {
-			//event.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate"))); 
-			plan.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate")));
+			// event.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate")));
+			plan.setCreateDate(getTimeEntityFromJsonObject(jsonObject
+					.getJSONObject("createDate")));
 		}
 
-		if (!jsonObject.isNull("distance")) { 
+		if (!jsonObject.isNull("distance")) {
 			plan.setDistance(jsonObject.getDouble("distance"));
 		}
-		
+
 		if (!jsonObject.isNull("location")) {
 			/*
 			 * event.setEventLocation(getGeoPointFromjsonObject(jsonObject
@@ -2202,46 +2572,49 @@ public class ServerResponseParser {
 
 			if (!jo.isNull("lat"))
 				plan.setLatitude(jo.getDouble("lat"));
-				//event.setLatitude(jo.getDouble("lat"));
-			if (!jo.isNull("lng")) 
+			// event.setLatitude(jo.getDouble("lat"));
+			if (!jo.isNull("lng"))
 				plan.setLongitude(jo.getDouble("lng"));
-				//event.setLongitude(jo.getDouble("lng"));
-			if (!jo.isNull("address")) 
+			// event.setLongitude(jo.getDouble("lng"));
+			if (!jo.isNull("address"))
 				plan.setAddress(jo.getString("address"));
-				//event.setAddress(jo.getString("address"));
+			// event.setAddress(jo.getString("address"));
 
 		}
 		if (!jsonObject.isNull("guests")) {
 
 			JSONObject guestObj = jsonObject.getJSONObject("guests");
 			if (!guestObj.isNull("users")) {
-				//event.setGuestList(getGuestList(guestObj.getJSONArray("users"))); 
+				// event.setGuestList(getGuestList(guestObj.getJSONArray("users")));
 				plan.setGuestList(getGuestList(guestObj.getJSONArray("users")));
 			}
 
 			if (!guestObj.isNull("circles")) {
-				//event.setCircleList(getCircleList(guestObj.getJSONArray("circles"))); 
-				plan.setCircleList(getCircleList(guestObj.getJSONArray("circles")));
+				// event.setCircleList(getCircleList(guestObj.getJSONArray("circles")));
+				plan.setCircleList(getCircleList(guestObj
+						.getJSONArray("circles")));
 			}
 
 		}
 
 		if (!jsonObject.isNull("permission")) {
-			//event.setPermission(jsonObject.getString("permission"));
+			// event.setPermission(jsonObject.getString("permission"));
 			plan.setPermission(jsonObject.getString("permission"));
 		}
 
 		if (!jsonObject.isNull("permittedUsers")) {
 
-			//event.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers"))); 
-			plan.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers")));
+			// event.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers")));
+			plan.setPermittedUserList(getListFromJSONArray(jsonObject
+					.getJSONArray("permittedUsers")));
 		}
 		if (!jsonObject.isNull("permittedCircles")) {
-			//event.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles"))); 
-			plan.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles")));
+			// event.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles")));
+			plan.setPermittedCircleList(getListFromJSONArray(jsonObject
+					.getJSONArray("permittedCircles")));
 		}
 
-		//return event; 
+		// return event;
 		return plan;
 	}
 

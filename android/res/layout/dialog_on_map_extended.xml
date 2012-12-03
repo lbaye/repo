@@ -1,69 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dip"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="265dip"
     android:layout_height="wrap_content"
-    android:background="#F7F7F7"
-    android:orientation="vertical"
-    android:paddingBottom="10dip" >
+    android:background="@color/transparent" >
 
-    <ImageView
-        android:id="@+id/close_btn"
-        android:layout_width="20dip"
-        android:layout_height="20dip"
-        android:layout_gravity="right|top"
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="5dip"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/balloon_overlay_close" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="250dip"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/rounder_border_bg_gray"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/infoContainer"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingLeft="5dip"
-            android:paddingRight="5dip"
-            android:paddingTop="0dip" >
+            android:orientation="horizontal" >
 
-            <ImageView
-                android:id="@+id/avater_image"
-                android:layout_width="50dip"
-                android:layout_height="50dip"
-                android:adjustViewBounds="true"
-                android:background="@drawable/rounded_border_image_bg"
-                android:scaleType="fitCenter"
-                android:src="@null" />
-
-            <Button
-                android:id="@+id/add_frnd_btn"
-                android:layout_width="70dip"
-                android:layout_height="35dip"
-                android:layout_marginTop="20dip"
-                android:text="Add Friend"
-                android:textSize="10dip"
-                android:textStyle="normal"
-                android:background="@drawable/selector_btn_light"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tvFriendshipStatus"
-                android:layout_width="70dip"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginTop="20dip"
-                android:text=""
-                android:textColor="@color/gray_dark"
-                android:textSize="10dip"
-                android:textStyle="bold"
-                android:visibility="visible" />
-            
-            <Button
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingRight="5dip"
+                android:paddingTop="0dip" >
+
+                <ImageView
+                    android:id="@+id/avater_image"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/rounded_border_image_bg"
+                    android:scaleType="fitCenter"
+                    android:src="@null" />
+
+                <TextView
+                    android:id="@+id/tvFriendshipStatus"
+                    android:layout_width="70dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/gray_dark"
+                    android:textSize="10dip"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <!--
+                 <Button
                 android:id="@+id/profile_btn"
                 android:layout_width="70dip"
                 android:layout_height="35dip"
@@ -72,203 +58,247 @@
                 android:textSize="10dip"
                 android:textStyle="normal"
                 android:background="@drawable/selector_btn_light"
-                android:visibility="visible" />
-            
-            
-        </LinearLayout>
+                android:visibility="visible" />
+                -->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|top"
-            android:layout_marginTop="0dip"
-            android:orientation="vertical" >
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:layout_gravity="left|top"
+                android:layout_marginTop="0dip"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/first_name_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Unknown"
+                        android:textColor="#000000"
+                        android:textSize="14dip"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/age_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dip"
+                        android:layout_toRightOf="@+id/first_name_text"
+                        android:layout_alignBottom="@+id/first_name_text"
+                        android:text="-Age:"
+                        android:textColor="#000000"
+                        android:textSize="12dip" />
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/first_name_text"
+                    android:id="@+id/status_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="Unknown"
-                    android:textColor="#000000"
+                    android:text="Status"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="12dip"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distance unknown"
+                    android:textColor="@color/green_text"
                     android:textSize="14dip"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/age_text"
+                    android:id="@+id/street_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dip"
-                    android:layout_toRightOf="@+id/first_name_text"
-                    android:text="-Age:"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-            </RelativeLayout>
+                    android:text="Location unknown"
+                    android:textColor="@color/green_text"
+                    android:textSize="14dip"
+                    android:textStyle="bold" />
 
-            
-            <TextView
-                android:id="@+id/status_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status"
-                android:textColor="#000000"
-                android:textSize="12dip"
-                android:textStyle="normal" />
-            
-            <TextView
-                android:id="@+id/distance_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Distance unknown"
-                android:textColor="#000000"
-                android:textSize="14dip"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/street_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location unknown"
-                android:textColor="#000000"
-                android:textSize="14dip"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/genderInfoContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/gender_text_title"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/genderInfoContainer"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/genderLabel"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
+                    android:layout_marginTop="10dip"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/gender_text"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/gender_text_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/genderLabel"
+                        android:textColor="#000000"
+                        android:textSize="12dip" />
+
+                    <TextView
+                        android:id="@+id/gender_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":Unknown"
+                        android:textColor="#000000"
+                        android:textSize="12dip"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/relationshipInfoContainer"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text=":Unknown"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-            </LinearLayout>
+                    android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/relationshipInfoContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/relationship_status_text_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/relationshipstatus"
+                        android:textColor="#000000"
+                        android:textSize="12dip" />
 
-                <TextView
-                    android:id="@+id/relationship_status_text_title"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/relationship_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unknown"
+                        android:textColor="#000000"
+                        android:textSize="12dip"
+                        android:textStyle="bold"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cityInfoContainer"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/relationshipstatus"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/relationship_text"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/city_text_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/living_in"
+                        android:textColor="#000000"
+                        android:textSize="12dip" />
+
+                    <TextView
+                        android:id="@+id/city_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unknown"
+                        android:textColor="#000000"
+                        android:textSize="12dip"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/workInfoContainer"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Unknown"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-            </LinearLayout>
+                    android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/cityInfoContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/work_text_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work_at"
+                        android:textColor="#000000"
+                        android:textSize="12dip" />
 
-                <TextView
-                    android:id="@+id/city_text_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/living_in"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-
-                <TextView
-                    android:id="@+id/city_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Unknown"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/workInfoContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/work_text_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/work_at"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
-
-                <TextView
-                    android:id="@+id/work_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Unknown"
-                    android:textColor="#000000"
-                    android:textSize="12dip" />
+                    <TextView
+                        android:id="@+id/work_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unknown"
+                        android:textColor="#000000"
+                        android:textSize="12dip"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dip"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:paddingTop="10dip"
-        android:visibility="visible" >
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoContainer"
+            android:paddingBottom="10dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:paddingTop="10dip"
+            android:visibility="visible" >
 
-        <Button
-            android:id="@+id/meet_up_btn"
-            android:layout_width="70dip"
-            android:layout_height="35dip"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/selector_btn_light"
-            android:text="@string/meet_up_label"
-            android:textSize="12dip"
-            android:visibility="gone" />
+            <RelativeLayout
+                android:layout_width="70dip"
+                android:layout_height="35dip"
+                android:layout_alignParentLeft="true" >
 
-        <Button
-            android:id="@+id/directions_btn"
-            android:layout_width="70dip"
-            android:layout_height="35dip"
-            android:layout_centerInParent="true"
-            android:background="@drawable/selector_btn_light"
-            android:text="@string/directionLabel"
-            android:textSize="12dip" />
+                <Button
+                    android:id="@+id/add_frnd_btn"
+                    android:layout_width="70dip"
+                    android:layout_height="35dip"
+                    android:background="@drawable/selector_btn_light"
+                    android:text="@string/add_friend_label"
+                    android:textSize="12dip"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
-        <Button
-            android:id="@+id/message_btn"
-            android:layout_width="70dip"
-            android:layout_height="35dip"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/selector_btn_light"
-            android:text="@string/messageLabel"
-            android:textSize="12dip" />
+                <Button
+                    android:id="@+id/meet_up_btn"
+                    android:layout_width="70dip"
+                    android:layout_height="35dip"
+                    android:background="@drawable/selector_btn_light"
+                    android:text="@string/meet_up_label"
+                    android:textSize="12dip"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/meet_up_btn_disabled"
+                    android:layout_width="70dip"
+                    android:layout_height="35dip"
+                    android:background="@drawable/btn_bg_light_pressed"
+                    android:text="@string/meet_up_label"
+                    android:textColor="@color/black"
+                    android:textSize="12dip"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/directions_btn"
+                android:layout_width="70dip"
+                android:layout_height="35dip"
+                android:layout_centerInParent="true"
+                android:background="@drawable/selector_btn_light"
+                android:text="@string/directionLabel"
+                android:textSize="12dip" />
+
+            <Button
+                android:id="@+id/message_btn"
+                android:layout_width="70dip"
+                android:layout_height="35dip"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_btn_light"
+                android:text="@string/messageLabel"
+                android:textSize="12dip" />
+        </RelativeLayout>
     </RelativeLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="0dip"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/map_info_collapse"
+        android:padding="0dip" />
+
+</RelativeLayout>

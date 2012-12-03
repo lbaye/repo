@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dip"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/atoz"
             android:textColor="@color/black"
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/distance_filter_label"
             android:textColor="@color/black"
@@ -150,7 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dip"
-            android:background="@color/transparent"
+            android:background="@color/offwhite"
             android:padding="5dip"
             android:text="@string/circlesLabel"
             android:textColor="@color/black"
@@ -245,7 +245,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:background="@color/offwhite">
         </LinearLayout>
     </ScrollView>
 

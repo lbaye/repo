@@ -84,11 +84,29 @@
             android:paddingRight="10dip" >
 
             <Button
-                android:id="@+id/btnInvitePeople"
+                android:id="@+id/btnPeopleByDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
+                android:background="@color/offwhite"
+                android:padding="5dip"
+                android:text="@string/byDistanceLabel"
+                android:textColor="@color/black"
+                android:textSize="11dip" />
+
+            <ImageView
+                android:layout_width="0dip"
+                android:layout_height="40dip"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/seperator" />
+
+            <Button
+                android:id="@+id/btnPeopleInvite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/offwhite"
                 android:padding="5dip"
                 android:text="@string/inviteLabel"
                 android:textColor="@color/black"
@@ -102,11 +120,11 @@
                 android:src="@drawable/seperator" />
 
             <Button
-                android:id="@+id/btnCirclePeople"
+                android:id="@+id/btnPeopleCircle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
+                android:background="@color/offwhite"
                 android:padding="5dip"
                 android:text="@string/circlesLabel"
                 android:textColor="@color/black"
@@ -120,11 +138,11 @@
                 android:src="@drawable/seperator" />
 
             <Button
-                android:id="@+id/btnBlockUnblockPeople"
+                android:id="@+id/btnPeopleBlockUnblock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
+                android:background="@color/offwhite"
                 android:padding="5dip"
                 android:text="@string/blockUnblockLabel"
                 android:textColor="@color/black"

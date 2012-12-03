@@ -64,7 +64,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_btn_light"
-                android:text="@string/addLabel"
+                android:text="@string/createLabel"
                 android:textColor="@drawable/black"
                 android:textSize="12dip" />
 
@@ -116,7 +116,7 @@
             android:layout_height="35dp"
             android:background="@drawable/img_blank"
             android:padding="5dp"
-            android:text="@string/okLabel"
+            android:text="@string/moveLabel"
             android:textColor="@drawable/black" 
             android:textSize="12dip"/>
     </LinearLayout>

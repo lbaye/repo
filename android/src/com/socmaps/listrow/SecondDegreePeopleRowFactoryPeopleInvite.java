@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -25,7 +26,7 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 			final ListItemClickListener licl,
 			final View convertView,
 			final ImageDownloader il,
-			final ListItemClickListenerSecondDegreePeople listItemClickListenerSecondDegreePeople) {
+			final ListItemClickListenerSecondDegreePeople listItemClickListenerSecondDegreePeople,boolean isChecked) {
 		ViewHolder holder;
 		View view;
 		final SecondDegreePeople people;
@@ -133,6 +134,26 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 			}
 		});
 
+		holder.checked
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean flag) {
+
+						listItemClickListenerSecondDegreePeople.onCheckChange(
+								people.getRefId(), flag);
+					}
+				});
+		
+		
+		
+		holder.checked.setChecked(isChecked);
+		//holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
+
+		holder.btnSendMessage.setVisibility(View.INVISIBLE);
+		holder.btnInvitePeople.setVisibility(View.INVISIBLE);
+
 		return view;
 	}
 
@@ -150,20 +171,20 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 		final Button btnInvitePeople;
 		final CheckBox checked;
 
-		private ViewHolder(ImageView image1, ImageView image2,
-				ImageView image3, ImageView image4, TextView textView1,
-				TextView textView2, TextView textView3, TextView textView4,
-				TextView textView5, Button sendMessage, Button blockUnblock,
-				CheckBox checkedBox) {
-			this.coverPhoto = image1;
-			this.avatar = image2;
-			this.sourceImage = image3;
-			this.showOnMap = image4;
-			this.firstNameText = textView1;
-			this.statusText = textView2;
-			this.addressText = textView3;
-			this.timeText = textView4;
-			this.distanceText = textView5;
+		private ViewHolder(ImageView coverPhoto, ImageView avatar,
+				ImageView sourceImage, ImageView showOnMap,
+				TextView firstNameText, TextView statusText,
+				TextView addressText, TextView timeText, TextView distanceText,
+				Button sendMessage, Button blockUnblock, CheckBox checkedBox) {
+			this.coverPhoto = coverPhoto;
+			this.avatar = avatar;
+			this.sourceImage = sourceImage;
+			this.showOnMap = showOnMap;
+			this.firstNameText = firstNameText;
+			this.statusText = statusText;
+			this.addressText = addressText;
+			this.timeText = timeText;
+			this.distanceText = distanceText;
 			this.btnSendMessage = sendMessage;
 			this.btnInvitePeople = blockUnblock;
 			this.checked = checkedBox;

@@ -2,8 +2,6 @@ package com.socmaps.widget;
 
 import java.util.List;
 
-import org.json.JSONArray;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,7 +12,6 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,12 +24,10 @@ import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.ui.PeopleCircleActivity;
-import com.socmaps.ui.PlaceEditSaveActivity;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
-import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
@@ -66,7 +61,7 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 	private String deleteCircleResponse = "";
 	private int deleteCircleStatus = 0;
 
-	private String circleName="";
+	private String circleName = "";
 
 	public PeopleCirclePrefaranceItemView(Context context, Circle circle,
 			ImageDownloader imageDownloader) {
@@ -117,6 +112,14 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 					+ circle.getFriendList().size() + ")");
 
 			circleName = circle.getName();
+
+			if (circle.getName().equalsIgnoreCase("friends")) {
+
+				btnDeleteCircle.setVisibility(View.INVISIBLE);
+
+				btnRenameCircle.setVisibility(View.INVISIBLE);
+			}
+
 		}
 
 		if (hideHeader || !isToggle) {
@@ -483,7 +486,8 @@ public class PeopleCirclePrefaranceItemView extends LinearLayout implements
 					if (circle.getId().equalsIgnoreCase(
 							StaticValues.myInfo.getCircleList().get(i).getId())) {
 
-						StaticValues.myInfo.getCircleList().get(i).setName(circleName);
+						StaticValues.myInfo.getCircleList().get(i)
+								.setName(circleName);
 						break;
 					}
 				}

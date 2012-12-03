@@ -14,6 +14,8 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +62,8 @@ public class MeetupRequestNewActivity extends Activity {
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle;
+	TextView tvSelectedLocationTitle; 
+	TextView tvTitle, tvTitleDescription, tvTitleAddress; 
 
 	EditText etMessage;
 	String requestMessage = "", requestAddress = "";
@@ -84,9 +87,11 @@ public class MeetupRequestNewActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader;
+	ImageLoader imageLoader; 
+	boolean isSelected;
 
-	public People selectedPeople;
+	public People selectedPeople; 
+	public Place selectedPlace; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +101,22 @@ public class MeetupRequestNewActivity extends Activity {
 		requestLat = getIntent().getDoubleExtra("destLat", 0);
 		requestLng = getIntent().getDoubleExtra("destLng", 0);
 		requestAddress = getIntent().getStringExtra("destAddress");
-
-		Log.d("Received Place GTag",
-				String.valueOf(requestLat) + " " + String.valueOf(requestLng));
+		Log.d("Received Place GTag", String.valueOf(requestLat) + " " + String.valueOf(requestLng) + " " + requestAddress); 
+		
+		if(requestLat != 0 && requestLng != 0) 
+		{
+			Object object = getIntent().getSerializableExtra("selectedPlace");
+			if (object != null) {
+				selectedPlace = (Place) (object);
+				object = null;
+			} 
+			
+			requestLat = selectedPlace.getLatitude(); 
+			requestLng = selectedPlace.getLongitude(); 
+			requestAddress = selectedPlace.getVicinity();
+			
+			Log.d("Check Lat Lng", requestLat+"" + " " + requestLng+"" + " " + requestAddress);
+		}
 
 		Object obj = getIntent().getSerializableExtra("selectedPeople");
 		if (obj != null) {
@@ -111,7 +129,10 @@ public class MeetupRequestNewActivity extends Activity {
 
 		initialize();
 
-		addLocationRadioGroup();
+		if(requestLat == 0 && requestLng == 0) 
+		{
+			addLocationRadioGroup(); 
+		}
 
 		generateFriendList();
 		showFriendList();
@@ -170,15 +191,33 @@ public class MeetupRequestNewActivity extends Activity {
 		btnUnselectAll = (Button) findViewById(R.id.btnUnselectAll);
 		btnUnselectAll.setOnClickListener(buttonActionListener);
 
-		etFriendSearch = (EditText) findViewById(R.id.etFriendSearch);
+		etFriendSearch = (EditText) findViewById(R.id.etFriendSearch); 
 		friendListContainer = (LinearLayout) findViewById(R.id.friendListContainer);
 		circleListContainer = (LinearLayout) findViewById(R.id.circleListContainer);
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
+		
+		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);  
+		tvTitleAddress = (TextView) findViewById(R.id.tvTitleAddress);
+		
+		if(requestLat == 0 && requestLng == 0)
+		{
+			locationRadioGroupContainer.setVisibility(View.VISIBLE);
+		} else if(requestLat != 0 && requestLng != 0) 
+		{
+			tvTitle.setVisibility(View.VISIBLE); 
+			tvTitleAddress.setVisibility(View.VISIBLE); 
+			tvTitle.setText("Venue: " + selectedPlace.getName());
+			//tvTitleDescription.setVisibility(View.VISIBLE); 
+			//tvTitleDescription.setText(selectedPlace.getName()); 
+			tvTitleAddress.setText(requestAddress);
+		}
 
-	}
+	} 
+	
 
 	private void addLocationRadioGroup() {
 		// TODO Auto-generated method stub
@@ -427,7 +466,7 @@ public class MeetupRequestNewActivity extends Activity {
 			name += lastName;
 		}
 
-		// selectedFriends.put(id, false);
+		selectedFriends.put(id, false);
 
 		/*
 		 * Work has to do for PreSelected Friend
@@ -447,6 +486,15 @@ public class MeetupRequestNewActivity extends Activity {
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
 
+		} 
+		
+		if (selectedPeople != null) {
+			if (id.equals(selectedPeople.getId())) {
+				proficPicContainer
+						.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, true);
+			}
+
 		}
 
 		profilePic.setOnClickListener(new OnClickListener() {
@@ -454,7 +502,7 @@ public class MeetupRequestNewActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				boolean isSelected = selectedFriends.get(id);
+				isSelected = selectedFriends.get(id);
 				if (isSelected) {
 					proficPicContainer
 							.setBackgroundResource(R.color.transparent);
@@ -466,16 +514,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 			}
 		});
-
-		if (selectedPeople != null) {
-			if (id.equals(selectedPeople.getId())) {
-				proficPicContainer
-						.setBackgroundResource(R.color.highlightGreen);
-				selectedFriends.put(id, true);
-			}
-
-		}
-
+		
 		return v;
 	}
 

@@ -56,6 +56,7 @@ import com.socmaps.entity.Place;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
+import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.DateTimePicker;
@@ -85,7 +86,9 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle;
+	TextView tvSelectedLocationTitle; 
+	
+	TextView tvTitle, tvTitleDescription, tvTitleAddress; 
 
 	ImageView ivEventImage;
 
@@ -126,30 +129,66 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 	String permissionValue = "";
 
-	ImageLoader imageLoader;
+	ImageLoader imageLoader; 
+	
+	public Place selectedPlace; 
+	int flagBack; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_new_layout); 
 		
-		eventLat = getIntent().getDoubleExtra("destLat", 0);
+		/*eventLat = getIntent().getDoubleExtra("destLat", 0);
 		eventLng = getIntent().getDoubleExtra("destLng", 0); 
 		eventAddress = getIntent().getStringExtra("destAddress"); 
 		
-		Log.d("Received Place GTag", String.valueOf(eventLat)+" "+ String.valueOf(eventLng));
+		Log.d("Received Place GTag", String.valueOf(eventLat)+" "+ String.valueOf(eventLng));*/  
+		
+		flagBack = getIntent().getIntExtra("flag", 0); 
+		
+		Object object = getIntent().getSerializableExtra("selectedPlace"); 
+		if(object != null) {
+			selectedPlace = (Place) (object); 
+			object = null;  
+			Log.d("Place Check", "Name: " + selectedPlace.getName() + " "
+					+ selectedPlace.getVicinity()); 
+			Log.d("Place Check Lat Lng", selectedPlace.getLatitude()+"" + " " + selectedPlace.getLongitude()+""); 
+			
+			eventLat = selectedPlace.getLatitude(); 
+			eventLng = selectedPlace.getLongitude(); 
+			eventAddress = selectedPlace.getVicinity();
+			
+			Log.d("Place ReCheck Lat Lng", eventLat+"" + " " + eventLng+" "+ eventAddress);
+		} 
 
 		initialize();
-		
-		
-		
 		setExpandListener();
 
-		addLocationRadioGroup();
+		//addLocationRadioGroup(); 
+		
+		if(eventLat == 0 && eventLng == 0)
+		{
+			addLocationRadioGroup();
+		}
+		 
 		addPermissionRadioGroup();
+		
+		
+		if(StaticValues.myInfo == null)
+		{
+			StaticValues.myInfo = ServerResponseParser
+					.parseUserProfileInfo(
+							Utility.getUserData(getApplicationContext()),
+							false);
+		}
 
-		generateFriendList();
-		showFriendList();
+		if(StaticValues.myInfo != null)
+		{
+			generateFriendList();
+			showFriendList();
+		}
+		
 	}
 	
 
@@ -177,9 +216,13 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Intent intent = new Intent(context, EventListActivity.class);
-			finish();
-			startActivity(intent);
+			if(flagBack == 0) 
+			{
+				Intent intent = new Intent(context, EventListActivity.class);
+				finish();
+				startActivity(intent);
+			} else 
+				finish();
 		}
 		return false;
 
@@ -255,7 +298,23 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
+		
+		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
+		tvTitleAddress = (TextView) findViewById(R.id.tvTitleAddress); 
+		
+		if(eventLat == 0 && eventLng == 0)
+		{
+			locationRadioGroupContainer.setVisibility(View.VISIBLE);
+		} else {
+			tvTitle.setVisibility(View.VISIBLE);
+			//tvTitleDescription.setVisibility(View.VISIBLE);  
+			tvTitleAddress.setVisibility(View.VISIBLE);
+			tvTitle.setText("Venue: " + selectedPlace.getName());
+			//tvTitleDescription.setText(selectedPlace.getName()); 
+			tvTitleAddress.setText(selectedPlace.getVicinity());
+		}
 
 	}
 
@@ -357,10 +416,14 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if (v == btnBack) {
-				Intent intent = new Intent(context, EventListActivity.class);
-				finish();
-				startActivity(intent);
+			if (v == btnBack) { 
+				
+				if(flagBack == 0) {
+					Intent intent = new Intent(context, EventListActivity.class);
+					finish();
+					startActivity(intent);
+				} else 
+					finish();							
 			} else if (v == btnNotification) {
 				Intent notificationIntent = new Intent(getApplicationContext(),
 						NotificationActivity.class);
@@ -579,9 +642,13 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 					Toast.LENGTH_SHORT).show();
 
 			// EventListActivity.isUpdateList = true;
-			Intent intent = new Intent(context, EventListActivity.class);
-			finish();
-			startActivity(intent);
+			if(flagBack == 0) 
+			{
+				Intent intent = new Intent(context, EventListActivity.class);
+				finish();
+				startActivity(intent);
+			} else 
+				finish();
 
 		} else {
 			Toast.makeText(context, "Failed. Please try again.",
@@ -593,7 +660,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	public void showPeoplePicker(String pickerName) {
 		// custom dialog
 		Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
-				shareWithSelectedFriendList, shareWithSelectedCircleList);
+				shareWithSelectedFriendList, shareWithSelectedCircleList);  
 
 		peoplePicker.show();
 	}

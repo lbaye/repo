@@ -127,8 +127,20 @@ public class EventRowFactory {
 		holder.maybeBtn.setOnClickListener(listener);
 
 		// set distance
+		String unit = Constant.UNIT_METRIC;
+		if(StaticValues.myInfo!=null)
+		{
+			if(StaticValues.myInfo.getSettings()!=null)
+			{
+				if(StaticValues.myInfo.getSettings().getUnit()!=null)
+				{
+					unit = StaticValues.myInfo.getSettings().getUnit();
+				}
+			}
+		}
+		
 		holder.distanceText.setText(Utility.getFormatedDistance(event
-				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+				.getDistance(), unit));
 
 		// set arrowClicklistener
 		holder.rightArrow.setOnClickListener(new OnClickListener() {

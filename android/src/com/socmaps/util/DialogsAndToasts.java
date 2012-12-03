@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Window;
 
+import com.socmaps.ui.LoginActivity;
 import com.socmaps.ui.R;
 
 public class DialogsAndToasts {
@@ -37,7 +38,8 @@ public class DialogsAndToasts {
 	}
 
 	public static Dialog showExtendedInfoDialog(Context c, int layoutResId) {
-		Dialog dialog = new Dialog(c);
+		
+		Dialog dialog = new Dialog(c,R.style.CustomDialogTheme);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(layoutResId);
 

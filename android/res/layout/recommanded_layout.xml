@@ -423,7 +423,7 @@
                         android:paddingRight="80dip"
                         android:layout_marginRight="10dip"
                         android:gravity="right|center_vertical"
-                        android:text="@string/send"
+                        android:text="@string/recommended_label"
                         android:textColor="@color/black"
                         android:textSize="12dip"
                         android:textStyle="normal" />

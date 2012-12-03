@@ -65,6 +65,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
 	TextView tvSelectedLocationTitle; 
+	TextView tvTitle, tvTitleDescription, tvTitleAddress;
 	
 	ProgressDialog m_ProgressDialog;
 
@@ -94,7 +95,9 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 	List<String> shareWithSelectedFriendList;
 	List<String> shareWithSelectedCircleList;
 	List<String> shareWithSelectedCircleFriendList;
-	List<String> shareWithSelectedFriendListAll;
+	List<String> shareWithSelectedFriendListAll; 
+	
+	public Place selectedPlace; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,14 +105,17 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.plan_layout);  
 		
-		eventLat = getIntent().getDoubleExtra("destLat", 0);
-		eventLng = getIntent().getDoubleExtra("destLng", 0); 
-		eventAddress = getIntent().getStringExtra("destAddress"); 
 		
-		Log.d("Received Place GTag", String.valueOf(eventLat)+" "+ String.valueOf(eventLng));
+		Object object = getIntent().getSerializableExtra("selectedPlace"); 
+		if(object != null) {
+			selectedPlace = (Place) (object); 
+			object = null;  
+			Log.d("Place Check", "Name: " + selectedPlace.getName() + " "
+					+ selectedPlace.getVicinity()); 
+			Log.d("Place Check Lat Lng", selectedPlace.getLatitude()+"" + " " + selectedPlace.getLongitude()+"");
+		}
 
 		initialize(); 
-		addLocationRadioGroup();
 		addPermissionRadioGroup();
 	} 
 	
@@ -182,6 +188,14 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
 		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
 		
+		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
+		tvTitleAddress = (TextView) findViewById(R.id.tvTitleAddress); 
+		
+		tvTitle.setText("Venue: " + selectedPlace.getName());
+		//tvTitleDescription.setText(selectedPlace.getName()); 
+		tvTitleAddress.setText(selectedPlace.getVicinity()); 
+		
 		
 	} 
 	
@@ -229,178 +243,8 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 
 	}
 	
-	private void addLocationRadioGroup() {
-		// TODO Auto-generated method stub
-		locationRadioGroupView = new LocationRadioGroup(context,
-				new LocationSelectionListener());
-
-		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
-				.findViewById(R.id.selectedLocationInfoPanel);
-		tvSelectedLocationAddress = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationAddress);
-
-		tvSelectedLocationTitle = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationTitle);
-
-		locationRadioGroupContainer.addView(locationRadioGroupView);
-
-		/*locationRadioGroupView
-				.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);*/ 
-		
-		if(eventLat != 0 && eventLng != 0) 
-		{
-			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
-			getDefaultLocationAddress();
-		}
-		else
-			locationRadioGroupView.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
-
-	} 
 	
-	private class LocationSelectionListener implements
-	LocationRadioGroupListener {
 
-	@Override
-	public void onLocationSelectionChanged(RadioGroup group,
-			RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
-		// TODO Auto-generated method stub
-			selectedLocationInfoPanel.setVisibility(View.GONE);
-			tvSelectedLocationAddress.setText("");
-			tvSelectedLocationTitle.setText("");
-			tvSelectedLocationTitle.setVisibility(View.GONE);
-			eventAddress = "";
-		
-			switch (selectedItem) {
-			case CURRENT_LOCATION:
-				getCurrentLocationAddress();
-				break;
-			case MY_PLACES:
-		
-				break;
-			case NEAR_TO_ME:
-				getNearByPlaces();
-				break;
-			case POINT_ON_MAP:
-				getLocationFromMap();
-				break;
-			default:
-				break;
-			}
-	
-		}
-	
-	}
-
-	public void displayAddress(String title, String address) {
-		tvSelectedLocationAddress.setText(address);
-		
-		if (title != null) {
-			if (!title.equalsIgnoreCase("")) {
-				tvSelectedLocationTitle.setText(title);
-				tvSelectedLocationTitle.setVisibility(View.VISIBLE);
-			}
-		}
-		
-		selectedLocationInfoPanel.setVisibility(View.VISIBLE);
-	
-	}
-
-	public void getCurrentLocationAddress() {
-		if (StaticValues.myPoint != null) {
-			if (StaticValues.myPoint != null) {
-				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-				Utility.getAddressByCoordinate(eventLat, eventLng,
-						new LocationAddressHandler());
-		
-			}
-		}
-	
-	}
-
-	public void getNearByPlaces() {
-		if (StaticValues.searchResult != null) {
-			if (StaticValues.searchResult.getPlaces() != null) {
-				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
-						context, new NearByPlacesPickerhandler(),
-						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
-		
-				nearByPlacesPicker.show();
-			}
-		}
-	
-	}
-
-	private class LocationAddressHandler extends Handler {
-		@Override
-		public void handleMessage(Message message) {
-				String result = null;
-				switch (message.what) {
-				case 0:
-					// failed to get address
-					break;
-				case 1:
-					Bundle bundle = message.getData();
-					result = bundle.getString("address");
-					break;
-				default:
-					result = null;
-				}
-				// replace by what you need to do
-				if (result != null) {
-					eventAddress = result;
-					displayAddress(null, eventAddress);
-				} else {
-					Log.e("ADDRESS", "Failed to get.");
-			}
-		
-		}
-	}
-
-	public void getLocationFromMap() {
-		double currentLat = 0;
-		double currentLng = 0;
-		
-		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-		
-		}
-		
-		Intent intent = new Intent(context, LocationPicker.class);
-		intent.putExtra("LAT", currentLat);
-		intent.putExtra("LNG", currentLng);
-		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
-	}
-
-	private class NearByPlacesPickerhandler implements
-		NearByPlacesPickerListener {
-	
-			@Override
-			public void onPlaceSelect(String pickerName, Place selectedPlace) {
-				// TODO Auto-generated method stub
-				if (selectedPlace != null) {
-					
-						eventLat = selectedPlace.getLatitude();
-						eventLng = selectedPlace.getLongitude();
-						eventAddress = selectedPlace.getVicinity();
-						displayAddress(selectedPlace.getName(), eventAddress);
-					
-			
-				}
-		} 
-	
-	} 
-
-	private void getDefaultLocationAddress() 
-	{
-		if (eventLat != 0 && eventLng != 0) {
-		
-			Utility.getAddressByCoordinate(eventLat, eventLng,
-					new LocationAddressHandler());
-	
-	}
-	} 
 	
 	private class ShareWithSelectionListener implements
 	PermissionRadioGroupListener {
@@ -458,50 +302,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		}
 
 	} 
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_MAP_PICKER && resultCode == RESULT_OK) {
-			eventAddress = data.getStringExtra("ADDRESS");
-			eventLat = data.getDoubleExtra("LAT", 0.0);
-			eventLng = data.getDoubleExtra("LNG", 0.0);
 
-			displayAddress(null, eventAddress);
-		}
-	} 
-	
-	private void selectDate() 
-	{
-		DatePickerDialog datePickerDialog = new DatePickerDialog(
-				PlanCreateActivity.this, new OnDateSetListener() {
-					@Override
-					public void onDateSet(DatePicker arg0, int arg1,
-							int arg2, int arg3) {
-						StringBuilder sb = new StringBuilder();
-						String month, day;
-						if (arg2 < 9) {
-							month = "0".concat(Integer
-									.toString(arg2 + 1));
-						} else {
-							month = Integer.toString(arg2 + 1);
-						}
-						if (arg3 < 9) {
-							day = "0".concat(Integer.toString(arg3));
-						} else {
-							day = Integer.toString(arg3);
-						}
-						sb.append(arg1).append("-").append(month)
-								.append("-").append(day);
-						dob = sb.toString();
-						Log.d("dob", dob);
-						tvShowSelectedDate.setText(dob);
-					}
-
-				}, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now
-						.get(Calendar.DATE));
-		datePickerDialog.show();
-	} 
 	
 	private void selectDateDetails() 
 	{
@@ -637,7 +438,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		
 		description = etMessage.getText().toString().trim(); 
 		
-		if (eventLat == 0 && eventLng == 0) {
+		if (selectedPlace.getLatitude() == 0 && selectedPlace.getLongitude() == 0) {
 			validated = false;
 			messageText = "Location not found. Please select or pick a location.";
 		} 
@@ -677,13 +478,14 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 					Utility.getAuthToken(context)); 
 			
 			//description = etMessage.getText().toString().trim(); 
-			Log.d("Description", description);
+			Log.d("Description", description); 
+			Log.d("Place Check Lat Lng", selectedPlace.getLatitude()+"" + " " + selectedPlace.getLongitude()+"");
 
 			restClient.AddParam("description", description); 
-			restClient.AddParam("address", eventAddress);
+			restClient.AddParam("address", selectedPlace.getVicinity());
 			restClient.AddParam("time", eventDateString + " " + Utility.getTimezoneOffset());
-			restClient.AddParam("lat", eventLat + "");
-			restClient.AddParam("lng", eventLng + "");
+			restClient.AddParam("lat", selectedPlace.getLatitude()+"");
+			restClient.AddParam("lng", selectedPlace.getLongitude()+"");
 
 			// add permitted users
 			if (!permissionValue.equals("")) {

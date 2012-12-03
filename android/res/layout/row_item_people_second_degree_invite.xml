@@ -67,11 +67,27 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" >
 
-                        <Button
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                        <ImageView
+                            android:id="@+id/ivSourceIcon"
+                            android:layout_width="22dip"
+                            android:layout_height="22dip"
                             android:layout_alignParentLeft="true"
-                            android:background="@drawable/facebookicon" />
+                            android:layout_alignParentTop="true"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/facebookicon" />
+
+                        <ImageView
+                            android:id="@+id/ivIconLocation"
+                            android:layout_width="17dip"
+                            android:layout_height="19dip"
+                            android:layout_alignTop="@+id/ivSourceIcon"
+                            android:layout_marginLeft="5dip"
+                            android:layout_marginTop="1dip"
+                            android:layout_toRightOf="@+id/ivSourceIcon"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_fb_checkin_location" />
 
                         <Button
                             android:id="@+id/btnInvitePeople"
@@ -80,7 +96,8 @@
                             android:layout_toLeftOf="@+id/btnMessagePeople"
                             android:background="@drawable/selector_btn_green"
                             android:text="@string/inviteLabel"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btnMessagePeople"
@@ -90,7 +107,8 @@
                             android:layout_marginLeft="10dp"
                             android:background="@drawable/selector_btn_green"
                             android:text="@string/messageLabel"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <LinearLayout

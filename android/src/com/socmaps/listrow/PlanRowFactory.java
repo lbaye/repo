@@ -18,8 +18,8 @@ import com.socmaps.util.Utility;
 
 public class PlanRowFactory {
 
-	public static View getView(final LayoutInflater inflater,
-			final Plan plan, final Context context,
+	public static View getView(final LayoutInflater inflater, final Plan plan,
+			final Context context,
 			final ListItemClickListenerPlan clickListener, final int position,
 			final View convertView, final ImageDownloader il, int a) {
 
@@ -53,13 +53,10 @@ public class PlanRowFactory {
 		} else
 			holder.planNameText.setVisibility(View.GONE);
 
-		
-
 		// set address
 		if (plan.getAddress() != null) {
 			if (!plan.getAddress().equals("")) {
-				holder.addressText.setText(plan
-						.getAddress());
+				holder.addressText.setText(plan.getAddress());
 				holder.addressText.setVisibility(View.VISIBLE);
 			} else
 				holder.addressText.setVisibility(View.GONE);
@@ -69,8 +66,9 @@ public class PlanRowFactory {
 		// set Date
 		if (plan.getPlanTime() != null) {
 
-			//holder.planDateTimeText.setText(Utility.getFormattedDisplayDateplanList(plan.getPlanTime())); 
-			holder.planDateTimeText.setText(Utility.getFormattedDisplayDateEventList(plan.getPlanTime()));
+			// holder.planDateTimeText.setText(Utility.getFormattedDisplayDateplanList(plan.getPlanTime()));
+			holder.planDateTimeText.setText(Utility
+					.getFormattedDisplayDateEventList(plan.getPlanTime()));
 			holder.planDateTimeText.setVisibility(View.VISIBLE);
 
 		} else
@@ -81,28 +79,32 @@ public class PlanRowFactory {
 		if (plan.getPlanImageUrl() != null) {
 
 			if (!plan.getPlanImageUrl().equalsIgnoreCase("")) {
-				//il.DisplayImage(plan.getplanImageUrl(), holder.coverPhoto,R.drawable.img_blank);
+				// il.DisplayImage(plan.getplanImageUrl(),
+				// holder.coverPhoto,R.drawable.img_blank);
 				il.download(plan.getPlanImageUrl(), holder.coverPhoto);
 			}
-		} 
-
+		}
 
 		// set distance
-		//holder.distanceText.setText(Utility.getFormatedDistance(((Plan) plan).getDistance(), StaticValues.myInfo.getSettings().getUnit()));
-		if(StaticValues.myPoint!=null)
-		{
-			holder.distanceText.setText(Utility.getFormatedDistance(Utility.calculateDistance(StaticValues.myPoint, new GeoPoint((int)(plan.getLatitude()*1E6), (int)(plan.getLongitude()*1E6)) ), StaticValues.myInfo.getSettings().getUnit()));
+		// holder.distanceText.setText(Utility.getFormatedDistance(((Plan)
+		// plan).getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+		if (StaticValues.myPoint != null) {
+			holder.distanceText.setText(Utility.getFormatedDistance(Utility
+					.calculateDistance(StaticValues.myPoint,
+							new GeoPoint((int) (plan.getLatitude() * 1E6),
+									(int) (plan.getLongitude() * 1E6))),
+					StaticValues.myInfo.getSettings().getUnit()));
 		}
-		
+
 		// set arrowClicklistener
 		holder.rightArrow.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
-				clickListener.onArrowButtonClick(plan); 
-				
+
+				clickListener.onArrowButtonClick(plan);
+
 			}
 		});
 
@@ -111,7 +113,7 @@ public class PlanRowFactory {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
+
 				clickListener.onItemClick(plan);
 			}
 		});
@@ -124,34 +126,31 @@ public class PlanRowFactory {
 			public void onClick(View v) {
 				clickListener.onShowOnMapButtonClick(plan);
 			}
-		}); 
-		
-		if (a == 1)
-		{
-			holder.btnEdit.setVisibility(View.VISIBLE); 
-			holder.btnDelete.setVisibility(View.VISIBLE); 
+		});
+
+		if (a == 1) {
+			holder.btnEdit.setVisibility(View.VISIBLE);
+			holder.btnDelete.setVisibility(View.VISIBLE);
 			holder.ivSeparator.setVisibility(View.VISIBLE);
-			//holder.btnEditPlace.setVisibility(View.VISIBLE);
-		} 
-		else 
-		{
-			holder.btnEdit.setVisibility(View.INVISIBLE); 
-			holder.btnDelete.setVisibility(View.INVISIBLE); 
+			// holder.btnEditPlace.setVisibility(View.VISIBLE);
+		} else {
+			holder.btnEdit.setVisibility(View.INVISIBLE);
+			holder.btnDelete.setVisibility(View.INVISIBLE);
 			holder.ivSeparator.setVisibility(View.INVISIBLE);
-			//holder.btnEditPlace.setVisibility(View.INVISIBLE);
+			// holder.btnEditPlace.setVisibility(View.INVISIBLE);
 		}
-		
+
 		holder.btnEdit.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				clickListener.onShowEditButtonClick(plan);
 			}
-		}); 
-		
+		});
+
 		holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -170,13 +169,11 @@ public class PlanRowFactory {
 				(TextView) viewGroup.findViewById(R.id.event_name_text),
 				(TextView) viewGroup.findViewById(R.id.event_date_text),
 				(TextView) viewGroup.findViewById(R.id.address_text),
-				(TextView) viewGroup.findViewById(R.id.distance_text),  	
-				(Button) viewGroup.findViewById(R.id.editPlanBtn), 
-				(Button) viewGroup.findViewById(R.id.deletePlanBtn), 
-				(ImageView) viewGroup.findViewById(R.id.ivSeparator)
-			);
+				(TextView) viewGroup.findViewById(R.id.distance_text),
+				(Button) viewGroup.findViewById(R.id.editPlanBtn),
+				(Button) viewGroup.findViewById(R.id.deletePlanBtn),
+				(ImageView) viewGroup.findViewById(R.id.ivSeparator));
 	}
-
 
 	private static class ViewHolder {
 		final ImageView coverPhoto;
@@ -185,30 +182,28 @@ public class PlanRowFactory {
 		final TextView planDateTimeText;
 		final TextView addressText;
 		final TextView distanceText;
-		final ImageView rightArrow; 
-		final Button btnEdit; 
-		final Button btnDelete; 
+		final ImageView rightArrow;
+		final Button btnEdit;
+		final Button btnDelete;
 		final ImageView ivSeparator;
 
 		private ViewHolder(ImageView image1, ImageView image2,
 				ImageView image3, TextView textView1, TextView textView2,
-				TextView textView3, TextView textView4, Button button1, 
-				Button button2, ImageView image4
-				) {
+				TextView textView3, TextView textView4, Button button1,
+				Button button2, ImageView image4) {
 			this.coverPhoto = image1;
 			this.rightArrow = image3;
 			this.showOnMap = image2;
 			this.planNameText = textView1;
 			this.planDateTimeText = textView2;
 			this.addressText = textView3;
-			this.distanceText = textView4; 
-			
-			this.btnEdit = button1; 
-			this.btnDelete = button2; 
-			
+			this.distanceText = textView4;
+
+			this.btnEdit = button1;
+			this.btnDelete = button2;
+
 			this.ivSeparator = image4;
 		}
 	}
-
 
 }

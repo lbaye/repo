@@ -22,8 +22,7 @@ public class PlaceRowFactoryForSavedPlace {
 			final Place placeObj, final Context con,
 			final ListItemClickListener licl, final View convertView,
 			final ImageDownloader il,
-			final ListItemClickListenerPlace listItemClickListenerPlace, 
-			int a) {
+			final ListItemClickListenerPlace listItemClickListenerPlace, int a) {
 		final ViewHolder holder;
 		View view;
 		final Place place;
@@ -83,13 +82,14 @@ public class PlaceRowFactoryForSavedPlace {
 			holder.addressText.setVisibility(View.GONE);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
-		
-		if(StaticValues.myPoint!=null)
-		{
-			holder.distanceText.setText(Utility.getFormatedDistance(Utility.calculateDistance(StaticValues.myPoint, new GeoPoint((int)(place.getLatitude()*1E6), (int)(place.getLongitude()*1E6)) ), StaticValues.myInfo.getSettings().getUnit()));
-		}
 
-		
+		if (StaticValues.myPoint != null) {
+			holder.distanceText.setText(Utility.getFormatedDistance(Utility
+					.calculateDistance(StaticValues.myPoint,
+							new GeoPoint((int) (place.getLatitude() * 1E6),
+									(int) (place.getLongitude() * 1E6))),
+					StaticValues.myInfo.getSettings().getUnit()));
+		}
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 
@@ -101,14 +101,11 @@ public class PlaceRowFactoryForSavedPlace {
 
 				listItemClickListenerPlace.onShowOnMapButtonClick(place);
 			}
-		}); 
-		
-		if (a ==1)
-		{
+		});
+
+		if (a == 1) {
 			holder.btnEditPlace.setVisibility(View.VISIBLE);
-		} 
-		else 
-		{
+		} else {
 			holder.btnEditPlace.setVisibility(View.INVISIBLE);
 		}
 
@@ -124,8 +121,12 @@ public class PlaceRowFactoryForSavedPlace {
 			}
 		});
 
-		Log.i("Save Place Data PlaceRowFactoryForSavedPlace>>>", "Name: "+place.getName()+" Phopt: "+place.getStreetViewImage()+" Address:"+place.getAddress()+" Category:"+place.getCategory());
-		
+		Log.i("Save Place Data PlaceRowFactoryForSavedPlace>>>",
+				"Name: " + place.getName() + " Phopt: "
+						+ place.getStreetViewImage() + " Address:"
+						+ place.getAddress() + " Category:"
+						+ place.getCategory());
+
 		return view;
 	}
 
@@ -159,5 +160,4 @@ public class PlaceRowFactoryForSavedPlace {
 		}
 	}
 
-	
 }

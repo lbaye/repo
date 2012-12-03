@@ -65,7 +65,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle;
+	TextView tvSelectedLocationTitle; 
+	TextView tvTitle, tvTitleDescription; 
 
 	ProgressDialog m_ProgressDialog;
 
@@ -99,7 +100,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	List<String> shareWithSelectedCircleFriendList;
 	List<String> shareWithSelectedFriendListAll;
 
-	Plan selectedPlan;
+	Plan selectedPlan; 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +127,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		setLatLngFromSeletedPlan();
 
 		initialize();
-		addLocationRadioGroup();
+		//addLocationRadioGroup();
 		addPermissionRadioGroup();
 
 		setDefaultValues();
@@ -171,7 +173,9 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	private void setLatLngFromSeletedPlan() {
 		if (selectedPlan != null) {
 			eventLat = selectedPlan.getLatitude();
-			eventLng = selectedPlan.getLongitude();
+			eventLng = selectedPlan.getLongitude(); 
+			
+			Log.d("Lat LNG", eventLat+"" +" " + eventLng+"");
 		}
 	}
 
@@ -205,7 +209,11 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
+		
+		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
+		
 	}
 
 	private class ButtonActionListener implements OnClickListener {
@@ -261,7 +269,9 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			}
 
 			etMessage.setText(planDescription);
-			tvShowSelectedDate.setText(eventDateString);
+			tvShowSelectedDate.setText(eventDateString); 
+			tvTitle.setText("Venue: " + selectedPlan.getAddress());
+			//tvTitleDescription.setText(selectedPlan.getAddress());
 		}
 	}
 
@@ -287,7 +297,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 				preSelectedItem = Permission.NONE;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_PUBLIC)) {
 				preSelectedItem = Permission.PUBLIC;
-			}
+			} 
 		}
 
 		permissionRadioGroupView = new PermissionRadioGroup(context,
@@ -296,178 +306,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	}
 
-	private void addLocationRadioGroup() {
-		// TODO Auto-generated method stub
-		locationRadioGroupView = new LocationRadioGroup(context,
-				new LocationSelectionListener());
-
-		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
-				.findViewById(R.id.selectedLocationInfoPanel);
-		tvSelectedLocationAddress = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationAddress);
-
-		tvSelectedLocationTitle = (TextView) locationRadioGroupView
-				.findViewById(R.id.tvSelectedLocationTitle);
-
-		locationRadioGroupContainer.addView(locationRadioGroupView);
-
-		/*
-		 * locationRadioGroupView
-		 * .setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
-		 */
-
-		if (eventLat != 0 && eventLng != 0) {
-			locationRadioGroupView
-					.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
-			getDefaultLocationAddress();
-		} else
-			locationRadioGroupView
-					.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
-
-	}
-
-	private class LocationSelectionListener implements
-			LocationRadioGroupListener {
-
-		@Override
-		public void onLocationSelectionChanged(RadioGroup group,
-				RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
-			// TODO Auto-generated method stub
-			selectedLocationInfoPanel.setVisibility(View.GONE);
-			tvSelectedLocationAddress.setText("");
-			tvSelectedLocationTitle.setText("");
-			tvSelectedLocationTitle.setVisibility(View.GONE);
-			eventAddress = "";
-
-			switch (selectedItem) {
-			case CURRENT_LOCATION:
-				getCurrentLocationAddress();
-				break;
-			case MY_PLACES:
-
-				break;
-			case NEAR_TO_ME:
-				getNearByPlaces();
-				break;
-			case POINT_ON_MAP:
-				getLocationFromMap();
-				break;
-			default:
-				break;
-			}
-
-		}
-
-	}
-
-	public void displayAddress(String title, String address) {
-		tvSelectedLocationAddress.setText(address);
-
-		if (title != null) {
-			if (!title.equalsIgnoreCase("")) {
-				tvSelectedLocationTitle.setText(title);
-				tvSelectedLocationTitle.setVisibility(View.VISIBLE);
-			}
-		}
-
-		selectedLocationInfoPanel.setVisibility(View.VISIBLE);
-
-	}
-
-	public void getCurrentLocationAddress() {
-		if (StaticValues.myPoint != null) {
-			if (StaticValues.myPoint != null) {
-				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-				Utility.getAddressByCoordinate(eventLat, eventLng,
-						new LocationAddressHandler());
-
-			}
-		}
-
-	}
-
-	public void getNearByPlaces() {
-		if (StaticValues.searchResult != null) {
-			if (StaticValues.searchResult.getPlaces() != null) {
-				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
-						context, new NearByPlacesPickerhandler(),
-						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
-
-				nearByPlacesPicker.show();
-			}
-		}
-
-	}
-
-	private class LocationAddressHandler extends Handler {
-		@Override
-		public void handleMessage(Message message) {
-			String result = null;
-			switch (message.what) {
-			case 0:
-				// failed to get address
-				break;
-			case 1:
-				Bundle bundle = message.getData();
-				result = bundle.getString("address");
-				break;
-			default:
-				result = null;
-			}
-			// replace by what you need to do
-			if (result != null) {
-				eventAddress = result;
-				displayAddress(null, eventAddress);
-			} else {
-				Log.e("ADDRESS", "Failed to get.");
-			}
-
-		}
-	}
-
-	public void getLocationFromMap() {
-		double currentLat = 0;
-		double currentLng = 0;
-
-		if (StaticValues.myPoint != null) {
-			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
-			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
-
-		}
-
-		Intent intent = new Intent(context, LocationPicker.class);
-		intent.putExtra("LAT", currentLat);
-		intent.putExtra("LNG", currentLng);
-		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
-	}
-
-	private class NearByPlacesPickerhandler implements
-			NearByPlacesPickerListener {
-
-		@Override
-		public void onPlaceSelect(String pickerName, Place selectedPlace) {
-			// TODO Auto-generated method stub
-			if (selectedPlace != null) {
-
-				eventLat = selectedPlace.getLatitude();
-				eventLng = selectedPlace.getLongitude();
-				eventAddress = selectedPlace.getVicinity();
-				displayAddress(selectedPlace.getName(), eventAddress);
-
-			}
-		}
-
-	}
-
-	private void getDefaultLocationAddress() {
-		if (eventLat != 0 && eventLng != 0) {
-
-			Utility.getAddressByCoordinate(eventLat, eventLng,
-					new LocationAddressHandler());
-
-		}
-	}
+	
 
 	private class ShareWithSelectionListener implements
 			PermissionRadioGroupListener {
@@ -544,18 +383,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
-				&& resultCode == RESULT_OK) {
-			eventAddress = data.getStringExtra("ADDRESS");
-			eventLat = data.getDoubleExtra("LAT", 0.0);
-			eventLng = data.getDoubleExtra("LNG", 0.0);
-
-			displayAddress(null, eventAddress);
-		}
-	}
 
 	private void selectDateDetails() {
 		// Create the dialog
@@ -729,7 +556,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 					Utility.getAuthToken(context));
 
 			//planDescription = etMessage.getText().toString().trim();
-			Log.d("Description", planDescription);
+			Log.d("Description", planDescription); 
+			Log.d("Lat LNG Recheck", eventLat+"" +" " + eventLng+"");
 
 			restClient.AddParam("description", planDescription);
 			restClient.AddParam("address", eventAddress);

@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.util.LangUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,12 +13,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.text.style.TypefaceSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;

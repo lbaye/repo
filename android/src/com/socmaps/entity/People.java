@@ -40,7 +40,7 @@ public class People implements Serializable {
 
 	private String currentAddress;
 
-	private String friendshipStatus;
+	private String friendshipStatus = "";
 
 	private boolean isBlocked;
 

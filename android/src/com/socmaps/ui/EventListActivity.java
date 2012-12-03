@@ -416,7 +416,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		}
 
 		if (v == btnNewEvent) {
-			Intent eventIntent = new Intent(getApplicationContext(),
+			Intent eventIntent = new Intent(context,
 					EventNewActivity.class);
 			finish();
 			startActivity(eventIntent);
@@ -498,16 +498,28 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		@Override
 		public int getCount() {
-			return mObjects.size();
+			if(mObjects!=null)
+			{
+				return mObjects.size();
+			}
+			return 0;
 		}
 
 		@Override
 		public Event getItem(int position) {
-			return mObjects.get(position);
+			if(mObjects!=null)
+			{
+				return mObjects.get(position);
+			}
+			return null;
 		}
 
 		public int getPosition(Event item) {
-			return mObjects.indexOf(item);
+			if(mObjects!=null)
+			{
+				return mObjects.indexOf(item);
+			}
+			return 0;
 		}
 
 		@Override

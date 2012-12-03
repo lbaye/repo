@@ -31,7 +31,6 @@ public class StaticValues {
 	public static Object highlightAnnotationItem;
 	public static boolean isHighlightAnnotation;
 
-	//public static boolean PEOPLE_IS_DISPLAY_CHECKBOX = false;
 	public static boolean PEOPLE_SELECT_ALL_USERS = false;
 
 }

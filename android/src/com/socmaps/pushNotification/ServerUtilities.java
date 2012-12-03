@@ -177,6 +177,8 @@ public final class ServerUtilities {
 			if (status != 200) {
 				throw new IOException("Post failed with error code " + status);
 			}
+		} catch (IOException e) {
+		} catch (Exception e) {
 		} finally {
 			if (conn != null) {
 				conn.disconnect();

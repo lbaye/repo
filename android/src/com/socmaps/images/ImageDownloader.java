@@ -225,6 +225,7 @@ public class ImageDownloader {
 						entity.consumeContent();
 
 						return bitmap;
+					} catch (OutOfMemoryError e) {
 					} catch (IllegalStateException e) {
 					} catch (Exception e) {
 					} finally {

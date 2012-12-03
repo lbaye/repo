@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -25,7 +24,7 @@ public class PeopleRowFactoryBlockUnblock {
 	public static View getView(final LayoutInflater inflater,
 			final Object peopleObj, final Context con,
 			final ListItemClickListener licl, final View convertView,
-			final  ImageDownloader il,
+			final ImageDownloader il,
 			final ListItemClickListenerPeople listItemClickListenerPeople) {
 
 		ViewHolder holder;
@@ -138,31 +137,25 @@ public class PeopleRowFactoryBlockUnblock {
 			if (!people.getAvatar().equals("")) {
 				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
 				// holder.avatar, 320,150);
-				
+
 				holder.avatar.setImageResource(R.drawable.img_blank);
 				il.download(people.getAvatar(), holder.avatar);
-				
-				
+
 			}
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
 		}// else
 			// holder.avatar.setImageResource(R.drawable.icon);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
-		
-		
-		if(people.getDistance()<Constant.MAX_ITEM_DISTANCE)
-		{
-			holder.distanceText.setText(Utility.getFormatedDistance(
-					people.getDistance(), StaticValues.myInfo
-							.getSettings().getUnit()));
-		}
-		else
-		{
+
+		if (people.getDistance() < Constant.MAX_ITEM_DISTANCE) {
+			holder.distanceText
+					.setText(Utility.getFormatedDistance(people.getDistance(),
+							StaticValues.myInfo.getSettings().getUnit()));
+		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);
 			holder.showOnMap.setVisibility(View.INVISIBLE);
 		}
-
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 
@@ -211,8 +204,6 @@ public class PeopleRowFactoryBlockUnblock {
 			holder.btnBlockUnblock.setText("Block");
 		}
 
-		
-
 		if (people.getUnit() == null) {
 			holder.checked.setChecked(people.isBlocked());
 		} else if (people.getUnit().equalsIgnoreCase(
@@ -226,6 +217,9 @@ public class PeopleRowFactoryBlockUnblock {
 		}
 
 		// }
+		
+		holder.btnSendMessage.setVisibility(View.INVISIBLE);
+		holder.btnBlockUnblock.setVisibility(View.INVISIBLE);
 
 		return view;
 	}

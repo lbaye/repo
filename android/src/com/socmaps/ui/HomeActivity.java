@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -65,11 +67,14 @@ import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.customballons.BubleTapHandle;
 import com.socmaps.customballons.CustomItemizedOverlay;
 import com.socmaps.customballons.CustomOverlayItem;
+import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.GeoTag;
 import com.socmaps.entity.MyGeoPoint;
+import com.socmaps.entity.MyInfo;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
+import com.socmaps.entity.Plan;
 import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.fb.BaseDialogListener;
@@ -97,6 +102,7 @@ import com.socmaps.widget.MultiDirectionSlidingDrawer;
 import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
+import com.socmaps.widget.PermissionRadioGroupLess;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
 public class HomeActivity extends MapActivity implements
@@ -175,22 +181,22 @@ public class HomeActivity extends MapActivity implements
 	private Button btnUpdateLocation, btnCircleMenu;
 
 	MyGeoPoint point;
-	boolean isFirstLocationUpdate = false;
+	boolean isFirstLocationUpdate = true;
+	boolean isLocationFound = false;
 
 	public List<String> friendRequestSentList = new ArrayList<String>();
 	public Dialog currentBubbleDialog;
 
-	PermissionRadioGroup permissionRadioGroupView;
+	PermissionRadioGroupLess permissionRadioGroupView;
 	LinearLayout shareWithRadioGroupContainer;
 	Permission locationSharingPermission;
 	String shareWithPickerName = "sharewith";
 	ShareWithSelectionListener shareWithSelectionListener;
-	
 
-	//List<String> shareWithSelectedFriendList;
-	//List<String> shareWithSelectedCircleList;
-	//List<String> shareWithSelectedCircleFriendList;
-	//List<String> shareWithSelectedFriendListAll;
+	// List<String> shareWithSelectedFriendList;
+	// List<String> shareWithSelectedCircleList;
+	// List<String> shareWithSelectedCircleFriendList;
+	// List<String> shareWithSelectedFriendListAll;
 
 	RelativeLayout circleMenu;
 	LinearLayout btnCloseCircleMenu;
@@ -227,6 +233,11 @@ public class HomeActivity extends MapActivity implements
 	FbAPIsLogoutListener fbAPIsLogoutListener;
 	SessionEvents sessionEvents;
 
+	TimerTask task;
+	Timer timer;
+	boolean isRunning = true;
+	long updateInterval = 60000; // 1 min
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -234,29 +245,31 @@ public class HomeActivity extends MapActivity implements
 
 		initialize();
 
+		setCheckBoxSelection();
 		setOnCheckChangeListener();
-		
 
 		addPermissionRadioGroup();
 
-		registerPushNotification();
+		try {
+			registerPushNotification();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		facebookAuthentication();
-		
-		handleNavigationFromNotificationBar(getIntent());		
+
+		handleNavigationFromNotificationBar(getIntent());
 		initializeNotificationBroadcast();
+
 	}
 
-	/*private void setDefaultNotificationValue() {
-		// TODO Auto-generated method stub
-		if (StaticValues.myInfo != null && btnNotification !=null) {
-			btnNotification.setText(""
-					+ StaticValues.myInfo.getNotificationCount()
-							.getTotalCount());
-		}
-	}*/
-	
-	
+	/*
+	 * private void setDefaultNotificationValue() { // TODO Auto-generated
+	 * method stub if (StaticValues.myInfo != null && btnNotification !=null) {
+	 * btnNotification.setText("" + StaticValues.myInfo.getNotificationCount()
+	 * .getTotalCount()); } }
+	 */
 
 	public void initialize() {
 
@@ -337,7 +350,6 @@ public class HomeActivity extends MapActivity implements
 		topDrawerListener = new TopDrawerListener();
 		bottomDrawerListener = new BottomDrawerListener();
 		shareWithSelectionListener = new ShareWithSelectionListener();
-		
 
 		// geoMapView = (MapView) findViewById(R.id.myGMap);
 
@@ -435,6 +447,25 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
+	public void getMapDataFromServer() {
+		// sendSelfLocationToServer();
+		getSearchResult();
+		getEventList();
+		getGeotagList();
+	}
+
+	public void initTimeTask() {
+		task = new TimerTask() {
+			public void run() {
+				if (isLocationFound && isRunning) {
+					getMapDataFromServer();
+				}
+			}
+		};
+		timer = new Timer();
+		timer.schedule(task, 500, updateInterval);
+	}
+
 	/*
 	 * private final BroadcastReceiver mHandleMessageReceiver = new
 	 * BroadcastReceiver() {
@@ -454,7 +485,46 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	/*private void registerPushNotification() {
+	/*
+	 * private void registerPushNotification() { // TODO Auto-generated method
+	 * stub checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
+	 * checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID"); // Make sure the
+	 * device has the proper dependencies. GCMRegistrar.checkDevice(this); //
+	 * Make sure the manifest was properly set - comment out this line // while
+	 * developing the app, then uncomment it when it's ready.
+	 * GCMRegistrar.checkManifest(this);
+	 * 
+	 * // registerReceiver(mHandleMessageReceiver, new //
+	 * IntentFilter(DISPLAY_MESSAGE_ACTION)); final String regId =
+	 * GCMRegistrar.getRegistrationId(this); if (regId.equals("")) { //
+	 * Automatically registers application on startup.
+	 * GCMRegistrar.register(getApplicationContext(),
+	 * CommonUtilities.SENDER_ID); } else { // Device is already registered on
+	 * GCM, check server. if (GCMRegistrar.isRegisteredOnServer(this)) { //
+	 * Skips registration. //
+	 * mDisplay.append(getString(R.string.already_registered) + // "\n");
+	 * Log.e("GCM", getString(R.string.already_registered)); } else { // Try to
+	 * register again, but not in the UI thread. // It's also necessary to
+	 * cancel the thread onDestroy(), // hence the use of AsyncTask instead of a
+	 * raw thread. final Context context = this; mRegisterTask = new
+	 * AsyncTask<Void, Void, Void>() {
+	 * 
+	 * @Override protected Void doInBackground(Void... params) { boolean
+	 * registered = ServerUtilities.register(context, regId); // At this point
+	 * all attempts to register with the app // server failed, so we need to
+	 * unregister the device // from GCM - the app will try to register again
+	 * when // it is restarted. Note that GCM will send an // unregistered
+	 * callback upon completion, but // GCMIntentService.onUnregistered() will
+	 * ignore it. if (!registered) { GCMRegistrar.unregister(context); } return
+	 * null; }
+	 * 
+	 * @Override protected void onPostExecute(Void result) { mRegisterTask =
+	 * null; }
+	 * 
+	 * }; mRegisterTask.execute(null, null, null); } } }
+	 */
+
+	private void registerPushNotification() throws IOException {
 		// TODO Auto-generated method stub
 		checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
 		checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
@@ -467,110 +537,79 @@ public class HomeActivity extends MapActivity implements
 		// registerReceiver(mHandleMessageReceiver, new
 		// IntentFilter(DISPLAY_MESSAGE_ACTION));
 		final String regId = GCMRegistrar.getRegistrationId(this);
-		if (regId.equals("")) {
-			// Automatically registers application on startup.
-			GCMRegistrar.register(getApplicationContext(),
-					CommonUtilities.SENDER_ID);
-		} else {
-			// Device is already registered on GCM, check server.
-			if (GCMRegistrar.isRegisteredOnServer(this)) {
-				// Skips registration.
-				// mDisplay.append(getString(R.string.already_registered) +
-				// "\n");
-				Log.e("GCM", getString(R.string.already_registered));
-			} else {
-				// Try to register again, but not in the UI thread.
-				// It's also necessary to cancel the thread onDestroy(),
-				// hence the use of AsyncTask instead of a raw thread.
-				final Context context = this;
-				mRegisterTask = new AsyncTask<Void, Void, Void>() {
 
-					@Override
-					protected Void doInBackground(Void... params) {
-						boolean registered = ServerUtilities.register(context,
-								regId);
-						// At this point all attempts to register with the app
-						// server failed, so we need to unregister the device
-						// from GCM - the app will try to register again when
-						// it is restarted. Note that GCM will send an
-						// unregistered callback upon completion, but
-						// GCMIntentService.onUnregistered() will ignore it.
-						if (!registered) {
-							GCMRegistrar.unregister(context);
-						}
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						mRegisterTask = null;
-					}
-
-				};
-				mRegisterTask.execute(null, null, null);
-			}
-		}
-	}*/
-	
-	private void registerPushNotification() {
-		// TODO Auto-generated method stub
-		checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
-		checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
-		// Make sure the device has the proper dependencies.
-		GCMRegistrar.checkDevice(this);
-		// Make sure the manifest was properly set - comment out this line
-		// while developing the app, then uncomment it when it's ready.
-		GCMRegistrar.checkManifest(this);
-
-		// registerReceiver(mHandleMessageReceiver, new
-		// IntentFilter(DISPLAY_MESSAGE_ACTION));
-		final String regId = GCMRegistrar.getRegistrationId(this);
-		
 		boolean forceRegister = true;
-		
-		if (regId.equals("") || forceRegister) {
-			// Automatically registers application on startup.
+
+		try {
 			GCMRegistrar.register(getApplicationContext(),
 					CommonUtilities.SENDER_ID);
-		} else {
-			// Device is already registered on GCM, check server.
-			if (GCMRegistrar.isRegisteredOnServer(this)) {
-				// Skips registration.
-				// mDisplay.append(getString(R.string.already_registered) +
-				// "\n");
-				Log.e("GCM", getString(R.string.already_registered));
-			} else {
-				// Try to register again, but not in the UI thread.
-				// It's also necessary to cancel the thread onDestroy(),
-				// hence the use of AsyncTask instead of a raw thread.
-				final Context context = this;
-				mRegisterTask = new AsyncTask<Void, Void, Void>() {
 
-					@Override
-					protected Void doInBackground(Void... params) {
-						boolean registered = ServerUtilities.register(context,
-								regId);
-						// At this point all attempts to register with the app
-						// server failed, so we need to unregister the device
-						// from GCM - the app will try to register again when
-						// it is restarted. Note that GCM will send an
-						// unregistered callback upon completion, but
-						// GCMIntentService.onUnregistered() will ignore it.
-						if (!registered) {
-							GCMRegistrar.unregister(context);
-						}
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						mRegisterTask = null;
-					}
-
-				};
-				mRegisterTask.execute(null, null, null);
-			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
+
+		if (regId != null) {
+			final Context context = this;
+			mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... params) {
+					boolean registered = ServerUtilities.register(context,
+							regId);
+					// At this point all attempts to register with the app
+					// server failed, so we need to unregister the device
+					// from GCM - the app will try to register again when
+					// it is restarted. Note that GCM will send an
+					// unregistered callback upon completion, but
+					// GCMIntentService.onUnregistered() will ignore it.
+					if (!registered) {
+						GCMRegistrar.unregister(context);
+					}
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void result) {
+					mRegisterTask = null;
+				}
+
+			};
+			mRegisterTask.execute(null, null, null);
+
+		}
+
+		/*
+		 * if (regId.equals("") || forceRegister) { // Automatically registers
+		 * application on startup.
+		 * 
+		 * try { GCMRegistrar.register(getApplicationContext(),
+		 * CommonUtilities.SENDER_ID);
+		 * 
+		 * } catch (Exception e) { // TODO: handle exception }
+		 * 
+		 * } else { // Device is already registered on GCM, check server. if
+		 * (GCMRegistrar.isRegisteredOnServer(this)) { // Skips registration. //
+		 * mDisplay.append(getString(R.string.already_registered) + // "\n");
+		 * Log.e("GCM", getString(R.string.already_registered)); } else { // Try
+		 * to register again, but not in the UI thread. // It's also necessary
+		 * to cancel the thread onDestroy(), // hence the use of AsyncTask
+		 * instead of a raw thread. final Context context = this; mRegisterTask
+		 * = new AsyncTask<Void, Void, Void>() {
+		 * 
+		 * @Override protected Void doInBackground(Void... params) { boolean
+		 * registered = ServerUtilities.register(context, regId); // At this
+		 * point all attempts to register with the app // server failed, so we
+		 * need to unregister the device // from GCM - the app will try to
+		 * register again when // it is restarted. Note that GCM will send an //
+		 * unregistered callback upon completion, but //
+		 * GCMIntentService.onUnregistered() will ignore it. if (!registered) {
+		 * GCMRegistrar.unregister(context); } return null; }
+		 * 
+		 * @Override protected void onPostExecute(Void result) { mRegisterTask =
+		 * null; }
+		 * 
+		 * }; mRegisterTask.execute(null, null, null); } }
+		 */
 	}
 
 	public void startGpsService() {
@@ -631,11 +670,14 @@ public class HomeActivity extends MapActivity implements
 	@Override
 	public synchronized void catchLocationUpdate(Location location) {
 
+		isLocationFound = true;
 		point = ServerResponseParser.getGeoPointByLatLong(
 				location.getLatitude(), location.getLongitude());
 		StaticValues.myPoint = point;
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
+
+		// isFirstLocationUpdate = true;
 
 		Log.e("Size mapoverlay self", mapOverlays.size() + "");
 
@@ -648,16 +690,20 @@ public class HomeActivity extends MapActivity implements
 		// mapOverlays.add(itemizedOverlay2);
 		// }
 
-		if (!isFirstLocationUpdate) {
+		if (isFirstLocationUpdate) {
 			relocationCurrentPosition();
-			isFirstLocationUpdate = true;
+			isFirstLocationUpdate = false;
+
+			initTimeTask();
 		}
 		mapView.invalidate();
 
 		sendSelfLocationToServer();
-		getSearchResult();
-		getEventList();
-		getGeotagList();
+
+		// make them periodic
+		// getSearchResult();
+		// getEventList();
+		// getGeotagList();
 
 	}
 
@@ -701,12 +747,12 @@ public class HomeActivity extends MapActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleGetSearchResultResponse(responseStatus, responseString);
-			//responseString = null;
+			// responseString = null;
 		}
 	};
 
 	public void handleGetSearchResultResponse(int status, String response) {
-		 Log.d("Get Search result", status + ":" + response);
+		Log.d("Get Search result", status + ":" + response);
 		// userList.clear();
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -1018,6 +1064,8 @@ public class HomeActivity extends MapActivity implements
 					.get(3));
 			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
 					.get(4));
+			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
+					.get(5));
 		} else {
 			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
 					.get(index));
@@ -1036,6 +1084,8 @@ public class HomeActivity extends MapActivity implements
 					.get(3));
 			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
 					.get(4));
+			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
+					.get(5));
 		} else {
 			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
 					.get(index));
@@ -1059,6 +1109,7 @@ public class HomeActivity extends MapActivity implements
 		listDisplayableContent.clear();
 
 		int displayedItemCounter = 0;
+		Object onlyItem = null;
 
 		for (int i = 0; i < list.size(); i++) {
 
@@ -1069,6 +1120,7 @@ public class HomeActivity extends MapActivity implements
 				listDisplayableContent.add(item);
 
 				People user = (People) item;
+				onlyItem = item;
 
 				GeoPoint geoPoint = new GeoPoint(
 						(int) (user.getCurrentLat() * 1E6),
@@ -1086,6 +1138,7 @@ public class HomeActivity extends MapActivity implements
 				listDisplayableContent.add(item);
 
 				Place place = (Place) item;
+				onlyItem = item;
 
 				GeoPoint geoPoint = new GeoPoint(
 						(int) (place.getLatitude() * 1E6),
@@ -1102,6 +1155,7 @@ public class HomeActivity extends MapActivity implements
 				listDisplayableContent.add(item);
 
 				SecondDegreePeople user = (SecondDegreePeople) item;
+				onlyItem = item;
 
 				GeoPoint geoPoint = new GeoPoint(
 						(int) (user.getCurrentLat() * 1E6),
@@ -1119,6 +1173,7 @@ public class HomeActivity extends MapActivity implements
 				listDisplayableContent.add(item);
 
 				Event event = (Event) item;
+				onlyItem = item;
 
 				GeoPoint geoPoint = new GeoPoint(
 						(int) (event.getLatitude() * 1E6),
@@ -1132,10 +1187,11 @@ public class HomeActivity extends MapActivity implements
 
 			} else if (item instanceof GeoTag
 					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PLACE, true)) {
+							Constant.PEOPLE, true)) {
 				listDisplayableContent.add(item);
 
 				GeoTag geoTag = (GeoTag) item;
+				onlyItem = item;
 
 				GeoPoint geoPoint = new GeoPoint(
 						(int) (geoTag.getLatitude() * 1E6),
@@ -1155,7 +1211,14 @@ public class HomeActivity extends MapActivity implements
 		itemizedOverlaySecondDegreePeople.populateItemizedOverlay();
 		itemizedOverlayEvent.populateItemizedOverlay();
 		itemizedOverlayGeotag.populateItemizedOverlay();
+
 		mapView.invalidate();
+		
+		if(isSearchEnabled && displayedItemCounter == 1)
+		{
+			StaticValues.isHighlightAnnotation = true;
+			StaticValues.highlightAnnotationItem = onlyItem;
+		}
 
 		if (displayedItemCounter > 0) {
 			GeoPoint selectedGeoPoint;
@@ -1318,21 +1381,25 @@ public class HomeActivity extends MapActivity implements
 	private void addPermissionRadioGroup() {
 		// TODO Auto-generated method stub
 
-		
-		
-		locationSharingPermission = Permission.values()[StaticValues.myInfo.getSettings().getShareLocation()];
-		if(locationSharingPermission.ordinal() <1)
-		{
+		locationSharingPermission = Permission.PUBLIC;
+		try {
+			locationSharingPermission = Permission.values()[StaticValues.myInfo
+					.getSettings().getShareLocation()];
+		} catch (NullPointerException e) {
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		if (locationSharingPermission.ordinal() < 1) {
 			locationSharingPermission = Permission.PUBLIC;
 		}
-		
-		Log.i("Permission value:login", locationSharingPermission.ordinal()+":"+StaticValues.myInfo.getSettings().getShareLocation());
-		
-		
-		Permission orgvalue = locationSharingPermission;
-		
-		
-		permissionRadioGroupView = new PermissionRadioGroup(context,shareWithSelectionListener, locationSharingPermission);
+
+		// Log.i("Permission value:login", locationSharingPermission.ordinal()+
+		// ":" + StaticValues.myInfo.getSettings().getShareLocation());
+
+		permissionRadioGroupView = new PermissionRadioGroupLess(context,
+				shareWithSelectionListener, locationSharingPermission);
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
@@ -1409,14 +1476,14 @@ public class HomeActivity extends MapActivity implements
 	protected void onPause() {
 		super.onPause();
 
+		isRunning = false;
 		Log.i("Home:onPause memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
 
 		gpsService.stopListener();
-		
-		
+
 		// unregisterReceiver(broadcastReceiver);
-		
+
 		StaticValues.highlightAnnotationItem = null;
 		StaticValues.isHighlightAnnotation = false;
 
@@ -1432,25 +1499,23 @@ public class HomeActivity extends MapActivity implements
 				"" + Debug.getNativeHeapAllocatedSize());
 
 	}
-	
-	public void handleNavigationFromNotificationBar(Intent intent)
-	{
-		if(StaticValues.myInfo == null)
-		{
-			if(Utility.getUserData(context)!=null)
-			{
+
+	public void handleNavigationFromNotificationBar(Intent intent) {
+		if (StaticValues.myInfo == null) {
+			if (Utility.getUserData(context) != null) {
 				StaticValues.myInfo = ServerResponseParser
-						.parseUserProfileInfo(Utility.getUserData(context), false);
+						.parseUserProfileInfo(Utility.getUserData(context),
+								false);
 			}
-			
-			if(StaticValues.myInfo == null)
-			{
-				Toast.makeText(context, "An unknown error occured.", Toast.LENGTH_SHORT).show();
+
+			if (StaticValues.myInfo == null) {
+				Toast.makeText(context, "An unknown error occured.",
+						Toast.LENGTH_SHORT).show();
 				finish();
 			}
-			
+
 		}
-		
+
 		Bundle extras = intent.getExtras();
 		Log.i("dbg", "onNewIntent");
 
@@ -1462,26 +1527,30 @@ public class HomeActivity extends MapActivity implements
 					Log.i("Home:PushData:Type", pushData.getObjectType());
 					if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
-						/*Intent intent2 = new Intent(context,
-								MessageActivity.class);
-						startActivity(intent2);*/
-						
-						Intent i = new Intent(context,
+						/*
+						 * Intent intent2 = new Intent(context,
+						 * MessageActivity.class); startActivity(intent2);
+						 */
+
+						Intent i = new Intent(
+								context,
 								MessageConversationFromNotificationActivity.class);
 						i.putExtra("itemThreadId", pushData.getObjectId());
-						i.putExtra("itemMessageId",  pushData.getObjectId());
+						i.putExtra("itemMessageId", pushData.getObjectId());
 
 						startActivity(i);
-						
+
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
-						/*Intent intent2 = new Intent(context,
-								MessageActivity.class);
-						startActivity(intent2);*/
-						Intent i = new Intent(context,
+						/*
+						 * Intent intent2 = new Intent(context,
+						 * MessageActivity.class); startActivity(intent2);
+						 */
+						Intent i = new Intent(
+								context,
 								MessageConversationFromNotificationActivity.class);
 						i.putExtra("itemThreadId", pushData.getObjectId());
-						i.putExtra("itemMessageId",  pushData.getObjectId());
+						i.putExtra("itemMessageId", pushData.getObjectId());
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_EVENT)) {
 						Intent intent2 = new Intent(context,
@@ -1496,11 +1565,13 @@ public class HomeActivity extends MapActivity implements
 						startActivity(intent2);
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_FRIEND_REQUEST_ACCEPT)) {
+
+						updateFriendList();
 						Intent intent2 = new Intent(context,
-								NotificationActivity.class);
-						intent2.putExtra("peopleId",
-								pushData.getObjectId());
+								ProfileActivity2.class);
+						intent2.putExtra("peopleId", pushData.getObjectId());
 						startActivity(intent2);
+
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MEETUP)) {
 						Intent intent2 = new Intent(context,
@@ -1508,10 +1579,25 @@ public class HomeActivity extends MapActivity implements
 						intent2.putExtra("selectedTab",
 								Constant.PUSH_NOTIFICATION_MEETUP);
 						startActivity(intent2);
+					} else if (pushData.getObjectType().equals(
+							Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
+
+						if (isSearchEnabled) {
+							disableSearch();
+							doSearch();
+						}
+
+						People people = Utility.getPeopleById(
+								pushData.getObjectId(),
+								StaticValues.searchResult.getPeoples());
+						if (people != null) {
+							StaticValues.isHighlightAnnotation = true;
+							StaticValues.highlightAnnotationItem = people;
+							highlightAnnotation();
+
+						}
 					}
-				}
-				else
-				{
+				} else {
 					Log.i("Home:PushData:Type", "PushData is null");
 				}
 			}
@@ -1519,9 +1605,52 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
+	public void updateFriendList() {
+
+		Thread thread = new Thread(friendListUpdateRunnable);
+
+		thread.start();
+	}
+
+	Runnable friendListUpdateRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			RestClient restClient = new RestClient(Constant.smFriendList);
+			restClient.AddHeader(Constant.authTokenParam,
+					Utility.getAuthToken(context));
+
+			try {
+				restClient.Execute(RestClient.RequestMethod.GET);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// restClient.getResponse();
+			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
+				// StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
+				if (restClient.getResponse() != null
+						&& !restClient.getResponse().equals("")) {
+					CirclesAndFriends circlesAndFriends = ServerResponseParser
+							.parseCircleAndFriends(restClient.getResponse());
+
+					if (circlesAndFriends != null) {
+						StaticValues.myInfo.setCircleList(circlesAndFriends
+								.getCircles());
+						StaticValues.myInfo.setFriendList(circlesAndFriends
+								.getFriends());
+					}
+
+				}
+			}
+
+		}
+	};
+
 	@Override
 	public void onNewIntent(Intent intent) {
-		
+
 		handleNavigationFromNotificationBar(intent);
 	}
 
@@ -1531,6 +1660,7 @@ public class HomeActivity extends MapActivity implements
 		super.onResume();
 		// setCheckBoxSelection();
 
+		isRunning = true;
 		Log.i("Home:onResume memory before",
 				"" + Debug.getNativeHeapAllocatedSize());
 
@@ -1560,12 +1690,10 @@ public class HomeActivity extends MapActivity implements
 
 		startGpsService();
 
-		
-
 		Log.i("Home:onResume memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
-		
-		//handleNavigationFromNotificationBar(getIntent());
+
+		// handleNavigationFromNotificationBar(getIntent());
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
@@ -1586,14 +1714,13 @@ public class HomeActivity extends MapActivity implements
 					.getSerializableExtra("pushData");
 
 			Utility.updateNotificationCountFromPush(pushData);
-			/*if(StaticValues.myInfo!=null)
-			{
-				btnNotification.setText(""+StaticValues.myInfo.getNotificationCount()
-						.getTotalCount());
-			}*/
-			
+			/*
+			 * if(StaticValues.myInfo!=null) {
+			 * btnNotification.setText(""+StaticValues
+			 * .myInfo.getNotificationCount() .getTotalCount()); }
+			 */
+
 			Utility.updateNotificationBubbleCounter(btnNotification);
-			
 
 		}
 	}
@@ -1967,107 +2094,127 @@ public class HomeActivity extends MapActivity implements
 				intentForMeetup.putExtra("destLng", item.getPlace()
 						.getLongitude());
 				intentForMeetup.putExtra("destAddress", item.getPlace()
-						.getAddress());
+						.getVicinity());
+				// intentForMeetup.putExtra("flagToIdentify", 1);
+				intentForMeetup.putExtra("selectedPlace", item.getPlace());
 				startActivity(intentForMeetup);
 			}
-		}); 
-		
-		// -- for event when Place Pop Up appear -- // 
-		
-		Button event_btn = (Button) d.findViewById(R.id.event_btn); 
+		});
+
+		// -- for event when Place Pop Up appear -- //
+
+		Button event_btn = (Button) d.findViewById(R.id.event_btn);
 		event_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
+
 				Log.d("PLACE MEET UP",
 						String.valueOf(item.getPlace().getLatitude())
 								+ " "
 								+ String.valueOf(item.getPlace().getLongitude()));
 
-				Intent intentForMeetup = new Intent(context,
+				Intent intentForEvent = new Intent(context,
 						EventNewActivity.class);
-				intentForMeetup.putExtra("destLat", item.getPlace()
-						.getLatitude());
-				intentForMeetup.putExtra("destLng", item.getPlace()
-						.getLongitude());
-				intentForMeetup.putExtra("destAddress", item.getPlace()
-						.getAddress());
-				startActivity(intentForMeetup);
+				/*
+				 * intentForMeetup.putExtra("destLat", item.getPlace()
+				 * .getLatitude()); intentForMeetup.putExtra("destLng",
+				 * item.getPlace() .getLongitude());
+				 * intentForMeetup.putExtra("destAddress", item.getPlace()
+				 * .getAddress());
+				 */
+				intentForEvent.putExtra("flag", 1);
+				intentForEvent.putExtra("selectedPlace", item.getPlace());
+				startActivity(intentForEvent);
 			}
-		}); 
-		
-		// -- for recommandation when Place Pop Up appear -- // 
-		
-		Button recommend_btn = (Button) d.findViewById(R.id.recommend_btn); 
+		});
+
+		// -- for recommandation when Place Pop Up appear -- //
+
+		Button recommend_btn = (Button) d.findViewById(R.id.recommend_btn);
 		recommend_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
+
 				Place place = item.getPlace();
-				
-				Intent intent = new Intent(context, RecommendationActivity.class);  
+
+				Intent intent = new Intent(context,
+						RecommendationActivity.class);
 				intent.putExtra("place", place);
 				startActivity(intent);
 			}
-		}); 
-		
-		Button plan_btn = (Button) d.findViewById(R.id.plan_btn); 
+		});
+
+		Button plan_btn = (Button) d.findViewById(R.id.plan_btn);
 		plan_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				//Toast.makeText(context, "Plan feature is coming soon", Toast.LENGTH_SHORT).show(); 
-				
-				Intent intent = new Intent(context, PlanCreateActivity.class); 
-				intent.putExtra("destLat", item.getPlace().getLatitude()); 
-				intent.putExtra("destLng", item.getPlace().getLongitude()); 
-				intent.putExtra("destAddress", item.getPlace().getAddress()); 
-				
-				startActivity(intent);
-			}
-		}); 
-		
-		Button review_btn = (Button) d.findViewById(R.id.review_btn); 
-		review_btn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Toast.makeText(context, "Review feature is coming soon", Toast.LENGTH_SHORT).show();
-			}
-		});  
-		
-		
-		
-		Button direction_btn = (Button) d.findViewById(R.id.direction_btn); 
-		direction_btn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				
+				// Toast.makeText(context, "Plan feature is coming soon",
+				// Toast.LENGTH_SHORT).show();
+
 				Place place = item.getPlace();
-				
-				Intent intent = new Intent(context, DirectionActivity.class);
-				intent.putExtra("destLat", place.getLatitude());
-				intent.putExtra("destLng", place.getLongitude());
-				intent.putExtra("destAddress", place.getAddress());
+
+				Intent intent = new Intent(context, PlanCreateActivity.class);
+				/*
+				 * intent.putExtra("destLat", item.getPlace().getLatitude());
+				 * intent.putExtra("destLng", item.getPlace().getLongitude());
+				 * intent.putExtra("destAddress", item.getPlace().getAddress());
+				 */
+
+				intent.putExtra("selectedPlace", place);
+
 				startActivity(intent);
 			}
 		});
-		
-		Button check_in_btn = (Button) d.findViewById(R.id.check_in_btn); 
-		check_in_btn.setOnClickListener(new OnClickListener() {
-			
+
+		Button review_btn = (Button) d.findViewById(R.id.review_btn);
+		review_btn.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast.makeText(context, "Check In feature is coming soon", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Review feature is coming soon",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+
+		Button direction_btn = (Button) d.findViewById(R.id.direction_btn);
+		direction_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				Place place = item.getPlace();
+
+				Intent intent = new Intent(context, DirectionActivity.class);
+				/*
+				 * intent.putExtra("destLat", place.getLatitude());
+				 * intent.putExtra("destLng", place.getLongitude());
+				 * intent.putExtra("destAddress", place.getAddress());
+				 */
+				intent.putExtra("selectedPlace", item.getPlace());
+				Log.d("Place Check", item.getPlace().getName() + " "
+						+ item.getPlace().getVicinity() + " "
+						+ item.getPlace().getLatitude() + " "
+						+ item.getPlace().getLongitude());
+				startActivity(intent);
+			}
+		});
+
+		Button check_in_btn = (Button) d.findViewById(R.id.check_in_btn);
+		check_in_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(context, "Check In feature is coming soon",
+						Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -2110,7 +2257,7 @@ public class HomeActivity extends MapActivity implements
 
 		int ageValue = item.getUser().getAge();
 		if (ageValue != 0) {
-			age.setText("-Age:" + ageValue);
+			age.setText("-Age: " + ageValue);
 			age.setVisibility(View.VISIBLE);
 		} else
 			age.setVisibility(View.GONE);
@@ -2181,19 +2328,34 @@ public class HomeActivity extends MapActivity implements
 			// imageLoader.DisplayImage(avatarUrl, avatar, R.drawable.icon);
 		}
 
+		avatar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(context, ProfileActivity2.class);
+				intent.putExtra("otherUser", item.getUser());
+				startActivity(intent);
+			}
+		});
+
 		Button meetupBtn = (Button) d.findViewById(R.id.meet_up_btn);
+		Button meetupBtnDisabled = (Button) d
+				.findViewById(R.id.meet_up_btn_disabled);
 		Button sendMessageBtn = (Button) d.findViewById(R.id.message_btn);
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
 		Button addFrndBtn = (Button) d.findViewById(R.id.add_frnd_btn);
 		Button directionBtn = (Button) d.findViewById(R.id.directions_btn);
-		Button profileBtn = (Button) d.findViewById(R.id.profile_btn);
+		// Button profileBtn = (Button) d.findViewById(R.id.profile_btn);
 
 		TextView tvFriendshipStatus = (TextView) d
 				.findViewById(R.id.tvFriendshipStatus);
 
 		String friendshipStatus = item.getUser().getFriendshipStatus();
 		if (friendRequestSentList.contains(userId)) {
-			tvFriendshipStatus.setText("Pending");
+			tvFriendshipStatus
+					.setText(getString(R.string.status_friend_request_pending));
+			meetupBtnDisabled.setVisibility(View.VISIBLE);
 		} else {
 			if (friendshipStatus
 					.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
@@ -2205,7 +2367,7 @@ public class HomeActivity extends MapActivity implements
 				meetupBtn.setVisibility(View.VISIBLE);
 			} else {
 				tvFriendshipStatus.setVisibility(View.VISIBLE);
-				addFrndBtn.setVisibility(View.GONE);
+				meetupBtnDisabled.setVisibility(View.VISIBLE);
 
 				String status = "";
 				if (friendshipStatus
@@ -2246,18 +2408,16 @@ public class HomeActivity extends MapActivity implements
 				showFrndRequestDialog(item);
 			}
 		});
-		
-		profileBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(context, ProfileActivity2.class);
-				intent.putExtra("otherUser", item.getUser());
-				startActivity(intent);
-			}
-		});
-		
+
+		/*
+		 * profileBtn.setOnClickListener(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View arg0) { // TODO Auto-generated
+		 * method stub Intent intent = new Intent(context,
+		 * ProfileActivity2.class); intent.putExtra("otherUser",
+		 * item.getUser()); startActivity(intent); } });
+		 */
+
 		sendMessageBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -2282,15 +2442,18 @@ public class HomeActivity extends MapActivity implements
 				Log.d("LAT LNG Meetup People",
 						String.valueOf(item.getUser().getCurrentLat())
 								+ " "
-								+ String.valueOf(item.getUser().getCurrentLng())); 
-				
+								+ String.valueOf(item.getUser().getCurrentLng()));
+
 				People people = item.getUser();
 
 				Intent intent = new Intent(context,
 						MeetupRequestNewActivity.class);
-				/*intent.putExtra("destLat", item.getUser().getCurrentLat());
-				intent.putExtra("destLng", item.getUser().getCurrentLng());
-				intent.putExtra("destAddress", item.getUser().getCurrentAddress()); */
+				/*
+				 * intent.putExtra("destLat", item.getUser().getCurrentLat());
+				 * intent.putExtra("destLng", item.getUser().getCurrentLng());
+				 * intent.putExtra("destAddress",
+				 * item.getUser().getCurrentAddress());
+				 */
 				intent.putExtra("selectedPeople", people);
 				startActivity(intent);
 				/*
@@ -2299,6 +2462,18 @@ public class HomeActivity extends MapActivity implements
 				 */
 			}
 
+		});
+
+		meetupBtnDisabled.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Toast.makeText(
+						context,
+						"To send Meet-up request, recipient should be your friend.",
+						Toast.LENGTH_SHORT).show();
+			}
 		});
 
 		directionBtn.setOnClickListener(new OnClickListener() {
@@ -2890,8 +3065,7 @@ public class HomeActivity extends MapActivity implements
 
 		else if (v == btnCircleMenuItemDeals) {
 
-			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show(); 
-			
+			Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemFriends) {
 
@@ -3009,56 +3183,44 @@ public class HomeActivity extends MapActivity implements
 				Permission selectedItem) {
 			// TODO Auto-generated method stub
 
-			if(locationSharingPermission != selectedItem)
-			{
+			if (locationSharingPermission != selectedItem) {
 				locationSharingPermission = selectedItem;
-				
+
 				updateLocationSharingPermission();
 			}
-			
 
-			/*switch (selectedItem) {
-			case PUBLIC:
-				permissionValue = Constant.PERMISSION_PUBLIC;
-				break;
-			case FRIENDS:
-				permissionValue = Constant.PERMISSION_FRIENDS;
-				break;
-			case NONE:
-				permissionValue = Constant.PERMISSION_NONE;
-				break;
-			case CIRCLES:
-				permissionValue = Constant.PERMISSION_CIRCLES;
-				break;
-			case CUSTOM:
-				permissionValue = Constant.PERMISSION_CUSTOM;
-				showPeoplePicker(shareWithPickerName);
-				break;
-			default:
-				permissionValue = Constant.PERMISSION_NONE;
-				break;
-			}*/
+			/*
+			 * switch (selectedItem) { case PUBLIC: permissionValue =
+			 * Constant.PERMISSION_PUBLIC; break; case FRIENDS: permissionValue
+			 * = Constant.PERMISSION_FRIENDS; break; case NONE: permissionValue
+			 * = Constant.PERMISSION_NONE; break; case CIRCLES: permissionValue
+			 * = Constant.PERMISSION_CIRCLES; break; case CUSTOM:
+			 * permissionValue = Constant.PERMISSION_CUSTOM;
+			 * showPeoplePicker(shareWithPickerName); break; default:
+			 * permissionValue = Constant.PERMISSION_NONE; break; }
+			 */
 		}
 	}
-	
-	
+
 	public void updateLocationSharingPermission() {
-		
+
 		Thread thread = new Thread(sharingUpdateRunnable);
-		
-		thread.start();		
+
+		thread.start();
 	}
-	
+
 	Runnable sharingUpdateRunnable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smLocationSharingUrl);
+			RestClient restClient = new RestClient(
+					Constant.smLocationSharingUrl);
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-			
-			restClient.AddParam("shareLocation", ""+locationSharingPermission.ordinal());
+
+			restClient.AddParam("shareLocation",
+					"" + locationSharingPermission.ordinal());
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.PUT);
@@ -3066,44 +3228,44 @@ public class HomeActivity extends MapActivity implements
 				e.printStackTrace();
 			}
 
-			//restClient.getResponse();
-			if(restClient.getResponseCode() == Constant.STATUS_SUCCESS)
-			{
-				StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
+			// restClient.getResponse();
+			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
+				StaticValues.myInfo.getSettings().setShareLocation(
+						locationSharingPermission.ordinal());
 			}
-			
-			Log.i("LocationSharing update", restClient.getResponseCode()+":"+restClient.getResponse());
+
+			Log.i("LocationSharing update", restClient.getResponseCode() + ":"
+					+ restClient.getResponse());
 		}
 	};
 
-	/*public void showPeoplePicker(String pickerName) {
-		// custom dialog
-		Dialog peoplePicker = new PeoplePicker(context,
-				new ShareWithPeoplePickerListener(), pickerName,
-				shareWithSelectedFriendList, shareWithSelectedCircleList);
+	/*
+	 * public void showPeoplePicker(String pickerName) { // custom dialog Dialog
+	 * peoplePicker = new PeoplePicker(context, new
+	 * ShareWithPeoplePickerListener(), pickerName, shareWithSelectedFriendList,
+	 * shareWithSelectedCircleList);
+	 * 
+	 * peoplePicker.show(); }
+	 */
 
-		peoplePicker.show();
-	}*/
-
-	/*public class ShareWithPeoplePickerListener implements PeoplePickerListener {
-
-		@Override
-		public void onSelect(String pickerName,
-				List<String> selectedFriendList,
-				List<String> selectedCircleList,
-				List<String> selectedCircleFriendList,
-				List<String> selectedFriendListAll) {
-
-			if (pickerName.equalsIgnoreCase(shareWithPickerName)) {
-				shareWithSelectedFriendList = selectedFriendList;
-				shareWithSelectedCircleList = selectedCircleList;
-				shareWithSelectedCircleFriendList = selectedCircleFriendList;
-				shareWithSelectedFriendListAll = selectedFriendListAll;
-			}
-
-		}
-
-	}*/
+	/*
+	 * public class ShareWithPeoplePickerListener implements
+	 * PeoplePickerListener {
+	 * 
+	 * @Override public void onSelect(String pickerName, List<String>
+	 * selectedFriendList, List<String> selectedCircleList, List<String>
+	 * selectedCircleFriendList, List<String> selectedFriendListAll) {
+	 * 
+	 * if (pickerName.equalsIgnoreCase(shareWithPickerName)) {
+	 * shareWithSelectedFriendList = selectedFriendList;
+	 * shareWithSelectedCircleList = selectedCircleList;
+	 * shareWithSelectedCircleFriendList = selectedCircleFriendList;
+	 * shareWithSelectedFriendListAll = selectedFriendListAll; }
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 
 	public void showFirstTimeDialog(final Context c) {
 
@@ -3253,5 +3415,4 @@ public class HomeActivity extends MapActivity implements
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
-	
 }

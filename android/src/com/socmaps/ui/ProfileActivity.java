@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,8 +23,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnScrollChangedListener;
 import android.view.Window;
 import android.webkit.WebChromeClient;
@@ -43,6 +46,7 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
+import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
@@ -51,6 +55,7 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
 public class ProfileActivity extends Activity implements OnClickListener {
 	Context context;
@@ -237,7 +242,38 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/507e47f0781d6ec93000000e/newsfeed.html
 		wViewNewsFeed.loadUrl(Constant.smServerUrl
-				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?authToken="+StaticValues.myInfo.getAuthToken());
+				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?authToken="+StaticValues.myInfo.getAuthToken());  
+		
+		/*wViewNewsFeed.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent arg1) {
+				// TODO Auto-generated method stub 
+				
+				WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
+				Log.i("NewsFeed OnTouch Check", "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType()); 
+				
+				String[] separated = hr.getExtra().toString().split("/"); 
+				separated[4] = separated[4].trim(); 
+				String s = separated[4].toString(); 
+				Log.d("CHECK Avatar/Photos", s);
+				
+				if(hr.getType() == 4 || hr.getType() == 5)  
+				{
+					Toast.makeText(getApplicationContext(), "Image Icon is Pressed", Toast.LENGTH_SHORT).show();
+				}
+				
+				if(s.equalsIgnoreCase("avatar")) 
+				{
+					Toast.makeText(getApplicationContext(), "Avatar Icon is Pressed", Toast.LENGTH_SHORT).show();
+				} else if(s.equalsIgnoreCase("photos")) 
+				{
+					Toast.makeText(getApplicationContext(), "Image Icon is Pressed", Toast.LENGTH_SHORT).show();
+				}
+				
+				return false;
+			}
+		});*/
 
 		wViewNewsFeed.setWebViewClient(new MyWebViewClient());
 		
@@ -546,7 +582,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Toast.makeText(context, "fffffff", Toast.LENGTH_SHORT).show();
 
 		Intent intentToShowMeetUp = new Intent(context,
-				MeetupRequestNewActivity.class);
+				MeetupRequestNewActivity.class); 
 		startActivity(intentToShowMeetUp);
 		//finish();
 	}
@@ -1212,7 +1248,51 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			// Uri.parse(url));
 			// startActivity(intent);
 
-			view.loadUrl(url);
+			//view.loadUrl(url); 
+			
+			Log.i("URL URL URL ", url); 
+			
+			String subURL = url.substring(6); 
+			if(subURL.startsWith("profile"))
+			{
+				String id = subURL.substring(8); 
+				Log.d("URL", id);
+				if(id.equalsIgnoreCase(StaticValues.myInfo.getId()))
+				{
+				
+				} else {
+					
+					People p=new People();
+					p.setId(id);
+					
+					Intent intent = new Intent(context, ProfileActivity2.class); 
+					
+					intent.putExtra("otherUser",p);
+					startActivity(intent);
+					
+				}
+			} else if(subURL.startsWith("image")) {
+				String imageURL = subURL.substring(6); 
+				Log.d("URL", imageURL); 
+				
+				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
+ 						context, imageURL , imageDownloader);
+ 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
+ 						LayoutParams.FILL_PARENT);
+ 				photoZoomPicker.show();
+			} else if(subURL.startsWith("geotag")) { 
+				String geoTagDetail = subURL.substring(7); 
+				String[] geoTag = geoTagDetail.split(":"); 
+				
+				String geoTagName = geoTag[0]; 
+				String geoTagNameFinal = geoTagName.replace("%20", " ");  
+				
+				String geoLat = geoTag[1]; 
+				String geoLng = geoTag[2];  
+				
+				//Toast.makeText(context, geoTagNameFinal + "\t" + geoLat+"" + "\t" + geoLng+"", Toast.LENGTH_LONG).show();
+			}
+			
 			return true;
 		}
 

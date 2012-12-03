@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
@@ -123,8 +122,9 @@ public class PeopleRowFactoryInvite {
 			if (!people.getCoverPhoto().equals("")) {
 				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
 				// holder.coverPhoto, 320,150);
-				//il.DisplayImage(people.getCoverPhoto(), holder.coverPhoto,R.drawable.cover_pic_default);
-				
+				// il.DisplayImage(people.getCoverPhoto(),
+				// holder.coverPhoto,R.drawable.cover_pic_default);
+
 				il.download(people.getCoverPhoto(), holder.coverPhoto);
 			}
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
@@ -145,14 +145,11 @@ public class PeopleRowFactoryInvite {
 			// holder.avatar.setImageResource(R.drawable.icon);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
-		if(people.getDistance()<Constant.MAX_ITEM_DISTANCE)
-		{
-			holder.distanceText.setText(Utility.getFormatedDistance(
-					people.getDistance(), StaticValues.myInfo
-							.getSettings().getUnit()));
-		}
-		else
-		{
+		if (people.getDistance() < Constant.MAX_ITEM_DISTANCE) {
+			holder.distanceText
+					.setText(Utility.getFormatedDistance(people.getDistance(),
+							StaticValues.myInfo.getSettings().getUnit()));
+		} else {
 			holder.distanceText.setVisibility(View.INVISIBLE);
 			holder.showOnMap.setVisibility(View.INVISIBLE);
 		}
@@ -193,7 +190,7 @@ public class PeopleRowFactoryInvite {
 		// holder.btnSendMessage.setOnClickListener(messageBtnListener);
 
 		// holder.checked.setChecked(people.isBlocked());
-		holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
+		//holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
 
 		// if (people.isBlocked()) {
 		// holder.btnBlockUnblock.setText("Unblock");

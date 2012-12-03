@@ -358,7 +358,8 @@ public class PlatformPreferencesActivity extends Activity implements
 			updateAllValues();
 		} else if (v == btnInvite) {
 
-			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb")) {
+			
+			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb") && FBUtility.mFacebook!=null) {
 				initInviteFriends();
 			} else {
 				initInvitationDialog();
