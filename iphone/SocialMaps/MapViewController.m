@@ -919,7 +919,9 @@ ButtonClickCallbackData callBackData;
 
     isFirstTimeDownloading = NO;
     
-    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0, 13, 310, 41) numButtons:3 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
+    int adjustPosX = 25;
+    
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0 + adjustPosX, 13, 310 - adjustPosX * 2, 41) numButtons:3 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
@@ -934,8 +936,6 @@ ButtonClickCallbackData callBackData;
     
 	if (!smAppDelegate.timerGotListing) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedLocationSharingSetting:) name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
     }
 }
 
@@ -951,8 +951,24 @@ ButtonClickCallbackData callBackData;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
     
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+    if (indx == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [alertView show];
+        [alertView release];
+    } else {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"1"]];
+    } else {
+         [radio gotoButton:smAppDelegate.shareLocationOption];
+    }
 }
 
 - (void)changedLocationSharingSetting:(NSNotification *)notif
@@ -965,19 +981,19 @@ ButtonClickCallbackData callBackData;
         
         switch (smAppDelegate.shareLocationOption) {
             case 0:
-                [UtilityClass showAlert:@"" :@"Location sharing is now set for all users"];
+                [UtilityClass showAlert:@"" :@"Location sharing is now set to: All users."];
                 break;
             case 1:
-                [UtilityClass showAlert:@"" :@"Location sharing is now set for friends only"];
+                [UtilityClass showAlert:@"" :@"Location sharing is now set to: Friends only."];
                 break;
             default:
-                [UtilityClass showAlert:@"" :@"Location sharing is now turned off for all users"];
+                [UtilityClass showAlert:@"" :@"Location sharing is now set to: No one."];
                 break;
         }
         
     } else {
         [radio gotoButton:smAppDelegate.shareLocationOption];
-        [UtilityClass showAlert:@"" :@"Network error"];
+        [UtilityClass showAlert:@"" :@"Could not handle request due to network error, try again."];
     }
     
     
@@ -1057,6 +1073,7 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
     userFriendslistArray=[[NSMutableArray alloc] init];
 
 }
@@ -1234,7 +1251,12 @@ ButtonClickCallbackData callBackData;
         [connectToFBView.layer setCornerRadius:7.0];
         connectToFBView.layer.borderColor=[[UIColor lightTextColor]CGColor];
         [self.view addSubview:connectToFBView];
+        
+        [UtilityClass showAlert:@"" :@"You are sharing your location to everyone. You can change your sharing option in map drop down or in the settings menu."];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedLocationSharingSetting:) name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
+    
     NSLog(@"viewDidAppear finished");
 }
 
