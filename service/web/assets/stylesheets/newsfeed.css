@@ -43,6 +43,10 @@ ul li .row .name {
   float: left;
   margin-top: 5px;
 }
+ul li .row .name a {
+  text-decoration: none;
+  color: #67b000;
+}
 ul li .row .name h4 {
   padding: 2px;
   margin: 0px;
