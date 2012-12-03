@@ -13,7 +13,7 @@
       - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
       - $rowLikesId = $activity->getId() . '_likes'
       - $rowCommentsId = $activity->getId() . '_comments'
-      - $userProfileLink =  "#profile:" . $activity->getOwner()->getId()
+      - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
 
       %li
         - if ($activity->getObjectType() === 'photo')
@@ -43,7 +43,7 @@
               - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
               .image(style=$imagePathCss)
                 - $photoFullPath = $baseUrl . $photo->getUriMedium();
-                - $photoPath = "#image:" . $baseUrl . $photo->getUriLarge();
+                - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
                 %a(href=$photoPath)
                   %img(src=$photoFullPath)
               .icon.icon_zoom
@@ -82,7 +82,7 @@
                   - if ($activity->getObjectType() === 'geotag')
                     - $geotag = $geotagRepo->find($activity->getObjectId())
                     - $geoLocation = $geotag->getLocation()->toArray()
-                    - $geotagLink = "#geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng']
+                    - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng']
 
                     has tagged "
                     %a(href= $geotagLink)
