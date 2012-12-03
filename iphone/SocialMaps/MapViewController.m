@@ -937,6 +937,7 @@ ButtonClickCallbackData callBackData;
 	if (!smAppDelegate.timerGotListing) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotListings:) name:NOTIF_GET_LISTINGS_DONE object:nil];
     }
+    
 }
 
 - (void)startGetLocation:(NSTimer*)timer
@@ -1250,7 +1251,7 @@ ButtonClickCallbackData callBackData;
         connectToFBView.layer.borderColor=[[UIColor lightTextColor]CGColor];
         [self.view addSubview:connectToFBView];
         
-        [UtilityClass showAlert:@"" :@"You are sharing your location to everyone. You can change your sharing option in map drop down or in the settings menu."];
+        [UtilityClass showAlert:@"" :@"Be aware that unknown people might now be able to see your location. You can change your sharing option in the map drop down or via the settings menu."];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedLocationSharingSetting:) name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
@@ -2008,32 +2009,34 @@ ButtonClickCallbackData callBackData;
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
                 
-                
-                 BOOL isExistingFriend = FALSE;
+                if ([item.friendshipStatus isEqualToString:@"friend"]) {
+                    
+                    BOOL isExistingFriend = FALSE;
+                    
+                    for (UserFriends *userFriends in friendListGlobalArray) {
+                        if ([userFriends.userId isEqualToString:item.userId]) {
+                            isExistingFriend = TRUE;
+                            break;
+                        }
+                    }
+                    
+                    if (!isExistingFriend) {
+                        UserFriends *frnd = [[UserFriends alloc] init];
+                        frnd.userId = item.userId;
+                        NSString *firstName = item.firstName;
+                        NSString *lastName = item.lastName;
+                        frnd.userName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                        frnd.imageUrl = item.avatar;
+                        frnd.distance = [item.distance intValue];
+                        frnd.coverImageUrl = item.coverPhotoUrl;
+                        frnd.address =  item.city;
+                        frnd.statusMsg = item.statusMsg;
+                        frnd.regMedia = item.regMedia;
+                        [friendListGlobalArray addObject:frnd];
+                        [frnd release];
+                    }
+                }
                  
-                 for (UserFriends *userFriends in friendListGlobalArray) {
-                     if ([userFriends.userId isEqualToString:item.userId]) {
-                         isExistingFriend = TRUE;
-                         break;
-                     }
-                 }
-                 
-                 if (!isExistingFriend) {
-                     UserFriends *frnd = [[UserFriends alloc] init];
-                     frnd.userId = item.userId;
-                     NSString *firstName = item.firstName;
-                     NSString *lastName = item.lastName;
-                     frnd.userName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                     frnd.imageUrl = item.avatar;
-                     frnd.distance = [item.distance intValue];
-                     frnd.coverImageUrl = item.coverPhotoUrl;
-                     frnd.address =  item.city;
-                     frnd.statusMsg = item.statusMsg;
-                     frnd.regMedia = item.regMedia;
-                     [friendListGlobalArray addObject:frnd];
-                     [frnd release];
-                 }
-        
                 if (![smAppDelegate.userId isEqualToString:item.userId]) {
                     // Do we already have this in the list?
                     __block NSNumber *indx;
