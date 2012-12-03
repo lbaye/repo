@@ -19,5 +19,6 @@
 @synthesize address;
 @synthesize statusMsg;
 @synthesize regMedia;
+@synthesize curlocLat,curlocLng;
 
 @end

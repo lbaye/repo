@@ -5200,6 +5200,8 @@ AppDelegate *smAppDelegate;
                     userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
                     userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
                     userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    userFrnd.curlocLat=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lat" key3:nil];
+                    userFrnd.curlocLng=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lng" key3:nil];
                     [userFrnds addObject:userFrnd];
                 }
                 circle.friends=userFrnds;
@@ -5301,6 +5303,9 @@ AppDelegate *smAppDelegate;
                     userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
                     userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
                     userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    userFrnd.curlocLat=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lat" key3:nil];
+                    userFrnd.curlocLng=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lng" key3:nil];
+
                     [userFrnds addObject:userFrnd];
                 }
                 circle.friends=userFrnds;
@@ -5400,6 +5405,9 @@ AppDelegate *smAppDelegate;
                     userFrnd.address=[self getNestedKeyVal:frndDic key1:@"address" key2:@"street" key3:nil];
                     userFrnd.statusMsg=[self getNestedKeyVal:frndDic key1:@"status" key2:nil key3:nil];
                     userFrnd.regMedia=[self getNestedKeyVal:frndDic key1:@"regMedia" key2:nil key3:nil];
+                    userFrnd.curlocLat=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lat" key3:nil];
+                    userFrnd.curlocLng=[self getNestedKeyVal:frndDic key1:@"currentLocation" key2:@"lng" key3:nil];
+
                     [userFrnds addObject:userFrnd];
                 }
                 circle.friends=userFrnds;

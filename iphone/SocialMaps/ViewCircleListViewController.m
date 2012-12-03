@@ -457,14 +457,11 @@ bool showSM=true;
         [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [cell.footerView.layer setCornerRadius:6.0f];
-//        [cell.footerView.layer setMasksToBounds:YES];
-//        cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
         
-        if (people.itemDistance > 99999)
-            cell.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
-        else
-            cell.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
 
 
     }

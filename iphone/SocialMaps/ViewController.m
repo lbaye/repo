@@ -91,14 +91,14 @@ UserDefault *userDef;
     }
     else{
         
-        if ([userDef readFromUserDefaults:@"betaPassWord"])
+//        if ([userDef readFromUserDefaults:@"betaPassWord"])
         {
             [self performSegueWithIdentifier: @"showLogin" sender: self];
         }
-        else
-        {
-            [self.view addSubview:privateBetaView];
-        }
+//        else
+//        {
+//            [self.view addSubview:privateBetaView];
+//        }
     }
     
 } 

@@ -502,10 +502,10 @@ bool searchFlag3=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
-        if (people.itemDistance > 99999)
-            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
-        else
-            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        cell1.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
 
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
