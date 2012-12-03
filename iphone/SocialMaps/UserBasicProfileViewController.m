@@ -46,8 +46,8 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
-@synthesize profileView,profileScrollView,zoomView,fullImageView;
+@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView,newsFeedImageIndicator;
+@synthesize profileView,profileScrollView,zoomView,fullImageView,newsfeedImgView,newsfeedImgFullView,activeDownload;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -153,6 +153,7 @@ int scrollHeight,reloadCounter=0;
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [newsfeedImgFullView removeFromSuperview];
     [zoomView removeFromSuperview];
     NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.userId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
     NSLog(@"urlStr %@",urlStr);
@@ -166,6 +167,28 @@ int scrollHeight,reloadCounter=0;
     [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
+
+}
+
+#pragma mark -
+#pragma mark Download support (NSURLConnectionDelegate)
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [self.activeDownload appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+	// Clear the activeDownload property to allow later attempts
+    self.activeDownload = nil;
+    
+    // Release the connection now that it's finished
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Set appIcon with activeDownload and clear temporary data/image
 
 }
 
@@ -328,6 +351,15 @@ int scrollHeight,reloadCounter=0;
         } 
     }
     [photoPicker.view removeFromSuperview];
+}
+
+-(IBAction)closeNewsfeedImgView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [newsFeedImageIndicator stopAnimating];
+    [newsfeedImgFullView removeFromSuperview];
 }
 
 -(IBAction)backButton:(id)sender
@@ -569,6 +601,36 @@ int scrollHeight,reloadCounter=0;
     }
 }
 
+
+-(void)loadNewsFeedImage:(NSString *)imageUrlStr
+{
+    [[newsfeedImgFullView viewWithTag:12345654] removeFromSuperview];
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:imageUrlStr]);
+    if ([dicImages_msg objectForKey:imageUrlStr])
+    {
+        newsfeedImgView.image=[dicImages_msg objectForKey:imageUrlStr];
+        NSLog(@"load from dic");
+    }
+    else
+    {
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"newsfeed image url: %@",imageUrlStr);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
+        if (img)
+        {
+            newsfeedImgView.image=img;
+            [dicImages_msg setObject:img forKey:imageUrlStr];
+        }
+        else
+        {
+            newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download newsfeed image. %@",img);
+        [pl drain];
+    }
+}
+
 //handling map view
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation 
 {
@@ -609,17 +671,41 @@ int scrollHeight,reloadCounter=0;
         [webView stopLoading];
         fragment = [[request URL] fragment];
         scheme = [[request URL] scheme];
-        NSLog(@"%@ scheme",[[request URL] absoluteString]);
-        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"1"] count]>0) {
-            // Do custom code
-            NSLog(@"got button %@",scheme);
-            return NO;
-        } 
-        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
-            [self performSelector: NSSelectorFromString(fragment)];
-            return NO;
+        NSString *dataStr=[[request URL] absoluteString];
+        NSLog(@"Data String: %@",dataStr);
+        NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
+        NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
+        NSLog(@"Tag String: %@",tagStr);
+        if ([tagStr isEqualToString:@"image"])
+        {
+            CGFloat xpos = self.view.frame.origin.x;
+            CGFloat ypos = self.view.frame.origin.y;
+            zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+            [UIView beginAnimations:@"Zoom" context:NULL];
+            [UIView setAnimationDuration:0.8];
+            zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+            [UIView commitAnimations];
+            [self.view addSubview:newsfeedImgFullView];
+            [newsFeedImageIndicator startAnimating];
+            [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];
         }
+        else if ([tagStr isEqualToString:@"profile"])
+        {
+            NSLog(@"url string: %@",urlStr);
+        }
+
+//        NSLog(@"%@ scheme",[[request URL] absoluteString]);
+//        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"#"] count]>0) {
+//            // Do custom code
+//            NSLog(@"got button %@",scheme);
+//            return NO;
+//        } 
+//        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
+//            [self performSelector: NSSelectorFromString(fragment)];
+//            return NO;
+//        }
         
+        return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
     

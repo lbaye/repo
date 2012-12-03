@@ -159,6 +159,9 @@
     NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
     CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
+    UIView *sudoView=[[UIView alloc] initWithFrame:detailView.frame];
+    [sudoView setBackgroundColor:[UIColor clearColor]];
+    [sudoView setTag:12321123];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
     
@@ -295,6 +298,8 @@
         profileBtn.tag = 11008;
         [infoView addSubview:profileBtn];    
     }
+    [sudoView setFrame:CGRectMake(detFrame.origin.x, detFrame.origin.y, detFrame.size.width, infoView.frame.size.height-10-27)];
+    [annoView insertSubview:sudoView aboveSubview:detailView];
     return annoView;
 }
 

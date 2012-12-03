@@ -48,6 +48,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIScrollView *profileScrollView;
     IBOutlet UIView *zoomView;
     IBOutlet UIImageView *fullImageView;
+    
+    IBOutlet UIImageView *newsfeedImgView;
+    IBOutlet UIView *newsfeedImgFullView;
+    NSMutableData *activeDownload;
+    IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
 }
 
 @property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
@@ -81,6 +86,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIScrollView *profileScrollView;
 @property(nonatomic,retain) IBOutlet UIView *zoomView;
 
+@property(nonatomic,retain) IBOutlet UIImageView *newsfeedImgView;
+@property(nonatomic,retain) IBOutlet UIView *newsfeedImgFullView;
+@property(nonatomic,retain) NSMutableData *activeDownload;
+@property(nonatomic,retain) IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
+
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
 -(IBAction)editStatusButton:(id)sender;
@@ -101,5 +111,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)goToZoomView:(id)sender;
 -(IBAction)closeZoomView:(id)sender;
 - (void) showPinOnMapViewPlan:(Plan *)plan;
+-(IBAction)closeNewsfeedImgView:(id)sender;
 
 @end
