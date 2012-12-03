@@ -84,6 +84,8 @@
     NSURL *url = imageInfo.imagePath;
         
     UIImage* newImage = imageInfo.image;
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
     if( !newImage ) {
         
@@ -101,10 +103,10 @@
         [[self cache] setObject:imageInfo forKey:url.description];
         [[self keyArray] addObject:url.description];
 		
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+       
 		NSError *err = nil;
 		
-		newImage = [[UIImage imageWithData: [NSData dataWithContentsOfURL:url options:0 error:&err]] retain];
+		newImage = /*[*/[UIImage imageWithData: [NSData dataWithContentsOfURL:url options:0 error:&err]] /*retain]*/;
 		if( newImage )
 		{
 			// check to see if we should flush existing cached items before adding this new item
@@ -117,7 +119,6 @@
 		else
 			NSLog( @"UIImageView:LoadImage Failed: %@", err );
 		
-		[pool drain];
 	}
     
 	if (newImage) {
@@ -129,6 +130,8 @@
         } 
         
 	}
+    
+    [pool drain];
 }
 
 + (void) removeAllCache 

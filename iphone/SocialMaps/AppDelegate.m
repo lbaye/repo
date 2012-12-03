@@ -462,6 +462,8 @@ static AppDelegate *sharedInstance=nil;
 {
     LoadingView *loadingView = [LoadingView loadingViewInView:sender];
 	loadingView.tag=11111111;
+    
+    
 /*    
 	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
     
@@ -480,7 +482,34 @@ static AppDelegate *sharedInstance=nil;
                                      UIViewAutoresizingFlexibleBottomMargin);
 	[sender addSubview: activityView];
  */
+    
+    
+    [self performSelector:@selector(showCloseButton:) withObject:loadingView afterDelay:120];
+    
 }
+
+
+- (void) showCloseButton:(id)sender
+{
+    UIButton *buttonClose = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonClose setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonClose addTarget:self action:@selector(hideActivityViewer) forControlEvents:UIControlEventTouchUpInside];
+    UIView *senderView = sender;
+    senderView.superview.userInteractionEnabled = YES;
+    senderView.superview.superview.userInteractionEnabled = YES;
+    senderView.userInteractionEnabled = YES;
+    self.window.userInteractionEnabled = YES;
+    [senderView addSubview:buttonClose];
+    
+    buttonClose.frame = CGRectMake(senderView.frame.size.width - 100, senderView.frame.size.height - 70, 100, 70);
+    
+    [buttonClose setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonClose.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    [buttonClose setTitle:@"Close" forState:UIControlStateNormal];
+    buttonClose.backgroundColor = [UIColor clearColor];
+    buttonClose.showsTouchWhenHighlighted = YES;
+}
+
 
 // Get User information
 // - messages

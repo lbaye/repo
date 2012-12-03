@@ -392,21 +392,21 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
-                                        <rect key="frame" x="112.5" y="8" width="95" height="60"/>
+                                        <rect key="frame" x="188.5" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_event.png" highlightedImage="map_direction_icon.png" id="CIq-Uf-1T3">
-                                                <rect key="frame" x="34" y="0.0" width="30" height="37"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_event.png" id="CIq-Uf-1T3">
+                                                <rect key="frame" x="37" y="5.5" width="24" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Events" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="kHB-6o-nmL">
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Events" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="kHB-6o-nmL">
                                                 <rect key="frame" x="9" y="32" width="78" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gxy-sW-Fxj" userLabel="gotoDirections">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="gxy-sW-Fxj" userLabel="gotoDirections">
                                                 <rect key="frame" x="0.0" y="0.0" width="95" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -424,7 +424,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="Ww5-ci-bnM" userLabel="mapBreadcrumbs">
+                                    <view hidden="YES" contentMode="scaleToFill" id="Ww5-ci-bnM" userLabel="mapBreadcrumbs">
                                         <rect key="frame" x="212" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -458,10 +458,10 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="h9n-hE-u7D">
-                                        <rect key="frame" x="109.5" y="8" width="1" height="60"/>
+                                        <rect key="frame" x="159.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="3dl-ai-vvi">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="3dl-ai-vvi">
                                         <rect key="frame" x="207.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -504,21 +504,21 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="5HN-YE-a9u" userLabel="mapMeetUp">
-                                        <rect key="frame" x="6" y="8" width="95" height="60"/>
+                                        <rect key="frame" x="27" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="meet_up_icon.png" highlightedImage="meet_up_icon.png" id="3mw-y9-dW5">
-                                                <rect key="frame" x="36" y="0.0" width="30" height="35"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="meet_up_icon.png" id="3mw-y9-dW5">
+                                                <rect key="frame" x="39" y="5.5" width="24" height="28"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="X6H-hS-ti1">
-                                                <rect key="frame" x="12" y="31.5" width="78" height="29"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up request" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="X6H-hS-ti1">
+                                                <rect key="frame" x="-9" y="31.5" width="120" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="chR-P5-ZnW" userLabel="gotoMeetupReq">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="chR-P5-ZnW" userLabel="gotoMeetupReq">
                                                 <rect key="frame" x="0.0" y="0.0" width="95" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -5104,7 +5104,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="login_txt.png" width="422" height="26"/>
         <image name="logo_2.png" width="436" height="86"/>
         <image name="logo_3.png" width="275" height="50"/>
-        <image name="map_direction_icon.png" width="21" height="34"/>
         <image name="map_my_place_icon.png" width="28" height="35"/>
         <image name="map_view_bar.png" width="640" height="121"/>
         <image name="map_view_icon.png" width="44" height="36"/>
