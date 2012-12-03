@@ -181,7 +181,7 @@
     [annoView bringSubviewToFront:btn];
     CGPoint annoOffset = CGPointMake((200-(ANNO_IMG_WIDTH+12))/2, 0);
     annoView.centerOffset = annoOffset;
-
+    annoView.tag=12211221;
     return annoView;
 }
 
@@ -221,8 +221,8 @@
     [button removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     button.tag=1234321;
-    [annoView addSubview:button];
-    
+//    [annoView addSubview:button];
+//    [annoView sendSubviewToBack:button];
     button.frame=[annoView frame];
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
@@ -231,7 +231,9 @@
     btn.frame = CGRectMake(annoFrame.size.width-24, 23, 26, 26);
     [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     [annoView bringSubviewToFront:btn];
-
+    [annoView insertSubview:button belowSubview:[annoView viewWithTag:11002]];
+    NSLog(@"annoview: %@ %@",annoView,[annoView subviews]);
+    annoView.tag=12211221;    
     return annoView;
 }
 

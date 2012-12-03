@@ -1003,7 +1003,9 @@ ButtonClickCallbackData callBackData;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([touch.view isKindOfClass:[UIButton class]]) {
+    NSLog(@"touch.view.tag %d %@",touch.view.tag,touch.view);
+    if (([touch.view isKindOfClass:[UIButton class]]) || (touch.view.tag==12211221) || (touch.view.tag==1234321) || (touch.view.tag==11002)|| (touch.view.tag==11001) || (touch.view.tag==12321123)||([touch.view isKindOfClass:[UIWebView class]]))
+    {
         return NO; // ignore the touch
     }
     return YES; // handle the touch
@@ -1474,7 +1476,7 @@ ButtonClickCallbackData callBackData;
     
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
-    [[UITabBar appearance] setTintColor:[UIColor lightTextColor]];
+    [[UITabBar appearance] setTintColor:[UIColor blackColor]];
     initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }

@@ -460,7 +460,7 @@ PullableView *pullUpView;
     
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
-    [[UITabBar appearance] setTintColor:[UIColor lightTextColor]];
+    [[UITabBar appearance] setTintColor:[UIColor blackColor]];
     initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }
