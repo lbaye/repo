@@ -53,7 +53,7 @@ static char const * const ObjectTagKey = "ObjectTag";
     if (url) {
         self.image = nil;
         [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
-        ImageInfo *imageInfo = [((ImageInfo*)[CachedImages getImageFromURL:url]) retain];
+        ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURL:url]);
 
         [self checkPreviousDownload:imageInfo];
         
@@ -70,7 +70,7 @@ static char const * const ObjectTagKey = "ObjectTag";
             NSLog(@"Start indicator");
         }
     } else {
-        ImageInfo *_imageInfo = [((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]) retain];
+        ImageInfo *_imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
         [self checkPreviousDownload:_imageInfo];
     }
 }
@@ -80,7 +80,7 @@ static char const * const ObjectTagKey = "ObjectTag";
     [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
     self.image = nil;
     if (url) {
-        ImageInfo *imageInfo = [((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]) retain];
+        ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
         }
