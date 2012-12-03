@@ -25,6 +25,7 @@
 #import "FriendListViewController.h"
 #import "Globals.h"
 #import "ODRefreshControl.h"
+#import "FriendsProfileViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -674,16 +675,16 @@ int scrollHeight,reloadCounter=0;
         NSString *dataStr=[[request URL] absoluteString];
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
-        NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
         NSLog(@"Tag String: %@",tagStr);
         if ([tagStr isEqualToString:@"image"])
         {
+            NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
             CGFloat xpos = self.view.frame.origin.x;
             CGFloat ypos = self.view.frame.origin.y;
-            zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+            newsfeedImgFullView.frame = CGRectMake(xpos+100,ypos+150,5,5);
             [UIView beginAnimations:@"Zoom" context:NULL];
             [UIView setAnimationDuration:0.8];
-            zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+            newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
             [UIView commitAnimations];
             [self.view addSubview:newsfeedImgFullView];
             [newsFeedImageIndicator startAnimating];
@@ -691,19 +692,25 @@ int scrollHeight,reloadCounter=0;
         }
         else if ([tagStr isEqualToString:@"profile"])
         {
-            NSLog(@"url string: %@",urlStr);
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"userID string: %@",userId);
+            if ([userId isEqualToString:smAppDelegate.userId])
+            {
+                NSLog(@"own profile");
+            }
+            else
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];   
+            }
         }
-
-//        NSLog(@"%@ scheme",[[request URL] absoluteString]);
-//        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"#"] count]>0) {
-//            // Do custom code
-//            NSLog(@"got button %@",scheme);
-//            return NO;
-//        } 
-//        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
-//            [self performSelector: NSSelectorFromString(fragment)];
-//            return NO;
-//        }
+        else if ([tagStr isEqualToString:@"geotag"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"geotag string: %@",userId);
+        }
         
         return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];

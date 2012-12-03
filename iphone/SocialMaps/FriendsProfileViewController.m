@@ -60,6 +60,11 @@
 @synthesize profileScrollView;
 @synthesize zoomView,fullImageView;
 
+@synthesize newsfeedImgView;
+@synthesize newsfeedImgFullView;
+@synthesize activeDownload;
+@synthesize newsFeedImageIndicator;
+
 AppDelegate *smAppDelegate;
 RestClient *rc;
 UserInfo *userInfo;
@@ -154,6 +159,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [statusContainer removeFromSuperview];
     [msgView removeFromSuperview];
     [zoomView removeFromSuperview];
+    [newsfeedImgFullView removeFromSuperview];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
@@ -180,6 +186,15 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     newsFeedscrollHeight=newsfeedView.frame.size.height;
     [profileScrollView addSubview:profileView];
     [profileScrollView addSubview:newsfeedView];
+}
+
+-(IBAction)closeNewsfeedImgView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [newsFeedImageIndicator stopAnimating];
+    [newsfeedImgFullView removeFromSuperview];
 }
 
 -(IBAction)editCoverButton:(id)sender
@@ -227,17 +242,48 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         [webView stopLoading];
         fragment = [[request URL] fragment];
         scheme = [[request URL] scheme];
-        NSLog(@"%@ scheme",scheme);
-        if ([[[request URL] absoluteString] hasPrefix:@"button://"]) {
-            // Do custom code
-            NSLog(@"got button %@",scheme);
-            return NO;
-        } 
-        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
-            [self performSelector: NSSelectorFromString(fragment)];
-            return NO;
+        NSString *dataStr=[[request URL] absoluteString];
+        NSLog(@"Data String: %@",dataStr);
+        NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
+        NSLog(@"Tag String: %@",tagStr);
+        if ([tagStr isEqualToString:@"image"])
+        {
+            NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
+            CGFloat xpos = self.view.frame.origin.x;
+            CGFloat ypos = self.view.frame.origin.y;
+            newsfeedImgFullView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+            [UIView beginAnimations:@"Zoom" context:NULL];
+            [UIView setAnimationDuration:0.8];
+            newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+            [UIView commitAnimations];
+            [self.view addSubview:newsfeedImgFullView];
+            [newsFeedImageIndicator startAnimating];
+            [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];
+        }
+        else if ([tagStr isEqualToString:@"profile"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"userID string: %@",userId);
+            if ([userId isEqualToString:userInfo.userId])
+            {
+                NSLog(@"own profile");
+            }
+            else
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+                
+            }
+        }
+        else if ([tagStr isEqualToString:@"geotag"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"geotag string: %@",userId);
         }
         
+        return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
     
@@ -260,6 +306,35 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
     [newsfeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
 
+}
+
+-(void)loadNewsFeedImage:(NSString *)imageUrlStr
+{
+    [[newsfeedImgFullView viewWithTag:12345654] removeFromSuperview];
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:imageUrlStr]);
+    if ([dicImages_msg objectForKey:imageUrlStr])
+    {
+        newsfeedImgView.image=[dicImages_msg objectForKey:imageUrlStr];
+        NSLog(@"load from dic");
+    }
+    else
+    {
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"newsfeed image url: %@",imageUrlStr);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
+        if (img)
+        {
+            newsfeedImgView.image=img;
+            [dicImages_msg setObject:img forKey:imageUrlStr];
+        }
+        else
+        {
+            newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download newsfeed image. %@",img);
+        [pl drain];
+    }
 }
 
 -(IBAction)geotagButton:(id)sender
@@ -559,7 +634,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     {
         [meetUpButton setEnabled:NO];
     }
-    
+    [userInfo retain];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
