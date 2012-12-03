@@ -13,6 +13,7 @@
       - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
       - $rowLikesId = $activity->getId() . '_likes'
       - $rowCommentsId = $activity->getId() . '_comments'
+      - $userProfileLink =  "#profile:" . $activity->getOwner()->getId()
 
       %li
         - if ($activity->getObjectType() === 'photo')
@@ -23,11 +24,11 @@
               .avatar
                 - $avatarPath = $photo->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-                - $userLink = "#user:" . $photo->getOwner()->getId();
-                %a(href= $userLink)
+
+                %a(href= $userProfileLink)
                   %img(src=$avatarPath)
               .name
-                %a(href= $userLink)
+                %a(href= $userProfileLink)
                   %h4= $photo->getOwner()->getName()
               .time
                 = $activity->toHumanizeDate()
@@ -42,7 +43,7 @@
               - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
               .image(style=$imagePathCss)
                 - $photoFullPath = $baseUrl . $photo->getUriMedium();
-                - $photoPath = "#photo:" . $baseUrl . $photo->getUriLarge();
+                - $photoPath = "#image:" . $baseUrl . $photo->getUriLarge();
                 %a(href=$photoPath)
                   %img(src=$photoFullPath)
               .icon.icon_zoom
@@ -66,12 +67,11 @@
               .avatar
                 - $avatarPath = $activity->getOwner()->getAvatar()
                 - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-                - $userLink =  "#user:" . $activity->getOwner()->getId()
 
-                %a(href= $userLink)
+                %a(href= $userProfileLink)
                   %img(src=$avatarPath)
               .name
-                %a(href= $userLink)
+                %a(href= $userProfileLink)
                   %h4= $activity->getOwner()->getName()
               .time
                 - if ($activity->getCreatedAt() != null)
@@ -81,7 +81,8 @@
                 - if ($activity->getOwner()->getId() == $currentUser->getId())
                   - if ($activity->getObjectType() === 'geotag')
                     - $geotag = $geotagRepo->find($activity->getObjectId())
-                    - $geotagLink = "#geotag:" . $geotag->getId()
+                    - $geoLocation = $geotag->getLocation()->toArray()
+                    - $geotagLink = "#geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng']
 
                     has tagged "
                     %a(href= $geotagLink)
