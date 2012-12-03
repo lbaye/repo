@@ -2431,7 +2431,7 @@ AppDelegate *smAppDelegate;
     
     for (int i=0; i<[circlesIdArr count]; i++)
     {
-        [request addPostValue:[circlesIdArr objectAtIndex:i] forKey:@"circleIds[]"];
+        [request addPostValue:[circlesIdArr objectAtIndex:i] forKey:@"inviteCircles[]"];
     }
     
     // Handle successful REST call
