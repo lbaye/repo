@@ -82,7 +82,7 @@
                   - if ($activity->getObjectType() === 'geotag')
                     - $geotag = $geotagRepo->find($activity->getObjectId())
                     - $geoLocation = $geotag->getLocation()->toArray()
-                    - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng']
+                    - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
                     has tagged "
                     %a(href= $geotagLink)
