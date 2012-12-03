@@ -343,6 +343,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)gotInboxMessages:(NSNotification *)notif {
     NSMutableArray *msg = [notif object];
+    
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
+    if (!msg) {
+        [UtilityClass showAlert:@"" :@"Network error, try again"];
+        return;
+    } else if ([msg count] == 0) {
+        [UtilityClass showAlert:@"" :@"No messages"];
+        return;
+    }
+    
     [smAppDelegate.messages removeAllObjects];
     [smAppDelegate.messages addObjectsFromArray:msg];
     
@@ -362,8 +374,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
     }
     [msgListTableView reloadData];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
 }
 
 -(void) displayNotificationCount {
