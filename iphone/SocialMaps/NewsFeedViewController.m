@@ -107,6 +107,7 @@ UILabel *statusLabel;
             newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
             [UIView commitAnimations];
             [self.view addSubview:newsfeedImgFullView];
+            [newsfeedImgView setImage:[UIImage imageNamed:@"sm_icon@2x.png"]];
             [newsFeedImageIndicator startAnimating];
             [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];
         }

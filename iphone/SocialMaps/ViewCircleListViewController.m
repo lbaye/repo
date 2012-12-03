@@ -112,6 +112,15 @@ bool showSM=true;
     [msgView removeFromSuperview];
     
     smAppDelegate.currentModelViewController = self;
+    
+//    
+//    
+//    filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first = [(Event*)a eventDistance];
+//        NSString *second = [(Event*)b eventDistance];
+//        return [first compare:second];
+//    }] mutableCopy];
+//    [self.circleListTableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated
