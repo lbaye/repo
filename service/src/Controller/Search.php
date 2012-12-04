@@ -49,6 +49,7 @@ class Search extends Base {
     }
 
     protected function performSearch($data) {
+        $this->debug('No cache found, Creating cache search cache');
         $appSearch = ApplicationSearchFactory::getInstance(
             ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
 
@@ -67,6 +68,7 @@ class Search extends Base {
 
     private function updateUserPulse(\Document\User $user) {
         if (!$user->isOnlineUser()) {
+            $this->debug('Updating user pulse');
             $user->setLastPulse(new \DateTime());
             $this->userRepository->updateObject($user);
         }
