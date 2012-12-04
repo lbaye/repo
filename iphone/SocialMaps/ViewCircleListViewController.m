@@ -30,6 +30,7 @@
 @synthesize listPulldownMenu,listPulldown,downloadedImageDict;
 @synthesize listViewfilter;
 @synthesize  msgView,textViewNewMsg;
+@synthesize itemDistance;
 
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -141,8 +142,46 @@ bool showSM=true;
 
 -(NSMutableArray *)loadDummyData
 {
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        LocationItemPeople *people=[[LocationItemPeople alloc] init];
+        people = (LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        people.userInfo.distance=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+        [smAppDelegate.peopleList replaceObjectAtIndex:i withObject:people];
+    }
+    
+    
+    
+    smAppDelegate.peopleList = [[smAppDelegate.peopleList sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+                     {
+                         People *firstPeople = [(LocationItemPeople*)a userInfo];
+                         People *secondPeople = [(LocationItemPeople*)a userInfo];
+                         if (firstPeople.distance > secondPeople.distance) 
+                         {
+                             return (NSComparisonResult)NSOrderedDescending;
+                         }
+                         
+                         if (firstPeople.distance < secondPeople.distance) 
+                         {
+                             return (NSComparisonResult)NSOrderedAscending;
+                         }
+                         return (NSComparisonResult)NSOrderedSame;
+                     }] mutableCopy];
     return smAppDelegate.peopleList;
 }
+
+- (NSComparisonResult) compareDistance:(LocationItem*) other {
+    if (self.itemDistance < other.itemDistance)
+        return NSOrderedAscending;
+    else if (self.itemDistance > other.itemDistance)
+        return NSOrderedDescending;
+    else
+        return NSOrderedSame;
+}
+
 
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
 {

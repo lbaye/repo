@@ -58,6 +58,7 @@ int uploadPhotoCounter=0;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.presentingViewController retain];
     isBgTaskRunning=true;
     [self loadDummydata];    
     [self reloadScrollview];
@@ -214,6 +215,12 @@ int uploadPhotoCounter=0;
 
 - (IBAction)backButtonAction:(id)sender
 {
+    NSLog(@"self.presentedViewController %@,self.presentingViewController %@",self.presentedViewController,self.presentingViewController);
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)dissmissView
+{
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -350,11 +357,12 @@ int uploadPhotoCounter=0;
     {
         if ([notif.object isKindOfClass:[Photo class]])
         {
-            NSLog(@"[notif object] %@",[notif object]);
+            
+            NSLog(@"Photo [notif object] %@  %d %@ %@",[notif object],uploadPhotoCounter,self,self.presentingViewController);
             [smAppDelegate hideActivityViewer];
             [smAppDelegate.window setUserInteractionEnabled:YES];
             [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
-            [self dismissModalViewControllerAnimated:YES];
+            [self performSelectorOnMainThread:@selector(dissmissView) withObject:nil waitUntilDone:YES];
         }
         else
         {

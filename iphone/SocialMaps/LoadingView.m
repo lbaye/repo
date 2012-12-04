@@ -80,7 +80,7 @@ CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius)
 + (id)loadingViewInView:(UIView *)aSuperview
 {
 	LoadingView *loadingView =
-		[[[LoadingView alloc] initWithFrame:[aSuperview bounds]] autorelease];
+		[[[LoadingView alloc] initWithFrame:CGRectMake(46, 170, 230, 120)] autorelease];
 	if (!loadingView)
 	{
 		return nil;
@@ -141,6 +141,9 @@ CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius)
 	[animation setType:kCATransitionFade];
 	[[aSuperview layer] addAnimation:animation forKey:@"layerAnimation"];
 	
+//    UIView *disableView=[[UIView alloc] initWithFrame:[aSuperview bounds]];
+//    [disableView setBackgroundColor:[UIColor lightTextColor]];
+//    [aSuperview addSubview:disableView];
 	return loadingView;
 }
 
@@ -180,7 +183,7 @@ CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius)
 	
 	CGContextRef context = UIGraphicsGetCurrentContext();
 
-	const CGFloat BACKGROUND_OPACITY = 0.85;
+	const CGFloat BACKGROUND_OPACITY = 0.65;
 	CGContextSetRGBFillColor(context, 0, 0, 0, BACKGROUND_OPACITY);
 	CGContextAddPath(context, roundRectPath);
 	CGContextFillPath(context);

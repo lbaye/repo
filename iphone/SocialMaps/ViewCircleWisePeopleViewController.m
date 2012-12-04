@@ -270,6 +270,37 @@ int renameCircleOndex;
     }
 }
 
+-(void)showConfirmBox:(int)index
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
+                                                    message:@"You must be connected to the internet to use this app." 
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:@"Cancel", nil];
+    [alert show];
+    alert.tag=index;
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"button Index %d",buttonIndex);
+    if (buttonIndex==0)
+    {
+        [self deleteCircleReq:alertView.tag];
+    }
+}
+
+-(void)deleteCircleReq:(int)index
+{
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    NSString *circleID;
+    circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
+    [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
+    [circleListDetailGlobalArray removeObjectAtIndex:index];
+    self.userCircle=[circleListDetailGlobalArray mutableCopy];
+    NSLog(@"delete index %d %@",index,circleID);    
+}
 
 -(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     
@@ -795,16 +826,8 @@ int renameCircleOndex;
 
 -(void)deleteCircle:(int)index
 {
-    [smAppDelegate showActivityViewer:self.view];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
-    NSString *circleID;
-    circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
-    [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
-    [circleListDetailGlobalArray removeObjectAtIndex:index];
-    self.userCircle=[circleListDetailGlobalArray mutableCopy];
-
-    NSLog(@"delete index %d %@",index,circleID);    
-    
+    [self showConfirmBox:index];
+   
 }
 
 - (void)createCircleDone:(NSNotification *)notif
