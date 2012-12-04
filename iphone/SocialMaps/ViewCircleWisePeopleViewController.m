@@ -272,11 +272,13 @@ int renameCircleOndex;
 
 -(void)showConfirmBox:(int)index
 {
+    NSString *circleName = ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleName;
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
-                                                    message:@"You must be connected to the internet to use this app." 
+                                                    message:[NSString stringWithFormat:@"Delete circle: %@", circleName]  
                                                    delegate:self 
-                                          cancelButtonTitle:@"Ok"
-                                          otherButtonTitles:@"Cancel", nil];
+                                          cancelButtonTitle:@"Yes"
+                                          otherButtonTitles:@"No", nil];
     [alert show];
     alert.tag=index;
 }
