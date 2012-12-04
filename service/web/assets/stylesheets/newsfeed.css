@@ -73,6 +73,10 @@ ul li .row .comment {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
+ul li .row .comment a {
+  text-decoration: none;
+  color: #67b000;
+}
 ul li .row-float {
   clear: both;
 }
