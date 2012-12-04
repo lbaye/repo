@@ -4,7 +4,7 @@ class NewsfeedApp
         @bindButtonsEvents()
         @initCurrentState()
 
-    setBaseUrl: (@baseUrl) -> 
+    setBaseUrl: (@baseUrl) ->
     getBaseUrl: -> @baseUrl
 
     setAuthToken: (@authToken) ->
