@@ -599,6 +599,8 @@ PullableView *pullUpView;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
+    if(searching) 
+		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
     return [anItem getRowHeight:tableView];
 }
 
@@ -880,6 +882,8 @@ PullableView *pullUpView;
             
             LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
             
+            if(searching) 
+                anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
             //anItem.itemCoverPhotoUrl = [NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"];
             
             if (anItem.itemCoverPhotoUrl) 
