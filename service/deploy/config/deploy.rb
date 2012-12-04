@@ -5,8 +5,8 @@ require 'capistrano/ext/multistage'
 set :use_sudo, false
 
 set :application, "social-maps-service"
-set :user, "root"
-set :group, "root"
+set :user, "ubuntu"
+set :group, "ubuntu"
 
 set :scm, :git
 set :branch, "develop"

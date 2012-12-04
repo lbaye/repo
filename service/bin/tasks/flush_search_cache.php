@@ -37,4 +37,3 @@ foreach ($cacheRefs as $cacheRef) {
 }
 
 echo "Done\n";
-$client->runTasks();
