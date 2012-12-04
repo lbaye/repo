@@ -43,7 +43,7 @@ class CreateSearchCache extends Base {
         $inst = AppSearchFactory::getInstance(
             AppSearchFactory::AS_DEFAULT, $user, $this->services['dm'], $this->serviceConf);
 
-        $result = $inst->searchAll($user->getCurrentLocation());
+        $result = $inst->searchAll($user->getCurrentLocation(), array('user' => $user));
 
         // Remove existing cache reference
         $this->cacheRefRepo->cleanupExistingReferences($user);

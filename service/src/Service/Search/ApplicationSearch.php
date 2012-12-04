@@ -17,6 +17,9 @@ class ApplicationSearch implements ApplicationSearchInterface {
     }
 
     public function searchAll(array $params, $options = array()) {
+        $user = isset($options['user']) ? $options['user'] : null;
+        if (!is_null($user)) $this->user = $user;
+
         $results = array();
         $results['people'] = $this->searchPeople($params, $options);
         $results['places'] = $this->searchPlaces($params, $options);

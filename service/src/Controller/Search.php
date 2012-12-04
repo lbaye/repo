@@ -53,7 +53,8 @@ class Search extends Base {
         $appSearch = ApplicationSearchFactory::getInstance(
             ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
 
-        return $appSearch->searchAll($data, array('limit' => \Helper\Constants::PEOPLE_LIMIT));
+        return $appSearch->searchAll(
+            $data, array('user' => $this->user, 'limit' => \Helper\Constants::PEOPLE_LIMIT));
     }
 
     public function allPeopleList() {
