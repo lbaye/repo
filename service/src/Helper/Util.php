@@ -109,4 +109,10 @@ class Util {
                 return \Logger::INFO;
         }
     }
+
+    public static function formatAddress($address) {
+        $parts = preg_split('/,\s*/', $address);
+        if (count($parts) > 0) return $parts[0];
+        else return $address;
+    }
 }

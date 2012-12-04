@@ -70,6 +70,9 @@ class ApplicationSearch implements ApplicationSearchInterface {
 
             $user['coverPhoto'] = \Helper\Url::buildStreetViewImage(
                 $this->config['googlePlace']['apiKey'], $user['currentLocation'], '320x130');
+
+            if (isset($user['lastSeenAt']) && !empty($user['lastSeenAt']))
+                $user['lastSeenAt'] = \Helper\Util::formatAddress($user['lastSeenAt']);
         }
 
         return $users;

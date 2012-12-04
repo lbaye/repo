@@ -139,7 +139,7 @@ abstract class Base {
             $this->serviceConf['googlePlace']['apiKey'],
             $this->services['dm']);
 
-        $address = $this->getFirstPart($reverseGeo->getAddress($current_location));
+        $address = $reverseGeo->getAddress($current_location);
         $this->debug('Found reversed geo location - ' .
             "$address ({$current_location['lat']}" . ', ' .
             "{$current_location['lng']})");
@@ -147,9 +147,4 @@ abstract class Base {
         return $address;
     }
 
-    private function getFirstPart($address) {
-        $parts = preg_split('/,\s*/', $address);
-        if (count($parts) > 0) return $parts[0];
-        else return $address;
-    }
 }

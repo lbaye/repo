@@ -909,6 +909,9 @@ class UserRepo extends Base {
 
         # TODO: How to fix less than $limit items
         foreach ($people_around as $target_user_hash) {
+            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt']))
+                $target_user_hash['lastSeenAt'] = \Helper\Util::formatAddress($target_user_hash['lastSeenAt']);
+
             $target_user = $this->find($target_user_hash['id']);
             if ($target_user->isVisibleTo($this->currentUser)) {
                 $visible_people[] = $target_user_hash;
