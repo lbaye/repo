@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 @class LocationItemPeople;
 @class ViewCircleListViewController;
+@class InviteFromCircleViewController;
 
 @protocol CircleImageDownloaderDelegate;
 

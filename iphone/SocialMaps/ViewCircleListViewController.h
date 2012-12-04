@@ -17,6 +17,7 @@
     IBOutlet UIView *msgView;
     IBOutlet UITextView *textViewNewMsg;
     IBOutlet UILabel *labelNotifCount;
+    float itemDistance;
 }
 
 @property(nonatomic,retain) IBOutlet UITableView *circleListTableView;
@@ -27,7 +28,7 @@
 @property (retain, nonatomic) IBOutlet UIView *listViewfilter;
 @property (nonatomic,retain)  IBOutlet UIView *msgView;
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
-
+@property (nonatomic)    float itemDistance;
 -(IBAction)gotoTabBar:(id)sender;
 -(IBAction)gotoInvites:(id)sender;
 -(IBAction)gotoCircles:(id)sender;

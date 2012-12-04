@@ -30,6 +30,8 @@ extern BOOL isPlanFromVenue;
 extern BOOL loadNewPlan;
 extern BOOL pointOnMapFlag;
 extern BOOL profileFromList;
+extern int badgeCount;
+extern BOOL notifBadgeFlag;
 
 @interface Globals : NSObject 
 

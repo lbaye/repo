@@ -43,6 +43,7 @@ NSMutableArray *circleList, *ImgesName, *friendListArr, *friendsIDArr, *friendsN
 NSString *searchTexts;
 NSMutableArray *FriendList;
 NSString *searchText;
+int uploadPhotoCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,11 +58,13 @@ NSString *searchText;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.presentingViewController retain];
     isBgTaskRunning=true;
     [self loadDummydata];    
     [self reloadScrollview];
     [customView removeFromSuperview];
     smAppDelegate.currentModelViewController = self;
+    uploadPhotoCounter=0;
 }
 
 - (void)viewDidLoad
@@ -165,17 +168,10 @@ NSString *searchText;
         [msg appendString:@" address,"];
     }
     
-//    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
-//    {
-//        if (msg.length==13)
-//        {
-//            msg=[[NSMutableString alloc] initWithString:@"Please enter comments"];
-//        }
-//        else
-//        {
-//            [msg appendString:@" comments"];
-//        }
-//    }
+    if (([commentView.text isEqualToString:@""])||([commentView.text isEqualToString:@"Image description..."]))
+    {
+        photo.comment=@"";
+    }
 
     for (int i=0; i<[selectedFriends count]; i++)
     {
@@ -218,6 +214,12 @@ NSString *searchText;
 }
 
 - (IBAction)backButtonAction:(id)sender
+{
+    NSLog(@"self.presentedViewController %@,self.presentingViewController %@",self.presentedViewController,self.presentingViewController);
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)dissmissView
 {
     [self dismissModalViewControllerAnimated:YES];
 }
@@ -351,11 +353,23 @@ NSString *searchText;
 
 - (void)uploadPhotoDone:(NSNotification *)notif
 {
-    NSLog(@"[notif object] %@",[notif object]);
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
-    [self dismissModalViewControllerAnimated:YES];
+    if(uploadPhotoCounter==0)
+    {
+        if ([notif.object isKindOfClass:[Photo class]])
+        {
+            
+            NSLog(@"Photo [notif object] %@  %d %@ %@",[notif object],uploadPhotoCounter,self,self.presentingViewController);
+            [smAppDelegate hideActivityViewer];
+            [smAppDelegate.window setUserInteractionEnabled:YES];
+            [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
+            [self performSelectorOnMainThread:@selector(dissmissView) withObject:nil waitUntilDone:YES];
+        }
+        else
+        {
+            [UtilityClass showAlert:@"" :@"Photo upload failed"];
+        }
+    }
+    uploadPhotoCounter++;
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView

@@ -114,7 +114,7 @@ DDAnnotation *annotation;
     [textViewPersonalMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewPersonalMsg.layer setMasksToBounds:YES];
     
-    labelAddress.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
+    labelAddress.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
     
     self.currentAddress = @"";
     selectedPlaceIndex = 0;
@@ -124,10 +124,15 @@ DDAnnotation *annotation;
     cancelButton.tintColor = [UIColor darkGrayColor];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self displayNotificationCount];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self displayNotificationCount];
     
     //load map data
     CLLocationCoordinate2D theCoordinate;
@@ -327,6 +332,7 @@ DDAnnotation *annotation;
 
 - (void)setAddressLabelFromLatLon
 {
+    labelAddress.text = @"Retrieving address ...";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         labelAddress.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
         //dispatch_async(dispatch_get_main_queue(), ^{
@@ -400,6 +406,7 @@ DDAnnotation *annotation;
         labelPlaceName.text = aPlaceItem.name;
     } else if (tableViewPlaces.tag == TAG_CURRENT_LOCATION) {
         if ([self.currentAddress isEqual:@""]) {
+            labelPlaceName.text = @"Retrieving address ...";
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -723,12 +730,18 @@ DDAnnotation *annotation;
     [UIView commitAnimations];    
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
+    if ([text isEqualToString:@"\n"]) {
+        [self actionSavePersonalMsgBtn:nil];
+        
+        //if ([textView.text isEqualToString:@""])
+            //[textView setPlaceHolderText:[textView getPlaceHolderText]];
+        
+        return NO;
+    }
+    else
+        return YES;
 }
 
 //lazy scroller

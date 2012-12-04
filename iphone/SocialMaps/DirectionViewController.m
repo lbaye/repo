@@ -78,10 +78,10 @@
         [imageView release];
     }
     
-    labelAddressFrom.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
-    labelAddressTo.backgroundColor = [UIColor colorWithWhite:.5 alpha:.7];
+    labelAddressFrom.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
+    labelAddressTo.backgroundColor = [UIColor colorWithWhite:0 alpha:.6];
     
-    [self displayNotificationCount];
+
     
     //tableView setup
     tableViewPlacesFrom.dataSource = self;
@@ -134,6 +134,7 @@
 {
     [super viewWillAppear:animated];
     smAppDelegate.currentModelViewController = self;
+    [self displayNotificationCount];
 }
 
 -(void) displayNotificationCount 

@@ -8,7 +8,7 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-
+#import "Globals.h"
 #import "UtilityClass.h"
 #import "CustomAlert.h"
 #import "AppDelegate.h"
@@ -228,22 +228,23 @@ CGFloat animatedDistance;
 }
 
 +(int) getNotificationCount {
+    
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     int ignoreCount = 0;
+    
     if (smAppDelegate.msgRead == TRUE)
         ignoreCount += [[self getUnreadMessage:smAppDelegate.messages] count];
     
     if (smAppDelegate.notifRead == TRUE)
         ignoreCount += [smAppDelegate.notifications count];
     
-    int totalNotif = smAppDelegate.friendRequests.count+
-    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount;
-    
-//    int totalNotif = smAppDelegate.friendRequests.count+
-//    [self getUnreadMessage:smAppDelegate.messages].count+smAppDelegate.notifications.count+smAppDelegate.meetUpRequests.count-smAppDelegate.ignoreCount-ignoreCount;
-
-    
+    int totalNotif = smAppDelegate.friendRequests.count + [self getUnreadMessage:smAppDelegate.messages].count + smAppDelegate.notifications.count /*+ smAppDelegate.meetUpRequests.count*/ - smAppDelegate.ignoreCount;
+    if ((notifBadgeFlag==TRUE) && (badgeCount>0))
+    {
+        totalNotif = badgeCount;
+    }
     NSLog(@"[self getUnreadMessage:smAppDelegate.messages].count %d smAppDelegate.notifications.count %d smAppDelegate.meetUpRequests.count %d smAppDelegate.ignoreCount %d ignoreCount %d",[self getUnreadMessage:smAppDelegate.messages].count,smAppDelegate.notifications.count,smAppDelegate.meetUpRequests.count,smAppDelegate.ignoreCount,ignoreCount);
+    
     return totalNotif;
 }
 
@@ -407,7 +408,7 @@ CGFloat animatedDistance;
     CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
     CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
     CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
-    if (distanceFromMe > 99999)
+    if (distanceFromMe > 999)
     {
         distanceText = [NSString stringWithFormat:@"%.2fkm", distanceFromMe/1000];
     }

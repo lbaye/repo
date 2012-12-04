@@ -71,6 +71,17 @@
         [loginAlert autorelease];
     }
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ((smAppDelegate.facebookLogin==TRUE)||(smAppDelegate.smLogin==TRUE))
+    {
+        NSLog(@"in view will appear");
+        [self performSegueWithIdentifier: @"showMapView" sender: self];        
+    }
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -422,17 +433,20 @@
         else 
             [self performSegueWithIdentifier: @"showMapView" sender: self];
     } else {
-        [CustomAlert setBackgroundColor:[UIColor redColor] 
-                        withStrokeColor:[UIColor redColor]];
-        CustomAlert *loginAlert = [[CustomAlert alloc]
-                                   initWithTitle:@"Cannot Register"
-                                   message:@"Please contact provider"
-                                   delegate:nil
-                                   cancelButtonTitle:@"Done"
-                                   otherButtonTitles:nil];
-        
-        [loginAlert show];
-        [loginAlert autorelease];
+        if (smAppDelegate.smLogin==FALSE)
+        {
+            [CustomAlert setBackgroundColor:[UIColor redColor] 
+                            withStrokeColor:[UIColor redColor]];
+            CustomAlert *loginAlert = [[CustomAlert alloc]
+                                       initWithTitle:@"Cannot Register"
+                                       message:@"Please contact provider"
+                                       delegate:nil
+                                       cancelButtonTitle:@"Done"
+                                       otherButtonTitles:nil];
+            
+            [loginAlert show];
+            [loginAlert autorelease];            
+        }
     }
 }
 

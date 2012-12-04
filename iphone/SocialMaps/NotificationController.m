@@ -15,18 +15,12 @@
 #import "RestClient.h"
 #import "MessageListViewController.h"
 #import "UtilityClass.h"
+#import "ODRefreshControl.h"
 
 @implementation NotificationController
 
 @synthesize selectedItemIndex;
 @synthesize selectedType;
-/*@synthesize friendRequests;
-@synthesize messages;
-@synthesize notifications;
-@synthesize msgRead;
-@synthesize notifRead;
-@synthesize ignoreCount;*/
-
 @synthesize notifCount;
 @synthesize msgCount;
 @synthesize reqCount;
@@ -37,20 +31,11 @@
 @synthesize notifButton;
 @synthesize msgButton;
 @synthesize reqButton;
-
+@synthesize webView;
 
 #define SECTION_HEADER_HEIGHT   44
 
 NSMutableArray *unreadMesg;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -60,17 +45,6 @@ NSMutableArray *unreadMesg;
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -81,24 +55,10 @@ NSMutableArray *unreadMesg;
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMessageStatus:) name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendsRequestAccepted:) name:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
     // Dummy cotifications
     int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
-//    if (smAppDelegate.msgRead == TRUE) {
-//        msgCount.text = @"";
-//        ignoreCount += [unreadMesg count];
-//    } else
-    
-    /*////////
-    if ([[UtilityClass getUnreadMessage:smAppDelegate.messages] count]==0)
-    {
-        msgCount.text = @"";
-    }
-    else
-    {
-    msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
-    }
-    */
     
     if (smAppDelegate.notifRead == TRUE || smAppDelegate.notifications.count == 0) {
         alertCount.text = @"";
@@ -106,11 +66,8 @@ NSMutableArray *unreadMesg;
     } else
         alertCount.text = [NSString stringWithFormat:@"%d",smAppDelegate.notifications.count];
     
-    //int totalCount = smAppDelegate.friendRequests.count+unreadMesg.count+
-      //                  smAppDelegate.notifications.count-smAppDelegate.ignoreCount-ignoreCount;
-    
-    
     int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
+    
     if (requestCount == 0)
         reqCount.text = @"";
     else
@@ -125,19 +82,34 @@ NSMutableArray *unreadMesg;
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
      msgCount.text = @"";
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/%@/minifeed.html?authToken=%@&r=1353821908.182321",smAppDelegate.userId,smAppDelegate.authToken]]]];
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [super viewWillDisappear:animated];
+}
+
+-(void) displayNotificationCount 
+{
     int totalNotif= [UtilityClass getNotificationCount];
     
     if (totalNotif == 0)
         notifCount.text = @"";
     else
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     
+    [self displayNotificationCount];
     
     if ([[UtilityClass getUnreadMessage:smAppDelegate.messages] count]==0)
         msgCount.text = @"";
@@ -148,6 +120,10 @@ NSMutableArray *unreadMesg;
     
     if (self.selectedType == Request)
         [self showFriendRequests:nil];
+    
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [smAppDelegate showActivityViewer:self.view];
 }
 
 -(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
@@ -169,12 +145,16 @@ NSMutableArray *unreadMesg;
 {
     if (selectedType==0)
     {
+        [webView setHidden:YES];
+        [notificationItems setHidden:NO];
         [msgButton setImage:[UIImage imageNamed:@"icon_message_notification_selected.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
     }
     else if (selectedType==1)
     {
+        [webView setHidden:YES];
+        [notificationItems setHidden:NO];
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"icon_friend_request_selected.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"notify_icon.png"] forState:UIControlStateNormal];
@@ -185,14 +165,14 @@ NSMutableArray *unreadMesg;
         [msgButton setImage:[UIImage imageNamed:@"message_notify_icon.png"] forState:UIControlStateNormal];
         [reqButton setImage:[UIImage imageNamed:@"friends_rqst_icon.png"] forState:UIControlStateNormal];
         [notifButton setImage:[UIImage imageNamed:@"icon_notify_selected.png"] forState:UIControlStateNormal];
-        
+        [webView setHidden:NO];
+        [notificationItems setHidden:YES];
     }
 }
 
 - (void)viewDidUnload
 {
     [self setNotifTabArrow:nil];
-    [self setNotifCount:nil];
     [self setNotifCount:nil];
     [self setMsgCount:nil];
     [self setReqCount:nil];
@@ -229,23 +209,13 @@ NSMutableArray *unreadMesg;
                                  currFrame.size.width, currFrame.size.height);
     notifTabArrow.frame = newFrame;
     selectedType = Message;
-    int ignoreCount = 0;
+    
     if (smAppDelegate.msgRead == FALSE) {
         smAppDelegate.msgRead = TRUE;
     }
-    if (smAppDelegate.msgRead == TRUE)
-        ignoreCount += [unreadMesg count];
+    
 
-    if (smAppDelegate.notifRead == TRUE)
-        ignoreCount += [smAppDelegate.notifications count];
-
-//    msgCount.text   = @"";
-    int totalCount = smAppDelegate.friendRequests.count+
-                    unreadMesg.count+smAppDelegate.notifications.count;
-    if (totalCount == 0)
-        notifCount.text = @"";
-    else
-        notifCount.text = [NSString stringWithFormat:@"%d",totalCount];
+    [self displayNotificationCount];
     [notificationItems reloadData];
     [self setNotificationImage];
 }
@@ -260,40 +230,22 @@ NSMutableArray *unreadMesg;
     [self setNotificationImage];
 }
 
-- (IBAction)showNotifications:(id)sender {
+- (IBAction)showNotifications:(id)sender 
+{
     CGRect currFrame = notifTabArrow.frame;
     CGRect newFrame = CGRectMake(-226, currFrame.origin.y, 
                                  currFrame.size.width, currFrame.size.height);
     notifTabArrow.frame = newFrame;
     selectedType = Notif;
-    int ignoreCount = 0;
-    if (smAppDelegate.notifRead == FALSE) {
-        smAppDelegate.notifRead = TRUE;
-    }
-    if (smAppDelegate.notifRead == TRUE)
-        ignoreCount += [smAppDelegate.notifications count];
-
-    if (smAppDelegate.msgRead == TRUE)
-        ignoreCount += [unreadMesg count];
-
     alertCount.text   = @"";
-    int totalCount = smAppDelegate.friendRequests.count+
-    unreadMesg.count+smAppDelegate.notifications.count;
-//    int totalCount = smAppDelegate.friendRequests.count+
-//    unreadMesg.count+smAppDelegate.notifications.count-
-//    smAppDelegate.ignoreCount-ignoreCount;
-    if (totalCount == 0)
-        notifCount.text = @"";
-    else
-        notifCount.text = [NSString stringWithFormat:@"%d",totalCount];
-
+    [self displayNotificationCount];
     [notificationItems reloadData];
     [self setNotificationImage];    
 }
+
 - (void)dealloc {
-    [notifTabArrow release];
-    [notifCount release];
-    [notifCount release];
+    
+    [notifTabArrow release];    
     [msgCount release];
     [reqCount release];
     [alertCount release];
@@ -352,25 +304,7 @@ NSMutableArray *unreadMesg;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
 	selectedItemIndex = indexPath.section;
-    /*
-    //Zubair vai code for notification makes userinteraction disable
-    //    ((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID
-    if (selectedType==0)
-    {
-        //[smAppDelegate.window setUserInteractionEnabled:NO];
-        //[smAppDelegate showActivityViewer:self.view];
-        //NSLog(@"indexPath.row %d %d %@",selectedType,indexPath.row,((NotifMessage *)[smAppDelegate.messages objectAtIndex:indexPath.row]).notifID);
-        //NSString *msgId=((NotifMessage *)[unreadMesg objectAtIndex:indexPath.row]).notifID; 
-        //RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        //[restClient setMessageStatus:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgId status:@"read"];
-        NotifMessage *msg =[[NotifMessage alloc] init];
-        msg=[unreadMesg objectAtIndex:indexPath.row];
-        msg.msgStatus=@"read";
-        [smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
-        
-        //NSLog(@"index: %d ",[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]]);
-    }
-    */
+    
     NotifMessage *msg;
     
     switch (selectedType) {
@@ -379,8 +313,7 @@ NSMutableArray *unreadMesg;
             msg = [unreadMesg objectAtIndex:indexPath.row];
             
             msg.msgStatus=@"read";
-            [smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
-            
+            //[smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
@@ -395,8 +328,6 @@ NSMutableArray *unreadMesg;
         default:
             break;
     }
-      
-    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -458,7 +389,7 @@ NSMutableArray *unreadMesg;
 	
 	UIView *header = [[UIView alloc] initWithFrame:CellFrame];
 
-	header.backgroundColor = [UIColor clearColor];
+	header.backgroundColor = [UIColor lightTextColor];
     UILabel *tempLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,0,
                                                                 tableView.frame.size.width,
                                                                 SECTION_HEADER_HEIGHT)];
@@ -468,7 +399,7 @@ NSMutableArray *unreadMesg;
     else if (selectedType == Request)
         tempLabel.text= @"Friend(s) request(s)";
     else
-        tempLabel.text= @"Notifications";
+        tempLabel.text= @"";
     [tempLabel setFont:[UIFont fontWithName:kFontNameBold size:20]];
     [header addSubview: tempLabel];
     [tempLabel release];
@@ -496,6 +427,24 @@ NSMutableArray *unreadMesg;
     [smAppDelegate.window setUserInteractionEnabled:YES];    
 }
 */
+
+- (void)friendsRequestAccepted:(NSNotification *)notif
+{
+    NSLog(@"friends request accepted");
+    RestClient *restClient=[[RestClient alloc] init];
+    [restClient getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];    
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [webView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
+}
+
 // NotifRequestDelegate methods
 - (void) buttonClicked:(NSString*)name cellRow:(int)row {
     NSLog(@"Delegate button %@ clicked for row %d", name, row);
@@ -523,6 +472,7 @@ NSMutableArray *unreadMesg;
 
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0]; // Only one section
         [notificationItems deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+
 
     } else if ([name isEqualToString:@"Decline"]) {
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
@@ -564,6 +514,23 @@ NSMutableArray *unreadMesg;
 
 - (IBAction)actionBackMe:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)gotFriendRequests:(NSNotification *)notif {
+    NSMutableArray *notifs = [notif object];
+    [smAppDelegate.friendRequests removeAllObjects];
+    [smAppDelegate.friendRequests addObjectsFromArray:notifs];
+    NSLog(@"AppDelegate: gotNotifications - %@", smAppDelegate.friendRequests);
+    [notificationItems reloadData];
+    
+    int requestCount = smAppDelegate.friendRequests.count-smAppDelegate.ignoreCount;
+    
+    if (requestCount == 0)
+        reqCount.text = @"";
+    else
+        reqCount.text   = [NSString stringWithFormat:@"%d",requestCount];
+    
+    [smAppDelegate hideActivityViewer];
 }
 
 @end

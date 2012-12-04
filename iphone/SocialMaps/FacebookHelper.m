@@ -99,6 +99,7 @@ UserDefault *userDefault;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSLog(@"Access Token is %@", facebook.accessToken );
     NSLog(@"Expiration Date is %@", facebook.expirationDate );
+    
     if ([facebook accessToken]) 
     {
         [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];        
@@ -106,15 +107,14 @@ UserDefault *userDefault;
     [prefs setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [prefs synchronize];
     NSLog(@"did log in");
+    [self getUserInfo:self];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.fbAccessToken = [facebook accessToken];
-    if (smAppDelegate.smLogin==TRUE)
-    {
-        NSLog(@"do connect fb with invite");
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
-    }
-
-    [self getUserInfo:self];
+//    if (smAppDelegate.smLogin==TRUE)
+//    {
+//        NSLog(@"do connect fb with invite");
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
+//    }
 }
 
 - (void)fbDidNotLogin:(BOOL)cancelled {
@@ -165,7 +165,7 @@ UserDefault *userDefault;
         UserFriends *aUserFriend=[[UserFriends alloc] init];
         aUserFriend.userName=name;
         aUserFriend.userId=[NSString stringWithFormat:@"%lld",fbid];
-        aUserFriend.imageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal",aUserFriend.userId];
+        aUserFriend.imageUrl=[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",aUserFriend.userId];
         [userFriendslistIndex setObject:[NSNumber numberWithInt:userFriendslistArray.count]  forKey:aUserFriend.userId]; 
         [userFriendslistArray addObject:aUserFriend];
         
@@ -251,14 +251,16 @@ UserDefault *userDefault;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
         
         // Save the FB id
+
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         NSLog(@"FB Id is %@  sm:%i fb:%i", fbId,smAppDelegate.smLogin,smAppDelegate.facebookLogin);
         [prefs setObject:fbId forKey:@"FBUserId"];
-//        if (smAppDelegate.smLogin==TRUE)
-//        {
-//            NSLog(@"callin get connect fb");
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
-//        }
+        smAppDelegate.fbId=fbId;
+        if (smAppDelegate.smLogin==TRUE)
+        {
+            NSLog(@"callin get connect fb");
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
+        }
 
         [prefs synchronize];
         }

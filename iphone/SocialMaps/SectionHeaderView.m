@@ -2,6 +2,8 @@
 #import "SectionHeaderView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ViewCircleWisePeopleViewController.h"
+#import "Globals.h"
+#import "UserCircle.h"
 
 @implementation SectionHeaderView
 
@@ -31,9 +33,10 @@ ViewCircleWisePeopleViewController *circleView;
         // Create and configure the title label.
         _section = sectionNumber;
         CGRect titleLabelFrame = self.bounds;
-        titleLabelFrame.origin.x += 35.0;
-        titleLabelFrame.size.width -= 35.0;
+        titleLabelFrame.origin.x += 10.0;
+        titleLabelFrame.size.width -= 150.0;
         CGRectInset(titleLabelFrame, 0.0, 5.0);
+        NSLog(@"frame %@",NSStringFromCGRect(titleLabelFrame));
         UILabel *label = [[UILabel alloc] initWithFrame:titleLabelFrame];
         label.text = title;
         label.font = [UIFont fontWithName:@"Helvetica" size:14.0];
@@ -79,9 +82,11 @@ ViewCircleWisePeopleViewController *circleView;
         [renameButton.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
         [renameButton addTarget:self action:@selector(renameButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [renameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        
-        [self addSubview:deleteButton];
-        [self addSubview:renameButton];
+        if (((UserCircle *)[circleListDetailGlobalArray objectAtIndex:sectionNumber]).type>1)
+        {
+            [self addSubview:deleteButton];
+            [self addSubview:renameButton];            
+        }
         //finish edit and rename button
         
         // Set the colors for the gradient layer.

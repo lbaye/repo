@@ -23,6 +23,9 @@
 #import "ViewEventListViewController.h"
 #import "PlaceListViewController.h"
 #import "FriendListViewController.h"
+#import "Globals.h"
+#import "ODRefreshControl.h"
+#import "FriendsProfileViewController.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -44,8 +47,8 @@
 @synthesize userItemScrollView;
 @synthesize mapView,mapContainer,statusContainer,entityTextField;
 @synthesize photoPicker,coverImage,profileImage,picSel;
-@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView;
-@synthesize profileView,profileScrollView,zoomView,fullImageView;
+@synthesize totalNotifCount,lastSeenat,nameButton,newsfeedView,newsFeedImageIndicator;
+@synthesize profileView,profileScrollView,zoomView,fullImageView,newsfeedImgView,newsfeedImgFullView,activeDownload;
 
 AppDelegate *smAppDelegate;
 RestClient *rc;
@@ -106,7 +109,8 @@ int scrollHeight,reloadCounter=0;
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
     [ImgesName addObject:@"thum"];
@@ -117,7 +121,6 @@ int scrollHeight,reloadCounter=0;
     
 //            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
@@ -135,17 +138,25 @@ int scrollHeight,reloadCounter=0;
     [profileView addSubview:lineView];
 }
 
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [newsfeedView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     isBackgroundTaskRunning=TRUE;
     [mapContainer removeFromSuperview];
     [statusContainer removeFromSuperview];
+    [newsfeedImgFullView removeFromSuperview];
     [zoomView removeFromSuperview];
     NSString *urlStr=[NSString stringWithFormat:@"%@/%@/newsfeed.html?authToken=%@&t=%@",WS_URL,smAppDelegate.userId,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
-
-//    urlStr=@"http://192.168.1.212:8888/me/newsfeed.html?authToken=1edbca500599e2eb4d3437326931ca167f52736f";
-//    urlStr=[NSString stringWithFormat:@"http://192.168.1.212:8888/me/newsfeed.html?authToken=%@",smAppDelegate.authToken];
     NSLog(@"urlStr %@",urlStr);
     
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
@@ -154,8 +165,31 @@ int scrollHeight,reloadCounter=0;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
+    [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
+
+}
+
+#pragma mark -
+#pragma mark Download support (NSURLConnectionDelegate)
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [self.activeDownload appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+	// Clear the activeDownload property to allow later attempts
+    self.activeDownload = nil;
+    
+    // Release the connection now that it's finished
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Set appIcon with activeDownload and clear temporary data/image
 
 }
 
@@ -318,6 +352,15 @@ int scrollHeight,reloadCounter=0;
         } 
     }
     [photoPicker.view removeFromSuperview];
+}
+
+-(IBAction)closeNewsfeedImgView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [newsFeedImageIndicator stopAnimating];
+    [newsfeedImgFullView removeFromSuperview];
 }
 
 -(IBAction)backButton:(id)sender
@@ -500,41 +543,93 @@ int scrollHeight,reloadCounter=0;
 
 -(void)loadImage
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
-    if (img)
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:userInfo.coverPhoto]);
+    if ([dicImages_msg objectForKey:userInfo.coverPhoto])
     {
-        coverImageView.image=img;
+        coverImageView.image=[dicImages_msg objectForKey:userInfo.coverPhoto];
+        NSLog(@"load from dic");
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
+        if (img)
+        {
+            coverImageView.image=img;
+            [dicImages_msg setObject:img forKey:userInfo.coverPhoto];
+        }
+        else
+        {
+            coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download1. %@",img);
+        [pl drain];
     }
-
-    NSLog(@"image setted after download1. %@",img);
-    [pl drain];
 }
 
 -(void)loadImage2
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    //temp use
-    UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
-    if (img2)
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:userInfo.avatar]);
+    if ([dicImages_msg objectForKey:userInfo.avatar])
     {
-        profileImageView.image=img2;
-        fullImageView.image=img2;
+        profileImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
+        fullImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
+        NSLog(@"load from dic");
     }
     else
     {
-        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
-        profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        //temp use
+        UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
+        if (img2)
+        {
+            profileImageView.image=img2;
+            fullImageView.image=img2;
+            [dicImages_msg setObject:img2 forKey:userInfo.avatar];
+        }
+        else
+        {
+            fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        }
+        
+        NSLog(@"image setted after download2. %@",img2);    
+        [pl drain];
     }
-    
-    NSLog(@"image setted after download2. %@",img2);    
-    [pl drain];
+}
+
+
+-(void)loadNewsFeedImage:(NSString *)imageUrlStr
+{
+    [[newsfeedImgFullView viewWithTag:12345654] removeFromSuperview];
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:imageUrlStr]);
+    if ([dicImages_msg objectForKey:imageUrlStr])
+    {
+        newsfeedImgView.image=[dicImages_msg objectForKey:imageUrlStr];
+        NSLog(@"load from dic");
+    }
+    else
+    {
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"newsfeed image url: %@",imageUrlStr);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
+        if (img)
+        {
+            newsfeedImgView.image=img;
+            [dicImages_msg setObject:img forKey:imageUrlStr];
+        }
+        else
+        {
+            newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download newsfeed image. %@",img);
+        [pl drain];
+    }
 }
 
 //handling map view
@@ -577,17 +672,47 @@ int scrollHeight,reloadCounter=0;
         [webView stopLoading];
         fragment = [[request URL] fragment];
         scheme = [[request URL] scheme];
-        NSLog(@"%@ scheme",[[request URL] absoluteString]);
-        if ([[[[request URL] absoluteString] componentsSeparatedByString:@"1"] count]>0) {
-            // Do custom code
-            NSLog(@"got button %@",scheme);
-            return NO;
-        } 
-        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
-            [self performSelector: NSSelectorFromString(fragment)];
-            return NO;
+        NSString *dataStr=[[request URL] absoluteString];
+        NSLog(@"Data String: %@",dataStr);
+        NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
+        NSLog(@"Tag String: %@",tagStr);
+        if ([tagStr isEqualToString:@"image"])
+        {
+            NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
+            CGFloat xpos = self.view.frame.origin.x;
+            CGFloat ypos = self.view.frame.origin.y;
+            newsfeedImgFullView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+            [UIView beginAnimations:@"Zoom" context:NULL];
+            [UIView setAnimationDuration:0.8];
+            newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+            [UIView commitAnimations];
+            [self.view addSubview:newsfeedImgFullView];
+            [newsFeedImageIndicator startAnimating];
+            [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];
+        }
+        else if ([tagStr isEqualToString:@"profile"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"userID string: %@",userId);
+            if ([userId isEqualToString:smAppDelegate.userId])
+            {
+                NSLog(@"own profile");
+            }
+            else
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];   
+            }
+        }
+        else if ([tagStr isEqualToString:@"geotag"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"geotag string: %@",userId);
         }
         
+        return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
     
@@ -691,7 +816,7 @@ int scrollHeight,reloadCounter=0;
         if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+//            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
@@ -809,11 +934,17 @@ int scrollHeight,reloadCounter=0;
 
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
-    NSLog(@"profile");
+    NSLog(@"profile %@",plan);
     //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
-    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
-    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
-    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"];
+    if (profileFromList==TRUE) {
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
+    }
+    else {
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.5];
+    }
 }
 
 - (void) dismissModalView {
@@ -839,22 +970,22 @@ int scrollHeight,reloadCounter=0;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-//    NSLog(@"did scroll %f",scrollView.contentOffset.y);
-    if (scrollView==profileScrollView)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
-        {
-            reloadCounter++;
-            if (reloadCounter==1) {
-            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
-            [smAppDelegate showActivityViewer:self.view];
-            [newsfeedView reload];
-            }
-        }
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+////    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+//    if (scrollView==profileScrollView)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
+//        {
+//            reloadCounter++;
+//            if (reloadCounter==1) {
+//            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
+//            [smAppDelegate showActivityViewer:self.view];
+//            [newsfeedView reload];
+//            }
+//        }
+//    }
+//}
 
 -(void)viewDidDisappear:(BOOL)animated
 {

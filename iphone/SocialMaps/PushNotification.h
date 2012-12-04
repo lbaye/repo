@@ -18,7 +18,8 @@ typedef enum _PUSH_NOTIFICATION_TYPE {
     PushNotificationShareDirection,
     PushNotificationShareMapix,
     PushNotificationSharePicture,
-    PushNotificationShareBreadcrumb
+    PushNotificationShareBreadcrumb,
+    PushNotificationAcceptedRequest
 } PUSH_NOTIFICATION_TYPE;
 
 @interface PushNotification : NSObject {

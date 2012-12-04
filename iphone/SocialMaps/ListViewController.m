@@ -26,6 +26,7 @@
 #import "NewsFeedViewController.h"
 #import "FriendListViewController.h"
 #import "Globals.h"
+#import "ODRefreshControl.h"
 
 @implementation ListViewController
 @synthesize listPullupMenu;
@@ -74,7 +75,6 @@ PullableView *pullUpView;
 {
     [super viewDidLoad];
     [circleView removeFromSuperview];
-    [self displayNotificationCount];
     listPulldownMenu.backgroundColor = [UIColor clearColor];
     listPullupMenu.backgroundColor   = [UIColor clearColor];
     
@@ -106,29 +106,35 @@ PullableView *pullUpView;
 
     [self initPullView];
     
-    CGSize labelSize = CGSizeMake(70, 20); 
+    CGSize labelSize = CGSizeMake(90, 20); 
     UILabel *labelRefresh = [[UILabel alloc] initWithFrame:CGRectMake((self.view.frame.size.width - labelSize.width) / 2, -labelSize.height - 10, labelSize.width, labelSize.height)];
     labelRefresh.text = @"Reloading...";
     labelRefresh.textAlignment = UITextAlignmentCenter;
     labelRefresh.textColor = [UIColor whiteColor];
-    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    [labelRefresh setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
     labelRefresh.backgroundColor= [UIColor clearColor];
     [itemList addSubview:labelRefresh];
     [labelRefresh release];
     
     copyDisplayListArray = [[NSMutableArray alloc] init];
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.itemList];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
 }
 
 - (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     [self loadImagesForOnscreenRows];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
     smAppDelegate.currentModelViewController = self;
+    [self displayNotificationCount];
 }
 
 - (void) viewDidDisappear:(BOOL)animated
@@ -137,15 +143,26 @@ PullableView *pullUpView;
     [super viewDidDisappear:animated];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
-        NSLog(@"At the top");
-        [smAppDelegate showActivityViewer:self.view];
-        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
-        [self getSortedDisplayList];
-        [itemList reloadData];
-    }
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [self getSortedDisplayList];
+    [itemList reloadData];
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
+//        NSLog(@"At the top");
+//        [smAppDelegate showActivityViewer:self.view];
+//        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
+//        [self getSortedDisplayList];
+//        [itemList reloadData];
+//    }
+//}
 
 -(void)initPullView
 {
@@ -442,10 +459,25 @@ PullableView *pullUpView;
     //    [self presentModalViewController:controller animated:YES];
     
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
-    UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
-    
+    UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
+    [[UITabBar appearance] setTintColor:[UIColor blackColor]];
     initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
+}
+
+- (void) showPinOnMapViewPlan:(Plan *)plan 
+{
+    NSLog(@"in listview plan %@",plan);
+    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
+    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
+    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:1.5];
+}
+
+- (void) dismissModalView
+{
+    
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)removeCircleView:(id)sender
@@ -532,11 +564,11 @@ PullableView *pullUpView;
             NSLog(@"in search");
             if (![((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
             {
+                profileFromList=TRUE;
                 FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
                 controller.friendsId=((LocationItemPeople *)[copyListOfItems objectAtIndex:indexPath.row]).userInfo.userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                profileFromList=TRUE;
             }
         }                
     }
@@ -545,6 +577,7 @@ PullableView *pullUpView;
         if ([[copyDisplayListArray objectAtIndex:indexPath.row] isKindOfClass:[LocationItemPeople class]]) 
         {
             NSLog(@"not in search");
+            profileFromList=TRUE;
             if (![((LocationItemPeople *)[copyDisplayListArray objectAtIndex:indexPath.row]).userInfo.source isEqualToString:@"facebook"])
             {
             FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
@@ -566,6 +599,8 @@ PullableView *pullUpView;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
+    if(searching) 
+		anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
     return [anItem getRowHeight:tableView];
 }
 
@@ -847,6 +882,8 @@ PullableView *pullUpView;
             
             LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
             
+            if(searching) 
+                anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
             //anItem.itemCoverPhotoUrl = [NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"];
             
             if (anItem.itemCoverPhotoUrl) 

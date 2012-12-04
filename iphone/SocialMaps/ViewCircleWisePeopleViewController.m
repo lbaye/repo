@@ -53,6 +53,7 @@
 
 -(void)emailMenuButtonPressed:(UIMenuController*)menuController;
 -(void)sendEmailForEntryAtIndexPath:(NSIndexPath*)indexPath;
+-(void)loadCircleData;
 
 @end
 
@@ -269,6 +270,37 @@ int renameCircleOndex;
     }
 }
 
+-(void)showConfirmBox:(int)index
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
+                                                    message:@"You must be connected to the internet to use this app." 
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:@"Cancel", nil];
+    [alert show];
+    alert.tag=index;
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"button Index %d",buttonIndex);
+    if (buttonIndex==0)
+    {
+        [self deleteCircleReq:alertView.tag];
+    }
+}
+
+-(void)deleteCircleReq:(int)index
+{
+    [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
+    NSString *circleID;
+    circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
+    [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
+    [circleListDetailGlobalArray removeObjectAtIndex:index];
+    self.userCircle=[circleListDetailGlobalArray mutableCopy];
+    NSLog(@"delete index %d %@",index,circleID);    
+}
 
 -(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     
@@ -311,7 +343,10 @@ int renameCircleOndex;
         [cell.footerView.layer setCornerRadius:6.0f];
         [cell.footerView.layer setMasksToBounds:YES];
         cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
-        cell.distanceLabel.text=[NSString stringWithFormat:@"%.2lfm",userFrnd.distance];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=userFrnd.curlocLat;
+        geoLocation.longitude=userFrnd.curlocLng;
+        cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         [cell.inviteButton addTarget:self action:@selector(addToCircle:) forControlEvents:UIControlEventTouchUpInside];
 //        [cell.inviteButton addTarget:self action:@selector(removeFromCircle:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -728,6 +763,26 @@ int renameCircleOndex;
     [self.circleSelectTableView reloadData];
     NSLog(@"self.circleSelectTableView %@",self.circleSelectTableView);
     [self.circleCreateView setNeedsDisplay];    
+    [self loadCircleData];
+}
+
+-(void)loadCircleData
+{
+    //load circle global data
+    [circleListGlobalArray removeAllObjects];
+    for (int i=0; i<[circleListDetailGlobalArray count];i++)
+    {
+        UserCircle *circleDetail=[circleListDetailGlobalArray objectAtIndex:i];
+        
+        UserCircle *circle=[[UserCircle alloc] init];
+        circle.circleID=circleDetail.circleID;
+        circle.circleName=circleDetail.circleName;
+        circle.type = circleDetail.type;
+        
+        circle.friends=circleDetail.friends;
+        [circleListGlobalArray addObject:circle];
+        NSLog(@"circle.circleID: %@",circle.circleID);
+    }
 }
 
 -(IBAction)saveRenameCircle:(id)sender
@@ -771,16 +826,8 @@ int renameCircleOndex;
 
 -(void)deleteCircle:(int)index
 {
-    [smAppDelegate showActivityViewer:self.view];
-    [smAppDelegate.window setUserInteractionEnabled:NO];
-    NSString *circleID;
-    circleID= ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleID;
-    [rc deleteCircleByCircleId:@"Auth-Token" :smAppDelegate.authToken :circleID];
-    [circleListDetailGlobalArray removeObjectAtIndex:index];
-    self.userCircle=[circleListDetailGlobalArray mutableCopy];
-
-    NSLog(@"delete index %d %@",index,circleID);    
-    
+    [self showConfirmBox:index];
+   
 }
 
 - (void)createCircleDone:(NSNotification *)notif
@@ -798,6 +845,7 @@ int renameCircleOndex;
     NSRange range = NSMakeRange(0, [circleListDetailGlobalArray count]-1);
     NSIndexSet *section = [NSIndexSet indexSetWithIndexesInRange:range];                                     
     [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
+    [self loadCircleData];
  
 }
 
@@ -837,6 +885,7 @@ int renameCircleOndex;
     [self.circleTableView  performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
     [self.circleTableView setNeedsDisplay];
     [self.circleTableView reloadData];
+    [self loadCircleData];
 }
 
 - (void)deleteCircleDone:(NSNotification *)notif
@@ -846,6 +895,7 @@ int renameCircleOndex;
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.circleTableView reloadData];
     [UtilityClass showAlert:@"" :@"Circle deleted successfully"];
+    [self loadCircleData];
 }
 
 - (void)renameCircleDone:(NSNotification *)notif
@@ -853,6 +903,7 @@ int renameCircleOndex;
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.circleTableView reloadData];
+    [self loadCircleData];
 }
 
 -(void)addToCircle:(id)sender

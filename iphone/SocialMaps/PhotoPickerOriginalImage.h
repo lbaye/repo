@@ -35,4 +35,6 @@ UIActionSheetDelegate> {
 - (void)takePhoto:(id)sender imgSize:(CGSize)size;
 - (void)selectPhoto:(id)sender imgSize:(CGSize)size;
 - (UIImage*) scaleImage:(UIImage*) img toSize:(CGSize)newSize;
+- (UIImage *)imageByScalingProportionallyToSize:(UIImage *)sourceImage;
+
 @end

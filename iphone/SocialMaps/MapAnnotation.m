@@ -106,18 +106,29 @@
     
     annoView.canShowCallout = NO;
     
+//    UIButton *button= [[UIButton alloc] initWithFrame:annoView.frame];
+    [(UIButton *)[annoView viewWithTag:1234321] removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+    [(UIButton *)[annoView viewWithTag:1234321] removeFromSuperview];
+//    [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+//    button.tag=1234321;
+//    [annoView addSubview:button];
+    
     changeState = [UIButton buttonWithType:UIButtonTypeCustom];
-    changeState.frame = CGRectMake(imgFrame.size.width-12, 23, 23, 23);
+    changeState.frame = CGRectMake(imgFrame.size.width-12, 21, 26, 26);
     [changeState addTarget:self action:@selector(changeStateClicked:) forControlEvents:UIControlEventTouchUpInside];
     [changeState setImage:[UIImage imageNamed:@"map_right_arrow.png"] forState:UIControlStateNormal];
     changeState.backgroundColor = [UIColor clearColor];
     changeState.tag = 11001;
     [annoView addSubview:changeState]; 
     annoView.centerOffset = CGPointMake(0.0, 0.0);
-    
-    
-    
+    [[annoView viewWithTag:1234321] removeFromSuperview];
     return annoView;
+}
+
+-(void)doNothing:(id)sender
+{
+    NSLog(@"do nothing");
+    [sender setNeedsDisplay];
 }
 
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem {
@@ -134,12 +145,19 @@
     [infoView.layer setBorderWidth:1.0f];
     [infoView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
 
+    [[annoView viewWithTag:1234321] removeFromSuperview];
+    UIButton *button= [[UIButton alloc] initWithFrame:annoView.frame];
+    [button removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+    button.tag=1234321;
+    [annoView addSubview:button];
+
     
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
     
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
-    btn.frame = CGRectMake(annoFrame.size.width-24, 23, 23, 23);
+    btn.frame = CGRectMake(annoFrame.size.width-24, 21, 26, 26);
     
     // For external users don't show details
     if ([locItem isKindOfClass:[LocationItemPeople class]]) {
@@ -163,7 +181,7 @@
     [annoView bringSubviewToFront:btn];
     CGPoint annoOffset = CGPointMake((200-(ANNO_IMG_WIDTH+12))/2, 0);
     annoView.centerOffset = annoOffset;
-    
+    annoView.tag=12211221;
     return annoView;
 }
 
@@ -171,6 +189,7 @@
     annoView = [self getViewForStateSummary:locItem];
     UIView *infoView = [annoView viewWithTag:11002];
     [infoView removeFromSuperview];
+    
     
     UIImageView *imgView = (UIImageView*)[annoView viewWithTag:11000];
     imgView.frame = CGRectMake(8, 8, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
@@ -197,15 +216,24 @@
     [infoView.layer setMasksToBounds:YES];
     [infoView.layer setBorderWidth:1.0f];
     [infoView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-    
+    [[annoView viewWithTag:1234321] removeFromSuperview];
+    UIButton *button= [[UIButton alloc] initWithFrame:annoView.frame];
+    [button removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
+    button.tag=1234321;
+//    [annoView addSubview:button];
+//    [annoView sendSubviewToBack:button];
+    button.frame=[annoView frame];
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
     
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
-    btn.frame = CGRectMake(annoFrame.size.width-24, 23, 23, 23);
+    btn.frame = CGRectMake(annoFrame.size.width-24, 23, 26, 26);
     [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     [annoView bringSubviewToFront:btn];
-
+    [annoView insertSubview:button belowSubview:[annoView viewWithTag:11002]];
+    NSLog(@"annoview: %@ %@",annoView,[annoView subviews]);
+    annoView.tag=12211221;    
     return annoView;
 }
 

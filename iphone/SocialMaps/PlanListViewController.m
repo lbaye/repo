@@ -272,11 +272,16 @@ int delCounter=0;
     NSLog(@"tag %d",[sender tag]);
     NSLog(@"tag %d",[sender tag]);
     pointOnMapFlag=TRUE;
-    if (profileFromList==FALSE)
+//    if (profileFromList==FALSE)
     {
         [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:[planListArr objectAtIndex:[sender tag]]];
-        [self dismissModalViewControllerAnimated:NO];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
     }
+}
+    
+- (void) dismissModalView {
+        
+        [self dismissModalViewControllerAnimated:NO];
 }
 
 -(IBAction)editPlanAction:(id)sender

@@ -468,7 +468,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="118" sectionHeaderHeight="22" sectionFooterHeight="22" id="Jjb-kW-qSG">
-                                <rect key="frame" x="0.0" y="45" width="320" height="415"/>
+                                <rect key="frame" x="0.0" y="94" width="320" height="353"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -584,6 +584,21 @@
                                     <outlet property="delegate" destination="1zV-9L-9dU" id="LCb-gV-t2O"/>
                                 </connections>
                             </tableView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top_curve_bg.png" id="8yM-sW-RHD">
+                                <rect key="frame" x="0.0" y="45" width="320" height="70"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_camera.png" id="7Pu-4X-hU5">
+                                <rect key="frame" x="20" y="63" width="28" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="My Plans" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="6mC-sk-Thf">
+                                <rect key="frame" x="57" y="62" width="96" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
@@ -801,74 +816,6 @@
         <image name="sp2.png" width="1" height="60"/>
         <image name="top_curve_bg.png" width="640" height="138"/>
     </resources>
-    <classes>
-        <class className="CreatePlanViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreatePlanViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="back:"/>
-                <relationship kind="action" name="cancelMapLocation:"/>
-                <relationship kind="action" name="cancelPlan:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="saveMapLocation:"/>
-                <relationship kind="action" name="savePlan:"/>
-                <relationship kind="action" name="segmentChanged:"/>
-                <relationship kind="action" name="selecDate:"/>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="customView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="dateLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="descriptionTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="frndsScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="mapContainerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="FriendsPlanListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FriendsPlanListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButtonAction:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="outlet" name="planListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="PlanListTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlanListTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addressBg" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="addressScroller" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="deletePlanButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="distanceLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="editPlanButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="planBgImg" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="planDescriptionView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="pointOnMap" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="PlanListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlanListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButtonAction:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="outlet" name="planListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

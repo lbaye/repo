@@ -20,6 +20,8 @@
     NSString *address;
     NSString *statusMsg;
     NSString *regMedia;
+    NSString *curlocLat;
+    NSString *curlocLng;
 }
 @property (atomic,retain) NSString* userId;
 @property (atomic,retain) NSString* userName;
@@ -31,6 +33,7 @@
 @property(nonatomic,retain) NSString *address;
 @property(nonatomic,retain) NSString *statusMsg;
 @property(nonatomic,retain) NSString *regMedia;
-
+@property(nonatomic,retain) NSString *curlocLat;
+@property(nonatomic,retain) NSString *curlocLng;
 
 @end

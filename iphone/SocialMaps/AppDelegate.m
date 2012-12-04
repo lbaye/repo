@@ -25,6 +25,9 @@
 #import "ViewEventListViewController.h"
 #import "NotificationController.h"
 #import "Globals.h"
+#import "FriendsProfileViewController.h"
+#import "MapViewController.h"
+#import "LoadingView.h"
 
 @implementation AppDelegate
 
@@ -82,6 +85,7 @@
 @synthesize currentModelViewController;
 @synthesize isAppInBackgound;
 @synthesize shareLocationOption;
+@synthesize timerGotListing;
 
 static AppDelegate *sharedInstance=nil;
 
@@ -246,7 +250,9 @@ static AppDelegate *sharedInstance=nil;
 {
     PushNotification *newNotif = [PushNotification parsePayload:userInfo];
     NSLog(@"Received notification: count:%d, data:%@  id:%@ type:%d", newNotif.badgeCount, userInfo, newNotif.objectIds, newNotif.notifType);
-    
+    notifBadgeFlag=TRUE;
+    badgeCount= newNotif.badgeCount;
+    [self.currentModelViewController viewWillAppear:NO];
     // Temporary - set count to zero
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
@@ -337,7 +343,50 @@ static AppDelegate *sharedInstance=nil;
             
             [self.currentModelViewController presentModalViewController:controller animated:YES];
         }
-       
+        else if (newNotif.notifType == PushNotificationAcceptedRequest) 
+        {
+            RestClient *rc=[[RestClient alloc] init];
+            [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
+            FriendsProfileViewController *frndProfile = [[FriendsProfileViewController alloc] init];
+            frndProfile.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+            frndProfile.friendsId=[newNotif.objectIds objectAtIndex:0];
+            [self.currentModelViewController presentModalViewController:frndProfile animated:YES];
+        }
+        else if (newNotif.notifType == PushNotificationProximityAlert)
+        {
+            NSLog(@"in proxomity alert");            
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            MapViewController *controller = [storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            LocationItemPeople *locItemPeople=[[LocationItemPeople alloc] init];
+            for (int i=0; i<[self.displayList count]; i++)
+            {
+                LocationItemPeople *locItem = (LocationItemPeople*)[self.displayList objectAtIndex:i];
+                if ([[newNotif.objectIds objectAtIndex:0] isEqualToString:locItem.userInfo.userId])
+                {
+                    locItemPeople=locItem;
+                }                
+            }
+
+            
+            if ([self.currentModelViewController isKindOfClass:[MapViewController class]]) 
+            {
+                [(MapViewController *) self.currentModelViewController showAnnotationDetailView:locItemPeople];
+                return;
+            }
+            
+            [controller showAnnotationDetailView:locItemPeople];
+            [self.currentModelViewController presentModalViewController:controller animated:YES];
+        }
+    }
+    else 
+    {
+        //apps not in background
+        if (newNotif.notifType == PushNotificationAcceptedRequest) 
+        {
+            RestClient *rc=[[RestClient alloc] init];
+            [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
+        }
     }
 }
 
@@ -400,19 +449,28 @@ static AppDelegate *sharedInstance=nil;
 
 -(void)hideActivityViewer
 {
+    /*
     [activityView stopAnimating];
 	[activityView removeFromSuperview];
 	activityView = nil;
+     */
+    LoadingView *loadingView2 =(LoadingView *)[self.window viewWithTag:11111111];
+    [loadingView2 removeView];
 }
 
 -(void)showActivityViewer:(UIView*) sender
 {
+    LoadingView *loadingView = [LoadingView loadingViewInView:sender];
+	loadingView.tag=11111111;
+    
+    
+/*    
 	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
     
 	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
     [activityView.layer setCornerRadius:4.0f];
     [activityView.layer setMasksToBounds:YES];
-    
+    activityView.tag=11111111;
     activityView.backgroundColor = [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:25.0/255.0 alpha:0.7];
 	[activityView startAnimating];
     [activityView hidesWhenStopped];
@@ -423,7 +481,35 @@ static AppDelegate *sharedInstance=nil;
                                      UIViewAutoresizingFlexibleTopMargin |
                                      UIViewAutoresizingFlexibleBottomMargin);
 	[sender addSubview: activityView];
+ */
+    
+    
+    [self performSelector:@selector(showCloseButton:) withObject:loadingView afterDelay:120];
+    
 }
+
+
+- (void) showCloseButton:(id)sender
+{
+    UIButton *buttonClose = [UIButton buttonWithType:UIButtonTypeCustom];
+    [buttonClose setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonClose addTarget:self action:@selector(hideActivityViewer) forControlEvents:UIControlEventTouchUpInside];
+    UIView *senderView = sender;
+    senderView.superview.userInteractionEnabled = YES;
+    senderView.superview.superview.userInteractionEnabled = YES;
+    senderView.userInteractionEnabled = YES;
+    self.window.userInteractionEnabled = YES;
+    [senderView addSubview:buttonClose];
+    
+    buttonClose.frame = CGRectMake(senderView.frame.size.width - 100, senderView.frame.size.height - 70, 100, 70);
+    
+    [buttonClose setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [buttonClose.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
+    [buttonClose setTitle:@"Close" forState:UIControlStateNormal];
+    buttonClose.backgroundColor = [UIColor clearColor];
+    buttonClose.showsTouchWhenHighlighted = YES;
+}
+
 
 // Get User information
 // - messages

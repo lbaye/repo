@@ -30,6 +30,7 @@
 @synthesize listPulldownMenu,listPulldown,downloadedImageDict;
 @synthesize listViewfilter;
 @synthesize  msgView,textViewNewMsg;
+@synthesize itemDistance;
 
 __strong NSMutableArray *filteredList, *eventListArray;
 __strong NSMutableDictionary *imageDownloadsInProgress;
@@ -112,6 +113,15 @@ bool showSM=true;
     [msgView removeFromSuperview];
     
     smAppDelegate.currentModelViewController = self;
+    
+//    
+//    
+//    filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first = [(Event*)a eventDistance];
+//        NSString *second = [(Event*)b eventDistance];
+//        return [first compare:second];
+//    }] mutableCopy];
+//    [self.circleListTableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -132,8 +142,46 @@ bool showSM=true;
 
 -(NSMutableArray *)loadDummyData
 {
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        LocationItemPeople *people=[[LocationItemPeople alloc] init];
+        people = (LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        people.userInfo.distance=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+        [smAppDelegate.peopleList replaceObjectAtIndex:i withObject:people];
+    }
+    
+    
+    
+    smAppDelegate.peopleList = [[smAppDelegate.peopleList sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+                     {
+                         People *firstPeople = [(LocationItemPeople*)a userInfo];
+                         People *secondPeople = [(LocationItemPeople*)a userInfo];
+                         if (firstPeople.distance > secondPeople.distance) 
+                         {
+                             return (NSComparisonResult)NSOrderedDescending;
+                         }
+                         
+                         if (firstPeople.distance < secondPeople.distance) 
+                         {
+                             return (NSComparisonResult)NSOrderedAscending;
+                         }
+                         return (NSComparisonResult)NSOrderedSame;
+                     }] mutableCopy];
     return smAppDelegate.peopleList;
 }
+
+- (NSComparisonResult) compareDistance:(LocationItem*) other {
+    if (self.itemDistance < other.itemDistance)
+        return NSOrderedAscending;
+    else if (self.itemDistance > other.itemDistance)
+        return NSOrderedDescending;
+    else
+        return NSOrderedSame;
+}
+
 
 - (void) checkboxClicked:(int)btnNum withState:(int) newState sender:(id) sender 
 {
@@ -457,14 +505,11 @@ bool showSM=true;
         [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [cell.footerView.layer setCornerRadius:6.0f];
-//        [cell.footerView.layer setMasksToBounds:YES];
-//        cell.footerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.6];
         
-        if (people.itemDistance > 99999)
-            cell.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
-        else
-            cell.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
 
 
     }

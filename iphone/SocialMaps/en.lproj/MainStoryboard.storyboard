@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
@@ -391,22 +391,22 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
-                                        <rect key="frame" x="112.5" y="8" width="95" height="60"/>
+                                    <view hidden="YES" contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
+                                        <rect key="frame" x="188.5" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_event.png" highlightedImage="map_direction_icon.png" id="CIq-Uf-1T3">
-                                                <rect key="frame" x="34" y="0.0" width="30" height="37"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="icon_event.png" id="CIq-Uf-1T3">
+                                                <rect key="frame" x="37" y="5.5" width="24" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Events" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="kHB-6o-nmL">
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Events" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="kHB-6o-nmL">
                                                 <rect key="frame" x="9" y="32" width="78" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gxy-sW-Fxj" userLabel="gotoDirections">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="gxy-sW-Fxj" userLabel="gotoDirections">
                                                 <rect key="frame" x="0.0" y="0.0" width="95" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -424,7 +424,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="Ww5-ci-bnM" userLabel="mapBreadcrumbs">
+                                    <view hidden="YES" contentMode="scaleToFill" id="Ww5-ci-bnM" userLabel="mapBreadcrumbs">
                                         <rect key="frame" x="212" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -458,10 +458,10 @@
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="h9n-hE-u7D">
-                                        <rect key="frame" x="109.5" y="8" width="1" height="60"/>
+                                        <rect key="frame" x="159.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="3dl-ai-vvi">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="sp.png" id="3dl-ai-vvi">
                                         <rect key="frame" x="207.5" y="8" width="1" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -503,22 +503,22 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="5HN-YE-a9u" userLabel="mapMeetUp">
-                                        <rect key="frame" x="6" y="8" width="95" height="60"/>
+                                    <view hidden="YES" contentMode="scaleToFill" id="5HN-YE-a9u" userLabel="mapMeetUp">
+                                        <rect key="frame" x="27" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="meet_up_icon.png" highlightedImage="meet_up_icon.png" id="3mw-y9-dW5">
-                                                <rect key="frame" x="36" y="0.0" width="30" height="35"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="meet_up_icon.png" id="3mw-y9-dW5">
+                                                <rect key="frame" x="39" y="5.5" width="24" height="28"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="X6H-hS-ti1">
-                                                <rect key="frame" x="12" y="31.5" width="78" height="29"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Meet-up request" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" adjustsFontSizeToFit="NO" id="X6H-hS-ti1">
+                                                <rect key="frame" x="-9" y="31.5" width="120" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="chR-P5-ZnW" userLabel="gotoMeetupReq">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="chR-P5-ZnW" userLabel="gotoMeetupReq">
                                                 <rect key="frame" x="0.0" y="0.0" width="95" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -779,7 +779,7 @@
                                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                             </imageView>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Share location with:" lineBreakMode="tailTruncation" minimumFontSize="10" id="nmp-Zs-QJl">
-                                                <rect key="frame" x="4" y="2" width="171" height="21"/>
+                                                <rect key="frame" x="4" y="0.0" width="171" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2190,6 +2190,14 @@
                                     <outlet property="delegate" destination="xAh-9q-Sej" id="RQV-wu-Wmo"/>
                                 </connections>
                             </tableView>
+                            <webView opaque="NO" contentMode="scaleToFill" id="jAL-eU-MsK">
+                                <rect key="frame" x="13" y="108" width="294" height="352"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="xAh-9q-Sej" id="uYb-LD-OWA"/>
+                                </connections>
+                            </webView>
                         </subviews>
                         <color key="backgroundColor" red="0.95294123888015747" green="0.95294123888015747" blue="0.95294123888015747" alpha="1" colorSpace="deviceRGB"/>
                     </view>
@@ -2203,6 +2211,7 @@
                         <outlet property="notificationItems" destination="2OU-er-a2F" id="Mk5-vi-ZsV"/>
                         <outlet property="reqButton" destination="tua-eR-v16" id="3bt-Sq-X9d"/>
                         <outlet property="reqCount" destination="MvU-Or-hjk" id="0RI-gI-ldy"/>
+                        <outlet property="webView" destination="jAL-eU-MsK" id="GXZ-da-aNO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GY2-DI-b1v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2450,23 +2459,12 @@
                                         <rect key="frame" x="0.0" y="2" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="3Nr-bC-Tpw">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Accounts settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="tb9-Dh-M20">
-                                                <rect key="frame" x="20" y="10" width="135" height="41"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="YQv-hi-TCU">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="imageEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_right.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2477,6 +2475,17 @@
                                                     <action selector="setAccountSettings:" destination="i7v-82-K9c" eventType="touchUpInside" id="j4A-Og-4zG"/>
                                                 </connections>
                                             </button>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Accounts settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="tb9-Dh-M20">
+                                                <rect key="frame" x="20" y="10" width="135" height="41"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon_arrow_right.png" id="3Nr-bC-Tpw">
+                                                <rect key="frame" x="287" y="19" width="12" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
@@ -2484,23 +2493,12 @@
                                         <rect key="frame" x="0.0" y="65" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="UyK-me-ikF">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Location sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="wxB-cl-jF3">
-                                                <rect key="frame" x="20" y="10" width="206" height="41"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="UZD-ju-eG4">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_right.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2511,30 +2509,31 @@
                                                     <action selector="setLocationSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="Jjb-aC-l90"/>
                                                 </connections>
                                             </button>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    </view>
-                                    <view hidden="YES" contentMode="scaleToFill" id="KWk-dn-Pkv" userLabel="platformSettings">
-                                        <rect key="frame" x="0.0" y="128" width="310" height="62"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="kHi-KC-ZGN">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon_arrow_right.png" id="UyK-me-ikF">
+                                                <rect key="frame" x="287" y="19" width="12" height="23"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Platform settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="Hub-d9-Z5x">
-                                                <rect key="frame" x="20" y="10" width="196" height="41"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Location sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="wxB-cl-jF3">
+                                                <rect key="frame" x="20" y="10" width="206" height="41"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sTA-U1-eFs">
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="KWk-dn-Pkv" userLabel="platformSettings">
+                                        <rect key="frame" x="0.0" y="128" width="310" height="62"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sTA-U1-eFs">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_down.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2545,6 +2544,17 @@
                                                     <action selector="expandPlatformSettings:" destination="i7v-82-K9c" eventType="touchUpInside" id="evD-UK-frg"/>
                                                 </connections>
                                             </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" id="kHi-KC-ZGN">
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Platform settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="Hub-d9-Z5x">
+                                                <rect key="frame" x="20" y="10" width="196" height="41"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
@@ -2552,23 +2562,12 @@
                                         <rect key="frame" x="0.0" y="192" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="9Qn-mF-vUc">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Layers settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="J8u-tL-oTh">
-                                                <rect key="frame" x="20" y="10" width="197" height="41"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cRR-1d-ysa">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cRR-1d-ysa">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_down.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2579,6 +2578,17 @@
                                                     <action selector="expandLayersSettings:" destination="i7v-82-K9c" eventType="touchUpInside" id="pAO-cZ-rja"/>
                                                 </connections>
                                             </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon_arrow_down.png" id="9Qn-mF-vUc">
+                                                <rect key="frame" x="287" y="19" width="12" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Layers settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="J8u-tL-oTh">
+                                                <rect key="frame" x="20" y="10" width="197" height="41"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
@@ -2586,23 +2596,12 @@
                                         <rect key="frame" x="0.0" y="255" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="l9h-1e-xtC">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Information sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="b3E-UO-6jR">
-                                                <rect key="frame" x="20" y="10" width="210" height="41"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="02A-Y3-Aa8">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_right.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2613,6 +2612,17 @@
                                                     <action selector="setInfoSharing:" destination="i7v-82-K9c" eventType="touchUpInside" id="OfR-mu-2m1"/>
                                                 </connections>
                                             </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon_arrow_right.png" id="l9h-1e-xtC">
+                                                <rect key="frame" x="287" y="19" width="12" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Information sharing" lineBreakMode="tailTruncation" minimumFontSize="10" id="b3E-UO-6jR">
+                                                <rect key="frame" x="20" y="10" width="210" height="41"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
@@ -2620,23 +2630,12 @@
                                         <rect key="frame" x="0.0" y="317" width="310" height="62"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="img_settings_list_bg.png" id="Ah9-YP-De2">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Notifications settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="w51-EP-prm">
-                                                <rect key="frame" x="20" y="10" width="249" height="41"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1ev-j4-FXl">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="62"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="277" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" image="icon_arrow_right.png">
+                                                <state key="normal" backgroundImage="img_settings_list_bg_solid.png">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2647,6 +2646,17 @@
                                                     <action selector="setNotifSettings:" destination="i7v-82-K9c" eventType="touchUpInside" id="z8C-Ys-cbL"/>
                                                 </connections>
                                             </button>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="icon_arrow_right.png" id="Ah9-YP-De2">
+                                                <rect key="frame" x="287" y="19" width="12" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Notifications settings" lineBreakMode="tailTruncation" minimumFontSize="10" id="w51-EP-prm">
+                                                <rect key="frame" x="20" y="10" width="249" height="41"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
@@ -3073,12 +3083,150 @@
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
+                            <view contentMode="scaleToFill" id="ic6-o7-aCE">
+                                <rect key="frame" x="20" y="20" width="280" height="314"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="9bb-4A-zXN">
+                                        <rect key="frame" x="0.0" y="88" width="280" height="186"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="MlS-Ix-dkd"/>
+                                        </connections>
+                                    </scrollView>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="zNS-fk-40p">
+                                        <rect key="frame" x="0.0" y="41" width="280" height="233"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="circleTableCell" id="h26-AA-syh" customClass="SelectCircleTableCell">
+                                                <rect key="frame" x="0.0" y="22" width="280" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="N58-YU-Xfg">
+                                                            <rect key="frame" x="20" y="10" width="182" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eGt-Cn-vSY">
+                                                            <rect key="frame" x="224" y="6" width="33" height="30"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                            <state key="normal" image="checkbox_unchecked.png">
+                                                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <state key="highlighted">
+                                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <connections>
+                                                    <outlet property="circrcleCheckbox" destination="eGt-Cn-vSY" id="nPf-RO-mnG"/>
+                                                    <outlet property="circrcleName" destination="N58-YU-Xfg" id="Cnv-LE-MX6"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="PnO-dp-Cvz" id="pWp-sl-hEN"/>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="FfN-Kb-qwb"/>
+                                        </connections>
+                                    </tableView>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.94999998807907104" contentMode="scaleToFill" id="uvt-tE-5qT">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <items>
+                                            <barButtonItem style="plain" id="84b-r4-kwx">
+                                                <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="fd2-WH-1Rf">
+                                                    <rect key="frame" x="6" y="8" width="267" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <segments>
+                                                        <segment title="Friends"/>
+                                                        <segment title="Circles"/>
+                                                    </segments>
+                                                    <color key="tintColor" red="0.58039218189999997" green="0.75294125079999996" blue="0.1098039299" alpha="1" colorSpace="deviceRGB"/>
+                                                    <connections>
+                                                        <action selector="segmentChanged:" destination="PnO-dp-Cvz" eventType="valueChanged" id="Db7-KN-usp"/>
+                                                    </connections>
+                                                </segmentedControl>
+                                            </barButtonItem>
+                                        </items>
+                                        <color key="tintColor" red="0.58039218189999997" green="0.75294125079999996" blue="0.1098039299" alpha="1" colorSpace="deviceRGB"/>
+                                    </toolbar>
+                                    <searchBar contentMode="redraw" showsCancelButton="YES" id="ml0-t1-Wa4">
+                                        <rect key="frame" x="0.0" y="44" width="280" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="1" colorSpace="deviceRGB"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="PnO-dp-Cvz" id="9L1-u9-b2K"/>
+                                        </connections>
+                                    </searchBar>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="arY-1Y-jY0">
+                                        <rect key="frame" x="24" y="281" width="108" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
+                                        <state key="normal" title="Invite">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveCustom:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="XBP-oI-aer"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eJk-eB-x6C">
+                                        <rect key="frame" x="143" y="281" width="108" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelCustom:" destination="PnO-dp-Cvz" eventType="touchUpInside" id="ey6-Rr-YF3"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="sp2.png" id="Uka-aZ-xj6">
+                                        <rect key="frame" x="137" y="281" width="1" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wpS-mw-xlY">
+                                        <rect key="frame" x="10" y="276" width="260" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="zK9-2t-0Hu"/>
                     <connections>
                         <outlet property="addressScollview" destination="ZGz-3K-MTb" id="TmF-C5-swB"/>
+                        <outlet property="circleTableView" destination="zNS-fk-40p" id="ljW-3L-nbf"/>
+                        <outlet property="customView" destination="ic6-o7-aCE" id="q4z-Ts-b6K"/>
                         <outlet property="deleteEventButton" destination="hmS-vl-M0B" id="fqr-cW-Wuf"/>
                         <outlet property="descriptionView" destination="E4A-wV-sft" id="39G-3i-TEP"/>
                         <outlet property="detailView" destination="ixc-V1-rJ0" id="hmy-tS-A8F"/>
@@ -3089,11 +3237,14 @@
                         <outlet property="eventImgView" destination="9kN-BQ-KgE" id="cg7-LX-996"/>
                         <outlet property="eventName" destination="cLa-U0-BSY" id="Med-L5-N1C"/>
                         <outlet property="eventShortDetail" destination="JUx-Uf-BDi" id="LzG-tk-nsr"/>
+                        <outlet property="friendSearchbar" destination="ml0-t1-Wa4" id="wNs-lb-So5"/>
+                        <outlet property="frndsScrollView" destination="9bb-4A-zXN" id="ZKB-sa-iBz"/>
                         <outlet property="guestScrollView" destination="3qv-P1-laO" id="fJq-L6-EoX"/>
                         <outlet property="inviteEventButton" destination="CIc-Bs-eUT" id="Sy9-7t-5fT"/>
                         <outlet property="mapContainer" destination="NYM-dH-GFe" id="sfB-Dx-H8a"/>
                         <outlet property="mapView" destination="hv2-vn-oPN" id="glA-g9-GJf"/>
                         <outlet property="rsvpView" destination="ZMq-Sm-dBK" id="VxP-yW-skd"/>
+                        <outlet property="segmentControl" destination="fd2-WH-1Rf" id="A9a-Bh-Kqt"/>
                         <outlet property="totalNotifCount" destination="lww-xc-wM7" id="VdN-9t-WCi"/>
                         <segue destination="iEq-R0-8Ox" kind="modal" identifier="updateEvent" modalTransitionStyle="crossDissolve" id="BET-LK-FoH"/>
                     </connections>
@@ -4940,7 +5091,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="icon_settings.png" width="43" height="45"/>
         <image name="icon_world.png" width="274" height="274"/>
         <image name="img_settings_header_bg.png" width="640" height="110"/>
-        <image name="img_settings_list_bg.png" width="600" height="100"/>
+        <image name="img_settings_list_bg_solid.png" width="600" height="100"/>
         <image name="line.png" width="601" height="1"/>
         <image name="line_arrow_down_left.png" width="600" height="14"/>
         <image name="line_arrow_up_left.png" width="600" height="14"/>
@@ -4953,7 +5104,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="login_txt.png" width="422" height="26"/>
         <image name="logo_2.png" width="436" height="86"/>
         <image name="logo_3.png" width="275" height="50"/>
-        <image name="map_direction_icon.png" width="21" height="34"/>
         <image name="map_my_place_icon.png" width="28" height="35"/>
         <image name="map_view_bar.png" width="640" height="121"/>
         <image name="map_view_icon.png" width="44" height="36"/>
@@ -4987,424 +5137,6 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="xlose_icon.png" width="15" height="15"/>
         <image name="zoom_icon.png" width="54" height="54"/>
     </resources>
-    <classes>
-        <class className="CreateEventViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEventViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addAll:"/>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="cancelCircle:"/>
-                <relationship kind="action" name="cancelCustom:"/>
-                <relationship kind="action" name="cancelEntity:"/>
-                <relationship kind="action" name="cancelEvent:"/>
-                <relationship kind="action" name="cancelMapLoc:"/>
-                <relationship kind="action" name="createEvent:"/>
-                <relationship kind="action" name="curLocButtonAction"/>
-                <relationship kind="action" name="customButtonAction"/>
-                <relationship kind="action" name="customSegment:"/>
-                <relationship kind="action" name="dateButtonAction:"/>
-                <relationship kind="action" name="degreeFriendsButtonAction"/>
-                <relationship kind="action" name="deleteButtonAction"/>
-                <relationship kind="action" name="descriptionButtonAction"/>
-                <relationship kind="action" name="friendsButtonAction"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="guestCanInvite:"/>
-                <relationship kind="action" name="myPlaceButtonAction"/>
-                <relationship kind="action" name="nameButtonAction"/>
-                <relationship kind="action" name="neamePlaceButtonAction:"/>
-                <relationship kind="action" name="peopleButtonAction"/>
-                <relationship kind="action" name="photoButtonAction"/>
-                <relationship kind="action" name="pointOnMapButtonAction"/>
-                <relationship kind="action" name="privateButtonAction"/>
-                <relationship kind="action" name="saveCircle:"/>
-                <relationship kind="action" name="saveCustom:"/>
-                <relationship kind="action" name="saveEntity:"/>
-                <relationship kind="action" name="saveMapLoc:"/>
-                <relationship kind="action" name="showCircle:"/>
-                <relationship kind="action" name="summaryButtonAction"/>
-                <relationship kind="action" name="unSelectAll:"/>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="circleTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="createButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="createLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="createView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="curLoc" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="custom" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="customScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="customSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="customSelectionView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="customTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="degreeFriends" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="deleteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="descriptionButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="entryTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="eventImagview" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="friends" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="frndListScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="guestCanInviteButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="lowerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapContainerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="myPlace" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="nameButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="neamePlace" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="people" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="photoButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="pointOnMap" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="private" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="summaryButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="upperView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewContainerScrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="EventListRsvpTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListRsvpTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="maybesButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="yesButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="EventListTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EventListTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventAddressScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventNameScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="footerView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewEventOnMap" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="ListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionSearchButton:"/>
-                <relationship kind="action" name="actionSearchOkButton:"/>
-                <relationship kind="action" name="backToMapview:"/>
-                <relationship kind="action" name="closePulldown:"/>
-                <relationship kind="action" name="closePullup:"/>
-                <relationship kind="action" name="goToNotifications:"/>
-                <relationship kind="action" name="gotoCircles:"/>
-                <relationship kind="action" name="gotoEvents:"/>
-                <relationship kind="action" name="gotoFriends:"/>
-                <relationship kind="action" name="gotoMeetupReq:"/>
-                <relationship kind="action" name="gotoMessages:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="gotoPlace:"/>
-                <relationship kind="action" name="gotoProfile:"/>
-                <relationship kind="action" name="gotoSettings:"/>
-                <relationship kind="action" name="gotoUserBasicProfile:"/>
-                <relationship kind="action" name="gotonDeals:"/>
-                <relationship kind="action" name="gotonNewsFeed:"/>
-                <relationship kind="action" name="removeCircleView:"/>
-                <relationship kind="action" name="showPullUpMenu:"/>
-                <relationship kind="action" name="showPulldownMenu:"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="itemList" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="listNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="listPulldown" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="listPulldownMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listPullupMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="listViewfilter" candidateClass="UIView"/>
-                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="viewNotification" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="LoginController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelReset:"/>
-                <relationship kind="action" name="doConnectFB:"/>
-                <relationship kind="action" name="doForgotPassword:"/>
-                <relationship kind="action" name="doLogin:"/>
-                <relationship kind="action" name="doRememberMe:"/>
-                <relationship kind="action" name="removeKeyboard:"/>
-                <relationship kind="action" name="sendReset:"/>
-                <relationship kind="outlet" name="bgImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="dialogView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="forgotPWView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="forgotPassword" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="profileImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="rememberMeSel" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="tapview" candidateClass="UIView"/>
-                <relationship kind="outlet" name="txtEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="txtForgotPWEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="txtPassword" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionSearchButton:"/>
-                <relationship kind="action" name="actionShowHideSearchBtn:"/>
-                <relationship kind="action" name="addCircleView:"/>
-                <relationship kind="action" name="applyFilter:"/>
-                <relationship kind="action" name="closeConnectWithFB:"/>
-                <relationship kind="action" name="closeInviteFrnds:"/>
-                <relationship kind="action" name="closePullupMenu:"/>
-                <relationship kind="action" name="connectWithFB:"/>
-                <relationship kind="action" name="dealsClicked:"/>
-                <relationship kind="action" name="gotoBasicProfile:"/>
-                <relationship kind="action" name="gotoBreadcrumbs:"/>
-                <relationship kind="action" name="gotoCheckins:"/>
-                <relationship kind="action" name="gotoCircle:"/>
-                <relationship kind="action" name="gotoDirections:"/>
-                <relationship kind="action" name="gotoEditFilters:"/>
-                <relationship kind="action" name="gotoFriends:"/>
-                <relationship kind="action" name="gotoMapix:"/>
-                <relationship kind="action" name="gotoMeetupReq:"/>
-                <relationship kind="action" name="gotoMyPlaces:"/>
-                <relationship kind="action" name="gotoPlace:"/>
-                <relationship kind="action" name="gotoProfile:"/>
-                <relationship kind="action" name="gotoSettings:"/>
-                <relationship kind="action" name="gotonDeals:"/>
-                <relationship kind="action" name="gotonNewsFeed:"/>
-                <relationship kind="action" name="hidePulldown:"/>
-                <relationship kind="action" name="inviteAllUsers:"/>
-                <relationship kind="action" name="inviteSelectedUsers:"/>
-                <relationship kind="action" name="peopleClicked:"/>
-                <relationship kind="action" name="placesClicked:"/>
-                <relationship kind="action" name="removeCircleView:"/>
-                <relationship kind="action" name="shareWithAll:"/>
-                <relationship kind="action" name="shareWithCircles:"/>
-                <relationship kind="action" name="shareWithCustom:"/>
-                <relationship kind="action" name="shareWithFriends:"/>
-                <relationship kind="action" name="shareWithNone:"/>
-                <relationship kind="action" name="showPullDown:"/>
-                <relationship kind="action" name="showPullupMenu:"/>
-                <relationship kind="outlet" name="buttonListView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonMapView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonProfileView" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circleView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="connectToFBView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="friendSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="imageViewSliderOpenClose" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="inviteFriendView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="inviteFrndTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="mapNotifBubble" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="mapPulldown" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapPullupMenu" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="selSavedFilter" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="selectedFilter" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="shareAllButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareCircleButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareCustomButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareFriendsButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="shareNoneButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showDealsButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showPeopleButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="showPlacesButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="viewNotification" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSharingPrefMapPullDown" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="MessageListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionAddMoreButton:"/>
-                <relationship kind="action" name="actionBackBtn:"/>
-                <relationship kind="action" name="actionCancelAddPplButton:"/>
-                <relationship kind="action" name="actionCancelBtn:"/>
-                <relationship kind="action" name="actionCancelCircleButton:"/>
-                <relationship kind="action" name="actionMeetUpBtn:"/>
-                <relationship kind="action" name="actionMessageBtn:"/>
-                <relationship kind="action" name="actionNewMessageBtn:"/>
-                <relationship kind="action" name="actionRefreshBtn:"/>
-                <relationship kind="action" name="actionSaveAddPplButton:"/>
-                <relationship kind="action" name="actionSaveCircleButton:"/>
-                <relationship kind="action" name="actionSendBtn:"/>
-                <relationship kind="action" name="actionSendReplyBtn:"/>
-                <relationship kind="action" name="actionShowCircleListButton:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="outlet" name="buttonMeetUp" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonMessage" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="friendSearchbar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="frndListScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="messageCreationView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="messageRepiesView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="messageReplyTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="msgReplyCreationView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="msgWritingView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="tableViewCircle" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="textFieldUserID1" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldUserID2" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldUserID3" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textViewNewMsg" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="textViewReplyMsg" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="viewCircleList" candidateClass="UIView"/>
-                <relationship kind="outlet" name="viewSearch" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="NotificationController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionBackMe:"/>
-                <relationship kind="action" name="showFriendRequests:"/>
-                <relationship kind="action" name="showMessages:"/>
-                <relationship kind="action" name="showNotifications:"/>
-                <relationship kind="outlet" name="alertCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="msgButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="msgCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="notifButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="notifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="notifTabArrow" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="notificationItems" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="reqButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="reqCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="RegistrationController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
-            <relationships>
-                <relationship kind="action" name="createAccount:"/>
-                <relationship kind="action" name="hideKeyboard:"/>
-                <relationship kind="action" name="selPicOption:"/>
-                <relationship kind="action" name="selectGender:"/>
-                <relationship kind="outlet" name="picSelButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="regEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regFirstName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regGender" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="regPassword" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="selMaleFemale" candidateClass="UIPickerView"/>
-            </relationships>
-        </class>
-        <class className="SelectCircleTableCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectCircleTableCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="circrcleCheckbox" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="circrcleName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="SettingsController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
-            <relationships>
-                <relationship kind="action" name="expandLayersSettings:"/>
-                <relationship kind="action" name="expandPlatformSettings:"/>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="setAccountSettings:"/>
-                <relationship kind="action" name="setInfoSharing:"/>
-                <relationship kind="action" name="setLocationSharing:"/>
-                <relationship kind="action" name="setNotifSettings:"/>
-                <relationship kind="outlet" name="backButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="layersView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="notifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="platformView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsHeader" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsMainHeader" candidateClass="UIView"/>
-                <relationship kind="outlet" name="settingsScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="discoverApp:"/>
-                <relationship kind="action" name="requestPassword:"/>
-                <relationship kind="action" name="textFieldEntryDone:"/>
-                <relationship kind="outlet" name="betaPassWord" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="privateBetaView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-            </relationships>
-        </class>
-        <class className="ViewEventDetailViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewEventDetailViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="closeMap:"/>
-                <relationship kind="action" name="deleteEvent:"/>
-                <relationship kind="action" name="editEvent:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="guestList:"/>
-                <relationship kind="action" name="invitePeople:"/>
-                <relationship kind="action" name="maybeAttendAction:"/>
-                <relationship kind="action" name="menuTapped"/>
-                <relationship kind="action" name="noAttendAction:"/>
-                <relationship kind="action" name="viewMapButton:"/>
-                <relationship kind="action" name="yesAttendAction:"/>
-                <relationship kind="outlet" name="addressScollview" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="deleteEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="descriptionView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="editEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="eventAddress" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDate" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventDistance" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventImgView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="eventName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="eventShortDetail" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="guestScrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="inviteEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="maybeButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="noButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="rsvpView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="yesButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="ViewEventListViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewEventListViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="backButton:"/>
-                <relationship kind="action" name="closeMapView:"/>
-                <relationship kind="action" name="dateAction:"/>
-                <relationship kind="action" name="distanceAction:"/>
-                <relationship kind="action" name="friendsEventAction:"/>
-                <relationship kind="action" name="gotoNotification:"/>
-                <relationship kind="action" name="maybeButton:"/>
-                <relationship kind="action" name="myEventAction:"/>
-                <relationship kind="action" name="newEventAction:"/>
-                <relationship kind="action" name="noButton:"/>
-                <relationship kind="action" name="publicEventAction:"/>
-                <relationship kind="action" name="viewLocationButton:"/>
-                <relationship kind="action" name="yesButton:"/>
-                <relationship kind="outlet" name="dateButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="distanceButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="downloadedImageDict" candidateClass="NSDictionary"/>
-                <relationship kind="outlet" name="eventListTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="eventSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="friendsEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="myEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="newEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="publicEventButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="totalNotifCount" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

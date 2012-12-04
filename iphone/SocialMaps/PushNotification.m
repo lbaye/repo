@@ -74,6 +74,9 @@
     } else if ([type caseInsensitiveCompare:@"friend_request"] == NSOrderedSame) {
         newNotif.notifType = PushNotificationFriendRequest;
         newNotif.objectIds = [NSArray arrayWithArray:users];
+    } else if ([type caseInsensitiveCompare:@"accepted_request"] == NSOrderedSame) {
+        newNotif.notifType = PushNotificationAcceptedRequest;
+        newNotif.objectIds = [NSArray arrayWithArray:users];
     } else {
         newNotif.notifType = PushNotificationShareBreadcrumb;
     }

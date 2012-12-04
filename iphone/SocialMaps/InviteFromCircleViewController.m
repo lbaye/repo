@@ -196,8 +196,7 @@ bool searchFlag4=true;
     static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
     
-    LocationItemPeople *people=[[LocationItemPeople alloc] init];
-    people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+    LocationItemPeople *people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
     //    CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -227,10 +226,10 @@ bool searchFlag4=true;
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
         cell1.addressLabel.text=people.itemAddress;
-        if (people.itemDistance > 99999)
-            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dkm", (int)people.itemDistance/1000];
-        else
-            cell1.distanceLabel.text = [NSString stringWithFormat:@"%dm", (int)people.itemDistance];
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=people.userInfo.currentLocationLat;
+        geoLocation.longitude=people.userInfo.currentLocationLng;
+        cell1.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
@@ -472,6 +471,7 @@ bool searchFlag4=true;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [userIDs release];
     }
 }
 

@@ -18,6 +18,9 @@
 #import "FriendListViewController.h"
 #import "NotificationController.h"
 #import "UtilityClass.h"
+#import "FacebookHelper.h"
+#import "UserDefault.h"
+#import "FacebookHelper.h"
 
 @implementation SettingsController
 @synthesize settingsScrollView;
@@ -29,6 +32,10 @@
 @synthesize backButton;
 //@synthesize defPlatforms;
 @synthesize smAppDelegate,totalNotifCount;
+UserDefault *userDefault;
+FacebookHelper *fbHelper;
+Facebook *facebookApi;
+int connectFBCounter=0, fbLoginCallbackCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,7 +90,11 @@
         notifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
     
     [self displayNotificationCount];
-    
+    userDefault=[[UserDefault alloc] init];
+    facebookApi = [[FacebookHelper sharedInstance] facebook];
+    fbHelper=[[FacebookHelper alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
     //UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
     //buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
@@ -96,6 +107,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
 }
@@ -108,8 +120,66 @@
     [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
 }
 
+- (void)getConnectwithFB:(NSNotification *)notif
+{
+    NSLog(@"(smAppDelegate.facebookLogin: %i smAppDelegate.smLogin: %i",smAppDelegate.facebookLogin,smAppDelegate.smLogin);
+    if ((smAppDelegate.smLogin==TRUE) && fbLoginCallbackCounter==0)
+    {
+
+        NSLog(@"");
+        RestClient *rc=[[RestClient alloc] init];
+        [smAppDelegate showActivityViewer:self.view];
+        NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
+        [fbHelper inviteFriends:nil];
+        NSLog(@"invite friends from callback if");
+        if ([smAppDelegate.fbId isEqualToString:@""])
+        {
+            smAppDelegate.fbId=[userDefault readFromUserDefaults:@"FBUserId"];
+        }
+        
+        NSLog(@"smAppDelegate.fbId %@",smAppDelegate.fbId);
+        if (smAppDelegate.fbAccessToken) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :smAppDelegate.fbAccessToken];
+            NSLog(@"got access token");
+        }
+        else if ([userDefault readFromUserDefaults:@"FBAccessTokenKey"]) 
+        {
+            [rc doConnectFB:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.fbId :[userDefault readFromUserDefaults:@"FBAccessTokenKey"]];
+            NSLog(@"got accees token from user default");
+        }
+        else
+        {
+            [smAppDelegate hideActivityViewer];
+            //            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
+        }
+    }
+    fbLoginCallbackCounter++;
+}
+
+- (void)connectFBDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
+    [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+    NSLog(@"Connected with fb :D %@",[notif object]);
+    if (connectFBCounter==0)
+    {
+        [UtilityClass showAlert:@"Social Maps" :[notif object]];
+    }
+    connectFBCounter++;
+}
+
+-(IBAction)connectWithFB:(id)sender
+{
+
+}
+
 - (void)viewDidUnload
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [self setSettingsScrollView:nil];
     [self setPlatformView:nil];
     [self setLayersView:nil];
@@ -176,10 +246,12 @@
     [btn addTarget:self action:@selector(collapsePlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *rowView = (UIView*) [sender superview];
+    
     CGRect rowFrame = CGRectMake(rowView.frame.origin.x, rowView.frame.origin.y, 
                                  rowView.frame.size.width, rowView.frame.size.height*2);
     CGRect chkboxFrame = CGRectMake(0, rowView.frame.size.height+7, 
                                     rowView.frame.size.width, rowView.frame.size.height-7);
+     
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, rowView.frame.size.height, 310, 7);
     UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
@@ -187,16 +259,35 @@
     lineImage.tag   = 1002;  
     [rowView addSubview:lineImage];
     
-    NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
-    NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
-                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
-                          [NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
+    //NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
+    //NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
+                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
+                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
     
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
-    chkBox.tag = 1001;
-    chkBox.backgroundColor = [UIColor clearColor];
-    chkBox.delegate = self;
-    [rowView addSubview:chkBox];
+    //CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
+    //chkBox.tag = 1001;
+    //chkBox.backgroundColor = [UIColor clearColor];
+    //chkBox.delegate = self;
+    //[rowView addSubview:chkBox];
+    
+    UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonInviteFBFriend.frame = chkboxFrame;
+    buttonInviteFBFriend.tag = 1001;
+    userDefault=[[UserDefault alloc] init];
+    if ((![userDefault readFromUserDefaults:@"connectWithFBDone"]) && (smAppDelegate.smLogin==TRUE) && (![facebookApi isSessionValid]))
+    {
+        [buttonInviteFBFriend setTitle:@"Connect with facebook" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [buttonInviteFBFriend setTitle:@"Invite facebook friends" forState:UIControlStateNormal];
+    }
+    [buttonInviteFBFriend addTarget:self action:@selector(actionInviteFriendButton:) forControlEvents:UIControlEventTouchUpInside];
+    [buttonInviteFBFriend setBackgroundImage:[UIImage imageNamed:@"img_settings_list_bg_solid.png"] forState:UIControlStateNormal];
+    [buttonInviteFBFriend setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
+    [buttonInviteFBFriend.titleLabel setFont: [UIFont fontWithName:@"Helvetica" size:14.0]];
+    [rowView addSubview:buttonInviteFBFriend];
     
     // New scrool view content size    
     settingsScrollView.contentSize = CGSizeMake(310, settingsScrollView.frame.size.height+rowView.frame.size.height);
@@ -208,7 +299,57 @@
     rowFrame = CGRectMake(layersView.frame.origin.x, layersView.frame.origin.y+chkboxFrame.size.height, layersView.frame.size.width, 
                          layersView.frame.size.height);
     layersView.frame = rowFrame;
+    
+}
 
+- (void)actionInviteFriendButton:(id)sender
+{
+    NSLog(@"Invite Facebook Friends");
+    UIButton *inviteButton=(UIButton *)([self.view viewWithTag:1001]);
+    [inviteButton setTitle:@"Invite facebook friends" forState:UIControlStateNormal];
+    if ((![userDefault readFromUserDefaults:@"connectWithFBDone"]) && (smAppDelegate.smLogin==TRUE))
+    {
+        NSLog(@"do connect fb");
+
+        //    [smAppDelegate showActivityViewer:self.view];
+        if ([facebookApi isSessionValid])
+        {
+            [fbHelper inviteFriends:nil];
+            NSLog(@"invite friends valid session");
+        }
+        else
+        {
+            NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                    @"email",
+                                    @"user_likes", 
+                                    @"user_photos", 
+                                    @"publish_checkins", 
+                                    @"photo_upload", 
+                                    @"user_location",
+                                    @"user_birthday",
+                                    @"user_about_me",
+                                    @"publish_stream",
+                                    @"read_stream",
+                                    @"friends_status",
+                                    @"user_checkins",
+                                    @"friends_checkins",
+                                    nil];
+            [facebookApi authorize:permissions];
+            //    smAppDelegate.facebookLogin=TRUE;
+            [permissions release];
+        }
+        [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
+        [userDefault writeToUserDefaults:@"connectWithFBDone" withString:@"FBConnectedDone"];
+    }
+//    if (smAppDelegate.smLogin==true)
+//    {
+//        [UtilityClass showAlert:@"" :@"Please connect with facebook"];
+//    }
+    else
+    {
+        [fbHelper inviteFriends:NULL];
+        NSLog(@"invite friends in else");
+    }
 }
 
 - (void)actionTestFriendListButton
@@ -283,7 +424,13 @@
 }
 
 // img_settings_list_bg.png
-- (IBAction)setInfoSharing:(id)sender {
+- (IBAction)setInfoSharing:(id)sender
+{
+    [self performSelector:@selector(setaInfoSharingMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setaInfoSharingMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Information sharing";
     
@@ -295,23 +442,30 @@
                                                  alpha:1.0];
     scrollView.tag = 4001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 4002;
-    [closeButton addTarget:self 
-                    action:@selector(closeSharingInfo:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 4002;
+     [closeButton addTarget:self 
+     action:@selector(closeSharingInfo:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
      */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
+
 }
 
-- (IBAction)setAccountSettings:(id)sender {
+- (IBAction)setAccountSettings:(id)sender 
+{
+    [self performSelector:@selector(setAccountSettingsMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setAccountSettingsMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Account settings";
     
@@ -323,21 +477,22 @@
                                                  alpha:1.0];
     scrollView.tag = 3001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 3002;
-    [closeButton addTarget:self 
-                    action:@selector(closeAccountSettings:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
-    */
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 3002;
+     [closeButton addTarget:self 
+     action:@selector(closeAccountSettings:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
+     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
+
 }
 
 - (IBAction)goBack:(id)sender {
@@ -361,7 +516,13 @@
         [self performSegueWithIdentifier:@"backToMap" sender:sender];
 }
 
-- (IBAction)setLocationSharing:(id)sender {
+- (IBAction)setLocationSharing:(id)sender
+{
+    [self performSelector:@selector(setLocationSharingMethod) withObject:nil afterDelay:.5];
+}
+
+-(void)setLocationSharingMethod
+{
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
@@ -373,17 +534,17 @@
                                                  alpha:1.0];
     scrollView.tag = 5001;
     /*
-    CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-                                   5, 15, 15);
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = closeFrame;
-    closeButton.tag   = 5002;
-    [closeButton addTarget:self 
-                    action:@selector(closeLocationSharing:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-                           forState:UIControlStateNormal];
-    [settingsHeader addSubview:closeButton];
+     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
+     5, 15, 15);
+     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     closeButton.frame = closeFrame;
+     closeButton.tag   = 5002;
+     [closeButton addTarget:self 
+     action:@selector(closeLocationSharing:)
+     forControlEvents:UIControlEventTouchUpInside];
+     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
+     forState:UIControlStateNormal];
+     [settingsHeader addSubview:closeButton];
      */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];

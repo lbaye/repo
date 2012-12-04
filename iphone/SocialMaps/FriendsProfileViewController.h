@@ -36,7 +36,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     
     
     BOOL isDragging_msg,isDecliring_msg;
-    NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName; 
     BOOL isBackgroundTaskRunning;
     UIImage *coverImage;
@@ -93,6 +92,11 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIView *zoomView;
 @property(nonatomic,retain) IBOutlet UIImageView *fullImageView;
 
+@property(nonatomic,retain) IBOutlet UIImageView *newsfeedImgView;
+@property(nonatomic,retain) IBOutlet UIView *newsfeedImgFullView;
+@property(nonatomic,retain) NSMutableData *activeDownload;
+@property(nonatomic,retain) IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
+
 -(IBAction)editCoverButton:(id)sender;
 -(IBAction)editProfilePicButton:(id)sender;
 -(IBAction)editStatusButton:(id)sender;
@@ -116,5 +120,6 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 -(IBAction)closeZoomView:(id)sender;
 -(IBAction)goToZoomView:(id)sender;
 - (void) showPinOnMapViewPlan:(Plan *)plan ;
+-(IBAction)closeNewsfeedImgView:(id)sender;
 
 @end

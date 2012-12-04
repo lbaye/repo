@@ -42,7 +42,6 @@
     
     [smAppDelegate showActivityViewer:self.view];
     
-    [self displayNotificationCount];
     
     copyListOfItems = [[NSMutableArray alloc] init];
     
@@ -51,7 +50,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self displayNotificationCount];    
     smAppDelegate.currentModelViewController = self;
 }
 
@@ -405,6 +404,9 @@
             UIImageView *imgCover = (UIImageView*) [cell viewWithTag:3001];
             
             Place *place = [placeList objectAtIndex:indexPath.row];
+            
+            if(searching) 
+                place = (Place*)[copyListOfItems objectAtIndex:indexPath.row];
             
             if (!place.photo) 
                 [imgCover loadFromURL:place.photoURL];

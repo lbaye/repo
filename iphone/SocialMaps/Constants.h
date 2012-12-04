@@ -32,6 +32,7 @@ extern NSString * const NOTIF_DELETE_EVENT_DONE;
 extern NSString * const NOTIF_CREATE_EVENT_DONE;
 extern NSString * const NOTIF_SET_RSVP_EVENT_DONE;
 extern NSString * const NOTIF_UPDATE_EVENT_DONE;
+extern NSString * const NOTIF_INVITE_FRIENDS_EVENT_DONE;
 extern NSString * const NOTIF_GET_BASIC_PROFILE_DONE;
 extern NSString * const NOTIF_UPDATE_BASIC_PROFILE_DONE;
 extern NSString * const NOTIF_GET_MY_PLACES_DONE;
@@ -67,6 +68,8 @@ extern NSString * const NOTIF_GET_ALL_PLANS_DONE;
 extern NSString * const NOTIF_GET_FRIENDS_PLANS_DONE;
 extern NSString * const NOTIF_DELETE_PLANS_DONE;
 extern NSString * const NOTIF_UPDATE_PLANS_DONE;
+extern NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED;
+extern NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;

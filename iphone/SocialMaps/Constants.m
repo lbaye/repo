@@ -19,8 +19,11 @@
 //NSString * const WS_URL = @"http://203.76.126.69/integration_social_maps/web";
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_4";
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
-NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
+//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
 //NSString * const WS_URL = @"http://192.168.1.212:8888";
+//NSString * const WS_URL = @"192.168.1.229/web";
+//NSString * const WS_URL = @"http://192.168.1.19/social_maps/web";
+NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";
 
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
@@ -47,6 +50,7 @@ NSString * const NOTIF_DELETE_EVENT_DONE= @"com.genweb2.socialmaps.deleteeventdo
 NSString * const NOTIF_CREATE_EVENT_DONE= @"com.genweb2.socialmaps.createeventdone";
 NSString * const NOTIF_SET_RSVP_EVENT_DONE= @"com.genweb2.socialmaps.setrsvpeventdone";
 NSString * const NOTIF_UPDATE_EVENT_DONE= @"com.genweb2.socialmaps.updateeventdone";
+NSString * const NOTIF_INVITE_FRIENDS_EVENT_DONE= @"com.genweb2.socialmaps.invitefriendseventdone";
 NSString * const NOTIF_GET_MY_PLACES_DONE= @"com.genweb2.socialmaps.getmyplacesdone";
 NSString * const NOTIF_GET_MEET_UP_REQUEST_DONE= @"com.genweb2.socialmaps.getmeetuprequestdone";
 NSString * const NOTIF_GET_BASIC_PROFILE_DONE= @"com.genweb2.socialmaps.getbasicprofiledone";
@@ -83,7 +87,8 @@ NSString * const NOTIF_GET_ALL_PLANS_DONE=@"com.genweb2.socialmaps.getallplandon
 NSString * const NOTIF_DELETE_PLANS_DONE=@"com.genweb2.socialmaps.deleteplandone";
 NSString * const NOTIF_UPDATE_PLANS_DONE=@"com.genweb2.socialmaps.updateplandone";
 NSString * const NOTIF_GET_FRIENDS_PLANS_DONE=@"com.genweb2.socialmaps.getfriendsplandone";
-
+NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED=@"com.genweb2.socialmaps.friendsrequestaccepteddone";
+NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.locationsharingsettingdone";
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest
 //NSString * const FB_APPID = @"474672942546031";  // SMTest2

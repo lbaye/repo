@@ -11,6 +11,8 @@
 #import "UIImageView+roundedCorner.h"
 #import "UtilityClass.h"
 #import "Constants.h"
+#import "UserFriends.h"
+#import "Globals.h"
 
 @implementation MapAnnotationPeople
 
@@ -93,11 +95,12 @@
     [msgView release];
     
     // 119, 184, 0 - green
-    NSString *distStr;
-    if (locItemPeople.itemDistance >= 1000)
-        distStr = [NSString stringWithFormat:@"%.1fkm AWAY", locItemPeople.itemDistance/1000.0];
-    else
-        distStr = [NSString stringWithFormat:@"%dm AWAY", (int)locItemPeople.itemDistance];
+    Geolocation *geoLocation=[[Geolocation alloc] init];
+    geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
+    geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
+    NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+
+    
     CGSize distSize = [distStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0f]];
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
@@ -150,8 +153,15 @@
     // TODO: making the height smaller for appstore submission as we are removing the 
     // buttons at the bottom
 //    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
+    Geolocation *geoLocation=[[Geolocation alloc] init];
+    geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
+    geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
+    NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
     CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
+    UIView *sudoView=[[UIView alloc] initWithFrame:detailView.frame];
+    [sudoView setBackgroundColor:[UIColor clearColor]];
+    [sudoView setTag:12321123];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
     
@@ -160,22 +170,22 @@
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
         NSString *msg=locItemPeople.userInfo.lastSeenAt;
-        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span><span style=\"line-height:1.2\"><br></span></body></html>", 
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ AWAY <br> %@ <br> </span><span style=\"line-height:1.2\"><br></span></body></html>", 
                            locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, msg==nil?@"":msg, 
-                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           locItemPeople.userInfo.distance==nil?@"":distStr, 
                            @""// Address of current location - use CLGeocoder
                            ] autorelease];
     }
     else
     {
-        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@m AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in <b>%@</b><br> Work at <b>%@</b><br></span></body></html>", 
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in: <b>%@</b><br> Work at: <b>%@</b><br></span></body></html>", 
                            locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, 
                            locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
-                           locItemPeople.userInfo.distance==nil?@"":locItemPeople.userInfo.distance, 
+                           locItemPeople.userInfo.distance==nil?@"":distStr, 
                            @"", // Address of current location - use CLGeocoder
                            locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
                            locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
@@ -206,6 +216,8 @@
     [addFriendBtn setTitleColor:[UIColor colorWithRed:119.0/255.0 green:184.0/255.0 blue:0.0 alpha:1.0] forState:UIControlStateNormal];
     
     NSString *friendShipStatus = locItemPeople.userInfo.friendshipStatus;
+    NSLog(@"friendShip Status = %@", friendShipStatus);
+    
     
     if ([friendShipStatus isEqualToString:@"rejected_by_me"] || [friendShipStatus isEqualToString:@"rejected_by_him"]) {
         [addFriendBtn setTitle:@"Rejected" forState:UIControlStateNormal];
@@ -224,11 +236,10 @@
         [addFriendBtn setTitle:@"Pending" forState:UIControlStateNormal];
         [addFriendBtn setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
         addFriendBtn.userInteractionEnabled = NO;
+    } else if ([friendShipStatus isEqualToString:@"friend"]) { 
+        addFriendBtn.hidden = YES;
     }
     
-    
-   
-
     [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
     [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
 
@@ -287,6 +298,8 @@
         profileBtn.tag = 11008;
         [infoView addSubview:profileBtn];    
     }
+    [sudoView setFrame:CGRectMake(detFrame.origin.x, detFrame.origin.y, detFrame.size.width, infoView.frame.size.height-10-27)];
+    [annoView insertSubview:sudoView aboveSubview:detailView];
     return annoView;
 }
 

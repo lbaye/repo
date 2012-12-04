@@ -48,7 +48,7 @@
 -(void)deleteEventById:(NSString *) eventID:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)createEvent:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)updateEvent:(NSString *) eventID:(Event*)event:(NSString *)authToken:(NSString *)authTokenValue;
-
+-(void)inviteMoreFriendsEvent:(NSString *) eventID:(NSMutableArray *)friendsIdArr:(NSMutableArray *)circlesIdArr:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue;
 
 -(void) setNotifications:(NotificationPref *)notificationPref:(NSString *)authToken:(NSString *)authTokenValue;
@@ -115,5 +115,5 @@
 -(void)deletePlans:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)planId;
 -(void)updatePlan:(Plan *)plan:(NSString *)authToken:(NSString *)authTokenValue;
 -(void)getFriendsAllplans:(NSString *)userId:(NSString *)authToken:(NSString *)authTokenValue;
-
+-(void) getUserFriendList:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andUserId:(NSString*)userId;
 @end

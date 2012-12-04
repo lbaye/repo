@@ -61,12 +61,11 @@ typedef enum _SHARING_TYPES {
     NSMutableArray		*copySearchAnnotationList;
     IBOutlet UIView *circleView;
     BOOL isFirstTimeDownloading;
-    NSTimer *timerGotListing;
     MapAnnotationEvent *mapAnnoEvent;
     IBOutlet UIView *connectToFBView;
     IBOutlet UIView *viewSharingPrefMapPullDown;
     CustomRadioButton *radio;
-                                    
+    BOOL shouldTimerStop;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -151,5 +150,6 @@ typedef enum _SHARING_TYPES {
 -(IBAction)connectWithFB:(id)sender;
 -(IBAction)closeConnectWithFB:(id)sender;
 - (void) showPinOnMapViewForPlan:(Plan*)plan;
+- (void) showAnnotationDetailView:(id <MKAnnotation>) anno;
 
 @end

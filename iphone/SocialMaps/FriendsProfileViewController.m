@@ -28,6 +28,7 @@
 #import "Globals.h"
 #import "FriendListViewController.h"
 #import "FriendsPlanListViewController.h"
+#import "ODRefreshControl.h"
 
 @interface FriendsProfileViewController ()
 
@@ -59,6 +60,11 @@
 @synthesize profileScrollView;
 @synthesize zoomView,fullImageView;
 
+@synthesize newsfeedImgView;
+@synthesize newsfeedImgFullView;
+@synthesize activeDownload;
+@synthesize newsFeedImageIndicator;
+
 AppDelegate *smAppDelegate;
 RestClient *rc;
 UserInfo *userInfo;
@@ -87,7 +93,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
-    [self displayNotificationCount];
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
     self.picSel = [[UIImagePickerController alloc] init];
@@ -113,7 +118,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
     NSLog(@"friendsId: %@",friendsId);
@@ -130,10 +136,19 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [ImgesName addObject:@"sm_icon@2x"];
     
     userItemScrollView.delegate = self;
-    dicImages_msg = [[NSMutableDictionary alloc] init];
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     [self reloadScrolview];
+}
+
+- (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl
+{
+    [newsfeedView reload];
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [refreshControl endRefreshing];
+    });
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -144,12 +159,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     [statusContainer removeFromSuperview];
     [msgView removeFromSuperview];
     [zoomView removeFromSuperview];
+    [newsfeedImgFullView removeFromSuperview];
     profileImageView.layer.borderColor=[[UIColor lightTextColor] CGColor];
     profileImageView.userInteractionEnabled=YES;
     profileImageView.layer.borderWidth=1.0;
     profileImageView.layer.masksToBounds = YES;
     [profileImageView.layer setCornerRadius:5.0];
-    
+    [self displayNotificationCount];
     smAppDelegate.currentModelViewController = self;
     
     [smAppDelegate showActivityViewer:self.view];
@@ -170,6 +186,15 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     newsFeedscrollHeight=newsfeedView.frame.size.height;
     [profileScrollView addSubview:profileView];
     [profileScrollView addSubview:newsfeedView];
+}
+
+-(IBAction)closeNewsfeedImgView:(id)sender
+{
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];	
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+    [newsFeedImageIndicator stopAnimating];
+    [newsfeedImgFullView removeFromSuperview];
 }
 
 -(IBAction)editCoverButton:(id)sender
@@ -217,17 +242,48 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         [webView stopLoading];
         fragment = [[request URL] fragment];
         scheme = [[request URL] scheme];
-        NSLog(@"%@ scheme",scheme);
-        if ([[[request URL] absoluteString] hasPrefix:@"button://"]) {
-            // Do custom code
-            NSLog(@"got button %@",scheme);
-            return NO;
-        } 
-        if ([scheme isEqualToString: @"button"] && [self respondsToSelector: NSSelectorFromString(fragment)]) {
-            [self performSelector: NSSelectorFromString(fragment)];
-            return NO;
+        NSString *dataStr=[[request URL] absoluteString];
+        NSLog(@"Data String: %@",dataStr);
+        NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
+        NSLog(@"Tag String: %@",tagStr);
+        if ([tagStr isEqualToString:@"image"])
+        {
+            NSString *urlStr=[NSString stringWithFormat:@"%@:%@",[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3],[[dataStr componentsSeparatedByString:@":"] objectAtIndex:4]];
+            CGFloat xpos = self.view.frame.origin.x;
+            CGFloat ypos = self.view.frame.origin.y;
+            newsfeedImgFullView.frame = CGRectMake(xpos+100,ypos+150,5,5);
+            [UIView beginAnimations:@"Zoom" context:NULL];
+            [UIView setAnimationDuration:0.8];
+            newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
+            [UIView commitAnimations];
+            [self.view addSubview:newsfeedImgFullView];
+            [newsFeedImageIndicator startAnimating];
+            [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];
+        }
+        else if ([tagStr isEqualToString:@"profile"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"userID string: %@",userId);
+            if ([userId isEqualToString:userInfo.userId])
+            {
+                NSLog(@"own profile");
+            }
+            else
+            {
+                FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+                controller.friendsId=userId;
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+                
+            }
+        }
+        else if ([tagStr isEqualToString:@"geotag"])
+        {
+            NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
+            NSLog(@"geotag string: %@",userId);
         }
         
+        return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
     
@@ -252,6 +308,35 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 
 }
 
+-(void)loadNewsFeedImage:(NSString *)imageUrlStr
+{
+    [[newsfeedImgFullView viewWithTag:12345654] removeFromSuperview];
+    NSLog(@"from dic %@",[dicImages_msg objectForKey:imageUrlStr]);
+    if ([dicImages_msg objectForKey:imageUrlStr])
+    {
+        newsfeedImgView.image=[dicImages_msg objectForKey:imageUrlStr];
+        NSLog(@"load from dic");
+    }
+    else
+    {
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"newsfeed image url: %@",imageUrlStr);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
+        if (img)
+        {
+            newsfeedImgView.image=img;
+            [dicImages_msg setObject:img forKey:imageUrlStr];
+        }
+        else
+        {
+            newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download newsfeed image. %@",img);
+        [pl drain];
+    }
+}
+
 -(IBAction)geotagButton:(id)sender
 {
 /*    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
@@ -272,6 +357,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 {
     NSLog(@"meet up request");
     MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+    controller.selectedfriendId = userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
@@ -434,24 +520,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     nameLabl.text=[NSString stringWithFormat:@" %@ %@",userInfo.firstName,userInfo.lastName];
     statusMsgLabel.text=@"";
     addressOrvenueLabel.text=userInfo.address.street;
-    if (userInfo.distance>0)
-    {
-        distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
-    }
-    else
-    {
-        NSLog(@"distance: %f",((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance);
-        float distance=((LocationItemPeople *)[self getPeopleById:userInfo.userId]).itemDistance;
-        userInfo.distance=(int)distance;
-        if (distance > 999)
-        {
-            distanceLabel.text = [NSString stringWithFormat:@"%.2f km", distance/1000];
-        }
-        else
-        {
-            distanceLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
-        }
-    }
+        Geolocation *geoLocation=[[Geolocation alloc] init];
+        geoLocation.latitude=userInfo.currentLocationLat;
+        geoLocation.longitude=userInfo.currentLocationLng;
+        distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
+   
     if (userInfo.age>0) {
         ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
     }
@@ -561,7 +634,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     {
         [meetUpButton setEnabled:NO];
     }
-    
+    [userInfo retain];
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -700,59 +773,77 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 
 -(void)loadImage
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
-    if (img)
+    if ([dicImages_msg objectForKey:userInfo.coverPhoto])
     {
-        coverImageView.image=img;
+        coverImageView.image=[dicImages_msg objectForKey:userInfo.coverPhoto];
     }
     else
     {
-        coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
+        if (img)
+        {
+            coverImageView.image=img;
+            [dicImages_msg setObject:img forKey:userInfo.coverPhoto];
+        }
+        else
+        {
+            coverImageView.image=[UIImage imageNamed:@"blank.png"];
+        }
+        
+        NSLog(@"image setted after download1. %@",img);
+        [pl drain];
     }
-    
-    NSLog(@"image setted after download1. %@",img);
-    [pl drain];
 }
 
 -(void)loadImage2
 {
-    NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
-    NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
-    //temp use
-    UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
-    if (img2)
+    if ([dicImages_msg objectForKey:userInfo.avatar])
     {
-        profileImageView.image=img2;
-        fullImageView.image=img2;
+        profileImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
+        fullImageView.image=[dicImages_msg objectForKey:userInfo.avatar];
     }
     else
     {
-        profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
-        fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        
+        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
+        NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
+        //temp use
+        UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
+        if (img2)
+        {
+            profileImageView.image=img2;
+            fullImageView.image=img2;
+            [dicImages_msg setObject:img2 forKey:userInfo.avatar];
+        }
+        else
+        {
+            fullImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+            profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
+        }
+        
+        NSLog(@"image setted after download2. %@",img2);    
+        [pl drain];
     }
-    
-    NSLog(@"image setted after download2. %@",img2);    
-    [pl drain];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    //    NSLog(@"did scroll %f",scrollView.contentOffset.y);
-    if (scrollView==profileScrollView)
-    {
-        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-        {
-            reloadFeedCounter++;
-            if (reloadFeedCounter==1) {
-                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-                [smAppDelegate showActivityViewer:self.view];
-                [newsfeedView reload];
-            }
-        }
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    //    NSLog(@"did scroll %f",scrollView.contentOffset.y);
+//    if (scrollView==profileScrollView)
+//    {
+//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
+//        {
+//            reloadFeedCounter++;
+//            if (reloadFeedCounter==1) {
+//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
+//                [smAppDelegate showActivityViewer:self.view];
+//                [newsfeedView reload];
+//            }
+//        }
+//    }
+//}
 
 //handling map view
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation 
@@ -867,7 +958,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
         {
             //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
+//            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
@@ -984,10 +1075,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         }
         else 
         {
-        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
-        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        [self presentModalViewController:controller animated:YES];
-        [controller release];
+            MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+            controller.selectedfriendId = userInfo.userId;
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            [controller release];
         }
     }
     else if (imageIndex==5)
@@ -1008,16 +1100,26 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
-    NSLog(@"profile");
     //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
     //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
-    [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
-    [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    if (profileFromList==TRUE)
+    {
+        NSLog(@"profile from list %@",plan);        
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
+    }
+    else
+    {
+        NSLog(@"profile from map %@",plan);        
+        [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
+        [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];
+    }
+
 }
 
-- (void) dismissModalView {
-    
-    [self dismissModalViewControllerAnimated:NO];
+- (void) dismissModalView
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

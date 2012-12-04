@@ -62,6 +62,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     profileImageList = [[NSMutableArray alloc] init];
     messageReplyList = [[NSMutableArray alloc] init];
     
+    [profileImageList addObject:@""]; //crash fix when no message in list 
     for (int i = 0; i < [smAppDelegate.messages count]; i++) {
         [profileImageList addObject:@""];
     }
@@ -116,9 +117,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     tableViewCircle.delegate = self;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self displayNotificationCount];
+}
+
 - (void) viewDidAppear:(BOOL)animated
 {
-    [self displayNotificationCount];
+
     [super viewDidAppear:animated];
     
     if (self.selectedMessage) {
@@ -159,8 +166,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)viewDidUnload
 {
     NSLog(@"called View did unload");
-    [replyTimer invalidate];
-    replyTimer = nil;
+    
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     msgListTableView = nil;
@@ -322,6 +333,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (IBAction)actionRefreshBtn:(id)sender {
     
     [smAppDelegate showActivityViewer:self.view];
+    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getInbox:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
@@ -331,6 +343,18 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)gotInboxMessages:(NSNotification *)notif {
     NSMutableArray *msg = [notif object];
+    
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    
+    if (!msg) {
+        [UtilityClass showAlert:@"" :@"Network error, try again"];
+        return;
+    } else if ([msg count] == 0) {
+        [UtilityClass showAlert:@"" :@"No messages"];
+        return;
+    }
+    
     [smAppDelegate.messages removeAllObjects];
     [smAppDelegate.messages addObjectsFromArray:msg];
     
@@ -350,7 +374,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
     }
     [msgListTableView reloadData];
-    [smAppDelegate hideActivityViewer];
+    
 }
 
 -(void) displayNotificationCount {
@@ -838,8 +862,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getReplies:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID since:self.timeSinceLastUpdate];
     } else {
-        [replyTimer invalidate];
-        replyTimer = nil;
+        if (replyTimer) {
+            [replyTimer invalidate];
+            replyTimer = nil;
+        }
     }
 }
 

@@ -69,7 +69,14 @@
 - (void) gotFriendsList:(NSNotification *)notif 
 {
     eachFriendList = [notif object];
-    [self sortByAtoZ];
+    if (eachFriendList) {
+        if ([eachFriendList count] == 0) {
+            [UtilityClass showAlert:@"" :@"Friend list is empty"];
+        }
+        [self sortByAtoZ];
+    } else {
+        [UtilityClass showAlert:@"" :@"Network problem. Try again"];
+    }
     [smAppDelegate hideActivityViewer];
 }
 

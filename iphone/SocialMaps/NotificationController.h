@@ -20,6 +20,7 @@ typedef enum _NOTIFY_TYPES {
     int    selectedItemIndex;
     NOTIFY_TYPES selectedType;
     AppDelegate     *smAppDelegate;
+    IBOutlet UIWebView *webView;
 }
 
 @property (nonatomic) int selectedItemIndex;
@@ -36,6 +37,7 @@ typedef enum _NOTIFY_TYPES {
 @property (nonatomic,retain) IBOutlet UIButton *notifButton;
 @property (nonatomic,retain) IBOutlet UIButton *msgButton;
 @property (nonatomic,retain) IBOutlet UIButton *reqButton;
+@property (nonatomic,retain) IBOutlet UIWebView *webView;
 
 - (IBAction)showMessages:(id)sender;
 - (IBAction)showFriendRequests:(id)sender;
