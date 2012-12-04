@@ -359,20 +359,18 @@ ButtonClickCallbackData callBackData;
                 [copySearchAnnotationList addObject:sTemp];
         }
         
-/*        //adding event list on searchong
-        for (LocationItem *sTemp in smAppDelegate.eventList) {
-            LocationItem *info = (LocationItem*)sTemp;
-            NSRange titleResultsRange = [info.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            
-            if (titleResultsRange.length > 0)
-                [copySearchAnnotationList addObject:sTemp];
+        if (copySearchAnnotationList.count == 0) {
+            [UtilityClass showAlert:@"" :@"No search result found"];
+        } else {
+            for (int i=0; i < copySearchAnnotationList.count; i++) {
+                LocationItem *anno = (LocationItem*) [copySearchAnnotationList objectAtIndex:i];
+                [_mapView addAnnotation:anno];
+                
+                if (i == 0)
+                    [self showAnnotationDetailView:anno];
+            }
         }
-        //ending add event list on searching
-*/        
-        for (int i=0; i < copySearchAnnotationList.count; i++) {
-            LocationItem *anno = (LocationItem*) [copySearchAnnotationList objectAtIndex:i];
-            [_mapView addAnnotation:anno];
-        }
+        
     } else {
         for (int i=0; i < smAppDelegate.displayList.count; i++) {
             LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
