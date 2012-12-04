@@ -93,4 +93,15 @@ static char const * const ObjectTagKey = "ObjectTag";
 	[self performSelector:@selector(loadFromURL:) withObject:url afterDelay:delay];
 }
 
+-(void)dealloc
+{
+    @try{
+        [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
+    }@catch(id anException){
+        NSLog(@"Cannot remove an observer");
+    }
+    
+    [super dealloc];
+}
+
 @end
