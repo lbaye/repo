@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
@@ -391,7 +391,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
+                                    <view hidden="YES" contentMode="scaleToFill" id="8Go-zK-jFt" userLabel="mapDirections">
                                         <rect key="frame" x="188.5" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -503,7 +503,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="5HN-YE-a9u" userLabel="mapMeetUp">
+                                    <view hidden="YES" contentMode="scaleToFill" id="5HN-YE-a9u" userLabel="mapMeetUp">
                                         <rect key="frame" x="27" y="8" width="95" height="60"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>

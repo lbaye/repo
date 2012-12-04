@@ -317,13 +317,13 @@ ButtonClickCallbackData callBackData;
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
         [self searchAnnotations];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 69 / 2);
-        pullDownView.closedCenter = CGPointMake(160, -5 - 69 / 2);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 105);
+        pullDownView.closedCenter = CGPointMake(160, -5 - 69 + 34);
     } else {
         [self moveSearchBarAnimation:44];
         [searchBar becomeFirstResponder];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 44 + 69 / 2);
-        pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 69 / 2);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 105 + 44);
+        pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 69 + 34);
     }
 }
 
@@ -1880,10 +1880,10 @@ ButtonClickCallbackData callBackData;
     
     
     pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 219)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 / 2);
-    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 / 2);
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 - 105);
+    pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 + 34);
     pullDownView.center = pullDownView.closedCenter;
-    
+    //self.view.userInteractionEnabled = YES;
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
     pullDownView.delegate = self;
     //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
