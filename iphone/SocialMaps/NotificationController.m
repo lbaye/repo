@@ -419,14 +419,14 @@ NSMutableArray *unreadMesg;
     [unreadMesg replaceObjectAtIndex:clickedButtonPath.row withObject:msg];
     [notificationItems reloadData];
 }
-/*
+
 - (void)setMessageStatus:(NSNotification *)notif
 {
     NSLog(@"message sts updated.");
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];    
 }
-*/
+
 
 - (void)friendsRequestAccepted:(NSNotification *)notif
 {
