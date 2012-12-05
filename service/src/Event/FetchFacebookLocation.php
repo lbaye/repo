@@ -47,6 +47,12 @@ class FetchFacebookLocation extends Base {
         $this->debug('Connecting with facebook with authToken - ' .
                      $facebookAuthToken);
 
+        if (is_null($smUser)) {
+            $this->debug('Invalid user id - ' . $userId);
+            $this->runTasks();
+            return;
+        }
+
         # Retrieve all facebook friend's checkins
         $fbCheckIns = $facebook->getFriendsCheckins();
         $totalCheckins = @count($fbCheckIns['data']);

@@ -99,6 +99,11 @@ abstract class Base {
             $this->user = $this->dm
                     ->getRepository('Document\User')
                     ->getByAuthToken($this->request->query->get('authToken'));
+
+        } elseif ($this->request->headers->has('X-AuthGen')) {
+            $this->user = $this->dm
+                    ->getRepository('Document\User')
+                    ->find($this->request->headers->get('X-AuthGen'));
         }
     }
 
