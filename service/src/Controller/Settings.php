@@ -415,6 +415,7 @@ class Settings extends Base {
         $this->debug('Sending proximity alert');
         $this->addTask(\Helper\Constants::APN_PROXIMITY_ALERT,
                        json_encode(array(
+                                        'reqId' => time() * rand(0, 500),
                                         'user_id' => $user->getId(),
                                         'timestamp' => time(),
                                         'validity' => 7200, // 2 hours

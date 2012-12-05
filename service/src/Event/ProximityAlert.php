@@ -150,7 +150,7 @@ class ProximityAlert extends Base
 
     private function sendNotification(\Document\User $user, array $notification)
     {
-        $this->debug("Sending notification to - " . $user->getFirstName());
+        $this->debug("Sending notification to - " . $user->getName());
 
         \Helper\Notification::send($notification, array($user));
         $this->pushNotification($user, $notification);
@@ -207,7 +207,7 @@ class ProximityAlert extends Base
 
     private function pushNotification(\Document\User $user, $notification)
     {
-        $this->debug('Sending push notification to ' . $user->getFirstName());
+        $this->debug('Sending push notification to ' . $user->getName());
         $this->debug(print_r($notification, true));
 
         $pushSettings = $user->getPushSettings();
