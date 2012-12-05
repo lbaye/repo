@@ -29,11 +29,15 @@ $cacheRefRepo = $bootstrap->dm->getRepository('Document\CacheRef');
 
 $cacheRefs = $bootstrap->dm->createQueryBuilder('Document\CacheRef')
         ->select('_id', 'cacheFile')->hydrate(false)->getQuery()->execute();
-echo 'Total cache references - ' . count($cacheRefs) . "\n";
+
+$logger->debug('Total cache references - ' . count($cacheRefs));
 
 foreach ($cacheRefs as $cacheRef) {
+    $logger->debug("Removing cache reference");
     $cacheRefRepo->delete($cacheRef['_id']->{'$id'});
-    @unlink($cacheRef['cacheFile']);
+
+    $logger->debug('Removing cache file from - ' . $cacheRef['cacheFile']);
+    unlink($cacheRef['cacheFile']);
 }
 
-echo "Done\n";
+$logger->debug('Flushed all search caches');

@@ -853,8 +853,12 @@ class UserRepo extends Base {
         unset($userHash['_id']);
 
         # unset address _id
-        if (isset($userHash['address']))
+        if (isset($userHash['address'])) {
             unset($userHash['address']['_id']);
+
+            if (empty($userHash['address']))
+                $userHash['address'] = null;
+        }
 
         # Retrieve user object
         $userObj = $this->find($userHash['id']);
