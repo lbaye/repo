@@ -12,13 +12,14 @@ use Repository\Likable;
 
 class UserActivityRepo extends Base implements Likable {
 
-    public function getByUser(User $user, $limit = 20) {
+    public function getByUser(User $user, $offset = 0,  $limit = 20) {
         return $this->dm->createQueryBuilder()
                 ->find('Document\UserActivity')
                 ->field('owner')
                 ->equals($user->getId())
                 ->sort('createdAt', 'desc')
                 ->limit($limit)
+                ->skip($offset)
                 ->getQuery()
                 ->execute();
     }

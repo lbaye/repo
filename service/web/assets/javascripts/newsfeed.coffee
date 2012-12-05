@@ -18,8 +18,8 @@ class NewsfeedApp
 
     bindButtonsEvents: ->
         that = @
-        @$('.link_like').click -> that.tapOnLike(that.$(@))
-        @$('.link_comment').click -> that.tapOnComment(that.$(@))
+        @$('.link_like').live 'click', -> that.tapOnLike(that.$(@))
+        @$('.link_comment').live 'click', -> that.tapOnComment(that.$(@))
         @$('.link_close').live 'click', -> that.tapOnCloseLikesPanel(that.$(@))
         @$(window.document).bind 'mousedown', (e) -> false
 
@@ -92,10 +92,11 @@ class NewsfeedApp
     incrementCount: (el, count) ->
         label = el.text()
         existingCount = parseInt(label.trim().split(/\s*/)[0], 10)
-        newCount = existingCount + count;
+        newCount = existingCount + count
 
-        label = newCount > 1 ? ' Likes' : ' Like'
-        el.text(newCount + label);
+        label = ' Likes'
+        label = ' Like' if newCount <= 1
+        el.text(newCount + label)
 
     isDisabled: (el) ->
         el.attr('data-ui-enabled') == 'false' || el.hasClass('disabled')
