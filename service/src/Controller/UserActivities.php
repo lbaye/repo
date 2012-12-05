@@ -84,7 +84,10 @@ class UserActivities extends Base {
     public function getActivitiesByUser(
         \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE) {
 
-        $activities = $this->userActivitiesRepo->getByUser($user);
+        $offset = $this->request->get('offset', 0);
+        $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
+
+        $partialView = $offset > 0;
 
         if (count($activities) == 0) {
             $this->response->setContent('');
@@ -105,6 +108,7 @@ class UserActivities extends Base {
                          'geotagRepo' => $this->geotagRepository,
                          'activityRepo' => $this->userActivitiesRepo,
                          'currentUser' => $user,
+                         'partialView' => $partialView,
                          'authToken' => $user->getAuthToken()
                     ));
             }

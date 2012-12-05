@@ -39,10 +39,10 @@
     NewsfeedApp.prototype.bindButtonsEvents = function() {
       var that;
       that = this;
-      this.$('.link_like').click(function() {
+      this.$('.link_like').live('click', function() {
         return that.tapOnLike(that.$(this));
       });
-      this.$('.link_comment').click(function() {
+      this.$('.link_comment').live('click', function() {
         return that.tapOnComment(that.$(this));
       });
       this.$('.link_close').live('click', function() {
@@ -144,13 +144,14 @@
     };
 
     NewsfeedApp.prototype.incrementCount = function(el, count) {
-      var existingCount, label, newCount, _ref;
+      var existingCount, label, newCount;
       label = el.text();
       existingCount = parseInt(label.trim().split(/\s*/)[0], 10);
       newCount = existingCount + count;
-      label = (_ref = newCount > 1) != null ? _ref : {
-        ' Likes': ' Like'
-      };
+      label = ' Likes';
+      if (newCount <= 1) {
+        label = ' Like';
+      }
       return el.text(newCount + label);
     };
 
