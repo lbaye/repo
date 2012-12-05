@@ -40,8 +40,8 @@ class Search extends Base {
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
             $this->updateUserPulse($this->user);
-            return $this->cacheAndReturn(
-                \Helper\CacheUtil::buildSearchCachePath($this->user, $data), 'performSearch', $data);
+
+            return $this->_generateResponse($this->performSearch($data));
         } else {
             $this->warn('Invalid request with missing required fields');
             return $this->_generateMissingFieldsError();

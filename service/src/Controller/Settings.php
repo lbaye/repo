@@ -365,17 +365,6 @@ class Settings extends Base {
         return $distance > self::ALLOWED_DISTANCE;
     }
 
-    private function requestForCacheUpdate(\Document\User $user, $oldLocation = null, $newLocation = null) {
-        $this->debug('Requesting for cache update');
-        $this->addTask(
-            \Helper\Constants::APN_REFRESH_SEARCH_CACHE,
-            json_encode(array(
-                             'userId' => $user->getId(),
-                             'oldLocation' => $oldLocation,
-                             'newLocation' => $newLocation
-                        )));
-    }
-
     /**
      * Update users visibility based on geo-fence settings and current location
      *

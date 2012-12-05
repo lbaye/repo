@@ -440,4 +440,15 @@ abstract class Base {
         return $this->response;
     }
 
+    protected function requestForCacheUpdate(\Document\User $user, $oldLocation = null, $newLocation = null) {
+        $this->debug('Requesting for cache update');
+        $this->addTask(
+            \Helper\Constants::APN_REFRESH_SEARCH_CACHE,
+            json_encode(array(
+                             'userId' => $user->getId(),
+                             'oldLocation' => $oldLocation,
+                             'newLocation' => $newLocation
+                        )));
+    }
+
 }

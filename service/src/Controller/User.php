@@ -153,6 +153,7 @@ class User extends Base
                 AppMessage::FRIEND_REQUEST, $friendRequest->getId()
             );
 
+            $this->requestForCacheUpdate($this->user);
             $this->response->setContent(json_encode($friendRequest->toArray()));
             $this->response->setStatusCode(Status::OK);
         } catch (\InvalidArgumentException $e) {
@@ -443,6 +444,8 @@ class User extends Base
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
             $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
+
+            $this->requestForCacheUpdate($user);
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
