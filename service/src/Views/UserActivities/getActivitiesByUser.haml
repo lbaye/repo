@@ -9,7 +9,7 @@
       %link(rel='stylesheet' href=$url)
 
     %body
-      .content(scroll="yes" count="0" userId=$currentUser->getId() authToken=$authToken baseUrl=$baseUrl)
+      .content(count="0" userId=$currentUser->getId() authToken=$authToken baseUrl=$baseUrl)
         %ul
           - foreach($activities as $activity)
             - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
@@ -109,7 +109,8 @@
                         - else
                           Like
                   .row.list_of_likes(id=$rowLikesId style='display:none')
-
+        .more
+          Click Here For More
 
       - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
       - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
@@ -148,7 +149,7 @@
             .name
               %a(href= $userProfileLink)
                 %h4
-                  = $photo->getOwner()->getName()
+                  =$photo->getOwner()->getName()
                   %span
                     has uploaded a new picture.
             .time

@@ -5,6 +5,11 @@ body {
   font-size: 12px;
   margin-top: 10px;
 }
+body .more {
+  color: #67b000;
+  text-align: center;
+  cursor: pointer;
+}
 .clearfix {
   clear: both;
 }
