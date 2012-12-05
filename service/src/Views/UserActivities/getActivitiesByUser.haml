@@ -7,118 +7,118 @@
     - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
     %link(rel='stylesheet' href=$url)
 
-%body
-  %ul
-    - foreach($activities as $activity)
-      - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
-      - $rowLikesId = $activity->getId() . '_likes'
-      - $rowCommentsId = $activity->getId() . '_comments'
-      - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
+  %body
+    %ul
+      - foreach($activities as $activity)
+        - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
+        - $rowLikesId = $activity->getId() . '_likes'
+        - $rowCommentsId = $activity->getId() . '_comments'
+        - $userProfileLink =  "self::profile:" . $activity->getOwner()->getId()
 
-      %li
-        - if ($activity->getObjectType() === 'photo')
-          - $photo = $photoRepo->find($activity->getObjectId())
+        %li
+          - if ($activity->getObjectType() === 'photo')
+            - $photo = $photoRepo->find($activity->getObjectId())
 
-          .photo
-            .row
-              .avatar
-                - $avatarPath = $photo->getOwner()->getAvatar()
-                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+            .photo
+              .row
+                .avatar
+                  - $avatarPath = $photo->getOwner()->getAvatar()
+                  - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
-                %a(href= $userProfileLink)
-                  %img.lazy(src=$lazyImagePath data-original=$avatarPath)
-              .name
-                %a(href= $userProfileLink)
-                  %h4
-                    = $photo->getOwner()->getName()
-                    %span
-                      has uploaded a new picture.
-              .time
-                = $activity->toHumanizeDate()
-
-
-            .row(style='height:100px; margin-top: 5px;')
-
-              - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
-              .image(style=$imagePathCss)
-                - $photoFullPath = $baseUrl . $photo->getUriMedium();
-                - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
-                %a(href=$photoPath)
-                  %img.lazy(src=$lazyImagePath data-original=$photoFullPath)
-              .icon.icon_zoom
-
-            .row
-              .tools
-                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
-                                     data-objecttype=$activity->getObjectType()
-                                     data-liked=$liked data-likes=$rowLikesId)
-                  = $activity->getLikesCount()
-                  - if ($activity->getLikesCount() > 1)
-                    Likes
-                  - else
-                    Like
-            .row.list_of_likes(id=$rowLikesId style='display:none')
-
-
-        - else
-          .activity
-            .row
-              .avatar
-                - $avatarPath = $activity->getOwner()->getAvatar()
-                - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-
-                %a(href= $userProfileLink)
-                  %img.lazy(src=$lazyImagePath data-original=$avatarPath)
-              .name
-                %a(href= $userProfileLink)
-                  %h4= $activity->getOwner()->getName()
-              .time
-                - if ($activity->getCreatedAt() != null)
+                  %a(href= $userProfileLink)
+                    %img.lazy(src=$lazyImagePath data-original=$avatarPath)
+                .name
+                  %a(href= $userProfileLink)
+                    %h4
+                      = $photo->getOwner()->getName()
+                      %span
+                        has uploaded a new picture.
+                .time
                   = $activity->toHumanizeDate()
 
-              .comment
-                - if ($activity->getOwner()->getId() == $currentUser->getId())
-                  - if ($activity->getObjectType() === 'geotag')
-                    - $geotag = $geotagRepo->find($activity->getObjectId())
-                    - $geoLocation = $geotag->getLocation()->toArray()
-                    - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
-                    has tagged "
-                    %a(href= $geotagLink)
-                      %strong= stripcslashes($activity->getTitle())
-                    "
-                    at
-                    %small= $geotag->getLocation()->getAddress()
+              .row(style='height:100px; margin-top: 5px;')
 
-                  - if ($activity->getObjectType() === 'friend')
-                    - $friend = $userRepo->find($activity->getObjectId())
-                    is now friend with
-                    = $friend->getName()
-            %div.clearfix
+                - $imagePathCss = 'background: url(\'' . $baseUrl . '/assets/images/empty-bg.png\') no-repeat'
+                .image(style=$imagePathCss)
+                  - $photoFullPath = $baseUrl . $photo->getUriMedium();
+                  - $photoPath = "self::image:" . $baseUrl . $photo->getUriLarge();
+                  %a(href=$photoPath)
+                    %img.lazy(src=$lazyImagePath data-original=$photoFullPath)
+                .icon.icon_zoom
 
-            .row
-              .tools
-                %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
-                                     data-objecttype=$activity->getObjectType()
-                                     data-liked=$liked data-likes=$rowLikesId)
-                  = $activity->getLikesCount()
-                  - if ($activity->getLikesCount() > 1)
-                    Likes
-                  - else
-                    Like
-            .row.list_of_likes(id=$rowLikesId style='display:none')
+              .row
+                .tools
+                  %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                       data-objecttype=$activity->getObjectType()
+                                       data-liked=$liked data-likes=$rowLikesId)
+                    = $activity->getLikesCount()
+                    - if ($activity->getLikesCount() > 1)
+                      Likes
+                    - else
+                      Like
+              .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
-  - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
-  - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
-  - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'
-  - $lazyLoadScriptUrl = $baseUrl . '/assets/javascripts/jquery.lazyload.js'
+          - else
+            .activity
+              .row
+                .avatar
+                  - $avatarPath = $activity->getOwner()->getAvatar()
+                  - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
-  %script(type='text/javascript' src=$jqScriptUrl)
-  %script(type='text/javascript' src=$lazyLoadScriptUrl)
-  %script(type='text/javascript' src=$scriptUrl)
-  %script(type='text/javascript')
-    window.appInst.setBaseUrl("#{$baseUrl}");
-    window.appInst.setAuthToken("#{$authToken}");
-    jQuery('img.lazy').lazyload();
+                  %a(href= $userProfileLink)
+                    %img.lazy(src=$lazyImagePath data-original=$avatarPath)
+                .name
+                  %a(href= $userProfileLink)
+                    %h4= $activity->getOwner()->getName()
+                .time
+                  - if ($activity->getCreatedAt() != null)
+                    = $activity->toHumanizeDate()
+
+                .comment
+                  - if ($activity->getOwner()->getId() == $currentUser->getId())
+                    - if ($activity->getObjectType() === 'geotag')
+                      - $geotag = $geotagRepo->find($activity->getObjectId())
+                      - $geoLocation = $geotag->getLocation()->toArray()
+                      - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+
+                      has tagged "
+                      %a(href= $geotagLink)
+                        %strong= stripcslashes($activity->getTitle())
+                      "
+                      at
+                      %small= $geotag->getLocation()->getAddress()
+
+                    - if ($activity->getObjectType() === 'friend')
+                      - $friend = $userRepo->find($activity->getObjectId())
+                      is now friend with
+                      = $friend->getName()
+              %div.clearfix
+
+              .row
+                .tools
+                  %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                       data-objecttype=$activity->getObjectType()
+                                       data-liked=$liked data-likes=$rowLikesId)
+                    = $activity->getLikesCount()
+                    - if ($activity->getLikesCount() > 1)
+                      Likes
+                    - else
+                      Like
+              .row.list_of_likes(id=$rowLikesId style='display:none')
+
+
+    - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
+    - $scriptUrl = $baseUrl . '/assets/javascripts/newsfeed.js?' . $jsUpdateTime
+    - $jqScriptUrl = $baseUrl . '/assets/javascripts/jquery-1.8.3.min.js'
+    - $lazyLoadScriptUrl = $baseUrl . '/assets/javascripts/jquery.lazyload.js'
+
+    %script(type='text/javascript' src=$jqScriptUrl)
+    %script(type='text/javascript' src=$lazyLoadScriptUrl)
+    %script(type='text/javascript' src=$scriptUrl)
+    %script(type='text/javascript')
+      window.appInst.setBaseUrl("#{$baseUrl}");
+      window.appInst.setAuthToken("#{$authToken}");
+      jQuery('img.lazy').lazyload();
 
