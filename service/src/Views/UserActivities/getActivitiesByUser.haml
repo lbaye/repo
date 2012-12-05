@@ -29,14 +29,13 @@
                   %img.lazy(src=$lazyImagePath data-original=$avatarPath)
               .name
                 %a(href= $userProfileLink)
-                  %h4= $photo->getOwner()->getName()
+                  %h4
+                    = $photo->getOwner()->getName()
+                    %span
+                      has uploaded a new picture.
               .time
                 = $activity->toHumanizeDate()
 
-              - $description = $photo->getDescription()
-              - if (!empty($description))
-                .comment
-                  = stripcslashes($photo->getDescription())
 
             .row(style='height:100px; margin-top: 5px;')
 
