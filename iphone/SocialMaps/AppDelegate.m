@@ -454,6 +454,7 @@ static AppDelegate *sharedInstance=nil;
 	[activityView removeFromSuperview];
 	activityView = nil;
      */
+    [self.window setUserInteractionEnabled:YES];
     LoadingView *loadingView2 =(LoadingView *)[self.window viewWithTag:11111111];
     [loadingView2 removeView];
 }
@@ -462,7 +463,7 @@ static AppDelegate *sharedInstance=nil;
 {
     LoadingView *loadingView = [LoadingView loadingViewInView:sender];
 	loadingView.tag=11111111;
-    
+    [self.window setUserInteractionEnabled:NO];
     
 /*    
 	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);

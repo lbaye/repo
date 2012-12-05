@@ -221,7 +221,7 @@ int uploadPhotoCounter=0;
 
 -(void)dissmissView
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [smAppDelegate.currentModelViewController dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)segmentChanged:(id)sender
@@ -359,17 +359,19 @@ int uploadPhotoCounter=0;
         {
             
             NSLog(@"Photo [notif object] %@  %d %@ %@",[notif object],uploadPhotoCounter,self,self.presentingViewController);
-            [smAppDelegate hideActivityViewer];
-            [smAppDelegate.window setUserInteractionEnabled:YES];
             [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
-            [self performSelectorOnMainThread:@selector(dissmissView) withObject:nil waitUntilDone:YES];
         }
         else
         {
             [UtilityClass showAlert:@"" :@"Photo upload failed"];
+
         }
     }
     uploadPhotoCounter++;
+    [smAppDelegate hideActivityViewer];
+    [smAppDelegate.window setUserInteractionEnabled:YES];
+    [self performSelectorOnMainThread:@selector(dissmissView) withObject:nil waitUntilDone:YES];
+
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
