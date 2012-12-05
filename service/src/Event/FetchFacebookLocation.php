@@ -62,24 +62,39 @@ class FetchFacebookLocation extends Base {
             if (count($fbCheckIns) > 0) {
                 $this->importExtUsersFromCheckins($dm, $extUserRepo, $smUser, $fbCheckIns, $facebook);
             }
+
+            # Reset current instance variables
+            $fbCheckIns = null;
+            $facebook = null;
+            $smUser = null;
+            $extUserRepo = null;
         } else {
             $this->debug("No facebook checkins found");
         }
 
+        $this->debug('Cleaning up objects - ' . gc_collect_cycles());
+
         $this->checkMemoryAfter();
     }
 
-    private function keepSingleCheckinPerUser($fbCheckIns) {
+    private function requestForCacheRefresh(User &$smUser) {
+        $this->debug('Requesting for cache refresh');
+        $this->addTaskBackground(\Helper\Constants::APN_CREATE_SEARCH_CACHE,
+                                 json_encode(array('userId' => $smUser->getId())));
+        $this->runTasks();
+    }
+
+    private function keepSingleCheckinPerUser(&$fbCheckIns) {
         $userCheckinMap = array();
 
         # Iterate through each checkin
         for ($i = 0; $i < count($fbCheckIns); $i++) {
-            $checkin = $fbCheckIns[$i];
-            $authorId = $checkin['author_uid'];
+            $checkin = &$fbCheckIns[$i];
+            $authorId = &$checkin['author_uid'];
 
             # Map hash with user id and checkin object
             if (!array_key_exists($authorId, $userCheckinMap))
-                $userCheckinMap[$authorId] = $checkin;
+                $userCheckinMap[$authorId] = &$checkin;
 
             # if user is already exists in hash don't add to the hash
         }
@@ -91,13 +106,13 @@ class FetchFacebookLocation extends Base {
     /*
      * Order checkins by their creation date.
      */
-    private function orderCheckinsByTimestamp(array $fbCheckIns) {
+    private function orderCheckinsByTimestamp(array &$fbCheckIns) {
         $this->debug('Ordering ' . count($fbCheckIns) . ' by timestamp');
         $orderedCheckins = array();
 
         for ($i = 0; $i < count($fbCheckIns); $i++) {
-            $checkin = $fbCheckIns[$i];
-            $orderedCheckins[(int)$checkin['timestamp']] = $checkin;
+            $checkin = &$fbCheckIns[$i];
+            $orderedCheckins[(int)$checkin['timestamp']] = &$checkin;
         }
 
         ksort($orderedCheckins);
@@ -105,13 +120,14 @@ class FetchFacebookLocation extends Base {
     }
 
     private function importExtUsersFromCheckins(
-        DM $dm, ExtUserRepo $extUserRepo, User $smUser, array $fbCheckIns, FB $facebook) {
+        DM &$dm, ExtUserRepo &$extUserRepo, User &$smUser, array &$fbCheckIns, FB &$facebook) {
 
         $this->info('Importing external users (' . count($fbCheckIns) .
                     ') from ' . $smUser->getFirstName() . ' facebook checkins');
 
         $checkinsWithMetaData = $this->getCheckinsWithMetaData($facebook, $fbCheckIns);
         $changed = false;
+        $changedCounts = 0;
 
         # Iterate through each check in
         for ($i = 0; $i < count($checkinsWithMetaData); $i++) {
@@ -125,6 +141,7 @@ class FetchFacebookLocation extends Base {
                     $extUser = $this->findOrCreateOrUpdateExtUser($extUserRepo, $checkinWithMeta, $smUser, $changed);
 
                     if ($changed) {
+                        $changedCounts++;
                         $this->debug("There are unsaved changes, Now performing persist operation");
                         $dm->persist($extUser);
                     }
@@ -140,8 +157,10 @@ class FetchFacebookLocation extends Base {
             }
         }
 
-        if ($changed)
+        if ($changed) {
             $dm->flush();
+            $this->requestForCacheRefresh($smUser);
+        }
 
         $dm->clear();
 
@@ -149,8 +168,8 @@ class FetchFacebookLocation extends Base {
     }
 
     private function findOrCreateOrUpdateExtUser(
-        ExtUserRepo $extUserRepo,
-        array $checkinWithMeta, User $smUser, &$changed) {
+        ExtUserRepo &$extUserRepo,
+        array &$checkinWithMeta, User &$smUser, &$changed) {
 
         $extUser = $extUserRepo->findOneBy(
             array('refId' => $checkinWithMeta['refId'] . ''));
@@ -190,7 +209,7 @@ class FetchFacebookLocation extends Base {
         return $extUser;
     }
 
-    private function getCheckinsWithMetaData(FB &$facebook, $fbCheckIns) {
+    private function getCheckinsWithMetaData(FB &$facebook, &$fbCheckIns) {
         $this->debug("Building checkins with meta data");
 
         $checkinsInfo = array();
@@ -224,11 +243,11 @@ class FetchFacebookLocation extends Base {
         $fullCheckinsInfo = array();
 
         # Map users info with user id
-        foreach ($users['data'] as $userInfo) {
+        foreach ($users['data'] as &$userInfo) {
             $this->debug('Building checkin information for user - ' . $userInfo['first_name']);
             $uid = $userInfo['uid'];
-            $checkinInfo = $checkinsInfo[$uid];
-            $pageInfo = $pages[$checkinInfo['pageId']];
+            $checkinInfo = &$checkinsInfo[$uid];
+            $pageInfo = &$pages[$checkinInfo['pageId']];
             $this->debug('Found page info - ' . json_encode($pageInfo));
 
             $created_at = new \DateTime();
@@ -260,13 +279,13 @@ class FetchFacebookLocation extends Base {
     private function buildAddress(array $info) {
         $location = $info['location'];
         if (!empty($location)) {
-            return implode(", ", array_filter(array($location['street'], $location['city'], $location['country'])));
+            return implode(", ", array_filter(array(@$location['street'], @$location['city'], @$location['country'])));
         }
 
         return null;
     }
 
-    private function mapByPageId(array $pagesResult) {
+    private function mapByPageId(array &$pagesResult) {
         $this->debug('Remapping pages with page_id as key and data as value');
 
         if (!empty($pagesResult)) {

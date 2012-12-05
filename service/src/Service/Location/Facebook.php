@@ -48,7 +48,7 @@ class Facebook extends Base {
         return ($results) ? $results : array();
     }
 
-    public function getPages(array $pageIds) {
+    public function getPages(array &$pageIds) {
         $fql = '
             SELECT
                 page_id, name, location

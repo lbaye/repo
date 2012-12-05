@@ -46,19 +46,24 @@ class CreateSearchCache extends Base {
         $result = $inst->searchAll($user->getCurrentLocation(), array('user' => $user));
 
         // Remove existing cache reference
+        $this->debug(sprintf('Cleaning up existing cache references for user - %s', $user->getFirstName()));
         $this->cacheRefRepo->cleanupExistingReferences($user);
 
         // Create cache file name
+        $this->debug(sprintf('Cache path for - %s', $user->getFirstName()));
         $cacheFile = \Helper\CacheUtil::buildSearchCachePath($user, $user->getCurrentLocation());
 
         // Ensure target directory does exist
         \Helper\CacheUtil::ensureDirectoryExistence($cacheFile);
 
         // Write data to cache file
+        $this->debug(sprintf('Writing cache for user - %s (%s)', $user->getFirstName(), $user->getId()));
         file_put_contents($cacheFile, json_encode($result));
 
         // Create cache reference
         \Helper\CacheUtil::createCacheReference(
             $this->cacheRefRepo, $user, $cacheFile, $user->getCurrentLocation(), $result['people']);
+
+        $this->debug(sprintf('Built cache for user - %s (%s)', $user->getFirstName(), $user->getId()));
     }
 }

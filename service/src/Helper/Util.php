@@ -75,7 +75,7 @@ class Util {
     }
 
     private static function createStreamHandler($config) {
-        $config = $config['logging'];
+        $config = isset($config['logging']) ? $config['logging'] : array();
         $level = Logger::DEBUG;
         $file = "%s/logs/web_%s.log";
 
