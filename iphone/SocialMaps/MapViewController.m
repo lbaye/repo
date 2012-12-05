@@ -366,8 +366,11 @@ ButtonClickCallbackData callBackData;
                 LocationItem *anno = (LocationItem*) [copySearchAnnotationList objectAtIndex:i];
                 [_mapView addAnnotation:anno];
                 
-                if (i == 0)
+                if (i == 0) {
+                    [self didTapMap];
                     [self showAnnotationDetailView:anno];
+                    
+                }
             }
         }
         

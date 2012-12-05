@@ -221,7 +221,7 @@ int uploadPhotoCounter=0;
 
 -(void)dissmissView
 {
-    [smAppDelegate.currentModelViewController dismissModalViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction)segmentChanged:(id)sender

@@ -98,6 +98,7 @@ bool showSM=true;
 	// Do any additional setup after loading the view.
     
     labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -131,6 +132,7 @@ bool showSM=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
+    [self getSortedDisplayList];
     [self.circleListTableView reloadData];
     
 }
