@@ -18,7 +18,7 @@
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller{
     CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize msgStringSize = [notifMessage sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-    CGSize fixedStringSize = [@"asks you as a friend!" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    CGSize fixedStringSize = [@"wants to be your friend." sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width);
     
     CGFloat msgHeight = msgRows*msgStringSize.height+4;
@@ -112,7 +112,10 @@
 		btnAcceptBg = [[[UIImageView alloc] init] autorelease];
 		btnAcceptBg.tag = 2010;
 		btnAcceptBg.frame = CGRectMake(1, CellFrame.size.height-btnImage.size.height/2-5, btnImage.size.width/2, btnImage.size.height/2);
-        btnAcceptBg.image = btnImage;
+        //btnAcceptBg.image = btnImage;
+        [accept.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize]];
+        [accept setTitle:@"Accept" forState:UIControlStateNormal];
+        [accept setBackgroundImage:[UIImage imageNamed:@"btn_bg_green_small"] forState:UIControlStateNormal];
 		[cell.contentView addSubview:btnAcceptBg];
 		[cell.contentView sendSubviewToBack:btnAcceptBg];
         [accept addTarget:self action:@selector(requestAccepted:) forControlEvents:UIControlEventTouchUpInside];
@@ -189,7 +192,7 @@
 	lblSender.text = notifSender;
     
     lblFixed.frame = fixedFrame;
-    lblFixed.text  = @"asks you as a friend!";
+    lblFixed.text  = @"wants to be your friend.";
 	
     // Count
     lblCount.text = [NSString stringWithFormat:@"%d friend(s) in common", numCommonFriends];
