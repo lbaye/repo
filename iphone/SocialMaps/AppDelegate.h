@@ -75,6 +75,7 @@
     bool            facebookLogin;
     bool            smLogin;
     NSTimer         *timerGotListing;
+    NSMutableArray *myPhotoList;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -135,6 +136,7 @@
 
 @property (nonatomic, retain) UIViewController *currentModelViewController;
 @property (nonatomic, assign) BOOL isAppInBackgound;
+@property (nonatomic,retain)    NSMutableArray *myPhotoList;
 
 + (id) sharedInstance;
 - (void) hideActivityViewer;

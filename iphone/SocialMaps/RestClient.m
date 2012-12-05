@@ -6358,7 +6358,7 @@ AppDelegate *smAppDelegate;
                 photo.address=[self getNestedKeyVal:jsonObjects key1:@"address" key2:nil key3:nil];
                 photo.photoThum=[self getNestedKeyVal:jsonObjects key1:@"imageThumb" key2:nil key3:nil];
                 NSLog(@"photo.imageUrl %@",photo.imageUrl);
-            
+                [photo retain];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:photo];
         } 
         else 

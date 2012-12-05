@@ -26,7 +26,7 @@
 NSMutableArray *selectedFriendsIndex, *filteredList1, *filteredList2, *customSelectedFriendsIndex;
 
 BOOL isBackgroundTaskRunning,isDragging_msg,isDecliring_msg;
-int zoomIndex;
+int zoomIndex,getAllPhotoCounter=0;
 RestClient *rc;
 AppDelegate *smAppdelegate;
 
@@ -65,13 +65,15 @@ AppDelegate *smAppdelegate;
     labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
     [zoomView removeFromSuperview];
     isBackgroundTaskRunning=true;
-    
+    getAllPhotoCounter=0;
     if (willLoadPhotoData==TRUE)
     {
-        [smAppdelegate showActivityViewer:self.view];
-        [smAppdelegate.window setUserInteractionEnabled:NO];
-        NSLog(@"load all photos");
-        [rc getPhotos:@"Auth-Token" :smAppdelegate.authToken];
+//        [smAppdelegate showActivityViewer:self.view];
+//        [smAppdelegate.window setUserInteractionEnabled:NO];
+//        NSLog(@"load all photos");
+//        [rc getPhotos:@"Auth-Token" :smAppdelegate.authToken];
+        [self loadData:smAppdelegate.myPhotoList];
+        [self reloadScrolview];
     }
     else
     {
@@ -90,6 +92,8 @@ AppDelegate *smAppdelegate;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_USER_ALL_PHOTO object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
     // Release any retained subviews of the main view.
 }
 
@@ -387,14 +391,13 @@ AppDelegate *smAppdelegate;
 {
     Photo *photo=[[Photo alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
-//    for (int i=0; i<[photoListArr count]; i++)
-//    {
-//        photo=[[Photo alloc] init];
-//        [photoListArr addObject:photo];
-//        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
-//    }
+    smAppdelegate.myPhotoList=[photoListArr mutableCopy];
     filteredList1=[photoListArr mutableCopy];
     filteredList2=[photoListArr mutableCopy];
+    [smAppdelegate.myPhotoList retain];
+    [filteredList1 retain];
+    [filteredList2 retain];
+    [selectedFriendsIndex retain];
     NSLog(@"filtered count: %d",[filteredList1 count]);
 }
 
@@ -449,6 +452,7 @@ AppDelegate *smAppdelegate;
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
+    [selectedFriendsIndex retain];
     //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: photoScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
@@ -530,22 +534,34 @@ AppDelegate *smAppdelegate;
     willLoadPhotoData = FALSE;
     [smAppdelegate.window setUserInteractionEnabled:YES];
     [smAppdelegate hideActivityViewer];
-    if ([[notif object] count]==0) 
+    if (getAllPhotoCounter==0)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"No photos found"];
+        if ([notif.object isKindOfClass:[NSMutableArray class]])
+        {
+            if ([[notif object] count]==0)
+            {
+                [UtilityClass showAlert:@"Social Maps" :@"No photos found"];
+            }
+            [self loadData:[notif object]];
+            [self reloadScrolview];
+        }
+        else
+        {
+            [UtilityClass showAlert:@"Social Maps" :@"Network error, please try again"];
+        }
     }
-    [self loadData:[notif object]];
-    [self reloadScrolview];
 }
 
 - (void)deletePhotoDone:(NSNotification *)notif
 {
+    NSLog(@"delete done %@",selectedFriendsIndex);
     [UtilityClass showAlert:@"Social Maps" :[notif object]];
     willLoadPhotoData = FALSE;
     [smAppdelegate.window setUserInteractionEnabled:YES];
     [smAppdelegate hideActivityViewer];
     [filteredList1 removeObject:[selectedFriendsIndex objectAtIndex:0]];
     [filteredList2 removeObject:[selectedFriendsIndex objectAtIndex:0]];
+    [smAppdelegate.myPhotoList removeObject:[selectedFriendsIndex objectAtIndex:0]];
     [selectedFriendsIndex removeAllObjects];
     [self reloadScrolview];
 }

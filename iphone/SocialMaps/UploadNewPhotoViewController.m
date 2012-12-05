@@ -195,7 +195,6 @@ int uploadPhotoCounter=0;
         [rc uploadPhoto:@"Auth-Token" :smAppDelegate.authToken :photo];
         [smAppDelegate showActivityViewer:self.view];
         [smAppDelegate.window setUserInteractionEnabled:NO];
-        willLoadPhotoData = TRUE;
     }
 }
 
@@ -355,16 +354,17 @@ int uploadPhotoCounter=0;
 {
     if(uploadPhotoCounter==0)
     {
+        NSLog(@"Photo [notif object] %@  %d %@ %@",[notif object],uploadPhotoCounter,self,self.presentingViewController);
         if ([notif.object isKindOfClass:[Photo class]])
-        {
-            
-            NSLog(@"Photo [notif object] %@  %d %@ %@",[notif object],uploadPhotoCounter,self,self.presentingViewController);
+        {            
+            [smAppDelegate.myPhotoList addObject:notif.object];
             [UtilityClass showAlert:@"Social Maps" :@"Photo uploaded successfully"];
+            willLoadPhotoData = TRUE;
+
         }
         else
         {
             [UtilityClass showAlert:@"" :@"Photo upload failed"];
-
         }
     }
     uploadPhotoCounter++;
@@ -845,6 +845,7 @@ int uploadPhotoCounter=0;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

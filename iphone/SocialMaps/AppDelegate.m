@@ -86,6 +86,7 @@
 @synthesize isAppInBackgound;
 @synthesize shareLocationOption;
 @synthesize timerGotListing;
+@synthesize myPhotoList;
 
 static AppDelegate *sharedInstance=nil;
 

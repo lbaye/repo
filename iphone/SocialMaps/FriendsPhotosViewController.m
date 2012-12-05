@@ -27,7 +27,7 @@
 NSMutableArray *selectedFriendsIndex, *filteredList1, *filteredList2, *customSelectedFriendsIndex;
 
 BOOL isBackgroundTaskRunning,isDragging_msg,isDecliring_msg;
-int zoomIndex;
+int zoomIndex, friendsAllPhotoCounter=0;;
 RestClient *rc;
 AppDelegate *smAppdelegate;
 
@@ -83,6 +83,7 @@ AppDelegate *smAppdelegate;
     }
     
     smAppdelegate.currentModelViewController = self;
+    friendsAllPhotoCounter=0;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -95,6 +96,7 @@ AppDelegate *smAppdelegate;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
 }
 
 - (IBAction)backButtonAction:(id)sender
@@ -522,15 +524,26 @@ AppDelegate *smAppdelegate;
     willLoadPhotoData = FALSE;
     [smAppdelegate.window setUserInteractionEnabled:YES];
     [smAppdelegate hideActivityViewer];
-    if ([[notif object] count]==0) 
+    if (friendsAllPhotoCounter==0)
     {
-        [UtilityClass showAlert:@"Social Maps" :@"No photos found"];
+        if ([notif.object isKindOfClass:[NSMutableArray class]]) {
+            
+            if ([[notif object] count]==0)
+            {
+                [UtilityClass showAlert:@"Social Maps" :@"No photos found"];
+            }
+            else
+            {
+                [self loadData:[notif object]];
+                [self reloadScrolview];
+            }
+        }
+        else
+        {
+            [UtilityClass showAlert:@"Social Maps" :@"Network error, please try again"];
+        }
     }
-    else
-    {
-        [self loadData:[notif object]];
-        [self reloadScrolview];
-    }
+    friendsAllPhotoCounter++;
 }
 
 - (void)deletePhotoDone:(NSNotification *)notif
