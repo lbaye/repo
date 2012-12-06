@@ -1123,7 +1123,7 @@ class User {
     }
 
     public function isOnlineUser() {
-        self::isOnline($this->lastPulse);
+        return self::isOnline($this->getLastPulse());
     }
 
     public static function isOnline($lastPulse) {

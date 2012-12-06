@@ -871,7 +871,7 @@ class UserRepo extends Base {
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
 
         # Set Online/offline status
-        $userHash['online'] = $userObj->isOnline($userObj->getLastPulse());
+        $userHash['online'] = $userObj->isOnlineUser();
 
         # Set street view image if no cover photo is set
         $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);
