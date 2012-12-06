@@ -844,6 +844,7 @@ int uploadPhotoCounter=0;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
     // Release any retained subviews of the main view.
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_UPLOAD_PHOTO object:nil];
 }

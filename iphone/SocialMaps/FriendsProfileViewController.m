@@ -256,6 +256,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
             [UIView setAnimationDuration:0.8];
             newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
             [UIView commitAnimations];
+            [newsfeedImgView setImage:[UIImage imageNamed:@"sm_icon@2x.png"]];
             [self.view addSubview:newsfeedImgFullView];
             [newsFeedImageIndicator startAnimating];
             [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];

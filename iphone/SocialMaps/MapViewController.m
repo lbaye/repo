@@ -1360,6 +1360,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)dealloc 
 {
+    [super dealloc];
     NSLog(@"Deallocating MapViewController");
     NSLog(@"MapView retain count - %d", [_mapView retainCount]);
     [radio release];
@@ -1387,7 +1388,6 @@ ButtonClickCallbackData callBackData;
     [viewSearch release];
     [searchBar release];
     [_mapView release]; _mapView = nil;
-    [super dealloc];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

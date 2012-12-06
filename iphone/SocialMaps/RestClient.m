@@ -5070,6 +5070,8 @@ AppDelegate *smAppDelegate;
         else
         {
             NSLog(@"Failed to register device: status=%d", responseStatus);
+            [smAppDelegate hideActivityViewer];
+            [UtilityClass showAlert:@"" :@"Failed to sync device for push notification, Plese log in again"];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -5079,6 +5081,8 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^
      {
          NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
+         [smAppDelegate hideActivityViewer];
+         [UtilityClass showAlert:@"" :@"Failed to sync device for push notification, Plese log in again"];
      }];
     
     //[request setDelegate:self];

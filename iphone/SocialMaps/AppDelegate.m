@@ -462,30 +462,11 @@ static AppDelegate *sharedInstance=nil;
 
 -(void)showActivityViewer:(UIView*) sender
 {
+    [[self.window viewWithTag:11111111] removeFromSuperview];
     LoadingView *loadingView = [LoadingView loadingViewInView:sender];
 	loadingView.tag=11111111;
     [self.window setUserInteractionEnabled:NO];
-    
-/*    
-	CGRect frame = CGRectMake((sender.frame.size.width-24) / 2, (sender.frame.size.height-24) / 2, 24, 24);
-    
-	activityView = [[UIActivityIndicatorView alloc] initWithFrame:frame];
-    [activityView.layer setCornerRadius:4.0f];
-    [activityView.layer setMasksToBounds:YES];
-    activityView.tag=11111111;
-    activityView.backgroundColor = [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:25.0/255.0 alpha:0.7];
-	[activityView startAnimating];
-    [activityView hidesWhenStopped];
-	activityView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-	[activityView sizeToFit];
-	activityView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin |
-                                     UIViewAutoresizingFlexibleRightMargin |
-                                     UIViewAutoresizingFlexibleTopMargin |
-                                     UIViewAutoresizingFlexibleBottomMargin);
-	[sender addSubview: activityView];
- */
-    
-    
+    [loadingView bringSubviewToFront:self.window];
     [self performSelector:@selector(showCloseButton:) withObject:loadingView afterDelay:120];
     
 }

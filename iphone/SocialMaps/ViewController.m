@@ -10,6 +10,9 @@
 #import "UtilityClass.h"
 #import "UserDefault.h"
 #import "CustomAlert.h"
+#import "AppDelegate.h"
+#import "Globals.h"
+#import "MapViewController.h"
 
 @implementation ViewController
 @synthesize progressView;
@@ -23,7 +26,7 @@ static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 CGFloat animatedDistance;
 UserDefault *userDef;
-
+AppDelegate *smAppDelegate;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -35,10 +38,25 @@ UserDefault *userDef;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    userDef=[[UserDefault alloc] init];
+    smAppDelegate.authToken = [userDef readFromUserDefaults:@"authToken"];
+    smAppDelegate.userId = [userDef readFromUserDefaults:@"userId"];
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if ([smAppDelegate.authToken isKindOfClass:[NSString class]])
+    {
+        NSLog(@"viewcontroller smAppDelegate.authToken: %@ %i %i",smAppDelegate.authToken,[smAppDelegate.authToken isKindOfClass:[NSString class]],[smAppDelegate.authToken isMemberOfClass:[NSNull class]]);
+        [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
+        userInfoServiceLoginFlag=FALSE;
+    }
+    else
+    {
+        userInfoServiceLoginFlag=TRUE;
+    }
 	// Do any additional setup after loading the view, typically from a nib.
     progressView.progress = 0.0;
+    [smAppDelegate.authToken retain];
+    [smAppDelegate.userId retain];
     //[self performSelectorOnMainThread:@selector(makeMyProgressBarMoving) withObject:nil waitUntilDone:NO];
-    userDef=[[UserDefault alloc] init];
 }
 
 - (void)viewDidUnload
@@ -51,6 +69,7 @@ UserDefault *userDef;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [super viewWillAppear:animated];
     [self.privateBetaView removeFromSuperview];
 }
@@ -87,18 +106,25 @@ UserDefault *userDef;
     float actual = [progressView progress];
     if (actual < 1) {
         progressView.progress = actual + 0.02;
-        [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(makeMyProgressBarMoving) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:0.08 target:self selector:@selector(makeMyProgressBarMoving) userInfo:nil repeats:NO];
     }
     else{
         
-//        if ([userDef readFromUserDefaults:@"betaPassWord"])
+        if (userInfoServiceLoginFlag == TRUE)
         {
             [self performSegueWithIdentifier: @"showLogin" sender: self];
         }
-//        else
-//        {
-//            [self.view addSubview:privateBetaView];
-//        }
+        if (userInfoServiceLoginFlag == FALSE) 
+        {
+            NSLog(@"goto map view");
+            //        [self performSegueWithIdentifier: @"showMapView" sender: self];
+            UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+            [controller retain];
+            controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            [self presentModalViewController:controller animated:YES];
+            
+        }
     }
     
 } 

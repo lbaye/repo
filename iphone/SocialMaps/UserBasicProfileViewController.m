@@ -393,7 +393,7 @@ int scrollHeight,reloadCounter=0;
      statusMsgLabel.text=@"";
     
      addressOrvenueLabel.text=userInfo.address.street;
-     distanceLabel.text=@"";
+     distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
     if (userInfo.age>0) {
         ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
     }
@@ -691,6 +691,7 @@ int scrollHeight,reloadCounter=0;
             [UIView setAnimationDuration:0.8];
             newsfeedImgFullView.frame = CGRectMake(xpos, ypos-20, 320, 460);
             [UIView commitAnimations];
+            [newsfeedImgView setImage:[UIImage imageNamed:@"sm_icon@2x.png"]];
             [self.view addSubview:newsfeedImgFullView];
             [newsFeedImageIndicator startAnimating];
             [self performSelectorInBackground:@selector(loadNewsFeedImage:) withObject:urlStr];

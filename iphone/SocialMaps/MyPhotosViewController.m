@@ -389,7 +389,6 @@ AppDelegate *smAppdelegate;
 
 -(void)loadData:(NSMutableArray *)photoListArr
 {
-    Photo *photo=[[Photo alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
     smAppdelegate.myPhotoList=[photoListArr mutableCopy];
     filteredList1=[photoListArr mutableCopy];

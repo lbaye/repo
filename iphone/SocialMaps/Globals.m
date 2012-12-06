@@ -33,5 +33,6 @@ BOOL pointOnMapFlag;
 BOOL profileFromList;
 int badgeCount;
 BOOL notifBadgeFlag;
+BOOL userInfoServiceLoginFlag;
 
 @end

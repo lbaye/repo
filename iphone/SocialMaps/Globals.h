@@ -32,6 +32,7 @@ extern BOOL pointOnMapFlag;
 extern BOOL profileFromList;
 extern int badgeCount;
 extern BOOL notifBadgeFlag;
+extern BOOL userInfoServiceLoginFlag;
 
 @interface Globals : NSObject 
 

@@ -54,6 +54,7 @@
     NSMutableArray *friendList;
     NSMutableArray *meetUpRequests;
     NSMutableArray *geotagList;
+    NSMutableArray *myPhotoList;
     // Preferences
     Platform        *platformPrefs;
     Layer           *layerPrefs;
@@ -75,7 +76,6 @@
     bool            facebookLogin;
     bool            smLogin;
     NSTimer         *timerGotListing;
-    NSMutableArray *myPhotoList;
 }
 
 @property (atomic) bool rememberLoginInfo;
@@ -135,8 +135,8 @@
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
 @property (nonatomic, retain) UIViewController *currentModelViewController;
+@property (nonatomic,retain)  NSMutableArray *myPhotoList;
 @property (nonatomic, assign) BOOL isAppInBackgound;
-@property (nonatomic,retain)    NSMutableArray *myPhotoList;
 
 + (id) sharedInstance;
 - (void) hideActivityViewer;

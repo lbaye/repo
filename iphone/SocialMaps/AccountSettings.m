@@ -408,7 +408,7 @@
     // Logout
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    [dicImages_msg removeAllObjects]; //delete dicImages_msg 
+//    [dicImages_msg removeAllObjects]; //delete dicImages_msg 
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.facebookLogin = FALSE;
     smAppDelegate.smLogin = FALSE;
@@ -424,6 +424,10 @@
     smAppDelegate.loginCount = [prefs integerForKey:@"loginCount"];
     smAppDelegate.deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
     smAppDelegate.deviceTokenChanged = FALSE;
+//    smAppDelegate.fbAccessToken;
+//    smAppDelegate.fbId;
+    [prefs removeObjectForKey:@"authToken"];
+    [prefs synchronize];
     [userFriendslistArray removeAllObjects];
     [userFriendslistIndex removeAllObjects];
     
@@ -467,7 +471,7 @@
     
     // Meet up request
     [smAppDelegate.meetUpRequests removeAllObjects];
-    
+    userInfoServiceLoginFlag = TRUE;
     [[smAppDelegate.window rootViewController] dismissModalViewControllerAnimated:NO];
     
     if (smAppDelegate.timerGotListing) {

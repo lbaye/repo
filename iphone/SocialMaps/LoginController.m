@@ -14,6 +14,8 @@
 #import "FacebookHelper.h"
 #import "AppDelegate.h"
 #import "UtilityClass.h"
+#import "Globals.h"
+#import "MapViewController.h"
 
 @implementation LoginController
 @synthesize txtEmail;
@@ -30,6 +32,7 @@
 @synthesize smAppDelegate;
 @synthesize profileImageView;
 @synthesize bgImgView,tapview;
+int fbRegCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,11 +78,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ((smAppDelegate.facebookLogin==TRUE)||(smAppDelegate.smLogin==TRUE))
-    {
-        NSLog(@"in view will appear");
-        [self performSegueWithIdentifier: @"showMapView" sender: self];        
-    }
+    fbRegCounter=0;
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -181,6 +180,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBFRIENDLIST_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FB_REG_DONE object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -273,13 +273,17 @@
             smAppDelegate.currPosition.longitude = userInfo.currentLocationLng;
             smAppDelegate.currPosition.positionTime = [NSDate date];
         }
+        NSLog(@"userInfo.authToken: %@",userInfo.authToken);
         smAppDelegate.authToken = userInfo.authToken;
         smAppDelegate.userId = userInfo.id;
-        [smAppDelegate getPreferenceSettings:userInfo.authToken];
+        if (userInfoServiceLoginFlag==TRUE)
+        {
+            [smAppDelegate getPreferenceSettings:userInfo.authToken];            
+        }
     
         // Always Register device token. This takes care of multiple user using same device
         RestClient *restClient = [[RestClient alloc] init];
-        [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:userInfo.authToken];
+        [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
         if (smAppDelegate.loginCount == 1)
             [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
@@ -400,54 +404,79 @@
 }
 - (void)fbRegDone:(NSNotification *)notif
 {
-    NSLog(@"In LoginController:fbRegDone");
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    
-    User * regInfo = [notif object];
-    if (regInfo != nil) {
-        smAppDelegate.loginCount++;
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
-        [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
-        [prefs setObject:regInfo.authToken forKey:@"authToken"];
-        [prefs setObject:regInfo.id forKey:@"userId"];
-        [prefs synchronize];
-        if (regInfo.currentLocationLat != nil && regInfo.currentLocationLng != nil &&
-            [regInfo.currentLocationLat floatValue] != 0.0 &&
-            [regInfo.currentLocationLng floatValue] != 0.0) {
-            smAppDelegate.currPosition.latitude = regInfo.currentLocationLat;
-            smAppDelegate.currPosition.longitude = regInfo.currentLocationLng;
-            smAppDelegate.currPosition.positionTime = [NSDate date];
-        }
-        smAppDelegate.authToken = regInfo.authToken;
-        smAppDelegate.userId = regInfo.id;
-        [smAppDelegate getPreferenceSettings:regInfo.authToken];
-        [smAppDelegate getUserInformation:regInfo.authToken];
-        
-        // Always Register device token. This takes care of multiple user using same device
-        RestClient *restClient = [[RestClient alloc] init];
-        [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
-        
-        if (smAppDelegate.loginCount == 1)
-            [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
-        else 
-            [self performSegueWithIdentifier: @"showMapView" sender: self];
-    } else {
-        if (smAppDelegate.smLogin==FALSE)
+    if ([notif.object isKindOfClass:[User class]])
+    {
+        NSLog(@"In LoginController:fbRegDone");
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        if (fbRegCounter==0)
         {
-            [CustomAlert setBackgroundColor:[UIColor redColor] 
-                            withStrokeColor:[UIColor redColor]];
-            CustomAlert *loginAlert = [[CustomAlert alloc]
-                                       initWithTitle:@"Cannot Register"
-                                       message:@"Please contact provider"
-                                       delegate:nil
-                                       cancelButtonTitle:@"Done"
-                                       otherButtonTitles:nil];
-            
-            [loginAlert show];
-            [loginAlert autorelease];            
+            User * regInfo = [notif object];
+            if (regInfo != nil) {
+                smAppDelegate.loginCount++;
+                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  //load NSUserDefaults
+                [prefs setInteger:smAppDelegate.loginCount forKey:@"loginCount"];
+                [prefs setObject:regInfo.authToken forKey:@"authToken"];
+                [prefs setObject:regInfo.id forKey:@"userId"];
+                [prefs synchronize];
+                if (regInfo.currentLocationLat != nil && regInfo.currentLocationLng != nil &&
+                    [regInfo.currentLocationLat floatValue] != 0.0 &&
+                    [regInfo.currentLocationLng floatValue] != 0.0) {
+                    smAppDelegate.currPosition.latitude = regInfo.currentLocationLat;
+                    smAppDelegate.currPosition.longitude = regInfo.currentLocationLng;
+                    smAppDelegate.currPosition.positionTime = [NSDate date];
+                }
+                smAppDelegate.authToken = regInfo.authToken;
+                smAppDelegate.userId = regInfo.id;
+                if (userInfoServiceLoginFlag==TRUE)
+                {
+                    [smAppDelegate getPreferenceSettings:regInfo.authToken];            
+                }
+                
+                [smAppDelegate getUserInformation:regInfo.authToken];
+                
+                // Always Register device token. This takes care of multiple user using same device
+                RestClient *restClient = [[RestClient alloc] init];
+                [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
+                
+                if (smAppDelegate.loginCount == 1)
+                    [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
+                else 
+                {
+                    //            [self performSegueWithIdentifier: @"showMapView" sender: self];
+                    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                    MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+                    [controller retain];
+                    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                    [self presentModalViewController:controller animated:YES];
+                }
+            } else {
+                if (smAppDelegate.smLogin==FALSE)
+                {
+                    [CustomAlert setBackgroundColor:[UIColor redColor] 
+                                    withStrokeColor:[UIColor redColor]];
+                    CustomAlert *loginAlert = [[CustomAlert alloc]
+                                               initWithTitle:@"Cannot Register"
+                                               message:@"Please contact provider"
+                                               delegate:nil
+                                               cancelButtonTitle:@"Done"
+                                               otherButtonTitles:nil];
+                    
+                    [loginAlert show];
+                    [loginAlert autorelease];            
+                }
+            }
         }
     }
+    else
+    {
+        [smAppDelegate hideActivityViewer];
+        if (fbRegCounter==0) 
+        {
+            [UtilityClass showAlert:@"" :@"Can not regigter/login, try again."];
+        }
+    }
+    fbRegCounter++;
 }
 
 - (void)fbLoginDone:(NSNotification *)notif
@@ -457,7 +486,7 @@
     if (userInfo != nil) {
         // Do registration if first login
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        NSLog(@"userInfo.facebookId: %@",userInfo.facebookId);
+        NSLog(@"userInfo.facebookId: %@ %@",userInfo.facebookId ,userInfo.firstName);
         [restClient loginFacebook:(User *)userInfo];
         
         [smAppDelegate.window setUserInteractionEnabled:NO];
@@ -498,7 +527,8 @@
         
         [loginAlert show];
         [loginAlert autorelease];
-    } else if (![facebook isSessionValid]) {
+    } else //if (![facebook isSessionValid])
+    {
         [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",
@@ -517,7 +547,8 @@
                                 nil];
         [facebook authorize:permissions];
         [permissions release];
-    } else {
+    } 
+/*    else {
         User *user = [[User alloc] init];
         user.facebookId = smAppDelegate.fbId;
         user.facebookAuthToken = smAppDelegate.fbAccessToken;
@@ -528,6 +559,7 @@
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
     }
+ */
 }
 
 - (IBAction)doForgotPassword:(id)sender {

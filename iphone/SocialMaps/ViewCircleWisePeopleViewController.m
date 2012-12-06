@@ -275,7 +275,7 @@ int renameCircleOndex;
     NSString *circleName = ((UserCircle *)[circleListDetailGlobalArray objectAtIndex:index]).circleName;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
-                                                    message:[NSString stringWithFormat:@"Delete circle: %@?", circleName]  
+                                                    message:[NSString stringWithFormat:@"Do you want to delete %@ circle?", circleName]  
                                                    delegate:self 
                                           cancelButtonTitle:@"Yes"
                                           otherButtonTitles:@"No", nil];
