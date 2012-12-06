@@ -24,7 +24,7 @@
                   .row
                     .avatar
                       - $avatarPath = $photo->getOwner()->getAvatar()
-                      - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+                      - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
                       %a(href= $userProfileLink)
                         %img.lazy(src=$avatarPath)
@@ -69,7 +69,7 @@
                   .row
                     .avatar
                       - $avatarPath = $activity->getOwner()->getAvatar()
-                      - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+                      - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
                       %a(href= $userProfileLink)
                         %img.lazy(src=$avatarPath)
@@ -143,7 +143,7 @@
           .row
             .avatar
               - $avatarPath = $photo->getOwner()->getAvatar()
-              - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+              - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
               %a(href= $userProfileLink)
                 %img.lazy(src=$avatarPath)
@@ -188,7 +188,7 @@
           .row
             .avatar
               - $avatarPath = $activity->getOwner()->getAvatar()
-              - $avatarPath = (preg_match('/^http:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+              - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
               %a(href= $userProfileLink)
                 %img.lazy(src=$avatarPath)
