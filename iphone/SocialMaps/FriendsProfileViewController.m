@@ -73,7 +73,7 @@ BOOL coverImgFlag;
 BOOL isDirtyFrnd=FALSE;
 NSMutableArray *selectedScrollIndex;
 UIImageView *lineView;
-int newsFeedscrollHeight,reloadFeedCounter=0;
+int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -175,6 +175,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
     NSLog(@"urlStr %@",urlStr);
     [friendsId retain];
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+    reloadFrndsProfileCounter=0;
 }
 
 -(void)reloadProfileScrollView
@@ -512,6 +513,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 
 - (void)getOtherUserProfileDone:(NSNotification *)notif
 {
+    if ([notif.object isKindOfClass:[UserInfo class]]) {
     NSLog(@"GOT SERVICE DATA FRIENDS Profile.. :D  %@",[notif object]);
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
@@ -636,6 +638,41 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         [meetUpButton setEnabled:NO];
     }
     [userInfo retain];
+    }
+    else
+    {
+        if (reloadFrndsProfileCounter==0)
+        {
+            [self showConfirmBox];
+        }
+    }
+    reloadFrndsProfileCounter++;
+}
+
+-(void)showConfirmBox
+{    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
+                                                    message:[NSString stringWithFormat:@"Network problem, reload?"]  
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Yes"
+                                          otherButtonTitles:@"No", nil];
+    [alert show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"button Index %d",buttonIndex);
+    if (buttonIndex==0)
+    {
+        [smAppDelegate showActivityViewer:self.view];
+        [rc getOtherUserProfile:@"Auth-Token":smAppDelegate.authToken:friendsId];
+    }
+    else
+    {
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+    }
+    reloadFrndsProfileCounter=0;
 }
 
 - (void)getBasicProfileDone:(NSNotification *)notif
@@ -786,7 +823,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         if (img)
         {
             coverImageView.image=img;
-            [dicImages_msg setObject:img forKey:userInfo.coverPhoto];
+            if (img && userInfo.coverPhoto)
+            {
+                [dicImages_msg setObject:img forKey:userInfo.coverPhoto];                
+            }
         }
         else
         {
@@ -816,6 +856,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
         {
             profileImageView.image=img2;
             fullImageView.image=img2;
+            if (img2 && userInfo.avatar)
             [dicImages_msg setObject:img2 forKey:userInfo.avatar];
         }
         else
@@ -989,6 +1030,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0;
 {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }

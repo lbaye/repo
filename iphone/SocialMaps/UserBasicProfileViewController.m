@@ -58,7 +58,7 @@ BOOL coverImgFlag;
 BOOL isDirty=FALSE;
 NSMutableArray *selectedScrollIndex;
 UIImageView *lineView;
-int scrollHeight,reloadCounter=0;
+int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -123,6 +123,7 @@ int scrollHeight,reloadCounter=0;
     userItemScrollView.delegate = self;
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
+    reloadProfileCounter=0;
     [self reloadScrolview];
 }
 
@@ -381,81 +382,118 @@ int scrollHeight,reloadCounter=0;
 
 - (void)getBasicProfileDone:(NSNotification *)notif
 {
-    NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
-    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-//     coverImageView.image;
-//     profileImageView.image;
-    userInfo=[notif object];
-     nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
-    [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
-     statusMsgLabel.text=@"";
-    
-     addressOrvenueLabel.text=userInfo.address.street;
-     distanceLabel.text=[NSString stringWithFormat:@"%dm",userInfo.distance];
-    if (userInfo.age>0) {
-        ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
-    }
-    else {
-        ageLabel.text=@"Not found";
-    }
-     relStsLabel.text=userInfo.relationshipStatus;
-     livingPlace.text=userInfo.address.city;
-     worksLabel.text=userInfo.workStatus;
-    if (userInfo.status) 
-    {
-        statusMsgLabel.text=userInfo.status;
-    }
-    
-    if ([userInfo.regMedia isEqualToString:@"fb"]) 
-    {
-        [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
+    if ([notif.object isKindOfClass:[UserInfo class]]) {
+        NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
+        //     coverImageView.image;
+        //     profileImageView.image;
+        userInfo=[notif object];
+        nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
+        [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
+        statusMsgLabel.text=@"";
+        
+        addressOrvenueLabel.text=userInfo.address.street;
+        distanceLabel.text=@"";
+        if (userInfo.age>0) {
+            ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
+        }
+        else {
+            ageLabel.text=@"Not found";
+        }
+        relStsLabel.text=userInfo.relationshipStatus;
+        livingPlace.text=userInfo.address.city;
+        worksLabel.text=userInfo.workStatus;
+        if (userInfo.status) 
+        {
+            statusMsgLabel.text=userInfo.status;
+        }
+        
+        if ([userInfo.regMedia isEqualToString:@"fb"]) 
+        {
+            [regStatus setImage:[UIImage imageNamed:@"icon_facebook.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+        }
+        regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        regStatus.userInteractionEnabled=YES;
+        regStatus.layer.borderWidth=1.0;
+        regStatus.layer.masksToBounds = YES;
+        [regStatus.layer setCornerRadius:5.0];
+        
+        [self performSelectorInBackground:@selector(loadImage) withObject:nil];
+        [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
+        
+        //    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
+        //    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+        
+        //add annotation to map
+        [mapView removeAnnotations:[self.mapView annotations]];
+        CLLocationCoordinate2D theCoordinate;
+        theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
+        theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
+        MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
+        MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
+        [self.mapView setRegion:adjustedRegion animated:YES]; 
+        
+        NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
+        DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+        
+        if (!userInfo.address.city)
+        {
+            annotation.title =[NSString stringWithFormat:@"Address not found"];
+        }
+        else 
+        {
+            annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
+        }
+        annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
+        annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+        if (CLLocationCoordinate2DIsValid(annotation.coordinate))
+        {
+            [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+            [self.mapView addAnnotation:annotation];        
+        }
     }
     else
     {
-        [regStatus setImage:[UIImage imageNamed:@"sm_icon@2x.png"] forState:UIControlStateNormal];
+        if (reloadProfileCounter==0)
+        {
+            [smAppDelegate hideActivityViewer];
+            [smAppDelegate.window setUserInteractionEnabled:YES];
+            [self showConfirmBox];
+        }
     }
-    regStatus.layer.borderColor=[[UIColor lightTextColor] CGColor];
-    regStatus.userInteractionEnabled=YES;
-    regStatus.layer.borderWidth=1.0;
-    regStatus.layer.masksToBounds = YES;
-    [regStatus.layer setCornerRadius:5.0];
-    
-    [self performSelectorInBackground:@selector(loadImage) withObject:nil];
-    [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
-    
-//    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
-//    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
+    reloadProfileCounter++;
+}
 
-    //add annotation to map
-    [mapView removeAnnotations:[self.mapView annotations]];
-    CLLocationCoordinate2D theCoordinate;
-	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
-    theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
-    [self.mapView setRegion:adjustedRegion animated:YES]; 
-    
-    NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
-	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-    
-    if (!userInfo.address.city)
+-(void)showConfirmBox
+{    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Socialmaps" 
+                                                    message:[NSString stringWithFormat:@"Network problem, reload?"]  
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Yes"
+                                          otherButtonTitles:@"No", nil];
+    [alert show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"button Index %d",buttonIndex);
+    if (buttonIndex==0)
     {
-        annotation.title =[NSString stringWithFormat:@"Address not found"];
+        [smAppDelegate showActivityViewer:self.view];
+        [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     }
-    else 
+    else
     {
-        annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
-    }
-	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
-    if (CLLocationCoordinate2DIsValid(annotation.coordinate))
-    {
-        [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-        [self.mapView addAnnotation:annotation];        
+        [smAppDelegate hideActivityViewer];
+        [smAppDelegate.window setUserInteractionEnabled:YES];
     }
 
+    reloadProfileCounter=0;
 }
 
 - (void)updateBasicProfileDone:(NSNotification *)notif
@@ -562,7 +600,10 @@ int scrollHeight,reloadCounter=0;
         if (img)
         {
             coverImageView.image=img;
-            [dicImages_msg setObject:img forKey:userInfo.coverPhoto];
+            if (img && userInfo.coverPhoto)
+            {
+                [dicImages_msg setObject:img forKey:userInfo.coverPhoto];            
+            }
         }
         else
         {
@@ -594,6 +635,7 @@ int scrollHeight,reloadCounter=0;
         {
             profileImageView.image=img2;
             fullImageView.image=img2;
+            if (img2 && userInfo.avatar)
             [dicImages_msg setObject:img2 forKey:userInfo.avatar];
         }
         else
@@ -793,7 +835,7 @@ int scrollHeight,reloadCounter=0;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
                 imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=1.0;
+                imgView.layer.borderWidth=0.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];
                 [aView addSubview:imgView];
@@ -851,7 +893,8 @@ int scrollHeight,reloadCounter=0;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
