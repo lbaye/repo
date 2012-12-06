@@ -10,7 +10,7 @@ class ProximityAlert extends Base {
      */
     protected $userRepository;
 
-    const ACCEPTABLE_DISTANCE_IN_METERS = 100;
+    const ACCEPTABLE_DISTANCE_IN_METERS = 500;
     const MAX_ALLOWED_DISTANCE = 0.033; # 3 KM
 
     protected function setFunction() {
@@ -35,6 +35,8 @@ class ProximityAlert extends Base {
                     $this->debug('Searching nearby friends for user - ' . $user->getFirstName());
                     $this->services['dm']->refresh($user);
                     $this->notifyNearbyFriends($user);
+                } else {
+                    $this->debug("No such user found for id - " . $workload->user_id);
                 }
                 $this->services['dm']->clear();
             } else {
@@ -84,22 +86,29 @@ class ProximityAlert extends Base {
 
         $friendIds = array();
         $friends = $user->getFriends();
-        foreach ($friends as $friendId) $friendIds[] = $friendId;
+        foreach ($friends as $friendId) $friendIds[] = new \MongoId($friendId);
 
         $friends = $this->services['dm']
                 ->createQueryBuilder('Document\User')
                 ->select('firstName', 'currentLocation', 'pushSettings')
                 ->field('id')->in($friendIds)
-                ->hydrate(false)
-                ->field('currentLocation')->near($from['lng'], $from['lat']);
+                ->hydrate(false);
 
-        $query = $friends->getQueryArray();
-        $query['currentLocation']['$maxDistance'] = self::MAX_ALLOWED_DISTANCE;
-        $friends->setQueryArray($query);
+        $friendsCursor = $friends->getQuery()->execute();
+        $friendsList = array();
 
-        $this->debug('QUERY - ' . json_encode($friends->getQuery()->debug()));
+        foreach ($friendsCursor as $friendHash) {
+            if (isset($friendHash['currentLocation'])) {
+                $to = $friendHash['currentLocation'];
+                $distance = \Helper\Location::distance($from['lat'], $from['lng'], $to['lat'], $to['lng']);
+                $this->debug($friendHash['firstName'] . ' is about - ' . $distance . ' m away');
 
-        return $friends->getQuery()->execute();
+                if ($distance <= self::ACCEPTABLE_DISTANCE_IN_METERS)
+                    $friendsList[] = $friendHash;
+            }
+        }
+
+        return $friendsList;
     }
 
     private function logCurrentLocation($user) {
@@ -107,19 +116,15 @@ class ProximityAlert extends Base {
                      json_encode($user->getCurrentLocation()));
     }
 
-    private function informUser(\Document\User $user, &$friendsCursor) {
-
-        if ($friendsCursor instanceof \Doctrine\ODM\MongoDB\Cursor) {
-            $friends = array_values($friendsCursor->toArray());
-        }
+    private function informUser(\Document\User $user, &$friends) {
 
         $this->debug('Informing user - ' . $user->getName() . ' about his nearby friends');
 
-        if (count($friendsCursor) == 1) {
+        if (count($friends) == 1) {
             $friend = $this->userRepository->find($friends[0]['_id']->{'$id'});
             $message = $this->createNotificationMessage($friend, $user);
         } else {
-            $message = $this->createGroupNotificationMessage($friendsCursor);
+            $message = $this->createGroupNotificationMessage($friends);
         }
 
         $this->sendNotification($user, $this->addNotificationsCounts($user, $message));
@@ -175,8 +180,7 @@ class ProximityAlert extends Base {
         );
     }
 
-    private function createGroupNotificationMessage(\Doctrine\ODM\MongoDB\Cursor $friendsCursor) {
-        $friends = array_values($friendsCursor->toArray());
+    private function createGroupNotificationMessage(&$friends) {
 
         if (count($friends) > 2) {
             $message = $friends[0]['firstName'] . ', ' .
