@@ -931,9 +931,7 @@ class UserRepo extends Base {
     public function getFbConnectedUsers($start = 0, $limit = 50) {
         $query = $this->createQueryBuilder()
                 ->field('facebookAuthToken')->exists(true)
-                ->hydrate(false)
-                ->skip($start)
-                ->limit($limit);
+                ->hydrate(false);
 
         $users = $query->getQuery()->execute();
         return (!empty($users)) ? $users : array();

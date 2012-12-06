@@ -36,9 +36,15 @@ class FetchExternalLocation extends Base {
             }
             $this->addTaskBackground(
                 'fetch_facebook_location',
-                json_encode(array( 'userId' => $fbUser['_id']->{'$id'}, 'facebookId' => $fbId, 'facebookAuthToken' => $fbAuthToken ))
+                json_encode(array('userId' => $fbUser['_id']->{'$id'},
+                                 'facebookId' => $fbId,
+                                 'facebookAuthToken' => $fbAuthToken ))
             );
+            $fbUser = null;
         }
+
+        $fbUsers = null;
+        $this->services['dm']->clear();
 
         $this->runTasks();
         $this->checkMemoryAfter();

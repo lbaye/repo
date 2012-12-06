@@ -121,11 +121,13 @@ abstract class Base {
     }
 
     public function checkMemoryBefore() {
-        $this->debug("Memory usage before: " . (memory_get_usage() / 1024) . " KB");
+        $this->info("Memory usage before: " . (memory_get_usage() / 1024) . " KB");
+        $this->info('Is Garbage collection enabled ? - ' . gc_enabled());
     }
 
     public function checkMemoryAfter() {
-        $this->debug("Memory usage after: " . (memory_get_usage() / 1024) . " KB");
+        $this->info("Memory usage after: " . (memory_get_usage() / 1024) . " KB");
+        $this->info('Garbage collected objects count - ' . gc_collect_cycles());
     }
 
     public function logJob($name, $job) {
