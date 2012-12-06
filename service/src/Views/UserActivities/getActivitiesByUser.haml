@@ -10,6 +10,30 @@
     %body
       .content(count="0" userId=$currentUser->getId() authToken=$authToken baseUrl=$baseUrl)
         %ul
+          -if (count($activities) < 1)
+            - $userProfileLink =  "self::profile:" . $currentUser->getId()
+            %li.events
+              .activity
+                .row
+                  .avatar
+                    - $avatarPath = $currentUser->getAvatar()
+                    - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                    %a(href= $userProfileLink)
+                      %img.lazy(src=$avatarPath)
+                  .name
+                    %div
+                      .left
+                        %a(href= $userProfileLink)
+                          %h4
+                            = $currentUser->getName()
+                      .right
+                        %span
+                          joined Social Maps on
+                        - $date = (array)$currentUser->getCreateDate()
+                        = date('F Y',strtotime($date['date']))
+                        .
+
           - foreach($activities as $activity)
             - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
             - $rowLikesId = $activity->getId() . '_likes'

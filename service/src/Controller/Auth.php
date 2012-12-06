@@ -196,18 +196,14 @@ class Auth extends Base
                 $this->debug('New facebook user - ' . $user->getId());
             }
 
-
-
             $userData = $user->toArrayDetailed();
             $userData['avatar'] = \Helper\Url::buildAvatarUrl($userData);
             $userData['coverPhoto'] = \Helper\Url::buildCoverPhotoUrl($userData);
             $userData['friends'] = $this->_getFriendList($user);
 
-
             $notificationCounts = $this->userRepository->generateNotificationCount($user->getId());
             $notificationCounts = explode("|", $notificationCounts['tabCounts']);
             $userData['notification_count'] = array('notifications' => $notificationCounts[2], 'friendRequest' => $notificationCounts[1], 'messageCount' => $notificationCounts[0]);
-
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
