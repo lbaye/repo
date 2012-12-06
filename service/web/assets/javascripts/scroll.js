@@ -14,7 +14,15 @@ $(document).ready(function () {
 
             if (new_num < (old_num + 4)) {
                 $('.more').hide();
+            } else {
+                $('.more span').show();
+                $('.more img').hide();
             }
+        }
+
+        var hideText = function(){
+            $('.more span').hide();
+            $('.more img').show();
         }
 
         var offset = parseInt($('.events').length);
@@ -23,6 +31,7 @@ $(document).ready(function () {
             type:'get',
             url:baseUrl + "/" + userId + "/newsfeed.html?authToken=" + authToken,
             data:{offset:offset},
+            beforeSend: hideText,
             success:success
         });
 
