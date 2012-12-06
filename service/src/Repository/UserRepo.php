@@ -870,6 +870,9 @@ class UserRepo extends Base {
         $userHash['avatar'] = $this->_buildAvatarUrl($userHash);
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
 
+        # Set Online/offline status
+        $userHash['online'] = $userObj->isOnlineUser();
+
         # Set street view image if no cover photo is set
         $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);
         $currentLocationFound = isset($userHash['currentLocation']) &&
