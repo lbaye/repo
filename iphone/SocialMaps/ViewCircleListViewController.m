@@ -513,7 +513,7 @@ bool showSM=true;
         geoLocation.longitude=people.userInfo.currentLocationLng;
         cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
 
-
+        [self showIsOnlineImage:cell.profilePicImgView :people];
     }
     [cell.inviteButton.layer setCornerRadius:6.0f];
     [cell.inviteButton.layer setMasksToBounds:YES];
@@ -524,6 +524,34 @@ bool showSM=true;
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     //    cell.eventImage.image = eventPhoto;
     return cell;
+}
+
+- (void)showIsOnlineImage:(UIView*)profileImage :(LocationItemPeople*)people
+{
+    UIView *imageViewIcon = profileImage;
+    
+    if ([imageViewIcon viewWithTag:20101] == nil) 
+    {
+        UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(5, imageViewIcon.frame.size.height - 15, 10, 10)];
+        imageViewIsOnline.tag = 20101;
+        
+        [imageViewIcon addSubview:imageViewIsOnline];
+        [imageViewIsOnline release];
+    }
+    
+    UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
+    
+    if (people.userInfo.isOnline) 
+    {
+        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+        imageIsOnline.animationDuration = 2;
+        imageIsOnline.animationImages = imageArray;
+        [imageIsOnline startAnimating];
+        [imageArray release];
+    } else {
+        imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+    }
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 

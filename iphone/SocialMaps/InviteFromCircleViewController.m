@@ -316,11 +316,40 @@ bool searchFlag4=true;
         [cell1.messageButton.layer setCornerRadius:6.0f];
         [cell1.messageButton.layer setMasksToBounds:YES];
 
-        
+        [self showIsOnlineImage:cell1.profilePicImgView :people];
     }
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     return cell1;
+}
+
+
+- (void)showIsOnlineImage:(UIView*)profileImage :(LocationItemPeople*)people
+{
+    UIView *imageViewIcon = profileImage;
+    
+    if ([imageViewIcon viewWithTag:20101] == nil) 
+    {
+        UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(5, imageViewIcon.frame.size.height - 15, 10, 10)];
+        imageViewIsOnline.tag = 20101;
+        
+        [imageViewIcon addSubview:imageViewIsOnline];
+        [imageViewIsOnline release];
+    }
+    
+    UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
+    
+    if (people.userInfo.isOnline) 
+    {
+        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+        imageIsOnline.animationDuration = 2;
+        imageIsOnline.animationImages = imageArray;
+        [imageIsOnline startAnimating];
+        [imageArray release];
+    } else {
+        imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+    }
+    
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
