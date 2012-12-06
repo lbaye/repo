@@ -480,6 +480,8 @@
 		B08845691619584C00676EFA /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08845671619584C00676EFA /* OverlayViewController.m */; };
 		B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F316203E1F003A9FA9 /* list_view_icon_black.png */; };
 		B08997F716203E2E003A9FA9 /* map_view_icon_black.png in Resources */ = {isa = PBXBuildFile; fileRef = B08997F616203E2E003A9FA9 /* map_view_icon_black.png */; };
+		B08B3D1D1670830A004F2EAF /* online_dot.png in Resources */ = {isa = PBXBuildFile; fileRef = B08B3D1C1670830A004F2EAF /* online_dot.png */; };
+		B08B3D221670841A004F2EAF /* offline_dot.png in Resources */ = {isa = PBXBuildFile; fileRef = B08B3D211670841A004F2EAF /* offline_dot.png */; };
 		B08B6C4F16469C1B00279EDD /* PlaceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */; };
 		B08B6C5016469C1B00279EDD /* PlaceListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */; };
 		B08B6C601646A2F900279EDD /* CachedImages.m in Sources */ = {isa = PBXBuildFile; fileRef = B08B6C5B1646A2F800279EDD /* CachedImages.m */; };
@@ -1175,6 +1177,8 @@
 		B08845671619584C00676EFA /* OverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayViewController.m; sourceTree = "<group>"; };
 		B08997F316203E1F003A9FA9 /* list_view_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_view_icon_black.png; sourceTree = "<group>"; };
 		B08997F616203E2E003A9FA9 /* map_view_icon_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map_view_icon_black.png; sourceTree = "<group>"; };
+		B08B3D1C1670830A004F2EAF /* online_dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = online_dot.png; path = Images/online_dot.png; sourceTree = SOURCE_ROOT; };
+		B08B3D211670841A004F2EAF /* offline_dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = offline_dot.png; path = Images/offline_dot.png; sourceTree = SOURCE_ROOT; };
 		B08B6C4C16469C1B00279EDD /* PlaceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceListViewController.h; sourceTree = "<group>"; };
 		B08B6C4D16469C1B00279EDD /* PlaceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceListViewController.m; sourceTree = "<group>"; };
 		B08B6C4E16469C1B00279EDD /* PlaceListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceListViewController.xib; sourceTree = "<group>"; };
@@ -1648,6 +1652,8 @@
 			isa = PBXGroup;
 			children = (
 				B0851550162E919D003347CB /* blank.png */,
+				B08B3D1C1670830A004F2EAF /* online_dot.png */,
+				B08B3D211670841A004F2EAF /* offline_dot.png */,
 				B08819441627174500FBCB1A /* btn_bg_gray_small.png */,
 				B08819451627174500FBCB1A /* btn_bg_green_small.png */,
 				B08819461627174500FBCB1A /* btn_bg_light_small.png */,
@@ -2385,6 +2391,8 @@
 				20B984C616552044003C8C10 /* img_close_gray.png in Resources */,
 				20CE7C1F165A0A2300022AF2 /* PlanStoryboard.storyboard in Resources */,
 				20F1BB361664A8020044C2CF /* img_settings_list_bg_solid.png in Resources */,
+				B08B3D1D1670830A004F2EAF /* online_dot.png in Resources */,
+				B08B3D221670841A004F2EAF /* offline_dot.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

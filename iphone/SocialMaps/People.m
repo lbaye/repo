@@ -41,5 +41,6 @@
 @synthesize blockStatus;
 @synthesize source;
 @synthesize lastSeenAtDate;
+@synthesize isOnline;
 
 @end
