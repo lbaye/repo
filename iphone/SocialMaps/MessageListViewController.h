@@ -45,7 +45,6 @@
     BOOL isDragging_msg;
     BOOL isDecliring_msg;
     CGFloat animatedDistance;
-    NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName;
     
     NotifMessage *selectedMessage;
