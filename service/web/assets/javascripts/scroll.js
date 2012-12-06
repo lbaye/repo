@@ -8,7 +8,6 @@ $(document).ready(function () {
     $('.more').click(function () {
         var success = function (res) {
             $('.content ul').append(res);
-            $('img.lazy').lazyload();
             var new_num = parseInt($('.events').length);
             var old_num = parseInt(container.attr('count'));
             container.attr("count", new_num);
