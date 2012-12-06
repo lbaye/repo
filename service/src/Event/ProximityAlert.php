@@ -78,6 +78,7 @@ class ProximityAlert extends Base {
         }
     }
 
+    // TODO: Check location sharing visibility with user and his friends
     private function findNearbyFriends(\Document\User $user) {
         $from = $user->getCurrentLocation();
 

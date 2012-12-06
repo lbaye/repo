@@ -38,6 +38,7 @@ class LastSeenAddress extends Base
 
                 $address = $this->_getAddress($current_location);
                 $this->_updateUserAddress($user, $address);
+                $this->services['dm']->clear();
             } catch (\Exception $e) {
                 $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
                 $this->error($e);
