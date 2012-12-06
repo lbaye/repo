@@ -527,7 +527,30 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         geoLocation.latitude=userInfo.currentLocationLat;
         geoLocation.longitude=userInfo.currentLocationLng;
         distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-   
+        
+        if (userInfo) {
+            for (LocationItemPeople *locationItemPeople in smAppDelegate.peopleList)
+            {
+                if ([locationItemPeople.userInfo.userId isEqualToString:userInfo.userId]) {
+                    UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(profileImageView.frame.size.width - 20, profileImageView.frame.size.height - 20, 14, 14)];
+                    if (locationItemPeople.userInfo.isOnline) {
+                        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+                        imageViewIsOnline.animationDuration = 2;
+                        imageViewIsOnline.animationImages = imageArray;
+                        [imageViewIsOnline startAnimating];
+                        [imageArray release];
+                        
+                    } else {
+                        imageViewIsOnline.image = [UIImage imageNamed:@"offline_dot.png"];
+                        
+                    }
+                    [profileImageView addSubview:imageViewIsOnline];
+                    [imageViewIsOnline release];
+                    break;
+                }
+            }   
+        }
+    
     if (userInfo.age>0) {
         ageLabel.text=[NSString stringWithFormat:@"%d",userInfo.age];
     }
@@ -1028,6 +1051,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 - (void)viewDidUnload
 {
+    [buttonZoomView release];
+    buttonZoomView = nil;
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
@@ -1224,4 +1249,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
 }
 
+- (void)dealloc {
+    [buttonZoomView release];
+    [super dealloc];
+}
 @end

@@ -517,6 +517,7 @@ ButtonClickCallbackData callBackData;
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
     FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
     controller.friendsId=locItem.userInfo.userId;
+    NSLog(@"profile id = %@", controller.friendsId);
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 }
@@ -707,8 +708,9 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
-    LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
-
+    LocationItem *locItem = (LocationItem*) [annoView annotation];
+    
+    
     //selectedAnno = [annoView annotation];
     [self mapAnnotationInfoUpdated:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
@@ -735,6 +737,7 @@ ButtonClickCallbackData callBackData;
             [self viewEventDetail:locItem];
             break;
         case MapAnnoUserActionProfile:
+            NSLog(@"locItem place = %@ name = %@", locItem, locItem.itemName);
             [self viewPeopleProfile:locItem];
             break;
         case MapAnnoUserActionCreateEvent:
