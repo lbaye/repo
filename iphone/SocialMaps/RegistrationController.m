@@ -118,8 +118,8 @@
 {
     userInfo.email = regEmail.text;
     userInfo.password = regPassword.text;
-    userInfo.lastName = regName.text;
     userInfo.firstName = regFirstName.text;
+    userInfo.lastName = regName.text;
     userInfo.gender = regGender.text;
     [self animateTextField: textField up: NO];
 }
@@ -143,10 +143,10 @@
     if ([theTextField isEqual:regEmail]) {
         [regPassword becomeFirstResponder];
     } else if ([theTextField isEqual:regPassword]){
-        [regName becomeFirstResponder];
-    } else if ([theTextField isEqual:regName]){
         [regFirstName becomeFirstResponder];
-    }else if ([theTextField isEqual:regFirstName]){
+    } else if ([theTextField isEqual:regFirstName]){//regFirstName   regName
+        [regName becomeFirstResponder];
+    }else if ([theTextField isEqual:regName]){
         [theTextField resignFirstResponder];
     }
     // Store the password
