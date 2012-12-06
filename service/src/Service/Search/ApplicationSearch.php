@@ -29,7 +29,7 @@ class ApplicationSearch implements ApplicationSearchInterface {
     }
 
     public function searchPeople(array $params, $options = array()) {
-        $limit = isset($options['limit']) ? $options['limit'] : 100;
+        $limit = isset($options['limit']) ? $options['limit'] : 2000;
         $location = array('lat' => (float)$params['lat'], 'lng' => (float)$params['lng']);
         $keywords = isset($params['keyword']) ? $params['keyword'] : null;
         $key = $this->config['googlePlace']['apiKey'];
