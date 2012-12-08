@@ -89,6 +89,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    UITapGestureRecognizer *zoomTapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToZoomView:)];
+    zoomTapGesture.numberOfTapsRequired = 1;
+    [profileImageView addGestureRecognizer:zoomTapGesture];
+    [zoomTapGesture release];
+    
     [statusMsgLabel.layer setCornerRadius:3.0f];
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
@@ -176,6 +181,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [friendsId retain];
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
     reloadFrndsProfileCounter=0;
+    [frndStatusButton setHidden:YES];
 }
 
 -(void)reloadProfileScrollView
@@ -349,10 +355,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
  */
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-    [frndStatusButton setTitle:@"requested" forState:UIControlStateNormal];
+//    [frndStatusButton setTitle:@"requested" forState:UIControlStateNormal];
     [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
     [addFrndButton setUserInteractionEnabled:NO];
-    [frndStatusButton setHidden:NO];
+    [frndStatusButton setHidden:YES];
 }
 
 -(IBAction)uploadPhotoButton:(id)sender
@@ -627,7 +633,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
+//        [frndStatusButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setTitle:userInfo.friendshipStatus forState:UIControlStateNormal];
         [addFrndButton setUserInteractionEnabled:NO];
         NSString *friendShipStatus=userInfo.friendshipStatus;
@@ -637,22 +643,26 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             [addFrndButton setImage:nil forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
+            [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"requested"]) {
             [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
+            [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"pending"]) {
             [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
+            [frndStatusButton setHidden:YES];
         }
         else if ([friendShipStatus isEqualToString:@"friend"]) {
             [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
+            [frndStatusButton setHidden:NO];
         }
     }
     
@@ -994,7 +1004,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
                 imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=1.0;
+                imgView.layer.borderWidth=0.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];
                 [aView addSubview:imgView];

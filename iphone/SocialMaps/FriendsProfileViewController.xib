@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">11D2001</string>
+		<string key="IBDocument.SystemVersion">11G63</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
-		<string key="IBDocument.AppKitVersion">1138.32</string>
-		<string key="IBDocument.HIToolboxVersion">568.00</string>
+		<string key="IBDocument.AppKitVersion">1138.51</string>
+		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">1181</string>
@@ -272,7 +272,7 @@
 								<string key="NSFrame">{{282, 9}, {28, 28}}</string>
 								<reference key="NSSuperview" ref="127988136"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="741067611"/>
+								<reference key="NSNextKeyView" ref="252513907"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAgMAA</bytes>
@@ -931,7 +931,7 @@
 							<object class="IBUIButton" id="760928344">
 								<reference key="NSNextResponder" ref="913850919"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{10, 104}, {52, 21}}</string>
+								<string key="NSFrame">{{10, 80}, {48, 45}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="941318944"/>
@@ -940,13 +940,12 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
-								<int key="IBUIButtonType">1</int>
 								<reference key="IBUIHighlightedTitleColor" ref="44308526"/>
 								<reference key="IBUINormalTitleColor" ref="953165368"/>
 								<reference key="IBUINormalTitleShadowColor" ref="666673848"/>
-								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">checkbox_unchecked.png</string>
+									<string key="NSResourceName">FB_friend_symbol.png</string>
 								</object>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<string key="name">Helvetica</string>
@@ -986,7 +985,7 @@
 								<string key="NSFrame">{{168, 380}, {140, 32}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="1042283280"/>
+								<reference key="NSNextKeyView" ref="434207318"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1147,7 +1146,7 @@
 								<string key="NSFrame">{{0, 105}, {320, 1}}</string>
 								<reference key="NSSuperview" ref="1042283280"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="434207318"/>
+								<reference key="NSNextKeyView" ref="229096920"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="868152180">
 									<int key="NSColorSpace">3</int>
@@ -1170,7 +1169,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{0, 136}, {320, 106}}</string>
+						<string key="NSFrame">{{1000, 136}, {320, 106}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="940662884"/>
@@ -1212,14 +1211,14 @@
 								<string key="NSFrame">{{0, 44}, {248, 252}}</string>
 								<reference key="NSSuperview" ref="434207318"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="229096920"/>
+								<reference key="NSNextKeyView" ref="741067611"/>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIMultipleTouchEnabled">YES</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{36, 82}, {248, 296}}</string>
+						<string key="NSFrame">{{360, 82}, {248, 296}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="255163580"/>
@@ -1296,7 +1295,7 @@
 								<string key="NSFrame">{{186, 118}, {115, 37}}</string>
 								<reference key="NSSuperview" ref="741067611"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="252513907"/>
+								<reference key="NSNextKeyView" ref="1042283280"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
@@ -1310,7 +1309,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{0, 44}, {320, 160}}</string>
+						<string key="NSFrame">{{1000, 44}, {320, 160}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="275205545"/>
@@ -2644,11 +2643,11 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="FB_friend_symbol.png">{95, 89}</string>
 			<string key="back_b_small.png">{70, 35}</string>
 			<string key="blank.png">{139, 139}</string>
 			<string key="btn_bg_light.png">{344, 64}</string>
 			<string key="bubble_count_icon.png">{55, 57}</string>
-			<string key="checkbox_unchecked.png">{50, 50}</string>
 			<string key="f_logo.png">{140, 140}</string>
 			<string key="header.png">{640, 91}</string>
 			<string key="img_close_gray.png">{19, 19}</string>

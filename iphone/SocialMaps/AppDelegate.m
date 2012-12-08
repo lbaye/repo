@@ -388,6 +388,19 @@ static AppDelegate *sharedInstance=nil;
             RestClient *rc=[[RestClient alloc] init];
             [rc getUserFriendList:@"Auth-Token" tokenValue:self.authToken andUserId:self.userId];
         }
+        else if (newNotif.notifType == PushNotificationMessage)
+        {
+            RestClient *rc=[[RestClient alloc] init];
+            [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
+            if ([self.currentModelViewController isKindOfClass:[NotificationController class]])
+            {
+                [[(NotificationController *)[self currentModelViewController] notificationItems] reloadData];
+            }
+            else
+            {
+                
+            }
+        }
     }
 }
 
