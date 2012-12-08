@@ -18,6 +18,7 @@ class Messages extends Base {
         $this->messageRepository->setConfig($this->config);
 
         $this->userRepository = $this->dm->getRepository('Document\User');
+        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 
