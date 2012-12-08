@@ -19,7 +19,6 @@ class Photos extends Base
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->photoRepo = $this->dm->getRepository('Document\Photo');
-        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 

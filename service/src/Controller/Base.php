@@ -125,6 +125,7 @@ abstract class Base {
 
         $this->serializer = \Service\Serializer\Factory::getSerializer('json');
         $this->cacheRefRepo = $this->dm->getRepository('Document\CacheRef');
+        $this->_updatePulse();
     }
 
     protected function createLogger($name) {
@@ -463,6 +464,4 @@ abstract class Base {
             $this->userRepository->updateUserPulse($this->user);
         }
     }
-
-
 }

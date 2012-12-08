@@ -18,7 +18,6 @@ class Reviews extends Base
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->reviewRepo = $this->dm->getRepository('Document\Review');
-        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
