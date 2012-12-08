@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
@@ -341,7 +341,7 @@
             <objects>
                 <viewController storyboardIdentifier="mapViewController" id="wC3-So-nVM" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iiB-MM-eFF">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="vAv-Wy-i1h" userLabel="MapView">
@@ -1533,7 +1533,7 @@
             <objects>
                 <viewController title="List View Controller" id="fgr-fq-SqM" customClass="ListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2r9-Es-OgG">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Sh-3V-Ss1" userLabel="listPullDown">
@@ -2015,7 +2015,7 @@
             <objects>
                 <viewController storyboardIdentifier="notificationViewController" id="xAh-9q-Sej" customClass="NotificationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jm0-Vq-vBY">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="QOl-IZ-Dve" userLabel="notifHeader">
@@ -4846,17 +4846,17 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <inset key="contentInset" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                     </tableView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="whitle_blend.png" id="z1Y-Nh-V63">
-                                        <rect key="frame" x="0.0" y="258.5" width="320" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line.png" id="X1u-CI-puI">
-                                        <rect key="frame" x="10" y="285" width="300" height="1"/>
+                                        <rect key="frame" x="0.0" y="260" width="320" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" id="5Fr-Cw-BsE">
                                         <rect key="frame" x="0.0" y="300" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line.png" id="X1u-CI-puI">
+                                                <rect key="frame" x="10" y="-10" width="300" height="1"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Your message..." id="vwO-Xo-kK2">
                                                 <rect key="frame" x="17" y="5" width="209" height="28"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5569,4 +5569,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="qvJ-bu-e6k"/>
+    </inferredMetricsTieBreakers>
 </document>
