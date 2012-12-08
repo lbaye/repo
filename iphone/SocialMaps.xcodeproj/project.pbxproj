@@ -103,6 +103,7 @@
 		20CF83431611F9780075E647 /* icon_friend_request_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83401611F9770075E647 /* icon_friend_request_selected.png */; };
 		20CF83441611F9780075E647 /* icon_message_notification_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83411611F9770075E647 /* icon_message_notification_selected.png */; };
 		20CF83451611F9780075E647 /* icon_notify_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 20CF83421611F9780075E647 /* icon_notify_selected.png */; };
+		20D129AD1673965C00F1E71C /* FB_friend_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D129AC1673965C00F1E71C /* FB_friend_symbol.png */; };
 		20D86222165DEBFA0005EE1B /* PlanImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D86221165DEBFA0005EE1B /* PlanImageDownloader.m */; };
 		20D86236165E11D70005EE1B /* FriendsPlanListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D86235165E11D70005EE1B /* FriendsPlanListViewController.m */; };
 		20E3655B1647A08E00F06437 /* Geotag.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E3655A1647A08E00F06437 /* Geotag.m */; };
@@ -639,6 +640,7 @@
 		20CF83401611F9770075E647 /* icon_friend_request_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_friend_request_selected.png; sourceTree = "<group>"; };
 		20CF83411611F9770075E647 /* icon_message_notification_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_message_notification_selected.png; sourceTree = "<group>"; };
 		20CF83421611F9780075E647 /* icon_notify_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_notify_selected.png; sourceTree = "<group>"; };
+		20D129AC1673965C00F1E71C /* FB_friend_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FB_friend_symbol.png; sourceTree = "<group>"; };
 		20D86220165DEBFA0005EE1B /* PlanImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanImageDownloader.h; sourceTree = "<group>"; };
 		20D86221165DEBFA0005EE1B /* PlanImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanImageDownloader.m; sourceTree = "<group>"; };
 		20D86234165E11D70005EE1B /* FriendsPlanListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsPlanListViewController.h; sourceTree = "<group>"; };
@@ -1754,6 +1756,7 @@
 				20BDE516164111C0008E22FD /* fbCheckin.png */,
 				205464D9164143FD00A96E8B /* fbCheckinIcon.png */,
 				4F4CA52715C45351004234E5 /* fb_search_icon.png */,
+				20D129AC1673965C00F1E71C /* FB_friend_symbol.png */,
 				4F72290E15C7F4BB008B60A8 /* flip_checkbox.png */,
 				20B5D56D16131975001105AF /* friends_rqst_icon.png */,
 				201DB4C416731CA300B840FE /* friend_symbol.png */,
@@ -2397,6 +2400,7 @@
 				201DB4C516731CA300B840FE /* friend_symbol.png in Resources */,
 				B08B3D1D1670830A004F2EAF /* online_dot.png in Resources */,
 				B08B3D221670841A004F2EAF /* offline_dot.png in Resources */,
+				20D129AD1673965C00F1E71C /* FB_friend_symbol.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
