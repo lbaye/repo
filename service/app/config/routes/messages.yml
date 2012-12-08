@@ -37,6 +37,11 @@ replies_since_message:
   requirements:
     _method: GET
 
+get_unread_message_by_id:
+  pattern: /messages/{id}/unread
+  defaults: { _controller: Controller\Messages::getUnreadMessagesById }
+  requirements: { _method: GET }
+
 delete_message:
   pattern:  /messages/{id}
   defaults: { _controller: Controller\Messages::delete }
@@ -53,7 +58,4 @@ add_recipient_to_message:
   requirements:
     _method: POST|PUT
 
-get_unread_message_by_id:
-  pattern: /unreadMessages/{id}
-  defaults: { _controller: Controller\Messages::getUnreadMessagesById }
-  requirements: { _method: GET }
+
