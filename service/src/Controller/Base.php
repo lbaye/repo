@@ -455,5 +455,14 @@ abstract class Base {
                              'newLocation' => $newLocation
                         )));
     }
+    /*
+     * Update user pulse
+     */
+    protected function _updatePulse() {
+        if ($this->user instanceof \Document\User) {
+            $this->userRepository->updateUserPulse($this->user);
+        }
+    }
+
 
 }

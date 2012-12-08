@@ -22,6 +22,7 @@ class User extends Base
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
+
         $this->userRepository->setConfig($this->config);
 
         $this->createLogger('Controller::User');
@@ -276,7 +277,7 @@ class User extends Base
         $key = $this->config['googlePlace']['apiKey'];
         if (!isset($data['coverPhoto']) || empty($data['coverPhoto'])) {
             if (!empty($data['lat']) && !empty($data['lng'])) {
-                $streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=320x165&location=" . $data['lat'] . "," . $data['lng'] . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+                $streetViewImage = \Helper\Url::buildStreetViewImage($key, $data, $size="320x130");
                 $data['coverPhoto'] = $streetViewImage;
             }
         }

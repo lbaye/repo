@@ -25,6 +25,7 @@ class Venue extends Base
         $this->response->headers->set('Content-Type', 'application/json');
 
         $this->userRepository = $this->dm->getRepository('Document\User');
+        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
 

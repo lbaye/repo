@@ -18,6 +18,31 @@ class Util {
     # inputs should be like strtotime($date)
     # Adapted from https://gist.github.com/207624 python version
     # Taken from - https://gist.github.com/1053741
+
+    public static function humanizeTimeDiff($diff)
+    {
+        if ($diff < 60) {
+            return $diff . " " . Util::pluralizee("second", $diff) . " ago";
+        } elseif ($diff < 3600) {
+            return (int)($diff / 60) . " " . Util::pluralizee("minute", (int)($diff / 60)) . " ago";
+        } elseif ($diff < (3600 * 24)) {
+            return (int)($diff / 3600) . " " . Util::pluralizee("hour", (int)($diff / 3600)) . " ago";
+        } elseif ($diff < (3600 * 24 * 30)) {
+            return (int)($diff / (3600 * 24)) . " " . Util::pluralizee("day", (int)($diff / (3600*24))) . " ago";
+        } elseif ($diff < (3600 * 24 * 365)) {
+            return (int)($diff / 3600 * 24 * 30) . " " . Util::pluralizee("month", (int)($diff / (3600*24*30))) . " ago";
+        } else {
+            return (int)($diff / (3600 * 24 * 365)) . " " . Util::pluralizee("year", (int)($diff / (3600 * 24 * 365))) . " ago";
+        }
+    }
+
+    public static function pluralizee($string , $val){
+        if($val != 1){
+            return $string . "s";
+        } else{
+            return $string;
+        }
+    }
     public static function toHumanizeDate($now, $otherDate = null, $offset = null) {
         if ($otherDate != null) {
             $offset = $now - $otherDate;

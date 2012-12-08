@@ -58,7 +58,7 @@ class Url
         return self::buildAbsoluteUrl(Dependencies::$rootUrl, $data['photo']);
     }
 
-    public static function buildStreetViewImage($key, array $position, $size = "320x165") {
+    public static function buildStreetViewImage($key, array $position, $size = "320x130") {
         $lat = $position['lat'];
         $lng = $position['lng'];
         return "http://maps.googleapis.com/maps/api/streetview?size=" .
