@@ -38,6 +38,7 @@ class LastSeenAddress extends Base
 
                 $address = $this->_getAddress($current_location);
                 $this->_updateUserAddress($user, $address);
+                $this->_updateCoverPhotoIfStreetImage($user, $current_location);
                 $this->services['dm']->clear();
             } catch (\Exception $e) {
                 $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
@@ -57,4 +58,18 @@ class LastSeenAddress extends Base
         $this->debug("Updating address - $address to {$user->getFirstName()}");
     }
 
+    public function _updateCoverPhotoIfStreetImage(\Document\User $user, $current_location){
+        if(empty($current_location['lat']) || empty($current_location['lng'])) {
+
+        } else {
+            $coverImage = $user->getCoverPhoto();
+            $update = (preg_match('/^http:\/\/maps.googleapis.com/', $coverImage) > 0) ? 1 : 0;
+            if($update){
+                $coverImage = \Helper\Url::getStreetViewImageOrReturnEmpty(null,$current_location);
+                $user->setCoverPhoto($coverImage);
+            }
+        }
+        $this->services['dm']->persist($user);
+        $this->services['dm']->flush();
+    }
 }
