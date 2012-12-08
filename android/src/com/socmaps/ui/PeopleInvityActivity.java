@@ -359,8 +359,9 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			imageDownloader = new ImageDownloader();
-			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
 		}
 
 		@Override
@@ -741,7 +742,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -783,7 +784,11 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
+
 		}
 	};
 
@@ -823,7 +828,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -873,7 +878,11 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 					invitePeopleServerResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
+			
 		}
 	};
 

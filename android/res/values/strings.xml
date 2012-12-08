@@ -10,7 +10,7 @@
     -->
 
     <string name="app_name">Socialmaps</string>
-    <string name="app_version">0.7.5</string>
+    <string name="app_version">1.0.0</string>
     <string name="login">Login</string>
     <string name="registerLabel">Register</string>
     <string name="passwordLabel">Password</string>
@@ -171,7 +171,7 @@
     <string name="recommended_label">Recommend</string>
     <string name="review_label">Reviews</string>
     <string name="save_place_label">Save Place</string>
-    <string name="meet_up_label">Meet up</string>
+    <string name="meet_up_label">Meet-up</string>
     <string name="add_friend_label">Add Friend</string>
     <string name="check_in">Check in</string>
     <string name="createNewCircle">Create a new circle\u0020</string>
@@ -199,7 +199,7 @@
     <string name="messageLabel">Message</string>
     <string name="friendRequestLabel">Friend(s) request(s)</string>
     <string name="notifyLabel">Notifications</string>
-    <string name="friendRequestNameLabel">\u0020 asks you as a friend!</string>
+    <string name="friendRequestNameLabel">\u0020 wants to be your friend.</string>
     <string name="commonFriendNumberLabel">\u0020 friend(s) in common</string>
     <string name="messageNameLabel">\u0020 says:</string>
     <string name="eraseHistoryTopLabel">Erase history...</string>

@@ -1,5 +1,6 @@
 package com.socmaps.ui;
 
+import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -29,6 +30,9 @@ public class NotificationActivity extends TabActivity {
 	Button btnBack, btnSearch, btnNotification;
 
 	private TabHost mTabHost;
+	
+	static TextView tabView1, tabView2, tabView3;
+	static int tabCounter = 0;
 
 	@Override
 	public void onAttachedToWindow() {
@@ -147,6 +151,18 @@ public class NotificationActivity extends TabActivity {
 		TextView tvItemCountDisplay = (TextView) tabItemLayout
 				.findViewById(R.id.tvItemCountDisplay);
 		tvItemCountDisplay.setText(text);
+		
+		if(tabCounter == 0)
+		{
+			tabView1 = tvItemCountDisplay;
+		} else if(tabCounter == 1)
+		{
+			tabView2 = tvItemCountDisplay;
+		} else if(tabCounter == 2)
+		{
+			tabView3 = tvItemCountDisplay;
+		}
+		tabCounter++;
 
 		return view;
 	}
@@ -165,6 +181,21 @@ public class NotificationActivity extends TabActivity {
 		super.onResume();
 		
 		Utility.updateNotificationBubbleCounter(btnNotification);
+		
+		
+		
+		
+		/*if(StaticValues.myInfo!=null)
+		{
+			
+			TextView tabLabel = (TextView) mTabHost.getChildAt(0).findViewById(R.id.tvItemCountDisplay);
+			tabLabel.setText("" + StaticValues.myInfo.getNotificationCount().getMessageCount());
+			
+			TextView tabLabel2 = (TextView) mTabHost.getChildAt(1).findViewById(R.id.tvItemCountDisplay);
+			tabLabel2.setText("" + StaticValues.myInfo.getNotificationCount().getFriendRequestCount());
+		}*/
+		
+
 
 	}
 

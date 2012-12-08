@@ -76,17 +76,13 @@ public class EventListActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.event_list_layout);
 
 		init();
-		
-		
-		
+
 		setListParameters();
 		setViewOnClickListener();
 
 		fetchDataForList();
 
 	}
-	
-
 
 	private void setViewOnClickListener() {
 
@@ -173,9 +169,9 @@ public class EventListActivity extends Activity implements OnClickListener,
 		super.onResume();
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		/*
 		 * if (isUpdateList) { isUpdateList = !isUpdateList; fetchDataForList();
 		 * // resetFilterEditText();
@@ -199,11 +195,10 @@ public class EventListActivity extends Activity implements OnClickListener,
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
-			mProgressDialog = ProgressDialog
-					.show(this,
-							getResources().getString(R.string.eventsLabel),
-							getResources().getString(
-									R.string.fetching_data_text), true);
+			mProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.eventsLabel),
+					getResources().getString(R.string.fetching_data_text),
+					true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -296,8 +291,9 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-
-			mProgressDialog.dismiss();
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
 			handleGetEventsResponse(responseStatus, responseString);
 
 		}
@@ -416,8 +412,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		}
 
 		if (v == btnNewEvent) {
-			Intent eventIntent = new Intent(context,
-					EventNewActivity.class);
+			Intent eventIntent = new Intent(context, EventNewActivity.class);
 			finish();
 			startActivity(eventIntent);
 		}
@@ -463,9 +458,10 @@ public class EventListActivity extends Activity implements OnClickListener,
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
 
-			imageDownloader = new ImageDownloader();
-			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
-			
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
+
 			init(context, textViewResourceId, 0, objects);
 			// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(context.getResources(),
 			// R.drawable.event_item_bg));
@@ -498,8 +494,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		@Override
 		public int getCount() {
-			if(mObjects!=null)
-			{
+			if (mObjects != null) {
 				return mObjects.size();
 			}
 			return 0;
@@ -507,16 +502,14 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		@Override
 		public Event getItem(int position) {
-			if(mObjects!=null)
-			{
+			if (mObjects != null) {
 				return mObjects.get(position);
 			}
 			return null;
 		}
 
 		public int getPosition(Event item) {
-			if(mObjects!=null)
-			{
+			if (mObjects != null) {
 				return mObjects.indexOf(item);
 			}
 			return 0;
@@ -707,7 +700,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onItemClick(Event event) {
 			// TODO Auto-generated method stub
-			//finish();
+			// finish();
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
@@ -718,7 +711,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onArrowButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			//finish();
+			// finish();
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);

@@ -119,7 +119,9 @@ public class LayerPreferencesActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 			handleLayerSettingsResponse(responseStatus, responseString);
 
 			/*
@@ -165,7 +167,7 @@ public class LayerPreferencesActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true,true);
 
 		} else {
 
@@ -259,7 +261,9 @@ public class LayerPreferencesActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleResponse(responseStatus, responseString);
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 
 		}
 	};
@@ -305,7 +309,7 @@ public class LayerPreferencesActivity extends Activity implements
 
 		m_ProgressDialog = ProgressDialog.show(this,
 				getResources().getString(R.string.please_wait_text),
-				getResources().getString(R.string.updating_data_text), true);
+				getResources().getString(R.string.updating_data_text), true,true);
 		m_ProgressDialog.show();
 	}
 

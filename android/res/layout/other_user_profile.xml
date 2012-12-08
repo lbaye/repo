@@ -619,7 +619,7 @@
 					        android:textStyle="normal"
 					        android:maxHeight="30dip"
 					        android:gravity="center_horizontal"
-					        android:text="Meet Up"
+					        android:text="@string/meet_up_label"
 					        
 					         />
 					
@@ -740,7 +740,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Meet Up Request"
+                        android:text="@string/meetupRequestLabel"
                         android:textColor="@color/gray_dark"
                         android:textSize="12dip" />
 

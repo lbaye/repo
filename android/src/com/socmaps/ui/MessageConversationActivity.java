@@ -504,7 +504,7 @@ public class MessageConversationActivity extends Activity implements
 								getResources().getString(
 										R.string.please_wait_text),
 								getResources().getString(
-										R.string.sending_request_text), true);
+										R.string.sending_request_text), true,true);
 			}
 
 		} else {

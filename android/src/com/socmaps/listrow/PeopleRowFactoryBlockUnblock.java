@@ -69,14 +69,18 @@ public class PeopleRowFactoryBlockUnblock {
 		if (people.getRegMedia() != null) {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {
-					holder.sourceImage.setImageResource(R.drawable.source_fb);
+					holder.sourceImage.setImageResource(R.drawable.facebookicon);
 					// holder.sourceImage.setVisibility(View.VISIBLE);
-					holder.sourceImage.setVisibility(View.GONE);
-				} else
-					holder.sourceImage.setVisibility(View.GONE);
+					//holder.sourceImage.setVisibility(View.GONE);
+				} //else
+					//holder.sourceImage.setVisibility(View.GONE);
 
 			} else
 				holder.sourceImage.setVisibility(View.GONE);
+		}
+		else
+		{
+			holder.sourceImage.setVisibility(View.GONE);
 		}
 
 		// ******************************************************************first

@@ -52,7 +52,8 @@ public class PeopleRowFactory {
 					(TextView) viewGroup.findViewById(R.id.time_text),
 					(TextView) viewGroup.findViewById(R.id.distance_text),
 					(TextView) viewGroup.findViewById(R.id.tvFriendshipStatus),
-					(LinearLayout)viewGroup.findViewById(R.id.llFriendshipStatusContainer));
+					(LinearLayout)viewGroup.findViewById(R.id.llFriendshipStatusContainer),
+					(ImageView) viewGroup.findViewById(R.id.ivOnline));
 			viewGroup.setTag(holder);
 
 			view = viewGroup;
@@ -131,6 +132,11 @@ public class PeopleRowFactory {
 		} else {
 			holder.addressText.setVisibility(View.GONE);
 			// Log.d("People Row Factory2", people.getCurrentAddress());
+		}
+		
+		if(people.isOnline())
+		{
+			holder.ivOnline.setImageResource(R.drawable.online);
 		}
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
@@ -268,11 +274,12 @@ public class PeopleRowFactory {
 		final TextView distanceText;
 		final TextView friendshipStatus;
 		final LinearLayout llFriendshipStatusContainer;
+		final ImageView ivOnline;
 
 		private ViewHolder(ImageView image1, ImageView image2,
 				ImageView image3, ImageView image4, TextView textView1,
 				TextView textView2, TextView textView3, TextView textView4,
-				TextView textView5, TextView textView6,LinearLayout linearLayout) {
+				TextView textView5, TextView textView6,LinearLayout linearLayout, ImageView ivOnline) {
 			this.coverPhoto = image1;
 			this.avatar = image2;
 			this.sourceImage = image3;
@@ -284,23 +291,9 @@ public class PeopleRowFactory {
 			this.distanceText = textView5;
 			this.friendshipStatus = textView6;
 			this.llFriendshipStatusContainer = linearLayout;
+			this.ivOnline = ivOnline;
 		}
 	}
 
-	/*private static class FetchImageTask extends
-			AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... arg0) {
-			Bitmap b = null;
-			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return b;
-		}
-	}*/
+	
 }

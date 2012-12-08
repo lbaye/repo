@@ -26,7 +26,9 @@ public class MessageActivity extends TabActivity {
 
 	ButtonActionListener buttonActionListener;
 
-	Button btnBack, btnNotification;
+	Button btnBack;
+	
+	static Button btnNotification;
 
 	private TabHost mTabHost; 
 	Context context;

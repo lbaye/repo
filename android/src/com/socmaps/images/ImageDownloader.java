@@ -23,6 +23,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.socmaps.fb.FBUtility;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -59,11 +61,22 @@ import java.util.concurrent.RejectedExecutionException;
 public class ImageDownloader {
 	private static final String LOG_TAG = "ImageDownloader";
 
+	private static ImageDownloader instance;
+
 	public enum Mode {
 		NO_ASYNC_TASK, NO_DOWNLOADED_DRAWABLE, CORRECT
 	}
 
-	private Mode mode = Mode.NO_ASYNC_TASK;
+	public static ImageDownloader getInstance() {
+		if (instance == null) {
+			instance = new ImageDownloader();
+		}
+
+		return instance;
+	}
+
+	// private Mode mode = Mode.NO_ASYNC_TASK;
+	private Mode mode = Mode.CORRECT;
 
 	/**
 	 * Download the specified image from the Internet and binds it to the
@@ -110,7 +123,8 @@ public class ImageDownloader {
 		if (cancelPotentialDownload(url, imageView)) {
 			switch (mode) {
 			case NO_ASYNC_TASK:
-				Bitmap bitmap = downloadBitmap(url);
+				// Bitmap bitmap = downloadBitmap(url);
+				Bitmap bitmap = FBUtility.getBitmap(url);
 				addBitmapToCache(url, bitmap);
 				imageView.setImageBitmap(bitmap);
 				break;
@@ -201,40 +215,41 @@ public class ImageDownloader {
 						((AndroidHttpClient) client).close();
 					}
 					return null;
-				}
+				} else {
+					final HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						InputStream inputStream = null;
+						try {
+							inputStream = entity.getContent();
+							// return BitmapFactory.decodeStream(inputStream);
+							// Bug on slow connections, fixed in future release.
 
-				final HttpEntity entity = response.getEntity();
-				if (entity != null) {
-					InputStream inputStream = null;
-					try {
-						inputStream = entity.getContent();
-						// return BitmapFactory.decodeStream(inputStream);
-						// Bug on slow connections, fixed in future release.
+							Bitmap bitmap = BitmapFactory
+									.decodeStream(new FlushedInputStream(
+											inputStream));
 
-						Bitmap bitmap = BitmapFactory
-								.decodeStream(new FlushedInputStream(
-										inputStream));
+							if ((client instanceof AndroidHttpClient)) {
+								((AndroidHttpClient) client).close();
+							}
 
-						if ((client instanceof AndroidHttpClient)) {
-							((AndroidHttpClient) client).close();
+							if (inputStream != null) {
+								inputStream.close();
+							}
+							entity.consumeContent();
+
+							return bitmap;
+						} catch (OutOfMemoryError e) {
+						} catch (IllegalStateException e) {
+						} catch (Exception e) {
+						} finally {
+							if (inputStream != null) {
+								inputStream.close();
+							}
+							entity.consumeContent();
 						}
-
-						if (inputStream != null) {
-							inputStream.close();
-						}
-						entity.consumeContent();
-
-						return bitmap;
-					} catch (OutOfMemoryError e) {
-					} catch (IllegalStateException e) {
-					} catch (Exception e) {
-					} finally {
-						if (inputStream != null) {
-							inputStream.close();
-						}
-						entity.consumeContent();
 					}
 				}
+
 			} catch (IOException e) {
 				getRequest.abort();
 				Log.w(LOG_TAG, "I/O error while retrieving bitmap from " + url,
@@ -316,7 +331,8 @@ public class ImageDownloader {
 		@Override
 		protected Bitmap doInBackground(String... params) {
 			url = params[0];
-			return downloadBitmap(url);
+			// return downloadBitmap(url);
+			return FBUtility.getBitmap(url);
 		}
 
 		/**
@@ -381,7 +397,7 @@ public class ImageDownloader {
 	 * aggressively cleared by the Garbage Collector.
 	 */
 
-	private static final int HARD_CACHE_CAPACITY = 10;
+	private static final int HARD_CACHE_CAPACITY = 400;
 	private static final int DELAY_BEFORE_PURGE = 10 * 1000; // in milliseconds
 
 	// Hard cache, with a fixed maximum capacity and a life duration
@@ -420,7 +436,8 @@ public class ImageDownloader {
 	 *            The newly downloaded bitmap.
 	 */
 	private void addBitmapToCache(String url, Bitmap bitmap) {
-		if (bitmap != null) {
+		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn"))
+				&& bitmap != null) {
 			synchronized (sHardBitmapCache) {
 				sHardBitmapCache.put(url, bitmap);
 			}
@@ -479,8 +496,8 @@ public class ImageDownloader {
 	 * after a certain inactivity delay.
 	 */
 	public void clearCache() {
-		sHardBitmapCache.clear();
-		sSoftBitmapCache.clear();
+		// sHardBitmapCache.clear();
+		// sSoftBitmapCache.clear();
 	}
 
 	/**

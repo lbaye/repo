@@ -389,7 +389,7 @@ public class MessageComposeActivity extends Activity {
 											R.string.please_wait_text),
 									getResources().getString(
 											R.string.sending_request_text),
-									true);
+									true,true);
 				} else {
 					Toast.makeText(MessageGroupActivity.group,
 							"No recipient selected.", Toast.LENGTH_SHORT)
@@ -480,7 +480,10 @@ public class MessageComposeActivity extends Activity {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 
 			handleResponseSendMessage(messageStatus, messageResponse);
 

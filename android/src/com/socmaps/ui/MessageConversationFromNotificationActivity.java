@@ -36,6 +36,7 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class MessageConversationFromNotificationActivity extends Activity {
@@ -102,7 +103,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true);
+						.getString(R.string.sending_request_text), true,true);
 			} else {
 				Toast.makeText(context, "Message ID not found.",
 						Toast.LENGTH_SHORT).show();
@@ -145,7 +146,11 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		@Override
 		public void run() {
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
+			
 			handleResponseMessage(messageStatus, messageResponse);
 			
 		}
@@ -283,6 +288,13 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
 
 		if (status == Constant.STATUS_SUCCESS) {
+			
+			if(StaticValues.myInfo!=null)
+			{
+				StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
+				StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
+				
+			}
 
 			lastUpdatedOn = Utility.getUnixTimestamp();
 			getRepliesPeriodically();
@@ -531,7 +543,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true);
+						.getString(R.string.sending_request_text), true,true);
 			}
 
 		} else {

@@ -221,7 +221,7 @@ public class LoginActivity extends Activity {
 						thread.start();
 						m_ProgressDialog = ProgressDialog.show(
 								LoginActivity.this, "Login",
-								"Authenticating. Please wait...", false);
+								"Authenticating. Please wait...", true,true);
 
 					} else {
 						Toast.makeText(getApplicationContext(),
@@ -399,7 +399,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void handleResponseFb(int status, String response) {
-		Log.d("Registration", status + ":" + response);
+		Log.d("FB Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 			// Log.d("Login", status+":"+response);
@@ -706,7 +706,7 @@ public class LoginActivity extends Activity {
 			thread.start();
 			m_ProgressDialog = ProgressDialog
 					.show(LoginActivity.this, "Forgot Password",
-							"Sending request. Please wait...", false);
+							"Sending request. Please wait...", true,true);
 
 		} else {
 			Toast.makeText(getApplicationContext(),
@@ -771,6 +771,8 @@ public class LoginActivity extends Activity {
 			facebookResponse = response;
 
 			if (m_ProgressDialog != null) {
+				
+				
 				// m_ProgressDialog.setMessage(getString(R.string.please_wait_text));
 			}
 			// handleFbResponse(response)
@@ -849,7 +851,7 @@ public class LoginActivity extends Activity {
 		// show progress dialog if needed
 		m_ProgressDialog = ProgressDialog.show(context, getResources()
 				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.facebook_data_request_message), true);
+				.getString(R.string.facebook_data_request_message), true,true);
 	}
 
 	private Runnable sendRequestThread = new Runnable() {

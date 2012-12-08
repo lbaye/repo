@@ -28,7 +28,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 	private Context context;
 
-	ProgressDialog m_ProgressDialog;
+	//ProgressDialog m_ProgressDialog;
 
 	View requestItemView;
 

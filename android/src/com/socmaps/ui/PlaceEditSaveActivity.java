@@ -64,7 +64,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	private double lat = 0.0;
 	private double lng = 0.0;
 
-	private ImageDownloader il;
+	private ImageDownloader imageDownloader;
 	private int catagoryPosition = 0;
 
 	@Override
@@ -89,8 +89,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 		context = PlaceEditSaveActivity.this;
 
-		il = new ImageDownloader();
-		il.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		isHome = getIntent().getBooleanExtra("ISHOME", false);
 		place = (Place) getIntent().getSerializableExtra("PLACE_OBJECT");
@@ -145,13 +146,13 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 			// if (isHome) {
 
-//			Log.i("updateUI() PlaceEditSaveActivity>>>",
-//					"Name: " + place.getName() + " Phopt: "
-//							+ place.getStreetViewImage() + " Address:"
-//							+ place.getVicinity() + " Category:"
-//							+ place.getCategory() + " lat:"
-//							+ place.getLatitude() + " Lon:"
-//							+ place.getLongitude());
+			// Log.i("updateUI() PlaceEditSaveActivity>>>",
+			// "Name: " + place.getName() + " Phopt: "
+			// + place.getStreetViewImage() + " Address:"
+			// + place.getVicinity() + " Category:"
+			// + place.getCategory() + " lat:"
+			// + place.getLatitude() + " Lon:"
+			// + place.getLongitude());
 
 			// } else {
 
@@ -180,7 +181,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			if (place.getStreetViewImage() != null) {
 				photoUrl = place.getStreetViewImage();
 				ivPlace.setImageResource(R.drawable.img_blank);
-				il.download(photoUrl, ivPlace);
+				imageDownloader.download(photoUrl, ivPlace);
 			}
 
 		}
@@ -276,7 +277,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 											R.string.please_wait_text),
 									getResources().getString(
 											R.string.sending_request_text),
-									true);
+									true, true);
 
 				} else {
 
@@ -294,7 +295,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true);
+						.getString(R.string.sending_request_text), true, true);
 
 			}
 
@@ -363,7 +364,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			handleResponseUpdatePlaces(savePlacesStatus, savePlacesResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -413,7 +416,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true);
+						.getString(R.string.sending_request_text), true, true);
 
 			} else {
 
@@ -480,7 +483,9 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			handleResponsesavePlaces(savePlacesStatus, savePlacesResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

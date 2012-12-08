@@ -8,15 +8,31 @@ public class NotificationCount {
 	private int notificationCount = 0;
 
 	public int getTotalCount(boolean isCalculated) {
+		
+		int count;
+		
 		if (isCalculated) {
-			return messageCount + friendRequestCount + notificationCount;
+			
+			count = messageCount + friendRequestCount + notificationCount;
+			 
 		} else {
-			return totalCount;
+			count =  totalCount;
 		}
+		
+		if(count<0)
+		{
+			count = 0;
+		}
+		
+		return count;
 
 	}
 
 	public int getTotalCount() {
+		if(totalCount<0)
+		{
+			return 0;
+		}
 		return totalCount;
 	}
 
@@ -25,6 +41,10 @@ public class NotificationCount {
 	}
 
 	public int getMessageCount() {
+		if(messageCount<0)
+		{
+			return 0;
+		}
 		return messageCount;
 	}
 
@@ -33,6 +53,10 @@ public class NotificationCount {
 	}
 
 	public int getFriendRequestCount() {
+		if(friendRequestCount<0)
+		{
+			return 0;
+		}
 		return friendRequestCount;
 	}
 
@@ -41,6 +65,10 @@ public class NotificationCount {
 	}
 
 	public int getNotificationCount() {
+		if(notificationCount<0)
+		{
+			return 0;
+		}
 		return notificationCount;
 	}
 

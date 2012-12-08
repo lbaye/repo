@@ -74,7 +74,7 @@ public class FriendRequestNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -114,7 +114,10 @@ public class FriendRequestNotificationActivity extends Activity {
 					friendRequestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			
+			}
 		}
 	};
 
@@ -246,7 +249,7 @@ public class FriendRequestNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -285,7 +288,10 @@ public class FriendRequestNotificationActivity extends Activity {
 			handleResponseAcceptFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
+			
+			if(m_ProgressDialog!=null){
 			m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -298,6 +304,13 @@ public class FriendRequestNotificationActivity extends Activity {
 			// Log.d("Login", status+":"+response);
 			if(selectedView!=null)
 			{
+				if(StaticValues.myInfo!=null)
+				{
+					StaticValues.myInfo.getNotificationCount().setFriendRequestCount(StaticValues.myInfo.getNotificationCount().getFriendRequestCount()-1);
+					StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
+					
+					NotificationActivity.tabView2.setText("" + StaticValues.myInfo.getNotificationCount().getFriendRequestCount());
+				}
 				selectedView.setVisibility(View.GONE);
 			}
 			
@@ -340,7 +353,7 @@ public class FriendRequestNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -379,7 +392,10 @@ public class FriendRequestNotificationActivity extends Activity {
 			handleResponseDeclineFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -394,6 +410,14 @@ public class FriendRequestNotificationActivity extends Activity {
 					Toast.LENGTH_SHORT).show();
 			if(selectedView!=null)
 			{
+				if(StaticValues.myInfo!=null)
+				{
+					StaticValues.myInfo.getNotificationCount().setFriendRequestCount(StaticValues.myInfo.getNotificationCount().getFriendRequestCount()-1);
+					StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
+					
+					NotificationActivity.tabView2.setText("" + StaticValues.myInfo.getNotificationCount().getFriendRequestCount());
+				}
+				
 				selectedView.setVisibility(View.GONE);
 			}
 			
@@ -422,7 +446,7 @@ public class FriendRequestNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -461,7 +485,9 @@ public class FriendRequestNotificationActivity extends Activity {
 			handleResponseIgnoreFriendRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

@@ -28,7 +28,7 @@ public class CustomBalloonOverlayViewPeople<Item extends OverlayItem> extends
 
 	private TextView name, status, distance, age;
 
-	private ImageView image;
+	private ImageView image, ivOnline, ivOffline;
 	private ImageDownloader imageDownloader;
 	
 	public CustomBalloonOverlayViewPeople(Context context,
@@ -57,6 +57,7 @@ public class CustomBalloonOverlayViewPeople<Item extends OverlayItem> extends
 		distance = (TextView) v.findViewById(R.id.distance_text);
 		age = (TextView) v.findViewById(R.id.age_text);
 		image = (ImageView) v.findViewById(R.id.balloon_item_image);
+		ivOnline = (ImageView) v.findViewById(R.id.ivOnline);
 
 	}
 
@@ -94,6 +95,15 @@ public class CustomBalloonOverlayViewPeople<Item extends OverlayItem> extends
 			age.setVisibility(View.VISIBLE);
 		} else
 			age.setVisibility(View.GONE);
+		
+		if(item.getUser().isOnline())
+		{
+			ivOnline.setImageResource(R.drawable.online);
+		}
+		else
+		{
+			ivOnline.setImageResource(R.drawable.offline);
+		}
 
 		image.setImageResource(R.drawable.img_blank);
 		/*new FetchImageTask() {

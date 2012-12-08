@@ -219,8 +219,9 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 		context = ShowItemOnMap.this;
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
 
@@ -583,7 +584,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -625,7 +626,11 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 					friendRequestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
 		}
 	};
 
@@ -681,7 +686,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -723,7 +728,11 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
 		}
 	};
 

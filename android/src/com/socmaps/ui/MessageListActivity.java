@@ -28,6 +28,7 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class MessageListActivity extends Activity {
@@ -121,7 +122,7 @@ public class MessageListActivity extends Activity {
 
 					for (int i = 0; i < messages.size(); i++) {
 
-						MessageEntity messageEntity = messages.get(i);
+						final MessageEntity messageEntity = messages.get(i);
 						if (messageEntity != null) {
 
 							final String messageId = messageEntity
@@ -185,6 +186,19 @@ public class MessageListActivity extends Activity {
 										@Override
 										public void onClick(View arg0) {
 											// TODO Auto-generated method stub
+											
+											if(messageEntity.getStatus().equalsIgnoreCase(Constant.STATUS_MESSAGE_UNREAD))
+											{
+												if(StaticValues.myInfo!=null)
+												{
+													StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
+													StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
+													
+													Utility.updateNotificationBubbleCounter(MessageActivity.btnNotification);
+													
+												}
+											}
+											
 											getMessageDetails(messageId,
 													threadId);
 										}
@@ -339,7 +353,7 @@ public class MessageListActivity extends Activity {
 								getResources().getString(
 										R.string.please_wait_text),
 								getResources().getString(
-										R.string.sending_request_text), true);
+										R.string.sending_request_text), true,true);
 			} else {
 				Toast.makeText(context, "Message ID not found.",
 						Toast.LENGTH_SHORT).show();
@@ -382,7 +396,12 @@ public class MessageListActivity extends Activity {
 			handleMessageDetailsResponse(messageStatus, messageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+			}
+			
 		}
 
 	};

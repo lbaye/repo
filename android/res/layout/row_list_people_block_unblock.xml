@@ -42,15 +42,13 @@
                     android:scaleType="fitCenter"
                     android:src="@null" />
 
-              <CheckBox
+                <CheckBox
                     android:id="@+id/checkRow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true" 
-                    android:visibility="visible"/>
-
-              
+                    android:layout_centerVertical="true"
+                    android:visibility="visible" />
             </RelativeLayout>
 
             <LinearLayout
@@ -70,11 +68,17 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" >
 
-                        <Button
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentLeft="true"
-                            android:background="@drawable/icon" />
+                        <ImageView
+                            android:id="@+id/source_image_btn"
+                            android:layout_width="22dip"
+                            android:layout_height="22dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="2dip"
+                            android:layout_toLeftOf="@+id/map_image_btn"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon"
+                            android:visibility="visible" />
 
                         <Button
                             android:id="@+id/btnBlockUnblockPeopleRow"
@@ -83,7 +87,8 @@
                             android:layout_toLeftOf="@+id/btnMessagePeopleBlockUnblockRow"
                             android:background="@drawable/selector_btn_green"
                             android:text="@string/blockLabel"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btnMessagePeopleBlockUnblockRow"
@@ -93,7 +98,8 @@
                             android:layout_marginLeft="10dp"
                             android:background="@drawable/selector_btn_green"
                             android:text="@string/messageLabel"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -155,25 +161,13 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/show_on_map" />
 
-                    <ImageView
-                        android:id="@+id/source_image_btn"
-                        android:layout_width="25dip"
-                        android:layout_height="25dip"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="2dip"
-                        android:layout_toLeftOf="@+id/map_image_btn"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/marker1"
-                        android:visibility="gone" />
-
                     <TextView
                         android:id="@+id/time_text"
                         android:layout_width="65dip"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="2dip"
-                        android:layout_toLeftOf="@+id/source_image_btn"
+                        android:layout_toLeftOf="@+id/map_image_btn"
                         android:maxLines="2"
                         android:text="Just now"
                         android:textColor="@android:color/white"

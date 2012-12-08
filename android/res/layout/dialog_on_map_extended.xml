@@ -27,14 +27,33 @@
                 android:paddingRight="5dip"
                 android:paddingTop="0dip" >
 
-                <ImageView
-                    android:id="@+id/avater_image"
-                    android:layout_width="70dip"
-                    android:layout_height="70dip"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/rounded_border_image_bg"
-                    android:scaleType="fitCenter"
-                    android:src="@null" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/avater_image"
+                        android:layout_width="70dip"
+                        android:layout_height="70dip"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/rounded_border_image_bg"
+                        android:scaleType="fitCenter"
+                        android:src="@null" />
+
+                    <ImageView
+                        android:id="@+id/ivOnline"
+                        android:layout_width="12dip"
+                        android:layout_height="12dip"
+                        android:layout_alignBottom="@+id/avater_image"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="5dip"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/offline"
+                        android:visibility="visible" />
+
+                    
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvFriendshipStatus"
@@ -58,7 +77,7 @@
                 android:textSize="10dip"
                 android:textStyle="normal"
                 android:background="@drawable/selector_btn_light"
-                android:visibility="visible" />
+                android:visibility="visible" />
                 -->
 
             </LinearLayout>
@@ -89,9 +108,9 @@
                         android:id="@+id/age_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/first_name_text"
                         android:layout_marginLeft="5dip"
                         android:layout_toRightOf="@+id/first_name_text"
-                        android:layout_alignBottom="@+id/first_name_text"
                         android:text="-Age:"
                         android:textColor="#000000"
                         android:textSize="12dip" />
@@ -167,11 +186,11 @@
                         android:id="@+id/relationship_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:singleLine="true"
                         android:text="Unknown"
                         android:textColor="#000000"
                         android:textSize="12dip"
-                        android:textStyle="bold"
-                        android:singleLine="true" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -297,8 +316,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="0dip"
         android:adjustViewBounds="true"
+        android:padding="0dip"
         android:scaleType="fitXY"
-        android:src="@drawable/map_info_collapse"
-        android:padding="0dip" />
+        android:src="@drawable/map_info_collapse" />
 
 </RelativeLayout>

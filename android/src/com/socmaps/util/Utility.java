@@ -1176,19 +1176,38 @@ public class Utility {
 			if (StaticValues.myInfo != null) {
 				StaticValues.myInfo.getNotificationCount().setTotalCount(
 						pushData.getBadge());
-				String tabCounts = pushData.getTabCounts();
+				String tabCounts = pushData.getTabCounts().trim();
+				
+				Log.i("tabCounts on parser", tabCounts);
+				
 				if (!tabCounts.equals("")) {
-					String[] tabCountsArray = tabCounts.split("|");
+					
+					String[] tabCountsArray = tabCounts.split("[|]");
+					
+					/*for(int i=0;i<tabCountsArray.length;i++)
+					{
+						Log.i("Item "+i, tabCountsArray[i]+"");
+					}*/
+					
+					
 					if (tabCountsArray.length == 3) {
+						Log.i("if tabCountsArray.length", tabCountsArray.length+"");
 						StaticValues.myInfo.getNotificationCount()
 								.setMessageCount(
 										Integer.parseInt(tabCountsArray[0]));
+						
+						Log.i("messageCount", tabCountsArray[0]);
+						
 						StaticValues.myInfo.getNotificationCount()
 								.setFriendRequestCount(
 										Integer.parseInt(tabCountsArray[1]));
 						StaticValues.myInfo.getNotificationCount()
 								.setNotificationCount(
 										Integer.parseInt(tabCountsArray[2]));
+					}
+					else
+					{
+						Log.i("else tabCountsArray.length", tabCountsArray.length+"");
 					}
 				}
 			}
@@ -1198,6 +1217,10 @@ public class Utility {
 	public static void updateNotificationBubbleCounter(Button btnNotification) {
 		// TODO Auto-generated method stub
 		if (StaticValues.myInfo != null && btnNotification != null) {
+			
+			if(StaticValues.myInfo.getNotificationCount()
+					.getTotalCount()>=0)
+			
 			btnNotification.setText(""
 					+ StaticValues.myInfo.getNotificationCount()
 							.getTotalCount());

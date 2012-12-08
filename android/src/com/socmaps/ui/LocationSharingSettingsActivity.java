@@ -686,7 +686,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 			handleAccountSettingsResponse(responseStatus, responseString);
 
 		}
@@ -763,7 +765,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true,true);
 
 		} else {
 
@@ -794,7 +796,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -837,7 +839,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 			handleResponseLocation(locationStatus, locationResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -887,7 +891,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -930,7 +934,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 			handleSaveLocationSharingResponse(locationStatus, locationResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

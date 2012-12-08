@@ -1,5 +1,6 @@
 package com.socmaps.ui;
 
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,7 +99,16 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		initialize();
 
-		personID = StaticValues.myInfo.getId();
+		//personID = StaticValues.myInfo.getId();
+		personID = getIntent().getStringExtra("PERSON_ID");
+		
+		if(personID == null)
+		{
+			if(StaticValues.myInfo!=null)
+			{
+				personID = StaticValues.myInfo.getId();
+			}
+		}
 
 		if (personID != null) {
 
@@ -106,7 +116,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 			Log.w("FriendListActivity onCreate", "personID not null");
 
-		} else {
+		}/* else {
 
 			getFriendList();
 
@@ -118,7 +128,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 			Log.w("FriendListActivity onCreate", "personID is null");
 
-		}
+		}*/
 
 	}
 
@@ -181,8 +191,9 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedPhoto = new HashMap<String, Boolean>();
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		//imageDownloader = new ImageDownloader();
+		//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 	}
 
 	@Override
@@ -495,7 +506,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -545,7 +556,9 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			handleResponseFriends(friendsStatus, friendsResponse);
 
 			// dismiss progress dialog if needed
+			if(m_ProgressDialog!=null){
 			m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -568,7 +581,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 							.getJSONArray("friends");
 
 					originalFriendList = ServerResponseParser
-							.parsePeoples(jArrayFriends);
+							.parsePeoples(jArrayFriends);						
 
 				}
 
@@ -579,14 +592,19 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 					mainCircleList = ServerResponseParser
 							.getCircleList(jArrayCircles);
+					
 
 				}
 
-				if (originalFriendList != null && mainCircleList != null
-						&& personID.equals(StaticValues.myInfo.getId())) {
-					StaticValues.myInfo.setFriendList(originalFriendList);
-					StaticValues.myInfo.setCircleList(mainCircleList);
+				if(StaticValues.myInfo!=null)
+				{
+					if (originalFriendList != null && mainCircleList != null
+							&& personID.equals(StaticValues.myInfo.getId())) {
+						StaticValues.myInfo.setFriendList(originalFriendList);
+						StaticValues.myInfo.setCircleList(mainCircleList);
+					}
 				}
+				
 
 				updateContentList(originalFriendList);
 				updateCircleContentList(mainCircleList);

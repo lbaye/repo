@@ -97,7 +97,7 @@ public class NotificationPreferencesActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true,true);
 		} else {
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
@@ -125,7 +125,12 @@ public class NotificationPreferencesActivity extends Activity implements
 	private Runnable returnResGetNotificationSettings = new Runnable() {
 		@Override
 		public void run() {
-			m_ProgressDialog.dismiss();
+
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
+			
 			handleNotificationSettingsResponse(responseStatus, responseString);
 		}
 	};
@@ -374,7 +379,10 @@ public class NotificationPreferencesActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleResponse(responseStatus, responseString);
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 
 		}
 	};
@@ -421,7 +429,7 @@ public class NotificationPreferencesActivity extends Activity implements
 
 		m_ProgressDialog = ProgressDialog.show(this,
 				getResources().getString(R.string.please_wait_text),
-				getResources().getString(R.string.updating_data_text), true);
+				getResources().getString(R.string.updating_data_text), true,true);
 		m_ProgressDialog.show();
 	}
 

@@ -100,15 +100,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 			if(intent.getStringExtra("message")!=null)
 			{
 				pushData.setMessage(intent.getStringExtra("message"));
+				Log.i("message", intent.getStringExtra("message"));
 			}
 			if(intent.getStringExtra("badge")!=null)
 			{
 				//pushData.setBadge(intent.getIntExtra("badge",0));
 				pushData.setBadge( Integer.parseInt(intent.getStringExtra("badge")));
+				Log.i("badge", intent.getStringExtra("badge"));
 			}
 			if(intent.getStringExtra("tabCounts")!=null)
 			{
 				pushData.setTabCounts(intent.getStringExtra("tabCounts"));
+				Log.i("tabCounts", intent.getStringExtra("tabCounts"));
 			}
 			
 			

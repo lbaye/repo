@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +23,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
@@ -41,20 +39,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
-import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.images.ImageLoader;
@@ -62,8 +57,6 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
-import com.socmaps.widget.DateTimePicker;
-import com.socmaps.widget.ExpandablePanel;
 import com.socmaps.widget.LocationPicker;
 import com.socmaps.widget.LocationRadioGroup;
 import com.socmaps.widget.LocationRadioGroupListener;
@@ -72,7 +65,6 @@ import com.socmaps.widget.NearByPlacesPickerListener;
 import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
-import com.socmaps.widget.PermissionRadioGroupListener;
 
 public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
@@ -402,7 +394,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		// show progress dialog if needed
 		m_ProgressDialog = ProgressDialog.show(context, getResources()
 				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.sending_request_text), true);
+				.getString(R.string.sending_request_text), true,true);
 	}
 
 	private Runnable sendEventDataThread = new Runnable() {
@@ -472,7 +464,10 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 
 			handleResponseSendEventData(responseStatus, responseString);
 

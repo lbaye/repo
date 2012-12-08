@@ -53,8 +53,6 @@
                             android:background="@drawable/rounded_border_image_bg"
                             android:scaleType="fitCenter"
                             android:src="@null" />
-
-                        
                     </RelativeLayout>
 
                     <LinearLayout
@@ -76,11 +74,11 @@
 
                                 <ImageView
                                     android:id="@+id/ivSource"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
                                     android:layout_alignParentLeft="true"
-                                    android:src="@drawable/icon"
-                                    android:scaleType="centerInside" />
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/icon" />
 
                                 <Button
                                     android:id="@+id/btnAddMoveToCircle"
@@ -90,7 +88,8 @@
                                     android:background="@drawable/selector_btn_green"
                                     android:text="@string/addMoveTo"
                                     android:textColor="@color/white"
-                                    android:textSize="12dip" />
+                                    android:textSize="12dip"
+                                      android:layout_alignParentRight="true" />
 
                                 <Button
                                     android:id="@+id/btnMessagePeopleCicleFriend"
@@ -101,7 +100,8 @@
                                     android:background="@drawable/selector_btn_green"
                                     android:text="@string/messageLabel"
                                     android:textColor="@color/white"
-                                    android:textSize="12dip" />
+                                    android:textSize="12dip"
+                                    android:visibility="gone" />
                             </RelativeLayout>
 
                             <TextView
@@ -145,26 +145,19 @@
                                 android:scaleType="fitXY"
                                 android:src="@drawable/show_on_map" />
 
-                            
-
-                       
-
-                            
-
-                                <TextView
-                                    android:id="@+id/address_text"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_toLeftOf="@+id/map_image_btn"
-                                    android:layout_centerVertical="true"
-                                    android:ellipsize="end"
-                                    android:singleLine="true"
-                                    android:text=""
-                                    android:textColor="@android:color/white"
-                                    android:textSize="10dip"
-                                    android:textStyle="bold" />
-                            
+                            <TextView
+                                android:id="@+id/address_text"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/map_image_btn"
+                                android:ellipsize="end"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="10dip"
+                                android:textStyle="bold" />
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>

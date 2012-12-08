@@ -240,7 +240,7 @@ public class RegistrationActivity extends Activity {
 										RegistrationActivity.this,
 										"Registration",
 										"Sending request. Please wait...",
-										false);
+										true,true);
 
 							} else {
 								Toast.makeText(RegistrationActivity.this,
@@ -269,7 +269,11 @@ public class RegistrationActivity extends Activity {
 
 			handleResponse(responseStatus, responseString);
 
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
 		}
 	};
 

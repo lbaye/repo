@@ -465,7 +465,7 @@ public class ServerResponseParser {
 
 		return circle;
 	}
-	
+
 	public static Circle parseCircleEntityDetails(JSONObject jObj) {
 		Circle circle = new Circle();
 
@@ -1823,8 +1823,20 @@ public class ServerResponseParser {
 			// Log.i("lastName", temp.getString("lastName"));
 
 			if (!peopleJSONObj.isNull("avatar"))
-				people.setAvatar(peopleJSONObj.getString("avatar"));
-			// Log.i("avatar", temp.getString("avatar"));
+			{
+				String avatar = peopleJSONObj.getString("avatar");
+				//Log.i("avatar before", avatar);
+				if(avatar.contains("?type=normal"))
+				{
+					//String[] avatars = avatar.split("?type");
+					//avatar = avatars[0];
+					//Log.i("avatar after", avatar);
+				}
+				
+				people.setAvatar(avatar);
+				 
+			}
+				
 
 			if (!peopleJSONObj.isNull("gender"))
 				people.setGender(peopleJSONObj.getString("gender"));
@@ -1877,25 +1889,32 @@ public class ServerResponseParser {
 			}
 			if (!peopleJSONObj.isNull("address")) {
 
-				if (!peopleJSONObj.getJSONObject("address").isNull("street"))
-					people.setStreetAddress(peopleJSONObj.getJSONObject(
-							"address").getString("street"));
+				try {
+					if (!peopleJSONObj.getJSONObject("address")
+							.isNull("street"))
+						people.setStreetAddress(peopleJSONObj.getJSONObject(
+								"address").getString("street"));
 
-				if (!peopleJSONObj.getJSONObject("address").isNull("city"))
-					people.setCity(peopleJSONObj.getJSONObject("address")
-							.getString("city"));
+					if (!peopleJSONObj.getJSONObject("address").isNull("city"))
+						people.setCity(peopleJSONObj.getJSONObject("address")
+								.getString("city"));
 
-				if (!peopleJSONObj.getJSONObject("address").isNull("country"))
-					people.setCountry(peopleJSONObj.getJSONObject("address")
-							.getString("country"));
+					if (!peopleJSONObj.getJSONObject("address").isNull(
+							"country"))
+						people.setCountry(peopleJSONObj
+								.getJSONObject("address").getString("country"));
 
-				if (!peopleJSONObj.getJSONObject("address").isNull("postCode"))
-					people.setPostCode(peopleJSONObj.getJSONObject("address")
-							.getString("postCode"));
+					if (!peopleJSONObj.getJSONObject("address").isNull(
+							"postCode"))
+						people.setPostCode(peopleJSONObj.getJSONObject(
+								"address").getString("postCode"));
 
-				if (!peopleJSONObj.getJSONObject("address").isNull("state"))
-					people.setState(peopleJSONObj.getJSONObject("address")
-							.getString("state"));
+					if (!peopleJSONObj.getJSONObject("address").isNull("state"))
+						people.setState(peopleJSONObj.getJSONObject("address")
+								.getString("state"));
+				} catch (JSONException e) {
+					// TODO: handle exception
+				}
 
 			}
 
@@ -1906,8 +1925,7 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("distance")) {
 				people.setDistance(peopleJSONObj.getDouble("distance"));
-				Log.i("distance", peopleJSONObj.getDouble("distance") + ":"
-						+ people.getFirstName());
+				//Log.i("distance", peopleJSONObj.getDouble("distance") + ":"+ people.getFirstName());
 			}
 			if (!peopleJSONObj.isNull("isFriend")) {
 				people.setIsFrnd(peopleJSONObj.getBoolean("isFriend"));
@@ -1923,21 +1941,25 @@ public class ServerResponseParser {
 			}
 
 			if (!peopleJSONObj.isNull("lastLogin")) {
-				TimeEntity timeEntity = new TimeEntity();
-				timeEntity.setDateTimeValue(peopleJSONObj.getJSONObject(
-						"lastLogin").getString("date"));
-				timeEntity.setTimeZoneType(peopleJSONObj.getJSONObject(
-						"lastLogin").getInt("timezone_type"));
-				timeEntity.setTimeZone(peopleJSONObj.getJSONObject("lastLogin")
-						.getString("timezone"));
+				/*
+				 * TimeEntity timeEntity = new TimeEntity();
+				 * timeEntity.setDateTimeValue(peopleJSONObj.getJSONObject(
+				 * "lastLogin").getString("date"));
+				 * timeEntity.setTimeZoneType(peopleJSONObj.getJSONObject(
+				 * "lastLogin").getInt("timezone_type"));
+				 * timeEntity.setTimeZone(
+				 * peopleJSONObj.getJSONObject("lastLogin")
+				 * .getString("timezone"));
+				 */
 
-				people.setLastLogIn(timeEntity);
+				people.setLastLogIn(getTimeEntityFromJsonObject(peopleJSONObj
+						.getJSONObject("lastLogin")));
 
 			}
 			if (!peopleJSONObj.isNull("lastSeenAt")) {
 
 				people.setCurrentAddress(peopleJSONObj.getString("lastSeenAt"));
-				Log.i("lastSeenAt", peopleJSONObj.getString("lastSeenAt"));
+				//Log.i("lastSeenAt", peopleJSONObj.getString("lastSeenAt"));
 
 			}
 
@@ -1945,6 +1967,7 @@ public class ServerResponseParser {
 
 				people.setFriendshipStatus(peopleJSONObj
 						.getString("friendship"));
+				//Log.i("FriendShip Status",peopleJSONObj.getString("friendship"));
 			}
 
 			if (!peopleJSONObj.isNull("blockStatus")) {
@@ -1957,9 +1980,17 @@ public class ServerResponseParser {
 				}
 
 			}
+			
+			if (!peopleJSONObj.isNull("online")) {
+				
+					people.setOnline(peopleJSONObj.getBoolean("online"));
+			}
+			
+			
 
 		} catch (JSONException e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 		return people;
@@ -2084,8 +2115,9 @@ public class ServerResponseParser {
 		}
 		return circles;
 	}
-	
-	public static List<Circle> getCircleListWithDetails(JSONArray ja) throws JSONException {
+
+	public static List<Circle> getCircleListWithDetails(JSONArray ja)
+			throws JSONException {
 		List<Circle> circles = new ArrayList<Circle>();
 		for (int i = 0; i < ja.length(); i++) {
 

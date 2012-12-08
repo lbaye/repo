@@ -73,7 +73,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	LinearLayout age_layout, relationship_layout, living_in_layout,
 			work_at_layout, layEditCoverPic, layEditStatus, layEditProfilePic;
 
-	RelativeLayout relativeLayoutForGeoTag, relativeLayoutForUploadPhoto; 
+	RelativeLayout relativeLayoutForGeoTag, relativeLayoutForUploadPhoto;
 	RelativeLayout relativeLayoutForStatus;
 
 	int responseStatus = 0;
@@ -111,8 +111,6 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.profile_info_layout);
 
 		initialize();
-		
-		
 
 		// onLoad();
 		setDefaultValues();
@@ -126,19 +124,20 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Eliminates color banding
 		window.setFormat(PixelFormat.RGBA_8888);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
 	private void initialize() {
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		context = ProfileActivity.this;
 
@@ -179,9 +178,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		places_icon_image.setOnClickListener(this);
 
 		meetup_icon_image = (ImageView) findViewById(R.id.meetup_icon_image);
-		meetup_icon_image.setOnClickListener(this); 
-		
-		btnPlan = (ImageView) findViewById(R.id.btnPlan); 
+		meetup_icon_image.setOnClickListener(this);
+
+		btnPlan = (ImageView) findViewById(R.id.btnPlan);
 		btnPlan.setOnClickListener(this);
 
 		tvName = (TextView) findViewById(R.id.tvName);
@@ -203,8 +202,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
 
 		relativeLayoutForGeoTag = (RelativeLayout) findViewById(R.id.relativeLayoutForGeoTag);
-		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto); 
-		
+		relativeLayoutForUploadPhoto = (RelativeLayout) findViewById(R.id.relativeLayoutForUploadPhoto);
+
 		relativeLayoutForStatus = (RelativeLayout) findViewById(R.id.relativeLayoutForStatus);
 
 		age_layout.setOnClickListener(this);
@@ -214,7 +213,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		layEditCoverPic.setOnClickListener(this);
 		layEditStatus.setOnClickListener(this);
 		layEditProfilePic.setOnClickListener(this);
-		
+
 		relativeLayoutForStatus.setOnClickListener(this);
 
 		relativeLayoutForGeoTag.setOnClickListener(this);
@@ -241,42 +240,39 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		// Our application's main page will be loaded
 		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/507e47f0781d6ec93000000e/newsfeed.html
-		wViewNewsFeed.loadUrl(Constant.smServerUrl
-				+"/"+ StaticValues.myInfo.getId() + "/newsfeed.html?authToken="+StaticValues.myInfo.getAuthToken());  
-		
-		/*wViewNewsFeed.setOnTouchListener(new View.OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent arg1) {
-				// TODO Auto-generated method stub 
-				
-				WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
-				Log.i("NewsFeed OnTouch Check", "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType()); 
-				
-				String[] separated = hr.getExtra().toString().split("/"); 
-				separated[4] = separated[4].trim(); 
-				String s = separated[4].toString(); 
-				Log.d("CHECK Avatar/Photos", s);
-				
-				if(hr.getType() == 4 || hr.getType() == 5)  
-				{
-					Toast.makeText(getApplicationContext(), "Image Icon is Pressed", Toast.LENGTH_SHORT).show();
-				}
-				
-				if(s.equalsIgnoreCase("avatar")) 
-				{
-					Toast.makeText(getApplicationContext(), "Avatar Icon is Pressed", Toast.LENGTH_SHORT).show();
-				} else if(s.equalsIgnoreCase("photos")) 
-				{
-					Toast.makeText(getApplicationContext(), "Image Icon is Pressed", Toast.LENGTH_SHORT).show();
-				}
-				
-				return false;
-			}
-		});*/
+		wViewNewsFeed.loadUrl(Constant.smServerUrl + "/"
+				+ StaticValues.myInfo.getId() + "/newsfeed.html?authToken="
+				+ StaticValues.myInfo.getAuthToken());
+
+		/*
+		 * wViewNewsFeed.setOnTouchListener(new View.OnTouchListener() {
+		 * 
+		 * @Override public boolean onTouch(View v, MotionEvent arg1) { // TODO
+		 * Auto-generated method stub
+		 * 
+		 * WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
+		 * Log.i("NewsFeed OnTouch Check", "getExtra = "+ hr.getExtra() +
+		 * "\t\t Type=" + hr.getType());
+		 * 
+		 * String[] separated = hr.getExtra().toString().split("/");
+		 * separated[4] = separated[4].trim(); String s =
+		 * separated[4].toString(); Log.d("CHECK Avatar/Photos", s);
+		 * 
+		 * if(hr.getType() == 4 || hr.getType() == 5) {
+		 * Toast.makeText(getApplicationContext(), "Image Icon is Pressed",
+		 * Toast.LENGTH_SHORT).show(); }
+		 * 
+		 * if(s.equalsIgnoreCase("avatar")) {
+		 * Toast.makeText(getApplicationContext(), "Avatar Icon is Pressed",
+		 * Toast.LENGTH_SHORT).show(); } else if(s.equalsIgnoreCase("photos")) {
+		 * Toast.makeText(getApplicationContext(), "Image Icon is Pressed",
+		 * Toast.LENGTH_SHORT).show(); }
+		 * 
+		 * return false; } });
+		 */
 
 		wViewNewsFeed.setWebViewClient(new MyWebViewClient());
-		
+
 		wViewNewsFeed.setWebChromeClient(new WebChromeClient() {
 
 			@Override
@@ -296,7 +292,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	public void setDefaultValues() {
 
-		imageDownloader.clearCache();
+		// imageDownloader.clearCache();
 
 		if (StaticValues.myInfo != null) {
 
@@ -305,7 +301,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			city = StaticValues.myInfo.getCity();
 			workStatus = StaticValues.myInfo.getWorkStatus();
 
-			imageLoader.clearCache();
+			// imageLoader.clearCache();
 
 			if (StaticValues.myInfo.getAvatar() != null) {
 				/*
@@ -463,8 +459,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		else if (v == btnEvent) {
 			Intent i = new Intent(context, EventListActivity.class);
-			startActivity(i); 
-			//finish();
+			startActivity(i);
+			// finish();
 		}
 
 		else if (v == places_icon_image) {
@@ -473,10 +469,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		else if (v == meetup_icon_image) {
 			showMeetUp();
-		} 
-		
-		else if (v == btnPlan) 
-		{
+		}
+
+		else if (v == btnPlan) {
 			showPlanList();
 		}
 
@@ -498,9 +493,9 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		case R.id.work_at_layout:
 			showTextInputDialog(R.id.work_at_layout, workStatus,
 					getString(R.string.servicelabel));
-			break; 
-			
-		case R.id.relativeLayoutForStatus: 
+			break;
+
+		case R.id.relativeLayoutForStatus:
 			showTextInputDialog(R.id.btnEditStatus, status,
 					getString(R.string.status));
 			break;
@@ -542,11 +537,11 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			break;
 		}
 
-	} 
-	
-	private void showPlanList() 
-	{
-		Intent intent = new Intent(getApplicationContext(), PlanListActivity.class); 
+	}
+
+	private void showPlanList() {
+		Intent intent = new Intent(getApplicationContext(),
+				PlanListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
@@ -556,18 +551,17 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(getApplicationContext(),
 				PhotoListActivity.class);
 		startActivity(intent);
-		//finish();
+		// finish();
 	}
 
 	private void showFriends() {
-		
-		
+
 		Intent friendIntent = new Intent(getApplicationContext(),
 				FriendListActivity.class);
-		//friendIntent.putExtra("PERSON_ID","");
+		// friendIntent.putExtra("PERSON_ID","");
 		startActivity(friendIntent);
-		
-		//Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
+
+		// Toast.makeText(context, "Not this time", Toast.LENGTH_SHORT).show();
 	}
 
 	private void showPlaces() {
@@ -575,16 +569,16 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// Toast.LENGTH_SHORT).show();
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
 		startActivity(intentToGoPlace);
-		//finish();
+		// finish();
 	}
 
 	private void showMeetUp() {
 		// Toast.makeText(context, "fffffff", Toast.LENGTH_SHORT).show();
 
 		Intent intentToShowMeetUp = new Intent(context,
-				MeetupRequestNewActivity.class); 
+				MeetupRequestNewActivity.class);
 		startActivity(intentToShowMeetUp);
-		//finish();
+		// finish();
 	}
 
 	public void spinnerShowRelationshipOption() {
@@ -1036,7 +1030,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				thread.start();
 				m_ProgressDialog = ProgressDialog.show(this, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.updating_data_text), true);
+						.getString(R.string.updating_data_text), true, true);
 
 			} else {
 
@@ -1150,7 +1144,13 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			handleResponseSavePersonalInfo(responseStatus, responseString);
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
+
 		}
 	};
 
@@ -1215,7 +1215,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	private void uploadPhoto() {
 
-		//finish();
+		// finish();
 		Intent intent = new Intent(context, PhotoUploadNewPhotoActivity.class);
 		startActivity(intent);
 
@@ -1248,51 +1248,50 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			// Uri.parse(url));
 			// startActivity(intent);
 
-			//view.loadUrl(url); 
-			
-			Log.i("URL URL URL ", url); 
-			
-			String subURL = url.substring(6); 
-			if(subURL.startsWith("profile"))
-			{
-				String id = subURL.substring(8); 
+			// view.loadUrl(url);
+
+			Log.i("URL URL URL ", url);
+
+			String subURL = url.substring(6);
+			if (subURL.startsWith("profile")) {
+				String id = subURL.substring(8);
 				Log.d("URL", id);
-				if(id.equalsIgnoreCase(StaticValues.myInfo.getId()))
-				{
-				
+				if (id.equalsIgnoreCase(StaticValues.myInfo.getId())) {
+
 				} else {
-					
-					People p=new People();
+
+					People p = new People();
 					p.setId(id);
-					
-					Intent intent = new Intent(context, ProfileActivity2.class); 
-					
-					intent.putExtra("otherUser",p);
+
+					Intent intent = new Intent(context, ProfileActivity2.class);
+
+					intent.putExtra("otherUser", p);
 					startActivity(intent);
-					
+
 				}
-			} else if(subURL.startsWith("image")) {
-				String imageURL = subURL.substring(6); 
-				Log.d("URL", imageURL); 
-				
+			} else if (subURL.startsWith("image")) {
+				String imageURL = subURL.substring(6);
+				Log.d("URL", imageURL);
+
 				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
- 						context, imageURL , imageDownloader);
- 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
- 						LayoutParams.FILL_PARENT);
- 				photoZoomPicker.show();
-			} else if(subURL.startsWith("geotag")) { 
-				String geoTagDetail = subURL.substring(7); 
-				String[] geoTag = geoTagDetail.split(":"); 
-				
-				String geoTagName = geoTag[0]; 
-				String geoTagNameFinal = geoTagName.replace("%20", " ");  
-				
-				String geoLat = geoTag[1]; 
-				String geoLng = geoTag[2];  
-				
-				//Toast.makeText(context, geoTagNameFinal + "\t" + geoLat+"" + "\t" + geoLng+"", Toast.LENGTH_LONG).show();
+						context, imageURL, imageDownloader);
+				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
+						LayoutParams.FILL_PARENT);
+				photoZoomPicker.show();
+			} else if (subURL.startsWith("geotag")) {
+				String geoTagDetail = subURL.substring(7);
+				String[] geoTag = geoTagDetail.split(":");
+
+				String geoTagName = geoTag[0];
+				String geoTagNameFinal = geoTagName.replace("%20", " ");
+
+				String geoLat = geoTag[1];
+				String geoLng = geoTag[2];
+
+				// Toast.makeText(context, geoTagNameFinal + "\t" + geoLat+"" +
+				// "\t" + geoLng+"", Toast.LENGTH_LONG).show();
 			}
-			
+
 			return true;
 		}
 

@@ -46,49 +46,50 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlanListActivity extends Activity implements OnClickListener, BroadcastListener{ 
-	
+public class PlanListActivity extends Activity implements OnClickListener,
+		BroadcastListener {
+
 	private Context context;
-	private Button btnBack, btnNotification; 
-	TextView tvtitle; 
-	LinearLayout separator;  
-	
-	private ListView planList; 
+	private Button btnBack, btnNotification;
+	TextView tvtitle;
+	LinearLayout separator;
+
+	private ListView planList;
 	private ListArrayAdapter contentAdapter;
 	private List<Plan> plans;
 	private List<Plan> dateWiseSortedPlans;
-	private ProgressDialog mProgressDialog, mProgressDialogForDelete;
+	private ProgressDialog mProgressDialog;
 	int requestCode;
 	String responseString;
 	int responseStatus = 0;
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
-	int colorButtonNormal, colorButtonSelected; 
-	
-	Plan seletedPlan; 
-	public People people; 
-	
-	String personID = null; 
-	String personFirstName = "" , personLastName = "";
-	
+	int colorButtonNormal, colorButtonSelected;
+
+	Plan seletedPlan;
+	public People people;
+
+	String personID = null;
+	String personFirstName = "", personLastName = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState); 
-		setContentView(R.layout.plan_list_layout); 
-		
-		personID = getIntent().getStringExtra("personID"); 
-		personFirstName = getIntent().getStringExtra("firstName"); 
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.plan_list_layout);
+
+		personID = getIntent().getStringExtra("personID");
+		personFirstName = getIntent().getStringExtra("firstName");
 		personLastName = getIntent().getStringExtra("lastName");
-		if(personID != null)
-			Log.d("Person ID", personID); 
-		
+		if (personID != null)
+			Log.d("Person ID", personID);
+
 		init();
 		setListParameters();
 		setViewOnClickListener();
 		fetchDataForList();
-	} 
-	
+	}
+
 	private void init() {
 		// TODO Auto-generated method stub
 		context = PlanListActivity.this;
@@ -97,28 +98,28 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		colorButtonSelected = getResources().getColor(R.color.gray_light);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
-		btnNotification = (Button) findViewById(R.id.btnNotification);  
-		
+		btnNotification = (Button) findViewById(R.id.btnNotification);
+
 		tvtitle = (TextView) findViewById(R.id.tvtitle);
-		
-		separator = (LinearLayout) findViewById(R.id.separator); 
+
+		separator = (LinearLayout) findViewById(R.id.separator);
 
 		planList = (ListView) findViewById(R.id.event_list);
 		plans = new ArrayList<Plan>();
 		dateWiseSortedPlans = new ArrayList<Plan>();
 		// contentAdapter=new ContentListAdapter(context,plans);
-		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_plan, plans);
-		planList.setTextFilterEnabled(true); 
-		
-		if(personID == null) 
-		{
+		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_plan,
+				plans);
+		planList.setTextFilterEnabled(true);
+
+		if (personID == null) {
 			tvtitle.setText("Plans");
-		} else if(personID != null) 
-		{
-			tvtitle.setText(personFirstName + " " + personLastName + "'s" + " " + "Plans");
+		} else if (personID != null) {
+			tvtitle.setText(personFirstName + " " + personLastName + "'s" + " "
+					+ "Plans");
 		}
-	} 
-	
+	}
+
 	private void initializeNotificationCountBroadcast() {
 
 		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
@@ -132,17 +133,16 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 
 		planList.setAdapter(contentAdapter);
 		int[] colors = { 0xFFFFFFFF, 0xFFFFFFFF };
-		planList.setDivider(new GradientDrawable(Orientation.TOP_BOTTOM,
-				colors));
+		planList.setDivider(new GradientDrawable(Orientation.TOP_BOTTOM, colors));
 		planList.setDividerHeight(2);
-	} 
-	
+	}
+
 	private void setViewOnClickListener() {
 
 		btnBack.setOnClickListener(this);
 		btnNotification.setOnClickListener(this);
-	} 
-	
+	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -155,15 +155,15 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		// TODO Auto-generated method stub
 		super.onPause();
 		unregisterReceiver(broadcastReceiver);
-	} 
-	
+	}
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 	}
 
@@ -176,50 +176,48 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if( v == btnBack)
-			finish(); 
-		else if(v == btnNotification)
-		{
+		if (v == btnBack)
+			finish();
+		else if (v == btnNotification) {
 			Intent intent = new Intent(context, NotificationActivity.class);
 			startActivity(intent);
-		} 
-	} 
-	
+		}
+	}
+
 	public void fetchDataForList() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
-			mProgressDialog = ProgressDialog
-					.show(this,
-							getResources().getString(R.string.plan_label),
-							getResources().getString(
-									R.string.fetching_data_text), true);
+			mProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.plan_label),
+					getResources().getString(R.string.fetching_data_text),
+					true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
-	} 
-	
+	}
+
 	private Runnable viewList = new Runnable() {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub 
-			
-			//RestClient getAccountSettingsClient;
-			//getAccountSettingsClient = new RestClient(Constant.smPlanUrl); 
-			
+			// TODO Auto-generated method stub
+
+			// RestClient getAccountSettingsClient;
+			// getAccountSettingsClient = new RestClient(Constant.smPlanUrl);
+
 			RestClient getAccountSettingsClient;
-			if(personID == null) 
-			{
-				//getAccountSettingsClient = new RestClient(Constant.smPlanUrl);
-				getAccountSettingsClient = new RestClient(Constant.smServerUrl+"/me/plans"); 
+			if (personID == null) {
+				// getAccountSettingsClient = new
+				// RestClient(Constant.smPlanUrl);
+				getAccountSettingsClient = new RestClient(Constant.smServerUrl
+						+ "/me/plans");
+			} else {
+				getAccountSettingsClient = new RestClient(Constant.smServerUrl
+						+ "/users" + "/" + personID + "/plans");
 			}
-			else 
-			{
-				getAccountSettingsClient = new RestClient(Constant.smServerUrl+"/users"+"/"+personID+"/plans");
-			}
-			
-			
-			//RestClient getAccountSettingsClient = new RestClient(Constant.smGetPlanUrl);
+
+			// RestClient getAccountSettingsClient = new
+			// RestClient(Constant.smGetPlanUrl);
 			getAccountSettingsClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -234,15 +232,17 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 
 			runOnUiThread(returnResGetplans);
 		}
-	}; 
-	
+	};
+
 	private Runnable returnResGetplans = new Runnable() {
 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
 
-			mProgressDialog.dismiss();
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
 			handleGetplansResponse(responseStatus, responseString);
 
 		}
@@ -254,17 +254,19 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
-			//dateWiseSortedPlans = ServerResponseParser.parseGetplanListResult(response); 
-			dateWiseSortedPlans = ServerResponseParser.parseGetPlanListResult(response);
-			
+			// dateWiseSortedPlans =
+			// ServerResponseParser.parseGetplanListResult(response);
+			dateWiseSortedPlans = ServerResponseParser
+					.parseGetPlanListResult(response);
+
 			/*
 			 * Log.e("plans size", dateWiseSortedPlans.size()+"");
 			 * plans.clear(); plans.addAll(dateWiseSortedPlans);
 			 */
-			
+
 			this.resetAdapterItems();
 
-			//btnFilterByDate.setBackgroundColor(colorButtonSelected);
+			// btnFilterByDate.setBackgroundColor(colorButtonSelected);
 			contentAdapter.notifyDataSetChanged();
 
 			break;
@@ -274,11 +276,10 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 					Utility.parseResponseString(response), Toast.LENGTH_LONG)
 					.show();
 
-			break; 
-			
+			break;
+
 		case Constant.STATUS_SUCCESS_NODATA:
-			Toast.makeText(getApplicationContext(),
-					"No plan found.",
+			Toast.makeText(getApplicationContext(), "No plan found.",
 					Toast.LENGTH_SHORT).show();
 			break;
 
@@ -294,15 +295,15 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 			break;
 
 		}
-	} 
-	
+	}
+
 	private void resetAdapterItems() {
 		this.plans.clear();
-		//clearFilterButtonSelection();
+		// clearFilterButtonSelection();
 		this.plans.addAll(this.dateWiseSortedPlans);
 		contentAdapter.setObjects(this.plans);
-	} 
-	
+	}
+
 	public class ListArrayAdapter extends BaseAdapter implements Filterable {
 
 		private List<Plan> mObjects;
@@ -329,9 +330,10 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Plan> objects) {
 
-			imageDownloader = new ImageDownloader();
-			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
-			
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
+
 			init(context, textViewResourceId, 0, objects);
 			// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(context.getResources(),
 			// R.drawable.Plan_item_bg));
@@ -389,25 +391,23 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			/*return PlanRowFactory.getView(LayoutInflater.from(context),
-					mObjects.get(position), context, new ItemListener(),
-					position, convertView, imageDownloader);*/ 
-			
-			if (personID == null) 
-			{
+			/*
+			 * return PlanRowFactory.getView(LayoutInflater.from(context),
+			 * mObjects.get(position), context, new ItemListener(), position,
+			 * convertView, imageDownloader);
+			 */
+
+			if (personID == null) {
 				return PlanRowFactory.getView(LayoutInflater.from(context),
 						mObjects.get(position), context, new ItemListener(),
 						position, convertView, imageDownloader, 1);
-			} 
-			else if (personID != null) 
-			{
+			} else if (personID != null) {
 				return PlanRowFactory.getView(LayoutInflater.from(context),
 						mObjects.get(position), context, new ItemListener(),
 						position, convertView, imageDownloader, 2);
-			} 
-			else 
+			} else
 				return null;
-			
+
 		}
 
 		public void setDropDownViewResource(int resource) {
@@ -492,29 +492,31 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 				}
 			}
 		}
-	} 
-	
+	}
+
 	private class ItemListener implements ListItemClickListenerPlan {
 
 		@Override
 		public void onItemClick(Plan plan) {
 			// TODO Auto-generated method stub
-			//Toast.makeText(getApplicationContext(), "Item Click Coming Soon", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(getApplicationContext(), "Item Click Coming Soon",
+			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onArrowButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			//Toast.makeText(getApplicationContext(), "Arrow Click Coming Soon", Toast.LENGTH_SHORT).show(); 
-			
-			
+			// Toast.makeText(getApplicationContext(),
+			// "Arrow Click Coming Soon", Toast.LENGTH_SHORT).show();
+
 		}
 
 		@Override
 		public void onShowOnMapButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			//Toast.makeText(getApplicationContext(), "Map Button Click Coming Soon", Toast.LENGTH_SHORT).show(); 
-			
+			// Toast.makeText(getApplicationContext(),
+			// "Map Button Click Coming Soon", Toast.LENGTH_SHORT).show();
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = plan;
 
@@ -526,14 +528,14 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		@Override
 		public void onShowEditButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			//Toast.makeText(getApplicationContext(), "Edit Option Coming Soon", Toast.LENGTH_SHORT).show(); 
-			if(plan != null) 
-			{
-				seletedPlan = plan; 
-				Log.d("Check Plan", seletedPlan.getPlanId()); 
-				
-				Intent intent = new Intent(context, PlanEditActivity.class); 
-				intent.putExtra("selectedPlan", seletedPlan); 
+			// Toast.makeText(getApplicationContext(),
+			// "Edit Option Coming Soon", Toast.LENGTH_SHORT).show();
+			if (plan != null) {
+				seletedPlan = plan;
+				Log.d("Check Plan", seletedPlan.getPlanId());
+
+				Intent intent = new Intent(context, PlanEditActivity.class);
+				intent.putExtra("selectedPlan", seletedPlan);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
@@ -542,18 +544,18 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 		@Override
 		public void onShowDeleteButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			//Toast.makeText(getApplicationContext(), "Delete Option Coming Soon", Toast.LENGTH_SHORT).show(); 
-			
-			if(plan != null) 
-			{
-				seletedPlan = plan; 
-				Log.d("Check Plan", seletedPlan.getPlanId()); 
+			// Toast.makeText(getApplicationContext(),
+			// "Delete Option Coming Soon", Toast.LENGTH_SHORT).show();
+
+			if (plan != null) {
+				seletedPlan = plan;
+				Log.d("Check Plan", seletedPlan.getPlanId());
 				initiateDeletePlan();
 			}
-		} 
-		
+		}
+
 	}
-	
+
 	public void initiateDeletePlan() {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle("Delete plan");
@@ -572,8 +574,8 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 			}
 		});
 		adb.show();
-	} 
-	
+	}
+
 	public void deletePlan() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, deletePlanThread,
@@ -581,19 +583,19 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 			thread.start();
 
 			// show progress dialog if needed
-			mProgressDialogForDelete = ProgressDialog.show(context, getResources()
+			mProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
-	} 
-	
+	}
+
 	private Runnable deletePlanThread = new Runnable() {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smPlanUrl + "/"
-					+seletedPlan.getPlanId());
+					+ seletedPlan.getPlanId());
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -608,19 +610,23 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 
 			runOnUiThread(deletePlanResponseThread);
 		}
-	}; 
-	
+	};
+
 	private Runnable deletePlanResponseThread = new Runnable() {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			mProgressDialogForDelete.dismiss();
+
+			if (mProgressDialog != null) {
+
+				mProgressDialog.dismiss();
+			}
 
 			handleResponseDeletePlan(responseStatus, responseString);
 
 		}
-	}; 
-	
+	};
+
 	public void handleResponseDeletePlan(int status, String response) {
 		// show proper message through Toast or Dialog
 
@@ -632,18 +638,17 @@ public class PlanListActivity extends Activity implements OnClickListener, Broad
 			Toast.makeText(context, "Plan deleted successfully.",
 					Toast.LENGTH_SHORT).show();
 			// EventListActivity.isUpdateList = true;
-			//Intent intent = new Intent(context, EventListActivity.class);
-			//finish();
-			//startActivity(intent); 
-			
-			for(int i=0 ; i< plans.size() ; i++)
-			{
-				if(plans.get(i).getPlanId().equalsIgnoreCase(seletedPlan.getPlanId()))
-				{
+			// Intent intent = new Intent(context, EventListActivity.class);
+			// finish();
+			// startActivity(intent);
+
+			for (int i = 0; i < plans.size(); i++) {
+				if (plans.get(i).getPlanId()
+						.equalsIgnoreCase(seletedPlan.getPlanId())) {
 					plans.remove(i);
 				}
 			}
-			
+
 			contentAdapter.notifyDataSetChanged();
 
 		} else {

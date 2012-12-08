@@ -109,6 +109,8 @@ public class ListViewActivity extends Activity implements
 		Utility.updateNotificationBubbleCounter(btnNotification);
 		
 		setCheckBoxSelection();
+		setOnCheckChangeListener();
+		
 		populateMasterList();
 
 		updateContentList(listMasterContent);
@@ -172,7 +174,7 @@ public class ListViewActivity extends Activity implements
 		btnListView.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.icon_list_view_selected));
 
-		setOnCheckChangeListener();
+		
 		topCloseButton = (Button) topDrawer.findViewById(R.id.topHandle);
 		bottomCloseButton = (Button) bottomDrawer
 				.findViewById(R.id.bottomHandle);
@@ -273,7 +275,7 @@ public class ListViewActivity extends Activity implements
 
 			else if (item instanceof Place
 					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PLACE, true)) {
+							Constant.PLACE, false)) {
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 			}
@@ -377,9 +379,9 @@ public class ListViewActivity extends Activity implements
 		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
 				.getBoolean(Constant.PEOPLE, true));
 		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PLACE, true));
+				.getBoolean(Constant.PLACE, false));
 		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.DEAL, true));
+				.getBoolean(Constant.DEAL, false));
 
 	}
 
@@ -475,8 +477,9 @@ public class ListViewActivity extends Activity implements
 
 			this.items = itemsList;
 			// imageLoader = new ImageLoader(context);
-			imageDownloader = new ImageDownloader();
-			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
 
 		}
 

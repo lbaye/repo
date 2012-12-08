@@ -67,8 +67,9 @@ public class PhotoZoomActivity extends Activity {
 
 		Log.w("PhotoZoomActivity photo_url size", photo_url.length + " what?");
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -129,7 +130,7 @@ public class PhotoZoomActivity extends Activity {
 		// TODO Auto-generated method stub
 
 		pDialog = ProgressDialog.show(context, "Please wait...", "Loading...",
-				false, false);
+				false, true);
 
 		final Thread d = new Thread(new Runnable() {
 

@@ -131,7 +131,7 @@
         xmlns:my="http://schemas.android.com/apk/res/com.socmaps.ui"
         android:id="@+id/topDrawer"
         android:layout_width="fill_parent"
-        android:layout_height="220dp"
+        android:layout_height="160dp"
         android:layout_below="@+id/searchPanel"
         android:background="#00F9F9F9"
         my:content="@+id/topSliderContent"

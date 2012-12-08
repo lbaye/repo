@@ -276,7 +276,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 							context.getResources().getString(
 									R.string.please_wait_text),
 							context.getResources().getString(
-									R.string.sending_request_text), true);
+									R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -388,7 +388,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 							context.getResources().getString(
 									R.string.please_wait_text),
 							context.getResources().getString(
-									R.string.sending_request_text), true);
+									R.string.sending_request_text), true,true);
 
 		} else {
 

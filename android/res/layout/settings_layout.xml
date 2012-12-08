@@ -97,7 +97,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
                 style="@style/ListButtonWithIcon"
-                android:text="@string/informationSharing" />
+                android:text="@string/informationSharing" 
+                android:visibility="gone"/>
 
             
             <Button
@@ -114,7 +115,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
                 style="@style/ListButtonWithIcon"
-                android:text="@string/notifications" />
+                android:text="@string/notifications" 
+                android:visibility="gone"/>
             
             <Button
                 android:id="@+id/btnPlatforms"

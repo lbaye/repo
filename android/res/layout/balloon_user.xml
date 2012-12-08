@@ -20,17 +20,35 @@
         android:layout_weight="1"
         android:gravity="center_vertical" >
 
-        <ImageView
-            android:id="@+id/balloon_item_image"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
-            android:layout_marginRight="10dip"
-            android:layout_marginTop="10dip"
-            android:adjustViewBounds="true"
-            android:background="@drawable/rounded_border_image_bg"
-            android:scaleType="fitCenter"
-            android:src="@null" />
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="15dip" >
+
+            <ImageView
+                android:id="@+id/balloon_item_image"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:adjustViewBounds="true"
+                android:background="@drawable/rounded_border_image_bg"
+                android:scaleType="fitCenter"
+                android:src="@null" />
+
+            <ImageView
+                android:id="@+id/ivOnline"
+                android:layout_width="12dip"
+                android:layout_height="12dip"
+                android:layout_alignBottom="@+id/balloon_item_image"
+                android:layout_alignParentLeft="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/offline"
+                android:layout_marginLeft="5dip"
+                android:layout_marginBottom="5dip"
+                android:visibility="visible" />
+            
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -67,11 +85,11 @@
                 android:id="@+id/status_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="Status"
                 android:textColor="@android:color/secondary_text_light"
-                android:textSize="12dip"
-                android:singleLine="true"
-                android:ellipsize="end" />
+                android:textSize="12dip" />
 
             <TextView
                 android:id="@+id/distance_text"

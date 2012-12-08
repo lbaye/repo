@@ -85,7 +85,7 @@ public class MeetupRequestListActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -125,7 +125,9 @@ public class MeetupRequestListActivity extends Activity {
 					meetupRequestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -360,7 +362,7 @@ public class MeetupRequestListActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -401,7 +403,9 @@ public class MeetupRequestListActivity extends Activity {
 			handleResponseToRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

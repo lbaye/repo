@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
-		Log.i("UserData", "" + Utility.getUserData(getApplicationContext()));
+		//Log.i("UserData", "" + Utility.getUserData(getApplicationContext()));
 
 		initialize();
 
@@ -251,14 +251,17 @@ public class SplashActivity extends Activity {
 			switch (msg.what) {
 			case 0:
 				finish();
+				
+				startActivity(new Intent(SplashActivity.this,
+						LoginActivity.class));
 
-				if (Utility.isBetaAuthenticated(getApplicationContext())) {
+				/*if (Utility.isBetaAuthenticated(getApplicationContext())) {
 					startActivity(new Intent(SplashActivity.this,
 							LoginActivity.class));
 				} else {
 					startActivity(new Intent(SplashActivity.this,
 							BetaLoginActivity.class));
-				}
+				}*/
 
 				break;
 

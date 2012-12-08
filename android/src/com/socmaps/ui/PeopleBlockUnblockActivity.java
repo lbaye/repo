@@ -300,7 +300,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -342,7 +342,11 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			handleResponseUnBlock(blockUnblockStatus, blockUnblockResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
+			
 		}
 	};
 
@@ -394,7 +398,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -436,7 +440,10 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			handleResponseBlock(blockUnblockStatus, blockUnblockResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -487,7 +494,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -536,7 +543,10 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			handleResponseBlockUnblock(blockUnblockStatus, blockUnblockResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -604,13 +614,14 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		private ImageDownloader imageLoader;
+		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			imageLoader = new ImageDownloader();
-			imageLoader.setMode(ImageDownloader.Mode.CORRECT);
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
 		}
 
 		@Override
@@ -653,7 +664,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 				return PeopleRowFactoryBlockUnblock.getView(
 						LayoutInflater.from(context), items.get(position),
 						context, PeopleBlockUnblockActivity.this, convertView,
-						imageLoader, new PeopleItemListener());
+						imageDownloader, new PeopleItemListener());
 			}
 
 			// if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal())
@@ -992,7 +1003,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -1034,7 +1045,10 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

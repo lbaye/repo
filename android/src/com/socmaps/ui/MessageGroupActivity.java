@@ -50,7 +50,7 @@ public class MessageGroupActivity extends ActivityGroup {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -90,7 +90,10 @@ public class MessageGroupActivity extends ActivityGroup {
 			navigateToList(messageStatus, messageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

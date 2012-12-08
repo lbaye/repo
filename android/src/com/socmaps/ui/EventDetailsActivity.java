@@ -49,7 +49,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	private Button inviteMoreFriendBtn, deleteBtn, editBtn, backBtn;
 	private LinearLayout rsvpPanel;
 	private Context context;
-	private ProgressDialog mProgressDialog;
+	// private ProgressDialog mProgressDialog;
 	int requestCode;
 	String responseString;
 	int responseStatus = 0;
@@ -59,7 +59,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	private boolean radioflag = true;
 	private LinearLayout deleteEditPanel;
 
-	ProgressDialog m_ProgressDialog;
+	private ProgressDialog m_ProgressDialog;
 
 	String myResponse = Constant.MY_RESPONSE_MAYBE;
 
@@ -72,24 +72,28 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	public Event selectedEvent;
 
-	//private ImageLoader imageLoader;
+	// private ImageLoader imageLoader;
 	ImageDownloader imageDownloader;
 
-	String source = ""; 
-	String s="";
+	String source = "";
+	String s = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_details_layout); 
+		setContentView(R.layout.event_details_layout);
 
 		source = getIntent().getStringExtra("source");
 		Object selectedItem = getIntent().getSerializableExtra("selectedEvent");
 		if (selectedItem != null) {
 			selectedEvent = (Event) (selectedItem);
-			selectedItem = null; 
-			Log.d("EVENT CHECK2", selectedEvent.getEventId()+" "+selectedEvent.getEventTitle()+" "+selectedEvent.getEvent_type()+" "+selectedEvent.getMyResponse());
+			selectedItem = null;
+			Log.d("EVENT CHECK2",
+					selectedEvent.getEventId() + " "
+							+ selectedEvent.getEventTitle() + " "
+							+ selectedEvent.getEvent_type() + " "
+							+ selectedEvent.getMyResponse());
 		}
 
 		initialize();
@@ -138,9 +142,9 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			Thread thread = new Thread(null, GetEventWithGuestList,
 					"MagentoBackground");
 			thread.start();
-			mProgressDialog = ProgressDialog.show(this, getResources()
+			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true, true);
 		} else {
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 		}
@@ -175,7 +179,9 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		public void run() {
 
 			handleEventWithGuestResponse(responseStatus, responseString);
-			mProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 
 		}
 
@@ -243,10 +249,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			} else
 				inviteFrndPanel.setVisibility(View.GONE);
 			// delete edit panel show hide
-			if (selectedEvent.getEvent_type()==null)
-			{
+			if (selectedEvent.getEvent_type() == null) {
 				deleteEditPanel.setVisibility(View.GONE);
-			} else if (selectedEvent.getEvent_type().equalsIgnoreCase("my_event")) {
+			} else if (selectedEvent.getEvent_type().equalsIgnoreCase(
+					"my_event")) {
 				deleteEditPanel.setVisibility(View.VISIBLE);
 			} else
 				deleteEditPanel.setVisibility(View.GONE);
@@ -296,8 +302,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			if (selectedEvent.getEventImageUrl() != null) {
 
 				if (!selectedEvent.getEventImageUrl().equalsIgnoreCase("")) {
-					//imageLoader.DisplayImage(selectedEvent.getEventImageUrl(),	eventImage);
-					imageDownloader.download(selectedEvent.getEventImageUrl(), eventImage);
+					// imageLoader.DisplayImage(selectedEvent.getEventImageUrl(),
+					// eventImage);
+					imageDownloader.download(selectedEvent.getEventImageUrl(),
+							eventImage);
 				}
 
 			} else {
@@ -389,9 +397,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		//imageLoader = new ImageLoader(context);
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageLoader = new ImageLoader(context);
+		//imageDownloader = new ImageDownloader();
+		//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		eventNameText = (TextView) findViewById(R.id.event_name_text);
 		eventDateTimeText = (TextView) findViewById(R.id.event_date_text);
@@ -426,26 +435,29 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 			if (source != null) {
 				if (source.equalsIgnoreCase("map")) {
-					//finish(); 
-					
+					// finish();
+
 					StaticValues.isHighlightAnnotation = true;
 					StaticValues.highlightAnnotationItem = selectedEvent;
-					
+
 					Intent intent = new Intent(context, HomeActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 				} else {
-					/*Intent intent = new Intent(context, EventListActivity.class);
-					finish();
-					startActivity(intent);*/ 
-					
+					/*
+					 * Intent intent = new Intent(context,
+					 * EventListActivity.class); finish();
+					 * startActivity(intent);
+					 */
+
 					finish();
 				}
 			} else {
-				/*Intent intent = new Intent(context, EventListActivity.class);
-				finish();
-				startActivity(intent);*/ 
-				
+				/*
+				 * Intent intent = new Intent(context, EventListActivity.class);
+				 * finish(); startActivity(intent);
+				 */
+
 				finish();
 			}
 
@@ -489,12 +501,12 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = selectedEvent;
-			//finish(); 
+			// finish();
 
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			
+
 		} else if (v == inviteMoreFriendBtn) {
 			showPeoplePicker(pickerInviteMore);
 		} else if (v == backBtn) {
@@ -531,7 +543,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -562,8 +574,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
 
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 			handleResponseDeleteEvent(responseStatus, responseString);
 
 		}
@@ -600,7 +614,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -633,7 +647,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 
 			handleResponseEvent(responseStatus, responseString);
 
@@ -714,7 +731,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		// show progress dialog if needed
 		m_ProgressDialog = ProgressDialog.show(context, getResources()
 				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.sending_request_text), true);
+				.getString(R.string.sending_request_text), true, true);
 	}
 
 	private Runnable sendInvitationDataThread = new Runnable() {
@@ -749,7 +766,10 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 
 			handleEventWithGuestResponse(responseStatus, responseString);
 			resetSelectedList();

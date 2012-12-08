@@ -39,6 +39,18 @@
                     android:background="@drawable/rounded_border_image_bg"
                     android:scaleType="fitCenter"
                     android:src="@null" />
+                
+                <ImageView
+                    android:id="@+id/ivOnline"
+                    android:layout_width="15dip"
+                    android:layout_height="15dip"
+                    android:layout_alignBottom="@+id/people_icon_image"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginLeft="5dip"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/offline"
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/llFriendshipStatusContainer"
@@ -76,7 +88,7 @@
                     android:layout_alignParentTop="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/marker1" />
+                    android:src="@drawable/icon" />
 
                 <TextView
                     android:id="@+id/first_name_text"

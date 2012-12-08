@@ -87,9 +87,9 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle; 
-	
-	TextView tvTitle, tvTitleDescription; 
+	TextView tvSelectedLocationTitle;
+
+	TextView tvTitle, tvTitleDescription;
 
 	ImageView ivEventImage;
 
@@ -151,12 +151,12 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		Object selectedItem = getIntent().getSerializableExtra("selectedEvent");
 		if (selectedItem != null) {
 			selectedEvent = (Event) (selectedItem);
-			selectedItem = null; 
-			
-			eventLat = selectedEvent.getLatitude(); 
-			eventLng = selectedEvent.getLongitude(); 
-			
-			Log.d("Lat Lng Check", eventLat+"" + " " + eventLng+"");
+			selectedItem = null;
+
+			eventLat = selectedEvent.getLatitude();
+			eventLng = selectedEvent.getLongitude();
+
+			Log.d("Lat Lng Check", eventLat + "" + " " + eventLng + "");
 		}
 
 		initialize();
@@ -195,10 +195,10 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 			eventLat = selectedEvent.getLatitude();
 			eventLng = selectedEvent.getLongitude();
-			eventAddress = selectedEvent.getAddress(); 
-			
+			eventAddress = selectedEvent.getAddress();
+
 			tvTitle.setText("Venue: " + eventAddress);
-			//tvTitleDescription.setText(eventAddress);
+			// tvTitleDescription.setText(eventAddress);
 
 			if (eventImageUrl != null) {
 				if (!eventImageUrl.equalsIgnoreCase("")) {
@@ -221,18 +221,16 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			chkGuestPermission.setChecked(isGuestPermitted);
 
 			if (eventAddress != null && !eventAddress.equals("")) {
-				//displayAddress(null, eventAddress);
+				// displayAddress(null, eventAddress);
 			}
 		}
 	}
-	
-
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
@@ -257,8 +255,9 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 		context = EventEditActivity.this;
 		// imageLoader = new ImageLoader(context);
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		guestList = selectedEvent.getGuestList();
 
@@ -318,9 +317,9 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
-		
-		tvTitle = (TextView) findViewById(R.id.tvTitle); 
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+
+		tvTitle = (TextView) findViewById(R.id.tvTitle);
 		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);
 
 	}
@@ -350,8 +349,6 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
-
-	
 
 	private void setExpandListener() {
 		// TODO Auto-generated method stub
@@ -496,7 +493,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		// show progress dialog if needed
 		m_ProgressDialog = ProgressDialog.show(context, getResources()
 				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.sending_request_text), true);
+				.getString(R.string.sending_request_text), true, true);
 	}
 
 	private Runnable sendEventDataThread = new Runnable() {
@@ -626,7 +623,10 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 
 			handleResponseSendEventData(responseStatus, responseString);
 
@@ -1175,7 +1175,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			if (resultCode == RESULT_OK) {
 
 				if (eventPicture != null) {
-					//eventPicture.recycle();
+					// eventPicture.recycle();
 				}
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
 						.get("data"), Constant.eventPhotoWidth,
@@ -1196,7 +1196,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 				try {
 
 					if (eventPicture != null) {
-						//eventPicture.recycle();
+						// eventPicture.recycle();
 					}
 					eventPicture = Utility
 							.resizeBitmap(

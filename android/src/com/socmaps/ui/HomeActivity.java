@@ -255,6 +255,8 @@ public class HomeActivity extends MapActivity implements
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 
 		facebookAuthentication();
@@ -277,8 +279,9 @@ public class HomeActivity extends MapActivity implements
 		gpsService = new GpsService(context, this);
 		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		mapView.setBuiltInZoomControls(false);
 
@@ -540,77 +543,103 @@ public class HomeActivity extends MapActivity implements
 
 		boolean forceRegister = true;
 
-		try {
+		Log.i("GCM RegID", "inside registerPushNotification");
+
+		if (regId == null || regId.equals("")) {
+			Log.i("GCM RegID", "regId is null");
+			// Automatically registers application on startup.
 			GCMRegistrar.register(getApplicationContext(),
 					CommonUtilities.SENDER_ID);
-
-		} catch (Exception e) {
-			// TODO: handle exception
+		} else {
+			registerDeviceOnServer(regId);
+			/*
+			 * // Device is already registered on GCM, check server. if
+			 * (GCMRegistrar.isRegisteredOnServer(this)) { // Skips
+			 * registration. //
+			 * mDisplay.append(getString(R.string.already_registered) + //
+			 * "\n"); Log.e("GCM", getString(R.string.already_registered)); }
+			 * else { // Try to register again, but not in the UI thread. //
+			 * It's also necessary to cancel the thread onDestroy(), // hence
+			 * the use of AsyncTask instead of a raw thread.
+			 * 
+			 * registerDeviceOnServer(regId); }
+			 */
 		}
 
-		if (regId != null) {
-			final Context context = this;
-			mRegisterTask = new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... params) {
-					boolean registered = ServerUtilities.register(context,
-							regId);
-					// At this point all attempts to register with the app
-					// server failed, so we need to unregister the device
-					// from GCM - the app will try to register again when
-					// it is restarted. Note that GCM will send an
-					// unregistered callback upon completion, but
-					// GCMIntentService.onUnregistered() will ignore it.
-					if (!registered) {
-						GCMRegistrar.unregister(context);
-					}
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void result) {
-					mRegisterTask = null;
-				}
-
-			};
-			mRegisterTask.execute(null, null, null);
-
-		}
-
-		/*
-		 * if (regId.equals("") || forceRegister) { // Automatically registers
-		 * application on startup.
-		 * 
-		 * try { GCMRegistrar.register(getApplicationContext(),
-		 * CommonUtilities.SENDER_ID);
-		 * 
-		 * } catch (Exception e) { // TODO: handle exception }
-		 * 
-		 * } else { // Device is already registered on GCM, check server. if
-		 * (GCMRegistrar.isRegisteredOnServer(this)) { // Skips registration. //
-		 * mDisplay.append(getString(R.string.already_registered) + // "\n");
-		 * Log.e("GCM", getString(R.string.already_registered)); } else { // Try
-		 * to register again, but not in the UI thread. // It's also necessary
-		 * to cancel the thread onDestroy(), // hence the use of AsyncTask
-		 * instead of a raw thread. final Context context = this; mRegisterTask
-		 * = new AsyncTask<Void, Void, Void>() {
-		 * 
-		 * @Override protected Void doInBackground(Void... params) { boolean
-		 * registered = ServerUtilities.register(context, regId); // At this
-		 * point all attempts to register with the app // server failed, so we
-		 * need to unregister the device // from GCM - the app will try to
-		 * register again when // it is restarted. Note that GCM will send an //
-		 * unregistered callback upon completion, but //
-		 * GCMIntentService.onUnregistered() will ignore it. if (!registered) {
-		 * GCMRegistrar.unregister(context); } return null; }
-		 * 
-		 * @Override protected void onPostExecute(Void result) { mRegisterTask =
-		 * null; }
-		 * 
-		 * }; mRegisterTask.execute(null, null, null); } }
-		 */
 	}
+
+	private void registerDeviceOnServer(final String regId) {
+		// TODO Auto-generated method stub
+
+		Log.i("GCM RegId", regId);
+		final Context context = this;
+		mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				boolean registered = ServerUtilities.register(context, regId);
+				// At this point all attempts to register with the app
+				// server failed, so we need to unregister the device
+				// from GCM - the app will try to register again when
+				// it is restarted. Note that GCM will send an
+				// unregistered callback upon completion, but
+				// GCMIntentService.onUnregistered() will ignore it.
+				if (!registered) {
+					GCMRegistrar.unregister(context);
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				mRegisterTask = null;
+			}
+
+		};
+		mRegisterTask.execute(null, null, null);
+	}
+
+	/*
+	 * private void registerPushNotification() throws IOException {
+	 * 
+	 * checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
+	 * checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
+	 * 
+	 * GCMRegistrar.checkDevice(this);
+	 * 
+	 * GCMRegistrar.checkManifest(this);
+	 * 
+	 * 
+	 * final String regId = GCMRegistrar.getRegistrationId(this);
+	 * 
+	 * boolean forceRegister = true; Log.i("GCM REG_ID", regId+"");
+	 * 
+	 * if(regId==null || regId.equals("")) { try {
+	 * GCMRegistrar.register(getApplicationContext(),
+	 * CommonUtilities.SENDER_ID);
+	 * 
+	 * } catch (Exception e) {
+	 * 
+	 * } }
+	 * 
+	 * Log.i("GCM REG_ID", regId); if (regId != null) { final Context context =
+	 * this; mRegisterTask = new AsyncTask<Void, Void, Void>() {
+	 * 
+	 * @Override protected Void doInBackground(Void... params) { boolean
+	 * registered = ServerUtilities.register(context, regId);
+	 * 
+	 * if (!registered) { GCMRegistrar.unregister(context); } return null; }
+	 * 
+	 * @Override protected void onPostExecute(Void result) { mRegisterTask =
+	 * null; }
+	 * 
+	 * }; mRegisterTask.execute(null, null, null);
+	 * 
+	 * }
+	 * 
+	 * 
+	 * }
+	 */
 
 	public void startGpsService() {
 		gpsService.StartListener();
@@ -1134,7 +1163,7 @@ public class HomeActivity extends MapActivity implements
 
 			} else if (item instanceof Place
 					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PLACE, true)) {
+							Constant.PLACE, false)) {
 				listDisplayableContent.add(item);
 
 				Place place = (Place) item;
@@ -1169,7 +1198,7 @@ public class HomeActivity extends MapActivity implements
 
 			} else if (item instanceof Event
 					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.EVENT, true)) {
+							Constant.EVENT, false)) {
 				listDisplayableContent.add(item);
 
 				Event event = (Event) item;
@@ -1213,9 +1242,8 @@ public class HomeActivity extends MapActivity implements
 		itemizedOverlayGeotag.populateItemizedOverlay();
 
 		mapView.invalidate();
-		
-		if(isSearchEnabled && displayedItemCounter == 1)
-		{
+
+		if (isSearchEnabled && displayedItemCounter == 1) {
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = onlyItem;
 		}
@@ -1581,21 +1609,23 @@ public class HomeActivity extends MapActivity implements
 						startActivity(intent2);
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_PROXIMITY_ALERT)) {
+						if (StaticValues.searchResult != null) {
+							if (isSearchEnabled) {
+								disableSearch();
+								doSearch();
+							}
 
-						if (isSearchEnabled) {
-							disableSearch();
-							doSearch();
+							People people = Utility.getPeopleById(
+									pushData.getObjectId(),
+									StaticValues.searchResult.getPeoples());
+							if (people != null) {
+								StaticValues.isHighlightAnnotation = true;
+								StaticValues.highlightAnnotationItem = people;
+								highlightAnnotation();
+
+							}
 						}
 
-						People people = Utility.getPeopleById(
-								pushData.getObjectId(),
-								StaticValues.searchResult.getPeoples());
-						if (people != null) {
-							StaticValues.isHighlightAnnotation = true;
-							StaticValues.highlightAnnotationItem = people;
-							highlightAnnotation();
-
-						}
 					}
 				} else {
 					Log.i("Home:PushData:Type", "PushData is null");
@@ -1700,6 +1730,9 @@ public class HomeActivity extends MapActivity implements
 
 	private void initializeNotificationBroadcast() {
 		// TODO Auto-generated method stub
+
+		Log.i("inside", "initializeNotificationBroadcast");
+
 		broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
 		broadcastReceiver.setCallback(new NotificationBroadcastListener());
 		registerReceiver(broadcastReceiver, new IntentFilter(
@@ -1709,6 +1742,8 @@ public class HomeActivity extends MapActivity implements
 	private class NotificationBroadcastListener implements BroadcastListener {
 		@Override
 		public void updateNotificationCountBuble(Intent intent) {
+
+			Log.i("inside updateNotificationCountBuble", "");
 
 			PushData pushData = (PushData) intent
 					.getSerializableExtra("pushData");
@@ -1818,11 +1853,11 @@ public class HomeActivity extends MapActivity implements
 		peopleCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
 				.getBoolean(Constant.PEOPLE, true));
 		placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.PLACE, true));
+				.getBoolean(Constant.PLACE, false));
 		eventCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.EVENT, true));
+				.getBoolean(Constant.EVENT, false));
 		dealCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-				.getBoolean(Constant.DEAL, true));
+				.getBoolean(Constant.DEAL, false));
 
 	}
 
@@ -2309,6 +2344,12 @@ public class HomeActivity extends MapActivity implements
 		} else {
 			workInfoContainer.setVisibility(View.GONE);
 		}
+		
+		ImageView ivOnline = (ImageView) d.findViewById(R.id.ivOnline);
+		if(item.getUser().isOnline())
+		{
+			ivOnline.setImageResource(R.drawable.online);
+		}
 
 		avatar = (ImageView) d.findViewById(R.id.avater_image);
 		avatar.setImageResource(R.drawable.img_blank);
@@ -2316,14 +2357,14 @@ public class HomeActivity extends MapActivity implements
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
 			// avatar.setImageResource(R.drawable.icon);
-			new FetchImageTask() {
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					if (result != null) {
-						avatar.setImageBitmap(result);
-					}
-				}
-			}.execute(item.getUser().getAvatar());
+			/*
+			 * new FetchImageTask() {
+			 * 
+			 * @Override protected void onPostExecute(Bitmap result) { if
+			 * (result != null) { avatar.setImageBitmap(result); } }
+			 * }.execute(item.getUser().getAvatar());
+			 */
+			imageDownloader.download(avatarUrl, avatar);
 
 			// imageLoader.DisplayImage(avatarUrl, avatar, R.drawable.icon);
 		}
@@ -2352,6 +2393,9 @@ public class HomeActivity extends MapActivity implements
 				.findViewById(R.id.tvFriendshipStatus);
 
 		String friendshipStatus = item.getUser().getFriendshipStatus();
+
+		Log.e("friendshipStatus", friendshipStatus);
+
 		if (friendRequestSentList.contains(userId)) {
 			tvFriendshipStatus
 					.setText(getString(R.string.status_friend_request_pending));
@@ -2373,6 +2417,7 @@ public class HomeActivity extends MapActivity implements
 				if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
 					status = getString(R.string.status_friend_request_friend);
+					meetupBtnDisabled.setVisibility(View.GONE);
 					meetupBtn.setVisibility(View.VISIBLE);
 				} else if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
@@ -2386,6 +2431,11 @@ public class HomeActivity extends MapActivity implements
 				} else if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_REJECTED_BY_HIM)) {
 					status = getString(R.string.status_friend_request_declined_by_him);
+				} else {
+					status = "";
+					meetupBtnDisabled.setVisibility(View.GONE);
+					addFrndBtn.setVisibility(View.VISIBLE);
+
 				}
 				tvFriendshipStatus.setText(status);
 			}
@@ -2716,7 +2766,7 @@ public class HomeActivity extends MapActivity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -2758,7 +2808,9 @@ public class HomeActivity extends MapActivity implements
 					friendRequestResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -2830,7 +2882,7 @@ public class HomeActivity extends MapActivity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -2872,7 +2924,9 @@ public class HomeActivity extends MapActivity implements
 			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 

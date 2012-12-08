@@ -57,9 +57,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		setContentView(R.layout.platform_preferences_layout);
 
 		initialize();
-		
-		
-		
+
 		setViewOnClickListener();
 
 	}
@@ -68,9 +66,9 @@ public class PlatformPreferencesActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		if (StaticValues.platformsPreferences == null) {
 			startDialogAndBgThread();
 		} else {
@@ -151,7 +149,12 @@ public class PlatformPreferencesActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
+
 			handlePlatformSettingsResponse(responseStatus, responseString);
 
 			/*
@@ -197,7 +200,7 @@ public class PlatformPreferencesActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true,true);
 
 		} else {
 
@@ -295,7 +298,12 @@ public class PlatformPreferencesActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleResponse(responseStatus, responseString);
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+
+			}
 
 		}
 	};
@@ -341,7 +349,7 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		m_ProgressDialog = ProgressDialog.show(this,
 				getResources().getString(R.string.please_wait_text),
-				getResources().getString(R.string.updating_data_text), true);
+				getResources().getString(R.string.updating_data_text), true,true);
 		m_ProgressDialog.show();
 	}
 
@@ -358,8 +366,8 @@ public class PlatformPreferencesActivity extends Activity implements
 			updateAllValues();
 		} else if (v == btnInvite) {
 
-			
-			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb") && FBUtility.mFacebook!=null) {
+			if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb")
+					&& FBUtility.mFacebook != null) {
 				initInviteFriends();
 			} else {
 				initInvitationDialog();

@@ -24,6 +24,7 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
+import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
@@ -62,7 +63,7 @@ public class MessageNotificationActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true);
+					.getString(R.string.sending_request_text), true,true);
 
 		} else {
 
@@ -101,7 +102,9 @@ public class MessageNotificationActivity extends Activity {
 			handleResponseMessage(messageStatus, messageResponse);
 
 			// dismiss progress dialog if needed
-			m_ProgressDialog.dismiss();
+			if(m_ProgressDialog!=null){
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -119,15 +122,8 @@ public class MessageNotificationActivity extends Activity {
 
 				if (messages != null) {
 
-					NotificationActivity ta = (NotificationActivity) this
-							.getParent();
-					TabHost th = ta.getMyTabHost();
-					View tab = th.getChildAt(0);
-					TextView tabLabel = (TextView) tab
-							.findViewById(R.id.tvItemCountDisplay);
-					tabLabel.setText(""
-							+ Utility.getMessageCount(messages,
-									Constant.STATUS_MESSAGE_UNREAD));
+					
+					/*tabLabel.setText("" + Utility.getMessageCount(messages, Constant.STATUS_MESSAGE_UNREAD));*/
 
 					for (int i = 0; i < messages.size(); i++) {
 
@@ -136,7 +132,7 @@ public class MessageNotificationActivity extends Activity {
 							if (messageEntity.getStatus() != null) {
 								if (messageEntity.getStatus().equalsIgnoreCase(
 										Constant.STATUS_MESSAGE_UNREAD)) {
-									View v = inflater.inflate(
+									final View v = inflater.inflate(
 											R.layout.row_message_list, null);
 									ExpandablePanel panel = (ExpandablePanel) v
 											.findViewById(R.id.foo);
@@ -185,12 +181,16 @@ public class MessageNotificationActivity extends Activity {
 										public void onClick(View arg0) {
 											//getMessageDetails(messageId,threadId);
 											
+											
+											
 											Intent i = new Intent(context,
 													MessageConversationFromNotificationActivity.class);
 											i.putExtra("itemThreadId", threadId);
 											i.putExtra("itemMessageId", messageId);
 
 											startActivity(i);
+											
+											v.setVisibility(View.GONE);
 										}
 									});
 
@@ -242,6 +242,17 @@ public class MessageNotificationActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		if(StaticValues.myInfo!=null)
+		{
+			NotificationActivity ta = (NotificationActivity) this
+					.getParent();
+			TabHost th = ta.getMyTabHost();
+			View tab = th.getChildAt(0);
+			final TextView tabLabel = (TextView) tab
+					.findViewById(R.id.tvItemCountDisplay);
+			tabLabel.setText("" + StaticValues.myInfo.getNotificationCount().getMessageCount());
+		}
 
 	}
 

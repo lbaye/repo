@@ -35,6 +35,8 @@ public class People implements Serializable {
 	private boolean isFriend;
 	private String statusMsg;
 	private String coverPhoto;
+	private boolean isOnline;
+	
 
 	private TimeEntity lastLogIn;
 
@@ -309,6 +311,14 @@ public class People implements Serializable {
 
 	public void setBlocked(boolean isBlocked) {
 		this.isBlocked = isBlocked;
+	}
+
+	public boolean isOnline() {
+		return isOnline;
+	}
+
+	public void setOnline(boolean isOnline) {
+		this.isOnline = isOnline;
 	}
 
 }

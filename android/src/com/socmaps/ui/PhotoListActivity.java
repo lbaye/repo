@@ -134,8 +134,9 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		selectedPhoto = new HashMap<String, Boolean>();
 
-		imageDownloader = new ImageDownloader();
-		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		imageDownloader = ImageDownloader.getInstance();
 
 		if (userID != null) {
 			btnUploadNewPhoto.setVisibility(View.GONE);
@@ -311,11 +312,10 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, getList, "MagentoBackground");
 			thread.start();
-			mProgressDialog = ProgressDialog
-					.show(this,
-							getResources().getString(R.string.photos),
-							getResources().getString(
-									R.string.fetching_data_text), true);
+			mProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.photos),
+					getResources().getString(R.string.fetching_data_text),
+					true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -357,7 +357,10 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			mProgressDialog.dismiss();
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
+
 			handleGetPhotosResponse(responseStatus, responseString);
 
 		}
@@ -378,7 +381,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			break;
 
 		case Constant.STATUS_SUCCESS_NODATA:
-			Toast.makeText(context, "No Photos are Found", Toast.LENGTH_SHORT)
+			Toast.makeText(context, "No photo found.", Toast.LENGTH_SHORT)
 					.show();
 			break;
 
@@ -416,7 +419,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			thread.start();
 			mProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.deletePhotoLabel), getResources()
-					.getString(R.string.please_wait_text), true);
+					.getString(R.string.please_wait_text), true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -460,7 +463,9 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			mProgressDialog.dismiss();
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
 			handleDeletePhotosResponse(responseStatus, responseString);
 
 		}

@@ -49,16 +49,18 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class EventListActivityOther extends Activity implements OnClickListener,
-		BroadcastListener {
+public class EventListActivityOther extends Activity implements
+		OnClickListener, BroadcastListener {
 	private Context context;
 	private EditText searchEditText;
 	private Button btnBack, btnSearch, btnNotification;
 
-	private Button btnDoSearch; /*btnNewEvent, btnFilterByDate,
-			btnFilterByDistance, btnFilterByFriendsEvent, btnFilterByMyEvent,
-			btnFilterByPublicEvent;*/ 
-	LinearLayout separator; 
+	private Button btnDoSearch; /*
+								 * btnNewEvent, btnFilterByDate,
+								 * btnFilterByDistance, btnFilterByFriendsEvent,
+								 * btnFilterByMyEvent, btnFilterByPublicEvent;
+								 */
+	LinearLayout separator;
 	private TextView tvtitle;
 	private ListView eventList;
 	// private ContentListAdapter contentAdapter;
@@ -74,31 +76,28 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 	// public static boolean isUpdateList = false;
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
-	int colorButtonNormal, colorButtonSelected; 
-	
-	String userID = null; 
+	int colorButtonNormal, colorButtonSelected;
+
+	String userID = null;
 	public People people;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_list_layout_other); 
-		
+		setContentView(R.layout.event_list_layout_other);
+
 		Object obj = getIntent().getSerializableExtra("user");
 		if (obj != null) {
 			people = (People) (obj);
 			obj = null;
 			userID = people.getId();
-			Log.d("CHECK VALUE at Event", "ID: " + people.getId()+"~"+userID);
-		} 
-		
+			Log.d("CHECK VALUE at Event", "ID: " + people.getId() + "~"
+					+ userID);
+		}
 
 		init();
-		
-		
-		
-		
+
 		setListParameters();
 		setViewOnClickListener();
 
@@ -112,14 +111,16 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		btnNotification.setOnClickListener(this);
 		btnSearch.setOnClickListener(this);
 
-		//btnNewEvent.setOnClickListener(this);
+		// btnNewEvent.setOnClickListener(this);
 		btnDoSearch.setOnClickListener(this);
 
-		/*btnFilterByDate.setOnClickListener(this);
-		btnFilterByDistance.setOnClickListener(this);
-		btnFilterByFriendsEvent.setOnClickListener(this);
-		btnFilterByMyEvent.setOnClickListener(this);
-		btnFilterByPublicEvent.setOnClickListener(this);*/
+		/*
+		 * btnFilterByDate.setOnClickListener(this);
+		 * btnFilterByDistance.setOnClickListener(this);
+		 * btnFilterByFriendsEvent.setOnClickListener(this);
+		 * btnFilterByMyEvent.setOnClickListener(this);
+		 * btnFilterByPublicEvent.setOnClickListener(this);
+		 */
 	}
 
 	private void init() {
@@ -131,22 +132,26 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnNotification = (Button) findViewById(R.id.btnNotification);
-		btnSearch = (Button) findViewById(R.id.btnSearch); 
+		btnSearch = (Button) findViewById(R.id.btnSearch);
 
 		searchEditText = (EditText) findViewById(R.id.etFriendSearch);
-		searchEditText.addTextChangedListener(filterTextWatcher); 
-		
-		separator = (LinearLayout) findViewById(R.id.separator); 
+		searchEditText.addTextChangedListener(filterTextWatcher);
+
+		separator = (LinearLayout) findViewById(R.id.separator);
 		tvtitle = (TextView) findViewById(R.id.tvtitle);
-		tvtitle.setText(people.getFirstName()+"'s"+" events");
+		tvtitle.setText(people.getFirstName() + "'s" + " events");
 
 		btnDoSearch = (Button) findViewById(R.id.btnDoSearch);
-		//btnNewEvent = (Button) findViewById(R.id.btnNewEvent);
-		/*btnFilterByDate = (Button) findViewById(R.id.btnFilterByDate);
-		btnFilterByDistance = (Button) findViewById(R.id.btnFilterByDistance);
-		btnFilterByFriendsEvent = (Button) findViewById(R.id.btnFilterByFriendsEvent);
-		btnFilterByMyEvent = (Button) findViewById(R.id.btnFilterByMyEvent);
-		btnFilterByPublicEvent = (Button) findViewById(R.id.btnFilterByPublicEvent);*/
+		// btnNewEvent = (Button) findViewById(R.id.btnNewEvent);
+		/*
+		 * btnFilterByDate = (Button) findViewById(R.id.btnFilterByDate);
+		 * btnFilterByDistance = (Button)
+		 * findViewById(R.id.btnFilterByDistance); btnFilterByFriendsEvent =
+		 * (Button) findViewById(R.id.btnFilterByFriendsEvent);
+		 * btnFilterByMyEvent = (Button) findViewById(R.id.btnFilterByMyEvent);
+		 * btnFilterByPublicEvent = (Button)
+		 * findViewById(R.id.btnFilterByPublicEvent);
+		 */
 
 		eventList = (ListView) findViewById(R.id.event_list);
 		events = new ArrayList<Event>();
@@ -195,7 +200,7 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		super.onResume();
 		initializeNotificationCountBroadcast();
 		findViewById(R.id.mainLayout).requestFocus();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
 		/*
 		 * if (isUpdateList) { isUpdateList = !isUpdateList; fetchDataForList();
@@ -220,11 +225,10 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
-			mProgressDialog = ProgressDialog
-					.show(this,
-							getResources().getString(R.string.eventsLabel),
-							getResources().getString(
-									R.string.fetching_data_text), true);
+			mProgressDialog = ProgressDialog.show(this, getResources()
+					.getString(R.string.eventsLabel),
+					getResources().getString(R.string.fetching_data_text),
+					true, true);
 		} else
 			DialogsAndToasts.showNoInternetConnectionDialog(context);
 	}
@@ -293,13 +297,14 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub 
-			
+			// TODO Auto-generated method stub
+
 			RestClient getAccountSettingsClient;
-			getAccountSettingsClient = new RestClient(Constant.smServerUrl+"/users"+"/"+userID+"/events");
-			
-			
-			//RestClient getAccountSettingsClient = new RestClient(Constant.smGetEventUrl);
+			getAccountSettingsClient = new RestClient(Constant.smServerUrl
+					+ "/users" + "/" + userID + "/events");
+
+			// RestClient getAccountSettingsClient = new
+			// RestClient(Constant.smGetEventUrl);
 			getAccountSettingsClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -322,7 +327,9 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		public void run() {
 			// TODO Auto-generated method stub
 
-			mProgressDialog.dismiss();
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
 			handleGetEventsResponse(responseStatus, responseString);
 
 		}
@@ -343,9 +350,16 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 			resetFilterEditText();
 			this.resetAdapterItems();
 
-			//btnFilterByDate.setBackgroundColor(colorButtonSelected);
+			// btnFilterByDate.setBackgroundColor(colorButtonSelected);
 			contentAdapter.notifyDataSetChanged();
 
+			break;
+			
+		case Constant.STATUS_SUCCESS_NODATA:
+			Toast.makeText(getApplicationContext(),
+					"No event found.", Toast.LENGTH_LONG)
+					.show();
+			
 			break;
 
 		case Constant.STATUS_BADREQUEST:
@@ -395,54 +409,46 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 	 * EventDetailsActivity.class); startActivity(eventDetailsIntent); }
 	 */
 
-	/*public void clearFilterButtonSelection() {
-		btnFilterByDate.setBackgroundColor(colorButtonNormal);
-		btnFilterByDistance.setBackgroundColor(colorButtonNormal);
-		btnFilterByFriendsEvent.setBackgroundColor(colorButtonNormal);
-		btnFilterByMyEvent.setBackgroundColor(colorButtonNormal);
-		btnFilterByPublicEvent.setBackgroundColor(colorButtonNormal);
-	}*/
+	/*
+	 * public void clearFilterButtonSelection() {
+	 * btnFilterByDate.setBackgroundColor(colorButtonNormal);
+	 * btnFilterByDistance.setBackgroundColor(colorButtonNormal);
+	 * btnFilterByFriendsEvent.setBackgroundColor(colorButtonNormal);
+	 * btnFilterByMyEvent.setBackgroundColor(colorButtonNormal);
+	 * btnFilterByPublicEvent.setBackgroundColor(colorButtonNormal); }
+	 */
 
 	@Override
 	public void onClick(View v) {
-		/*if (v == btnFilterByDistance) {
-			this.resetAdapterItems();
-			sortDataByDistance();
-			btnFilterByDistance.setBackgroundColor(colorButtonSelected);
-			contentAdapter.notifyDataSetChanged();
-		}
-		if (v == btnFilterByDate) {
-			this.resetAdapterItems();
-			btnFilterByDate.setBackgroundColor(colorButtonSelected);
-			contentAdapter.notifyDataSetChanged();
-		}
-		if (v == btnFilterByFriendsEvent) {
-			this.resetAdapterItems();
-			filterEvents("friends_event");
-			btnFilterByFriendsEvent.setBackgroundColor(colorButtonSelected);
-			contentAdapter.notifyDataSetChanged();
-		}
-		if (v == btnFilterByMyEvent) {
-			this.resetAdapterItems();
-			filterEvents("my_event");
-			btnFilterByMyEvent.setBackgroundColor(colorButtonSelected);
-			contentAdapter.notifyDataSetChanged();
+		/*
+		 * if (v == btnFilterByDistance) { this.resetAdapterItems();
+		 * sortDataByDistance();
+		 * btnFilterByDistance.setBackgroundColor(colorButtonSelected);
+		 * contentAdapter.notifyDataSetChanged(); } if (v == btnFilterByDate) {
+		 * this.resetAdapterItems();
+		 * btnFilterByDate.setBackgroundColor(colorButtonSelected);
+		 * contentAdapter.notifyDataSetChanged(); } if (v ==
+		 * btnFilterByFriendsEvent) { this.resetAdapterItems();
+		 * filterEvents("friends_event");
+		 * btnFilterByFriendsEvent.setBackgroundColor(colorButtonSelected);
+		 * contentAdapter.notifyDataSetChanged(); } if (v == btnFilterByMyEvent)
+		 * { this.resetAdapterItems(); filterEvents("my_event");
+		 * btnFilterByMyEvent.setBackgroundColor(colorButtonSelected);
+		 * contentAdapter.notifyDataSetChanged();
+		 * 
+		 * } if (v == btnFilterByPublicEvent) { this.resetAdapterItems();
+		 * filterEvents("public_event");
+		 * btnFilterByPublicEvent.setBackgroundColor(colorButtonSelected);
+		 * contentAdapter.notifyDataSetChanged();
+		 * 
+		 * }
+		 */
 
-		}
-		if (v == btnFilterByPublicEvent) {
-			this.resetAdapterItems();
-			filterEvents("public_event");
-			btnFilterByPublicEvent.setBackgroundColor(colorButtonSelected);
-			contentAdapter.notifyDataSetChanged();
-
-		}*/
-
-		/*if (v == btnNewEvent) {
-			Intent eventIntent = new Intent(getApplicationContext(),
-					EventNewActivity.class);
-			finish();
-			startActivity(eventIntent);
-		}*/
+		/*
+		 * if (v == btnNewEvent) { Intent eventIntent = new
+		 * Intent(getApplicationContext(), EventNewActivity.class); finish();
+		 * startActivity(eventIntent); }
+		 */
 		if (v == btnBack) {
 			finish();
 		}
@@ -454,7 +460,7 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 
 	private void resetAdapterItems() {
 		this.events.clear();
-		//clearFilterButtonSelection();
+		// clearFilterButtonSelection();
 		this.events.addAll(this.dateWiseSortedEvents);
 		contentAdapter.setObjects(this.events);
 	}
@@ -485,9 +491,10 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
 
-			imageDownloader = new ImageDownloader();
-			imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
-			
+			//imageDownloader = new ImageDownloader();
+			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			imageDownloader = ImageDownloader.getInstance();
+
 			init(context, textViewResourceId, 0, objects);
 			// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(context.getResources(),
 			// R.drawable.event_item_bg));
@@ -519,6 +526,10 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		}
 
 		public int getCount() {
+			if(mObjects == null)
+			{
+				return 0;
+			}
 			return mObjects.size();
 		}
 
@@ -712,28 +723,29 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		@Override
 		public void onItemClick(Event event) {
 			// TODO Auto-generated method stub
-			
-			
-			Log.d("EVENT CHECK", event.getEventId()+" "+ event.getEventTitle()+" "+event.getEvent_type()+" "+event.getMyResponse());
+
+			Log.d("EVENT CHECK",
+					event.getEventId() + " " + event.getEventTitle() + " "
+							+ event.getEvent_type() + " "
+							+ event.getMyResponse());
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
-			eventDetailsIntent.putExtra("selectedEvent", event); 
-			startActivity(eventDetailsIntent); 
-			//finish();
+			eventDetailsIntent.putExtra("selectedEvent", event);
+			startActivity(eventDetailsIntent);
+			// finish();
 		}
 
 		@Override
 		public void onArrowButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
-			eventDetailsIntent.putExtra("selectedEvent", event); 
-			startActivity(eventDetailsIntent); 
-			
-			//finish();
+			eventDetailsIntent.putExtra("selectedEvent", event);
+			startActivity(eventDetailsIntent);
+
+			// finish();
 
 		}
 
@@ -760,9 +772,11 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 		@Override
 		public void onShowOnMapButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			/*Intent intent = new Intent(context, ShowItemOnMap.class);
-			intent.putExtra("FLAG", Constant.FLAG_EVENT);
-			startActivity(intent);*/
+			/*
+			 * Intent intent = new Intent(context, ShowItemOnMap.class);
+			 * intent.putExtra("FLAG", Constant.FLAG_EVENT);
+			 * startActivity(intent);
+			 */
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = event;
 			finish();
@@ -771,4 +785,3 @@ public class EventListActivityOther extends Activity implements OnClickListener,
 	}
 
 }
-

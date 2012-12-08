@@ -219,7 +219,7 @@ public class AccountSettingsActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.updating_data_text), true);
+					.getString(R.string.updating_data_text), true, true);
 
 		} else {
 
@@ -503,7 +503,10 @@ public class AccountSettingsActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+				m_ProgressDialog.dismiss();
+
+			}
 			handleAccountSettingsResponse(responseStatus, responseString);
 
 		}
@@ -580,7 +583,7 @@ public class AccountSettingsActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true);
+					.getString(R.string.fetching_data_text), true, true);
 
 		} else {
 
@@ -711,7 +714,12 @@ public class AccountSettingsActivity extends Activity implements
 		@Override
 		public void run() {
 			handleResponseSavePersonalInfo(responseStatus, responseString);
-			m_ProgressDialog.dismiss();
+
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+			}
+
 		}
 	};
 
@@ -722,7 +730,10 @@ public class AccountSettingsActivity extends Activity implements
 			// TODO Auto-generated method stub
 			handleResponse(responseStatus, responseString);
 
-			m_ProgressDialog.dismiss();
+			if (m_ProgressDialog != null) {
+
+				m_ProgressDialog.dismiss();
+			}
 		}
 	};
 
@@ -910,7 +921,7 @@ public class AccountSettingsActivity extends Activity implements
 				thread.start();
 				m_ProgressDialog = ProgressDialog.show(this, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.updating_data_text), true);
+						.getString(R.string.updating_data_text), true,true);
 
 			} else {
 
@@ -1136,7 +1147,7 @@ public class AccountSettingsActivity extends Activity implements
 				thread.start();
 				m_ProgressDialog = ProgressDialog.show(this, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.updating_data_text), true);
+						.getString(R.string.updating_data_text), true,true);
 
 			} else {
 
