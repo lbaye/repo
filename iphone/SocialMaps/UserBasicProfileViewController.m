@@ -74,6 +74,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    UITapGestureRecognizer *zoomTapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToZoomView:)];
+    zoomTapGesture.numberOfTapsRequired = 1;
+    [profileImageView addGestureRecognizer:zoomTapGesture];
+    [zoomTapGesture release];
+    
     [statusMsgLabel.layer setCornerRadius:3.0f];
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
@@ -212,6 +217,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)editStatusButton:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     entityFlag=0;
     [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"My status message...";
@@ -248,6 +257,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)saveEntity:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     isDirty=TRUE;
     NSLog(@"save");
     [statusContainer removeFromSuperview];
@@ -287,6 +300,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)cancelEntity:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     NSLog(@"cancel");
     [statusContainer removeFromSuperview];
     [entityTextField resignFirstResponder];
@@ -514,6 +532,9 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)ageButtonAction:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     NSLog(@"age button");
     entityFlag=1;
 //    [self.view addSubview:statusContainer];
@@ -531,6 +552,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)realstsButtonAction:(id)sender
 {
+    
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     NSLog(@"relsts button");    
     entityFlag=2;
     [self.view addSubview:statusContainer];
@@ -540,6 +566,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)liveatButtonAction:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     NSLog(@"liveat button");    
     entityFlag=3;
     [self.view addSubview:statusContainer];
@@ -549,6 +579,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)workatButtonAction:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     NSLog(@"work at button");
     entityFlag=4;
     [self.view addSubview:statusContainer];
@@ -558,6 +592,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)nameButtonAction:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     entityFlag=5;
     [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"Enter first name...";

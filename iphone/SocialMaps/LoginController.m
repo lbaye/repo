@@ -529,6 +529,7 @@ int fbRegCounter=0;
         [loginAlert autorelease];
     } else //if (![facebook isSessionValid])
     {
+        NSLog(@"asking FB permission");
         [smAppDelegate showActivityViewer:self.view];
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",

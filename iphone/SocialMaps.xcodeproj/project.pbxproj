@@ -14,6 +14,7 @@
 		2018C29F1604672700457BB6 /* CircleListCheckBoxTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C29E1604672700457BB6 /* CircleListCheckBoxTableCell.m */; };
 		2018C2A21604721D00457BB6 /* ViewCircleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */; };
 		2018C2A516048AEF00457BB6 /* CircleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */; };
+		201DB4C516731CA300B840FE /* friend_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 201DB4C416731CA300B840FE /* friend_symbol.png */; };
 		2024BF7916075FE3008013DC /* SelectCircleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2024BF7816075FE3008013DC /* SelectCircleTableCell.m */; };
 		2026D740165228EA00739CAA /* PhotoPickerOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2026D73F165228EA00739CAA /* PhotoPickerOriginalImage.m */; };
 		205464DA164143FD00A96E8B /* fbCheckinIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 205464D9164143FD00A96E8B /* fbCheckinIcon.png */; };
@@ -512,6 +513,7 @@
 		2018C2A11604721D00457BB6 /* ViewCircleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCircleListViewController.m; sourceTree = "<group>"; };
 		2018C2A316048AEF00457BB6 /* CircleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleImageDownloader.h; sourceTree = "<group>"; };
 		2018C2A416048AEF00457BB6 /* CircleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleImageDownloader.m; sourceTree = "<group>"; };
+		201DB4C416731CA300B840FE /* friend_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friend_symbol.png; sourceTree = "<group>"; };
 		2024BF7716075FE3008013DC /* SelectCircleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCircleTableCell.h; sourceTree = "<group>"; };
 		2024BF7816075FE3008013DC /* SelectCircleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCircleTableCell.m; sourceTree = "<group>"; };
 		2026D73E165228EA00739CAA /* PhotoPickerOriginalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPickerOriginalImage.h; sourceTree = "<group>"; };
@@ -1748,6 +1750,7 @@
 				4F4CA52715C45351004234E5 /* fb_search_icon.png */,
 				4F72290E15C7F4BB008B60A8 /* flip_checkbox.png */,
 				20B5D56D16131975001105AF /* friends_rqst_icon.png */,
+				201DB4C416731CA300B840FE /* friend_symbol.png */,
 				4FE4261915C06FAD00A6B6A3 /* girl.png */,
 				4F469CCC15FD15FE008341C2 /* header.png */,
 				4F1B99B415CC377D0066BF16 /* icon_72x72.png */,
@@ -2385,6 +2388,7 @@
 				20B984C616552044003C8C10 /* img_close_gray.png in Resources */,
 				20CE7C1F165A0A2300022AF2 /* PlanStoryboard.storyboard in Resources */,
 				20F1BB361664A8020044C2CF /* img_settings_list_bg_solid.png in Resources */,
+				201DB4C516731CA300B840FE /* friend_symbol.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

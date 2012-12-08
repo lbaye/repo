@@ -87,11 +87,13 @@ NSMutableArray *unreadMesg;
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
     [super viewWillDisappear:animated];
 }
 
@@ -121,6 +123,7 @@ NSMutableArray *unreadMesg;
     if (self.selectedType == Request)
         [self showFriendRequests:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewMessageDone:) name:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     [smAppDelegate showActivityViewer:self.view];
@@ -170,6 +173,7 @@ NSMutableArray *unreadMesg;
     }
 }
 
+
 - (void)viewDidUnload
 {
     [self setNotifTabArrow:nil];
@@ -178,7 +182,6 @@ NSMutableArray *unreadMesg;
     [self setReqCount:nil];
     [self setAlertCount:nil];
     [self setNotificationItems:nil];
-    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -531,6 +534,14 @@ NSMutableArray *unreadMesg;
         reqCount.text   = [NSString stringWithFormat:@"%d",requestCount];
     
     [smAppDelegate hideActivityViewer];
+}
+
+-(void)gotNewMessageDone:(NSNotification *)notif
+{
+    msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
+    unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
+    [notificationItems reloadData];
+    [self displayNotificationCount];
 }
 
 @end
