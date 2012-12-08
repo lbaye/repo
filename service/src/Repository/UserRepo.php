@@ -9,6 +9,7 @@ use Document\FriendRequest;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
+use Helper\Util as Util;
 
 class UserRepo extends Base {
     const MAX_NOTIFICATIONS = 20;
@@ -16,7 +17,7 @@ class UserRepo extends Base {
     static $DEFAULT_USER_FIELDS = array('_id', 'firstName', 'lastName', 'currentLocation', 'email',
                                         'status', 'avatar', 'coverPhoto', 'distance',
                                         'age', 'gender', 'lastSeenAt', 'relationshipStatus',
-                                        'workStatus', 'dateOfBirth', 'regMedia', 'address');
+                                        'workStatus', 'dateOfBirth', 'regMedia', 'address', 'lastPulse');
 
     protected $loggerName = 'Repository::UserRepo';
 
@@ -916,8 +917,19 @@ class UserRepo extends Base {
 
         # TODO: How to fix less than $limit items
         foreach ($people_around as $target_user_hash) {
-            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt']))
-                $target_user_hash['lastSeenAt'] = \Helper\Util::formatAddress($target_user_hash['lastSeenAt']);
+            if (isset($target_user_hash['lastSeenAt']) && !empty($target_user_hash['lastSeenAt'])){
+                $target_user_hash['lastSeenAt'] = "Last seen at " . \Helper\Util::formatAddress($target_user_hash['lastSeenAt']);
+                if(!$target_user_hash['online'] && !empty($target_user_hash['lastPulse'])){
+
+                    $time = ((array)time());
+                    $now = $time[0];
+                    $then = (array)$target_user_hash['lastPulse'];
+                    $then = (int)($then['sec']);
+                    $diff = $now - $then;
+
+                    $target_user_hash['lastSeenAt'] =  "Last seen at ". $target_user_hash['lastSeenAt'] . " about " . Util::humanizeTimeDiff($diff);
+                }
+            }
 
             $target_user = $this->find($target_user_hash['id']);
             if ($target_user->isVisibleTo($this->currentUser)) {
@@ -1158,5 +1170,13 @@ class UserRepo extends Base {
             "tabCounts" => "{$unread_messages_count}|{$pending_friend_requests_count}|0",
             "sound" => "default"
         );
+    }
+
+    public function updateUserPulse(\Document\User $user) {
+        if (!$user->isOnlineUser()) {
+            $this->debug('Updating user pulse');
+            $user->setLastPulse(new \DateTime());
+            $this->updateObject($user);
+        }
     }
 }

@@ -31,6 +31,7 @@ class Gathering extends Base
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
+        $this->_updatePulse();
 
         $this->_ensureLoggedIn();
         $this->createLogger('Controller::Gathering');

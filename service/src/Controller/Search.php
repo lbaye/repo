@@ -39,7 +39,7 @@ class Search extends Base {
         $data = $this->request->request->all();
 
         if ($this->_isRequiredFieldsFound(array('lat', 'lng'), $data)) {
-            $this->updateUserPulse($this->user);
+            $this->userRepository->updateUserPulse($this->user);
 
             return $this->_generateResponse($this->performSearch($data));
         } else {
@@ -65,14 +65,6 @@ class Search extends Base {
 
         return $this->_generateResponse(
             $appSearch->searchPeople($data, array('limit' => \Helper\Constants::PEOPLE_LIMIT)));
-    }
-
-    private function updateUserPulse(\Document\User $user) {
-        if (!$user->isOnlineUser()) {
-            $this->debug('Updating user pulse');
-            $user->setLastPulse(new \DateTime());
-            $this->userRepository->updateObject($user);
-        }
     }
 
     /** TODO: Finalize deals search */
