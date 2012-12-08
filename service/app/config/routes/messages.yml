@@ -52,3 +52,8 @@ add_recipient_to_message:
   defaults: { _controller: Controller\Messages::addRecipients }
   requirements:
     _method: POST|PUT
+
+get_unread_message_by_id:
+  pattern: /unreadMessages/{id}
+  defaults: { _controller: Controller\Messages::getUnreadMessagesById }
+  requirements: { _method: GET }
