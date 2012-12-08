@@ -512,7 +512,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
         
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"replyList"];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        
         
         CGRect senderFrame = CGRectMake(SENDER_NAME_START_POSX + GAP, GAP, senderStringSize.width, senderStringSize.height);
         
@@ -526,6 +526,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         if (cell == nil) {
             
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"replyList"] autorelease];
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
             
             // Message sender
             UILabel *lblSender = [[[UILabel alloc] initWithFrame:senderFrame] autorelease];
@@ -1211,8 +1212,75 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 	incomingView.hidden = !incomingView.hidden;
 }
 
+- (void)scrollSelfViewDown
+{
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3]; 
+	
+    CGRect rect = self.view.frame;
+	
+	rect.origin.y = 0;
+	msgReplyCreationView.frame = CGRectMake(0, 300, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+	
+    self.view.frame = rect;
+    [UIView commitAnimations];
+}
+
+- (void)scrollSelfViewUp
+{
+    NSLog(@"scrollSelfView");
+    
+    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    
+    NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
+    
+    int totalVisibleCellHeight = 0;
+    
+    for (NSIndexPath *indexPath in visiblePaths)
+    {
+        MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
+        totalVisibleCellHeight += [self getRowHeight:messageReplyTableView :msgReply];
+    }
+    
+    NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
+    
+    
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3]; 
+	
+    
+    
+    if (totalVisibleCellHeight > 55) {
+        CGRect rect = self.view.frame;
+        
+        int moveBy = -totalVisibleCellHeight + 55;
+        
+        if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
+            moveBy = -kOFFSET_FOR_KEYBOARD; 
+        }
+        
+        rect.origin.y = moveBy;
+        self.view.frame = rect;
+        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+    } else {
+        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+	}
+	//rect.origin.y = -totalVisibleCellHeight;
+	//rect.size.height += kOFFSET_FOR_KEYBOARD;
+	
+    
+    [UIView commitAnimations];
+}
+
 -(void)setViewMovedUp:(UIView*)view
 {
+    if (messageRepiesView == view) {
+        [self scrollSelfViewUp];
+        return;
+    }
+    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3]; 
 	
@@ -1223,10 +1291,16 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 	
     view.frame = rect;
     [UIView commitAnimations];
+
 }
 
 -(void)setViewMovedDown:(UIView*)view
 {
+    if (messageRepiesView == view) {
+        [self scrollSelfViewDown];
+        return;
+    }
+    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
 	

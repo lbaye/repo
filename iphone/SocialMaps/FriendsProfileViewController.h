@@ -33,6 +33,7 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
     IBOutlet UIView *statusContainer;
     IBOutlet UITextField *entityTextField;
     PhotoPicker *photoPicker;
+    IBOutlet UIButton *buttonZoomView;
     
     
     BOOL isDragging_msg,isDecliring_msg;

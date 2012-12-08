@@ -374,6 +374,7 @@ int renameCircleOndex;
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         }
+        
         //    cell.actAndSceneLabel.text=@"actAndScene";
         //    cell.quotationTextView.text=@"Quotation";
         return cell;

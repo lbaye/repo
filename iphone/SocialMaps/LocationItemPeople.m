@@ -28,10 +28,39 @@
     UIImageView *checkinImage = (UIImageView*) [cell viewWithTag:20032];
     UIButton *frndButton = (UIButton*) [cell viewWithTag:20016];
     UIButton *refButton = (UIButton*) [cell viewWithTag:20017];
+
+    UIView *imageViewIcon = [cell viewWithTag:2010];
     
+    if ([imageViewIcon viewWithTag:20101] == nil) 
+    {
+        UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(5, imageViewIcon.frame.size.height - 15, 10, 10)];
+        imageViewIsOnline.tag = 20101;
+        
+        [imageViewIcon addSubview:imageViewIsOnline];
+        [imageViewIsOnline release];
+    }
+    
+    UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
+    
+    if (!userInfo.external) {
+        
+        if (userInfo.isOnline) 
+        {
+            NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+            imageIsOnline.animationDuration = 2;
+            imageIsOnline.animationImages = imageArray;
+            [imageIsOnline startAnimating];
+            [imageArray release];
+        } else {
+            imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        }
+    } else {
+        [[imageViewIcon viewWithTag:20101] removeFromSuperview];
+    }
+        
     if (txtMsg == nil) {
-        CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-        CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
+        //CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+        //CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
         
         CGRect msgFrame = CGRectMake(80, 
                                      lblName.frame.origin.y+lblName.frame.size.height,

@@ -517,6 +517,7 @@ ButtonClickCallbackData callBackData;
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
     FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
     controller.friendsId=locItem.userInfo.userId;
+    NSLog(@"profile id = %@", controller.friendsId);
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
 }
@@ -707,8 +708,9 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
-    LocationItemPlace *locItem = (LocationItemPlace*) [annoView annotation];
-
+    LocationItem *locItem = (LocationItem*) [annoView annotation];
+    
+    
     //selectedAnno = [annoView annotation];
     [self mapAnnotationInfoUpdated:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
@@ -735,6 +737,7 @@ ButtonClickCallbackData callBackData;
             [self viewEventDetail:locItem];
             break;
         case MapAnnoUserActionProfile:
+            NSLog(@"locItem place = %@ name = %@", locItem, locItem.itemName);
             [self viewPeopleProfile:locItem];
             break;
         case MapAnnoUserActionCreateEvent:
@@ -2126,7 +2129,7 @@ ButtonClickCallbackData callBackData;
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         
-                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar] || ![item.workStatus isEqualToString:aPerson.userInfo.workStatus] || ![item.city isEqualToString:aPerson.userInfo.city])) {
+                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar] || ![item.workStatus isEqualToString:aPerson.userInfo.workStatus] || ![item.city isEqualToString:aPerson.userInfo.city] || item.isOnline != aPerson.userInfo.isOnline)) {
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
                             NSLog(@"lastSeenAt %@", item.lastSeenAt);
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
@@ -2134,6 +2137,7 @@ ButtonClickCallbackData callBackData;
                             aPerson.userInfo.relationsipStatus = item.relationsipStatus;
                             aPerson.userInfo.workStatus = item.workStatus;
                             aPerson.userInfo.city = item.city;
+                            aPerson.userInfo.isOnline = item.isOnline;
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
 

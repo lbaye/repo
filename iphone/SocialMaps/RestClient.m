@@ -1733,6 +1733,11 @@ AppDelegate *smAppDelegate;
                     
                     people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
                     
+                    people.isOnline = [[self getNestedKeyVal:item key1:@"online" key2:nil key3:nil] boolValue];
+                    
+                    if (people.isOnline) {
+                        NSLog(@"people name = %@ isOnline = %d", people.firstName, people.isOnline);
+                    }
 //                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
