@@ -623,17 +623,21 @@ bool searchFlag3=true;
     
     UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
     
-    if (people.userInfo.isOnline) 
-    {
-        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
-        imageIsOnline.animationDuration = 2;
-        imageIsOnline.animationImages = imageArray;
-        [imageIsOnline startAnimating];
-        [imageArray release];
+    if (!people.userInfo.external) {
+        
+        if (people.userInfo.isOnline) 
+        {
+            NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+            imageIsOnline.animationDuration = 2;
+            imageIsOnline.animationImages = imageArray;
+            [imageIsOnline startAnimating];
+            [imageArray release];
+        } else {
+            imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        }
     } else {
-        imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        [[imageViewIcon viewWithTag:20101] removeFromSuperview];
     }
-    
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

@@ -531,7 +531,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         if (userInfo) {
             for (LocationItemPeople *locationItemPeople in smAppDelegate.peopleList)
             {
-                if ([locationItemPeople.userInfo.userId isEqualToString:userInfo.userId]) {
+                if ([locationItemPeople.userInfo.userId isEqualToString:userInfo.userId] && !locationItemPeople.userInfo.external) {
                     UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(profileImageView.frame.size.width - 20, profileImageView.frame.size.height - 20, 14, 14)];
                     if (locationItemPeople.userInfo.isOnline) {
                         NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];

@@ -539,18 +539,24 @@ bool showSM=true;
         [imageViewIsOnline release];
     }
     
-    UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
-    
-    if (people.userInfo.isOnline) 
-    {
-        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
-        imageIsOnline.animationDuration = 2;
-        imageIsOnline.animationImages = imageArray;
-        [imageIsOnline startAnimating];
-        [imageArray release];
-    } else {
-        imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+    if (!people.userInfo.external) {
+        
+        UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
+        
+        if (people.userInfo.isOnline) 
+        {
+            NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+            imageIsOnline.animationDuration = 2;
+            imageIsOnline.animationImages = imageArray;
+            [imageIsOnline startAnimating];
+            [imageArray release];
+        } else {
+            imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        }
+    }else {
+        [[imageViewIcon viewWithTag:20101] removeFromSuperview];
     }
+    
 
 }
 

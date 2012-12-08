@@ -32,21 +32,25 @@
             
         }
         
-        UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(5, annoView.frame.size.height - 26, 10, 10)];
-    
-        if (((LocationItemPeople*)locItem).userInfo.isOnline) {
-            NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
-            imageViewIsOnline.animationDuration = 2;
-            imageViewIsOnline.animationImages = imageArray;
-            [imageViewIsOnline startAnimating];
-            [imageArray release];
-        } else {
-            imageViewIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        if (!locItemPeople.userInfo.external) {
+            
+            UIImageView *imageViewIsOnline = [[UIImageView alloc] initWithFrame:CGRectMake(5, annoView.frame.size.height - 26, 10, 10)];
+            
+            if (locItemPeople.userInfo.isOnline) {
+                NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+                imageViewIsOnline.animationDuration = 2;
+                imageViewIsOnline.animationImages = imageArray;
+                [imageViewIsOnline startAnimating];
+                [imageArray release];
+            } else {
+                imageViewIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+            }
+            
+            [[annoView viewWithTag:11000] addSubview:imageViewIsOnline];
+            
+            [imageViewIsOnline release];
         }
         
-        [[annoView viewWithTag:11000] addSubview:imageViewIsOnline];
-       
-        [imageViewIsOnline release];
     }
     return annoView;
 }

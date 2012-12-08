@@ -42,16 +42,21 @@
     
     UIImageView *imageIsOnline = (UIImageView*)[imageViewIcon viewWithTag:20101];
     
-    if (userInfo.isOnline) 
-    {
-        NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
-        imageIsOnline.animationDuration = 2;
-        imageIsOnline.animationImages = imageArray;
-        [imageIsOnline startAnimating];
-        [imageArray release];
+    if (!userInfo.external) {
+        
+        if (userInfo.isOnline) 
+        {
+            NSArray *imageArray = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"online_dot.png"], [UIImage imageNamed:@"blank.png"], nil];
+            imageIsOnline.animationDuration = 2;
+            imageIsOnline.animationImages = imageArray;
+            [imageIsOnline startAnimating];
+            [imageArray release];
+        } else {
+            imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
+        }
     } else {
-        imageIsOnline.image = [UIImage imageNamed:@"offline_dot.png"]; 
-    }  
+        [[imageViewIcon viewWithTag:20101] removeFromSuperview];
+    }
         
     if (txtMsg == nil) {
         //CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
