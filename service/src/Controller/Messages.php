@@ -314,4 +314,40 @@ class Messages extends Base {
 
         return $this->response;
     }
+
+    public function getUnreadMessagesById($id) {
+        $message = $this->messageRepository->find($id);
+        if (empty($message)) {
+            $this->_generate404();
+        } else {
+
+            $messageDetail = array();
+
+            $messageArr = $message->toArray(true);
+
+            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+
+            foreach ($messageArr['recipients'] AS &$recipient) {
+                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
+            }
+
+            foreach ($messageArr['replies'] AS &$avatar) {
+
+                $avatar['sender']['avatar'] = \Helper\Url::buildAvatarUrl($avatar['sender']);
+            }
+
+            $messageDetail = $messageArr;
+
+            if (!in_array($this->user->getId(), $messageDetail['readBy'])) {
+                $messageDetail['status'] = 'unread';
+            } else {
+                $messageDetail['status'] = 'read';
+            }
+
+            $this->_generateResponse($messageDetail);
+        }
+
+        return $this->response;
+    }
+
 }
