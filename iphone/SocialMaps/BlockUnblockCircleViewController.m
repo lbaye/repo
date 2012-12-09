@@ -137,26 +137,17 @@ bool searchFlag3=true;
 -(NSMutableArray *)loadDummyData
 {
     NSMutableArray *peopleList=[[NSMutableArray alloc] init];
-//    for (int i=0; i<[friendListGlobalArray count]; i++)
-//    {
-//        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//        UserFriends *aUserFriends=[[UserFriends alloc] init];
-//        aUserFriends=[friendListGlobalArray objectAtIndex:i];
-//        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
-//        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
-//        {
-//            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-//            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
-//        }
-//        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
-//        [pool drain];
-//    }
+    
     for (int i=0; i<[smAppDelegate.peopleList count]; i++)
     {
-        [allUserIdArr addObject:((LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i]).userInfo.userId];
-        [peopleList addObject:[smAppDelegate.peopleList objectAtIndex:i]];
+        
+        LocationItemPeople *people=[smAppDelegate.peopleList objectAtIndex:i];
+        if (![people.userInfo.source isEqualToString:@"facebook"])
+        {
+            [peopleList addObject:[smAppDelegate.peopleList objectAtIndex:i]];            
+        }
     }
-    return smAppDelegate.peopleList;
+    return peopleList;
 }
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
@@ -381,6 +372,7 @@ bool searchFlag3=true;
 
 - (void)viewDidUnload
 {
+//    [CircleImageDownloader cancelDownload];
     [labelNotifCount release];
     labelNotifCount = nil;
     [super viewDidUnload];
@@ -537,6 +529,14 @@ bool searchFlag3=true;
         {
             NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
             cell1.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
+        }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+            //            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+            cell1.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell1.regStsImgView.userInteractionEnabled=YES;
+            cell1.regStsImgView.layer.masksToBounds = YES;
+            [cell1.regStsImgView.layer setCornerRadius:5.0];
         }
         else
         {

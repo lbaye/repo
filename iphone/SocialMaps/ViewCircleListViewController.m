@@ -483,13 +483,29 @@ bool showSM=true;
             cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
             cell.inviteButton.hidden=NO;
         }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+//            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+            cell.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.regStsImgView.userInteractionEnabled=YES;
+            cell.regStsImgView.layer.masksToBounds = YES;
+            [cell.regStsImgView.layer setCornerRadius:5.0];
+            [cell.friendShipStatus setTitle:@"FB friend" forState:UIControlStateNormal];
+            cell.friendShipStatus.hidden=NO;
+        }
         else
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
             cell.inviteButton.hidden=YES;
+            [cell.friendShipStatus setTitle:@"Friend" forState:UIControlStateNormal];
         }
         
         if ([people.userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            cell.friendShipStatus.hidden=NO;
+            [cell.friendShipStatus setTitle:@"Friend" forState:UIControlStateNormal];
+        }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
             cell.friendShipStatus.hidden=NO;
         }
@@ -515,6 +531,7 @@ bool showSM=true;
 
         [self showIsOnlineImage:cell.profilePicImgView :people];
     }
+    [cell.footerView.layer setCornerRadius:6.0f];
     [cell.inviteButton.layer setCornerRadius:6.0f];
     [cell.inviteButton.layer setMasksToBounds:YES];
     [cell.messageButton.layer setCornerRadius:6.0f];

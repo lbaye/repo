@@ -121,21 +121,18 @@ bool searchFlag4=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    //    for (int i=0; i<[friendListGlobalArray count]; i++)
-    //    {
-    //        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-    //        UserFriends *aUserFriends=[[UserFriends alloc] init];
-    //        aUserFriends=[friendListGlobalArray objectAtIndex:i];
-    //        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
-    //        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
-    //        {
-    //            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-    //            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
-    //        }
-    //        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
-    //        [pool drain];
-    //    }
-    return smAppDelegate.peopleList;
+    NSMutableArray *peopleList=[[NSMutableArray alloc] init];
+    
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        
+        LocationItemPeople *people=[smAppDelegate.peopleList objectAtIndex:i];
+        if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+            [peopleList addObject:[smAppDelegate.peopleList objectAtIndex:i]];            
+        }
+    }
+    return peopleList;
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
@@ -265,6 +262,14 @@ bool searchFlag4=true;
             NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
             cell1.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
             cell1.inviteButton.hidden=NO;
+        }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+            //            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+            cell1.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell1.regStsImgView.userInteractionEnabled=YES;
+            cell1.regStsImgView.layer.masksToBounds = YES;
+            [cell1.regStsImgView.layer setCornerRadius:5.0];
         }
         else
         {
@@ -460,6 +465,24 @@ bool searchFlag4=true;
 
 -(IBAction)selectedUser:(id)sender
 {
+    if ([selectedPeople count]==0)
+    {
+        [UtilityClass showAlert:@"" :@"Please select any Facebook friends"];
+    }
+    else 
+    {
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        if ([facebookApi isSessionValid])
+        {
+            NSMutableArray *idArr=[[NSMutableArray alloc] init];
+            for (int i=0; i<[selectedPeople count]; i++)
+            {
+                [idArr addObject:((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId];
+            }
+            FacebookHelper *fbHelper=[[FacebookHelper alloc] init];
+            [fbHelper inviteFriends:idArr];
+        }
+    }
 }
 
 -(IBAction)selectAllpeople:(id)sender

@@ -21,6 +21,7 @@
 @synthesize regStsImgView;
 @synthesize friendShipStatus;
 @synthesize footerView;
+@synthesize fbFrndView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

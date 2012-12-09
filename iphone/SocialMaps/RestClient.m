@@ -1777,7 +1777,7 @@ AppDelegate *smAppDelegate;
                 {
                     People *people=[[People alloc] init];
                     
-                    people.userId = [self getNestedKeyVal:item key1:@"_id" key2:@"$id" key3:nil];
+                    people.userId = [self getNestedKeyVal:item key1:@"refId" key2:nil key3:nil];
                     people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
                     people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
                     people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
