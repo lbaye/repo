@@ -461,8 +461,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     [messageReplyList addObjectsFromArray:msgReplies];
     [messageReplyTableView reloadData];
-    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
-    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    
+    if (textViewReplyMsg.isFirstResponder) {
+        [self scrollSelfViewUp];
+    }
+    
+    //NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+    //[messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
 
     
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
