@@ -5,7 +5,7 @@ my_newsfeed:
 
 my_network_newsfeed_html:
   pattern: /me/network/newsfeed.html
-  defaults: { _controller: Controller\UserActivities::getActivities, type: html }
+  defaults: { _controller: Controller\UserActivities::getActivities, type: html, networkFeed: true }
   requirements: { _method: GET }
 
 
@@ -19,10 +19,20 @@ my_minifeed_html:
   defaults: { _controller: Controller\UserActivities::getMiniFeed, type: html }
   requirements: { _method: GET }
 
+my_network_minifeed_html:
+  pattern: /me/network/minifeed.html
+  defaults: { _controller: Controller\UserActivities::getMiniFeed, type: html, networkFeed: true }
+  requirements: { _method: GET }
+
 user_newsfeed:
   pattern: /{userId}/newsfeed
   defaults: { _controller: Controller\UserActivities::getActivitiesByUserId, type: json }
   requirements: { _method: GET }
+
+user_network_newsfeed_html:
+  pattern: /{userId}/network/newsfeed.html
+  defaults: {_controller: Controller\UserActivities::getActivitiesByUserId, type: html, networkFeed: true }
+  requirements: {_method: GET}
 
 user_newsfeed_html:
   pattern: /{userId}/newsfeed.html

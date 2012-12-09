@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     var container = $('.content');
-    var userId = container.attr("userId");
+    var target = container.attr("target");
     var baseUrl = container.attr("baseUrl");
     var authToken = container.attr("authToken");
 
@@ -29,12 +29,10 @@ $(document).ready(function () {
         container.attr("scroll", "no");
         $.ajax({
             type:'get',
-            url:baseUrl + "/" + userId + "/newsfeed.html?authToken=" + authToken,
+            url:baseUrl + "/" + target + "/newsfeed.html?authToken=" + authToken,
             data:{offset:offset},
             beforeSend: hideText,
             success:success
         });
-
     });
-
 });

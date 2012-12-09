@@ -30,14 +30,14 @@ class UserActivities extends Base {
         $this->userRepository->setConfig($this->config);
     }
 
-    public function getActivities($type) {
+    public function getActivities($type, $networkFeed = false) {
         $this->_ensureLoggedIn();
-        return $this->getActivitiesByUser($this->user, $type);
+        return $this->getActivitiesByUser($this->user, $type, $networkFeed);
     }
 
-    public function getMiniFeed($type){
+    public function getMiniFeed($type, $networkFeed = false){
         $this->_ensureLoggedIn();
-        return $this->getMiniFeedByUser($this->user, $type);
+        return $this->getMiniFeedByUser($this->user, $type, $networkFeed);
     }
 
     public function getMiniFeedByUserId($type) {
@@ -45,15 +45,18 @@ class UserActivities extends Base {
         return $this->getMiniFeedByUser($this->userRepository->find($userId), $type);
     }
 
-    public function getActivitiesByUserId($type) {
+    public function getActivitiesByUserId($type, $networkFeed = false) {
         $userId = $this->request->get('userId');
-        return $this->getActivitiesByUser($this->userRepository->find($userId), $type);
+        return $this->getActivitiesByUser($this->userRepository->find($userId), $type, $networkFeed);
     }
 
     public function getMiniFeedByUser(
-        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE) {
+        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false) {
 
-        $activities = $this->userActivitiesRepo->getByUser($user);
+        if($networkFeed)
+            $activities = $this->userActivitiesRepo->getByNetwork($user);
+        else
+            $activities = $this->userActivitiesRepo->getByUser($user);
 
         if (count($activities) == 0) {
             $this->response->setContent('');
@@ -82,10 +85,14 @@ class UserActivities extends Base {
     }
 
     public function getActivitiesByUser(
-        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE) {
+        \Document\User $user, $type = self::DEFAULT_CONTENT_TYPE, $networkFeed = false) {
 
         $offset = $this->request->get('offset', 0);
-        $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
+
+        if ($networkFeed)
+            $activities = $this->userActivitiesRepo->getByNetwork($user, $offset, 5);
+        else
+            $activities = $this->userActivitiesRepo->getByUser($user, $offset, 5);
 
         $partialView = $offset > 0;
 
@@ -109,6 +116,7 @@ class UserActivities extends Base {
                          'activityRepo' => $this->userActivitiesRepo,
                          'currentUser' => $user,
                          'partialView' => $partialView,
+                         'networkFeed' => $networkFeed,
                          'authToken' => $user->getAuthToken()
                     ));
             }

@@ -5,10 +5,11 @@
       %title Hello
       - $updateTime = filemtime($baseDir . '/assets/stylesheets/newsfeed.css')
       - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
+      - $target = $networkFeed > 0 ? $currentUser->getId() . "/network" :  $currentUser->getId()
       %link(rel='stylesheet' href=$url)
 
     %body
-      .content(count="0" userId=$currentUser->getId() authToken=$authToken baseUrl=$baseUrl)
+      .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
         %ul
           - $userProfileLink =  "self::profile:" . $currentUser->getId()
           %li.events
@@ -136,7 +137,8 @@
                   .row.list_of_likes(id=$rowLikesId style='display:none')
         .more
           %span
-            Load more...
+            %a
+              Load more...
           - $loadingImage = $baseUrl . '/assets/images/loading.gif?' . $jsUpdateTime
           %img(src=$loadingImage)
 
