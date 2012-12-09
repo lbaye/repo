@@ -423,7 +423,7 @@
 								<string key="NSFrame">{{120, 76}, {180, 21}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="760928344"/>
+								<reference key="NSNextKeyView" ref="941318944"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -781,7 +781,7 @@
 								<string key="NSFrame">{{87, 30}, {18, 17}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="797044519"/>
+								<reference key="NSNextKeyView" ref="760928344"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -934,7 +934,7 @@
 								<string key="NSFrame">{{10, 80}, {48, 45}}</string>
 								<reference key="NSSuperview" ref="913850919"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="941318944"/>
+								<reference key="NSNextKeyView" ref="797044519"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1169,7 +1169,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{1000, 136}, {320, 106}}</string>
+						<string key="NSFrame">{{0, 136}, {320, 106}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="940662884"/>
@@ -1218,7 +1218,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{360, 82}, {248, 296}}</string>
+						<string key="NSFrame">{{36, 82}, {248, 296}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="255163580"/>
@@ -1309,7 +1309,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{1000, 44}, {320, 160}}</string>
+						<string key="NSFrame">{{0, 44}, {320, 160}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="275205545"/>

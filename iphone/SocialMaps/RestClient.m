@@ -7508,10 +7508,25 @@ AppDelegate *smAppDelegate;
                 msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"longitude = %@", msg.lng);
-                if (![smAppDelegate.messages containsObject:msg]) {
-                    [smAppDelegate.messages addObject:msg];
-
+                NSLog(@"message notif sender = %@", msg.notifSender);
+//                if (![smAppDelegate.messages containsObject:msg])
+//                {
+//                    [smAppDelegate.messages insertObject:msg atIndex:0];
+//                }
+                int p=0;
+                for (int i=0; i<[smAppDelegate.messages count]; i++)
+                {
+                    NotifMessage *message = [smAppDelegate.messages objectAtIndex:i];
+                    if ([message.notifID isEqualToString:messageId])
+                    {
+                        NSLog(@"match found");
+                        p++;
+                    }
+                    NSLog(@"message loop");
+                }
+                if (p==0) 
+                {
+                    [smAppDelegate.messages insertObject:msg atIndex:0];
                 }
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
