@@ -20,4 +20,7 @@
     <color name="offwhite">#F6F6F6</color>
     <color name="seperator">#D7D7D7</color>
     <color name="red">#FF0000</color>
+    <color name="green_light">#77A3E85F</color>
+    <color name="green_dark">#67B000</color>
+    <color name="green_shade">#AAD7F4B9</color>
 </resources>

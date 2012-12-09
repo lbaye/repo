@@ -344,23 +344,16 @@ public class MessageConversationActivity extends Activity implements
 			senderMessage.setText(messageText);
 		}
 
-		final ImageView profilePic = (ImageView) v
+		/*final ImageView profilePic = (ImageView) v
 				.findViewById(R.id.profilePic);
 
 		String avatarUrl = mEntity.getSenderAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
-
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
 
-		}
+		}*/
 
 		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
 

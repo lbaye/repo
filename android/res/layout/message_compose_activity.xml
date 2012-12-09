@@ -222,9 +222,10 @@
             android:layout_marginTop="10dp"
             android:gravity="top"
             android:hint="Your message..."
-            android:lines="3"
+            android:minLines="2"
             android:textColor="@color/black"
-            android:textSize="12dip" />
+            android:textSize="13dip" 
+            android:inputType="textCapSentences"/>
 
         <LinearLayout
             android:id="@+id/buttonContainer"
@@ -242,7 +243,7 @@
                 android:layout_height="40dip" 
                 android:minWidth="65dip"
                 android:text="@string/cancel"
-                android:textSize="12dp" />
+                android:textSize="13dp" />
 
             <Button
                 android:id="@+id/btnSend"
@@ -250,7 +251,7 @@
                 android:layout_height="40dip"
                 android:minWidth="65dip"
                 android:text="@string/send"
-                android:textSize="12dp" />
+                android:textSize="13dp" />
         </LinearLayout>
     </RelativeLayout>
 

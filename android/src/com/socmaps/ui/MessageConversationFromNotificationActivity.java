@@ -76,6 +76,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	String itemThreadId;
 	String itemMessageId;
+	boolean isUnread;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		itemThreadId = getIntent().getStringExtra("itemThreadId");
 		itemMessageId = getIntent().getStringExtra("itemMessageId");
+		isUnread = getIntent().getBooleanExtra("status", false);
 
 		// handleResponseMessage(responseStatus, responseText);
 		getMessageDetails();
@@ -105,7 +107,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 						.getString(R.string.please_wait_text), getResources()
 						.getString(R.string.sending_request_text), true,true);
 			} else {
-				Toast.makeText(context, "Message ID not found.",
+				Toast.makeText(context, "Message details not found.",
 						Toast.LENGTH_SHORT).show();
 				finish();
 			}
@@ -289,7 +291,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		if (status == Constant.STATUS_SUCCESS) {
 			
-			if(StaticValues.myInfo!=null)
+			if(StaticValues.myInfo!=null && isUnread)
 			{
 				StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
 				StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
@@ -399,23 +401,16 @@ public class MessageConversationFromNotificationActivity extends Activity {
 			senderMessage.setText(messageText);
 		}
 
-		final ImageView profilePic = (ImageView) v
+		/*final ImageView profilePic = (ImageView) v
 				.findViewById(R.id.profilePic);
 
 		String avatarUrl = mEntity.getSenderAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
-
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
 
-		}
+		}*/
 		
 		Button btnDirection = (Button)v.findViewById(R.id.btnDirection);
 		

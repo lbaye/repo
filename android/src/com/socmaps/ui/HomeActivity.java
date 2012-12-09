@@ -1574,11 +1574,11 @@ public class HomeActivity extends MapActivity implements
 						 * Intent intent2 = new Intent(context,
 						 * MessageActivity.class); startActivity(intent2);
 						 */
-						Intent i = new Intent(
-								context,
-								MessageConversationFromNotificationActivity.class);
+						Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
 						i.putExtra("itemThreadId", pushData.getObjectId());
 						i.putExtra("itemMessageId", pushData.getObjectId());
+						i.putExtra("status", true);
+						startActivity(i);
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_EVENT)) {
 						Intent intent2 = new Intent(context,

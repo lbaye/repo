@@ -995,14 +995,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		if (peopleUpdate.getStreetAddress() != null) {
 			// tvAddress.setText(people.getStreetAddress());
-			tvAddress.setText(peopleUpdate.getCurrentAddress()); /*
-																 * use
-																 * getCurrentAddress
-																 * to show
-																 * OtherProfile
-																 * "my address"
-																 * field
-																 */
+			tvAddress.setText(peopleUpdate.getCurrentAddress()); 
 		}
 
 		/* extra work : may be discard later on */

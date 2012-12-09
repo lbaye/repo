@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="10dip"
-            android:layout_marginTop="15dip"
+            android:layout_marginTop="5dip"
             android:background="@drawable/rounder_border_bg_light"
             android:gravity="center"
             android:orientation="vertical"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="Test title"
                 android:textColor="@color/white"
-                android:textSize="12dip"
+                android:textSize="13dip"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -52,7 +52,7 @@
             android:layout_below="@+id/threadTitleContainer"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="10dip"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:scrollbars="vertical" >
 
             <LinearLayout
@@ -81,26 +81,28 @@
             android:id="@+id/etNewMessage"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/btnSend"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:layout_toLeftOf="@+id/btnSend"
             android:hint="Your message..."
             android:textColor="@color/black"
-            android:textSize="12dip" />
+            android:textSize="13dip" 
+            android:inputType="textCapSentences"/>
 
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="40dip"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:text="@string/send"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </RelativeLayout>
 
 </RelativeLayout>

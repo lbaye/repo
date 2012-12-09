@@ -129,10 +129,17 @@ public class MessageListActivity extends Activity {
 									.getMessageId();
 							final String threadId = messageEntity.getThread();
 
-							View v = inflater.inflate(
+							final View v = inflater.inflate(
 									R.layout.message_list_item, null);
 							RelativeLayout listItemParent = (RelativeLayout) v
 									.findViewById(R.id.listItemParent);
+							
+							
+							if(messageEntity.getStatus().equalsIgnoreCase(Constant.STATUS_MESSAGE_UNREAD))
+							{
+								v.setBackgroundResource(R.drawable.list_item_selector_highlighted);
+								
+							}
 
 							TextView senderName = (TextView) v
 									.findViewById(R.id.senderName);
@@ -186,9 +193,11 @@ public class MessageListActivity extends Activity {
 										@Override
 										public void onClick(View arg0) {
 											// TODO Auto-generated method stub
-											
+											boolean isUnread = false;
 											if(messageEntity.getStatus().equalsIgnoreCase(Constant.STATUS_MESSAGE_UNREAD))
 											{
+												isUnread = true;
+												/*v.setBackgroundResource(R.drawable.list_item_selector);
 												if(StaticValues.myInfo!=null)
 												{
 													StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
@@ -196,11 +205,17 @@ public class MessageListActivity extends Activity {
 													
 													Utility.updateNotificationBubbleCounter(MessageActivity.btnNotification);
 													
-												}
+												}*/
 											}
 											
-											getMessageDetails(messageId,
-													threadId);
+											v.setBackgroundResource(R.drawable.list_item_selector);
+											Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
+											i.putExtra("itemThreadId", threadId);
+											i.putExtra("itemMessageId", messageId);
+											i.putExtra("status", isUnread);
+											startActivity(i);
+											
+											//getMessageDetails(messageId, threadId);
 										}
 									});
 

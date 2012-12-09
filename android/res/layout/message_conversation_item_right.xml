@@ -6,7 +6,8 @@
     android:background="@drawable/list_item_selector"
     android:orientation="vertical"
     android:paddingBottom="15dp"
-    android:focusable="true" >
+    android:focusable="true"
+    android:paddingLeft="60dip" >
 
     <LinearLayout
         android:id="@+id/proficPicContainer"
@@ -15,7 +16,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dip"
-        android:background="#8DC111" >
+        android:background="#8DC111" 
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/profilePic"
@@ -37,7 +39,7 @@
         android:layout_toRightOf="@+id/sentTime"
         android:text="Sender Name"
         android:textColor="@color/black"
-        android:textSize="12dip"
+        android:textSize="13dip"
         android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="end"
@@ -63,7 +65,6 @@
         android:id="@+id/messageTextContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:minHeight="45dip"
         android:layout_below="@+id/senderName"
         android:layout_marginRight="7dip"
         android:layout_marginTop="3dip"
@@ -79,17 +80,18 @@
             android:layout_height="wrap_content"
             android:text="Message"
             android:textColor="@color/black"
-            android:textSize="12dip"
-            android:textStyle="normal" />
+            android:textSize="13dip"
+            android:textStyle="normal"
+            android:gravity="right" />
         
         <Button
                 android:id="@+id/btnDirection"
-                android:layout_width="80dip"
-                android:layout_height="32dip"
+                android:layout_width="85dip"
+                android:layout_height="35dip"
                 android:background="@drawable/btn_selector_green"
                 android:text="@string/getDirectionLabel"
                 android:textColor="@drawable/btn_selector_green_text_color"
-                android:textSize="12dip"
+                android:textSize="13dip"
                 android:layout_marginTop="10dip"
                 android:visibility="gone" />
     </LinearLayout>
