@@ -19,7 +19,6 @@ class CheckIns extends Base
 
         $this->userRepository = $this->dm->getRepository('Document\User');
         $this->checkInRepo = $this->dm->getRepository('Document\CheckIn');
-        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
         $this->_ensureLoggedIn();
