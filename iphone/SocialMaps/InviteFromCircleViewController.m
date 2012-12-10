@@ -20,9 +20,9 @@
 #import "RestClient.h"
 #import "UtilityClass.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 @interface InviteFromCircleViewController ()
-- (void)startIconDownload:(LocationItemPeople *)people forIndexPath:(NSIndexPath *)indexPath;
 -(void)inviteButtonAction:(id)sender;
 -(void)messageButtonAction:(id)sender;
 -(void)checkBoxButtonAction:(id)sender;
@@ -121,21 +121,18 @@ bool searchFlag4=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    //    for (int i=0; i<[friendListGlobalArray count]; i++)
-    //    {
-    //        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-    //        UserFriends *aUserFriends=[[UserFriends alloc] init];
-    //        aUserFriends=[friendListGlobalArray objectAtIndex:i];
-    //        NSLog(@"aEvent.eventImageUrl: %@",aUserFriends.imageUrl);
-    //        if (!(aUserFriends.imageUrl)||(aUserFriends.imageUrl==(NSString *)[NSNull null]))
-    //        {
-    //            aUserFriends.imageUrl=[[NSBundle mainBundle] pathForResource:@"event_item_bg" ofType:@"png"];
-    //            NSLog(@"aUserFriends.imageUrl %@",aUserFriends.imageUrl);
-    //        }
-    //        [friendListGlobalArray replaceObjectAtIndex:i withObject:aUserFriends];
-    //        [pool drain];
-    //    }
-    return smAppDelegate.peopleList;
+    NSMutableArray *peopleList=[[NSMutableArray alloc] init];
+    
+    for (int i=0; i<[smAppDelegate.peopleList count]; i++)
+    {
+        
+        LocationItemPeople *people=[smAppDelegate.peopleList objectAtIndex:i];
+        if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+            [peopleList addObject:[smAppDelegate.peopleList objectAtIndex:i]];            
+        }
+    }
+    return peopleList;
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
@@ -233,24 +230,6 @@ bool searchFlag4=true;
         
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
-        if (!people.userInfo.coverImage)
-        {
-            NSLog(@"!userFriends.userProfileImage");
-            if (self.inviteTableView.dragging == NO && self.inviteTableView.decelerating == NO)
-            {
-                [self startIconDownload:people forIndexPath:indexPath];
-                NSLog(@"Downloading for %@ index=%d", cellValue, indexPath.row);
-            }
-            else if(searchFlag4==true)
-            {
-                NSLog(@"search flag true start download");
-                [self startIconDownload:people forIndexPath:indexPath];
-            }
-            
-            NSLog(@"userFriends %@ %@",people.itemIcon,people.itemBg);
-            // if a download is deferred or in progress, return a placeholder image
-            cell1.profilePicImgView.image=[UIImage imageNamed:@"event_item_bg.png"];
-        }
         
         [cell1.footerView.layer setCornerRadius:6.0f];
         [cell1.footerView.layer setMasksToBounds:YES];
@@ -265,6 +244,14 @@ bool searchFlag4=true;
             NSLog(@"reg media fb %@",[UIImage imageNamed:@"icon_facebook.png"]);
             cell1.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
             cell1.inviteButton.hidden=NO;
+        }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+            //            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+            cell1.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell1.regStsImgView.userInteractionEnabled=YES;
+            cell1.regStsImgView.layer.masksToBounds = YES;
+            [cell1.regStsImgView.layer setCornerRadius:5.0];
         }
         else
         {
@@ -281,15 +268,6 @@ bool searchFlag4=true;
             cell1.friendShipStatus.hidden=YES;
         }
         
-        
-        if ([downloadedImageDict objectForKey:people.userInfo.userId])
-        {
-            cell1.coverPicImgView.image=[downloadedImageDict objectForKey:people.userInfo.userId];
-        }
-        else
-        {
-            cell1.coverPicImgView.image=people.itemBg;
-        }
         
         if ([selectedPeople containsObject:[filteredList objectAtIndex:indexPath.row]])
         {
@@ -315,7 +293,10 @@ bool searchFlag4=true;
         [cell1.inviteButton.layer setMasksToBounds:YES];
         [cell1.messageButton.layer setCornerRadius:6.0f];
         [cell1.messageButton.layer setMasksToBounds:YES];
-
+        
+ 	    UIImageView *imageView = cell1.coverPicImgView;
+        [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
+        [cell1.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
         [self showIsOnlineImage:cell1.profilePicImgView :people];
     }
     
@@ -392,65 +373,40 @@ bool searchFlag4=true;
 
 //Lazy loading method starts
 
-#pragma mark -
-#pragma mark Table cell image support
-
-- (void)startIconDownload:(LocationItemPeople *)people forIndexPath:(NSIndexPath *)indexPath
-{
-    CircleImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:people.userInfo.userId];
-    if (iconDownloader == nil)
-    {
-        iconDownloader = [[CircleImageDownloader alloc] init];
-        iconDownloader.people = people;
-        iconDownloader.indexPathInTableView = indexPath;
-        iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:people.userInfo.userId];
-        NSLog(@"imageDownloadsInProgress %@",imageDownloadsInProgress);
-        [iconDownloader startDownload];
-        //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
-        NSLog(@"start downloads ... %@ %d",people.userInfo.userId, indexPath.row);
-        [iconDownloader release];
-    }
-}
-
-// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
-- (void)loadImagesForOnscreenRows
-{
-    if ([filteredList count] > 0)
-    {
-        NSArray *visiblePaths = [self.inviteTableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths)
-        {
-            LocationItemPeople *people = [filteredList objectAtIndex:indexPath.row];
+- (void)loadImagesForOnscreenRows {
+    
+    if ([filteredList count] > 0) {
+        
+        NSArray *visiblePaths = [inviteTableView indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
             
-            if (!people.itemBg) // avoid the app icon download if the app already has an icon
+            CircleListCheckBoxTableCell *cell = (CircleListCheckBoxTableCell *)[inviteTableView cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
+            
+            LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+            
+            if (anItem.userInfo.coverPhotoUrl) 
             {
-                [self startIconDownload:people forIndexPath:indexPath];
+                [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
             }
         }
     }
 }
 
-// called by our ImageDownloader when an icon is ready to be displayed
-- (void)appImageDidLoad:(NSString *)userID
-{
-    CircleImageDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userID];
-    if (iconDownloader != nil)
-    {
-        //        NSNumber *indx = [eventListIndex objectForKey:userID];
-        LocationItemPeople *people = [peopleListArray objectAtIndex:iconDownloader.indexPathInTableView.row];
-        people.userInfo.coverImage = people.userInfo.coverImage;
-        
-        CircleListTableCell *cell = (CircleListTableCell *)[self.inviteTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        CircleListCheckBoxTableCell *cell1 = (CircleListCheckBoxTableCell*)[self.inviteTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        
-        // Display the newly loaded image
-        [downloadedImageDict setValue:iconDownloader.people.userInfo.coverImage forKey:userID];
-        cell.profilePicImgView.image = iconDownloader.people.userInfo.coverImage;
-        cell1.profilePicImgView.image = iconDownloader.people.userInfo.coverImage;
-        //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
-        [self.inviteTableView reloadData];
-    }
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) 
+        [self loadImagesForOnscreenRows];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
 }
 
 -(IBAction)cancel:(id)sender
@@ -460,6 +416,24 @@ bool searchFlag4=true;
 
 -(IBAction)selectedUser:(id)sender
 {
+    if ([selectedPeople count]==0)
+    {
+        [UtilityClass showAlert:@"" :@"Please select any Facebook friends"];
+    }
+    else 
+    {
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        if ([facebookApi isSessionValid])
+        {
+            NSMutableArray *idArr=[[NSMutableArray alloc] init];
+            for (int i=0; i<[selectedPeople count]; i++)
+            {
+                [idArr addObject:((LocationItemPeople *)[selectedPeople objectAtIndex:i]).userInfo.userId];
+            }
+            FacebookHelper *fbHelper=[[FacebookHelper alloc] init];
+            [fbHelper inviteFriends:idArr];
+        }
+    }
 }
 
 -(IBAction)selectAllpeople:(id)sender
@@ -545,18 +519,6 @@ bool searchFlag4=true;
 #pragma mark Deferred image loading (UIScrollViewDelegate)
 
 // Load images for all onscreen rows when scrolling is finished
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (!decelerate)
-    {
-        [self loadImagesForOnscreenRows];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self loadImagesForOnscreenRows];
-}
 
 //Lazy loading method ends.
 
@@ -583,7 +545,7 @@ bool searchFlag4=true;
         searchText4=@"";
         //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+        filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
         NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);
         [self.inviteTableView reloadData];
     }
@@ -621,7 +583,7 @@ bool searchFlag4=true;
     searchText4=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+    filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
     [self.inviteTableView reloadData];
     [inviteSearchBar resignFirstResponder];
     NSLog(@"3");
@@ -652,7 +614,7 @@ bool searchFlag4=true;
     {
         NSLog(@"null string");
         inviteSearchBar.text=@"";
-        filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
+        filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
     }
     else
         for (LocationItemPeople *sTemp in smAppDelegate.peopleList)

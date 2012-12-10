@@ -156,7 +156,7 @@
     if ([userInfo.friendshipStatus isEqualToString:@"friend"]==TRUE)
     {
         frndButton.hidden=NO;
-        [frndButton setTitle:@"friend" forState:UIControlStateNormal];
+        [frndButton setTitle:@"Friend" forState:UIControlStateNormal];
     }
     else
     {

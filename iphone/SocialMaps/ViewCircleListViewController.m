@@ -20,9 +20,9 @@
 #import "LocationItemPeople.h"
 #import "RestClient.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 @interface ViewCircleListViewController ()
-- (void)startIconDownload:(UserFriends *)userFriend forIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation ViewCircleListViewController
@@ -483,13 +483,29 @@ bool showSM=true;
             cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
             cell.inviteButton.hidden=NO;
         }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
+        {
+//            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+            cell.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
+            cell.regStsImgView.userInteractionEnabled=YES;
+            cell.regStsImgView.layer.masksToBounds = YES;
+            [cell.regStsImgView.layer setCornerRadius:5.0];
+            [cell.friendShipStatus setTitle:@"FB friend" forState:UIControlStateNormal];
+            cell.friendShipStatus.hidden=NO;
+        }
         else
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
             cell.inviteButton.hidden=YES;
+            [cell.friendShipStatus setTitle:@"Friend" forState:UIControlStateNormal];
         }
         
         if ([people.userInfo.friendshipStatus isEqualToString:@"friend"]) 
+        {
+            cell.friendShipStatus.hidden=NO;
+            [cell.friendShipStatus setTitle:@"Friend" forState:UIControlStateNormal];
+        }
+        else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
             cell.friendShipStatus.hidden=NO;
         }
@@ -515,11 +531,15 @@ bool showSM=true;
 
         [self showIsOnlineImage:cell.profilePicImgView :people];
     }
+    [cell.footerView.layer setCornerRadius:6.0f];
     [cell.inviteButton.layer setCornerRadius:6.0f];
     [cell.inviteButton.layer setMasksToBounds:YES];
     [cell.messageButton.layer setCornerRadius:6.0f];
     [cell.messageButton.layer setMasksToBounds:YES];
-
+    
+    UIImageView *imageView = cell.coverPicImgView;
+    [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
+    [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     //    cell.eventImage.image = eventPhoto;
@@ -564,6 +584,42 @@ bool showSM=true;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+}
+
+- (void)loadImagesForOnscreenRows {
+    
+    if ([filteredList count] > 0) {
+        
+        NSArray *visiblePaths = [circleListTableView indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            CircleListTableCell *cell = (CircleListTableCell *)[circleListTableView cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
+            
+            LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+            
+            if (anItem.userInfo.coverPhotoUrl) 
+            {
+                [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
+            }
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) 
+        [self loadImagesForOnscreenRows];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
 }
 
 //Lazy loading method starts

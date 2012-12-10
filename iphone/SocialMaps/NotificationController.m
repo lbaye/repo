@@ -538,6 +538,7 @@ NSMutableArray *unreadMesg;
 
 -(void)gotNewMessageDone:(NSNotification *)notif
 {
+    NSLog(@"got new message");
     msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
     [notificationItems reloadData];

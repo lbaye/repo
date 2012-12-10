@@ -1093,6 +1093,27 @@ AppDelegate *smAppDelegate;
             smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             smAppDelegate.shareLocationOption = [aUserInfo.shareLocationOption intValue] - 1;
             
+            
+            NSMutableArray *frndList=[[NSMutableArray alloc] init];
+            for (NSDictionary *item in [jsonObjects objectForKey:@"friends"])
+            {
+                UserFriends *frnd = [[UserFriends alloc] init];
+                frnd.userId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
+                NSString *firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
+                NSString *lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
+                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                frnd.imageUrl = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                frnd.distance = [[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil] doubleValue];
+                frnd.coverImageUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
+                frnd.address =[NSString stringWithFormat:@"%@, %@",[self getNestedKeyVal:item key1:@"address" key2:@"street" key3:nil],[self getNestedKeyVal:item key1:@"address" key2:@"city" key3:nil]];
+                frnd.statusMsg = [self getNestedKeyVal:item key1:@"status" key2:nil key3:nil];
+                frnd.regMedia = [self getNestedKeyVal:item key1:@"regMedia" key2:nil key3:nil];
+                
+                [frndList addObject:frnd];
+                NSLog(@"frnd.userId: %@",frnd.userId);
+            }
+            
+            friendListGlobalArray=[frndList mutableCopy];
 //            NSLog(@"getAccountSettings: %@",jsonObjects);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
@@ -1777,11 +1798,12 @@ AppDelegate *smAppDelegate;
                 {
                     People *people=[[People alloc] init];
                     
-                    people.userId = [self getNestedKeyVal:item key1:@"_id" key2:@"$id" key3:nil];
+                    people.userId = [self getNestedKeyVal:item key1:@"refId" key2:nil key3:nil];
                     people.email = [self getNestedKeyVal:item key1:@"email" key2:nil key3:nil];
                     people.firstName = [self getNestedKeyVal:item key1:@"firstName" key2:nil key3:nil];
                     people.lastName = [self getNestedKeyVal:item key1:@"lastName" key2:nil key3:nil];
                     people.avatar = [self getNestedKeyVal:item key1:@"avatar" key2:nil key3:nil];
+                    people.coverPhotoUrl = [self getNestedKeyVal:item key1:@"coverPhoto" key2:nil key3:nil];
                     people.enabled = [self getNestedKeyVal:item key1:@"enabled" key2:nil key3:nil];
                     people.gender = [self getNestedKeyVal:item key1:@"gender" key2:nil key3:nil];
                     people.relationsipStatus = [self getNestedKeyVal:item key1:@"relationshipStatus" key2:nil key3:nil];
@@ -6900,7 +6922,12 @@ AppDelegate *smAppDelegate;
         {
             NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
             NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
-            [friendListGlobalArray removeAllObjects];
+            if (friendListGlobalArray) {
+                [friendListGlobalArray removeAllObjects];
+            }
+            else {
+                friendListGlobalArray=[[NSMutableArray alloc] ini];
+            }
             NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
             
             for (NSDictionary *dicFriends in friendList) {
@@ -7508,10 +7535,25 @@ AppDelegate *smAppDelegate;
                 msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"longitude = %@", msg.lng);
-                if (![smAppDelegate.messages containsObject:msg]) {
-                    [smAppDelegate.messages addObject:msg];
-
+                NSLog(@"message notif sender = %@", msg.notifSender);
+//                if (![smAppDelegate.messages containsObject:msg])
+//                {
+//                    [smAppDelegate.messages insertObject:msg atIndex:0];
+//                }
+                int p=0;
+                for (int i=0; i<[smAppDelegate.messages count]; i++)
+                {
+                    NotifMessage *message = [smAppDelegate.messages objectAtIndex:i];
+                    if ([message.notifID isEqualToString:messageId])
+                    {
+                        NSLog(@"match found");
+                        p++;
+                    }
+                    NSLog(@"message loop");
+                }
+                if (p==0) 
+                {
+                    [smAppDelegate.messages insertObject:msg atIndex:0];
                 }
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
