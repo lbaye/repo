@@ -70,7 +70,8 @@ class Url
 
         $lat = $location['lat'];
         $lng = $location['lng'];
-        $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng . "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
+        $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng .
+                    "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
 
         $handler = curl_init();
         curl_setopt($handler, CURLOPT_HEADER, 0);
@@ -84,7 +85,7 @@ class Url
 
         // if data value is an empty json document ('{}') , the panorama is not available for that point
         if ($data === '{}' || $http_status != 200) {
-            return "";
+            return null;
         }
         else {
             return self::buildStreetViewImage($key,$location, $size);

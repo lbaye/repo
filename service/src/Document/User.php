@@ -1082,7 +1082,7 @@ class User {
                 $radius = $geo_fence['radius'];
                 if (empty($radius)) $radius = 0;
 
-                $restrictedDistanceInKm = ((float)$radius) * 1000;
+                $restrictedDistanceInKm = ((float)$radius);
 
                 // Convert distance from meter to kilo meter
                 $actualDistanceInKm = $this->checkDistance($appUser->getCurrentLocation(), $geo_fence) / 1000;

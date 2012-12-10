@@ -59,12 +59,10 @@ class LastSeenAddress extends Base
     }
 
     public function _updateCoverPhotoIfStreetImage(\Document\User $user, $current_location){
-        if(empty($current_location['lat']) || empty($current_location['lng'])) {
-
-        } else {
+        if (!(empty($current_location['lat']) || empty($current_location['lng']))) {
             $coverImage = $user->getCoverPhoto();
             $update = (preg_match('/^http:\/\/maps.googleapis.com/', $coverImage) > 0) ? 1 : 0;
-            if($update){
+            if ($update) {
                 $coverImage = \Helper\Url::getStreetViewImageOrReturnEmpty(null,$current_location);
                 $user->setCoverPhoto($coverImage);
             }
