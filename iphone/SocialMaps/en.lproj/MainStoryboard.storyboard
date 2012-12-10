@@ -4846,7 +4846,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <inset key="contentInset" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                     </tableView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="whitle_blend.png" id="z1Y-Nh-V63">
-                                        <rect key="frame" x="0.0" y="260" width="320" height="30"/>
+                                        <rect key="frame" x="0.0" y="280" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" id="5Fr-Cw-BsE">

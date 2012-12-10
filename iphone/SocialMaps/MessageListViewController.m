@@ -29,6 +29,7 @@
 #define     TAG_TABLEVIEW_REPLY     1001
 #define     TAG_TABLEVIEW_INBOX     1002
 #define     TAG_MEETUP_VIEW         1003
+#define     SENDER_NAME_REPLY_START_POSX    90
 
 @implementation MessageListViewController
 
@@ -464,10 +465,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     if (textViewReplyMsg.isFirstResponder) {
         [self scrollSelfViewUp];
+    } else {
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+        [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
     
-    //NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
-    //[messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    
 
     
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
@@ -514,19 +517,26 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
         
-        CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
+        CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kMediumLabelFontSize]];
         
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"replyList"];
-        
-        
-        CGRect senderFrame = CGRectMake(SENDER_NAME_START_POSX + GAP, GAP, senderStringSize.width, senderStringSize.height);
-        
-        CGRect timeFrame = CGRectMake(senderStringSize.width + GAP, 
-                                      GAP, tableView.frame.size.width - 22 - senderStringSize.width, senderStringSize.height);
+
+        CGRect senderFrame = CGRectMake(SENDER_NAME_REPLY_START_POSX + GAP, GAP, senderStringSize.width, senderStringSize.height);
         
         CGFloat rowHeight = [self getRowHeight:tableView :msgReply];
         
-        CGRect msgFrame = CGRectMake(SENDER_NAME_START_POSX, senderFrame.size.height + senderFrame.origin.y + 1, tableView.frame.size.width - SENDER_NAME_START_POSX - GAP * 4, rowHeight - 22);
+        CGFloat rowWidth = tableView.frame.size.width - SENDER_NAME_REPLY_START_POSX - GAP * 4;
+        CGFloat rowStartPos = SENDER_NAME_REPLY_START_POSX;
+        
+        if (rowWidth > [self getRowWidth:tableView :msgReply]) {
+            rowWidth = [self getRowWidth:tableView :msgReply];
+            rowStartPos = tableView.frame.size.width - rowWidth - 10;
+        }
+        CGRect msgFrame = CGRectMake(rowStartPos, senderFrame.size.height + senderFrame.origin.y + 1, rowWidth, rowHeight - 22);
+        
+        
+        CGRect timeFrame = CGRectMake(10, msgFrame.size.height + msgFrame.origin.y - senderStringSize.height,  msgFrame.origin.x - GAP - 10, senderStringSize.height);
+        
         
         if (cell == nil) {
             
@@ -554,13 +564,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             UITextView *txtViewTxtMsg = [[[UITextView alloc] initWithFrame:msgFrame] autorelease];
             txtViewTxtMsg.tag = 3005;
             txtViewTxtMsg.textColor = [UIColor blackColor];
-            txtViewTxtMsg.font = [UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize];
+            txtViewTxtMsg.font = [UIFont fontWithName:@"Helvetica" size:kMediumLabelFontSize];
             [txtViewTxtMsg.layer setCornerRadius:5.0f];
             [txtViewTxtMsg.layer setBorderWidth:0.5];
             [txtViewTxtMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
             [txtViewTxtMsg.layer setMasksToBounds:YES];
             txtViewTxtMsg.userInteractionEnabled = NO;
             [cell.contentView addSubview:txtViewTxtMsg];
+            
             
             //Thumb Image
             UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 48, 48)];
@@ -570,7 +581,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [imageViewReply.layer setBorderColor:[UIColor darkGrayColor].CGColor];
             [imageViewReply.layer setMasksToBounds:YES];
             [cell addSubview:imageViewReply];
-            
+            imageViewReply.hidden = YES;
         }
         
         UILabel     *lblSender  = (UILabel*) [cell viewWithTag:3002];
@@ -578,22 +589,27 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         UITextView  *txtMsg     = (UITextView*) [cell viewWithTag:3005];
         UIImageView *imageViewReply = (UIImageView*) [cell viewWithTag:3006];
         
+        NSLog(@"logged in user id = %@ msgReply sender ID = %@", smAppDelegate.userId, msgReply.senderID);
+        
         if ([smAppDelegate.userId isEqualToString:msgReply.senderID]) {
             imageViewReply.frame = CGRectMake(10, (rowHeight - 48) / 2, 48, 48);
+            
+            //lblTime.frame = CGRectMake(10, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
             lblTime.frame = timeFrame;
             txtMsg.frame = msgFrame;
+            txtMsg.backgroundColor = [UIColor colorWithRed:163.0/255 green:232.0/255 blue:95.0/255 alpha:0.4];
             lblSender.frame = senderFrame;
             lblTime.textAlignment = UITextAlignmentRight;
   
         } else {
             imageViewReply.frame = CGRectMake(tableView.frame.size.width - 60, (rowHeight - 48) / 2, 48, 48);
             lblSender.frame = CGRectMake(tableView.frame.size.width - senderFrame.size.width - 64, senderFrame.origin.y, senderFrame.size.width, senderFrame.size.height);
-            
-            lblTime.frame = CGRectMake(10, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
+            txtMsg.backgroundColor = [UIColor colorWithRed:243.0/255 green:244.0/255 blue:245.0/255 alpha:1];
+            lblTime.frame = CGRectMake(timeFrame.origin.x + msgFrame.size.width + GAP, timeFrame.origin.y , timeFrame.size.width, timeFrame.size.height);
             txtMsg.frame = CGRectMake(10, txtMsg.frame.origin.y, txtMsg.frame.size.width, msgFrame.size.height);
             lblTime.textAlignment = UITextAlignmentLeft;
         }
-        
+        /*
         IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
         
         if (!iconDownloader)
@@ -608,12 +624,30 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             //imageViewReply.image = msgReply.senderImage;
             imageViewReply.image = iconDownloader.userFriends.userProfileImage;
         }
-        
+        */
         lblSender.text = msgReply.senderName;
         lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
         
         if (msgReply.metaType) {
+            
+            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
+            
+            if (!iconDownloader)
+            {
+                //imageViewReply.image = [UIImage imageNamed:@"girl.png"];
+                imageViewReply.image = nil;
+                if (tableView.dragging == NO && tableView.decelerating == NO) {
+                    [self startReplyIconDownload:msgReply forIndexPath:indexPath];
+                }            
+            }  else {
+                //NSLog(@"image crash = %@", msgReply.senderImage);
+                //imageViewReply.image = msgReply.senderImage;
+                imageViewReply.image = iconDownloader.userFriends.userProfileImage;
+            }
+            
+            imageViewReply.hidden = NO;
+            
             if (![cell viewWithTag:10001]) {
                 UIButton *buttonGotoDirection = [UIButton buttonWithType:UIButtonTypeCustom];
                 [buttonGotoDirection setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -627,6 +661,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [cell viewWithTag:10001].frame = CGRectMake(txtMsg.frame.origin.x + (txtMsg.frame.size.width - 90) / 2, rowHeight - 40, 90, 30);
         } else {
             [[cell viewWithTag:10001] removeFromSuperview];
+            imageViewReply.hidden = YES;
         }
         
         return cell;
@@ -681,6 +716,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [lblTxtMsgContainer.layer setBorderColor:[UIColor lightGrayColor].CGColor];
         [lblTxtMsgContainer.layer setMasksToBounds:YES];
         [lblTxtMsgContainer addSubview:lblTxtMsg];
+        lblTxtMsgContainer.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:lblTxtMsgContainer];
         
         [cell.imageView.layer setCornerRadius:6.0f];
@@ -744,6 +780,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         cell.imageView.image = iconDownloader.userFriends.userProfileImage;
     }
 
+    if ([msg.msgStatus isEqualToString:@"unread"]) {
+        cell.contentView.backgroundColor = [UIColor colorWithRed:163.0/255 green:232.0/255 blue:95.0/255 alpha:0.4];
+    } else {
+       // cell.backgroundColor = [UIColor colorWithRed:243.0/255 green:244.0/255 blue:245.0/255 alpha:1];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+    }
+    
     return cell;
 }
 
@@ -895,12 +938,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     return CELL_HEIGHT;
 }
 
+- (CGFloat) getRowWidth:(UITableView*)tv:(MessageReply*)msgReply 
+{
+    CGSize msgStringSize = [msgReply.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kLargeLabelFontSize]];
+    return msgStringSize.width + 10;
+}
+    
+
 - (CGFloat) getRowHeight:(UITableView*)tv:(MessageReply*)msgReply {
     
     CGFloat cellRowHeight;
     
     CGSize senderStringSize = [msgReply.senderName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
-    CGSize msgStringSize = [msgReply.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    CGSize msgStringSize = [msgReply.content sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kLargeLabelFontSize]];
 
     int newLine = [[msgReply.content componentsSeparatedByString:@"\n"] count];
     
@@ -908,7 +958,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     msgRows = msgRows + newLine - 1;
     
-    cellRowHeight = senderStringSize.height + msgRows*15 + 15;
+    cellRowHeight = senderStringSize.height + msgRows*18 + 17;
     
     CGFloat cellHeight = (cellRowHeight < CELL_HEIGHT) ? CELL_HEIGHT: cellRowHeight;
     
