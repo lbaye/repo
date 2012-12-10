@@ -927,7 +927,7 @@ class UserRepo extends Base {
                     $then = (int)($then['sec']);
                     $diff = $now - $then;
 
-                    $target_user_hash['lastSeenAt'] =  "Last seen at ". $target_user_hash['lastSeenAt'] . " about " . Util::humanizeTimeDiff($diff);
+                    $target_user_hash['lastSeenAt'] =  $target_user_hash['lastSeenAt'] . " about " . Util::humanizeTimeDiff($diff);
                 }
             }
 
