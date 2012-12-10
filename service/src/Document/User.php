@@ -1142,4 +1142,14 @@ class User {
         return false;
     }
 
+    public function hasCurrentLocation() {
+        return $this->hasDefined('currentLocation', 'lat') &&
+               $this->hasDefined('currentLocation', 'lng');
+    }
+
+    public function hasDefined($propertyName, $key) {
+        $value = $this->{'get' . ucfirst($propertyName)}();
+        return (is_array($value) && !empty($value[$key]));
+    }
+
 }
