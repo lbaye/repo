@@ -25,7 +25,7 @@ class User {
     const PREF_FIELD_STATUS = "status";
     const PREF_FIELD_GEO_FENCES = "geo_fences";
 
-    const MAX_IDLE_TIME_IN_MINS = 10;
+    const MAX_IDLE_TIME_IN_MINS = 30;
 
     /** @ODM\Id */
     protected $id;
@@ -1082,7 +1082,7 @@ class User {
                 $radius = $geo_fence['radius'];
                 if (empty($radius)) $radius = 0;
 
-                $restrictedDistanceInKm = ((float)$radius) * 1000;
+                $restrictedDistanceInKm = ((float)$radius);
 
                 // Convert distance from meter to kilo meter
                 $actualDistanceInKm = $this->checkDistance($appUser->getCurrentLocation(), $geo_fence) / 1000;
@@ -1140,6 +1140,16 @@ class User {
         }
 
         return false;
+    }
+
+    public function hasCurrentLocation() {
+        return $this->hasDefined('currentLocation', 'lat') &&
+               $this->hasDefined('currentLocation', 'lng');
+    }
+
+    public function hasDefined($propertyName, $key) {
+        $value = $this->{'get' . ucfirst($propertyName)}();
+        return (is_array($value) && !empty($value[$key]));
     }
 
 }

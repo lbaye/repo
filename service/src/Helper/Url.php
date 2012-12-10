@@ -65,4 +65,34 @@ class Url
                $size .  "&location=" . $lat . "," .$lng .
                "&fov=90&heading=235&pitch=10&sensor=false&key=". $key;
     }
+
+    public static function getStreetViewImageOrReturnEmpty($config, array $location, $size = "320x130") {
+
+        $key = $config['googlePlace']['apiKey'];
+        $baseUrl = $config['web']['root'];
+
+        $lat = $location['lat'];
+        $lng = $location['lng'];
+        $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng .
+                    "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
+
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_HEADER, 0);
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($handler, CURLOPT_URL, $endpoint);
+        $data = curl_exec($handler);
+
+        $http_status = curl_getinfo($handler, CURLINFO_HTTP_CODE);
+
+        curl_close($handler);
+
+        // if data value is an empty json document ('{}') , the panorama is not available for that point
+        if ($data === '{}' || $http_status != 200) {
+            return $baseUrl . '/assets/images/default-cover-photo.png';
+        }
+        else {
+            return self::buildStreetViewImage($key, $location, $size);
+        }
+
+    }
 }

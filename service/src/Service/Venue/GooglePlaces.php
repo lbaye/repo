@@ -65,6 +65,8 @@ class GooglePlaces extends Base
 
     private function get_street_view_image($lat, $lng, $key) {
 
+        $lat = $location['lat'];
+        $lng = $location['lng'];
         $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng . "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
 
         $handler = curl_init();
@@ -106,7 +108,7 @@ class GooglePlaces extends Base
                 }
         }
         else {
-             return "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
+             return "http://maps.googleapis.com/maps/api/streetview?size=" . $size ."&location=" . $lat . "," . $lng . "&fov=90&heading=235&pitch=10&sensor=false&key={$key}";
         }
 
     }

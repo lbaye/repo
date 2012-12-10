@@ -36,8 +36,10 @@ class LastSeenAddress extends Base
                 $current_location = $user->getCurrentLocation();
                 $this->debug("Requesting for reverse geo location at position ({$current_location['lat']}, {$current_location['lng']}) for {$user->getFirstName()} ({$user->getId()})");
 
-                $address = $this->_getAddress($current_location);
-                $this->_updateUserAddress($user, $address);
+                $this->setAddress($user);
+                $this->setCoverPhotoIfStreetImage($user);
+                $this->storeChanges($user);
+
                 $this->services['dm']->clear();
             } catch (\Exception $e) {
                 $this->error('Failed to retrieve "reverse geo location", might be an issue with google API');
@@ -48,13 +50,35 @@ class LastSeenAddress extends Base
         }
     }
 
-    public function _updateUserAddress(\Document\User $user, $address)
-    {
-        $user->setLastSeenAt($address);
-
+    private function storeChanges(\Document\User &$user) {
         $this->services['dm']->persist($user);
         $this->services['dm']->flush();
-        $this->debug("Updating address - $address to {$user->getFirstName()}");
+
+        return true;
     }
 
+    private function setAddress(\Document\User &$user) {
+        try {
+            $address = $this->_getAddress($user->getCurrentLocation());
+            $user->setLastSeenAt($address);
+            $this->debug("Updating address - $address to {$user->getFirstName()}");
+        } catch (\Exception $e) {
+            $this->error('Failed to retrieve address from google service - ' . $e->getMessage());
+        }
+    }
+
+    private function setCoverPhotoIfStreetImage(\Document\User &$user){
+        if ($user->hasCurrentLocation()) {
+            $coverImage = $user->getCoverPhoto();
+            $streetImage = (preg_match('/^https?:\/\/maps.googleapis.com/', $coverImage) > 0) ? 1 : 0;
+
+            // If Not user defined image
+            if (empty($coverImage) || $streetImage) {
+                $current_location = $user->getCurrentLocation();
+                $coverImage = \Helper\Url::getStreetViewImageOrReturnEmpty($this->conf, $current_location);
+                $user->setCoverPhoto($coverImage);
+                $this->debug('Updating user cover photo - ' . $user->getName() . ' - ' . $coverImage);
+            }
+        }
+    }
 }

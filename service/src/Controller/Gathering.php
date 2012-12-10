@@ -29,9 +29,9 @@ class Gathering extends Base
         parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
+        $this->_updatePulse();
         $this->userRepository->setCurrentUser($this->user);
         $this->userRepository->setConfig($this->config);
-        $this->_updatePulse();
 
         $this->_ensureLoggedIn();
         $this->createLogger('Controller::Gathering');
