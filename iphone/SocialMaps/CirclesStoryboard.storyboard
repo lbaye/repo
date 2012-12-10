@@ -512,7 +512,7 @@
                                                     <rect key="frame" x="83" y="15" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <view alpha="0.60000002384185791" contentMode="scaleToFill" id="5Xc-xO-Wik">
+                                                <view alpha="0.80000000000000004" contentMode="scaleToFill" id="5Xc-xO-Wik">
                                                     <rect key="frame" x="81" y="60" width="235" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -605,7 +605,7 @@
                                                     <rect key="frame" x="19" y="14" width="70" height="70"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <view alpha="0.60000002384185791" contentMode="scaleToFill" id="s1m-Su-k5n">
+                                                <view alpha="0.80000000000000004" contentMode="scaleToFill" id="s1m-Su-k5n">
                                                     <rect key="frame" x="96" y="60" width="221" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -1021,11 +1021,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <tableView key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Vi6-D9-Zt9">
-                                            <rect key="frame" x="0.0" y="66" width="320" height="32"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </tableView>
                                         <prototypes>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="circleTableCell" id="bUA-lP-lNe" customClass="SelectCircleTableCell">
                                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
@@ -1441,7 +1436,7 @@
                                                     <rect key="frame" x="83" y="15" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <view alpha="0.60000002384185791" contentMode="scaleToFill" id="IGz-RW-Jn8">
+                                                <view alpha="0.80000000000000004" contentMode="scaleToFill" id="IGz-RW-Jn8">
                                                     <rect key="frame" x="81" y="61" width="235" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -1547,7 +1542,7 @@
                                                     <rect key="frame" x="19" y="14" width="70" height="70"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <view alpha="0.60000002384185791" contentMode="scaleToFill" id="BE7-aW-LIn">
+                                                <view alpha="0.80000000000000004" contentMode="scaleToFill" id="BE7-aW-LIn">
                                                     <rect key="frame" x="95" y="59" width="221" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>

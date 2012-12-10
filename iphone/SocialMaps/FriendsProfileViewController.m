@@ -182,10 +182,21 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [newsfeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
     reloadFrndsProfileCounter=0;
     [frndStatusButton setHidden:YES];
+    
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    UIActivityIndicatorView *indicator=[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(150, profileView.frame.size.height+5, 20, 20)];
+    [indicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+    [indicator setTag:123123123];
+    [indicator startAnimating];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+30)];
+    [profileScrollView addSubview:indicator];
+    [profileScrollView addSubview:profileView];
+    [self reloadScrolview];
 }
 
 -(void)reloadProfileScrollView
 {
+    [[profileScrollView viewWithTag:123123123] removeFromSuperview];
     [profileView removeFromSuperview];
     [newsfeedView removeFromSuperview];
     [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];

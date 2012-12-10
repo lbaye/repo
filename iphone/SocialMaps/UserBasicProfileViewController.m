@@ -129,11 +129,21 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
     reloadProfileCounter=0;
+    
+    [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];
+    UIActivityIndicatorView *indicator=[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(150, profileView.frame.size.height, 20, 20)];
+    [indicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+    [indicator setTag:123123123];
+    [indicator startAnimating];
+    [profileScrollView setContentSize:CGSizeMake(320, profileView.frame.size.height+30)];
+    [profileScrollView addSubview:indicator];
+    [profileScrollView addSubview:profileView];
     [self reloadScrolview];
 }
 
 -(void)reloadProfileScrollView
 {
+    [[profileScrollView viewWithTag:123123123] removeFromSuperview];
     [profileView removeFromSuperview];
     [newsfeedView removeFromSuperview];
     [profileView setFrame:CGRectMake(0, 0, profileView.frame.size.width, profileView.frame.size.height)];

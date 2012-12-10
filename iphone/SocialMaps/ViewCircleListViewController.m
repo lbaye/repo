@@ -20,9 +20,9 @@
 #import "LocationItemPeople.h"
 #import "RestClient.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 @interface ViewCircleListViewController ()
-- (void)startIconDownload:(UserFriends *)userFriend forIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation ViewCircleListViewController
@@ -536,7 +536,10 @@ bool showSM=true;
     [cell.inviteButton.layer setMasksToBounds:YES];
     [cell.messageButton.layer setCornerRadius:6.0f];
     [cell.messageButton.layer setMasksToBounds:YES];
-
+    
+    UIImageView *imageView = cell.coverPicImgView;
+    [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
+    [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
     //    cell.eventImage.image = eventPhoto;
@@ -581,6 +584,42 @@ bool showSM=true;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+}
+
+- (void)loadImagesForOnscreenRows {
+    
+    if ([filteredList count] > 0) {
+        
+        NSArray *visiblePaths = [circleListTableView indexPathsForVisibleRows];
+        
+        for (NSIndexPath *indexPath in visiblePaths) {
+            
+            CircleListTableCell *cell = (CircleListTableCell *)[circleListTableView cellForRowAtIndexPath:indexPath];
+            
+            //get the imageView on cell
+            
+            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
+            
+            LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+            
+            if (anItem.userInfo.coverPhotoUrl) 
+            {
+                [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
+            }
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    if (!decelerate) 
+        [self loadImagesForOnscreenRows];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+    [self loadImagesForOnscreenRows];
+    
 }
 
 //Lazy loading method starts

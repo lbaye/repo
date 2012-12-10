@@ -22,6 +22,7 @@
 #import "UtilityClass.h"
 #import "RestClient.h"
 #import "NotificationController.h"
+#import "UIImageView+Cached.h"
 
 #pragma mark -
 #pragma mark EmailMenuItem
@@ -312,7 +313,8 @@ int renameCircleOndex;
         
         CircleListTableCell *cell = (CircleListTableCell*)[self.circleTableView dequeueReusableCellWithIdentifier:QuoteCellIdentifier];
         
-        if (!cell) {
+        if (!cell)
+        {
             
             UINib *quoteCellNib = [UINib nibWithNibName:@"CircleListTableCell" bundle:nil];
             [quoteCellNib instantiateWithOwner:self options:nil];
@@ -364,8 +366,10 @@ int renameCircleOndex;
         [cell.inviteButton.layer setMasksToBounds:YES];
         [cell.messageButton.layer setCornerRadius:6.0f];
         [cell.messageButton.layer setMasksToBounds:YES];
-
         cell.coverPicImgView.image=[UIImage imageNamed:@"cover_pic_default.png"];
+        //        [cell.coverPicImgView.image setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.coverImageUrl]];
+        [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.coverImageUrl]];
+
         if ([userFrnd.regMedia isEqualToString:@"fb"]) 
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
@@ -473,6 +477,43 @@ int renameCircleOndex;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSLog(@"indexPath %@",indexPath);
 }
+
+//- (void)loadImagesForOnscreenRows {
+//    
+//    if ([sectionInfoArray_ count] > 0) {
+//        
+//        NSArray *visiblePaths = [circleSelectTableView indexPathsForVisibleRows];
+//        
+//        for (NSIndexPath *indexPath in visiblePaths) {
+//            
+//            CircleListTableCell *cell = (CircleListTableCell *)[circleSelectTableView cellForRowAtIndexPath:indexPath];
+//            
+//            //get the imageView on cell
+//            
+//            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
+//            SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:indexPath.section];
+//            UserFriends *userFrnd=[sectionInfo.userCircle.friends objectAtIndex:indexPath.row];
+//            
+//            
+//            if (userFrnd.coverImageUrl) 
+//            {
+//                [imgCover loadFromURL:[NSURL URLWithString:userFrnd.coverImageUrl]];
+//            }
+//        }
+//    }
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//    
+//    if (!decelerate) 
+//        [self loadImagesForOnscreenRows];
+//}
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    
+//    [self loadImagesForOnscreenRows];
+//    
+//}
 
 
 #pragma mark Section header delegate
