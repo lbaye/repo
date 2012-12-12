@@ -72,7 +72,7 @@ class MessageRepo extends Base {
         return $this->_toArrayAll($replies);
     }
 
-    public function insert(MessageDocument $message) {
+    public function insert(MessageDocument $message, UserDocument $user = null) {
         if (!$message->isValid()) {
             throw new \InvalidArgumentException('Invalid Message data', 406);
         }
@@ -86,6 +86,9 @@ class MessageRepo extends Base {
             $thread = $message->getThread();
             if (!empty($thread))
                 $this->addToThread($message);
+                // Clear readby for parent message
+                if(!is_null($user))
+                    $this->clearReadBy($thread, $user);
         } catch (\Exception $e) {
             die($e);
         }
@@ -96,6 +99,13 @@ class MessageRepo extends Base {
     private function addToThread(MessageDocument $message) {
         $message->getThread()->getReplies()->add($message);
         $this->dm->persist($message->getThread());
+        $this->dm->flush();
+    }
+
+    private function clearReadBy(MessageDocument $message, UserDocument $user) {
+        $message->resetReadStatusFor($user);
+        $message->setUpdateDate(new \DateTime());
+        $this->dm->persist($message);
         $this->dm->flush();
     }
 
