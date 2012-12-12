@@ -23,7 +23,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="Kz2-aJ-5EF" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -262,10 +262,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="8D2-hQ-Vjb">
-                                        <rect key="frame" x="0.0" y="255" width="320" height="90"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    </scrollView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Title:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="WuM-qD-Ni5">
                                         <rect key="frame" x="11" y="83" width="39" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -283,11 +279,16 @@
                                             <outlet property="delegate" destination="Lax-Y4-COn" id="bqJ-uO-y9J"/>
                                         </connections>
                                     </textField>
+                                    <imageView userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="scaleAspectFit" image="blank.png" id="N31-dD-yXM">
+                                        <rect key="frame" x="21" y="257" width="279" height="81"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94901967050000002" green="0.95294123890000004" blue="0.95686280729999995" alpha="0.94999999999999996" colorSpace="deviceRGB"/>
                             </view>
                             <view contentMode="scaleToFill" id="kyz-XR-dtX">
-                                <rect key="frame" x="1000" y="45" width="320" height="248"/>
+                                <rect key="frame" x="0.0" y="45" width="320" height="248"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tag People:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="XhU-El-jXP">
@@ -300,9 +301,10 @@
                                         <rect key="frame" x="5" y="37" width="300" height="7"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="line_arrow_up_left.png" id="M2t-Y0-MfQ">
-                                        <rect key="frame" x="5" y="95" width="300" height="7"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="blank.png" id="M2t-Y0-MfQ">
+                                        <rect key="frame" x="5" y="90" width="300" height="1"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Search" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="wls-a3-Qmd">
                                         <rect key="frame" x="7" y="59" width="42" height="21"/>
@@ -501,7 +503,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" id="Mke-hg-qzp">
-                                <rect key="frame" x="1000" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="1100" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" pagingEnabled="YES" id="0FW-pN-F0Y">
@@ -569,6 +571,7 @@
                         <outlet property="commentsView" destination="RTg-iR-DTh" id="Itm-Hk-l9w"/>
                         <outlet property="createButton" destination="Gun-1H-4Lj" id="l4P-vf-heO"/>
                         <outlet property="createLabel" destination="YDv-qf-7dU" id="XS6-e4-AfL"/>
+                        <outlet property="eventImagview" destination="N31-dD-yXM" id="kOy-Dd-DC0"/>
                         <outlet property="friendSearchbar" destination="RyG-0w-IqW" id="zIv-eg-tiA"/>
                         <outlet property="frndListScrollView" destination="YbF-ag-ww4" id="TET-Gn-AQV"/>
                         <outlet property="largePhotoScroller" destination="0FW-pN-F0Y" id="Jd3-2L-OOB"/>
@@ -579,7 +582,6 @@
                         <outlet property="nameButton" destination="8Eu-lg-ECA" id="pno-Qo-HeT"/>
                         <outlet property="nextButton" destination="43j-Mc-0ir" id="v6j-Ku-P6H"/>
                         <outlet property="photoButton" destination="dXm-NJ-iQA" id="V6n-r3-bLZ"/>
-                        <outlet property="photoScrollView" destination="8D2-hQ-Vjb" id="nsh-BQ-TEB"/>
                         <outlet property="prevButton" destination="xg8-7g-GJP" id="4W6-g7-8JJ"/>
                         <outlet property="titleTextField" destination="Txq-KP-0aH" id="56G-Vj-2be"/>
                         <outlet property="totalNotifCount" destination="htl-hy-YG3" id="H1D-vm-Mu1"/>
@@ -595,6 +597,7 @@
     </scenes>
     <resources>
         <image name="back_b_small.png" width="70" height="35"/>
+        <image name="blank.png" width="139" height="139"/>
         <image name="bubble_count_icon.png" width="55" height="57"/>
         <image name="checkbox_unchecked.png" width="50" height="50"/>
         <image name="header.png" width="640" height="91"/>
@@ -604,10 +607,9 @@
         <image name="img_close_gray.png" width="19" height="19"/>
         <image name="line.png" width="601" height="1"/>
         <image name="line_arrow_down_left.png" width="600" height="14"/>
-        <image name="line_arrow_up_left.png" width="600" height="14"/>
         <image name="line_arrow_up_right.png" width="600" height="14"/>
         <image name="location_bar_radio_cheked.png" width="42" height="42"/>
-        <image name="logo_3.png" width="275" height="50"/>
+        <image name="logo_3.png" width="221" height="41"/>
         <image name="sp2.png" width="1" height="60"/>
         <image name="top_curve_bg.png" width="640" height="138"/>
     </resources>

@@ -186,10 +186,7 @@ int geoCounter=0;
 {
     [super viewDidLoad];
     
-    [smAppDelegate.window setUserInteractionEnabled:NO];
-    [smAppDelegate showActivityViewer:self.view];
     rc=[[RestClient alloc] init];
-    [rc getGeotagPhotos:@"Auth-Token" :smAppDelegate.authToken :smAppDelegate.userId];
     [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
@@ -231,7 +228,14 @@ int geoCounter=0;
     CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 130, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2001];
     radio.delegate = self;
     [upperView addSubview:radio];
-    
+    CGColorSpaceRef cmykSpace = CGColorSpaceCreateDeviceCMYK();
+    CGFloat cmykValue[] = {.38, .02, .98, .05, 1};      // blue
+    CGColorRef colorCMYK = CGColorCreate(cmykSpace, cmykValue);
+    CGColorSpaceRelease(cmykSpace);
+    NSLog(@"colorCMYK: %@", colorCMYK);
+    eventImagview.layer.borderWidth=5.0;
+    eventImagview.layer.cornerRadius=5.0;
+    eventImagview.layer.borderColor = [[UIColor colorWithCGColor:colorCMYK] CGColor];
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
@@ -493,7 +497,7 @@ int geoCounter=0;
     [self hideCommentsView:YES];
     [self hidePhotoScroller:NO];
     [commentsView resignFirstResponder];
-//    [self.photoPicker getPhoto:self];
+    [self.photoPicker getPhoto:self];
 }
 
 -(IBAction)deleteButtonAction
@@ -711,11 +715,6 @@ int geoCounter=0;
         [msg appendString:@" comments,"];
     }
     
-    if ([customSelectedPhotoIndex count]==0)
-    {
-        [msg appendString:@" photo,"];
-    }
-    
     if ([geotag.category length]==0)
     {
         [msg appendString:@" category,"];
@@ -723,12 +722,7 @@ int geoCounter=0;
     
     if ([msg length]<=13) {
     geotag.geoTagDescription=commentsView.text;
-    NSData *imgdata;
-    if ([customSelectedPhotoIndex count]>0) {
-        imgdata = UIImagePNGRepresentation([dicImages_msg objectForKey:((Photo *)[customSelectedPhotoIndex objectAtIndex:0]).imageUrl]);        
-        NSString *imgBase64Data = [imgdata base64EncodedString];
-        geotag.geoTagImageUrl=imgBase64Data;
-    }
+    
     for (int i=0; i<[selectedFriendsIndex count]; i++) 
     {
         [geotag.frndList addObject:((UserFriends *)[selectedFriendsIndex objectAtIndex:i]).userId];
@@ -1283,38 +1277,6 @@ int geoCounter=0;
 }
 
 //handling selection from custom scroll view of friends selection
--(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
-{
-//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
-    NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
-    if ([customSelectedPhotoIndex containsObject:[photoFilterList1 objectAtIndex:[sender.view tag]]])
-    {
-        [customSelectedPhotoIndex removeObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
-    } 
-    else 
-    {
-        [customSelectedPhotoIndex addObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
-    }
-    Photo *photo=[[Photo alloc] init];
-    photo=[photoFilterList1 objectAtIndex:[sender.view tag]];
-    NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
-    for (int l=0; l<[subviews count]; l++)
-    {
-        UIView *im=[subviews objectAtIndex:l];
-        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
-        UIImageView *im1=[subviews1 objectAtIndex:0];
-        
-        if ([im1.image isEqual:photo.photoImage])
-        {
-            [im1 setAlpha:1.0];
-            im1.layer.borderWidth=2.0;
-            im1.layer.masksToBounds = YES;
-            [im1.layer setCornerRadius:7.0];
-            im1.layer.borderColor=[[UIColor greenColor]CGColor];
-        }        
-    }
-    [self reloadPhotoScrolview];
-}
 
 //scroll view delegate method
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1585,332 +1547,6 @@ int geoCounter=0;
     [self reloadScrolview];
 }
 
-//searchbar delegate method end
-
-//Photo scroller starts
-
--(void) reloadPhotoScrolview
-{
-    NSLog(@"photo scroll init");
-    if (isBackgroundTaskRunning==true)
-    {
-        int x=0; //declared for imageview x-axis point    
-        int x2=0; //declared for imageview x-axis point
-        int y=0;
-        NSArray* subviews = [NSArray arrayWithArray:photoScrollView.subviews];
-        UIImageView *imgView;
-        for (UIView* view in subviews) 
-        {
-            if([view isKindOfClass :[UIView class]])
-            {
-                [view removeFromSuperview];
-            }
-            else if([view isKindOfClass :[UIImageView class]])
-            {
-                // [view removeFromSuperview];
-            }
-        }
-        NSArray* subviews1 = [[NSArray arrayWithArray: largePhotoScroller.subviews] mutableCopy];
-        for (UIView* view in subviews1) 
-        {
-            if([view isKindOfClass :[UIView class]])
-            {
-                [view removeFromSuperview];
-            }
-            else if([view isKindOfClass :[UIImageView class]])
-            {
-                // [view removeFromSuperview];
-            }
-        }   
-        
-        photoScrollView.contentSize=CGSizeMake(320,(ceilf([photoFilterList1 count]/4.0))*90);
-        largePhotoScroller.contentSize=CGSizeMake([photoFilterList2 count]*320, 460);
-        
-        NSLog(@"event create isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-        for(int i=0; i<[photoFilterList1 count];i++)               
-        {
-            if(i< [photoFilterList1 count]) 
-            { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[photoFilterList1 objectAtIndex:i];
-                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-                
-                if ((photo.photoThum==NULL)||[photo.photoThum isEqual:[NSNull null]])
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:photo.photoThum]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.photoThum]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.photoThum]==nil))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.photoThum]; 
-                        [self performSelectorInBackground:@selector(DownLoadThum:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
-                x=(i%4)*80;
-                y=(i/4)*90;
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x+5, y, 80, 80)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
-                name.textAlignment=UITextAlignmentCenter;
-                UIButton *zoomButton= [UIButton buttonWithType:UIButtonTypeCustom];;
-                zoomButton.tag=i;
-                zoomButton.frame=CGRectMake(45, 45, 20, 20);
-                [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom_icon.png"] forState:UIControlStateNormal];
-                [zoomButton addTarget:self action:@selector(gotoZoomView:) forControlEvents:UIControlEventTouchUpInside];
-                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
-                [name setNumberOfLines:0];
-                [name setText:photo.description];
-                [name setBackgroundColor:[UIColor clearColor]];
-                imgView.userInteractionEnabled = YES;
-                imgView.tag = i;
-                aView.tag=i;
-                imgView.exclusiveTouch = YES;
-                imgView.clipsToBounds = NO;
-                imgView.opaque = YES;
-                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-                imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=2.0;
-                imgView.layer.masksToBounds = YES;
-                imgView.contentMode=UIViewContentModeScaleAspectFit;
-                [imgView.layer setCornerRadius:7.0];
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-                for (int c=0; c<[customSelectedPhotoIndex count]; c++)
-                {
-                    if ([[photoFilterList1 objectAtIndex:i] isEqual:[customSelectedPhotoIndex objectAtIndex:c]]) 
-                    {
-                        imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                        NSLog(@"found selected: %@",[customSelectedPhotoIndex objectAtIndex:c]);
-                    }
-                    else
-                    {
-                    }
-                }
-                [aView addSubview:imgView];
-                [aView addSubview:zoomButton];
-                [aView addSubview:name];
-                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePhotoTapGesture:)];
-                tapGesture.numberOfTapsRequired = 1;
-                [imgView addGestureRecognizer:tapGesture];
-                [tapGesture release];           
-                [photoScrollView addSubview:aView];
-            }        
-        }
-        
-        //handling custom scroller
-        for(int i=0; i<[photoFilterList2 count];i++)               
-        {
-            if(i< [photoFilterList2 count]) 
-            { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[photoFilterList2 objectAtIndex:i];
-                imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
-                if (photo.imageUrl == nil) 
-                {
-                    imgView.image = [UIImage imageNamed:@"blank.png"];
-                } 
-                else if([dicImages_msg valueForKey:photo.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:photo.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:photo.imageUrl]==nil)) 
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"blank.png"] forKey:photo.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoadPhoto:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"blank.png"];                   
-                    }               
-                }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
-                UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-                UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
-                [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
-                [name setNumberOfLines:0];
-                [name setText:photo.description];
-                [name setBackgroundColor:[UIColor clearColor]];
-                imgView.userInteractionEnabled = YES;
-                imgView.tag = i;
-                aView.tag=i;
-                imgView.exclusiveTouch = YES;
-                imgView.clipsToBounds = NO;
-                imgView.opaque = YES;
-                imgView.contentMode=UIViewContentModeScaleAspectFit;
-                imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-                imgView.userInteractionEnabled=YES;
-                imgView.layer.borderWidth=2.0;
-                imgView.layer.masksToBounds = YES;
-                [imgView.layer setCornerRadius:7.0];
-                imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-                [aView addSubview:imgView];
-                [largePhotoScroller addSubview:aView];
-            }        
-            x2+=320;
-        }
-    }
-}
-
--(IBAction)gotoZoomView:(id)sender
-{
-    [self scrollToPage:[sender tag]:NO];
-    CGFloat xpos = self.view.frame.origin.x;
-    CGFloat ypos = self.view.frame.origin.y;
-    zoomView.frame = CGRectMake(xpos+100,ypos+150,5,5);
-    [UIView beginAnimations:@"Zoom" context:NULL];
-    [UIView setAnimationDuration:0.8];
-    zoomView.frame = CGRectMake(xpos, ypos-20, 320, 460);
-    [UIView commitAnimations];
-    [self.view addSubview:zoomView];
-    NSLog(@"tag: %d",[sender tag]);
-}
-
--(IBAction)closeZoomView:(id)sender
-{
-    CATransition *animation = [CATransition animation];
-	[animation setType:kCATransitionFade];	
-	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
-    [zoomView removeFromSuperview];
-}
-
--(IBAction)viewPrevImage:(id)sender
-{
-    NSLog(@"view previous img");
-    [self scrollToPage:zoomIndex-1:YES];
-}
-
--(IBAction)viewNextImage:(id)sender
-{
-    NSLog(@"view next img %d",zoomIndex);
-    [self scrollToPage:zoomIndex+1:YES];
-}
-
--(void)scrollToPage:(int)page:(BOOL)animated
-{
-    CGRect frame = largePhotoScroller.frame;
-    frame.origin.x = frame.size.width * page;
-    frame.origin.y = 0;
-    [largePhotoScroller scrollRectToVisible:frame animated:animated];
-}
-
--(void)loadData:(NSMutableArray *)photoListArr
-{
-    Photo *photo=[[Photo alloc] init];
-    photoFilterList1=[[NSMutableArray alloc] init];
-    //    for (int i=0; i<[photoListArr count]; i++)
-    //    {
-    //        photo=[[Photo alloc] init];
-    //        [photoListArr addObject:photo];
-    //        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
-    //    }
-    photoFilterList1=[photoListArr mutableCopy];
-    photoFilterList2=[photoListArr mutableCopy];
-    [self reloadPhotoScrolview];
-    NSLog(@"photoFilterList1 count: %d",[photoFilterList1 count]);
-}
-
--(void)DownLoadPhoto:(NSNumber *)path
-{
-    if (isBackgroundTaskRunning==true)
-    {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-        int index = [path intValue];
-        Photo *photo=[[Photo alloc] init];
-        photo=[photoFilterList1 objectAtIndex:index];
-        
-        NSString *Link = photo.imageUrl;
-        //Start download image from url
-        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-        if(img)
-        {
-            //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:photo.imageUrl];
-            [self reloadPhotoScrolview];
-        }
-        // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
-    }
-}
-
--(void)DownLoadThum:(NSNumber *)path
-{
-    if (isBackgroundTaskRunning==true)
-    {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-        int index = [path intValue];
-        Photo *photo=[[Photo alloc] init];
-        photo=[photoFilterList1 objectAtIndex:index];
-        
-        NSString *Link = photo.photoThum;
-        //Start download image from url
-        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-        if(img)
-        {
-            //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:photo.photoThum];
-            [self reloadPhotoScrolview];
-        }
-        // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
-    }
-}
-
-//handling selection from scroll view of friends selection
--(IBAction) handlePhotoTapGesture:(UIGestureRecognizer *)sender
-{
-    NSArray* subviews = [NSArray arrayWithArray: photoScrollView.subviews];
-    if ([customSelectedPhotoIndex containsObject:[photoFilterList1 objectAtIndex:[sender.view tag]]])
-    {
-        [customSelectedPhotoIndex removeObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
-    } 
-    else 
-    {
-        [customSelectedPhotoIndex removeAllObjects];
-        [customSelectedPhotoIndex addObject:[photoFilterList1 objectAtIndex:[sender.view tag]]];
-    }
-    Photo *photo=[[Photo alloc] init];
-    photo=[photoFilterList1 objectAtIndex:[sender.view tag]];
-    NSLog(@"selectedFriendsIndex2 : %@",customSelectedPhotoIndex);
-    for (int l=0; l<[subviews count]; l++)
-    {
-        UIView *im=[subviews objectAtIndex:l];
-        NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
-        UIImageView *im1=[subviews1 objectAtIndex:0];
-        
-        if ([im1.image isEqual:photo.photoImage])
-        {
-            [im1 setAlpha:1.0];
-            im1.layer.borderWidth=2.0;
-            im1.layer.masksToBounds = YES;
-            [im1.layer setCornerRadius:7.0];
-            im1.layer.borderColor=[[UIColor greenColor]CGColor];
-        }
-    }
-    [self reloadPhotoScrolview];
-}
-
 //Photo scrollers ends
 //keyboard hides input fields deleget methods
 
@@ -2004,14 +1640,6 @@ int geoCounter=0;
     [UIView commitAnimations];    
 }
 
-- (void)getPhotoForGeoTagDone:(NSNotification *)notif
-{
-    [smAppDelegate.window setUserInteractionEnabled:YES];
-    [smAppDelegate hideActivityViewer];
-    [self loadData:[notif object]];
-    [self reloadPhotoScrolview];
-}
-
 - (void)createGeoTagDone:(NSNotification *)notif
 {
     geoCounter++;
@@ -2037,9 +1665,7 @@ int geoCounter=0;
 
 -(void)hidePhotoScroller:(BOOL)isHidden
 {
-    [deletePhotoButton setHidden:isHidden];
-    [uploadPhotoButton setHidden:isHidden];
-    [photoScrollView setHidden:isHidden];
+    [eventImagview setHidden:isHidden];
 }
 
 -(void)hideCommentsView:(BOOL)isHidden

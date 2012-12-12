@@ -2365,7 +2365,7 @@ ButtonClickCallbackData callBackData;
                 item.itemDistance=[aGeotag.geoTagDistance floatValue];
                 item.itemDistance=[UtilityClass getDistanceWithoutFormattingFromLocation:aGeotag.geoTagLocation];
                 item.itemIcon=[UIImage imageNamed:@"sm_icon.png.png"];
-                item.itemBg=[UIImage imageNamed:@"cover_pic_default.png"];
+                item.itemCoverPhotoUrl=[NSURL URLWithString:aGeotag.geoTagImageUrl];
                 item.currDisplayState=0;
                 item.itemCategory=[NSString stringWithFormat:@"%@ %@",aGeotag.ownerLastName,aGeotag.ownerFirstName];
                 [smAppDelegate.geotagList replaceObjectAtIndex:i withObject:item];

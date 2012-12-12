@@ -48,7 +48,7 @@ AppDelegate *smAppDelegate;
         NSLog(@"viewcontroller smAppDelegate.authToken: %@ %i %i",smAppDelegate.authToken,[smAppDelegate.authToken isKindOfClass:[NSString class]],[smAppDelegate.authToken isMemberOfClass:[NSNull class]]);
         [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
         RestClient *rc=[[RestClient alloc] init];
-        [rc getFriendListWithAuthKey:@"Auth-Token" tokenValue:smAppDelegate.authToken andFriendId:smAppDelegate.userId];
+        [rc getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];
         userInfoServiceLoginFlag=FALSE;
     }
     else
