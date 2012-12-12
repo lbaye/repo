@@ -104,6 +104,7 @@ class MessageRepo extends Base {
 
     private function clearReadBy(MessageDocument $message, UserDocument $user) {
         $message->resetReadStatusFor($user);
+        $message->setUpdateDate(new \DateTime());
         $this->dm->persist($message);
         $this->dm->flush();
     }
