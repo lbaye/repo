@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
@@ -341,7 +341,7 @@
             <objects>
                 <viewController storyboardIdentifier="mapViewController" id="wC3-So-nVM" customClass="MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iiB-MM-eFF">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="vAv-Wy-i1h" userLabel="MapView">
@@ -965,8 +965,8 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="logo_3.png" id="bai-L9-D0Y" userLabel="mapViewLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="bai-L9-D0Y" userLabel="mapViewLogo">
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -1463,7 +1463,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="D2K-Aq-XYw" userLabel="consentLogo">
-                                        <rect key="frame" x="100" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -1533,7 +1533,7 @@
             <objects>
                 <viewController title="List View Controller" id="fgr-fq-SqM" customClass="ListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2r9-Es-OgG">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Sh-3V-Ss1" userLabel="listPullDown">
@@ -1602,7 +1602,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="eIN-Wd-pT6" userLabel="mapViewLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -2015,7 +2015,7 @@
             <objects>
                 <viewController storyboardIdentifier="notificationViewController" id="xAh-9q-Sej" customClass="NotificationController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Jm0-Vq-vBY">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="QOl-IZ-Dve" userLabel="notifHeader">
@@ -2027,7 +2027,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="bdo-vY-f9P" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -2250,7 +2250,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="4si-r6-Geb" userLabel="regLogo">
-                                        <rect key="frame" x="100" y="8" width="121" height="30"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -2671,7 +2671,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="7Vj-F0-v7y" userLabel="settingsLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -3038,7 +3038,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="nk2-Qc-kxJ" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -3270,7 +3270,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="oyl-Tm-jvt" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -4435,7 +4435,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="y9C-Vp-hM9" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -4969,7 +4969,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="Dzu-LY-OAP" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -5103,7 +5103,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <image name="location_bar_radio_none.png" width="42" height="42"/>
         <image name="login_txt.png" width="422" height="26"/>
         <image name="logo_2.png" width="436" height="86"/>
-        <image name="logo_3.png" width="275" height="50"/>
+        <image name="logo_3.png" width="221" height="41"/>
         <image name="map_my_place_icon.png" width="28" height="35"/>
         <image name="map_view_bar.png" width="640" height="121"/>
         <image name="map_view_icon.png" width="44" height="36"/>
@@ -5570,6 +5570,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="O7W-hL-Xr5"/>
         <segue reference="qvJ-bu-e6k"/>
     </inferredMetricsTieBreakers>
 </document>

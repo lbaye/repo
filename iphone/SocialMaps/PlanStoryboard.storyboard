@@ -420,7 +420,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="Imm-rZ-H9T" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -628,7 +628,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo_3.png" id="Db9-PS-mDP" userLabel="consentLogo">
-                                        <rect key="frame" x="92" y="8" width="137" height="25"/>
+                                        <rect key="frame" x="105" y="13" width="110" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                     </imageView>
@@ -811,7 +811,7 @@
         <image name="icon_camera.png" width="56" height="38"/>
         <image name="line_arrow_down_left.png" width="600" height="14"/>
         <image name="location_bar_radio_cheked.png" width="42" height="42"/>
-        <image name="logo_3.png" width="275" height="50"/>
+        <image name="logo_3.png" width="221" height="41"/>
         <image name="show_on_map.png" width="43" height="43"/>
         <image name="sp2.png" width="1" height="60"/>
         <image name="top_curve_bg.png" width="640" height="138"/>
