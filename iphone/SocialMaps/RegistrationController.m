@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "NSData+Base64.h"
 #import "UtilityClass.h"
+#import "ActionSheetPicker.h"
 
 @implementation RegistrationController
 @synthesize regEmail;
@@ -160,7 +161,13 @@
 }
 
 - (IBAction)selectGender:(id)sender {
-    selMaleFemale.hidden = FALSE;
+//    selMaleFemale.hidden = FALSE;
+    [ActionSheetPicker displayActionPickerWithView:sender data:arrayGender selectedIndex:0 target:self action:@selector(genderWasSelected::) title:@"Select Gender"];
+}
+
+-(void)genderWasSelected:(NSNumber *)selectedIndex:(id)element 
+{
+    regGender.text = [arrayGender objectAtIndex:[selectedIndex intValue]];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
@@ -197,12 +204,40 @@
     } else if ([userInfo.email isEqualToString:@""] || userInfo.email == nil ||
         [userInfo.password isEqualToString:@""] || userInfo.password == nil ||
         [userInfo.lastName isEqualToString:@""] || userInfo.lastName == nil ||
-        [userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil) {
+        [userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil ||
+        regPhoto == nil ||[regGender.text isEqualToString:@""])
+    {
+        NSMutableString *message=[[NSMutableString alloc] initWithString:@"Please provide "];        
+        if (regPhoto == nil)
+        {
+            [message appendString:@"image, "];            
+        }
+        if ([userInfo.email isEqualToString:@""] || userInfo.email == nil)
+        {
+            [message appendString:@"email address, "];
+        }
+        if ([userInfo.password isEqualToString:@""] || userInfo.password == nil)
+        {
+            [message appendString:@"password, "];
+        }
+        if ([regGender.text isEqualToString:@""])
+        {
+            [message appendString:@"gender, "];
+        }
+        if ([userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil)
+        {
+            [message appendString:@"first name, "];
+        }
+        
+        if ([userInfo.lastName isEqualToString:@""] || userInfo.lastName == nil)
+        {
+            [message appendString:@"last name "];
+        }
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
         CustomAlert *loginAlert = [[CustomAlert alloc]
                                    initWithTitle:@"Required information missing"
-                                   message:@"Please provide all required information"
+                                   message:message
                                    delegate:nil
                                    cancelButtonTitle:@"Done"
                                    otherButtonTitles:nil];
