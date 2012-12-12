@@ -1,4 +1,5 @@
 body {
+  background: #d0f0e2;
   margin: 0px;
   padding: 0px;
   font-family: helvetica;
@@ -24,10 +25,15 @@ ul {
 }
 ul li {
   clear: both;
-  margin: 0;
+  margin: 10px;
   padding: 0;
-  margin-bottom: 15px;
-  min-height: 80px;
+  /*margin-bottom: 15px;*/
+
+  /*min-height: 80px;*/
+
+  background: #fff;
+  box-shadow: 0px 0px 6px #888;
+  border-radius: 4px;
 }
 ul li .row {
   clear: both;
@@ -35,6 +41,7 @@ ul li .row {
 }
 ul li .row .avatar {
   float: left;
+  margin-top: 10px;
   margin-left: 10px;
   margin-right: 5px;
   width: 40px;
@@ -50,7 +57,7 @@ ul li .row .avatar img {
 }
 ul li .row .name {
   float: left;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 ul li .row .name .right {
   float: left;
@@ -72,7 +79,7 @@ ul li .row .name h4 {
 ul li .row .time {
   float: right;
   margin-right: 10px;
-  margin-top: 5px;
+  margin-top: 10px;
   color: #888;
 }
 ul li .row .comment {
@@ -99,31 +106,34 @@ ul li .row-float {
 }
 ul li .tools {
   clear: both;
-  text-align: right;
+  text-align: left;
   cursor: pointer;
   list-style-type: none;
   display: block;
   height: 25px;
-  padding-right: 10px;
+  background: #f0f0f0;
+  padding: 10px;
 }
 ul li .tools a {
   width: 70px;
   height: 25px;
   text-decoration: none;
   padding: 3px 5px 3px 5px;
-  color: #fff;
-  font-size: 90%;
+  color: #67b000;
+  font-size: 110%;
+  font-weight: bold;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   z-index: 400;
   line-height: 25px;
 }
-ul li .tools .disabled {
-  background: #888;
+ul li .tools .link_likes {
+  float: right;
+  width: auto;
 }
-ul li .tools .enabled {
-  background: #94C11C;
+ul li .tools .disabled {
+  color: #888;
 }
 ul li .activity .row .comment {
   width: auto;
@@ -147,7 +157,7 @@ ul li .photo .row .image img {
   width: 100%;
 }
 ul li .list_of_likes {
-  border: 1px solid #ccc;
+  border-top: 1px solid #ccc;
 }
 ul li .list_of_likes h4 {
   padding: 5px;
@@ -174,6 +184,12 @@ ul li .list_of_likes table tr td img {
 ul li .list_of_likes table tr td a {
   color: #888;
   font-weight: bold;
+}
+ul li .tiny {
+  height: 60px;
+}
+ul li .tiny .name {
+  margin-top: 20px;
 }
 .notice-panel {
   padding: 5px;

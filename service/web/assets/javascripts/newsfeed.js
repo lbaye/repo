@@ -27,12 +27,31 @@
     };
 
     NewsfeedApp.prototype.initCurrentState = function() {
+      this.disableLikeButtons();
+      return this.disableUnlikeButtons();
+    };
+
+    NewsfeedApp.prototype.disableLikeButtons = function() {
       var that;
       that = this;
       return this.$('\\*[data-liked="true"]').each(function() {
         var el;
         el = that.$(this);
-        return that.disableButton(el);
+        if (el.hasClass('link_like')) {
+          return el.hide();
+        }
+      });
+    };
+
+    NewsfeedApp.prototype.disableUnlikeButtons = function() {
+      var that;
+      that = this;
+      return this.$('\\*[data-liked="false"]').each(function() {
+        var el;
+        el = that.$(this);
+        if (el.hasClass('link_unlike')) {
+          return el.hide();
+        }
       });
     };
 
@@ -42,24 +61,37 @@
       this.$('.link_like').live('click', function() {
         return that.tapOnLike(that.$(this));
       });
+      this.$('.link_unlike').live('click', function() {
+        return that.tapOnUnLike(that.$(this));
+      });
       this.$('.link_comment').live('click', function() {
         return that.tapOnComment(that.$(this));
       });
       this.$('.link_close').live('click', function() {
         return that.tapOnCloseLikesPanel(that.$(this));
       });
+      this.$('.link_likes').live('click', function() {
+        return that.tapOnLikesList(that.$(this));
+      });
       return this.$(window.document).bind('mousedown', function(e) {
         return false;
       });
     };
 
+    NewsfeedApp.prototype.tapOnLikesList = function(el) {
+      return this.loadLikes(el);
+    };
+
     NewsfeedApp.prototype.tapOnLike = function(el) {
       if (this.isDisabled(el)) {
-        this.showMessage('success', 'You have already liked it!');
-        return this.loadLikes(el);
+        return this.showMessage('success', 'You have already liked it!');
       } else {
         return this.likeThis(el);
       }
+    };
+
+    NewsfeedApp.prototype.tapOnUnLike = function(el) {
+      return this.showMessage('success', 'You have unliked it');
     };
 
     NewsfeedApp.prototype.tapOnComment = function(el) {
@@ -86,11 +118,9 @@
       uri = '/newsfeed/' + el.attr('data-objectid') + '/like';
       this.sendRequestTo(uri).success(function(r) {
         return that.processServerResponse(el, r);
-      }).complete(function(r) {
-        return that.loadLikes(el);
       });
-      this.incrementCount(this.$(el), 1);
-      return this.disableButton(this.$(el));
+      this.incrementCount(this.$(el).parent().find('.link_likes'), 1);
+      return this.disableLikeButton(this.$(el));
     };
 
     NewsfeedApp.prototype.processServerResponse = function(el, response) {
@@ -159,8 +189,9 @@
       return el.attr('data-ui-enabled') === 'false' || el.hasClass('disabled');
     };
 
-    NewsfeedApp.prototype.disableButton = function(el) {
-      return el.css('data-ui-enabled', 'false').removeClass('enabled').addClass('disabled');
+    NewsfeedApp.prototype.disableLikeButton = function(el) {
+      el.removeClass('enabled').addClass('disabled').hide();
+      return el.parent().find('.link_unlike').removeClass('disabled').addClass('enabled').show();
     };
 
     NewsfeedApp.prototype.enableButton = function(el) {
