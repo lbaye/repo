@@ -278,10 +278,15 @@ class Message
     public function addReadStatusFor(\Document\User $user)
     {
         if (empty($this->readBy)) {
-            $this->readBy = array($user->getId());
+            $this->resetReadStatusFor($user);
         } else {
             $this->readBy[] = $user->getId();
         }
+    }
+
+    public function resetReadStatusFor(\Document\User $user)
+    {
+       $this->readBy = array($user->getId());
     }
 
     public function setMetaContent($metaContent)
