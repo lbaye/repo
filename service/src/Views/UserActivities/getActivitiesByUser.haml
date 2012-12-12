@@ -161,7 +161,7 @@
                   .row.list_of_likes(id=$rowLikesId style='display:none')
         .more
           %span
-            %a
+            %a(href="self::expand")
               Load more...
           - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
           %img(src=$loadingImage)
