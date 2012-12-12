@@ -84,11 +84,12 @@ class MessageRepo extends Base {
         # Add to parent message
         try {
             $thread = $message->getThread();
-            if (!empty($thread))
+            if (!empty($thread)) {
                 $this->addToThread($message);
-                // Clear readby for parent message
                 if(!is_null($user))
                     $this->clearReadBy($thread, $user);
+            }
+
         } catch (\Exception $e) {
             die($e);
         }
