@@ -21,6 +21,7 @@
 #import "NotificationController.h"
 #import "SelectCircleTableCell.h"
 #import "DirectionViewController.h"
+#import "UITextView+PlaceHolder.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -116,6 +117,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     selectedCircleCheckOriginalArr = [[NSMutableArray alloc] init];
     tableViewCircle.dataSource = self;
     tableViewCircle.delegate = self;
+    
+    [textViewReplyMsg setPlaceHolderText:@"Your Message..."];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -1019,12 +1022,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     } else {
         [self setViewMovedUp:messageRepiesView];
     }
-    
+
     if (!(textView.textColor == [UIColor blackColor])) {
         textView.text = @"";
         textView.textColor = [UIColor blackColor];
     }
     return YES;
+    
 }
 
 //Lazy loading method starts
