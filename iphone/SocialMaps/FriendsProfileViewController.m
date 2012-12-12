@@ -301,7 +301,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
             NSLog(@"geotag string: %@",userId);
         }
-        
+        else if ([tagStr isEqualToString:@"expand"])
+        {
+            [self performSelector:@selector(reloadProfileScrollView) withObject:nil afterDelay:3.0];
+        }
         return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }

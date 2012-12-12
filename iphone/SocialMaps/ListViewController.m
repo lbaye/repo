@@ -546,7 +546,6 @@ PullableView *pullUpView;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UIImageView *imageView = (UIImageView*)[cell viewWithTag:123456789];
-    //[imageView setImageForUrlIfAvailable:[NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"]];
     [imageView setImageForUrlIfAvailable:anItem.itemCoverPhotoUrl];
     
     return cell;

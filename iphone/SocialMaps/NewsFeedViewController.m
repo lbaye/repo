@@ -76,7 +76,8 @@ UILabel *statusLabel;
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     [smAppDelegate showActivityViewer:self.view];
-     NSString *urlStr=[NSString stringWithFormat:@"%@/me/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+     NSString *urlStr = [NSString stringWithFormat:@"%@/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+
     NSLog(@"urlStr %@",urlStr);
     [self displayNotificationCount];
     [newsFeedView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];    
@@ -136,7 +137,10 @@ UILabel *statusLabel;
             NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
             NSLog(@"geotag string: %@",userId);
         }
-        
+        else if ([tagStr isEqualToString:@"expand"])
+        {
+            [self performSelector:@selector(reloadNewsFeedScrollView) withObject:nil afterDelay:3.0];
+        }
         return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
@@ -144,6 +148,24 @@ UILabel *statusLabel;
     return YES;
 }
 
+
+-(void)reloadNewsFeedScrollView
+{
+    CGRect frame = newsFeedView.frame;
+    frame.size.height = 1;
+    newsFeedView.frame = frame;
+    CGSize fittingSize = [newsFeedView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    newsFeedView.frame = frame;
+    newsFeedscrollHeight=newsFeedView.frame.size.height;
+    NSLog(@"webview size: %f, %f", fittingSize.width, fittingSize.height);
+    [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    [newsFeedView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none'"];
+    [smAppDelegate hideActivityViewer];
+    [newsFeedScroller setContentSize:CGSizeMake(320, fittingSize.height)];
+    NSLog(@"Frame %@ %@",NSStringFromCGSize(newsFeedScroller.contentSize),NSStringFromCGRect(newsFeedView.frame));
+
+}
 
 -(void)loadNewsFeedImage:(NSString *)imageUrlStr
 {
