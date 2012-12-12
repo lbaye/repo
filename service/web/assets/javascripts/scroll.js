@@ -7,25 +7,29 @@ $(document).ready(function () {
 
     $('.more').click(function () {
         var success = function (res) {
-            $('.content ul').append(res);
-            var new_num = parseInt($('.events').length);
-            var old_num = parseInt(container.attr('count'));
-            container.attr("count", new_num);
+            try {
+                $('.content ul').append(res);
+                var new_num = parseInt($('.events').length);
+                var old_num = parseInt(container.attr('count'));
+                container.attr("count", new_num);
 
-            if (new_num < (old_num + 4)) {
-                $('.more').hide();
-            } else {
-                $('.more span').show();
-                $('.more img').hide();
+                if (new_num < (old_num + 4)) {
+                    $('.more').hide();
+                } else {
+                    $('.more span').show();
+                    $('.more img').hide();
+                }
+
+                window.appInst.initCurrentState();
+            } catch (e) {
+                alert(e);
             }
-
-            window.appInst.initCurrentState();
-        }
+        };
 
         var hideText = function(){
             $('.more span').hide();
             $('.more img').show();
-        }
+        };
 
         var offset = parseInt($('.events').length);
         container.attr("scroll", "no");
