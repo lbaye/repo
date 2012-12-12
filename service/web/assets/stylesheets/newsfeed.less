@@ -9,6 +9,7 @@ body {
     font-family: helvetica;
     font-size: 12px;
     margin-top: 10px;
+
     .more {
       color: @SM_GREEN;
       text-align: center;
@@ -67,10 +68,11 @@ ul {
             }
 
             .name {
+                max-width: 80%;
                 float: left;
                 margin-top: 10px;
 
-                .right{
+                .right {
                   float: left;
                   margin-top: 3px;
                 }
@@ -78,6 +80,10 @@ ul {
                 .left {
                   margin-right: 5px;
                   float: left;
+
+                  h4 {
+                    display: inline;
+                  }
                 }
 
                 a {

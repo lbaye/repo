@@ -61,6 +61,7 @@ ul li .row .avatar img {
   height: 40px;
 }
 ul li .row .name {
+  max-width: 80%;
   float: left;
   margin-top: 10px;
 }
@@ -71,6 +72,9 @@ ul li .row .name .right {
 ul li .row .name .left {
   margin-right: 5px;
   float: left;
+}
+ul li .row .name .left h4 {
+  display: inline;
 }
 ul li .row .name a {
   text-decoration: none;

@@ -7,6 +7,7 @@
       - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
       - $target = $networkFeed > 0 ? $currentUser->getId() . "/network" :  $currentUser->getId()
       %link(rel='stylesheet' href=$url)
+      %meta(name="viewport" content="initial-scale=1.0, user-scalable=no")
 
     %body
       .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
@@ -27,7 +28,6 @@
                       %a(href= $userProfileLink)
                         %h4
                           = $contextUser->getName()
-                    .right
                       %span
                         joined
                         %strong SocialMaps
@@ -62,7 +62,6 @@
                           %a(href= $userProfileLink)
                             %h4
                               = $photo->getOwner()->getName()
-                        .right
                           %span
                             has uploaded a new picture.
                     .time
@@ -204,7 +203,6 @@
                   %a(href= $userProfileLink)
                     %h4
                       = $photo->getOwner()->getName()
-                .right
                   %span
                     has uploaded a new picture.
             .time
