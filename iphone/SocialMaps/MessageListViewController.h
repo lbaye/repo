@@ -58,6 +58,8 @@
     IBOutlet UIView *viewCircleList;
     
     NSMutableArray *selectedCircleCheckOriginalArr;
+    
+    BOOL            isGroupChat;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
