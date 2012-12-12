@@ -6926,7 +6926,7 @@ AppDelegate *smAppDelegate;
                 [friendListGlobalArray removeAllObjects];
             }
             else {
-                friendListGlobalArray=[[NSMutableArray alloc] ini];
+                friendListGlobalArray=[[NSMutableArray alloc] init];
             }
             NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
             
@@ -6966,6 +6966,25 @@ AppDelegate *smAppDelegate;
                         [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
                     }
                 }
+                
+                NSMutableArray *circleList=[[NSMutableArray alloc] init];
+                for (int i=0; i<[[jsonObjects objectForKey:@"circles"] count];i++)
+                {
+                    UserCircle *circle=[[UserCircle alloc] init];
+                    circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
+                    circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
+                    NSString *type =[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                    if ([type caseInsensitiveCompare:@"custom"] == NSOrderedSame)
+                        circle.type = CircleTypeCustom;
+                    else if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                        circle.type = CircleTypeSystem;
+                    else
+                        circle.type = CircleTypeSecondDegree;
+                    circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                    [circleList addObject:circle];
+                    NSLog(@"circle.circleID: %@",circle.circleID);
+                }
+                circleListGlobalArray=circleList;
                 
                 [eachFriendsList addObject:eachFriend];
             }
@@ -7403,11 +7422,15 @@ AppDelegate *smAppDelegate;
         {
             NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
             NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
-            
+            if (friendListGlobalArray) {
+                [friendListGlobalArray removeAllObjects];
+            }
+            else {
+                friendListGlobalArray=[[NSMutableArray alloc] init];
+            }
             NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
-            [friendListGlobalArray removeAllObjects];
-            for (NSDictionary *dicFriends in friendList)
-            {
+            
+            for (NSDictionary *dicFriends in friendList) {
                 NSLog(@"friendDic = %@", dicFriends);
                 
                 EachFriendInList *eachFriend = [[EachFriendInList alloc] init];
@@ -7417,19 +7440,6 @@ AppDelegate *smAppDelegate;
                 eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
                 eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
                 
-                for (NSDictionary *dicCircle in circleList)
-                {
-                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
-                    if ([frndIdList containsObject:eachFriend.friendId])
-                    {
-                        if (!eachFriend.friendCircle) 
-                        {
-                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
-                        }
-                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
-                    }
-                }
-                [eachFriendsList addObject:eachFriend];
                 //user frnd global starts
                 UserFriends *frnd = [[UserFriends alloc] init];
                 frnd.userId = [self getNestedKeyVal:dicFriends key1:@"id" key2:nil key3:nil];
@@ -7446,6 +7456,37 @@ AppDelegate *smAppDelegate;
                 [friendListGlobalArray addObject:frnd];
                 NSLog(@"globalfrnd.userId: %@ %@ %lf %@ %@ %@ %@",frnd.userId,frnd.imageUrl,frnd.distance,frnd.coverImageUrl,frnd.address,frnd.statusMsg,frnd.regMedia);
                 //user friends global ends
+                
+                
+                for (NSDictionary *dicCircle in circleList) {
+                    NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
+                    if ([frndIdList containsObject:eachFriend.friendId]) {
+                        if (!eachFriend.friendCircle) 
+                            eachFriend.friendCircle = [[NSMutableArray alloc] init];
+                        [eachFriend.friendCircle addObject:[dicCircle objectForKey:@"name"]];
+                    }
+                }
+                
+                NSMutableArray *circleList=[[NSMutableArray alloc] init];
+                for (int i=0; i<[[jsonObjects objectForKey:@"circles"] count];i++)
+                {
+                    UserCircle *circle=[[UserCircle alloc] init];
+                    circle.circleID=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"id"];
+                    circle.circleName=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"name"];
+                    NSString *type =[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"type"];
+                    if ([type caseInsensitiveCompare:@"custom"] == NSOrderedSame)
+                        circle.type = CircleTypeCustom;
+                    else if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame)
+                        circle.type = CircleTypeSystem;
+                    else
+                        circle.type = CircleTypeSecondDegree;
+                    circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
+                    [circleList addObject:circle];
+                    NSLog(@"circle.circleID: %@",circle.circleID);
+                }
+                circleListGlobalArray=circleList;
+                
+                [eachFriendsList addObject:eachFriend];
             }
             
 //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
