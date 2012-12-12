@@ -1,0 +1,74 @@
+{% extends "AdminUserBundle::layout.html.twig" %}
+
+{% block title "Social Maps - Place Search Result " %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ asset('bundles/whiteoctoberpagerfanta/css/pagerfantaDefault.css') }}" type="text/css"
+      media="all"/>
+<a href="{{ path('admin_user_logoutpage') }}">Logout</a> <br/>
+<a href="{{ path('manage_place_paginated', {'page': 1}) }}"><< Back To Place List</a>
+<table class="user_list" align="right">
+    <tr>
+        <td>
+            <form action="{{ path('place_search_result', {'page': 1}) }}" method="POST" id="search_keyword">
+                {{ form_rest(form) }}
+
+            </form>
+        </td>
+    </tr>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>Place ID</th>
+
+            <th>Category</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th class="actionHeader">Actions</th>
+        </tr>
+        </thead>
+
+        {% if pager|length > 0 %}
+
+        <tbody>
+        {% for place in entities %}
+        <tr>
+            <td><a href="{{ path('manage_place_edit', {'id': place.id}) }}">{{ place.id }}</a></td>
+
+            <td>{{ place.category }}</td>
+            <td>{{ place.title }}</td>
+            <td>{{ place.description }}</td>
+
+            <td>
+                <div class="actions">
+                    <a title="Edit" class="btn btn-primary btn-mini edit-item"
+                       href="{{ path('manage_place_edit', {'id': place.id}) }}"><i class="icon-edit icon-white"></i>Edit</a>
+                    <br/><br/>
+
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6">
+                <div class="pagerfanta">
+                    {{ pagerfanta(pager, 'default') }}
+                </div>
+            </td>
+        </tr>
+        </tfoot>
+        {% else %}
+        <tfoot>
+        <tr>
+            <td colspan="6">
+                <div class="pagerfanta">
+                    No Place Found.
+                </div>
+            </td>
+        </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+    {% endblock %}
