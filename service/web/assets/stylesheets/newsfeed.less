@@ -1,14 +1,14 @@
 
+@SM_BG_COLOR: #D0F0E2;
 @SM_GREEN: #67b000;
 
-
 body {
+    background: @SM_BG_COLOR;
     margin:  0px;
     padding:  0px;
     font-family: helvetica;
     font-size: 12px;
     margin-top: 10px;
-
     .more {
       color: @SM_GREEN;
       text-align: center;
@@ -30,10 +30,13 @@ ul {
 
     li {
         clear: both;
-        margin: 0;
+        margin: 10px;
         padding: 0;
-        margin-bottom: 15px;
-        min-height: 80px;
+        /*margin-bottom: 15px;*/
+        /*min-height: 80px;*/
+        background: #fff;
+        box-shadow: 0px 0px 6px #888;
+        border-radius: 4px;
 
         .row {
             clear: both;
@@ -41,6 +44,7 @@ ul {
 
             .avatar {
                 float: left;
+                margin-top: 10px;
                 margin-left: 10px;
                 margin-right: 5px;
                 width: 40px;
@@ -58,7 +62,7 @@ ul {
 
             .name {
                 float: left;
-                margin-top: 5px;
+                margin-top: 10px;
 
                 .right{
                   float: left;
@@ -85,7 +89,7 @@ ul {
             .time {
                 float: right;
                 margin-right: 10px;
-                margin-top: 5px;
+                margin-top: 10px;
                 color: #888;
             }
 
@@ -117,20 +121,22 @@ ul {
 
         .tools {
             clear: both;
-            text-align: right;
+            text-align: left;
             cursor: pointer;
             list-style-type: none;
             display: block;
             height: 25px;
-            padding-right: 10px;
+            background: #f0f0f0;
+            padding: 10px;
 
             a {
                 width: 70px;
                 height: 25px;
                 text-decoration: none;
                 padding: 3px 5px 3px 5px;
-                color: #fff;
-                font-size: 90%;
+                color: @SM_GREEN;
+                font-size: 110%;
+                font-weight: bold;
                 -webkit-border-radius: 5px;
                 -moz-border-radius: 5px;
                 border-radius: 5px;
@@ -138,12 +144,17 @@ ul {
                 line-height: 25px;
             }
 
+            .link_likes {
+                float: right;
+                width: auto;
+            }
+
             .disabled {
-                background: #888;
+                color: #888;
             }
 
             .enabled {
-                background: #94C11C;
+
             }
 
         }
@@ -182,8 +193,7 @@ ul {
         }
 
         .list_of_likes {
-            border: 1px solid #ccc;
-
+            border-top: 1px solid #ccc;
             h4 {
                 padding: 5px;
                 background: #f0f0f0;
@@ -215,6 +225,13 @@ ul {
                         font-weight: bold;
                     }
                 }
+            }
+        }
+
+        .tiny {
+            height: 60px;
+            .name {
+                margin-top: 20px;
             }
         }
     }

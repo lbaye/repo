@@ -96,30 +96,26 @@ class UserActivities extends Base {
 
         $partialView = $offset > 0;
 
-        if (count($activities) == 0) {
-            $this->response->setContent('');
-            $this->response->headers->set('Content-Type', 'text/html');
-            return $this->response;
-        } else {
+        if (self::DEFAULT_CONTENT_TYPE === $type) {
             $items = array();
-            foreach ($activities as $activity) $items[] = $activity->toArray();
+            if (count($activities) > 0)
+                foreach ($activities as $activity) $items[] = $activity->toArray();
 
-            if (self::DEFAULT_CONTENT_TYPE === $type)
-                return $this->_generateResponse($items);
-            else {
-                return $this->render(
-                    array(
-                         'activities' => $activities,
-                         'userRepo' => $this->userRepository,
-                         'photoRepo' => $this->photoRepository,
-                         'geotagRepo' => $this->geotagRepository,
-                         'activityRepo' => $this->userActivitiesRepo,
-                         'currentUser' => $user,
-                         'partialView' => $partialView,
-                         'networkFeed' => $networkFeed,
-                         'authToken' => $user->getAuthToken()
-                    ));
-            }
+            return $this->_generateResponse($items);
+        } else {
+            return $this->render(
+                array(
+                     'activities' => $activities,
+                     'userRepo' => $this->userRepository,
+                     'photoRepo' => $this->photoRepository,
+                     'geotagRepo' => $this->geotagRepository,
+                     'activityRepo' => $this->userActivitiesRepo,
+                     'contextUser' => $user,
+                     'currentUser' => $this->user,
+                     'partialView' => $partialView,
+                     'networkFeed' => $networkFeed,
+                     'authToken' => $this->user->getAuthToken()
+                ));
         }
     }
 

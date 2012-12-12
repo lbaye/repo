@@ -11,12 +11,12 @@
     %body
       .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
         %ul
-          - $userProfileLink =  "self::profile:" . $currentUser->getId()
-          %li.events
-            .activity
+          - $userProfileLink =  "self::profile:" . $contextUser->getId()
+          %li
+            .activity.tiny
               .row
                 .avatar
-                  - $avatarPath = $currentUser->getAvatar()
+                  - $avatarPath = $contextUser->getAvatar()
                   - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
 
                   %a(href= $userProfileLink)
@@ -26,13 +26,17 @@
                     .left
                       %a(href= $userProfileLink)
                         %h4
-                          = $currentUser->getName()
+                          = $contextUser->getName()
                     .right
                       %span
-                        joined SocialMaps on
-                      - $date = (array)$currentUser->getCreateDate()
+                        joined
+                        %strong SocialMaps
+                        on
+                      - $date = (array)$contextUser->getCreateDate()
                       = date('F Y',strtotime($date['date']))
                       .
+
+            %div.clearfix
 
           - foreach($activities as $activity)
             - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
@@ -79,7 +83,15 @@
                     .tools
                       %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                            data-objecttype=$activity->getObjectType()
-                                           data-liked=$liked data-likes=$rowLikesId)
+                                           data-liked=$liked)
+                        Like
+
+                      %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Unlike
+                      %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                                    data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                         = $activity->getLikesCount()
                         - if ($activity->getLikesCount() > 1)
                           Likes
@@ -104,13 +116,13 @@
                       - if ($activity->getCreatedAt() != null)
                         = $activity->toHumanizeDate()
 
-                    .comment
-                      - if ($activity->getOwner()->getId() == $currentUser->getId())
-                        - if ($activity->getObjectType() === 'geotag')
-                          - $geotag = $geotagRepo->find($activity->getObjectId())
-                          - $geoLocation = $geotag->getLocation()->toArray()
-                          - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+                    - if ($activity->getOwner()->getId() == $currentUser->getId())
+                      - if ($activity->getObjectType() === 'geotag')
+                        - $geotag = $geotagRepo->find($activity->getObjectId())
+                        - $geoLocation = $geotag->getLocation()->toArray()
+                        - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
+                        .comment
                           has tagged "
                           %a(href= $geotagLink)
                             %strong= stripcslashes($activity->getTitle())
@@ -118,28 +130,40 @@
                           at
                           %small= $geotag->getLocation()->getAddress()
 
-                        - if ($activity->getObjectType() === 'friend')
-                          - $friend = $userRepo->find($activity->getObjectId())
+                      - if ($activity->getObjectType() === 'friend')
+                        - $friend = $userRepo->find($activity->getObjectId())
+                        - $friendLink = "self::profile:" . $friend->getId()
+                        .comment
                           is now friend with
-                          = $friend->getName()
+                          %a(href=$friendLink)
+                            = $friend->getName()
                   %div.clearfix
 
                   .row
                     .tools
                       %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                            data-objecttype=$activity->getObjectType()
-                                           data-liked=$liked data-likes=$rowLikesId)
+                                           data-liked=$liked)
+                        Like
+
+                      %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                           data-objecttype=$activity->getObjectType()
+                                           data-liked=$liked)
+                        Unlike
+                      %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                                    data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                         = $activity->getLikesCount()
                         - if ($activity->getLikesCount() > 1)
                           Likes
                         - else
                           Like
+
                   .row.list_of_likes(id=$rowLikesId style='display:none')
         .more
           %span
             %a
               Load more...
-          - $loadingImage = $baseUrl . '/assets/images/loading.gif?' . $jsUpdateTime
+          - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
           %img(src=$loadingImage)
 
       - $jsUpdateTime = filemtime($baseDir . '/assets/javascripts/newsfeed.js')
@@ -201,12 +225,22 @@
             .tools
               %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                    data-objecttype=$activity->getObjectType()
-                                   data-liked=$liked data-likes=$rowLikesId)
+                                   data-liked=$liked)
+                Like
+
+              %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Unlike
+              %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                            data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                 = $activity->getLikesCount()
                 - if ($activity->getLikesCount() > 1)
                   Likes
                 - else
                   Like
+
+             
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
@@ -226,13 +260,13 @@
               - if ($activity->getCreatedAt() != null)
                 = $activity->toHumanizeDate()
 
-            .comment
-              - if ($activity->getOwner()->getId() == $currentUser->getId())
-                - if ($activity->getObjectType() === 'geotag')
-                  - $geotag = $geotagRepo->find($activity->getObjectId())
-                  - $geoLocation = $geotag->getLocation()->toArray()
-                  - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+            - if ($activity->getOwner()->getId() == $currentUser->getId())
+              - if ($activity->getObjectType() === 'geotag')
+                - $geotag = $geotagRepo->find($activity->getObjectId())
+                - $geoLocation = $geotag->getLocation()->toArray()
+                - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
+                .comment
                   has tagged "
                   %a(href= $geotagLink)
                     %strong= stripcslashes($activity->getTitle())
@@ -240,22 +274,35 @@
                   at
                   %small= $geotag->getLocation()->getAddress()
 
-                - if ($activity->getObjectType() === 'friend')
-                  - $friend = $userRepo->find($activity->getObjectId())
+              - if ($activity->getObjectType() === 'friend')
+                - $friend = $userRepo->find($activity->getObjectId())
+                - $friendLink = "self::profile:" . $friend->getId()
+                .comment
                   is now friend with
-                  = $friend->getName()
+                  %a(href=$friendLink)
+                    = $friend->getName()
+                    
           %div.clearfix
 
           .row
             .tools
               %a.link_like.enabled(href='javascript:;' data-objectid=$activity->getId()
                                    data-objecttype=$activity->getObjectType()
-                                   data-liked=$liked data-likes=$rowLikesId)
+                                   data-liked=$liked)
+                Like
+
+              %a.link_unlike.enabled(href='javascript:;' data-objectid=$activity->getId()
+                                   data-objecttype=$activity->getObjectType()
+                                   data-liked=$liked)
+                Unlike
+              %a.link_likes(href='javascript:;' data-objectid=$activity->getId()
+                            data-objecttype=$activity->getObjectType() data-likes=$rowLikesId)
                 = $activity->getLikesCount()
                 - if ($activity->getLikesCount() > 1)
                   Likes
                 - else
                   Like
+                  
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 

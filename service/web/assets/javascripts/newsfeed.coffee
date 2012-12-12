@@ -11,24 +11,45 @@ class NewsfeedApp
     getAuthToken: -> @authToken
 
     initCurrentState: ->
+        @disableLikeButtons()
+        @disableUnlikeButtons()
+
+    disableLikeButtons: ->
         that = @
         @$('\\*[data-liked="true"]').each ->
             el = that.$(@)
-            that.disableButton el
+
+            if el.hasClass('link_like')
+                el.hide()
+
+    disableUnlikeButtons: ->
+        that = @
+        @$('\\*[data-liked="false"]').each ->
+            el = that.$(@)
+
+            if el.hasClass('link_unlike')
+                el.hide()
 
     bindButtonsEvents: ->
         that = @
         @$('.link_like').live 'click', -> that.tapOnLike(that.$(@))
+        @$('.link_unlike').live 'click', -> that.tapOnUnLike(that.$(@))
         @$('.link_comment').live 'click', -> that.tapOnComment(that.$(@))
         @$('.link_close').live 'click', -> that.tapOnCloseLikesPanel(that.$(@))
+        @$('.link_likes').live 'click', -> that.tapOnLikesList(that.$(@))
         @$(window.document).bind 'mousedown', (e) -> false
+
+    tapOnLikesList: (el) ->
+        @loadLikes(el)
 
     tapOnLike: (el) ->
         if @isDisabled(el)
             @showMessage 'success', 'You have already liked it!'
-            @loadLikes(el)
         else
             @likeThis(el)
+
+    tapOnUnLike: (el) ->
+        @showMessage 'success', 'You have unliked it'
 
     tapOnComment: (el) ->
         alert 'Comment'
@@ -48,10 +69,9 @@ class NewsfeedApp
         that = @
         uri = '/newsfeed/' + el.attr('data-objectid') + '/like'
         @sendRequestTo(uri).success((r) -> that.processServerResponse(el, r))
-                           .complete((r) -> that.loadLikes(el))
 
-        @incrementCount @$(el), 1
-        @disableButton @$(el)
+        @incrementCount @$(el).parent().find('.link_likes'), 1
+        @disableLikeButton @$(el)
 
     processServerResponse: (el, response) ->
         @showMessage 'success', response.message
@@ -101,8 +121,9 @@ class NewsfeedApp
     isDisabled: (el) ->
         el.attr('data-ui-enabled') == 'false' || el.hasClass('disabled')
 
-    disableButton: (el) ->
-        el.css('data-ui-enabled', 'false').removeClass('enabled').addClass('disabled')
+    disableLikeButton: (el) ->
+        el.removeClass('enabled').addClass('disabled').hide()
+        el.parent().find('.link_unlike').removeClass('disabled').addClass('enabled').show()
 
     enableButton: (el) ->
         el.css('data-ui-enabled', 'true').removeClass('disabled').addClass('enabled')

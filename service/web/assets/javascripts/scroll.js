@@ -18,6 +18,8 @@ $(document).ready(function () {
                 $('.more span').show();
                 $('.more img').hide();
             }
+
+            window.appInst.initCurrentState();
         }
 
         var hideText = function(){
