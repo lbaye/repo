@@ -4,8 +4,13 @@ $(document).ready(function () {
     var target = container.attr("target");
     var baseUrl = container.attr("baseUrl");
     var authToken = container.attr("authToken");
+    var moreDiv = $('.more');
 
-    $('.more').click(function () {
+    if (parseInt($('.events').length) < 4) {
+        moreDiv.hide();
+    }
+
+    moreDiv.click(function () {
         var success = function (res) {
             try {
                 $('.content ul').append(res);
@@ -14,7 +19,7 @@ $(document).ready(function () {
                 container.attr("count", new_num);
 
                 if (new_num < (old_num + 4)) {
-                    $('.more').hide();
+                    moreDiv.hide();
                 } else {
                     $('.more span').show();
                     $('.more img').hide();
@@ -26,7 +31,7 @@ $(document).ready(function () {
             }
         };
 
-        var hideText = function(){
+        var hideText = function () {
             $('.more span').hide();
             $('.more img').show();
         };
@@ -37,7 +42,7 @@ $(document).ready(function () {
             type:'get',
             url:baseUrl + "/" + target + "/newsfeed.html?authToken=" + authToken,
             data:{offset:offset},
-            beforeSend: hideText,
+            beforeSend:hideText,
             success:success
         });
     });
