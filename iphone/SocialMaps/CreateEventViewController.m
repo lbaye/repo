@@ -962,6 +962,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                 return i;
             }
         }
+        [radio gotoButton:2];
     }
     return 0;
 }

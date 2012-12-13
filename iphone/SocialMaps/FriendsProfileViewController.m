@@ -718,6 +718,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     {
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
+        [self dismissModalViewControllerAnimated:YES];
     }
     reloadFrndsProfileCounter=0;
 }

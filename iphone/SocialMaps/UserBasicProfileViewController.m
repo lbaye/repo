@@ -519,6 +519,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     {
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
+        [self dismissModalViewControllerAnimated:YES];
     }
 
     reloadProfileCounter=0;

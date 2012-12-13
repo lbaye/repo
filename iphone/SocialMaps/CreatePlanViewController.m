@@ -92,7 +92,7 @@ int createCounter=0, updateCounter=0;
     [self reloadScrollview];
     smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     [descriptionTextView makeRoundCornerWithColor:[UIColor lightTextColor]];
-    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 115, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(20, 115, 280, 21) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:200000];
     radio.delegate = self;
     
     shareRadio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(25, 387, 280, 21) numButtons:5 labels:[NSArray arrayWithObjects:@"Private",@"Friends",@"Circles",@"Public",@"Custom",nil]  default:0 sender:self tag:2001];
@@ -155,7 +155,7 @@ int createCounter=0, updateCounter=0;
     NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
     [descriptionTextView resignFirstResponder];
     
-    if ([sender tag] == 2000) {
+    if ([sender tag] == 200000) {
         switch (indx) {
             case 3:
                 [self.view addSubview:mapContainerView];
@@ -366,8 +366,9 @@ int createCounter=0, updateCounter=0;
     plan.planAddress=aPlan.planAddress;
     plan.planGeolocation.latitude=aPlan.planGeolocation.latitude;
     plan.planGeolocation.longitude=aPlan.planGeolocation.longitude;
-    [radio setSelIndex:2];
-    [radio gotoButton:[placeNameArr indexOfObject:aPlan.planAddress]];
+    [radio gotoButton:2];
+//    [radio gotoButton:[placeNameArr indexOfObject:aPlan.planAddress]];
+    NSLog(@"[placeNameArr indexOfObject:aPlan.planAddress] %d",[placeNameArr indexOfObject:aPlan.planAddress]);
 }
 
 -(void)setAddressDateShare:(Plan *)aPlan
