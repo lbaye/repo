@@ -4274,11 +4274,11 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201) {
             NSLog(@"sendMessage successful:status=%d", responseStatus);
             //[UtilityClass showAlert:@"" :@"Reply sent"];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_REPLY_DONE object:content];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send reply"];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_REPLY_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4287,7 +4287,8 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         NSLog(@"sendMessage failed: unknown error");
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
+        [UtilityClass showAlert:@"" :@"Network error, try again"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_REPLY_DONE object:nil];
     }];
     
     //[request setDelegate:self];

@@ -913,6 +913,7 @@ ButtonClickCallbackData callBackData;
         NSLog(@"show fb invite  %@  %@",smAppDelegate.fbId,[userDefault readFromUserDefaults:@"fbinvite"]);
         [fbHelper inviteFriends:nil];
         [userDefault writeToUserDefaults:@"fbinvite" withString:@"fbinvite"];
+        [UtilityClass showAlert:@"" :@"Be aware that unknown people might now be able to see your location. You can change your sharing option in the map drop down or via the settings menu."];
     }
 
     _mapPullupMenu.hidden = TRUE;
@@ -931,7 +932,7 @@ ButtonClickCallbackData callBackData;
     
     if (smAppDelegate.gotListing == FALSE) {
         [smAppDelegate.window setUserInteractionEnabled:NO];
-        [smAppDelegate showActivityViewer:self.view];
+        [smAppDelegate showActivityViewer:smAppDelegate.window];
 
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
@@ -1141,36 +1142,32 @@ ButtonClickCallbackData callBackData;
     
     if (CLLocationCoordinate2DIsValid(zoomLocation)) {
         
-    // 2
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
-    // 3
-    NSLog(@"MapViewController:loadAnnotations");
-    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
-    for (id<MKAnnotation> annotation in _mapView.annotations) {
-        [_mapView removeAnnotation:annotation];
-    }
-    [_mapView removeAnnotations:_mapView.annotations];
-    for (int i=0; i < smAppDelegate.displayList.count; i++) {
-        LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
-//        NSLog(@"[smAppDelegate.displayList count] %d  %@",[smAppDelegate.displayList count],anno);
-        if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
-        {
-            [_mapView addAnnotation:anno];
+        // 2
+        MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+        // 3
+        NSLog(@"MapViewController:loadAnnotations");
+        MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
+        for (id<MKAnnotation> annotation in _mapView.annotations) {
+            [_mapView removeAnnotation:annotation];
         }
-    }
-    
-    // 4
-    if (smAppDelegate.needToCenterMap == TRUE) {
-        NSLog(@"MapViewController:loadAnnotations centering map %f %f",adjustedRegion.center.latitude,zoomLocation.latitude);
-        [_mapView setRegion:adjustedRegion animated:YES];
-        NSLog(@"1");
-        [_mapView setCenterCoordinate:zoomLocation animated:YES];
-        NSLog(@"2");
-    }
-    
-    if (viewSearch.frame.origin.y > 44) {
-        [self searchAnnotations];
-    }
+        [_mapView removeAnnotations:_mapView.annotations];
+        for (int i=0; i < smAppDelegate.displayList.count; i++) {
+            LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
+            
+            if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
+            {
+                [_mapView addAnnotation:anno];
+            }
+        }
+        
+        // 4
+        if (smAppDelegate.needToCenterMap == TRUE) {
+            NSLog(@"MapViewController:loadAnnotations centering map %f %f",adjustedRegion.center.latitude,zoomLocation.latitude);
+            [_mapView setRegion:adjustedRegion animated:YES];
+            NSLog(@"1");
+            [_mapView setCenterCoordinate:zoomLocation animated:YES];
+            NSLog(@"2");
+        }
     }
 }
 

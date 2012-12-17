@@ -90,18 +90,16 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotInboxMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendReplyDone:) name:NOTIF_SEND_REPLY_DONE object:nil];
+    
     //friends list
     frndListScrollView.delegate = self;
      selectedFriendsIndex=[[NSMutableArray alloc] init];
      filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    //dicImages_msg = [[NSMutableDictionary alloc] init];
     
     //set scroll view content size.
     [self loadDummydata];
-    
-    //reloading scrollview to start asynchronous download.
-    //[self reloadScrolview]; 
     
     MeetUpRequestListView *meetUpRequestListView = [[MeetUpRequestListView alloc] initWithFrame:CGRectMake(0, 0, messageRepiesView.frame.size.width, messageRepiesView.frame.size.height) andParentControllder:self];
     meetUpRequestListView.tag = TAG_MEETUP_VIEW;
@@ -171,13 +169,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 {
     NSLog(@"called View did unload");
     
-    if (replyTimer) {
-        [replyTimer invalidate];
-        replyTimer = nil;
-    }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     msgListTableView = nil;
     [messageCreationView release];
     messageCreationView = nil;
@@ -321,11 +312,37 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if ([textViewReplyMsg.text isEqualToString:@""] || [textViewReplyMsg.text isEqualToString:@"Your Message..."]) {
         [UtilityClass showAlert:@"" :@"Please enter your message"];
     } else {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        //[self doTopViewAnimation:messageRepiesView];
-        [self clearTextView:textViewReplyMsg];
+        if (![textViewReplyMsg.superview viewWithTag:5005] && !isCheckingNewReplies) 
+        {
+            RestClient *restClient = [[[RestClient alloc] init] autorelease];
+            [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+            [self showHideIndicatorOnTextview:textViewReplyMsg];
+        } 
+        else {
+            [UtilityClass showAlert:@"" :@"Please wait"];
+        }
     }
+}
+
+- (void)showHideIndicatorOnTextview:(UITextView*)textView
+{
+    if (![textView.superview viewWithTag:5005]) 
+    {
+        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        indicator.frame = CGRectMake(textView.frame.size.width + textView.frame.origin.x - indicator.frame.size.width - 5, textView.frame.origin.y + 3, indicator.frame.size.width, indicator.frame.size.height);
+        indicator.hidesWhenStopped = YES;
+        [indicator startAnimating];
+        indicator.tag = 5005;
+        [textView.superview addSubview:indicator];
+        [indicator release];
+        textView.userInteractionEnabled = NO;
+    }
+    else 
+    {
+        [[textView.superview viewWithTag:5005] removeFromSuperview];
+        textView.userInteractionEnabled = YES;
+    }
+    
 }
 
 - (void) clearTextView:(UITextView*)textVeiw
@@ -405,6 +422,34 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
 }
 
+- (void)sendReplyDone:(NSNotification *)notif
+{
+    [self showHideIndicatorOnTextview:textViewReplyMsg];
+    
+    if (notif.object) {
+        NSLog(@"message sent = %@", notif.object);
+        MessageReply *messageReply = [[MessageReply alloc] init];
+        messageReply.content = textViewReplyMsg.text;
+        messageReply.senderID = smAppDelegate.userId;
+        messageReply.msgId = @"temp";
+        [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(addTempReplyInTableView:) userInfo:messageReply repeats:YES];
+        [messageReply release];
+    }
+}
+
+- (void)addTempReplyInTableView:(NSTimer*)timer
+{
+    if (!isCheckingNewReplies) {
+        [messageReplyList addObject:timer.userInfo];
+        [timer invalidate];
+        [messageReplyTableView reloadData];
+        [self clearTextView:textViewReplyMsg];
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+        [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+        isCheckingNewReplies = YES;
+    }
+}
+
 - (NSMutableArray*)getUserIds
 {
     NSMutableArray *userIDs = [[NSMutableArray alloc] init];
@@ -421,36 +466,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) getReplyMessages:(NSNotification *)notif {
     NSLog(@"gotReplyMessages");
+    [smAppDelegate hideActivityViewer];
     
-    //NSDate *currentTime = [NSDate date];
-    //NSTimeInterval ti = [currentTime timeIntervalSince1970];
-    //self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti - 50];
+    //isCheckingNewReplies = YES;
     
     NSMutableArray *msgReplies = [notif object];
 
-    /*
-    if ([msgReplies count] == 0  || [((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] -1]).time isEqual:((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time]) {
-        return;
-    }
-    */
-    
     if ([msgReplies count] == 0) {
+        isCheckingNewReplies = NO;
         return;
     }
-    /*
-    NSTimeInterval ti =[((MessageReply*)[msgReplies objectAtIndex:[msgReplies count] - 1]).time timeIntervalSince1970];
-    self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
-    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
-    */
     
-    /*
-    for (MessageReply *eachMsgReply in messageReplyList) {
-            MessageReply *parentMsg = (MessageReply*)[messageReplyList objectAtIndex:0];
-            if ([eachMsgReply.senderID isEqualToString:parentMsg.senderID]) {
-                eachMsgReply.senderImage = parentMsg.senderImage;
-            }
-    }
-    */
     for (int i = 0; i < [msgReplies count]; i++) {
         for (int j = 0; j < [messageReplyList count]; j++) {
             if ([((MessageReply*)[msgReplies objectAtIndex:i]).msgId isEqualToString:((MessageReply*)[messageReplyList objectAtIndex:j]).msgId]) {
@@ -460,7 +486,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     
     if ([msgReplies count] == 0) {
+        isCheckingNewReplies = NO;
         return;
+    }
+    
+    for (MessageReply *msgReply in messageReplyList) {
+        if ([msgReply.msgId isEqualToString:@"temp"]) {
+            [messageReplyList removeObject:msgReply];
+        }
     }
     
     [messageReplyList addObjectsFromArray:msgReplies];
@@ -472,13 +505,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
         [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
-    
-    
-
-    
+   
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
     self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
+    isCheckingNewReplies = NO;
 }
 
 
@@ -501,7 +532,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             cell.circrcleName.text = [NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]];
         } else {
             NSLog(@"circle name %@", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName]);
-            //cell.circrcleName.text = [[circleListGlobalArray objectAtIndex:indexPath.row] circleName];
             cell.circrcleName.text=[NSString stringWithFormat:@"%@ (%d)", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName],[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]] ;
         }
         
@@ -531,7 +561,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         if (rowWidth > [self getRowWidth:tableView :msgReply]) {
             rowWidth = [self getRowWidth:tableView :msgReply];
-            rowStartPos = tableView.frame.size.width - rowWidth - 10;
+            rowStartPos = tableView.frame.size.width - rowWidth - 12;
         }
         
         CGRect senderFrame = CGRectMake(rowStartPos, 0, senderStringSize.width, senderStringSize.height);
@@ -592,8 +622,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         UITextView  *txtMsg     = (UITextView*) [cell viewWithTag:3005];
         UIImageView *imageViewReply = (UIImageView*) [cell viewWithTag:3006];
         
-        NSLog(@"logged in user id = %@ msgReply sender ID = %@", smAppDelegate.userId, msgReply.senderID);
-        
         if ([smAppDelegate.userId isEqualToString:msgReply.senderID]) {
             imageViewReply.frame = CGRectMake(37, msgFrame.origin.y, 48, 48);
             
@@ -620,22 +648,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             
             lblTime.textAlignment = UITextAlignmentLeft;
         }
-        /*
-        IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
         
-        if (!iconDownloader)
-        {
-            //imageViewReply.image = [UIImage imageNamed:@"girl.png"];
-            imageViewReply.image = nil;
-            if (tableView.dragging == NO && tableView.decelerating == NO) {
-                [self startReplyIconDownload:msgReply forIndexPath:indexPath];
-            }            
-        }  else {
-            //NSLog(@"image crash = %@", msgReply.senderImage);
-            //imageViewReply.image = msgReply.senderImage;
-            imageViewReply.image = iconDownloader.userFriends.userProfileImage;
-        }
-        */
         lblSender.text = msgReply.senderName;
         lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
@@ -652,8 +665,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     [self startReplyIconDownload:msgReply forIndexPath:indexPath];
                 }            
             }  else {
-                //NSLog(@"image crash = %@", msgReply.senderImage);
-                //imageViewReply.image = msgReply.senderImage;
                 imageViewReply.image = iconDownloader.userFriends.userProfileImage;
             }
             
@@ -775,7 +786,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         cell.imageView.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
-            //recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
             recipientWrappedInMessage.notifID = msg.notifID;
             recipientWrappedInMessage.notifMessage = msg.notifMessage;
             recipientWrappedInMessage.notifSender = msg.notifSender;
@@ -787,14 +797,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
         }            
     }  else {
-        //cell.imageView.image = (UIImage*)[profileImageList objectAtIndex:indexPath.row];
         cell.imageView.image = iconDownloader.userFriends.userProfileImage;
     }
 
     if ([msg.msgStatus isEqualToString:@"unread"]) {
         cell.contentView.backgroundColor = [UIColor colorWithRed:163.0/255 green:232.0/255 blue:95.0/255 alpha:0.4];
     } else {
-       // cell.backgroundColor = [UIColor colorWithRed:243.0/255 green:244.0/255 blue:245.0/255 alpha:1];
         cell.contentView.backgroundColor = [UIColor clearColor];
     }
     
@@ -900,8 +908,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.metaType = msg.metaType;
     messageReply.lat = msg.lat;
     messageReply.lng = msg.lng;
-    //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    //messageReply.senderImage = cell.imageView.image;
+    
     [messageReplyList removeAllObjects];
     if (![messageReply.senderID isEqualToString:@"sender_id"])
             [messageReplyList addObject:messageReply];
@@ -918,6 +925,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     msgParentID = msg.notifID;
     self.timeSinceLastUpdate = @"420";
+    [smAppDelegate showActivityViewer:self.view];
     [self startReqForReplyMessages];
     if (!replyTimer) {
         replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
@@ -981,9 +989,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         senderStringSize.height = 0;
         
     
-    cellRowHeight = senderStringSize.height + msgRows*18 + 17;
+    cellRowHeight = senderStringSize.height + msgRows*18 + 22;
     
-    CGFloat cellHeight = (cellRowHeight < CELL_HEIGHT - 17) ? CELL_HEIGHT - 17: cellRowHeight;
+    CGFloat cellHeight = (cellRowHeight < CELL_HEIGHT - 20) ? CELL_HEIGHT - 20: cellRowHeight;
     
     if (msgReply.metaType)
         cellHeight += 40; 
@@ -1087,13 +1095,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)loadImagesForOnscreenRows
 {
     //pending for msgReply tableView
-    if (!messageRepiesView.hidden) {
-//        for (MessageReply *msgReply in messageReplyList) {
-//            if (msgReply.senderID == userId) {
-//                msgReply.senderImage = iconDownloader.userFriends.userProfileImage;
-//            }
-//        }
-        
+    if (!messageRepiesView.hidden) {        
         if ([messageReplyList count] > 0)
         {
             NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
@@ -1107,16 +1109,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 {
                     [self startReplyIconDownload:msgReply forIndexPath:indexPath];
                 }
-//                } else {
-//                    //MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
-//                    UITableViewCell *cell = [messageReplyTableView cellForRowAtIndexPath:indexPath];
-//                    UIImageView *imageViewReply = (UIImageView*) [cell viewWithTag:3006];
-//                    imageViewReply.image = msgReply.senderImage;
-//                }
             }
         }
         
-        //[messageReplyTableView reloadData];
         return;
     }
     
@@ -1370,10 +1365,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     } else {
         msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
 	}
-	//rect.origin.y = -totalVisibleCellHeight;
-	//rect.size.height += kOFFSET_FOR_KEYBOARD;
-	
-    
     [UIView commitAnimations];
 }
 
@@ -1419,6 +1410,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)dealloc 
 {
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
+    
     [messageReplyList release];
     //[imageDownloadsInProgress release];
     [profileImageList release];
@@ -1469,29 +1469,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrolview];
 }
 
-/*
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    isDragging_msg = FALSE;
-}
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    isDecliring_msg = FALSE;
-}
-*/
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     isDragging_msg = TRUE;
@@ -1534,23 +1515,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar 
 {
-    // searchBarTextDidBeginEditing is called whenever 
-    // focus is given to the UISearchBar
-    // call our activate method so that we can do some 
-    // additional things when the UISearchBar shows.
     searchTexts=friendSearchbar.text;
-    //[UIView beginAnimations:@"FadeIn" context:nil];
-    //[UIView setAnimationDuration:0.5];
-    //[UIView commitAnimations];
     [self beganEditing];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
 {
-    // searchBarTextDidEndEditing is fired whenever the 
-    // UISearchBar loses focus
-    // We don't need to do anything here.
-    //    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
 }
@@ -1571,12 +1541,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
-    // Do the search and show the results in tableview
-    // Deactivate the UISearchBar
-    // You'll probably want to do this on another thread
-    // SomeService is just a dummy class representing some 
-    // api that you are using to do the search
-    
     searchTexts=friendSearchbar.text;
     searchFlag=false;
     [self searchResult];
@@ -1585,11 +1549,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)searchResult
 {
-    //[self loadDummydata];
     searchTexts = friendSearchbar.text;
 
-    //NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
-    
     [filteredList removeAllObjects];
     
     if ([searchTexts isEqualToString:@""])
@@ -1717,21 +1678,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (iconDownloader && iconDownloader.userFriends.userProfileImage.size.height > 5){
                 imgView.image = iconDownloader.userFriends.userProfileImage; 
             } 
-            /*
-            else if([[dicImages_msg valueForKey:userFrnd.imageUrl] isKindOfClass:[UIImage class]]) 
-            { 
-                //If image available in dictionary, set it to imageview 
-                imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-            } 
-             */
+            
             else 
             { 
                 if (!isDragging_msg && !isDecliring_msg) //&&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
                     
                 {
-                    //If scroll view moves set a placeholder image and start download image. 
-                    //[dicImages_msg setObject:[UIImage imageNamed:@"girl.png"] forKey:userFrnd.imageUrl]; 
-                    //[dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
                     if (!iconDownloader) {
                         iconDownloader = [[IconDownloader alloc] init];
                     }
@@ -1739,22 +1691,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     iconDownloader.userFriends = userFrnd;
                     iconDownloader.delegate = self;
                     [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
-                    //imgView.image = [[UIImage alloc] init];
                     iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
                     [iconDownloader startDownload];
-                    //  [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
-                    
-                    
                 }
-                /*
-                else 
-                { 
-                    // Image is not available, so set a placeholder image
-                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
-                    imgView.image = [[UIImage alloc] init];                   
-                } 
-                 */
             }
 
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
@@ -1782,10 +1721,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                 {
                     imgView.layer.borderColor=[[UIColor greenColor] CGColor];
                 }
-                else
-                {
-                }
-                
             }
             [aView addSubview:imgView];
             [aView addSubview:name];
@@ -1816,29 +1751,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     [self reloadScrolview];
 }
-/*
--(void)DownLoad:(NSNumber *)path
-{
-    NSLog(@"in Download");
-    //NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-    int index = [path intValue];
-    UserFriends *userFrnd=[[UserFriends alloc] init];
-    userFrnd=[filteredList objectAtIndex:index];
-    
-    NSString *Link = userFrnd.imageUrl;
-    //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]] == NULL))
-    {
-        //If download complete, set that image to dictionary
-        [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-        [self reloadScrolview];
-    }
-    // Now, we need to reload scroll view to load downloaded image
-    //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-    //[pl release];
-}
-*/
+
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];
@@ -1939,7 +1852,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [selectedCircleCheckArr addObjectsFromArray:selectedCircleCheckOriginalArr];
     [tableViewCircle reloadData];
     [smAppDelegate.window addSubview:viewCircleList];
-    self.view.userInteractionEnabled = NO;
+    self.view.userInteractionEnabled = NO; 
 }
 
 -(void)handleTableViewCheckbox:(id)sender
@@ -1959,10 +1872,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [sender setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
         NSLog(@"added");
     }
-/*
-    NSMutableArray *testFriends =  ((UserCircle*)[circleListGlobalArray objectAtIndex:clickedButtonPath.row]).friends;
-    NSLog(@"friends %@", testFriends);
- */
 }
 
 @end

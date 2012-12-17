@@ -24,7 +24,8 @@
 //NSString * const WS_URL = @"192.168.1.229/web";
 //NSString * const WS_URL = @"http://192.168.1.19/social_maps/web";
 //NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";
-NSString * const WS_URL = @"http://services.socialmapsapp.com/v1_6";
+//NSString * const WS_URL = @"http://services.socialmapsapp.com/v1_6";
+NSString * const WS_URL = @"http://services.socialmapsapp.com/prodtest";
 
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
@@ -91,6 +92,7 @@ NSString * const NOTIF_GET_FRIENDS_PLANS_DONE=@"com.genweb2.socialmaps.getfriend
 NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED=@"com.genweb2.socialmaps.friendsrequestaccepteddone";
 NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.locationsharingsettingdone";
 NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifgetmessagewithiddone";
+NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
 
 //NSString * const FB_APPID = @"260432304058696";
 //NSString * const FB_APPID = @"171067529694083"; // SMTest

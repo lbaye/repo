@@ -60,6 +60,7 @@
     NSMutableArray *selectedCircleCheckOriginalArr;
     
     BOOL            isGroupChat;
+    BOOL            isCheckingNewReplies;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;
