@@ -152,6 +152,7 @@ AppDelegate *smAppDelegate;
     [request setPostValue:userInfo.interests forKey:@"interests"];
     [request setPostValue:userInfo.workStatus forKey:@"workStatus"];
     [request setPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
+    [request setPostValue:userInfo.dateOfBirth forKey:@"dateOfBirth"];
     //[request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
     
     // Handle successful REST call

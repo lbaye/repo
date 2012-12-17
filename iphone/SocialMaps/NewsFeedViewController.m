@@ -77,6 +77,7 @@ UILabel *statusLabel;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     [smAppDelegate showActivityViewer:self.view];
      NSString *urlStr = [NSString stringWithFormat:@"%@/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
+//   urlStr = [NSString stringWithFormat:@"192.168.1.219:8888/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
 
     NSLog(@"urlStr %@",urlStr);
     [self displayNotificationCount];
