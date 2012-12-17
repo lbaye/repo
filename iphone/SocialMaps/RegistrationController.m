@@ -29,6 +29,18 @@
 @synthesize picSel;
 @synthesize regPhoto;
 @synthesize photoPicker;
+@synthesize moreInfoView;
+@synthesize dateOfBirthTxtField;
+@synthesize biographyTxtField;
+@synthesize interestsTxtField;
+@synthesize streetAdressTxtField;
+@synthesize cityTxtField;
+@synthesize zipCodeTxtField;
+@synthesize countryTxtField;
+@synthesize serviceTxtField;
+@synthesize relatioshipStatusTxtField;
+@synthesize basicInfoView;
+@synthesize registrationScrollView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -67,6 +79,15 @@
     [arrayGender addObject:@"Female"];
     [arrayGender addObject:@"Male"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regDone:) name:NOTIF_REG_DONE object:nil];
+    
+    
+    [registrationScrollView setContentSize:CGSizeMake(320, basicInfoView.frame.size.height+moreInfoView.frame.size.height)];
+    
+    basicInfoView.frame=CGRectMake(0, 0, basicInfoView.frame.size.width, basicInfoView.frame.size.height);
+    moreInfoView.frame=CGRectMake(0, basicInfoView.frame.size.height, moreInfoView.frame.size.width, moreInfoView.frame.size.height);
+    
+    [registrationScrollView addSubview:basicInfoView];
+    [registrationScrollView addSubview:moreInfoView];
     
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
@@ -111,7 +132,8 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self animateTextField: textField up: YES];
+//    [self animateTextField: textField up: YES];
+    [UtilityClass beganEditing:(UIControl *)textField];
 }
 
 
@@ -122,7 +144,8 @@
     userInfo.firstName = regFirstName.text;
     userInfo.lastName = regName.text;
     userInfo.gender = regGender.text;
-    [self animateTextField: textField up: NO];
+//    [self animateTextField: textField up: NO];
+        [UtilityClass endEditing];
 }
 
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up
@@ -150,14 +173,38 @@
     }else if ([theTextField isEqual:regName]){
         [theTextField resignFirstResponder];
     }
+    else {
+        [theTextField resignFirstResponder];
+    }
     // Store the password
     userInfo.email = regEmail.text;
     userInfo.password = regPassword.text;
     userInfo.lastName = regName.text;
     userInfo.firstName = regFirstName.text;
     userInfo.gender = regGender.text;
-
 	return YES;
+}
+
+- (IBAction)selectDateOfBirthAction:(id)sender
+{
+    NSLog(@"select date");
+    [ActionSheetPicker displayActionPickerWithView:sender dateOfBirthPickerMode:UIDatePickerModeDate selectedDate:[NSDate date] target:self action:@selector(dateWasSelected::) title:@"Select date of birth"];
+}
+
+- (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
+{
+    userInfo.dateOfBirth=[UtilityClass convertDateToDisplayFormat:selectedDate];
+    dateOfBirthTxtField.text=[NSString stringWithFormat:@"%@",[UtilityClass convertDateToDisplayFormat:selectedDate]];
+}
+
+- (IBAction)selectCountryAction:(id)sender
+{
+    NSLog(@"select country");
+}
+
+- (IBAction)selectRelStatus:(id)sender
+{
+    NSLog(@"select rel status");
 }
 
 - (IBAction)selectGender:(id)sender {
@@ -170,24 +217,25 @@
     regGender.text = [arrayGender objectAtIndex:[selectedIndex intValue]];
 }
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
-    
-    return 1;
-}
-- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component {
-    
-    return [arrayGender count];
-}
-- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [arrayGender objectAtIndex:row];
-}
+//- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
+//    
+//    return 1;
+//}
+//- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component {
+//    
+//    return [arrayGender count];
+//}
+//- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+//    return [arrayGender objectAtIndex:row];
+//}
+//
+//- (void)pickerView:(UIPickerView *)thePickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+//    
+//    NSLog(@"Selected Gender: %@. Index of selected color: %i", [arrayGender objectAtIndex:row], row);
+//    selMaleFemale.hidden = TRUE;
+//    regGender.text = [arrayGender objectAtIndex:row];
+//}
 
-- (void)pickerView:(UIPickerView *)thePickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    
-    NSLog(@"Selected Gender: %@. Index of selected color: %i", [arrayGender objectAtIndex:row], row);
-    selMaleFemale.hidden = TRUE;
-    regGender.text = [arrayGender objectAtIndex:row];
-}
 - (IBAction)createAccount:(id)sender {
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
@@ -248,6 +296,15 @@
         NSData *imgdata = UIImagePNGRepresentation(regPhoto);
         NSString *imgBase64Data = [imgdata base64EncodedString];
         userInfo.avatar = imgBase64Data;
+        
+        userInfo.bio = biographyTxtField.text;
+        userInfo.interests =interestsTxtField.text;
+        userInfo.street = streetAdressTxtField.text;
+        userInfo.city = cityTxtField.text;
+        userInfo.postCode = zipCodeTxtField.text;
+        userInfo.country = countryTxtField.text;
+        userInfo.workStatus = serviceTxtField.text;
+        userInfo.relationshipStatus = relatioshipStatusTxtField.text;
         
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient register:(User *)userInfo];
