@@ -39,8 +39,8 @@ public class MessageNotificationActivity extends Activity {
 	String messageResponse = "";
 	int messageStatus = 0;
 
-	public String itemMessageId;
-	public String itemThreadId;
+	private String itemMessageId;
+	private String itemThreadId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MessageNotificationActivity extends Activity {
 
 	}
 
-	public void getMessages() {
+	private void getMessages() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, messagesThread,
@@ -108,7 +108,7 @@ public class MessageNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseMessage(int status, String response) {
+	private void handleResponseMessage(int status, String response) {
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
 
@@ -209,7 +209,7 @@ public class MessageNotificationActivity extends Activity {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MessageNotificationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 		messageListContainer = (LinearLayout) findViewById(R.id.message_list_container);

@@ -436,7 +436,7 @@ public class ImageDownloader {
 	 *            The newly downloaded bitmap.
 	 */
 	private void addBitmapToCache(String url, Bitmap bitmap) {
-		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn"))
+		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn") || url.contains("default-cover-photo.png"))
 				&& bitmap != null) {
 			synchronized (sHardBitmapCache) {
 				sHardBitmapCache.put(url, bitmap);

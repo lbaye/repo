@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socmaps.entity.SecondDegreePeople;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
@@ -26,7 +27,7 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 			final Context con,
 			final ListItemClickListener licl,
 			final View convertView,
-			final ImageLoader il,
+			final ImageDownloader il,
 			final ListItemClickListenerSecondDegreePeople listItemClickListenerSecondDegreePeople) {
 		ViewHolder holder;
 		View view;
@@ -88,11 +89,21 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 			if (!people.getAvatar().equals("")) {
 				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
 				// holder.avatar, 320,150);
-				il.DisplayImage(people.getAvatar(), holder.avatar);
+				il.download(people.getAvatar(), holder.avatar);
 			}
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
 		} // else
 			// holder.avatar.setImageResource(R.drawable.icon);
+
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getAvatar(), holder.coverPhoto);
+
+		} else
+			holder.coverPhoto
+					.setImageResource(R.drawable.cover_pic_second_degree);
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
 		holder.distanceText.setText(Utility.getFormatedDistance(people

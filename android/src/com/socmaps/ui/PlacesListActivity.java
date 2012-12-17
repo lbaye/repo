@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -34,6 +36,9 @@ import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPlace;
 import com.socmaps.listrow.PlaceRowFactoryForSavedPlace;
 import com.socmaps.listrow.RowType;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -47,7 +52,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private Button btnBack;
 	private ListView contentListView;
 
-	public Context context;
+	private Context context;
 	private ContentListAdapter contentAdapter;
 
 	private List<Place> listMasterContent;
@@ -56,7 +61,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	boolean isSearchEnabled = false;
 
-	public Dialog msgDialog;
+	private Dialog msgDialog;
 
 	private ProgressDialog m_ProgressDialog;
 
@@ -67,7 +72,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private String placesResponse;
 	private int placesStatus;
 
-	String personID = null;
+	private String personID = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,10 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 		super.onResume();
 
-		getPlacesFromServer();
+		// Testing purpose ************************
+		callAPI();
+
+		// getPlacesFromServer();
 		setListParameters();
 
 		Log.w("PlacesListActivity ", "onResume()");
@@ -98,7 +106,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	/*
 	 * All initialize
 	 */
-	public void initialize() {
+	private void initialize() {
 
 		context = PlacesListActivity.this;
 
@@ -166,7 +174,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void updateListView() {
+	private void updateListView() {
 		contentAdapter.notifyDataSetChanged();
 	}
 
@@ -178,8 +186,8 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		public ContentListAdapter(Context context, List<Place> itemsList) {
 
 			this.items = itemsList;
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			// imageDownloader = new ImageDownloader();
+			// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 		}
 
@@ -235,13 +243,13 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void updateContentList(List<Place> list) {
+	private void updateContentList(List<Place> list) {
 		listContent.clear();
 		listContent.addAll(list);
 
 	}
 
-	public void updateDisplayList(List<Place> list) {
+	private void updateDisplayList(List<Place> list) {
 
 		int displayedItemCounter = 0;
 
@@ -342,137 +350,137 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	/*
 	 * Places places from server
 	 */
-	private void getPlacesFromServer() {
-		// TODO Auto-generated method stub
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			Thread thread = new Thread(null, placesThread,
-					"Start get places from server");
-			thread.start();
-
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
-	}
-
-	private Runnable placesThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient;
-			if (personID == null) {
-				restClient = new RestClient(Constant.smPlaces);
-			} 
-			else 
-			{
-				restClient = new RestClient(Constant.smServerUrl+"/users"+"/"+personID+"/places");
-				Log.i("PlaceList URL", Constant.smServerUrl+"/users"+"/"+personID+"/places");
-			}
-				
-
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			placesResponse = restClient.getResponse();
-			placesStatus = restClient.getResponseCode();
-
-			runOnUiThread(placesResponseFromServer);
-		}
-	};
-
-	private Runnable placesResponseFromServer = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponsePlaces(placesStatus, placesResponse);
-
-			// dismiss progress dialog if needed
-
-			if(m_ProgressDialog!=null){
-				m_ProgressDialog.dismiss();
-			}
-		}
-	};
-
-	public void handleResponsePlaces(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("Got places response from server", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-			// Toast.makeText(context, "Places response successful.",
-			// Toast.LENGTH_SHORT).show();
-
-			listMasterContent.clear();
-			listMasterContent = ServerResponseParser.parseSavedPlaces(response);
-
-			sortMasterListData();
-
-			updateContentList(listMasterContent);
-			updateDisplayList(listContent);
-
-			break;
-		case Constant.STATUS_SUCCESS_NODATA:
-			Toast.makeText(getApplicationContext(),
-					"No place found.",
-					Toast.LENGTH_SHORT).show();
-			break;
-		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-
-	}
 
 	/*
-	 * Hide Keybord
+	 * private void getPlacesFromServer() { // TODO Auto-generated method stub
+	 * if (Utility.isConnectionAvailble(getApplicationContext())) {
+	 * 
+	 * Thread thread = new Thread(null, placesThread,
+	 * "Start get places from server"); thread.start();
+	 * 
+	 * // show progress dialog if needed m_ProgressDialog =
+	 * ProgressDialog.show(context, getResources()
+	 * .getString(R.string.please_wait_text), getResources()
+	 * .getString(R.string.sending_request_text), true, true);
+	 * 
+	 * } else {
+	 * 
+	 * DialogsAndToasts
+	 * .showNoInternetConnectionDialog(getApplicationContext()); } }
+	 * 
+	 * private Runnable placesThread = new Runnable() {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * RestClient restClient; if (personID == null) { restClient = new
+	 * RestClient(Constant.smPlaces); } else { restClient = new
+	 * RestClient(Constant.smServerUrl + "/users" + "/" + personID + "/places");
+	 * Log.i("PlaceList URL", Constant.smServerUrl + "/users" + "/" + personID +
+	 * "/places"); }
+	 * 
+	 * restClient.AddHeader(Constant.authTokenParam,
+	 * Utility.getAuthToken(context));
+	 * 
+	 * try { restClient.Execute(RestClient.RequestMethod.GET); } catch
+	 * (Exception e) { e.printStackTrace(); }
+	 * 
+	 * placesResponse = restClient.getResponse(); placesStatus =
+	 * restClient.getResponseCode();
+	 * 
+	 * runOnUiThread(placesResponseFromServer); } };
+	 * 
+	 * private Runnable placesResponseFromServer = new Runnable() {
+	 * 
+	 * @Override public void run() { // TODO Auto-generated method stub
+	 * handleResponsePlaces(placesStatus, placesResponse);
+	 * 
+	 * // dismiss progress dialog if needed
+	 * 
+	 * if (m_ProgressDialog != null) { m_ProgressDialog.dismiss(); } } };
+	 * 
+	 * public void handleResponsePlaces(int status, String response) { // show
+	 * proper message through Toast or Dialog
+	 * Log.w("Got places response from server", status + ":" + response); switch
+	 * (status) { case Constant.STATUS_SUCCESS: // Log.d("Login",
+	 * status+":"+response); // Toast.makeText(context,
+	 * "Places response successful.", // Toast.LENGTH_SHORT).show();
+	 * 
+	 * listMasterContent.clear(); listMasterContent =
+	 * ServerResponseParser.parseSavedPlaces(response);
+	 * 
+	 * sortMasterListData();
+	 * 
+	 * updateContentList(listMasterContent); updateDisplayList(listContent);
+	 * 
+	 * break; case Constant.STATUS_SUCCESS_NODATA:
+	 * Toast.makeText(getApplicationContext(), "No place found.",
+	 * Toast.LENGTH_SHORT).show(); break; default:
+	 * Toast.makeText(getApplicationContext(),
+	 * "An unknown error occured. Please try again!!",
+	 * Toast.LENGTH_SHORT).show(); break;
+	 * 
+	 * }
+	 * 
+	 * }
 	 */
 
-	// public void hideKeybord() {
-	//
-	// // etSearchField
-	// // .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-	// //
-	// // public void onFocusChange(View v, boolean flag) {
-	// // if (flag == false) {
-	// // InputMethodManager inputMethodManager = (InputMethodManager)
-	// // getSystemService(Context.INPUT_METHOD_SERVICE);
-	// // inputMethodManager.hideSoftInputFromWindow(
-	// // v.getWindowToken(), 0);
-	// // }
-	// // }
-	// // });
-	//
-	// InputMethodManager mgr = (InputMethodManager)
-	// getSystemService(Context.INPUT_METHOD_SERVICE);
-	// mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-	// }
+	private void callAPI() {
 
-	// protected void hideMessageDialogKeybord(EditText msgEditText) {
-	// // TODO Auto-generated method stub
-	//
-	// InputMethodManager mgr = (InputMethodManager)
-	// getSystemService(Context.INPUT_METHOD_SERVICE);
-	// mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-	//
-	// }
+		String url;
+		if (personID == null) {
+			url = Constant.smPlaces;
+		} else {
+			url = Constant.smServerUrl + "/users" + "/" + personID + "/places";
+			Log.i("PlaceList URL", Constant.smServerUrl + "/users" + "/"
+					+ personID + "/places");
+		}
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.GET_SERVER_DATA, true, getResources().getString(
+						R.string.please_wait_text), getResources().getString(
+						R.string.sending_request_text),
+				new BackProcessCallBackListener(),true);
+
+		backProcess.execute(RestClient.RequestMethod.GET);
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String result, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("Got places response from server callback process >> :",
+					status + ":" + result);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+
+				listMasterContent.clear();
+				listMasterContent = ServerResponseParser
+						.parseSavedPlaces(result);
+
+				sortMasterListData();
+
+				updateContentList(listMasterContent);
+				updateDisplayList(listContent);
+
+				break;
+			case Constant.STATUS_SUCCESS_NODATA:
+				Toast.makeText(getApplicationContext(), "No place found.",
+						Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				Toast.makeText(getApplicationContext(),
+						"An unknown error occured. Please try again!!",
+						Toast.LENGTH_SHORT).show();
+				break;
+
+			}
+
+		}
+
+	}
 
 	/*
 	 * Search portion
@@ -502,7 +510,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 			searchPanel.setVisibility(View.GONE);
 	}
 
-	public void showSearchPanel(boolean display) {
+	private void showSearchPanel(boolean display) {
 		if (display) {
 			searchPanel.setVisibility(View.VISIBLE);
 
@@ -525,4 +533,5 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		return false;
 
 	}
+
 }

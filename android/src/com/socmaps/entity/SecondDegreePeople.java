@@ -18,6 +18,7 @@ public class SecondDegreePeople implements Serializable {
 	private String lastSeenAt;
 	private List<String> smFriends;
 	private TimeEntity createTime;
+	private String coverPhoto;
 
 	public String getRefId() {
 		return refId;
@@ -121,5 +122,15 @@ public class SecondDegreePeople implements Serializable {
 	public void setCreateTime(TimeEntity createTime) {
 		this.createTime = createTime;
 	}
+
+	public String getCoverPhoto() {
+		return coverPhoto;
+	}
+
+	public void setCoverPhoto(String coverPhoto) {
+		this.coverPhoto = coverPhoto;
+	}
+	
+	
 
 }

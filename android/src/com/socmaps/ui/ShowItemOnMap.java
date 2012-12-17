@@ -55,7 +55,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 	// Button mOpenButton;
 	MultiDirectionSlidingDrawer topDrawer, bottomDrawer;
 
-	public static Context context;
+	private static Context context;
 
 	private TapControlledMapView mapView;
 
@@ -71,8 +71,8 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 	private static int flag = -1;
 
-	public ImageView avatar, placeIconImage;
-	public Dialog d, msgDialog, frndRequestDialog;
+	private ImageView avatar, placeIconImage;
+	private Dialog d, msgDialog, frndRequestDialog;
 
 	private ProgressDialog m_ProgressDialog;
 
@@ -92,7 +92,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 	Object selectedItem;
 
-	public List<String> friendRequestSentList = new ArrayList<String>();
+	private List<String> friendRequestSentList = new ArrayList<String>();
 
 	ImageDownloader imageDownloader;
 
@@ -215,7 +215,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		mapController.animateTo(point);
 	}
 
-	public void initialize() {
+	private void initialize() {
 
 		context = ShowItemOnMap.this;
 
@@ -571,7 +571,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void sendFriendRequest(String friendId, String message) {
+	private void sendFriendRequest(String friendId, String message) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendRequestFriendId = friendId;
@@ -634,7 +634,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		}
 	};
 
-	public void handleResponseFriendRequest(int status, String response) {
+	private void handleResponseFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Send Frnd Request", status + ":" + response);
@@ -672,7 +672,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		}
 	}
 
-	public void sendMessage(String friendId, String subject, String content) {
+	private void sendMessage(String friendId, String subject, String content) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			sendMessageFriendId = friendId;
@@ -736,7 +736,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {

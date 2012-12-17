@@ -357,7 +357,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		}
 	}
 
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 		// Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
 		// shareWithSelectedFriendList, shareWithSelectedCircleList);
@@ -535,7 +535,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		}
 	}
 
-	public void initiateSendEventData() {
+	private void initiateSendEventData() {
 		Thread thread = new Thread(null, sendPlanThread,
 				"Start send event data");
 		thread.start();
@@ -625,7 +625,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		}
 	};
 
-	public void handleResponseSendEventData(int status, String response) {
+	private void handleResponseSendEventData(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("Plan Update RESPONSE", status + ":" + response);

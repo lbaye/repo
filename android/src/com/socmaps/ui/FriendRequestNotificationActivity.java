@@ -55,7 +55,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = FriendRequestNotificationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 		friendRequestListContainer = (LinearLayout) findViewById(R.id.friend_request_list_container);
@@ -64,7 +64,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	}
 
-	public void getFriendRequest() {
+	private void getFriendRequest() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, friendRequestThread,
@@ -121,7 +121,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseFriendRequest(int status, String response) {
+	private void handleResponseFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("FR REQ RESPONSE", status + ":" + response);
@@ -237,7 +237,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	// ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void acceptFriendRequest(String senderId) {
+	private void acceptFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendId = senderId;
@@ -295,7 +295,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseAcceptFriendRequest(int status, String response) {
+	private void handleResponseAcceptFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Accept Friend Request", status + ":" + response);
@@ -341,7 +341,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	// //////////////////////////////////////////////////////////////////////////////////
 
-	public void declineFriendRequest(String senderId) {
+	private void declineFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendId = senderId;
@@ -399,7 +399,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseDeclineFriendRequest(int status, String response) {
+	private void handleResponseDeclineFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Decline Friend Request", status + ":" + response);
@@ -434,7 +434,7 @@ public class FriendRequestNotificationActivity extends Activity {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void ignoreFriendRequest(String senderId) {
+	private void ignoreFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendId = senderId;
@@ -491,7 +491,7 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseIgnoreFriendRequest(int status, String response) {
+	private void handleResponseIgnoreFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Ignore Friend Request", status + ":" + response);

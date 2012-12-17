@@ -1,5 +1,6 @@
 package com.socmaps.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -59,6 +62,7 @@ public class MessageComposeActivity extends Activity {
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
 	ImageLoader imageLoader;
+	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,9 +70,9 @@ public class MessageComposeActivity extends Activity {
 
 		setContentView(R.layout.message_compose_activity);
 
-		initialize(); 
-		
-		//MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		initialize();
+
+		// MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		// generate list
 		generateList();
@@ -117,7 +121,7 @@ public class MessageComposeActivity extends Activity {
 
 	}
 
-	public View getItemViewFriend(People fEntity) {
+	private View getItemViewFriend(People fEntity) {
 
 		View v = inflater.inflate(R.layout.people_item, null);
 
@@ -128,23 +132,23 @@ public class MessageComposeActivity extends Activity {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		String firstName = fEntity.getFirstName();
-		String lastName = fEntity.getLastName();
+		/*String firstName = fEntity.getFirstName();
+		String lastName = fEntity.getLastName();*/
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
 
-		String name = "";
+		String name = ""; 
+		name = Utility.getFieldText(fEntity); 
+		nameView.setText(name);
 
-		if (firstName != null) {
+		/*if (firstName != null) {
 			name = firstName + " ";
 		}
 		if (lastName != null) {
 			name += lastName;
-		}
+		}*/
 
 		selectedFriends.put(id, false);
-
-		nameView.setText(name);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
@@ -158,6 +162,16 @@ public class MessageComposeActivity extends Activity {
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
 
+		} 
+		
+		if(backupSelectedFriends.containsKey(id)) 
+		{
+			boolean preValue = backupSelectedFriends.get(id); 
+			
+			if(preValue) {
+				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, preValue);
+			}
 		}
 
 		profilePic.setOnClickListener(new OnClickListener() {
@@ -181,7 +195,7 @@ public class MessageComposeActivity extends Activity {
 		return v;
 	}
 
-	public View getItemViewCircle(Circle cEntity) {
+	private View getItemViewCircle(Circle cEntity) {
 
 		View v = inflater.inflate(R.layout.circle_item, null);
 
@@ -215,7 +229,7 @@ public class MessageComposeActivity extends Activity {
 		return v;
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MessageComposeActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
@@ -245,10 +259,51 @@ public class MessageComposeActivity extends Activity {
 
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles); 
+		
+		etFriendSearch.addTextChangedListener(filterTextWatcher);
 
-	}
+		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				Log.d("inside On Key", "INSIDE ON KEY");
+				if (event.ACTION_DOWN == 0) {
+					doSearch();
+					Log.d("Do Search", "Do Search Method Called  "
+							+ etFriendSearch.getText().toString().trim()); 
+					//hideKeyBoard2();
+				}
+				return false;
+			}
+		});*/
 
-	public void showFriendList() {
+	} 
+	
+	private TextWatcher filterTextWatcher = new TextWatcher() {
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			//contentAdapter.getFilter().filter(s); 
+			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			doSearch();
+		}
+
+	};
+	
+	/*private void hideKeyBoard2() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(etFriendSearch.getWindowToken(), 0);
+	}*/
+
+	private void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
 		btnCircleSelect.setTextAppearance(context,
@@ -261,7 +316,7 @@ public class MessageComposeActivity extends Activity {
 		scrollViewFriends.setVisibility(View.VISIBLE);
 	}
 
-	public void showCircleList() {
+	private void showCircleList() {
 		btnFriendSelect.setTextAppearance(context,
 				R.style.ButtonTextStyleNormal);
 		btnCircleSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
@@ -273,7 +328,7 @@ public class MessageComposeActivity extends Activity {
 		scrollViewCircles.setVisibility(View.VISIBLE);
 	}
 
-	public void selectAll() {
+	private void selectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(true);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -281,7 +336,7 @@ public class MessageComposeActivity extends Activity {
 		}
 	}
 
-	public void unselectAll() {
+	private void unselectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(false);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -289,7 +344,7 @@ public class MessageComposeActivity extends Activity {
 		}
 	}
 
-	public void selectionFriends(boolean isSelect) {
+	private void selectionFriends(boolean isSelect) {
 		int selectionColor;
 		if (isSelect) {
 			selectionColor = R.color.highlightGreen;
@@ -315,7 +370,7 @@ public class MessageComposeActivity extends Activity {
 		}
 	}
 
-	public void selectionCircles(boolean isSelect) {
+	private void selectionCircles(boolean isSelect) {
 
 		int totalChild = circleListContainer.getChildCount();
 		for (int i = 0; i < totalChild; i++) {
@@ -334,7 +389,7 @@ public class MessageComposeActivity extends Activity {
 		 */
 	}
 
-	public void validateNewMessage() {
+	private void validateNewMessage() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			boolean isValidReciever = false;
@@ -389,7 +444,7 @@ public class MessageComposeActivity extends Activity {
 											R.string.please_wait_text),
 									getResources().getString(
 											R.string.sending_request_text),
-									true,true);
+									true, true);
 				} else {
 					Toast.makeText(MessageGroupActivity.group,
 							"No recipient selected.", Toast.LENGTH_SHORT)
@@ -481,7 +536,7 @@ public class MessageComposeActivity extends Activity {
 		@Override
 		public void run() { // TODO Auto-generated method stub
 
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 
@@ -490,7 +545,7 @@ public class MessageComposeActivity extends Activity {
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
@@ -499,9 +554,7 @@ public class MessageComposeActivity extends Activity {
 
 			// etNewMessage.setText("");
 			Toast.makeText(MessageGroupActivity.group,
-					"Message sent successfully.", Toast.LENGTH_SHORT).show(); 
-			
-			
+					"Message sent successfully.", Toast.LENGTH_SHORT).show();
 
 			MessageGroupActivity.group.back();
 
@@ -535,12 +588,12 @@ public class MessageComposeActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 
-	} 
-	
+	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy(); 
+		super.onDestroy();
 		hideKeyBoard();
 	}
 
@@ -550,10 +603,9 @@ public class MessageComposeActivity extends Activity {
 		}
 		return false;
 
-	} 
-	
-	private void hideKeyBoard()
-	{
+	}
+
+	private void hideKeyBoard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(etNewMessage.getWindowToken(), 0);
 	}
@@ -569,9 +621,9 @@ public class MessageComposeActivity extends Activity {
 				showCircleList();
 			} else if (v == btnSend) {
 				hideKeyBoard();
-				validateNewMessage(); 
-				//MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-			} else if (v == btnCancel) { 
+				validateNewMessage();
+				// MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			} else if (v == btnCancel) {
 				hideKeyBoard();
 				MessageGroupActivity.group.back();
 			} else if (v == btnSelectAll) {
@@ -580,6 +632,25 @@ public class MessageComposeActivity extends Activity {
 				unselectAll();
 			}
 
+		}
+
+	}
+
+	private void doSearch() {
+
+		List<Object> dataList = new ArrayList<Object>();
+		dataList.addAll(StaticValues.myInfo.getFriendList());
+
+		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch
+				.getText().toString().trim()));
+		friendListContainer.removeAllViews();
+
+		// backUpSelectedFriends = selectedFriends;
+		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
+		selectedFriends.clear();
+		for (int i = 0; i < list.size(); i++) {
+			View v = getItemViewFriend((People) list.get(i));
+			friendListContainer.addView(v);
 		}
 
 	}

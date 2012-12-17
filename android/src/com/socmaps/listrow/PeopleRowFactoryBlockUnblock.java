@@ -69,17 +69,16 @@ public class PeopleRowFactoryBlockUnblock {
 		if (people.getRegMedia() != null) {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {
-					holder.sourceImage.setImageResource(R.drawable.facebookicon);
+					holder.sourceImage
+							.setImageResource(R.drawable.facebookicon);
 					// holder.sourceImage.setVisibility(View.VISIBLE);
-					//holder.sourceImage.setVisibility(View.GONE);
-				} //else
-					//holder.sourceImage.setVisibility(View.GONE);
+					// holder.sourceImage.setVisibility(View.GONE);
+				} // else
+					// holder.sourceImage.setVisibility(View.GONE);
 
 			} else
 				holder.sourceImage.setVisibility(View.GONE);
-		}
-		else
-		{
+		} else {
 			holder.sourceImage.setVisibility(View.GONE);
 		}
 
@@ -124,16 +123,16 @@ public class PeopleRowFactoryBlockUnblock {
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.cover_pic_default));
-		if (people.getCoverPhoto() != null) {
-			if (!people.getCoverPhoto().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
-				// holder.coverPhoto, 320,150);
-				holder.coverPhoto.setImageResource(R.drawable.img_blank);
-				il.download(people.getCoverPhoto(), holder.coverPhoto);
-			}
-			// holder.statusText.setText(otherUserEntity.getStatusMsg());
-		} // else
-			// holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
+			// holder.coverPhoto, 320,150);
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getCoverPhoto(), holder.coverPhoto);
+
+		} else
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.icon));
@@ -208,20 +207,27 @@ public class PeopleRowFactoryBlockUnblock {
 			holder.btnBlockUnblock.setText("Block");
 		}
 
+		
+		
+		
 		if (people.getUnit() == null) {
 			holder.checked.setChecked(people.isBlocked());
+			Log.i("people.getUnit() null", ""+people.isBlocked());
 		} else if (people.getUnit().equalsIgnoreCase(
 				con.getString(R.string.unselectAllLabel))) {
 			holder.checked.setChecked(true);
+			Log.i("people.getUnit() unselectAllLabel", "true");
 		} else if (people.getUnit().equalsIgnoreCase(
 				con.getString(R.string.selectAllLabel))) {
 			holder.checked.setChecked(false);
+			Log.i("people.getUnit() selectAllLabel", "false");
 		} else {
 			holder.checked.setChecked(people.isBlocked());
+			Log.i("people.getUnit() else", ""+people.isBlocked());
 		}
 
 		// }
-		
+
 		holder.btnSendMessage.setVisibility(View.INVISIBLE);
 		holder.btnBlockUnblock.setVisibility(View.INVISIBLE);
 

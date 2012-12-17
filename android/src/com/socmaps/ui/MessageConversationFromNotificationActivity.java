@@ -94,7 +94,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public void getMessageDetails() {
+	private void getMessageDetails() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			if (itemMessageId != null && !itemMessageId.equalsIgnoreCase("")) {
@@ -159,7 +159,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	};
 
-	public void getRepliesPeriodically() {
+	private void getRepliesPeriodically() {
 		final int delay = 30;
 		long period = fetchNewRepliesAfter;
 		Timer timer = new Timer();
@@ -180,7 +180,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		}, delay * 1000, period);
 	}
 
-	public void getReplies() {
+	private void getReplies() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, replyThread, "Start get replies");
@@ -239,7 +239,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseReplies(int status, String response) {
+	private void handleResponseReplies(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("REPLY RESPONSE", status + ":" + response);
@@ -284,7 +284,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public void handleResponseMessage(int status, String response) {
+	private void handleResponseMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
@@ -357,7 +357,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public View getListItem(final MessageEntity mEntity) {
+	private View getListItem(final MessageEntity mEntity) {
 		View v;
 
 		String senderId = mEntity.getSenderId();
@@ -439,7 +439,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		return v;
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MessageConversationFromNotificationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
@@ -493,7 +493,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public void scrollToBottom() {
+	private void scrollToBottom() {
 		final Handler handler = new Handler();
 		new Thread(new Runnable() {
 			@Override
@@ -526,7 +526,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	}
 
-	public void validateNewMessage() {
+	private void validateNewMessage() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			if (!etNewMessage.getText().toString().trim().equalsIgnoreCase("")
@@ -584,7 +584,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);

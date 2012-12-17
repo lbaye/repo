@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -105,7 +106,7 @@ public class MessageListActivity extends Activity {
 	 * // dismiss progress dialog if needed m_ProgressDialog.dismiss(); } };
 	 */
 
-	public void handleResponseMessage(int status, String response) {
+	private void handleResponseMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
@@ -218,6 +219,14 @@ public class MessageListActivity extends Activity {
 											//getMessageDetails(messageId, threadId);
 										}
 									});
+							
+							
+							if(messageEntity.getStatus().equalsIgnoreCase("unread")){
+								
+								senderMessage.setBackgroundColor(Color.GRAY);
+								//v.setBackgroundColor(Color.GRAY);
+								
+							}
 
 							messageListContainer.addView(v);
 						}
@@ -267,7 +276,7 @@ public class MessageListActivity extends Activity {
 		return info;
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MessageListActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
@@ -336,7 +345,7 @@ public class MessageListActivity extends Activity {
 
 	}
 
-	public void initateNewMessage() {
+	private void initateNewMessage() {
 		// TODO Auto-generated method stub
 		Intent i = new Intent(context, MessageComposeActivity.class);
 
@@ -351,7 +360,7 @@ public class MessageListActivity extends Activity {
 
 	}
 
-	public void getMessageDetails(String messageId, String threadId) {
+	private void getMessageDetails(String messageId, String threadId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			itemMessageId = messageId;

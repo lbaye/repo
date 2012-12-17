@@ -80,15 +80,97 @@
             android:id="@+id/linearLayoutBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical" > 
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="5dip"
+                android:paddingLeft="10dip"
+                android:paddingTop="10dip" >
+
+                <Button
+                    android:id="@+id/btnPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="left|center_vertical"
+                    android:paddingBottom="5dip"
+                    android:paddingRight="10dip"
+                    android:paddingTop="5dip"
+                    android:text="Event photo..."
+                    android:textColor="@color/black"
+                    android:textSize="12dip"
+                    android:textStyle="normal" 
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left" 
+                    android:paddingRight="10dip">
+
+                    <ImageView
+                        android:id="@+id/ivEventImage"
+                        android:layout_width="fill_parent"
+                        android:layout_height="150dip"
+                        android:background="@color/offwhite"
+                        android:scaleType="fitCenter" 
+                        android:src="@null" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dip" >
+
+                <Button
+                    android:id="@+id/btnAddOrUploadPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="left|center_vertical" 
+                    android:text="Edit Photo"
+                    android:paddingLeft="95dip" 
+                    android:paddingRight="7dip"
+                    android:textColor="@color/black"
+                    android:textSize="12dip"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:layout_width="2dip"
+                    android:layout_height="30dip"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/seperator" />
+
+                <Button
+                    android:id="@+id/btnCanclePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="50dip"
+                    android:text="@string/deletePhotoLabel"
+                    android:textColor="@color/black"
+                    android:textSize="12dip"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
             <!-- RadioGroup for location starts -->
 
-            <!-- <LinearLayout
+            <LinearLayout
                 android:id="@+id/locationRadioGroupContainer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" >
-            </LinearLayout> -->
+            </LinearLayout>
             <!-- RadioGroup for location ends --> 
             
             <TextView 
@@ -103,6 +185,7 @@
                     android:textSize="12dip"
                     android:textStyle="bold" 
                     android:layout_marginTop="5dip" 
+                    android:visibility="gone"
                     /> 
                     
             <TextView
@@ -210,7 +293,7 @@
                         android:gravity="right|center_vertical" />
                 </LinearLayout>
 
-                <LinearLayout
+                <!-- <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
@@ -244,7 +327,7 @@
                             android:scaleType="fitXY"
                             android:src="@null" />
                     </LinearLayout>
-                </LinearLayout>
+                </LinearLayout> -->
             </LinearLayout>
 
             <View

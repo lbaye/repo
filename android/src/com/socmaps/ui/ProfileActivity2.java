@@ -73,8 +73,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	ImageDownloader imageDownloader;
 
 	private ProgressDialog m_ProgressDialog = null;
-	public final static int REQUEST_CODE_CAMERA = 700;
-	public final static int REQUEST_CODE_GALLERY = 701;
 	int requestCode;
 	Bitmap avatar;
 	String dob = "";
@@ -82,7 +80,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 	String strRelationshipStatus;
 
-	public People people;
+	private People people;
 	private People peopleUpdate;
 	private String peopleId;
 
@@ -95,7 +93,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			relativeLayoutDirection;
 	TextView tvFriendshipStatus, tvFriendshipCheck;
 
-	public Dialog msgDialog, frndRequestDialog;
+	private Dialog msgDialog, frndRequestDialog;
 	// public Dialog currentBubbleDialog;
 
 	String friendRequestFriendId = "";
@@ -103,7 +101,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	String friendRequestResponse = "";
 	int friendRequestStatus = 0;
 
-	public List<String> friendRequestSentList = new ArrayList<String>();
+	private List<String> friendRequestSentList = new ArrayList<String>();
 
 	String sendMessageFriendId = "";
 	String sendMessageSubject = "";
@@ -538,7 +536,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		frndRequestDialog.show();
 	}
 
-	public void sendFriendRequest(String friendId, String message) {
+	private void sendFriendRequest(String friendId, String message) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendRequestFriendId = friendId;
@@ -601,7 +599,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseFriendRequest(int status, String response) {
+	private void handleResponseFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Send Frnd Request", status + ":" + response);
@@ -633,7 +631,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 	}
 
-	public void handleSuccssfulFriendRequest() {
+	private void handleSuccssfulFriendRequest() {
 		// currentBubbleDialog.dismiss();
 		if (!friendRequestSentList.contains(friendRequestFriendId)) {
 			friendRequestSentList.add(friendRequestFriendId);
@@ -683,7 +681,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		msgDialog.show();
 	}
 
-	public void sendMessage(String friendId, String subject, String content) {
+	private void sendMessage(String friendId, String subject, String content) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			sendMessageFriendId = friendId;
@@ -747,7 +745,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
@@ -900,7 +898,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseFriends(int status, String response) {
+	private void handleResponseFriends(int status, String response) {
 
 		Log.w("Got friends response from server", status + ":" + response);
 		switch (status) {
@@ -940,7 +938,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 	}
 
-	public void setDefaultValues() {
+	private void setDefaultValues() {
 
 		if (peopleUpdate.getFriendshipStatus() != null) {
 			if (peopleUpdate.getFriendshipStatus().equalsIgnoreCase(

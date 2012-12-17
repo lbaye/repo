@@ -77,8 +77,7 @@ public class PlaceRowFactory {
 
 		}
 
-		String url = place.getStreetViewImage();
-		if (url != null) {
+		if (place.getStreetViewImage() != null && !place.getStreetViewImage().equals("")) {
 			/*
 			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
 			 * (con.getResources(), R.drawable.cover_pic_default));
@@ -88,9 +87,9 @@ public class PlaceRowFactory {
 			// il.DisplayImage(url, holder.coverPhoto, R.drawable.img_blank);
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(url, holder.coverPhoto);
+			il.download(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
-			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
 		}
 
 		// ******************************************************************current

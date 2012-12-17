@@ -191,7 +191,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		// searchEditText.setHint("Your search");
 	}
 
-	public void fetchDataForList() {
+	private void fetchDataForList() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
@@ -300,7 +300,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 	};
 
-	public void handleGetEventsResponse(int status, String response) {
+	private void handleGetEventsResponse(int status, String response) {
 		Log.d("Events", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -321,14 +321,14 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -369,7 +369,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 	 * EventDetailsActivity.class); startActivity(eventDetailsIntent); }
 	 */
 
-	public void clearFilterButtonSelection() {
+	private void clearFilterButtonSelection() {
 		btnFilterByDate.setBackgroundColor(colorButtonNormal);
 		btnFilterByDistance.setBackgroundColor(colorButtonNormal);
 		btnFilterByFriendsEvent.setBackgroundColor(colorButtonNormal);
@@ -432,7 +432,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 		contentAdapter.setObjects(this.events);
 	}
 
-	public class ListArrayAdapter extends BaseAdapter implements Filterable {
+	private class ListArrayAdapter extends BaseAdapter implements Filterable {
 
 		private List<Event> mObjects;
 
@@ -455,7 +455,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		private ImageDownloader imageDownloader;
 
-		public ListArrayAdapter(Context context, int textViewResourceId,
+		private ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
 
 			//imageDownloader = new ImageDownloader();
@@ -473,7 +473,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 			mNotifyOnChange = true;
 		}
 
-		public void setNotifyOnChange(boolean notifyOnChange) {
+		private void setNotifyOnChange(boolean notifyOnChange) {
 			mNotifyOnChange = notifyOnChange;
 		}
 

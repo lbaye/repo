@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,12 +39,15 @@ import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
 
 public class FriendListActivity extends Activity implements OnClickListener {
 
@@ -99,36 +103,39 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		initialize();
 
-		//personID = StaticValues.myInfo.getId();
+		// personID = StaticValues.myInfo.getId();
 		personID = getIntent().getStringExtra("PERSON_ID");
-		
-		if(personID == null)
-		{
-			if(StaticValues.myInfo!=null)
-			{
+
+		if (personID == null) {
+			if (StaticValues.myInfo != null) {
 				personID = StaticValues.myInfo.getId();
 			}
 		}
 
 		if (personID != null) {
 
-			getFriendsOfFriendsFromServer();
+			// getFriendsOfFriendsFromServer();
+
+			// Another way
+			callAPI();
 
 			Log.w("FriendListActivity onCreate", "personID not null");
 
-		}/* else {
-
-			getFriendList();
-
-			updateContentList(originalFriendList);
-
-			updateCircleContentList(mainCircleList);
-
-			generateListViewForAToZ();
-
-			Log.w("FriendListActivity onCreate", "personID is null");
-
-		}*/
+		}/*
+		 * else {
+		 * 
+		 * getFriendList();
+		 * 
+		 * updateContentList(originalFriendList);
+		 * 
+		 * updateCircleContentList(mainCircleList);
+		 * 
+		 * generateListViewForAToZ();
+		 * 
+		 * Log.w("FriendListActivity onCreate", "personID is null");
+		 * 
+		 * }
+		 */
 
 	}
 
@@ -191,8 +198,8 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedPhoto = new HashMap<String, Boolean>();
 
-		//imageDownloader = new ImageDownloader();
-		//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 	}
 
@@ -315,7 +322,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		// }
 	}
 
-	public View getItemViewFriend(final People people) {
+	private View getItemViewFriend(final People people) {
 
 		View v = inflater.inflate(R.layout.friend_item, null);
 
@@ -468,7 +475,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void updateContentList(List<People> list) {
+	private void updateContentList(List<People> list) {
 
 		if (list != null) {
 
@@ -481,7 +488,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void updateCircleContentList(List<Circle> list) {
+	private void updateCircleContentList(List<Circle> list) {
 
 		if (list != null) {
 
@@ -495,138 +502,227 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	/*
 	 * Friends from server
 	 */
-	private void getFriendsOfFriendsFromServer() {
-		// TODO Auto-generated method stub
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
+	// private void getFriendsOfFriendsFromServer() {
+	// // TODO Auto-generated method stub
+	// if (Utility.isConnectionAvailble(getApplicationContext())) {
+	//
+	// Thread thread = new Thread(null, friendsThread,
+	// "Start get friends from server");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog.show(context, getResources()
+	// .getString(R.string.please_wait_text), getResources()
+	// .getString(R.string.sending_request_text), true, true);
+	//
+	// } else {
+	//
+	// DialogsAndToasts
+	// .showNoInternetConnectionDialog(getApplicationContext());
+	// }
+	// }
+	//
+	// private Runnable friendsThread = new Runnable() {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// RestClient restClient;
+	// // if(personID == null)
+	// // {
+	// // restClient = new RestClient(Constant.smPlaces);
+	// // }
+	// // else
+	// // {
+	// restClient = new RestClient(Constant.smServerUrl + "/" + personID
+	// + "/friends");
+	// // }
+	//
+	// restClient.AddHeader(Constant.authTokenParam,
+	// Utility.getAuthToken(context));
+	//
+	// // restClient.AddParam("users[]", unblockId);
+	//
+	// try {
+	// restClient.Execute(RestClient.RequestMethod.GET);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// friendsResponse = restClient.getResponse();
+	// friendsStatus = restClient.getResponseCode();
+	//
+	// runOnUiThread(friendsResponseFromServer);
+	// }
+	// };
+	//
+	// private Runnable friendsResponseFromServer = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// handleResponseFriends(friendsStatus, friendsResponse);
+	//
+	// // dismiss progress dialog if needed
+	// if (m_ProgressDialog != null) {
+	// m_ProgressDialog.dismiss();
+	// }
+	// }
+	// };
+	//
+	// public void handleResponseFriends(int status, String response) {
+	// // show proper message through Toast or Dialog
+	// Log.w("Got friends response from server", status + ":" + response);
+	// switch (status) {
+	// case Constant.STATUS_SUCCESS:
+	// // Log.d("Login", status+":"+response);
+	// // Toast.makeText(context, "Places response successful.",
+	// // Toast.LENGTH_SHORT).show();
+	//
+	// try {
+	//
+	// JSONObject jsonObject = new JSONObject(response);
+	//
+	// if (!jsonObject.isNull("friends")) {
+	//
+	// JSONArray jArrayFriends = jsonObject
+	// .getJSONArray("friends");
+	//
+	// originalFriendList = ServerResponseParser
+	// .parsePeoples(jArrayFriends);
+	//
+	// }
+	//
+	// if (!jsonObject.isNull("circles")) {
+	//
+	// JSONArray jArrayCircles = jsonObject
+	// .getJSONArray("circles");
+	//
+	// mainCircleList = ServerResponseParser
+	// .getCircleList(jArrayCircles);
+	//
+	// }
+	//
+	// if (StaticValues.myInfo != null) {
+	// if (originalFriendList != null && mainCircleList != null
+	// && personID.equals(StaticValues.myInfo.getId())) {
+	// StaticValues.myInfo.setFriendList(originalFriendList);
+	// StaticValues.myInfo.setCircleList(mainCircleList);
+	// }
+	// }
+	//
+	// updateContentList(originalFriendList);
+	// updateCircleContentList(mainCircleList);
+	//
+	// generateListViewForAToZ();
+	//
+	// } catch (JSONException e) {
+	// // TODO: handle exception
+	// }
+	//
+	// // sortMasterListData();
+	// //
+	// // updateContentList(listMasterContent);
+	// // updateDisplayList(listContent);
+	//
+	// break;
+	//
+	// default:
+	// Toast.makeText(getApplicationContext(),
+	// "An unknown error occured. Please try again!!",
+	// Toast.LENGTH_SHORT).show();
+	// break;
+	//
+	// }
+	//
+	// }
 
-			Thread thread = new Thread(null, friendsThread,
-					"Start get friends from server");
-			thread.start();
+	// Another way***************
 
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+	private void callAPI() {
 
-		} else {
+		String url = Constant.smServerUrl + "/" + personID + "/friends";
 
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.GET_SERVER_DATA, true, getResources().getString(
+						R.string.please_wait_text), getResources().getString(
+						R.string.sending_request_text),
+				new BackProcessCallBackListener(),true);
+
+		backProcess.execute(RestClient.RequestMethod.GET);
 	}
 
-	private Runnable friendsThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient;
-			// if(personID == null)
-			// {
-			// restClient = new RestClient(Constant.smPlaces);
-			// }
-			// else
-			// {
-			restClient = new RestClient(Constant.smServerUrl + "/" + personID
-					+ "/friends");
-			// }
-
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			// restClient.AddParam("users[]", unblockId);
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			friendsResponse = restClient.getResponse();
-			friendsStatus = restClient.getResponseCode();
-
-			runOnUiThread(friendsResponseFromServer);
-		}
-	};
-
-	private Runnable friendsResponseFromServer = new Runnable() {
+	private class BackProcessCallBackListener implements BackProcessCallback {
 
 		@Override
-		public void run() {
+		public void onFinish(int status, String response, int type) {
+
 			// TODO Auto-generated method stub
-			handleResponseFriends(friendsStatus, friendsResponse);
+			Log.w("Got friends response from server", status + ":" + response);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+				// Log.d("Login", status+":"+response);
+				// Toast.makeText(context, "Places response successful.",
+				// Toast.LENGTH_SHORT).show();
 
-			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
-			m_ProgressDialog.dismiss();
-			}
-		}
-	};
+				try {
 
-	public void handleResponseFriends(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("Got friends response from server", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-			// Toast.makeText(context, "Places response successful.",
-			// Toast.LENGTH_SHORT).show();
+					JSONObject jsonObject = new JSONObject(response);
 
-			try {
+					if (!jsonObject.isNull("friends")) {
 
-				JSONObject jsonObject = new JSONObject(response);
+						JSONArray jArrayFriends = jsonObject
+								.getJSONArray("friends");
 
-				if (!jsonObject.isNull("friends")) {
+						originalFriendList = ServerResponseParser
+								.parsePeoples(jArrayFriends);
 
-					JSONArray jArrayFriends = jsonObject
-							.getJSONArray("friends");
-
-					originalFriendList = ServerResponseParser
-							.parsePeoples(jArrayFriends);						
-
-				}
-
-				if (!jsonObject.isNull("circles")) {
-
-					JSONArray jArrayCircles = jsonObject
-							.getJSONArray("circles");
-
-					mainCircleList = ServerResponseParser
-							.getCircleList(jArrayCircles);
-					
-
-				}
-
-				if(StaticValues.myInfo!=null)
-				{
-					if (originalFriendList != null && mainCircleList != null
-							&& personID.equals(StaticValues.myInfo.getId())) {
-						StaticValues.myInfo.setFriendList(originalFriendList);
-						StaticValues.myInfo.setCircleList(mainCircleList);
 					}
+
+					if (!jsonObject.isNull("circles")) {
+
+						JSONArray jArrayCircles = jsonObject
+								.getJSONArray("circles");
+
+						mainCircleList = ServerResponseParser
+								.getCircleList(jArrayCircles);
+
+					}
+
+					if (StaticValues.myInfo != null) {
+						if (originalFriendList != null
+								&& mainCircleList != null
+								&& personID.equals(StaticValues.myInfo.getId())) {
+							StaticValues.myInfo
+									.setFriendList(originalFriendList);
+							StaticValues.myInfo.setCircleList(mainCircleList);
+						}
+					}
+
+					updateContentList(originalFriendList);
+					updateCircleContentList(mainCircleList);
+
+					generateListViewForAToZ();
+
+				} catch (JSONException e) {
+					// TODO: handle exception
 				}
-				
 
-				updateContentList(originalFriendList);
-				updateCircleContentList(mainCircleList);
+				break;
 
-				generateListViewForAToZ();
+			case Constant.STATUS_SUCCESS_NODATA:
+				Toast.makeText(getApplicationContext(), "No data found.",
+						Toast.LENGTH_SHORT).show();
+				break;
 
-			} catch (JSONException e) {
-				// TODO: handle exception
+			default:
+				Toast.makeText(getApplicationContext(),
+						"An unknown error occured. Please try again!!",
+						Toast.LENGTH_SHORT).show();
+				break;
+
 			}
-
-			// sortMasterListData();
-			//
-			// updateContentList(listMasterContent);
-			// updateDisplayList(listContent);
-
-			break;
-
-		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			break;
 
 		}
 
@@ -637,7 +733,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	// return friends;
 	// }
 
-	class ListComparatorName implements Comparator<People> {
+	private class ListComparatorName implements Comparator<People> {
 
 		@Override
 		public int compare(People first, People last) {
@@ -648,7 +744,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	class ListComparatorDistance implements Comparator<People> {
+	private	class ListComparatorDistance implements Comparator<People> {
 
 		@Override
 		public int compare(People first, People last) {

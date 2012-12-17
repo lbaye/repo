@@ -135,7 +135,7 @@ public class NotificationPreferencesActivity extends Activity implements
 		}
 	};
 
-	public void handleNotificationSettingsResponse(int status, String response) {
+	private void handleNotificationSettingsResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -147,13 +147,13 @@ public class NotificationPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -387,7 +387,7 @@ public class NotificationPreferencesActivity extends Activity implements
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -402,14 +402,14 @@ public class NotificationPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 		default:

@@ -23,7 +23,6 @@ public class StaticValues {
 
 	public static Place selectedPlace = null;
 	public static People selectedPeople = null;
-	// public static Event selectedEvent = null;
 	public static MyGeoPoint myPoint = null;
 
 	public static MeetupRequest selectedMeetupRequest = null;

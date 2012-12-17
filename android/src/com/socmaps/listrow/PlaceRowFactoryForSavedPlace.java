@@ -56,20 +56,12 @@ public class PlaceRowFactoryForSavedPlace {
 		// il.download(iconUrl, holder.avatar);
 		// }
 
-		String url = place.getStreetViewImage();
-		if (url != null) {
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * (con.getResources(), R.drawable.cover_pic_default));
-			 * BitmapManager.INSTANCE.loadBitmap(url, holder.coverPhoto,
-			 * 320,150);
-			 */
-			// il.DisplayImage(url, holder.coverPhoto, R.drawable.img_blank);
-
+	
+		if (place.getStreetViewImage() != null&& !place.getStreetViewImage().equals("")) {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
-			il.download(url, holder.coverPhoto);
+			il.download(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
-			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_place);
 		}
 
 		// ******************************************************************current

@@ -470,7 +470,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 	}
 
-	public void togglePanel(LinearLayout titlePanel, LinearLayout contentPanel) {
+	private void togglePanel(LinearLayout titlePanel, LinearLayout contentPanel) {
 		if (contentPanel.getVisibility() == View.VISIBLE) {
 			contentPanel.setVisibility(View.GONE);
 
@@ -534,7 +534,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 	};
 
-	public void getLocationFromMap() {
+	private void getLocationFromMap() {
 		double currentLat = 0;
 		double currentLng = 0;
 
@@ -575,7 +575,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	}
 
-	public void addNewLocation(Place place, int radius) {
+	private void addNewLocation(Place place, int radius) {
 
 		// add to list
 
@@ -591,7 +591,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	}
 
-	public void showInputDialog(final Place place) {
+	private void showInputDialog(final Place place) {
 		// custom dialog
 		final Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
 		dialog.setContentView(R.layout.input_text_dialog_layout);
@@ -642,7 +642,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		dialog.show();
 	}
 
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 		Dialog peoplePicker = new PeoplePicker(context,
 				new PeoplePickerHandler(), pickerName,
@@ -695,7 +695,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 	};
 
-	public void handleAccountSettingsResponse(int status, String response) {
+	private void handleAccountSettingsResponse(int status, String response) {
 		Log.d("Account Settings", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -714,14 +714,14 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -845,7 +845,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	};
 
-	public void handleResponseLocation(int status, String response) {
+	private void handleResponseLocation(int status, String response) {
 		// show proper message through Toast or Dialog
 		Log.w("Got location response from server", status + ":" + response);
 		switch (status) {
@@ -940,7 +940,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	};
 
-	public void handleSaveLocationSharingResponse(int status, String response) {
+	private void handleSaveLocationSharingResponse(int status, String response) {
 
 		Log.w("Save Location Sharing  response from server", status + ":"
 				+ response);

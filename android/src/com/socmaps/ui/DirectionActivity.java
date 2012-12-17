@@ -270,10 +270,12 @@ public class DirectionActivity extends Activity implements OnClickListener {
 				break;
 			}
 
+			
+			
 		}
 	}
 
-	public void getNearByPlaces() {
+	private void getNearByPlaces() {
 		if (StaticValues.searchResult != null) {
 
 			if (StaticValues.searchResult.getPlaces() != null) {
@@ -287,7 +289,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void getCurrentLocationAddressForSource() {
+	private void getCurrentLocationAddressForSource() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
 				sourceLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
@@ -301,7 +303,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void getDefaultLocationAddressForSource() {
+	private void getDefaultLocationAddressForSource() {
 		if (sourceLat != 0 && sourceLng != 0) {
 			Utility.getAddressByCoordinate(sourceLat, sourceLng,
 					new LocationAddressHandler());
@@ -335,7 +337,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void getLocationFromMap() {
+	private void getLocationFromMap() {
 		double currentLat = 0;
 		double currentLng = 0;
 
@@ -378,7 +380,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void displayAddress(String title, String address) {
+	private void displayAddress(String title, String address) {
 		tvSelectedLocationAddressSource.setText(address);
 
 		if (title != null) {
@@ -459,7 +461,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void getNearByPlacesDest() {
+	private void getNearByPlacesDest() {
 		if (StaticValues.searchResult != null) {
 
 			if (StaticValues.searchResult.getPlaces() != null) {
@@ -473,7 +475,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void getCurrentLocationAddressDest() {
+	private void getCurrentLocationAddressDest() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
 				destLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
@@ -485,7 +487,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void getDefaultLocationAddressDest() {
+	private void getDefaultLocationAddressDest() {
 
 		if (destLat != 0 && destLng != 0) {
 
@@ -521,7 +523,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void getLocationFromMapDest() {
+	private void getLocationFromMapDest() {
 		double currentLat = 0;
 		double currentLng = 0;
 
@@ -560,7 +562,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void displayAddressRe(String title, String address) {
+	private void displayAddressRe(String title, String address) {
 		tvSelectedLocationAddressDest.setText(address);
 
 		if (title != null) {
@@ -573,7 +575,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		selectedLocationInfoPanelDest.setVisibility(View.VISIBLE);
 	}
 
-	public void selectTransport(View v, String transport) {
+	private void selectTransport(View v, String transport) {
 		dirflg = transport;
 		ivDirectionCar.setBackgroundResource(R.drawable.button_bg_direction);
 		ivDirectionCycle.setBackgroundResource(R.drawable.button_bg_direction);

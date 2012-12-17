@@ -3,6 +3,13 @@ package com.socmaps.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -29,6 +37,9 @@ import android.widget.Toast;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Place;
 import com.socmaps.images.ImageDownloader;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -42,17 +53,16 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	private TextView txtPlaceAddress, titlePlaceEditSave;
 
-	private Dialog msgDialog;
-
 	private ImageView ivPlace, separatorDeleteCancel;
-	// private final static int REQUEST_CODE_CAMERA = 705;
-	// private final static int REQUEST_CODE_GALLERY = 707;
 	private int requestCode;
 	private Bitmap placeIcon;
 	private boolean isHome;
+
+	private Dialog msgDialog;
 	private ProgressDialog m_ProgressDialog;
 	private String savePlacesResponse;
 	private int savePlacesStatus;
+
 	private String placeName = "";
 	private String placeDiscription = "";
 	private String categoryItem = "";
@@ -60,7 +70,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	private String photoUrl;
 	private Place place;
 
-	private boolean isUpdate;
+	// private boolean isUpdate;
 	private double lat = 0.0;
 	private double lng = 0.0;
 
@@ -85,7 +95,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 
 		context = PlaceEditSaveActivity.this;
 
@@ -178,10 +188,16 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 			lat = place.getLatitude();
 			lng = place.getLongitude();
 
-			if (place.getStreetViewImage() != null) {
+			if (place.getStreetViewImage() != null
+					&& !place.getStreetViewImage().equals("")) {
 				photoUrl = place.getStreetViewImage();
 				ivPlace.setImageResource(R.drawable.img_blank);
 				imageDownloader.download(photoUrl, ivPlace);
+
+				// ivPlace.buildDrawingCache();
+				// placeIcon = ivPlace.getDrawingCache();
+
+				placeIcon = getBitmapFromURL(place.getStreetViewImage());
 			}
 
 		}
@@ -227,7 +243,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 		case R.id.btnPeopleDelete:
 
-			isUpdate = false;
+			// isUpdate = false;
 
 			deleteConfirmDialog();
 
@@ -239,215 +255,354 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 		case R.id.btnPeopleUpdate:
 
-			isUpdate = true;
+			// isUpdate = true;
 
 			if (isHome) {
 
-				savePlaceToServer();
+				// savePlaceToServer();
+
+				savePlace();
 
 			} else {
-				updateOrDeletePlace();
+
+				updatePlace();
+
+				// updateOrDeletePlace();
 			}
 			break;
 
 		default:
 			break;
+		}
+	}
+
+	private Bitmap getBitmapFromURL(String src) {
+		try {
+			URL url = new URL(src);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(input);
+			return myBitmap;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return null;
 		}
 	}
 
 	/*
 	 * Update and Delete an existing place
 	 */
-	private void updateOrDeletePlace() {
-		// TODO Auto-generated method stub
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
+	// private void updateOrDeletePlace() {
+	// // TODO Auto-generated method stub
+	// if (Utility.isConnectionAvailble(getApplicationContext())) {
+	//
+	// if (isUpdate) {
+	//
+	// if (!placeName.trim().equals("") && placeName != null) {
+	//
+	// Thread thread = new Thread(null, updatePlacesThread,
+	// "Start update place to server");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog
+	// .show(context,
+	// getResources().getString(
+	// R.string.please_wait_text),
+	// getResources().getString(
+	// R.string.sending_request_text),
+	// true, true);
+	//
+	// } else {
+	//
+	// Toast.makeText(context, "Please enter place name",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// }
+	//
+	// } else {
+	//
+	// Thread thread = new Thread(null, updatePlacesThread,
+	// "Start update place to server");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog.show(context, getResources()
+	// .getString(R.string.please_wait_text), getResources()
+	// .getString(R.string.sending_request_text), true, true);
+	//
+	// }
+	//
+	// } else {
+	//
+	// DialogsAndToasts
+	// .showNoInternetConnectionDialog(getApplicationContext());
+	// }
+	// }
+	//
+	// private Runnable updatePlacesThread = new Runnable() {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// RestClient restClient = new RestClient(Constant.smCreatePlaces
+	// + "/" + place.getId());
+	// restClient.AddHeader(Constant.authTokenParam,
+	// Utility.getAuthToken(context));
+	//
+	// try {
+	//
+	// if (isUpdate) {
+	//
+	// restClient.AddParam("title", placeName);
+	// restClient.AddParam("address", strAddress);
+	// restClient.AddParam("description", placeDiscription);
+	// restClient.AddParam("category", categoryItem);
+	//
+	// if (placeIcon != null) {
+	//
+	// String photoString = "";
+	// ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
+	//
+	// placeIcon.compress(Bitmap.CompressFormat.PNG, 60,
+	// full_stream);
+	//
+	// byte[] full_bytes = full_stream.toByteArray();
+	// photoString = Base64.encodeToString(full_bytes,
+	// Base64.DEFAULT);
+	// restClient.AddParam("photo", photoString);
+	//
+	// }
+	//
+	// restClient.Execute(RestClient.RequestMethod.PUT);
+	//
+	// } else {
+	// restClient.Execute(RestClient.RequestMethod.DELETE);
+	// }
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// savePlacesResponse = restClient.getResponse();
+	// savePlacesStatus = restClient.getResponseCode();
+	//
+	// runOnUiThread(updatePlacesResponseFromServer);
+	// }
+	// };
+	//
+	// private Runnable updatePlacesResponseFromServer = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// handleResponseUpdatePlaces(savePlacesStatus, savePlacesResponse);
+	//
+	// // dismiss progress dialog if needed
+	// if (m_ProgressDialog != null) {
+	// m_ProgressDialog.dismiss();
+	// }
+	// }
+	// };
+	//
+	// public void handleResponseUpdatePlaces(int status, String response) {
+	// // show proper message through Toast or Dialog
+	// Log.w("Places Update response from server", status + ":" + response);
+	// switch (status) {
+	// case Constant.STATUS_SUCCESS:
+	// // Log.d("Login", status+":"+response);
+	//
+	// if (isUpdate) {
+	// Toast.makeText(context, "Place updated successfully.",
+	// Toast.LENGTH_SHORT).show();
+	// } else {
+	// Toast.makeText(context, "Place deleted successfully.",
+	// Toast.LENGTH_SHORT).show();
+	// }
+	//
+	// finish();
+	// break;
+	//
+	// default:
+	// Toast.makeText(getApplicationContext(),
+	// "An unknown error occured. Please try again!!",
+	// Toast.LENGTH_SHORT).show();
+	// finish();
+	// break;
+	//
+	// }
+	//
+	// }
+	//
+	// /*
+	// * Places create/save to server
+	// */
+	// private void savePlaceToServer() {
+	// // TODO Auto-generated method stub
+	//
+	// if (!placeName.equals("") && placeName != null) {
+	//
+	// if (Utility.isConnectionAvailble(getApplicationContext())) {
+	//
+	// Thread thread = new Thread(null, savePlacesThread,
+	// "Start save place to server");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog.show(context, getResources()
+	// .getString(R.string.please_wait_text), getResources()
+	// .getString(R.string.sending_request_text), true, true);
+	//
+	// } else {
+	//
+	// DialogsAndToasts
+	// .showNoInternetConnectionDialog(getApplicationContext());
+	// }
+	//
+	// } else {
+	// Toast.makeText(context, "Please enter place name",
+	// Toast.LENGTH_SHORT).show();
+	// }
+	//
+	// }
+	//
+	// private Runnable savePlacesThread = new Runnable() {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// RestClient restClient = new RestClient(Constant.smCreatePlaces);
+	// restClient.AddHeader(Constant.authTokenParam,
+	// Utility.getAuthToken(context));
+	//
+	// Log.w("PlaceEditSaveActivity Save a new Place", "title:"
+	// + placeName + " lat:" + lat + " long:" + lng);
+	//
+	// restClient.AddParam("title", placeName);
+	// restClient.AddParam("lat", lat + "");
+	// restClient.AddParam("lng", lng + "");
+	// restClient.AddParam("description", placeDiscription);
+	// restClient.AddParam("category", categoryItem);
+	// restClient.AddParam("address", strAddress);
+	//
+	// if (placeIcon != null) {
+	//
+	// String photoString = "";
+	// ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
+	//
+	// placeIcon.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
+	//
+	// byte[] full_bytes = full_stream.toByteArray();
+	// photoString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
+	// restClient.AddParam("photo", photoString);
+	//
+	// }
+	//
+	// try {
+	// restClient.Execute(RestClient.RequestMethod.POST);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// savePlacesResponse = restClient.getResponse();
+	// savePlacesStatus = restClient.getResponseCode();
+	//
+	// runOnUiThread(savePlacesResponseFromServer);
+	// }
+	// };
+	//
+	// private Runnable savePlacesResponseFromServer = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// handleResponsesavePlaces(savePlacesStatus, savePlacesResponse);
+	//
+	// // dismiss progress dialog if needed
+	// if (m_ProgressDialog != null) {
+	// m_ProgressDialog.dismiss();
+	// }
+	// }
+	// };
+	//
+	// public void handleResponsesavePlaces(int status, String response) {
+	// // show proper message through Toast or Dialog
+	// Log.w("Places saved response from server", status + ":" + response);
+	// switch (status) {
+	// case Constant.STATUS_CREATED:
+	// // Log.d("Login", status+":"+response);
+	// Toast.makeText(context, "Places saved successful.",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// finish();
+	//
+	// break;
+	//
+	// default:
+	// Toast.makeText(getApplicationContext(),
+	// "An unknown error occured. Please try again!!",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// finish();
+	// break;
+	//
+	// }
+	//
+	// }
 
-			if (isUpdate) {
+	// Save a new place
+	private void savePlace() {
+		String url = Constant.smCreatePlaces;
 
-				if (!placeName.trim().equals("") && placeName != null) {
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("title", placeName));
+		params.add(new BasicNameValuePair("lat", lat + ""));
+		params.add(new BasicNameValuePair("lng", lng + ""));
+		params.add(new BasicNameValuePair("description", placeDiscription));
+		params.add(new BasicNameValuePair("category", categoryItem));
+		params.add(new BasicNameValuePair("address", strAddress));
 
-					Thread thread = new Thread(null, updatePlacesThread,
-							"Start update place to server");
-					thread.start();
+		if (placeIcon != null) {
 
-					// show progress dialog if needed
-					m_ProgressDialog = ProgressDialog
-							.show(context,
-									getResources().getString(
-											R.string.please_wait_text),
-									getResources().getString(
-											R.string.sending_request_text),
-									true, true);
+			String photoString = "";
+			ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 
-				} else {
+			placeIcon.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
-					Toast.makeText(context, "Please enter place name",
-							Toast.LENGTH_SHORT).show();
+			byte[] full_bytes = full_stream.toByteArray();
+			photoString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
+			params.add(new BasicNameValuePair("photo", photoString));
 
-				}
-
-			} else {
-
-				Thread thread = new Thread(null, updatePlacesThread,
-						"Start update place to server");
-				thread.start();
-
-				// show progress dialog if needed
-				m_ProgressDialog = ProgressDialog.show(context, getResources()
-						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true, true);
-
-			}
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
 		}
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.SAVE, true, getResources().getString(
+						R.string.please_wait_text), getResources().getString(
+						R.string.sending_request_text),
+				new BackProcessCallBackListener(), true);
+
+		backProcess.execute(RestClient.RequestMethod.POST);
+
 	}
 
-	private Runnable updatePlacesThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smCreatePlaces
-					+ "/" + place.getId());
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
+	// Update an existing place
+	private void updatePlace() {
 
-			try {
+		if (!placeName.trim().equals("") && placeName != null) {
 
-				if (isUpdate) {
+			String url = Constant.smCreatePlaces + "/" + place.getId();
 
-					restClient.AddParam("title", placeName);
-					restClient.AddParam("address", strAddress);
-					restClient.AddParam("description", placeDiscription);
-					restClient.AddParam("category", categoryItem);
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
-					if (placeIcon != null) {
-
-						String photoString = "";
-						ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
-
-						placeIcon.compress(Bitmap.CompressFormat.PNG, 60,
-								full_stream);
-
-						byte[] full_bytes = full_stream.toByteArray();
-						photoString = Base64.encodeToString(full_bytes,
-								Base64.DEFAULT);
-						restClient.AddParam("photo", photoString);
-
-					}
-
-					restClient.Execute(RestClient.RequestMethod.PUT);
-
-				} else {
-					restClient.Execute(RestClient.RequestMethod.DELETE);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			savePlacesResponse = restClient.getResponse();
-			savePlacesStatus = restClient.getResponseCode();
-
-			runOnUiThread(updatePlacesResponseFromServer);
-		}
-	};
-
-	private Runnable updatePlacesResponseFromServer = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponseUpdatePlaces(savePlacesStatus, savePlacesResponse);
-
-			// dismiss progress dialog if needed
-			if (m_ProgressDialog != null) {
-				m_ProgressDialog.dismiss();
-			}
-		}
-	};
-
-	public void handleResponseUpdatePlaces(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("Places Update response from server", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-
-			if (isUpdate) {
-				Toast.makeText(context, "Place updated successfully.",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(context, "Place deleted successfully.",
-						Toast.LENGTH_SHORT).show();
-			}
-
-			finish();
-			break;
-
-		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			finish();
-			break;
-
-		}
-
-	}
-
-	/*
-	 * Places create/save to server
-	 */
-	private void savePlaceToServer() {
-		// TODO Auto-generated method stub
-
-		if (!placeName.equals("") && placeName != null) {
-
-			if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-				Thread thread = new Thread(null, savePlacesThread,
-						"Start save place to server");
-				thread.start();
-
-				// show progress dialog if needed
-				m_ProgressDialog = ProgressDialog.show(context, getResources()
-						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true, true);
-
-			} else {
-
-				DialogsAndToasts
-						.showNoInternetConnectionDialog(getApplicationContext());
-			}
-
-		} else {
-			Toast.makeText(context, "Please enter place name",
-					Toast.LENGTH_SHORT).show();
-		}
-
-	}
-
-	private Runnable savePlacesThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smCreatePlaces);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			Log.w("PlaceEditSaveActivity Save a new Place", "title:"
-					+ placeName + " lat:" + lat + " long:" + lng);
-
-			restClient.AddParam("title", placeName);
-			restClient.AddParam("lat", lat + "");
-			restClient.AddParam("lng", lng + "");
-			restClient.AddParam("description", placeDiscription);
-			restClient.AddParam("category", categoryItem);
-			restClient.AddParam("address", strAddress);
+			params.add(new BasicNameValuePair("title", placeName));
+			params.add(new BasicNameValuePair("address", strAddress));
+			params.add(new BasicNameValuePair("description", placeDiscription));
+			params.add(new BasicNameValuePair("category", categoryItem));
 
 			if (placeIcon != null) {
 
@@ -458,57 +613,87 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 
 				byte[] full_bytes = full_stream.toByteArray();
 				photoString = Base64.encodeToString(full_bytes, Base64.DEFAULT);
-				restClient.AddParam("photo", photoString);
+				params.add(new BasicNameValuePair("photo", photoString));
 
 			}
 
-			try {
-				restClient.Execute(RestClient.RequestMethod.POST);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			BackProcess backProcess = new BackProcess(context, params, url,
+					REQUEST_TYPE.UPDATE, true, getResources().getString(
+							R.string.please_wait_text), getResources()
+							.getString(R.string.sending_request_text),
+					new BackProcessCallBackListener(), true);
 
-			savePlacesResponse = restClient.getResponse();
-			savePlacesStatus = restClient.getResponseCode();
+			backProcess.execute(RestClient.RequestMethod.PUT);
 
-			runOnUiThread(savePlacesResponseFromServer);
+		} else {
+
+			DialogsAndToasts
+					.showNoInternetConnectionDialog(getApplicationContext());
 		}
-	};
 
-	private Runnable savePlacesResponseFromServer = new Runnable() {
+	}
+
+	// Delete an existing place
+	private void deletePlace() {
+
+		String url = Constant.smCreatePlaces + "/" + place.getId();
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.DELETE, true, getResources().getString(
+						R.string.please_wait_text), getResources().getString(
+						R.string.sending_request_text),
+				new BackProcessCallBackListener(), true);
+
+		backProcess.execute(RestClient.RequestMethod.DELETE);
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
 
 		@Override
-		public void run() {
+		public void onFinish(int status, String result, int type) {
+
 			// TODO Auto-generated method stub
-			handleResponsesavePlaces(savePlacesStatus, savePlacesResponse);
+			Log.w("Got places response from server callback process >> :",
+					status + ":" + result);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
 
-			// dismiss progress dialog if needed
-			if (m_ProgressDialog != null) {
-				m_ProgressDialog.dismiss();
+				if (type == REQUEST_TYPE.DELETE.ordinal()) {
+					Toast.makeText(context, "Place deleted successfully.",
+							Toast.LENGTH_SHORT).show();
+
+				} else if (type == REQUEST_TYPE.UPDATE.ordinal()) {
+					Toast.makeText(context, "Place updated successfully.",
+							Toast.LENGTH_SHORT).show();
+
+				}
+
+				finish();
+				break;
+			case Constant.STATUS_SUCCESS_NODATA:
+				Toast.makeText(getApplicationContext(), "No place found.",
+						Toast.LENGTH_SHORT).show();
+				break;
+
+			case Constant.STATUS_CREATED:
+				// Log.d("Login", status+":"+response);
+				Toast.makeText(context, "Place saved successfully.",
+						Toast.LENGTH_SHORT).show();
+
+				finish();
+
+				break;
+			default:
+				Toast.makeText(getApplicationContext(),
+						"An unknown error occured. Please try again!!",
+						Toast.LENGTH_SHORT).show();
+
+				finish();
+				break;
+
 			}
-		}
-	};
-
-	public void handleResponsesavePlaces(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("Places saved response from server", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Places saved successful.",
-					Toast.LENGTH_SHORT).show();
-
-			finish();
-
-			break;
-
-		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-
-			finish();
-			break;
 
 		}
 
@@ -541,7 +726,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 		alert.show();
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -569,7 +754,10 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 					public void onClick(DialogInterface dialog, int id) {
 
 						// Delete this place
-						updateOrDeletePlace();
+						// updateOrDeletePlace();
+
+						deletePlace();
+
 						dialog.cancel();
 					}
 				});
@@ -660,7 +848,7 @@ public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	 */
 
 	// TODO Auto-generated method stub
-	public void showTextInputDialog(final int id, final String text, String hint) {
+	private void showTextInputDialog(final int id, final String text, String hint) {
 
 		Log.w("showTextInputDialog into", "id: " + id + " text:" + text);
 

@@ -112,7 +112,7 @@ public class PlatformPreferencesActivity extends Activity implements
 			((RadioButton) rG.findViewById(R.id.off_radio)).setChecked(true);
 	}
 
-	public void handlePlatformSettingsResponse(int status, String response) {
+	private void handlePlatformSettingsResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -124,14 +124,14 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -308,7 +308,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -322,14 +322,14 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 		default:
@@ -390,7 +390,7 @@ public class PlatformPreferencesActivity extends Activity implements
 
 	}
 
-	public class FbAPIsAuthListener implements AuthListener {
+	private class FbAPIsAuthListener implements AuthListener {
 
 		// @Override
 		@Override
@@ -411,7 +411,7 @@ public class PlatformPreferencesActivity extends Activity implements
 	 * The Callback for notifying the application when log out starts and
 	 * finishes.
 	 */
-	public class FbAPIsLogoutListener implements LogoutListener {
+	private class FbAPIsLogoutListener implements LogoutListener {
 		// @Override
 		@Override
 		public void onLogoutBegin() {
@@ -473,7 +473,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
-	public void initInviteFriends() {
+	private void initInviteFriends() {
 		Log.d("Facebook", "Have to invite");
 
 		if (Utility.isConnectionAvailble(context)) {
@@ -487,7 +487,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		}
 	}
 
-	public void showInvitationDialog() {
+	private void showInvitationDialog() {
 		Bundle params = new Bundle();
 		params.putString("message", "Checkout the app.");
 		FBUtility.mFacebook.dialog(context, "apprequests", params,
@@ -498,7 +498,7 @@ public class PlatformPreferencesActivity extends Activity implements
 	 * callback for the apprequests dialog which sends an app request to user's
 	 * friends.
 	 */
-	public class AppRequestsListener extends BaseDialogListener {
+	private class AppRequestsListener extends BaseDialogListener {
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {

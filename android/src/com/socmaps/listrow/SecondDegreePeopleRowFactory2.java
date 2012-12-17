@@ -104,6 +104,17 @@ public class SecondDegreePeopleRowFactory2 {
 			}
 		});
 
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getAvatar(), holder.coverPhoto);
+			
+
+		} else
+			holder.coverPhoto
+					.setImageResource(R.drawable.cover_pic_second_degree);
+
 		// holder.btnSendMessage.setOnClickListener(new View.OnClickListener() {
 		//
 		// @Override

@@ -109,6 +109,33 @@ public class SecondDegreePeopleRowFactory {
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
 		} // else holder.avatar.setImageResource(R.drawable.icon);
 
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
+			// holder.avatar, 320,150);
+
+			// il.DisplayImage(people.getAvatar(),
+			// holder.avatar,R.drawable.img_blank);
+			// il.download(people.getAvatar(), holder.avatar);
+
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getAvatar(), holder.coverPhoto);
+			/*
+			 * new FetchImageTask() {
+			 * 
+			 * @Override protected void onPostExecute(Bitmap result) { if
+			 * (result != null) {
+			 * 
+			 * holder.avatar.setImageBitmap(result); } else {
+			 * holder.avatar.setImageResource(R.drawable.img_blank); } }
+			 * }.execute(people.getAvatar());
+			 */
+
+		} else
+			holder.coverPhoto
+					.setImageResource(R.drawable.cover_pic_second_degree);
+
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
 		holder.distanceText.setText(Utility.getFormatedDistance(people
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
@@ -173,20 +200,13 @@ public class SecondDegreePeopleRowFactory {
 		}
 	}
 
-	/*private static class FetchImageTask extends
-			AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... arg0) {
-			Bitmap b = null;
-			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return b;
-		}
-	}*/
+	/*
+	 * private static class FetchImageTask extends AsyncTask<String, Integer,
+	 * Bitmap> {
+	 * 
+	 * @Override protected Bitmap doInBackground(String... arg0) { Bitmap b =
+	 * null; try { b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
+	 * .getContent()); } catch (MalformedURLException e) { e.printStackTrace();
+	 * } catch (IOException e) { e.printStackTrace(); } return b; } }
+	 */
 }

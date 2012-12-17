@@ -97,7 +97,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 	List<String> shareWithSelectedCircleFriendList;
 	List<String> shareWithSelectedFriendListAll; 
 	
-	public Place selectedPlace; 
+	private Place selectedPlace; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -280,7 +280,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		}
 	} 
 	
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 		//Dialog peoplePicker = new PeoplePicker(context, this, pickerName, shareWithSelectedFriendList, shareWithSelectedCircleList);
 		
@@ -458,7 +458,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		}
 	} 
 	
-	public void initiateSendEventData() {
+	private void initiateSendEventData() {
 		Thread thread = new Thread(null, sendPlanThread,
 				"Start send plan data");
 		thread.start();
@@ -541,7 +541,7 @@ public class PlanCreateActivity extends Activity implements PeoplePickerListener
 		}
 	}; 
 	
-	public void handleResponseSendEventData(int status, String response) {
+	private void handleResponseSendEventData(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("Plan CREATE RESPONSE", status + ":" + response);

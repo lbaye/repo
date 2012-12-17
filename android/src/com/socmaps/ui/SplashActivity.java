@@ -125,7 +125,7 @@ public class SplashActivity extends Activity {
 		}
 	}
 
-	public void getUserInfo() {
+	private void getUserInfo() {
 		// TODO Auto-generated method stub
 
 		Log.i("Splash: getUserInfo", "Requesting to server.");
@@ -164,7 +164,7 @@ public class SplashActivity extends Activity {
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Login", status + ":" + response);
 
 		isRequestingToServer = false;
@@ -189,7 +189,7 @@ public class SplashActivity extends Activity {
 
 	}
 
-	public void parseUserData(String response) {
+	private void parseUserData(String response) {
 		boolean isError = true;
 		if (response != null) {
 			if (!response.equals("")) {

@@ -77,9 +77,9 @@
         <activity android:name=".MessageConversationActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".MeetupRequestListActivity" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".MessageComposeActivity" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".EventNewActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".EventNewActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateVisible|adjustResize|adjustPan"></activity>
         <activity android:name=".EventEditActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".MeetupRequestNewActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".MeetupRequestNewActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".FriendListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".MessageConversationFromNotificationActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PeopleListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
@@ -101,7 +101,7 @@
         <activity android:name=".PhotoZoomActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity> 
         <activity android:name=".PlanListActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".PlanEditActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
-        
+        <activity android:name="PlaceNearToPerson" android:screenOrientation="portrait" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="stateHidden"></activity>
         
         <service android:name="com.socmaps.notificationBroadcast.BroadcastService" />
         <!--
@@ -125,6 +125,7 @@
         
          <service android:name=".GCMIntentService" />
         <uses-library android:name="com.google.android.maps" />
+        
         
         
         

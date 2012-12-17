@@ -1,5 +1,6 @@
 package com.socmaps.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,9 +92,12 @@ public class MeetupRequestNewActivity extends Activity {
 	ImageLoader imageLoader; 
 	boolean isSelected;
 
-	public People selectedPeople; 
-	public Place selectedPlace; 
-
+	private People selectedPeople; 
+	private Place selectedPlace; 
+	 
+	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>(); 
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -214,9 +219,42 @@ public class MeetupRequestNewActivity extends Activity {
 			//tvTitleDescription.setVisibility(View.VISIBLE); 
 			//tvTitleDescription.setText(selectedPlace.getName()); 
 			tvTitleAddress.setText(requestAddress);
+		} 
+		
+		etFriendSearch.addTextChangedListener(filterTextWatcher);
+		
+		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+		    		Log.d("inside On Key", "INSIDE ON KEY"); 
+		    		if(event.ACTION_DOWN == 0) {
+		    			doSearch(); 
+		    			Log.d("Do Search", "Do Search Method Called  " + etFriendSearch.getText().toString().trim()); 
+		    		}
+		            return false;
+		        }
+		    });*/
+	} 
+	
+	private TextWatcher filterTextWatcher = new TextWatcher() {
+
+		@Override
+		public void afterTextChanged(Editable s) {
 		}
 
-	} 
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			//contentAdapter.getFilter().filter(s); 
+			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			doSearch();
+		}
+
+	};
 	
 
 	private void addLocationRadioGroup() {
@@ -306,7 +344,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	}
 
-	public void initiateSendData() {
+	private void initiateSendData() {
 		Thread thread = new Thread(null, sendRequestThread,
 				"Start send request");
 		thread.start();
@@ -390,7 +428,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	};
 
-	public void handleResponseRequest(int status, String response) {
+	private void handleResponseRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MEETUP REQUEST RESPONSE", status + ":" + response);
@@ -443,9 +481,9 @@ public class MeetupRequestNewActivity extends Activity {
 
 	}
 
-	public View getItemViewFriend(People fEntity) {
+	private View getItemViewFriend(People fEntity) {
 
-		View v = inflater.inflate(R.layout.people_item, null);
+		View v = inflater.inflate(R.layout.people_item, null); 
 
 		TextView nameView = (TextView) v.findViewById(R.id.name);
 		final ImageView profilePic = (ImageView) v
@@ -453,49 +491,38 @@ public class MeetupRequestNewActivity extends Activity {
 
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
-
-		String firstName = fEntity.getFirstName();
-		String lastName = fEntity.getLastName();
+		
 		final String id = fEntity.getId();
 		Log.d("fEntity ID Check", id);
 		String avatarUrl = fEntity.getAvatar();
 
-		String name = "";
-
-		if (firstName != null) {
-			name = firstName + " ";
-		}
-		if (lastName != null) {
-			name += lastName;
-		}
-
-		selectedFriends.put(id, false);
-
-		/*
-		 * Work has to do for PreSelected Friend
-		 */
-
+		String name = ""; 
+		name = Utility.getFieldText(fEntity); 
 		nameView.setText(name);
 
+		selectedFriends.put(id, false); 
+
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
-
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
-
 		} 
+		
+		if(backupSelectedFriends.containsKey(id)) 
+		{
+			boolean preValue = backupSelectedFriends.get(id); 
+			
+			if(preValue) {
+				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, preValue);
+			}
+		}
 		
 		if (selectedPeople != null) {
 			if (id.equals(selectedPeople.getId())) {
 				proficPicContainer
 						.setBackgroundResource(R.color.highlightGreen);
 				selectedFriends.put(id, true);
+				selectedPeople = null;
 			}
 
 		}
@@ -507,21 +534,19 @@ public class MeetupRequestNewActivity extends Activity {
 				// TODO Auto-generated method stub
 				isSelected = selectedFriends.get(id);
 				if (isSelected) {
-					proficPicContainer
-							.setBackgroundResource(R.color.transparent);
+					proficPicContainer.setBackgroundResource(R.color.transparent); 
 				} else {
-					proficPicContainer
-							.setBackgroundResource(R.color.highlightGreen);
+					proficPicContainer.setBackgroundResource(R.color.highlightGreen); 
+					
 				}
-				selectedFriends.put(id, !isSelected);
-
+				selectedFriends.put(id, !isSelected);  	
 			}
 		});
 		
 		return v;
 	}
 
-	public View getItemViewCircle(Circle cEntity) {
+	private View getItemViewCircle(Circle cEntity) {
 
 		View v = inflater.inflate(R.layout.circle_item, null);
 
@@ -557,7 +582,7 @@ public class MeetupRequestNewActivity extends Activity {
 		return v;
 	}
 
-	public void showFriendList() {
+	private void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
 		btnCircleSelect.setTextAppearance(context,
@@ -570,7 +595,7 @@ public class MeetupRequestNewActivity extends Activity {
 		scrollViewFriends.setVisibility(View.VISIBLE);
 	}
 
-	public void showCircleList() {
+	private void showCircleList() {
 		btnFriendSelect.setTextAppearance(context,
 				R.style.ButtonTextStyleNormal);
 		btnCircleSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
@@ -582,7 +607,7 @@ public class MeetupRequestNewActivity extends Activity {
 		scrollViewCircles.setVisibility(View.VISIBLE);
 	}
 
-	public void selectAll() {
+	private void selectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(true);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -590,7 +615,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	}
 
-	public void unselectAll() {
+	private void unselectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(false);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -598,7 +623,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	}
 
-	public void selectionFriends(boolean isSelect) {
+	private void selectionFriends(boolean isSelect) {
 		int selectionColor;
 		if (isSelect) {
 			selectionColor = R.color.highlightGreen;
@@ -606,7 +631,8 @@ public class MeetupRequestNewActivity extends Activity {
 			selectionColor = R.color.transparent;
 		}
 
-		int totalChild = friendListContainer.getChildCount();
+		int totalChild = friendListContainer.getChildCount(); 
+		Log.d("Child Count", totalChild+"");
 		for (int i = 0; i < totalChild; i++) {
 			View v = friendListContainer.getChildAt(i);
 			LinearLayout proficPicContainer = (LinearLayout) v
@@ -624,7 +650,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	}
 
-	public void selectionCircles(boolean isSelect) {
+	private void selectionCircles(boolean isSelect) {
 
 		int totalChild = circleListContainer.getChildCount();
 		for (int i = 0; i < totalChild; i++) {
@@ -690,7 +716,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 	}
 
-	public void displayAddress(String title, String address) {
+	private void displayAddress(String title, String address) {
 		tvSelectedLocationAddress.setText(address);
 
 		if (title != null) {
@@ -704,7 +730,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 	}
 
-	public void getNearByPlaces() {
+	private void getNearByPlaces() {
 		if (StaticValues.searchResult != null) {
 
 			if (StaticValues.searchResult.getPlaces() != null) {
@@ -718,7 +744,7 @@ public class MeetupRequestNewActivity extends Activity {
 
 	}
 
-	public void getCurrentLocationAddress() {
+	private void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
 				requestLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
@@ -757,7 +783,7 @@ public class MeetupRequestNewActivity extends Activity {
 		}
 	}
 
-	public void getLocationFromMap() {
+	private void getLocationFromMap() {
 		double currentLat = 0;
 		double currentLng = 0;
 
@@ -801,6 +827,25 @@ public class MeetupRequestNewActivity extends Activity {
 					new LocationAddressHandler());
 
 		}
+	} 
+	
+	
+	private void doSearch() {
+		
+		List<Object> dataList = new ArrayList<Object>();
+		dataList.addAll(StaticValues.myInfo.getFriendList());
+
+		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch.getText().toString().trim())); 
+		friendListContainer.removeAllViews(); 
+		
+		//backUpSelectedFriends = selectedFriends; 
+		backupSelectedFriends  = new HashMap<String, Boolean>(selectedFriends);
+		selectedFriends.clear();
+		for (int i = 0; i < list.size(); i++) { 
+			View v = getItemViewFriend((People)list.get(i)); 
+			friendListContainer.addView(v); 
+		} 
+
 	}
 
 }

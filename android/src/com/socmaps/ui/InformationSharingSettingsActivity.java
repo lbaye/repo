@@ -135,7 +135,7 @@ public class InformationSharingSettingsActivity extends Activity implements
 		}
 	};
 
-	public void handleInformationSharingSettingsResponse(int status,
+	private void handleInformationSharingSettingsResponse(int status,
 			String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
@@ -148,13 +148,13 @@ public class InformationSharingSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -371,7 +371,7 @@ public class InformationSharingSettingsActivity extends Activity implements
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -384,13 +384,13 @@ public class InformationSharingSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 		default:

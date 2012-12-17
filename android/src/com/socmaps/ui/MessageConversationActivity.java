@@ -24,7 +24,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -35,13 +34,11 @@ import com.socmaps.entity.MessageEntity;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.NotifyOnNewReplies;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
-public class MessageConversationActivity extends Activity implements
-		NotifyOnNewReplies {
+public class MessageConversationActivity extends Activity{
 
 	ButtonActionListener buttonActionListener;
 	Button btnSend;
@@ -104,7 +101,7 @@ public class MessageConversationActivity extends Activity implements
 	 * // don't append on the view // Otherwise do nothing } }); }
 	 */
 
-	public void getRepliesPeriodically() {
+	private void getRepliesPeriodically() {
 		final int delay = 30;
 		long period = fetchNewRepliesAfter;
 		Timer timer = new Timer();
@@ -125,7 +122,7 @@ public class MessageConversationActivity extends Activity implements
 		}, delay * 1000, period);
 	}
 
-	public void getReplies() {
+	private void getReplies() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, replyThread, "Start get replies");
@@ -192,7 +189,7 @@ public class MessageConversationActivity extends Activity implements
 		}
 	};
 
-	public void handleResponseReplies(int status, String response) {
+	private void handleResponseReplies(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("REPLY RESPONSE", status + ":" + response);
@@ -237,7 +234,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	public void handleResponseMessage(int status, String response) {
+	private void handleResponseMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
@@ -299,7 +296,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	public View getListItem(final MessageEntity mEntity) {
+	private View getListItem(final MessageEntity mEntity) {
 		View v;
 
 		String senderId = mEntity.getSenderId();
@@ -383,7 +380,7 @@ public class MessageConversationActivity extends Activity implements
 		return v;
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MessageConversationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
@@ -445,7 +442,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	public void scrollToBottom() {
+	private void scrollToBottom() {
 		final Handler handler = new Handler();
 		new Thread(new Runnable() {
 			@Override
@@ -482,7 +479,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	public void validateNewMessage() {
+	private void validateNewMessage() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			if (!etNewMessage.getText().toString().trim().equalsIgnoreCase("")
@@ -543,7 +540,7 @@ public class MessageConversationActivity extends Activity implements
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
@@ -591,25 +588,7 @@ public class MessageConversationActivity extends Activity implements
 
 	}
 
-	/*
-	 * private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
-	 * 
-	 * @Override protected Bitmap doInBackground(String... arg0) { Bitmap b =
-	 * null; try { b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-	 * .getContent()); } catch (MalformedURLException e) { e.printStackTrace();
-	 * } catch (IOException e) { e.printStackTrace(); } return b; } }
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.socmaps.util.NotifyOnNewReplies#onNewReply(java.lang.String)
-	 */
-	@Override
-	public void onNewReply(String reply) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 	private Map<String, String> buildViewableMessageInfo(MessageEntity message) {
 

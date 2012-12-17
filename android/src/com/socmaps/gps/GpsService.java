@@ -33,7 +33,8 @@ public class GpsService {
 
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				|| locationManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager
+						.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
 			Log.e("Location service", "Enabled");
 
 			Criteria criteria = getCriteria();
@@ -43,7 +44,8 @@ public class GpsService {
 				if (locationProvider
 						.equalsIgnoreCase(LocationManager.GPS_PROVIDER)
 						|| locationProvider
-								.equalsIgnoreCase(LocationManager.NETWORK_PROVIDER)) {
+								.equalsIgnoreCase(LocationManager.NETWORK_PROVIDER) || locationProvider
+								.equalsIgnoreCase(LocationManager.PASSIVE_PROVIDER)) {
 					locationManager.requestLocationUpdates(locationProvider,
 							minTime, minDistance, deviceLocationListener);
 				}

@@ -129,7 +129,7 @@ public class HomeActivity extends MapActivity implements
 	TopDrawerListener topDrawerListener;
 	BottomDrawerListener bottomDrawerListener;
 
-	public Context context;
+	private Context context;
 	private TapControlledMapView mapView;
 	private static Handler handler;
 	private Runnable runneable;
@@ -155,8 +155,8 @@ public class HomeActivity extends MapActivity implements
 
 	// private static boolean flag = false;
 
-	public ImageView avatar, placeIconImage;
-	public Dialog d, msgDialog, frndRequestDialog;
+	private ImageView avatar, placeIconImage;
+	private Dialog d, msgDialog, frndRequestDialog;
 
 	private ProgressDialog m_ProgressDialog;
 
@@ -184,8 +184,8 @@ public class HomeActivity extends MapActivity implements
 	boolean isFirstLocationUpdate = true;
 	boolean isLocationFound = false;
 
-	public List<String> friendRequestSentList = new ArrayList<String>();
-	public Dialog currentBubbleDialog;
+	private List<String> friendRequestSentList = new ArrayList<String>();
+	private Dialog currentBubbleDialog;
 
 	PermissionRadioGroupLess permissionRadioGroupView;
 	LinearLayout shareWithRadioGroupContainer;
@@ -273,7 +273,7 @@ public class HomeActivity extends MapActivity implements
 	 * .getTotalCount()); } }
 	 */
 
-	public void initialize() {
+	private void initialize() {
 
 		context = HomeActivity.this;
 		gpsService = new GpsService(context, this);
@@ -450,14 +450,14 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void getMapDataFromServer() {
+	private void getMapDataFromServer() {
 		// sendSelfLocationToServer();
 		getSearchResult();
 		getEventList();
 		getGeotagList();
 	}
 
-	public void initTimeTask() {
+	private void initTimeTask() {
 		task = new TimerTask() {
 			public void run() {
 				if (isLocationFound && isRunning) {
@@ -641,7 +641,7 @@ public class HomeActivity extends MapActivity implements
 	 * }
 	 */
 
-	public void startGpsService() {
+	private void startGpsService() {
 		gpsService.StartListener();
 
 		handler = new Handler(new Callback() {
@@ -706,6 +706,9 @@ public class HomeActivity extends MapActivity implements
 		myLat = location.getLatitude();
 		myLng = location.getLongitude();
 
+		Log.e("location.getLatitude():" + location.getLatitude(),
+				"location.getLongitude():" + location.getLongitude());
+
 		// isFirstLocationUpdate = true;
 
 		Log.e("Size mapoverlay self", mapOverlays.size() + "");
@@ -736,7 +739,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void getSearchResult() {
+	private void getSearchResult() {
 		Thread userFetchThread = new Thread(null, getSearchResultThread,
 				"Start geting searchResult");
 		userFetchThread.start();
@@ -780,7 +783,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	};
 
-	public void handleGetSearchResultResponse(int status, String response) {
+	private void handleGetSearchResultResponse(int status, String response) {
 		Log.d("Get Search result", status + ":" + response);
 		// userList.clear();
 		switch (status) {
@@ -803,14 +806,14 @@ public class HomeActivity extends MapActivity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -822,7 +825,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void getGeotagList() {
+	private void getGeotagList() {
 		Thread userFetchThread = new Thread(null, getGeotagListThread,
 				"Start geting geotag list");
 		userFetchThread.start();
@@ -866,7 +869,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	};
 
-	public void handleGetGeotagListResponse(int status, String response) {
+	private void handleGetGeotagListResponse(int status, String response) {
 		// Log.d("Get Search result", status + ":" + response);
 		// userList.clear();
 		switch (status) {
@@ -886,14 +889,14 @@ public class HomeActivity extends MapActivity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -905,7 +908,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void getEventList() {
+	private void getEventList() {
 		Thread userFetchThread = new Thread(null, getEventListThread,
 				"Start geting event list");
 		userFetchThread.start();
@@ -947,7 +950,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	};
 
-	public void handleGetEventListResponse(int status, String response) {
+	private void handleGetEventListResponse(int status, String response) {
 		// Log.d("Get Search result", status + ":" + response);
 		// userList.clear();
 		switch (status) {
@@ -969,14 +972,14 @@ public class HomeActivity extends MapActivity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -1077,13 +1080,13 @@ public class HomeActivity extends MapActivity implements
 	 * }
 	 */
 
-	public void updateContentList(List<Object> list) {
+	private void updateContentList(List<Object> list) {
 		listContent.clear();
 		listContent.addAll(list);
 
 	}
 
-	public void clearMap(int index, boolean all) {
+	private void clearMap(int index, boolean all) {
 		if (all) {
 			removeAllItemFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
 					.get(1));
@@ -1102,7 +1105,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void hideBallons(int index, boolean all) {
+	private void hideBallons(int index, boolean all) {
 		if (all) {
 
 			hideAllBallonsFromItemizedOverlay((CustomItemizedOverlay) mapOverlays
@@ -1122,7 +1125,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void updateMapDisplay(List<Object> list) {
+	private void updateMapDisplay(List<Object> list) {
 
 		CustomOverlayItem focusedItemPeople = itemizedOverlayOtherPeople
 				.getFocus();
@@ -1528,7 +1531,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void handleNavigationFromNotificationBar(Intent intent) {
+	private void handleNavigationFromNotificationBar(Intent intent) {
 		if (StaticValues.myInfo == null) {
 			if (Utility.getUserData(context) != null) {
 				StaticValues.myInfo = ServerResponseParser
@@ -1635,7 +1638,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void updateFriendList() {
+	private void updateFriendList() {
 
 		Thread thread = new Thread(friendListUpdateRunnable);
 
@@ -1760,7 +1763,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void highlightAnnotation() {
+	private void highlightAnnotation() {
 
 		circleMenu.setVisibility(View.GONE);
 
@@ -1821,7 +1824,7 @@ public class HomeActivity extends MapActivity implements
 		StaticValues.isHighlightAnnotation = false;
 	}
 
-	public void disableSearch() {
+	private void disableSearch() {
 		etSearchField.setText("");
 		showSearchPanel(false);
 		isSearchEnabled = false;
@@ -1861,7 +1864,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void facebookAuthentication() {
+	private void facebookAuthentication() {
 
 		Log.i("HomeActivity", "facebookAuthentication");
 
@@ -1886,7 +1889,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void initInviteFriends() {
+	private void initInviteFriends() {
 		Log.d("Facebook", "Have to invite");
 
 		if (Utility.isConnectionAvailble(context)) {
@@ -1900,14 +1903,14 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void showInvitationDialog() {
+	private void showInvitationDialog() {
 		Bundle params = new Bundle();
 		params.putString("message", "Checkout the app.");
 		FBUtility.mFacebook.dialog(context, "apprequests", params,
 				new AppRequestsListener());
 	}
 
-	public void askForFacebookAccount() {
+	private void askForFacebookAccount() {
 		// have to implement later
 
 		if (!Utility.getFacebookInvitationDisplayStatus(context)) {
@@ -1922,7 +1925,7 @@ public class HomeActivity extends MapActivity implements
 	 * callback for the apprequests dialog which sends an app request to user's
 	 * friends.
 	 */
-	public class AppRequestsListener extends BaseDialogListener {
+	private class AppRequestsListener extends BaseDialogListener {
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
@@ -2692,7 +2695,7 @@ public class HomeActivity extends MapActivity implements
 
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void sendSelfLocationToServer() {
+	private void sendSelfLocationToServer() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, updateLocationThread,
@@ -2753,7 +2756,7 @@ public class HomeActivity extends MapActivity implements
 				+ responseStringUpdateLocation);
 	}
 
-	public void sendFriendRequest(String friendId, String message) {
+	private void sendFriendRequest(String friendId, String message) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			friendRequestFriendId = friendId;
@@ -2814,7 +2817,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	};
 
-	public void handleResponseFriendRequest(int status, String response) {
+	private void handleResponseFriendRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Send Frnd Request", status + ":" + response);
@@ -2846,7 +2849,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void handleSuccssfulFriendRequest() {
+	private void handleSuccssfulFriendRequest() {
 		currentBubbleDialog.dismiss();
 		if (!friendRequestSentList.contains(friendRequestFriendId)) {
 			friendRequestSentList.add(friendRequestFriendId);
@@ -2868,7 +2871,7 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	public void sendMessage(String friendId, String subject, String content) {
+	private void sendMessage(String friendId, String subject, String content) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			sendMessageFriendId = friendId;
@@ -2930,7 +2933,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	};
 
-	public void handleResponseSendMessage(int status, String response) {
+	private void handleResponseSendMessage(int status, String response) {
 		// show proper message through Toast or Dialog
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
@@ -3213,7 +3216,7 @@ public class HomeActivity extends MapActivity implements
 			showSearchPanel(false);
 	}
 
-	public void showSearchPanel(boolean display) {
+	private void showSearchPanel(boolean display) {
 		if (display) {
 			searchPanel.setVisibility(View.VISIBLE);
 
@@ -3222,7 +3225,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void relocationCurrentPosition() {
+	private void relocationCurrentPosition() {
 		if (point != null) {
 			hideBallons(0, true);
 			mapController.animateTo(point);
@@ -3256,7 +3259,7 @@ public class HomeActivity extends MapActivity implements
 		}
 	}
 
-	public void updateLocationSharingPermission() {
+	private void updateLocationSharingPermission() {
 
 		Thread thread = new Thread(sharingUpdateRunnable);
 
@@ -3321,7 +3324,7 @@ public class HomeActivity extends MapActivity implements
 	 * }
 	 */
 
-	public void showFirstTimeDialog(final Context c) {
+	private void showFirstTimeDialog(final Context c) {
 
 		isFirstTimeFbdialog = new Dialog(c, R.style.CustomDialogTheme);
 		isFirstTimeFbdialog.setContentView(R.layout.first_time_dialog);
@@ -3385,7 +3388,7 @@ public class HomeActivity extends MapActivity implements
 	 * fails.
 	 */
 
-	public class FbAPIsAuthListener implements AuthListener {
+	private class FbAPIsAuthListener implements AuthListener {
 
 		// @Override
 		@Override
@@ -3407,7 +3410,7 @@ public class HomeActivity extends MapActivity implements
 	 * The Callback for notifying the application when log out starts and
 	 * finishes.
 	 */
-	public class FbAPIsLogoutListener implements LogoutListener {
+	private class FbAPIsLogoutListener implements LogoutListener {
 		// @Override
 		@Override
 		public void onLogoutBegin() {

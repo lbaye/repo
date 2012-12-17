@@ -93,7 +93,8 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 					selectedEvent.getEventId() + " "
 							+ selectedEvent.getEventTitle() + " "
 							+ selectedEvent.getEvent_type() + " "
-							+ selectedEvent.getMyResponse());
+							+ selectedEvent.getMyResponse() + " URL: "
+							+ selectedEvent.getEventImageUrl());
 		}
 
 		initialize();
@@ -187,7 +188,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	};
 
-	public void handleEventWithGuestResponse(int status, String response) {
+	private void handleEventWithGuestResponse(int status, String response) {
 		Log.d("Events", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -200,14 +201,14 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -339,7 +340,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public View getItemViewFriend(People people) {
+	private View getItemViewFriend(People people) {
 
 		View v = inflater.inflate(R.layout.people_item, null);
 
@@ -368,12 +369,21 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(
-					getResources(), R.drawable.user_default));
+			imageDownloader.download(avatarUrl, profilePic);
 
-			BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
+		} else {
 
+			profilePic.setImageResource(R.drawable.user_default);
 		}
+
+		// if (avatarUrl != null && !avatarUrl.equals("")) {
+		//
+		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(
+		// getResources(), R.drawable.user_default));
+		//
+		// BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
+		//
+		// }
 
 		proficPicContainer.setBackgroundResource(R.color.highlightGreen);
 
@@ -398,8 +408,8 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// imageLoader = new ImageLoader(context);
-		//imageDownloader = new ImageDownloader();
-		//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+		// imageDownloader = new ImageDownloader();
+		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		eventNameText = (TextView) findViewById(R.id.event_name_text);
@@ -514,7 +524,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public void initiateDeleteEvent() {
+	private void initiateDeleteEvent() {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle("Delete event");
 		adb.setMessage("Are you sure you want to delete this event?");
@@ -534,7 +544,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		adb.show();
 	}
 
-	public void deleteEvent() {
+	private void deleteEvent() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, deleteEventThread,
 					"Start delete event");
@@ -583,7 +593,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseDeleteEvent(int status, String response) {
+	private void handleResponseDeleteEvent(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("DELETE EVENT RESPONSE", status + ":" + response);
@@ -605,7 +615,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void responseToEvent() {
+	private void responseToEvent() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, responseEventThread,
 					"Start response event");
@@ -657,7 +667,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseEvent(int status, String response) {
+	private void handleResponseEvent(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("rsvp response", status + ":" + response);
@@ -674,7 +684,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 
 		// initialize picker
@@ -716,14 +726,14 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void resetSelectedList() {
+	private void resetSelectedList() {
 		// reset selected list
 		inviteMoreSelectedFriendList = null;
 		inviteMoreSelectedCircleList = null;
 		inviteMoreSelectedFriendListAll = null;
 	}
 
-	public void initiateSendInvitation() {
+	private void initiateSendInvitation() {
 		Thread thread = new Thread(null, sendInvitationDataThread,
 				"Start send messages");
 		thread.start();

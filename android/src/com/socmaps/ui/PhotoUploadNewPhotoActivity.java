@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -163,7 +164,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 	}
 
-	public void takeIconFromGalaryOrCamara() {
+	private void takeIconFromGalaryOrCamara() {
 		// TODO Auto-generated method stub
 		final CharSequence[] items = { "Gallery", "Camera" };
 		AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -187,7 +188,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		alert.show();
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -217,7 +218,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 				photoIcon = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
-						Constant.profileCoverWidth, 0, true);
+						Constant.photoWidth, 0, true);
 
 				ivPhoto.setImageBitmap(photoIcon);
 
@@ -229,12 +230,35 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				// imageUri = data.getData();
+				
+				Uri selectedImage = data.getData();
+	            try {
+	            	photoIcon = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.photoWidth, 0, true);
+					
+	            	ivPhoto.setImageBitmap(photoIcon);
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}  catch (OutOfMemoryError e) {
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
+					Log.e("Gallery image", "OutOfMemoryError");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				
+				
+				/*imageUri = data.getData();
 				try {
 
-					// avatar =
-					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-					// data.getData());
 					if (photoIcon != null) {
 						// photoIcon.recycle();
 					}
@@ -260,8 +284,8 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
-				}
-				// ivProfilePicture.setImageURI(imageUri);
+				}*/
+				
 			}
 		}
 
@@ -371,7 +395,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 	}
 
-	public void getCurrentLocationAddress() {
+	private void getCurrentLocationAddress() {
 		if (StaticValues.myPoint != null) {
 			if (StaticValues.myPoint != null) {
 				latitude = StaticValues.myPoint.getLatitudeE6() / 1E6;
@@ -410,7 +434,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		}
 	}
 
-	public void getNearByPlaces() {
+	private void getNearByPlaces() {
 		if (StaticValues.searchResult != null) {
 			if (StaticValues.searchResult.getPlaces() != null) {
 				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
@@ -441,7 +465,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 	}
 
-	public void displayAddress(String title, String address) {
+	private void displayAddress(String title, String address) {
 		tvSelectedLocationAddress.setText(address);
 
 		if (title != null) {
@@ -456,7 +480,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 	}
 
-	public void getLocationFromMap() {
+	private void getLocationFromMap() {
 		double currentLat = 0;
 		double currentLng = 0;
 
@@ -472,7 +496,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
 	}
 
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 		Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
 				shareWithSelectedFriendList, shareWithSelectedCircleList);
@@ -620,7 +644,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		}
 	};
 
-	public void handleResponseUploadPhpto(int status, String response) {
+	private void handleResponseUploadPhpto(int status, String response) {
 
 		Log.w("Photo upload response from server", status + ":" + response);
 		switch (status) {

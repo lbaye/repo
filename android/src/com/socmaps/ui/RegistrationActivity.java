@@ -11,9 +11,11 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -68,6 +70,8 @@ public class RegistrationActivity extends Activity {
 
 	String responseString = "";
 	int responseStatus = 0;
+	
+	Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +108,7 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 
 				DatePickerDialog datePickerDialog = new DatePickerDialog(
-						RegistrationActivity.this, new OnDateSetListener() {
+						context, new OnDateSetListener() {
 							@Override
 							public void onDateSet(DatePicker arg0, int arg1,
 									int arg2, int arg3) {
@@ -140,7 +144,7 @@ public class RegistrationActivity extends Activity {
 
 				final CharSequence[] items = { "Gallery", "Camera" };
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						RegistrationActivity.this);
+						context);
 				builder.setTitle("Select");
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 					@Override
@@ -197,7 +201,7 @@ public class RegistrationActivity extends Activity {
 
 				if (flag) {
 					locationSharingDisclaimerDialog = new Dialog(
-							RegistrationActivity.this,
+							context,
 							android.R.style.Theme_Light_NoTitleBar);
 					locationSharingDisclaimerDialog
 							.setContentView(R.layout.location_sharing_disclaimer_layout);
@@ -237,13 +241,13 @@ public class RegistrationActivity extends Activity {
 										requestRunnable, "MagentoBackground");
 								thread.start();
 								m_ProgressDialog = ProgressDialog.show(
-										RegistrationActivity.this,
+										context,
 										"Registration",
 										"Sending request. Please wait...",
 										true,true);
 
 							} else {
-								Toast.makeText(RegistrationActivity.this,
+								Toast.makeText(context,
 										"Internet Connection Unavailable",
 										Toast.LENGTH_SHORT).show();
 							}
@@ -277,7 +281,7 @@ public class RegistrationActivity extends Activity {
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
@@ -299,7 +303,7 @@ public class RegistrationActivity extends Activity {
 		}
 	}
 
-	public void sendRegistrationRequest() {
+	private void sendRegistrationRequest() {
 
 		String email = etEmail.getText().toString().trim();
 		String password = etPassword.getText().toString();
@@ -379,7 +383,7 @@ public class RegistrationActivity extends Activity {
 
 	}
 
-	public void registrationSuccess(String response) {
+	private void registrationSuccess(String response) {
 		// Have to parse response
 
 		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
@@ -391,10 +395,10 @@ public class RegistrationActivity extends Activity {
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
 					StaticValues.myInfo.getAuthToken(),response,
-					RegistrationActivity.this);
+					context);
 
 			finish();
-			Intent myIntent = new Intent(RegistrationActivity.this,
+			Intent myIntent = new Intent(context,
 					HomeActivity.class);
 			startActivity(myIntent);
 		} else {
@@ -403,7 +407,7 @@ public class RegistrationActivity extends Activity {
 
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -422,6 +426,9 @@ public class RegistrationActivity extends Activity {
 	}
 
 	private void initialize() {
+		
+		context = getApplicationContext();
+		
 		btnBack = (Button) findViewById(R.id.btnBack);
 		etEmail = (EditText) findViewById(R.id.etEmail);
 		etPassword = (EditText) findViewById(R.id.etPassword);
@@ -462,7 +469,7 @@ public class RegistrationActivity extends Activity {
 				// avatar = (Bitmap) data.getExtras().get("data");
 				avatar = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
-						Constant.thumbWidth, Constant.thumbHeight);
+						Constant.thumbWidth, 0, true);
 				ivProfilePicture.setImageBitmap(avatar);
 			}
 
@@ -472,11 +479,31 @@ public class RegistrationActivity extends Activity {
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				// imageUri = data.getData();
-				try {
-					// avatar =
-					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-					// data.getData());
+				
+				Uri selectedImage = data.getData();
+	            try {
+					avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);
+					
+					ivProfilePicture.setImageBitmap(avatar);
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}  catch (OutOfMemoryError e) {
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
+					Log.e("Gallery image", "OutOfMemoryError");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				/*try {					
 					if (avatar != null) {
 						//avatar.recycle();
 					}
@@ -498,19 +525,11 @@ public class RegistrationActivity extends Activity {
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
-				}
-				// ivProfilePicture.setImageURI(imageUri);
+				}*/
+				
 			}
 		}
 	}
-
-	/*
-	 * public String getPath(Uri uri) { String[] projection = {
-	 * MediaStore.Images.Media.DATA }; Cursor cursor = managedQuery(uri,
-	 * projection, null, null, null); int column_index = cursor
-	 * .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	 * cursor.moveToFirst(); return cursor.getString(column_index); }
-	 */
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -521,9 +540,9 @@ public class RegistrationActivity extends Activity {
 
 	}
 
-	public void onClose() {
+	private void onClose() {
 		finish();
-		Intent myIntent = new Intent(RegistrationActivity.this,
+		Intent myIntent = new Intent(context,
 				LoginActivity.class);
 		startActivity(myIntent);
 	}

@@ -67,7 +67,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 	int colorButtonNormal, colorButtonSelected;
 
 	Plan seletedPlan;
-	public People people;
+	private People people;
 
 	String personID = null;
 	String personFirstName = "", personLastName = "";
@@ -184,7 +184,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public void fetchDataForList() {
+	private void fetchDataForList() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
@@ -249,7 +249,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 	};
 
-	public void handleGetplansResponse(int status, String response) {
+	private void handleGetplansResponse(int status, String response) {
 		Log.d("plans", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -273,7 +273,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -285,7 +285,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -304,7 +304,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		contentAdapter.setObjects(this.plans);
 	}
 
-	public class ListArrayAdapter extends BaseAdapter implements Filterable {
+	private class ListArrayAdapter extends BaseAdapter implements Filterable {
 
 		private List<Plan> mObjects;
 
@@ -410,7 +410,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		}
 
-		public void setDropDownViewResource(int resource) {
+		private void setDropDownViewResource(int resource) {
 			this.mDropDownResource = resource;
 		}
 
@@ -556,7 +556,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void initiateDeletePlan() {
+	private void initiateDeletePlan() {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle("Delete plan");
 		adb.setMessage("Are you sure you want to delete this plan?");
@@ -576,7 +576,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		adb.show();
 	}
 
-	public void deletePlan() {
+	private void deletePlan() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, deletePlanThread,
 					"Start delete plan");
@@ -627,7 +627,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		}
 	};
 
-	public void handleResponseDeletePlan(int status, String response) {
+	private void handleResponseDeletePlan(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("DELETE Plan RESPONSE", status + ":" + response);

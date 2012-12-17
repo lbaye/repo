@@ -72,6 +72,10 @@ public class RestClient {
 	public void AddParam(String name, String value) {
 		params.add(new BasicNameValuePair(name, value));
 	}
+	
+	public void AddParams(ArrayList<NameValuePair> param) {
+		params = param;
+	}
 
 	public void AddHeader(String name, String value) {
 		headers.add(new BasicNameValuePair(name, value));

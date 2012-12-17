@@ -82,7 +82,7 @@ public class LayerPreferencesActivity extends Activity implements
 			((RadioButton) rG.findViewById(R.id.off_radio)).setChecked(true);
 	}
 
-	public void handleLayerSettingsResponse(int status, String response) {
+	private void handleLayerSettingsResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -94,14 +94,14 @@ public class LayerPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -268,7 +268,7 @@ public class LayerPreferencesActivity extends Activity implements
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -282,14 +282,14 @@ public class LayerPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 			break;
 		default:

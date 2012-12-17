@@ -117,19 +117,18 @@ public class PeopleRowFactoryInvite {
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.cover_pic_default));
-		holder.coverPhoto.setImageResource(R.drawable.img_blank);
-		if (people.getCoverPhoto() != null) {
-			if (!people.getCoverPhoto().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
-				// holder.coverPhoto, 320,150);
-				// il.DisplayImage(people.getCoverPhoto(),
-				// holder.coverPhoto,R.drawable.cover_pic_default);
 
-				il.download(people.getCoverPhoto(), holder.coverPhoto);
-			}
-			// holder.statusText.setText(otherUserEntity.getStatusMsg());
-		} // else
-			// holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
+			// holder.coverPhoto, 320,150);
+			// il.DisplayImage(people.getCoverPhoto(),
+			// holder.coverPhoto,R.drawable.cover_pic_default);
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getCoverPhoto(), holder.coverPhoto);
+		}  else
+			 holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.icon));
@@ -190,7 +189,7 @@ public class PeopleRowFactoryInvite {
 		// holder.btnSendMessage.setOnClickListener(messageBtnListener);
 
 		// holder.checked.setChecked(people.isBlocked());
-		//holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
+		// holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
 
 		// if (people.isBlocked()) {
 		// holder.btnBlockUnblock.setText("Unblock");

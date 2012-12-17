@@ -22,12 +22,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,6 +81,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 	Button btnBack, btnNotification;
 	Button btnName, btnSummary, btnDescription, btnDate, btnPhoto, btnCancel,
 			btnSave;
+	Button btnAddOrUploadPhoto, btnCanclePhoto;
 	CheckBox chkGuestPermission;
 	Context context;
 
@@ -143,6 +148,8 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 	// private ImageLoader imageLoader;
 	ImageDownloader imageDownloader;
 
+	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -156,12 +163,12 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			eventLat = selectedEvent.getLatitude();
 			eventLng = selectedEvent.getLongitude();
 
-			Log.d("Lat Lng Check", eventLat + "" + " " + eventLng + "");
+			Log.d("Lat Lng Received", eventLat + "" + " " + eventLng + "");
 		}
 
 		initialize();
 		setExpandListener();
-
+		addLocationRadioGroup();
 		addPermissionRadioGroup();
 
 		generateFriendList();
@@ -170,7 +177,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		setDefaultValue();
 	}
 
-	public void setDefaultValue() {
+	private void setDefaultValue() {
 
 		if (selectedEvent != null) {
 			eventId = selectedEvent.getEventId();
@@ -197,7 +204,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			eventLng = selectedEvent.getLongitude();
 			eventAddress = selectedEvent.getAddress();
 
-			tvTitle.setText("Venue: " + eventAddress);
+			// tvTitle.setText("Venue: " + eventAddress);
 			// tvTitleDescription.setText(eventAddress);
 
 			if (eventImageUrl != null) {
@@ -263,6 +270,12 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 		buttonActionListener = new ButtonActionListener();
 
+		btnAddOrUploadPhoto = (Button) findViewById(R.id.btnAddOrUploadPhoto);
+		btnAddOrUploadPhoto.setOnClickListener(buttonActionListener);
+
+		btnCanclePhoto = (Button) findViewById(R.id.btnCanclePhoto);
+		btnCanclePhoto.setOnClickListener(buttonActionListener);
+
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(buttonActionListener);
 
@@ -320,7 +333,72 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
 
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
-		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
+		
+		etFriendSearch.addTextChangedListener(filterTextWatcher);
+
+		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				Log.d("inside On Key", "INSIDE ON KEY");
+				if (event.ACTION_DOWN == 0) {
+					doSearch();
+					Log.d("Do Search", "Do Search Method Called  "
+							+ etFriendSearch.getText().toString().trim());
+				}
+				return false;
+			}
+		});*/
+
+	} 
+	
+	private TextWatcher filterTextWatcher = new TextWatcher() {
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			//contentAdapter.getFilter().filter(s); 
+			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			doSearch();
+		}
+
+	};
+
+	private void addLocationRadioGroup() {
+		// TODO Auto-generated method stub
+		locationRadioGroupView = new LocationRadioGroup(context,
+				new LocationSelectionListener());
+
+		selectedLocationInfoPanel = (LinearLayout) locationRadioGroupView
+				.findViewById(R.id.selectedLocationInfoPanel);
+		tvSelectedLocationAddress = (TextView) locationRadioGroupView
+				.findViewById(R.id.tvSelectedLocationAddress);
+
+		tvSelectedLocationTitle = (TextView) locationRadioGroupView
+				.findViewById(R.id.tvSelectedLocationTitle);
+
+		locationRadioGroupContainer.addView(locationRadioGroupView);
+
+		/*
+		 * locationRadioGroupView
+		 * .setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
+		 */
+
+		if (eventLat != 0 && eventLng != 0) {
+			locationRadioGroupView
+					.setValue(LocationRadioGroup.SelectedItem.POINT_ON_MAP);
+			getDefaultLocationAddress();
+		} else
+			locationRadioGroupView
+					.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 	}
 
@@ -450,10 +528,19 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 				selectAll();
 			} else if (v == btnUnselectAll) {
 				unselectAll();
+			} else if (v == btnAddOrUploadPhoto) {
+				capturePhoto();
+			} else if (v == btnCanclePhoto) {
+				cleareImage();
 			}
 
 		}
 
+	}
+
+	private void cleareImage() {
+		// ivEventImage.setImageResource(0);
+		ivEventImage.setImageDrawable(null);
 	}
 
 	private void validateEvent() {
@@ -485,7 +572,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		}
 	}
 
-	public void initiateSendEventData() {
+	private void initiateSendEventData() {
 		Thread thread = new Thread(null, sendEventDataThread,
 				"Start send messages");
 		thread.start();
@@ -510,6 +597,8 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			if (chkGuestPermission.isChecked()) {
 				guestsCanInvite = "1";
 			}
+
+			Log.d("Lat Lng to Server", eventLat + "" + "~~" + eventLng + "");
 
 			restClient.AddParam("title", eventName);
 			restClient.AddParam("eventShortSummary", eventSummary);
@@ -633,7 +722,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		}
 	};
 
-	public void handleResponseSendEventData(int status, String response) {
+	private void handleResponseSendEventData(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("EVENT UPDATE RESPONSE", status + ":" + response);
@@ -656,7 +745,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 	}
 
-	public void showPeoplePicker(String pickerName) {
+	private void showPeoplePicker(String pickerName) {
 		// custom dialog
 		Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
 				shareWithSelectedFriendList, shareWithSelectedCircleList);
@@ -721,7 +810,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 	}
 
-	public View getItemViewFriend(People fEntity) {
+	private View getItemViewFriend(People fEntity) {
 
 		View v = inflater.inflate(R.layout.people_item, null);
 
@@ -732,23 +821,23 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		String firstName = fEntity.getFirstName();
-		String lastName = fEntity.getLastName();
+		/*String firstName = fEntity.getFirstName();
+		String lastName = fEntity.getLastName();*/
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
 
-		String name = "";
+		String name = ""; 
+		name = Utility.getFieldText(fEntity); 
+		nameView.setText(name);
 
-		if (firstName != null) {
+		/*if (firstName != null) {
 			name = firstName + " ";
 		}
 		if (lastName != null) {
 			name += lastName;
-		}
+		}*/
 
 		selectedFriends.put(id, false);
-
-		nameView.setText(name);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
@@ -769,6 +858,16 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			 * 
 			 * profilePic.setImageBitmap(result); } } }.execute(avatarUrl);
 			 */
+		} 
+		
+		if(backupSelectedFriends.containsKey(id)) 
+		{
+			boolean preValue = backupSelectedFriends.get(id); 
+			
+			if(preValue) {
+				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, preValue);
+			}
 		}
 
 		profilePic.setOnClickListener(new OnClickListener() {
@@ -792,7 +891,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		return v;
 	}
 
-	public View getItemViewCircle(Circle cEntity) {
+	private View getItemViewCircle(Circle cEntity) {
 
 		View v = inflater.inflate(R.layout.circle_item, null);
 
@@ -826,7 +925,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		return v;
 	}
 
-	public void showFriendList() {
+	private void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
 		btnCircleSelect.setTextAppearance(context,
@@ -839,7 +938,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		scrollViewFriends.setVisibility(View.VISIBLE);
 	}
 
-	public void showCircleList() {
+	private void showCircleList() {
 		btnFriendSelect.setTextAppearance(context,
 				R.style.ButtonTextStyleNormal);
 		btnCircleSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
@@ -851,7 +950,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		scrollViewCircles.setVisibility(View.VISIBLE);
 	}
 
-	public void selectAll() {
+	private void selectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(true);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -859,7 +958,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		}
 	}
 
-	public void unselectAll() {
+	private void unselectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(false);
 		} else if (scrollViewCircles.getVisibility() == View.VISIBLE) {
@@ -867,7 +966,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		}
 	}
 
-	public void selectionFriends(boolean isSelect) {
+	private void selectionFriends(boolean isSelect) {
 		int selectionColor;
 		if (isSelect) {
 			selectionColor = R.color.highlightGreen;
@@ -893,7 +992,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		}
 	}
 
-	public void selectionCircles(boolean isSelect) {
+	private void selectionCircles(boolean isSelect) {
 
 		int totalChild = circleListContainer.getChildCount();
 		for (int i = 0; i < totalChild; i++) {
@@ -928,7 +1027,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 	}
 
 	// TODO Auto-generated method stub
-	public void showTextInputDialog(final int type) {
+	private void showTextInputDialog(final int type) {
 		// custom dialog
 		final Dialog dialog = new Dialog(context, R.style.CustomDialogTheme);
 		dialog.setContentView(R.layout.input_text_dialog_layout);
@@ -1128,7 +1227,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		mDateTimeDialog.show();
 	}
 
-	public void capturePhoto() {
+	private void capturePhoto() {
 		final CharSequence[] items = { "Gallery", "Camera" };
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle("Select");
@@ -1150,7 +1249,7 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 		alert.show();
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -1177,9 +1276,14 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 				if (eventPicture != null) {
 					// eventPicture.recycle();
 				}
+				/*
+				 * eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
+				 * .get("data"), Constant.eventPhotoWidth,
+				 * Constant.eventPhotoHeight);
+				 */
+
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
-						.get("data"), Constant.eventPhotoWidth,
-						Constant.eventPhotoHeight);
+						.get("data"), Constant.profileCoverWidth, 0, true);
 
 				ivEventImage.setImageBitmap(eventPicture);
 
@@ -1193,26 +1297,45 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				try {
+				
+
+				Uri selectedImage = data.getData();
+	            try {
+					eventPicture = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.eventPhotoWidth, 0, true);
+					
+					ivEventImage.setImageBitmap(eventPicture);
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}  catch (OutOfMemoryError e) {
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
+					Log.e("Gallery image", "OutOfMemoryError");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				/*try {
 
 					if (eventPicture != null) {
 						// eventPicture.recycle();
 					}
-					eventPicture = Utility
-							.resizeBitmap(
-									MediaStore.Images.Media.getBitmap(
-											this.getContentResolver(),
-											data.getData()),
-									Constant.eventPhotoWidth,
-									Constant.eventPhotoHeight);
+					
+
+					eventPicture = Utility.resizeBitmap(
+							MediaStore.Images.Media.getBitmap(
+									this.getContentResolver(), data.getData()),
+							Constant.profileCoverWidth, 0, true);
 
 					ivEventImage.setImageBitmap(eventPicture);
 
-					// eventPicture =
-					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-					// imageUri);
-
-					// ivEventImage.setImageBitmap(eventPicture);
 
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -1228,9 +1351,16 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				}*/
 
 			}
+		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
+				&& resultCode == RESULT_OK) {
+			eventAddress = data.getStringExtra("ADDRESS");
+			eventLat = data.getDoubleExtra("LAT", 0.0);
+			eventLng = data.getDoubleExtra("LNG", 0.0);
+
+			displayAddress(null, eventAddress);
 		}
 	}
 
@@ -1271,6 +1401,168 @@ public class EventEditActivity extends Activity implements PeoplePickerListener 
 			}
 
 		}
+	}
+
+	private class LocationSelectionListener implements
+			LocationRadioGroupListener {
+
+		@Override
+		public void onLocationSelectionChanged(RadioGroup group,
+				RadioButton radio, LocationRadioGroup.SelectedItem selectedItem) {
+			// TODO Auto-generated method stub
+			selectedLocationInfoPanel.setVisibility(View.GONE);
+			tvSelectedLocationAddress.setText("");
+			tvSelectedLocationTitle.setText("");
+			tvSelectedLocationTitle.setVisibility(View.GONE);
+			eventAddress = "";
+
+			switch (selectedItem) {
+			case CURRENT_LOCATION:
+				getCurrentLocationAddress();
+				break;
+			case MY_PLACES:
+
+				break;
+			case NEAR_TO_ME:
+				getNearByPlaces();
+				break;
+			case POINT_ON_MAP:
+				getLocationFromMap();
+				break;
+			default:
+				break;
+			}
+
+		}
+
+	}
+
+	private void displayAddress(String title, String address) {
+		tvSelectedLocationAddress.setText(address);
+
+		if (title != null) {
+			if (!title.equalsIgnoreCase("")) {
+				tvSelectedLocationTitle.setText(title);
+				tvSelectedLocationTitle.setVisibility(View.VISIBLE);
+			}
+		}
+
+		selectedLocationInfoPanel.setVisibility(View.VISIBLE);
+
+	}
+
+	private void getCurrentLocationAddress() {
+		if (StaticValues.myPoint != null) {
+			if (StaticValues.myPoint != null) {
+				eventLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
+				eventLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+				Utility.getAddressByCoordinate(eventLat, eventLng,
+						new LocationAddressHandler());
+
+			}
+		}
+
+	}
+
+	private void getNearByPlaces() {
+		if (StaticValues.searchResult != null) {
+			if (StaticValues.searchResult.getPlaces() != null) {
+				NearByPlacesPicker nearByPlacesPicker = new NearByPlacesPicker(
+						context, new NearByPlacesPickerhandler(),
+						"NEAR_BY_PACES", StaticValues.searchResult.getPlaces());
+
+				nearByPlacesPicker.show();
+			}
+		}
+
+	}
+
+	private class LocationAddressHandler extends Handler {
+		@Override
+		public void handleMessage(Message message) {
+			String result = null;
+			switch (message.what) {
+			case 0:
+				// failed to get address
+				break;
+			case 1:
+				Bundle bundle = message.getData();
+				result = bundle.getString("address");
+				break;
+			default:
+				result = null;
+			}
+			// replace by what you need to do
+			if (result != null) {
+				eventAddress = result;
+				displayAddress(null, eventAddress);
+			} else {
+				Log.e("ADDRESS", "Failed to get.");
+			}
+
+		}
+	}
+
+	private void getLocationFromMap() {
+		double currentLat = 0;
+		double currentLng = 0;
+
+		if (StaticValues.myPoint != null) {
+			currentLat = StaticValues.myPoint.getLatitudeE6() / 1E6;
+			currentLng = StaticValues.myPoint.getLongitudeE6() / 1E6;
+
+		}
+
+		Intent intent = new Intent(context, LocationPicker.class);
+		intent.putExtra("LAT", currentLat);
+		intent.putExtra("LNG", currentLng);
+		startActivityForResult(intent, Constant.REQUEST_CODE_MAP_PICKER);
+	}
+
+	private class NearByPlacesPickerhandler implements
+			NearByPlacesPickerListener {
+
+		@Override
+		public void onPlaceSelect(String pickerName, Place selectedPlace) {
+			// TODO Auto-generated method stub
+			if (selectedPlace != null) {
+
+				eventLat = selectedPlace.getLatitude();
+				eventLng = selectedPlace.getLongitude();
+				eventAddress = selectedPlace.getVicinity();
+				displayAddress(selectedPlace.getName(), eventAddress);
+
+			}
+		}
+
+	}
+
+	private void getDefaultLocationAddress() {
+		if (eventLat != 0 && eventLng != 0) {
+
+			Utility.getAddressByCoordinate(eventLat, eventLng,
+					new LocationAddressHandler());
+
+		}
+	}
+
+	private void doSearch() {
+
+		List<Object> dataList = new ArrayList<Object>();
+		dataList.addAll(StaticValues.myInfo.getFriendList());
+
+		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch
+				.getText().toString().trim()));
+		friendListContainer.removeAllViews();
+
+		// backUpSelectedFriends = selectedFriends;
+		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
+		selectedFriends.clear();
+		for (int i = 0; i < list.size(); i++) {
+			View v = getItemViewFriend((People) list.get(i));
+			friendListContainer.addView(v);
+		}
+
 	}
 
 	/*

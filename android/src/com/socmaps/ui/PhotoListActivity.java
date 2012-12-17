@@ -56,9 +56,9 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 	ImageDownloader imageDownloader;
 	String userID = null;
-	public People people;
+	private People people;
 
-	public static boolean isUploadNewPhoto = false;
+	static boolean isUploadNewPhoto = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +195,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public View getItemView(final Photo photo) {
+	private View getItemView(final Photo photo) {
 
 		View v = inflater.inflate(R.layout.photo_item, null);
 
@@ -308,7 +308,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		return counter;
 	}
 
-	public void getPhotos() {
+	private void getPhotos() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, getList, "MagentoBackground");
 			thread.start();
@@ -367,7 +367,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 	};
 
-	public void handleGetPhotosResponse(int status, String response) {
+	private void handleGetPhotosResponse(int status, String response) {
 		Log.d("Photos", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -387,14 +387,14 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -413,7 +413,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		Log.w("onPause()", "PhotoListActivity");
 	}
 
-	public void initiateDeletePhotos() {
+	private void initiateDeletePhotos() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, deletePhotos, "MagentoBackground");
 			thread.start();
@@ -472,7 +472,7 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 	};
 
-	public void handleDeletePhotosResponse(int status, String response) {
+	private void handleDeletePhotosResponse(int status, String response) {
 		Log.d("Photos", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -496,14 +496,14 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;

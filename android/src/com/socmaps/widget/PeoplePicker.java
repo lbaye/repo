@@ -17,9 +17,14 @@ import java.util.Set;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,6 +41,7 @@ import com.socmaps.entity.People;
 import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
+import com.socmaps.util.Utility;
 
 public class PeoplePicker extends Dialog implements OnClickListener {
 	Button btnCancel, btnOk;
@@ -63,7 +69,9 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 	List<String> removedFriendList;
 	List<String> removedCircleList;
 
-	ImageLoader imageLoader;
+	ImageLoader imageLoader; 
+	
+	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
 	public PeoplePicker(Context context,
 			PeoplePickerListener peoplePickerListener, String pickerName,
@@ -133,14 +141,55 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		friendListContainer = (LinearLayout) findViewById(R.id.friendListContainer);
 		circleListContainer = (LinearLayout) findViewById(R.id.circleListContainer);
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
-		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
+		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles); 
+		
+		etFriendSearch.addTextChangedListener(filterTextWatcher);
+		
+		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+		    		Log.d("inside On Key", "INSIDE ON KEY"); 
+		    		if(event.ACTION_DOWN == 0) {
+		    			doSearch(); 
+		    			Log.d("Do Search", "Do Search Method Called  " + etFriendSearch.getText().toString().trim()); 
+		    			//hideKeyBoard(); 
+		    		}
+		            return false;
+		        }
+		    });*/
 
+	} 
+	
+	private void hideKeyBoard() { 
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(etFriendSearch.getWindowToken(), 0);
 	}
+	
+	private TextWatcher filterTextWatcher = new TextWatcher() {
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			//contentAdapter.getFilter().filter(s); 
+			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			doSearch();
+		}
+
+	};
 
 	@Override
 	public void onClick(View v) {
 		if (v == btnCancel) {
-			dismiss();
+			dismiss(); 
+			hideKeyBoard();
 		}
 		if (v == btnOk) {
 
@@ -206,7 +255,8 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 			peoplePickerListener.onSelect(pickerName, selectedFriendList,
 					selectedCircleList, selectedCircleFriendList,
 					selectedFriendListAll);
-			dismiss();
+			dismiss(); 
+			hideKeyBoard();
 		}
 
 		if (v == btnFriendSelect) {
@@ -312,6 +362,16 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 			imageLoader.DisplayImage(avatarUrl, profilePic,
 					R.drawable.user_default);
 
+		} 
+		
+		if(backupSelectedFriends.containsKey(id)) 
+		{
+			boolean preValue = backupSelectedFriends.get(id); 
+			
+			if(preValue) {
+				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+				selectedFriends.put(id, preValue);
+			}
 		}
 
 		profilePic.setOnClickListener(new android.view.View.OnClickListener() {
@@ -472,6 +532,25 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		if (negativeButtonLabel != null) {
 			btnCancel.setText(negativeButtonLabel);
 		}
+	}
+
+	private void doSearch() {
+
+		List<Object> dataList = new ArrayList<Object>();
+		dataList.addAll(StaticValues.myInfo.getFriendList());
+
+		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch
+				.getText().toString().trim()));
+		friendListContainer.removeAllViews();
+
+		// backUpSelectedFriends = selectedFriends;
+		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
+		selectedFriends.clear();
+		for (int i = 0; i < list.size(); i++) {
+			View v = getItemViewFriend((People) list.get(i));
+			friendListContainer.addView(v);
+		}
+
 	}
 
 }

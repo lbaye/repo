@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream.GetField;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,7 +71,14 @@ public class Utility {
 
 	private static final double metricDivisor = 1000;
 	private static final double imperialDivisor = 1760;
-
+	
+	/**
+	 * Returns title of an Object. Object should be instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
+	 * 
+	 * @param item Object which is an instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
+	 * @return  the title text
+	 * @see String
+	 */
 	public static String getFieldText(Object item) {
 		if (item instanceof People) {
 
@@ -131,6 +140,17 @@ public class Utility {
 			return "";
 	}
 
+	
+	/**
+	 * Returns a List of searched object based on Object's title({@link #getFieldText(Object)}).
+	 * Object should be instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
+	 *  
+	 * @param masterList  List of object to be searched
+	 * @param key  search key on which search would be performed.
+	 * @return  Searched result of List associated with the search key.
+	 * @see #getFieldText(Object)
+	 * @see List
+	 */
 	public static List<Object> getSearchResult(List<Object> masterList,
 			String key) {
 		if (key == null || key.length() == 0) {
@@ -167,6 +187,15 @@ public class Utility {
 
 	}
 
+	
+	/**
+	 * Returns a list of circle with People whose name match with the search key.
+	 * 
+	 * @param masterList Original circle list.
+	 * @param orgFriendList Original friend list.
+	 * @param key People name or search text.
+	 * @return List of circles.  
+	 */
 	public static List<Circle> getSearchResultFromCircle(
 			List<Circle> masterList, List<People> orgFriendList, String key) {
 
@@ -235,7 +264,14 @@ public class Utility {
 		return newCircles;
 
 	}
-
+	
+	/**
+	 * Converts a distance with specified unit and returns as text that may be used to display on screen. 
+	 * @param distance in meter
+	 * @param unit metric or imperial
+	 * @return Formated distance
+	 * @see String
+	 */
 	public static String getFormatedDistance(double distance, String unit) {
 		String result = "";
 
@@ -265,13 +301,21 @@ public class Utility {
 		return distance * 1.09361;
 	}
 
-	public static Date getLocalTimeFromUTC(TimeEntity te) {
+	/**
+	 * Converts a UTC time to local time and return as Date.
+	 * 
+	 * @param timeEntity UTC time as TimeEntity
+	 * @return Converted local time
+	 * @see com.socmaps.entity.TimeEntity
+	 * @see Date
+	 */
+	public static Date getLocalTimeFromUTC(TimeEntity timeEntity) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss");
 		// simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(te.getTimeZone()));
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity.getTimeZone()));
 		try {
-			return simpleDateFormat.parse(te.getDateTimeValue());
+			return simpleDateFormat.parse(timeEntity.getDateTimeValue());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -279,16 +323,35 @@ public class Utility {
 		}
 	}
 
-	public static String getFormattedDisplayDateEventList(TimeEntity te) {
-		Date targetDate = getLocalTimeFromUTC(te);
+	/**
+	 * Converts a TimeEntity to formated text to display Event's date and time.
+	 * 
+	 * @param timeEntity UTC time of Event as TimeEntity
+	 * @return formated time of the event.
+	 * @see com.socmaps.entity.TimeEntity
+	 * @see String
+	 */
+	public static String getFormattedDisplayDateEventList(TimeEntity timeEntity) {
+		Date targetDate = getLocalTimeFromUTC(timeEntity);
 		return eventListTimeFormater.format(targetDate);
 	}
 
+	/**
+	 * Returns current date of the system.
+	 * 
+	 * @return system date
+	 * @see Date
+	 */
 	public static Date getCurrentDate() {
 		Calendar c = Calendar.getInstance();
 		return c.getTime();
 	}
 
+	/**
+	 * Returns Time zone offset of the system as String. Value would vary from "-12:00" to "+13:00"
+	 * @return Offset
+	 * @see String
+	 */
 	public static String getTimezoneOffset() {
 		String offsetString = "";
 
@@ -333,10 +396,19 @@ public class Utility {
 
 	private static SimpleDateFormat eventListTimeFormater = new SimpleDateFormat(
 			"EEEE, MMMM dd, yyyy HH:mm");
+	
 
-	public static String getFormattedDisplayDate(TimeEntity te) {
+	/**
+	 * Converts a TimeEntity to formated text to display date and time.
+	 * 
+	 * @param timeEntity UTC time as TimeEntity
+	 * @return formated time.
+	 * @see com.socmaps.entity.TimeEntity
+	 * @see String
+	 */
+	public static String getFormattedDisplayDate(TimeEntity timeEntity) {
 
-		Date targetDate = getLocalTimeFromUTC(te);
+		Date targetDate = getLocalTimeFromUTC(timeEntity);
 		Date now = getCurrentDate();
 
 		Log.e("targetdate in local format", targetDate.toString());
@@ -351,9 +423,18 @@ public class Utility {
 		}
 	}
 
-	public static String getFormattedDisplayDateForMap(TimeEntity te) {
+	
+	/**
+	 * Converts a TimeEntity to formated text to display date and time on Map view annotations.
+	 * 
+	 * @param timeEntity UTC time as TimeEntity
+	 * @return formated time.
+	 * @see com.socmaps.entity.TimeEntity
+	 * @see String
+	 */
+	public static String getFormattedDisplayDateForMap(TimeEntity timeEntity) {
 
-		Date targetDate = getLocalTimeFromUTC(te);
+		Date targetDate = getLocalTimeFromUTC(timeEntity);
 		Date now = getCurrentDate();
 
 		Log.e("targetdate in local format", targetDate.toString());
@@ -381,11 +462,22 @@ public class Utility {
 		return sevenDaysBefore.before(targetDate);
 	}
 
+	/**
+	 * Returns formated text of a given distance that may be used to display on screen. 
+	 * @param distance in metric or imperial
+	 * @return Formated distance
+	 * @see String
+	 */
 	public static String getFormatedDistance(double distance) {
 		return String.format("%.2f", distance);
 	}
 
-	public static String parseResponseString(String responseString) {
+	/**
+	 * Returns the JSONString from a server response associated with "result"
+	 * @param responseString response string from server
+	 * @return JSONString
+	 */
+	public static String getJSONStringFromServerResponse(String responseString) {
 		try {
 			JSONObject jo = new JSONObject(responseString);
 			return jo.getString(Constant.responseKey);
@@ -397,8 +489,15 @@ public class Utility {
 		// return null;
 	}
 
-	public static boolean isConnectionAvailble(Context ctx) {
-		ConnectivityManager cm = (ConnectivityManager) ctx
+	/**
+	 * Determines if Internet connection is available or not on the device.
+	 * 
+	 * @param context Currently active Context.
+	 * @return true if connection available, false otherwise.
+	 * @see Context
+	 */
+	public static boolean isConnectionAvailble(Context context) {
+		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
@@ -407,7 +506,15 @@ public class Utility {
 		return false;
 	}
 
-	public static boolean isServiceRunning(String serviceClassName,
+	/**
+	 * Determines a service is running or not with a given name.
+	 * 
+	 * @param serviceName name of the service.
+	 * @param context Active context
+	 * @return true if service is running, false otherwise
+	 * @see Context
+	 */
+	public static boolean isServiceRunning(String serviceName,
 			Context context) {
 		final ActivityManager activityManager = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
@@ -416,19 +523,27 @@ public class Utility {
 
 		for (RunningServiceInfo runningServiceInfo : services) {
 			if (runningServiceInfo.service.getClassName().equals(
-					serviceClassName)) {
+					serviceName)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public static String MD5_Hash(String s) {
+	
+	
+	/**
+	 * Returns the MD5 Hash value of a given string.
+	 * 
+	 * @param string String that needed to be converted
+	 * @return MD5 Hash value
+	 * @exception NoSuchAlgorithmException returns empty string.
+	 */
+	public static String toMD5Hash(String string) {
 		try {
 			// Create MD5 Hash
 			MessageDigest digest = java.security.MessageDigest
 					.getInstance("MD5");
-			digest.update(s.getBytes());
+			digest.update(string.getBytes());
 			byte messageDigest[] = digest.digest();
 
 			// Create Hex String
@@ -448,6 +563,12 @@ public class Utility {
 		return "";
 	}
 
+	
+	/**
+	 * Determines if this Email id is valid or not
+	 * @param email Email id to check.
+	 * @return true if valid, false otherwise
+	 */
 	public static boolean isValidEmailID(String email) {
 
 		if (email == null || email.trim().equals("")) {
@@ -457,15 +578,16 @@ public class Utility {
 		Pattern pattern;
 		Matcher matcher;
 		String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-+]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-		// String EMAIL_PATTERN =
-		// "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-		// + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		pattern = Pattern.compile(EMAIL_PATTERN);
 		matcher = pattern.matcher(email);
 		return matcher.matches();
 
 	}
 
+	/**
+	 * returns the system date.
+	 * @return System date with "yyyy-MM-dd HH:mm:ss" format.
+	 */
 	public static String getdate() {
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -970,8 +1092,7 @@ public class Utility {
 		thread.start();
 	}
 
-	public static void getAddressByCoordinate(final double lat,
-			final double lng, final Handler handler) {
+	public static void getAddressByCoordinate(final double lat,	final double lng, final Handler handler) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
@@ -1226,5 +1347,36 @@ public class Utility {
 							.getTotalCount());
 		}
 	}
+	
+	
+	public static Bitmap decodeUri(Uri selectedImage, ContentResolver contentResolver) throws FileNotFoundException {
+
+        // Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 160;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE
+               || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o2);
+
+    }
 
 }

@@ -93,11 +93,11 @@ public class MessageActivity extends TabActivity {
 
 	}
 
-	public TabHost getMyTabHost() {
+	private TabHost getMyTabHost() {
 		return mTabHost;
 	}
 
-	public void initialize() { 
+	private void initialize() { 
 		
 		context = MessageActivity.this;
 		

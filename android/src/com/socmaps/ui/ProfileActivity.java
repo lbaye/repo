@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -85,8 +86,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	private String flag = ""; // UNIT or INFO
 	private ProgressDialog m_ProgressDialog = null;
 
-	public final static int REQUEST_CODE_CAMERA = 700;
-	public final static int REQUEST_CODE_GALLERY = 701;
+	private final static int REQUEST_CODE_CAMERA = 700;
+	private final static int REQUEST_CODE_GALLERY = 701;
 	boolean isCoverPic = true;
 
 	int requestCode;
@@ -290,7 +291,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void setDefaultValues() {
+	private void setDefaultValues() {
 
 		// imageDownloader.clearCache();
 
@@ -581,7 +582,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		// finish();
 	}
 
-	public void spinnerShowRelationshipOption() {
+	private void spinnerShowRelationshipOption() {
 		AlertDialog dialog;
 
 		final String str[] = getResources().getStringArray(
@@ -764,7 +765,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		alert.show();
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case ProfileActivity.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -795,8 +796,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 					// coverPic = (Bitmap) data.getExtras().get("data");
 					coverPic = Utility.resizeBitmap((Bitmap) data.getExtras()
-							.get("data"), Constant.profileCoverWidth,
-							Constant.profileCoverHeight);
+							.get("data"), Constant.profileCoverWidth, 0, true);
 
 					ivCoverPic.setImageBitmap(coverPic);
 
@@ -808,8 +808,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 					// avatar = (Bitmap) data.getExtras().get("data");
 					avatar = Utility.resizeBitmap((Bitmap) data.getExtras()
-							.get("data"), Constant.thumbWidth,
-							Constant.thumbHeight);
+							.get("data"), Constant.thumbWidth, 0, true);
 
 					ivProfilePic.setImageBitmap(avatar);
 
@@ -823,53 +822,29 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		} else if (requestCode == ProfileActivity.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				// imageUri = data.getData();
-				// isChanged = true;
-				try {
+				
+				
 
-					if (isCoverPic) {
-
-						// avatar =
-						// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-						// data.getData());
-						if (coverPic != null) {
-							// coverPic.recycle();
-						}
-						coverPic = Utility.resizeBitmap(
-								MediaStore.Images.Media.getBitmap(
-										this.getContentResolver(),
-										data.getData()),
-								Constant.profileCoverWidth,
-								Constant.profileCoverHeight);
+				Uri selectedImage = data.getData();
+	            try {
+	            	
+	            	if(isCoverPic) {
+	            		coverPic = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.profileCoverWidth, 0, true);					
 						ivCoverPic.setImageBitmap(coverPic);
-						isChanged = true;
-
-					} else {
-
-						// avatar =
-						// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-						// data.getData());
-						if (avatar != null) {
-							// avatar.recycle();
-						}
-						avatar = Utility.resizeBitmap(
-								MediaStore.Images.Media.getBitmap(
-										this.getContentResolver(),
-										data.getData()), Constant.thumbWidth,
-								Constant.thumbHeight);
+	            	} else {
+	            		avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);					
 						ivProfilePic.setImageBitmap(avatar);
-						isChanged = true;
-					}
-
-				} catch (FileNotFoundException e) {
+	            	}
+					
+					isChanged = true;
+				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (OutOfMemoryError e) {
-
-					Log.e("Gallery image", "OutOfMemoryError");
+					e1.printStackTrace();
+				}  catch (OutOfMemoryError e) {
 					Toast.makeText(context,
 							getString(R.string.errorMessageGallery),
 							Toast.LENGTH_SHORT).show();
+					Log.e("Gallery image", "OutOfMemoryError");
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -878,13 +853,13 @@ public class ProfileActivity extends Activity implements OnClickListener {
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				// ivProfilePicture.setImageURI(imageUri);
+				
 			}
 		}
 	}
 
 	// TODO Auto-generated method stub
-	public void showTextInputDialog(final int id, final String text, String hint) {
+	private void showTextInputDialog(final int id, final String text, String hint) {
 
 		Log.w("showTextInputDialog into", "id: " + id + " text:" + text);
 
@@ -970,57 +945,13 @@ public class ProfileActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		// String title = "";
-		// String hint = "";
-		// String text = "";
-		//
-		// switch (type) {
-		// case 1:
-		// title = "Enter name:";
-		// hint = "Name";
-		// text = eventName;
-		// break;
-		// case 2:
-		// title = "Enter summary:";
-		// hint = "Summary";
-		// text = eventSummary;
-		// break;
-		// case 3:
-		// title = "Enter description:";
-		// hint = "Description";
-		// text = eventDescription;
-		// break;
-		// default:
-		// break;
-		// }
-		//
-		// tvTitle.setText(title);
-		// etInputText.setHint(hint);
-		// if (!text.equalsIgnoreCase("")) {
-		// etInputText.setText(text);
-		// }
 
 		dialog.show();
 	}
 
-	public void updateSettings() {
+	private void updateSettings() {
 		boolean flag = true;
 
-		// if (!Utility.isValidEmailID(etEmail.getText().toString().trim())) {
-		// flag = false;
-		// etEmail.setError("Invalid Email Id");
-		// } else if (etFirstName.getText().toString().trim().equals("")) {
-		// flag = false;
-		// etFirstName.setError("First Name can not be empty.");
-		// } else if (etLastName.getText().toString().trim().equals("")) {
-		// flag = false;
-		// etLastName.setError("Last Name can not be empty.");
-		// }
-
-		/*
-		 * else if (etUserName.getText().toString().trim().equals("")) { flag =
-		 * false; etUserName.setError("User Name can not be empty."); }
-		 */
 
 		if (flag) {
 			if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -1089,11 +1020,6 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 				ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 
-				// Bitmap resizedAvatar =
-				// Utility.resizeBitmap(avatar,Constant.thumbWidth,
-				// Constant.thumbHeight);
-				// resizedAvatar.compress(Bitmap.CompressFormat.PNG,
-				// 60,full_stream);
 				avatar.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
 				byte[] full_bytes = full_stream.toByteArray();
@@ -1154,7 +1080,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		}
 	};
 
-	public void handleResponseSavePersonalInfo(int status, String response) {
+	private void handleResponseSavePersonalInfo(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -1185,14 +1111,14 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -1310,55 +1236,5 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		}
 
 		System.gc();
-	}
-
-	/*
-	 * private void onLoad() {
-	 * if(Utility.isConnectionAvailble(getApplicationContext())) {
-	 * tempURLString=Constant.profileInfoUrl;
-	 * responseString=Data.getServerResponse(tempURLString); Log.d("response",
-	 * responseString); responseObject=Data.parseResponse(responseString);
-	 * responseDataString=responseObject.getData(); Log.d("responseData",
-	 * responseDataString);
-	 * 
-	 * try { JSONObject jsonObject = new JSONObject(responseDataString);
-	 * profileInfoObject=new ProfileInfo(); profileInfoObject.setBio(
-	 * jsonObject.getString("bio"));
-	 * profileInfoObject.setCity(jsonObject.getString("city"));
-	 * profileInfoObject.setCountry(jsonObject.getString("country"));
-	 * profileInfoObject.setDateOfBirth(jsonObject.getString("dob"));
-	 * profileInfoObject.setEmail(jsonObject.getString("email"));
-	 * profileInfoObject.setFirstName(jsonObject.getString("first_name"));
-	 * profileInfoObject.setLastName(jsonObject.getString("last_name"));
-	 * profileInfoObject.setPostCode(jsonObject.getString("post_code"));
-	 * profileInfoObject.setProfilePic(jsonObject.getString("profile_pic"));
-	 * profileInfoObject.setRegMedia(jsonObject.getString("reg_media"));
-	 * profileInfoObject
-	 * .setRelationshipStatus(jsonObject.getString("relationship_status"));
-	 * profileInfoObject.setService(jsonObject.getString("service"));
-	 * profileInfoObject.setSmID(jsonObject.getInt("sm_id"));
-	 * profileInfoObject.setStreetAddress
-	 * (jsonObject.getString("street_address"));
-	 * 
-	 * tvName.setText(profileInfoObject.getFirstName().concat("".concat(
-	 * profileInfoObject.getLastName())));
-	 * tvAge.setText(Integer.toString(Utility
-	 * .calculateAge(profileInfoObject.getDateOfBirth())));
-	 * tvLivesIn.setText(profileInfoObject
-	 * .getCity().concat(", ".concat(profileInfoObject.getCountry())));
-	 * tvWork.setText(profileInfoObject.getService()); try {
-	 * ivProfilePicture.setImageBitmap
-	 * (BitmapFactory.decodeStream((InputStream)new
-	 * URL(profileInfoObject.getProfilePic()).getContent())); } catch
-	 * (MalformedURLException e) { e.printStackTrace(); } catch (IOException e)
-	 * { e.printStackTrace(); }
-	 * 
-	 * if(profileInfoObject.getRegMedia().equals("fb")) {
-	 * ivRegistationMedium.setImageResource(R.drawable.facebookicon); } else {
-	 * ivRegistationMedium.setImageResource(R.drawable.ic_launcher); } } catch
-	 * (JSONException e) { e.printStackTrace(); } } else {
-	 * Toast.makeText(getApplicationContext(),
-	 * "Internet Connection Unavailable", Toast.LENGTH_SHORT).show(); } }
-	 */
-
+	}	
 }

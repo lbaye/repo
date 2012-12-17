@@ -47,7 +47,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 	private LinearLayout llCircleList;
 	private LinearLayout circleItemView;
 
-	public static boolean isRefreshCircleList = false;
+	private static boolean isRefreshCircleList = false;
 
 	private static PeopleCircleActivity ins = null;
 
@@ -75,7 +75,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 
 		ins = PeopleCircleActivity.this;
 		context = PeopleCircleActivity.this;
@@ -210,7 +210,7 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 			searchPanel.setVisibility(View.GONE);
 	}
 
-	public void showSearchPanel(boolean display) {
+	private void showSearchPanel(boolean display) {
 		if (display) {
 			searchPanel.setVisibility(View.VISIBLE);
 

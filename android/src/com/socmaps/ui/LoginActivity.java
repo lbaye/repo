@@ -234,7 +234,7 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public void authenticateFacebook() {
+	private void authenticateFacebook() {
 		FBUtility.mFacebook.authorize(LoginActivity.this,
 				Constant.facebookPermissions, new LoginDialogListener());
 
@@ -313,7 +313,7 @@ public class LoginActivity extends Activity {
 		SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
 	}
 
-	public void authenticate() {
+	private void authenticate() {
 
 		String email = etEmail.getText().toString().trim();
 		String password = etPassword.getText().toString();
@@ -337,7 +337,7 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public void handleForgotPassResponse(int status, String response) {
+	private void handleForgotPassResponse(int status, String response) {
 		Log.d("ForgotPass", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -371,7 +371,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -398,7 +398,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void handleResponseFb(int status, String response) {
+	private void handleResponseFb(int status, String response) {
 		Log.d("FB Login", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -420,7 +420,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void fbLoginSuccess(String response) {
+	private void fbLoginSuccess(String response) {
 
 		// String facebookId = FBUtility.userUID;
 		String facebookAuthToken = FBUtility.mFacebook.getAccessToken();
@@ -487,7 +487,7 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public void loginSuccess(String response) {
+	private void loginSuccess(String response) {
 		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(response,
 				false);
 
@@ -538,7 +538,7 @@ public class LoginActivity extends Activity {
 	 * }
 	 */
 
-	public void sendFbRegistrationRequest(String fbResponse) {
+	private void sendFbRegistrationRequest(String fbResponse) {
 		try {
 			JSONObject jsonObject = new JSONObject(fbResponse);
 			if (!jsonObject.isNull("id")) {
@@ -613,7 +613,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void closeProgressDialog() {
+	private void closeProgressDialog() {
 		if (m_ProgressDialog != null) {
 			if (m_ProgressDialog.isShowing()) {
 				m_ProgressDialog.dismiss();
@@ -621,7 +621,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public void performForgotPass() {
+	private void performForgotPass() {
 		// custom dialog
 		forgotpassDialog = new Dialog(LoginActivity.this,
 				R.style.CustomDialogTheme);
@@ -670,7 +670,7 @@ public class LoginActivity extends Activity {
 		forgotpassDialog.show();
 	}
 
-	public void sendForgotPasswordRequest() {
+	private void sendForgotPasswordRequest() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			forgotpassRunnable = new Runnable() {
@@ -760,7 +760,7 @@ public class LoginActivity extends Activity {
 	/*
 	 * Callback for fetching current user's name, picture, uid.
 	 */
-	public class UserRequestListener extends BaseRequestListener {
+	private class UserRequestListener extends BaseRequestListener {
 
 		// @Override
 		@Override
@@ -782,7 +782,7 @@ public class LoginActivity extends Activity {
 
 	}
 
-	public class FbAPIsAuthListener implements AuthListener {
+	private class FbAPIsAuthListener implements AuthListener {
 
 		// @Override
 		@Override
@@ -798,7 +798,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	public class FbAPIsLogoutListener implements LogoutListener {
+	private class FbAPIsLogoutListener implements LogoutListener {
 		// @Override
 		@Override
 		public void onLogoutBegin() {
@@ -830,7 +830,7 @@ public class LoginActivity extends Activity {
 	/*
 	 * Request user name, and picture to show on the main screen.
 	 */
-	public void initiateRequestUserData() {
+	private void initiateRequestUserData() {
 
 		Log.e("LoginActivity", "Fetching user name, profile pic...");
 		Bundle params = new Bundle();
@@ -841,7 +841,7 @@ public class LoginActivity extends Activity {
 		// FBUtility.mAsyncRunner.request("me", new UserRequestListener());
 	}
 
-	public void requestUserData() {
+	private void requestUserData() {
 		Log.i("LoginActivity", "inside requestUserData");
 
 		Thread thread = new Thread(null, sendRequestThread,
@@ -864,7 +864,7 @@ public class LoginActivity extends Activity {
 		}
 	};
 
-	public void handleFacebookError(String fbResponse) {
+	private void handleFacebookError(String fbResponse) {
 		FacebookErrorResponse fbError = ServerResponseParser
 				.parseFacebookError(fbResponse);
 

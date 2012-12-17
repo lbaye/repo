@@ -16,7 +16,7 @@ import com.socmaps.util.Utility;
 
 public class MessageGroupActivity extends ActivityGroup {
 
-	public static MessageGroupActivity group;
+	static MessageGroupActivity group;
 	private ArrayList<View> history;
 
 	private Context context;
@@ -40,7 +40,7 @@ public class MessageGroupActivity extends ActivityGroup {
 
 	}
 
-	public void getMessages() {
+	private void getMessages() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, messagesThread,
@@ -97,7 +97,7 @@ public class MessageGroupActivity extends ActivityGroup {
 		}
 	};
 
-	public void navigateToList(int status, String response) {
+	private void navigateToList(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		// Start the root activity withing the group and get its view
@@ -115,14 +115,14 @@ public class MessageGroupActivity extends ActivityGroup {
 
 	}
 
-	public void replaceView(View v) {
+	void replaceView(View v) {
 		// Adds the old one to history
 		history.add(v);
 		// Changes this Groups View to the new View.
 		setContentView(v);
 	}
 
-	public void back() {
+	void back() {
 		if (history.size() > 1) {
 			history.remove(history.size() - 1);
 			setContentView(history.get(history.size() - 1));

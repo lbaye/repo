@@ -19,7 +19,6 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class PeopleRowFactory2 {
-	
 
 	public static View getView(final LayoutInflater inflater,
 			final Object peopleObj, final Context con,
@@ -46,7 +45,8 @@ public class PeopleRowFactory2 {
 					(TextView) viewGroup.findViewById(R.id.time_text),
 					(TextView) viewGroup.findViewById(R.id.distance_text),
 					(TextView) viewGroup.findViewById(R.id.tvFriendshipStatus),
-					(LinearLayout) viewGroup.findViewById(R.id.llFriendshipStatusContainer),
+					(LinearLayout) viewGroup
+							.findViewById(R.id.llFriendshipStatusContainer),
 					(ImageView) viewGroup.findViewById(R.id.ivOnline));
 			viewGroup.setTag(holder);
 
@@ -127,39 +127,38 @@ public class PeopleRowFactory2 {
 			holder.addressText.setVisibility(View.GONE);
 			// Log.d("People Row Factory2", people.getCurrentAddress());
 		}
-		
-		if(people.isOnline())
-		{
+
+		if (people.isOnline()) {
 			holder.ivOnline.setImageResource(R.drawable.online);
 		}
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.cover_pic_default));
-		if (people.getCoverPhoto() != null) {
-			if (!people.getCoverPhoto().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
-				// holder.coverPhoto, 320,150);
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
 
-				// il.DisplayImage(people.getCoverPhoto(),
-				// holder.coverPhoto,R.drawable.img_blank);
+			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
+			// holder.coverPhoto, 320,150);
 
-				holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			// il.DisplayImage(people.getCoverPhoto(),
+			// holder.coverPhoto,R.drawable.img_blank);
 
-				il.download(people.getCoverPhoto(), holder.coverPhoto);
-				/*
-				 * new FetchImageTask() {
-				 * 
-				 * @Override protected void onPostExecute(Bitmap result) { if
-				 * (result != null) {
-				 * 
-				 * holder.coverPhoto.setImageBitmap(result); } }
-				 * }.execute(people.getCoverPhoto());
-				 */
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 
-			}
+			il.download(people.getCoverPhoto(), holder.coverPhoto);
+			/*
+			 * new FetchImageTask() {
+			 * 
+			 * @Override protected void onPostExecute(Bitmap result) { if
+			 * (result != null) {
+			 * 
+			 * holder.coverPhoto.setImageBitmap(result); } }
+			 * }.execute(people.getCoverPhoto());
+			 */
+
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
 		} else
-			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
 
 		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
 		// R.drawable.icon));
@@ -279,6 +278,5 @@ public class PeopleRowFactory2 {
 			this.ivOnline = ivOnline;
 		}
 	}
-	
-	
+
 }

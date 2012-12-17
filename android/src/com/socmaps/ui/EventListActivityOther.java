@@ -79,7 +79,7 @@ public class EventListActivityOther extends Activity implements
 	int colorButtonNormal, colorButtonSelected;
 
 	String userID = null;
-	public People people;
+	private People people;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,7 +221,7 @@ public class EventListActivityOther extends Activity implements
 		// searchEditText.setHint("Your search");
 	}
 
-	public void fetchDataForList() {
+	private void fetchDataForList() {
 		if (Utility.isConnectionAvailble(context)) {
 			Thread thread = new Thread(null, viewList, "MagentoBackground");
 			thread.start();
@@ -336,7 +336,7 @@ public class EventListActivityOther extends Activity implements
 
 	};
 
-	public void handleGetEventsResponse(int status, String response) {
+	private void handleGetEventsResponse(int status, String response) {
 		Log.d("Events", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -364,14 +364,14 @@ public class EventListActivityOther extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -465,7 +465,7 @@ public class EventListActivityOther extends Activity implements
 		contentAdapter.setObjects(this.events);
 	}
 
-	public class ListArrayAdapter extends BaseAdapter implements Filterable {
+	private class ListArrayAdapter extends BaseAdapter implements Filterable {
 
 		private List<Event> mObjects;
 

@@ -26,7 +26,7 @@ public class NotifyNotificationActivity extends Activity {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 		buttonActionListener = new ButtonActionListener();
 		context = NotifyNotificationActivity.this;
 		notificationListContainer = (LinearLayout) findViewById(R.id.notification_list_container);

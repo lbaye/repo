@@ -134,14 +134,16 @@ public class Constant {
 	public final static int STATUS_GENERAL_NOTIMPLEMENTED = 501;
 	public final static int STATUS_GENERAL_UNAVAILABLE = 503;
 
-	public final static int thumbWidth = 100;
-	public final static int thumbHeight = 100;
+	public final static int thumbWidth = 160;
+	public final static int thumbHeight = 160;
 
 	public final static int profileCoverWidth = 320;
 	public final static int profileCoverHeight = 160;
 
 	public final static int eventPhotoWidth = 320;
 	public final static int eventPhotoHeight = 180;
+	
+	public final static int photoWidth = 320;
 
 	public final static String authTokenParam = "Auth-Token";
 

@@ -60,7 +60,7 @@ public class ListViewActivity extends Activity implements
 	TopDrawerListener topDrawerListener;
 	BottomDrawerListener bottomDrawerListener;
 
-	public Context context;
+	private Context context;
 	private ListView contentListView;
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
@@ -140,7 +140,7 @@ public class ListViewActivity extends Activity implements
 		peoplesAndPlacesEntity = StaticValues.searchResult;
 	}
 
-	public void initialize() {
+	private void initialize() {
 
 		context = ListViewActivity.this;
 
@@ -246,13 +246,13 @@ public class ListViewActivity extends Activity implements
 		System.gc();
 	}
 
-	public void updateContentList(List<Object> list) {
+	private void updateContentList(List<Object> list) {
 		listContent.clear();
 		listContent.addAll(list);
 
 	}
 
-	public void updateDisplayList(List<Object> list) {
+	private void updateDisplayList(List<Object> list) {
 
 		int displayedItemCounter = 0;
 
@@ -291,7 +291,7 @@ public class ListViewActivity extends Activity implements
 		}
 	}
 
-	public void updateListView() {
+	private void updateListView() {
 		contentAdapter.notifyDataSetChanged();
 	}
 
@@ -858,7 +858,7 @@ public class ListViewActivity extends Activity implements
 			searchPanel.setVisibility(View.GONE);
 	}
 
-	public void showSearchPanel(boolean display) {
+	private void showSearchPanel(boolean display) {
 		if (display) {
 			searchPanel.setVisibility(View.VISIBLE);
 

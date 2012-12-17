@@ -93,6 +93,18 @@ public class SecondDegreePeopleRowFactoryPeopleInvite {
 			// holder.statusText.setText(otherUserEntity.getStatusMsg());
 		} // else
 			// holder.avatar.setImageResource(R.drawable.icon);
+		
+		
+		if (people.getCoverPhoto() != null
+				&& !people.getCoverPhoto().equals("")) {
+
+			holder.coverPhoto.setImageResource(R.drawable.img_blank);
+			il.download(people.getAvatar(), holder.coverPhoto);
+
+		} else
+			holder.coverPhoto
+					.setImageResource(R.drawable.cover_pic_second_degree);
+		
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
 		holder.distanceText.setText(Utility.getFormatedDistance(people

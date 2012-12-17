@@ -102,7 +102,7 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <TextView
+        <!-- <TextView
             android:id="@+id/tvSelectedLocationAddress"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -110,7 +110,37 @@
             android:paddingRight="10dip"
             android:textColor="@color/black"
             android:textSize="12dip"
-            android:textStyle="normal" />
+            android:textStyle="normal" /> --> 
+            
+            <RelativeLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content" 
+	            android:paddingRight="5dip"
+	            android:paddingLeft="5dip"
+	            android:layout_marginTop="5dip"
+	            android:layout_marginBottom="5dip">
+
+            <TextView
+                android:id="@+id/tvSelectedLocationAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" 
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/checkedIcon"
+                android:paddingLeft="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="12dip" />
+
+            <ImageView
+                android:id="@+id/checkedIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/radio_checked_small" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

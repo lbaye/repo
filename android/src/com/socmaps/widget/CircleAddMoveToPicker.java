@@ -11,10 +11,11 @@ package com.socmaps.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,6 +36,9 @@ import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.ui.PeopleCircleActivity;
 import com.socmaps.ui.R;
+import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
+import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -163,7 +167,9 @@ public class CircleAddMoveToPicker extends Dialog implements
 				}
 
 			// Api calling
-			moveToSelectedCircle();
+			// moveToSelectedCircle();
+
+			moveSelectedPersonToParticularCircleAPICall();
 
 			// Dialog cancel
 			dismiss();
@@ -176,11 +182,13 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 			if (!circleName.equals("")) {
 
-				sendCircleNameToServer();
+				// sendCircleNameToServer();
+				// Another way
+				addNewCircleAPICall();
 
 			} else {
-				Toast.makeText(context, "Please Enter Circle Name", 1000)
-						.show();
+				Toast.makeText(context, "Please Enter Circle Name",
+						Toast.LENGTH_SHORT).show();
 			}
 			hideKeybord();
 			dismiss();
@@ -261,231 +269,352 @@ public class CircleAddMoveToPicker extends Dialog implements
 	/*
 	 * Add Circle to server
 	 */
-	private void sendCircleNameToServer() {
-		// TODO Auto-generated method stub
-
-		if (Utility.isConnectionAvailble(context)) {
-
-			Thread thread = new Thread(null, sendCircleNameThread,
-					"Start add circle");
-			thread.start();
-
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog
-					.show(context,
-							context.getResources().getString(
-									R.string.please_wait_text),
-							context.getResources().getString(
-									R.string.sending_request_text), true,true);
-
-		} else {
-
-			DialogsAndToasts.showNoInternetConnectionDialog(context);
-		}
-
-	}
-
-	private Runnable sendCircleNameThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smCircleUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			restClient.AddParam("name", circleName);
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.POST);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			createCircleResponse = restClient.getResponse();
-			createCircleStatus = restClient.getResponseCode();
-
-			((Activity) context).runOnUiThread(sendCircleNameReturnResponse);
-
-			// handleResponseSendMessage(createCircleStatus,
-			// createCircleResponse);
-
-			// dismiss progress dialog if needed
-			// m_ProgressDialog.dismiss();
-		}
-	};
-
-	private Runnable sendCircleNameReturnResponse = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponseCircleName(createCircleStatus, createCircleResponse);
-
-			// dismiss progress dialog if needed
-
-			if (m_ProgressDialog != null) {
-				m_ProgressDialog.dismiss();
-			}
-		}
-	};
-
-	public void handleResponseCircleName(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("New Circle Add ", status + ":" + response);
-
-		switch (status) {
-		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Successfully added new circle.",
-					Toast.LENGTH_SHORT).show();
-
-			try {
-				JSONArray jArray = new JSONArray(response);
-				List<Circle> circles = ServerResponseParser
-						.getCircleListWithDetails(jArray);
-				if (circles.size() > 0) {
-					StaticValues.myInfo.setCircleList(circles);
-				}
-
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-			// Refresh Circle list
-			if (PeopleCircleActivity.getIns() != null) {
-				PeopleCircleActivity.getIns().generateCircleView();
-			}
-
-			break;
-
-		default:
-			Toast.makeText(context,
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-
-	}
+	// private void sendCircleNameToServer() {
+	// // TODO Auto-generated method stub
+	//
+	// if (Utility.isConnectionAvailble(context)) {
+	//
+	// Thread thread = new Thread(null, sendCircleNameThread,
+	// "Start add circle");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog
+	// .show(context,
+	// context.getResources().getString(
+	// R.string.please_wait_text),
+	// context.getResources().getString(
+	// R.string.sending_request_text), true, true);
+	//
+	// } else {
+	//
+	// DialogsAndToasts.showNoInternetConnectionDialog(context);
+	// }
+	//
+	// }
+	//
+	// private Runnable sendCircleNameThread = new Runnable() {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// RestClient restClient = new RestClient(Constant.smCircleUrl);
+	// restClient.AddHeader(Constant.authTokenParam,
+	// Utility.getAuthToken(context));
+	//
+	// restClient.AddParam("name", circleName);
+	//
+	// try {
+	// restClient.Execute(RestClient.RequestMethod.POST);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// createCircleResponse = restClient.getResponse();
+	// createCircleStatus = restClient.getResponseCode();
+	//
+	// ((Activity) context).runOnUiThread(sendCircleNameReturnResponse);
+	//
+	// // handleResponseSendMessage(createCircleStatus,
+	// // createCircleResponse);
+	//
+	// // dismiss progress dialog if needed
+	// // m_ProgressDialog.dismiss();
+	// }
+	// };
+	//
+	// private Runnable sendCircleNameReturnResponse = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// handleResponseCircleName(createCircleStatus, createCircleResponse);
+	//
+	// // dismiss progress dialog if needed
+	//
+	// if (m_ProgressDialog != null) {
+	// m_ProgressDialog.dismiss();
+	// }
+	// }
+	// };
+	//
+	// public void handleResponseCircleName(int status, String response) {
+	// // show proper message through Toast or Dialog
+	// Log.w("New Circle Add ", status + ":" + response);
+	//
+	// switch (status) {
+	// case Constant.STATUS_CREATED:
+	// // Log.d("Login", status+":"+response);
+	// Toast.makeText(context, "Successfully added new circle.",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// try {
+	// JSONArray jArray = new JSONArray(response);
+	// List<Circle> circles = ServerResponseParser
+	// .getCircleListWithDetails(jArray);
+	// if (circles.size() > 0) {
+	// StaticValues.myInfo.setCircleList(circles);
+	// }
+	//
+	// } catch (Exception e) {
+	// // TODO: handle exception
+	// }
+	//
+	// // Refresh Circle list
+	// if (PeopleCircleActivity.getIns() != null) {
+	// PeopleCircleActivity.getIns().generateCircleView();
+	// }
+	//
+	// break;
+	//
+	// default:
+	// Toast.makeText(context,
+	// "An unknown error occured. Please try again!!",
+	// Toast.LENGTH_SHORT).show();
+	// break;
+	//
+	// }
+	//
+	// }
 
 	// End *******************************************************
+
+	// Another way
+
+	private void addNewCircleAPICall() {
+
+		String url = Constant.smCircleUrl;
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("name", circleName));
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.ADD, true, context.getResources().getString(
+						R.string.please_wait_text), context.getResources()
+						.getString(R.string.sending_request_text),
+				new BackProcessCallBackListener(),true);
+
+		backProcess.execute(RestClient.RequestMethod.POST);
+
+	}
+
+	private void moveSelectedPersonToParticularCircleAPICall() {
+
+		String id = people.getId();
+
+		Log.w("Request Url  >>", Constant.smCircleUrl + "/friend/" + id);
+
+		String url = Constant.smCircleUrl + "/friend/" + id;
+
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		for (String ids : selectedArrayList) {
+			params.add(new BasicNameValuePair("circles[]", ids));
+		}
+
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.MOVE, true, context.getResources().getString(
+						R.string.please_wait_text), context.getResources()
+						.getString(R.string.sending_request_text),
+				new BackProcessCallBackListener(),true);
+
+		backProcess.execute(RestClient.RequestMethod.PUT);
+
+	}
+
+	private class BackProcessCallBackListener implements BackProcessCallback {
+
+		@Override
+		public void onFinish(int status, String response, int type) {
+
+			// TODO Auto-generated method stub
+			Log.w("Got places response from server callback process >> :",
+					status + ":" + response);
+			switch (status) {
+			case Constant.STATUS_SUCCESS:
+
+				Toast.makeText(context, "Moved selected circles successfully.",
+						Toast.LENGTH_SHORT).show();
+
+				try {
+					JSONArray jArray = new JSONArray(response);
+					// List<Circle> circles = ServerResponseParser
+					// .getCircleList(jArray);
+					List<Circle> circles = ServerResponseParser
+							.getCircleListWithDetails(jArray);
+
+					if (circles.size() > 0) {
+						StaticValues.myInfo.setCircleList(circles);
+					}
+
+				} catch (JSONException e) {
+					// TODO: handle exception
+				}
+
+				// Refresh Circle list
+				if (PeopleCircleActivity.getIns() != null) {
+
+					PeopleCircleActivity.getIns().generateCircleView();
+				}
+
+				break;
+
+			case Constant.STATUS_CREATED:
+
+				Toast.makeText(context, "Successfully added new circle.",
+						Toast.LENGTH_SHORT).show();
+
+				try {
+					JSONArray jArray = new JSONArray(response);
+					List<Circle> circles = ServerResponseParser
+							.getCircleListWithDetails(jArray);
+					if (circles.size() > 0) {
+						StaticValues.myInfo.setCircleList(circles);
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
+				// Refresh Circle list
+				if (PeopleCircleActivity.getIns() != null) {
+					PeopleCircleActivity.getIns().generateCircleView();
+				}
+
+				break;
+			case Constant.STATUS_SUCCESS_NODATA:
+				Toast.makeText(context, "No place found.", Toast.LENGTH_SHORT)
+						.show();
+				break;
+			default:
+				Toast.makeText(context,
+						"An unknown error occured. Please try again!!",
+						Toast.LENGTH_SHORT).show();
+				break;
+
+			}
+
+		}
+
+	}
 
 	/*
 	 * Move a particular friend to selected Circles
 	 */
-	private void moveToSelectedCircle() {
-		// TODO Auto-generated method stub
-
-		if (Utility.isConnectionAvailble(context)) {
-
-			Thread thread = new Thread(null, moveToSelectedCirclesThread,
-					"Start move to selected circles");
-			thread.start();
-
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog
-					.show(context,
-							context.getResources().getString(
-									R.string.please_wait_text),
-							context.getResources().getString(
-									R.string.sending_request_text), true,true);
-
-		} else {
-
-			DialogsAndToasts.showNoInternetConnectionDialog(context);
-		}
-
-	}
-
-	private Runnable moveToSelectedCirclesThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String id = people.getId();
-
-			RestClient restClient = new RestClient(Constant.smCircleUrl
-					+ "/friend/" + id);
-
-			Log.w("Request Url  >>", Constant.smCircleUrl + "/friend/" + id);
-
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			for (String ids : selectedArrayList) {
-				restClient.AddParam("circles[]", ids);
-			}
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.PUT);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			moveToSelectedCirclesResponse = restClient.getResponse();
-			moveToSelectedCirclesStatus = restClient.getResponseCode();
-
-			((Activity) context)
-					.runOnUiThread(moveToSelectedCirclesResponseRunable);
-
-		}
-	};
-
-	private Runnable moveToSelectedCirclesResponseRunable = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponsemoveToSelectedCircles(moveToSelectedCirclesStatus,
-					moveToSelectedCirclesResponse);
-
-			// dismiss progress dialog if needed
-
-			if (m_ProgressDialog != null) {
-				m_ProgressDialog.dismiss();
-			}
-		}
-	};
-
-	public void handleResponsemoveToSelectedCircles(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.w("Move to selected circles", status + ":" + response);
-
-		switch (status) {
-		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Moved selected circles successfully.",
-					Toast.LENGTH_SHORT).show();
-
-			try {
-				JSONArray jArray = new JSONArray(response);
-				List<Circle> circles = ServerResponseParser
-						.getCircleList(jArray);
-				if (circles.size() > 0) {
-					StaticValues.myInfo.setCircleList(circles);
-				}
-
-			} catch (JSONException e) {
-				// TODO: handle exception
-			}
-
-			// Refresh Circle list
-			if (PeopleCircleActivity.getIns() != null) {
-
-				PeopleCircleActivity.getIns().generateCircleView();
-			}
-
-			break;
-
-		default:
-			Toast.makeText(context,
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-
-	}
+	// private void moveToSelectedCircle() {
+	// // TODO Auto-generated method stub
+	//
+	// if (Utility.isConnectionAvailble(context)) {
+	//
+	// Thread thread = new Thread(null, moveToSelectedCirclesThread,
+	// "Start move to selected circles");
+	// thread.start();
+	//
+	// // show progress dialog if needed
+	// m_ProgressDialog = ProgressDialog
+	// .show(context,
+	// context.getResources().getString(
+	// R.string.please_wait_text),
+	// context.getResources().getString(
+	// R.string.sending_request_text), true, true);
+	//
+	// } else {
+	//
+	// DialogsAndToasts.showNoInternetConnectionDialog(context);
+	// }
+	//
+	// }
+	//
+	// private Runnable moveToSelectedCirclesThread = new Runnable() {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	//
+	// String id = people.getId();
+	//
+	// RestClient restClient = new RestClient(Constant.smCircleUrl
+	// + "/friend/" + id);
+	//
+	// Log.w("Request Url  >>", Constant.smCircleUrl + "/friend/" + id);
+	//
+	// restClient.AddHeader(Constant.authTokenParam,
+	// Utility.getAuthToken(context));
+	//
+	// for (String ids : selectedArrayList) {
+	// restClient.AddParam("circles[]", ids);
+	// }
+	//
+	// try {
+	// restClient.Execute(RestClient.RequestMethod.PUT);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// moveToSelectedCirclesResponse = restClient.getResponse();
+	// moveToSelectedCirclesStatus = restClient.getResponseCode();
+	//
+	// ((Activity) context)
+	// .runOnUiThread(moveToSelectedCirclesResponseRunable);
+	//
+	// }
+	// };
+	//
+	// private Runnable moveToSelectedCirclesResponseRunable = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// handleResponsemoveToSelectedCircles(moveToSelectedCirclesStatus,
+	// moveToSelectedCirclesResponse);
+	//
+	// // dismiss progress dialog if needed
+	//
+	// if (m_ProgressDialog != null) {
+	// m_ProgressDialog.dismiss();
+	// }
+	// }
+	// };
+	//
+	// public void handleResponsemoveToSelectedCircles(int status, String
+	// response) {
+	// // show proper message through Toast or Dialog
+	// Log.w("Move to selected circles", status + ":" + response);
+	//
+	// switch (status) {
+	// case Constant.STATUS_SUCCESS:
+	// // Log.d("Login", status+":"+response);
+	// Toast.makeText(context, "Moved selected circles successfully.",
+	// Toast.LENGTH_SHORT).show();
+	//
+	// try {
+	// JSONArray jArray = new JSONArray(response);
+	// List<Circle> circles = ServerResponseParser
+	// .getCircleList(jArray);
+	// if (circles.size() > 0) {
+	// StaticValues.myInfo.setCircleList(circles);
+	// }
+	//
+	// } catch (JSONException e) {
+	// // TODO: handle exception
+	// }
+	//
+	// // Refresh Circle list
+	// if (PeopleCircleActivity.getIns() != null) {
+	//
+	// PeopleCircleActivity.getIns().generateCircleView();
+	// }
+	//
+	// break;
+	//
+	// default:
+	// Toast.makeText(context,
+	// "An unknown error occured. Please try again!!",
+	// Toast.LENGTH_SHORT).show();
+	// break;
+	//
+	// }
+	//
+	// }
 
 	// End ********************************
 

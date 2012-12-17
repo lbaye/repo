@@ -67,8 +67,8 @@ public class AccountSettingsActivity extends Activity implements
 	DatePicker dpDateOfBirth;
 	// RadioButton metricBtn,imperialBtn;
 	RadioGroup unitRadioGroup;
-	Uri imageUri;
-	String tempURLString;
+	//Uri imageUri;
+	//String tempURLString;
 
 	int requestCode;
 	String responseString;
@@ -513,7 +513,7 @@ public class AccountSettingsActivity extends Activity implements
 
 	};
 
-	public void handleAccountSettingsResponse(int status, String response) {
+	private void handleAccountSettingsResponse(int status, String response) {
 		Log.d("Account Settings", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -532,14 +532,14 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -592,7 +592,7 @@ public class AccountSettingsActivity extends Activity implements
 
 	}
 
-	public boolean onOptionItemSelected(int requestCode) {
+	private boolean onOptionItemSelected(int requestCode) {
 		switch (requestCode) {
 		case Constant.REQUEST_CODE_GALLERY:
 			Intent intent = new Intent();
@@ -623,7 +623,7 @@ public class AccountSettingsActivity extends Activity implements
 				}
 				avatar = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
-						Constant.thumbWidth, Constant.thumbHeight);
+						Constant.thumbWidth, 0, true);
 				ivProfilePicture.setImageBitmap(avatar);
 
 			}
@@ -632,12 +632,33 @@ public class AccountSettingsActivity extends Activity implements
 			}
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				imageUri = data.getData();
+				
+				Uri selectedImage = data.getData();
+	            try {
+					avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);
+					
+					ivProfilePicture.setImageBitmap(avatar);
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}  catch (OutOfMemoryError e) {
+					Toast.makeText(context,
+							getString(R.string.errorMessageGallery),
+							Toast.LENGTH_SHORT).show();
+					Log.e("Gallery image", "OutOfMemoryError");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+				/*imageUri = data.getData();
 				try {
-					// avatar =
-					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-					// imageUri);
-					// ivProfilePicture.setImageBitmap(avatar);
+					
 					if (avatar != null) {
 						// avatar.recycle();
 					}
@@ -661,7 +682,7 @@ public class AccountSettingsActivity extends Activity implements
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
-				}
+				}*/
 				// ivProfilePicture.setImageURI(imageUri);
 			}
 		}
@@ -675,7 +696,7 @@ public class AccountSettingsActivity extends Activity implements
 	 * cursor.moveToFirst(); return cursor.getString(column_index); }
 	 */
 
-	public void selectDate() {
+	private void selectDate() {
 		DatePickerDialog datePickerDialog = new DatePickerDialog(
 				AccountSettingsActivity.this, new OnDateSetListener() {
 					@Override
@@ -737,7 +758,7 @@ public class AccountSettingsActivity extends Activity implements
 		}
 	};
 
-	public void handleResponse(int status, String response) {
+	private void handleResponse(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -750,14 +771,14 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -769,7 +790,7 @@ public class AccountSettingsActivity extends Activity implements
 		}
 	}
 
-	public void handleResponseSavePersonalInfo(int status, String response) {
+	private void handleResponseSavePersonalInfo(int status, String response) {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
@@ -784,14 +805,14 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.parseResponseString(response), Toast.LENGTH_LONG)
+					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
 					.show();
 
 			break;
@@ -897,7 +918,7 @@ public class AccountSettingsActivity extends Activity implements
 		}
 	};
 
-	public void updateSettings() {
+	private void updateSettings() {
 		boolean flag = true;
 		if (!Utility.isValidEmailID(etEmail.getText().toString().trim())) {
 			flag = false;
@@ -930,7 +951,7 @@ public class AccountSettingsActivity extends Activity implements
 		}
 	}
 
-	public void selectPicture() {
+	private void selectPicture() {
 		final CharSequence[] items = { "Gallery", "Camera" };
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountSettingsActivity.this);
@@ -955,7 +976,7 @@ public class AccountSettingsActivity extends Activity implements
 		alert.show();
 	}
 
-	public void promptClearHistory() {
+	private void promptClearHistory() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountSettingsActivity.this);
 
@@ -973,7 +994,7 @@ public class AccountSettingsActivity extends Activity implements
 		alert.show();
 	}
 
-	public void promptDeleteAccount() {
+	private void promptDeleteAccount() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountSettingsActivity.this);
 		builder.setTitle("Delete Account");
@@ -990,7 +1011,7 @@ public class AccountSettingsActivity extends Activity implements
 		alert.show();
 	}
 
-	public void clearHistory() {
+	private void clearHistory() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountSettingsActivity.this);
 		builder.setTitle("Success");
@@ -1006,7 +1027,7 @@ public class AccountSettingsActivity extends Activity implements
 		alert.show();
 	}
 
-	public void deleteAccount() {
+	private void deleteAccount() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountSettingsActivity.this);
 		builder.setTitle("Success");
@@ -1189,24 +1210,6 @@ public class AccountSettingsActivity extends Activity implements
 
 	}
 
-	/*
-	 * public class DownloadImagesTask extends AsyncTask<ImageView, Void,
-	 * Bitmap> {
-	 * 
-	 * ImageView imageView = null;
-	 * 
-	 * @Override protected Bitmap doInBackground(ImageView... imageViews) {
-	 * this.imageView = imageViews[0]; return download_Image((String)
-	 * imageView.getTag()); }
-	 * 
-	 * @Override protected void onPostExecute(Bitmap result) {
-	 * imageView.setImageBitmap(result); }
-	 * 
-	 * private Bitmap download_Image(String url) {
-	 * 
-	 * return Utility.loadBitmapFromURL(url); }
-	 * 
-	 * }
-	 */
+	
 
 }

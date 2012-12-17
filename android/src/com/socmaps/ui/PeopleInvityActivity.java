@@ -82,7 +82,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
 
-	public Dialog msgDialog;
+	private Dialog msgDialog;
 	private String sendMessageFriendId = "";
 	private String sendMessageSubject = "";
 	private String sendMessageContent = "";
@@ -118,13 +118,13 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void populateListData() {
+	private void populateListData() {
 		populateMasterList();
 		updateContentList(listMasterContent);
 		updateDisplayList(listContent);
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = PeopleInvityActivity.this;
 		// colorButtonSelected = getResources().getColor(R.color.gray_light);
 
@@ -347,7 +347,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void updateListView() {
+	private void updateListView() {
 		contentAdapter.notifyDataSetChanged();
 	}
 
@@ -431,13 +431,13 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 	}
 
-	public void updateContentList(List<Object> list) {
+	private void updateContentList(List<Object> list) {
 		listContent.clear();
 		listContent.addAll(list);
 
 	}
 
-	public void updateDisplayList(List<Object> list) {
+	private void updateDisplayList(List<Object> list) {
 
 		int displayedItemCounter = 0;
 
@@ -596,7 +596,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		@Override
 		public void onSendMessageButtonClick(People people) {
 			// TODO Auto-generated method stub
-			showMessageDialog(people);
+			//showMessageDialog(people);
 		}
 
 		@Override
@@ -692,233 +692,233 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	/*
 	 * Send Message to individual Person
 	 */
-	private void showMessageDialog(final People people) {
-		// TODO Auto-generated method stub
-		msgDialog = DialogsAndToasts.showSendMessage(context);
-		final EditText msgEditText = (EditText) msgDialog
-				.findViewById(R.id.message_body_text);
-		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
-		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
-		send.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (!msgEditText.getText().toString().trim().equals("")) {
-					sendMessage(people.getId(), "Message", msgEditText
-							.getText().toString().trim());
-				} else {
-					msgEditText.setError("Please enter your message!!");
-				}
-
-				hideMessageDialogKeybord(msgEditText);
-			}
-		});
-		cancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				hideMessageDialogKeybord(msgEditText);
-				msgDialog.dismiss();
-
-			}
-		});
-		msgDialog.show();
-	}
-
-	public void sendMessage(String friendId, String subject, String content) {
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			sendMessageFriendId = friendId;
-			sendMessageSubject = subject;
-			sendMessageContent = content;
-
-			Thread thread = new Thread(null, sendMessageThread,
-					"Start send message");
-			thread.start();
-
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
-	}
-
-	private Runnable sendMessageThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			restClient.AddParam("recipients[]", sendMessageFriendId);
-			restClient.AddParam("subject", sendMessageSubject);
-			restClient.AddParam("content", sendMessageContent);
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.POST);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			sendMessageResponse = restClient.getResponse();
-			sendMessageStatus = restClient.getResponseCode();
-
-			runOnUiThread(sendMessageReturnResponse);
-		}
-	};
-
-	private Runnable sendMessageReturnResponse = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
-
-			// dismiss progress dialog if needed
-
-			if(m_ProgressDialog!=null){
-				m_ProgressDialog.dismiss();
-			}
-
-		}
-	};
-
-	public void handleResponseSendMessage(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.d("Send Message", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Message sent successfully.",
-					Toast.LENGTH_SHORT).show();
-			msgDialog.dismiss();
-			break;
-
-		default:
-			Toast.makeText(getApplicationContext(),
-					"Message not delivered,please try again!!",
-					Toast.LENGTH_SHORT).show();
-
-			break;
-
-		}
-
-	}
+//	private void showMessageDialog(final People people) {
+//		// TODO Auto-generated method stub
+//		msgDialog = DialogsAndToasts.showSendMessage(context);
+//		final EditText msgEditText = (EditText) msgDialog
+//				.findViewById(R.id.message_body_text);
+//		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
+//		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
+//		send.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				if (!msgEditText.getText().toString().trim().equals("")) {
+//					sendMessage(people.getId(), "Message", msgEditText
+//							.getText().toString().trim());
+//				} else {
+//					msgEditText.setError("Please enter your message!!");
+//				}
+//
+//				hideMessageDialogKeybord(msgEditText);
+//			}
+//		});
+//		cancel.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//
+//				hideMessageDialogKeybord(msgEditText);
+//				msgDialog.dismiss();
+//
+//			}
+//		});
+//		msgDialog.show();
+//	}
+//
+//	public void sendMessage(String friendId, String subject, String content) {
+//		if (Utility.isConnectionAvailble(getApplicationContext())) {
+//
+//			sendMessageFriendId = friendId;
+//			sendMessageSubject = subject;
+//			sendMessageContent = content;
+//
+//			Thread thread = new Thread(null, sendMessageThread,
+//					"Start send message");
+//			thread.start();
+//
+//			// show progress dialog if needed
+//			m_ProgressDialog = ProgressDialog.show(context, getResources()
+//					.getString(R.string.please_wait_text), getResources()
+//					.getString(R.string.sending_request_text), true,true);
+//
+//		} else {
+//
+//			DialogsAndToasts
+//					.showNoInternetConnectionDialog(getApplicationContext());
+//		}
+//	}
+//
+//	private Runnable sendMessageThread = new Runnable() {
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			RestClient restClient = new RestClient(Constant.smMessagesUrl);
+//			restClient.AddHeader(Constant.authTokenParam,
+//					Utility.getAuthToken(context));
+//
+//			restClient.AddParam("recipients[]", sendMessageFriendId);
+//			restClient.AddParam("subject", sendMessageSubject);
+//			restClient.AddParam("content", sendMessageContent);
+//
+//			try {
+//				restClient.Execute(RestClient.RequestMethod.POST);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			sendMessageResponse = restClient.getResponse();
+//			sendMessageStatus = restClient.getResponseCode();
+//
+//			runOnUiThread(sendMessageReturnResponse);
+//		}
+//	};
+//
+//	private Runnable sendMessageReturnResponse = new Runnable() {
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
+//
+//			// dismiss progress dialog if needed
+//
+//			if(m_ProgressDialog!=null){
+//				m_ProgressDialog.dismiss();
+//			}
+//
+//		}
+//	};
+//
+//	public void handleResponseSendMessage(int status, String response) {
+//		// show proper message through Toast or Dialog
+//		Log.d("Send Message", status + ":" + response);
+//		switch (status) {
+//		case Constant.STATUS_CREATED:
+//			// Log.d("Login", status+":"+response);
+//			Toast.makeText(context, "Message sent successfully.",
+//					Toast.LENGTH_SHORT).show();
+//			msgDialog.dismiss();
+//			break;
+//
+//		default:
+//			Toast.makeText(getApplicationContext(),
+//					"Message not delivered,please try again!!",
+//					Toast.LENGTH_SHORT).show();
+//
+//			break;
+//
+//		}
+//
+//	}
 
 	/*
 	 * Invite Selected users
 	 */
-	private void sendSelectedPeopleToServer() {
-		// TODO Auto-generated method stub
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			Thread thread = new Thread(null, invitePeopleThread,
-					"Start send block unblock list to server");
-			thread.start();
-
-			// show progress dialog if needed
-			m_ProgressDialog = ProgressDialog.show(context, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
-	}
-
-	private Runnable invitePeopleThread = new Runnable() {
-		@Override
-		public void run() {
-
-			RestClient restClient = new RestClient(Constant.smBlockUnblockUrl);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			for (String key : selectedArrayList.keySet()) {
-
-				boolean value = selectedArrayList.get(key);
-
-				if (value) {
-
-					restClient.AddParam("users[]", key);
-				}
-
-			}
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.PUT);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			invitePeopleServerResponse = restClient.getResponse();
-			invitePeopleStatus = restClient.getResponseCode();
-
-			runOnUiThread(invitePeopleResponse);
-		}
-	};
-
-	private Runnable invitePeopleResponse = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleResponseInvitePeople(invitePeopleStatus,
-					invitePeopleServerResponse);
-
-			// dismiss progress dialog if needed
-
-			if(m_ProgressDialog!=null){
-				m_ProgressDialog.dismiss();
-			}
-			
-		}
-	};
-
-	public void handleResponseInvitePeople(int status, String response) {
-		// show proper message through Toast or Dialog
-		Log.d("Send Block Unblock Return Response", status + ":" + response);
-		switch (status) {
-		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-			Toast.makeText(context, "Request sent successfully.",
-					Toast.LENGTH_SHORT).show();
-
-			for (int i = 0; i < StaticValues.searchResult
-					.getSecondDegreePeoples().size(); i++) {
-
-				SecondDegreePeople p = StaticValues.searchResult
-						.getSecondDegreePeoples().get(i);
-
-				// StaticValues.searchResult.getSecondDegreePeoples().get(i)
-				// .setBlocked(selectedArrayList.get(p.getId()));
-
-			}
-			//
-			// populateListData();
-
-			break;
-
-		default:
-			Toast.makeText(getApplicationContext(),
-					"An unknown error occured. Please try again!!",
-					Toast.LENGTH_SHORT).show();
-			break;
-
-		}
-
-	}
+//	private void sendSelectedPeopleToServer() {
+//		// TODO Auto-generated method stub
+//		if (Utility.isConnectionAvailble(getApplicationContext())) {
+//
+//			Thread thread = new Thread(null, invitePeopleThread,
+//					"Start send block unblock list to server");
+//			thread.start();
+//
+//			// show progress dialog if needed
+//			m_ProgressDialog = ProgressDialog.show(context, getResources()
+//					.getString(R.string.please_wait_text), getResources()
+//					.getString(R.string.sending_request_text), true,true);
+//
+//		} else {
+//
+//			DialogsAndToasts
+//					.showNoInternetConnectionDialog(getApplicationContext());
+//		}
+//	}
+//
+//	private Runnable invitePeopleThread = new Runnable() {
+//		@Override
+//		public void run() {
+//
+//			RestClient restClient = new RestClient(Constant.smBlockUnblockUrl);
+//			restClient.AddHeader(Constant.authTokenParam,
+//					Utility.getAuthToken(context));
+//
+//			for (String key : selectedArrayList.keySet()) {
+//
+//				boolean value = selectedArrayList.get(key);
+//
+//				if (value) {
+//
+//					restClient.AddParam("users[]", key);
+//				}
+//
+//			}
+//
+//			try {
+//				restClient.Execute(RestClient.RequestMethod.PUT);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			invitePeopleServerResponse = restClient.getResponse();
+//			invitePeopleStatus = restClient.getResponseCode();
+//
+//			runOnUiThread(invitePeopleResponse);
+//		}
+//	};
+//
+//	private Runnable invitePeopleResponse = new Runnable() {
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			handleResponseInvitePeople(invitePeopleStatus,
+//					invitePeopleServerResponse);
+//
+//			// dismiss progress dialog if needed
+//
+//			if(m_ProgressDialog!=null){
+//				m_ProgressDialog.dismiss();
+//			}
+//			
+//		}
+//	};
+//
+//	public void handleResponseInvitePeople(int status, String response) {
+//		// show proper message through Toast or Dialog
+//		Log.d("Send Block Unblock Return Response", status + ":" + response);
+//		switch (status) {
+//		case Constant.STATUS_SUCCESS:
+//			// Log.d("Login", status+":"+response);
+//			Toast.makeText(context, "Request sent successfully.",
+//					Toast.LENGTH_SHORT).show();
+//
+//			for (int i = 0; i < StaticValues.searchResult
+//					.getSecondDegreePeoples().size(); i++) {
+//
+//				SecondDegreePeople p = StaticValues.searchResult
+//						.getSecondDegreePeoples().get(i);
+//
+//				// StaticValues.searchResult.getSecondDegreePeoples().get(i)
+//				// .setBlocked(selectedArrayList.get(p.getId()));
+//
+//			}
+//			//
+//			// populateListData();
+//
+//			break;
+//
+//		default:
+//			Toast.makeText(getApplicationContext(),
+//					"An unknown error occured. Please try again!!",
+//					Toast.LENGTH_SHORT).show();
+//			break;
+//
+//		}
+//
+//	}
 
 	// **** Invite fb friends ******************************
 
@@ -935,7 +935,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 	}
 
-	public class FbAPIsAuthListener implements AuthListener {
+	private class FbAPIsAuthListener implements AuthListener {
 
 		// @Override
 		@Override
@@ -956,7 +956,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	 * The Callback for notifying the application when log out starts and
 	 * finishes.
 	 */
-	public class FbAPIsLogoutListener implements LogoutListener {
+	private class FbAPIsLogoutListener implements LogoutListener {
 		// @Override
 		@Override
 		public void onLogoutBegin() {
@@ -1018,7 +1018,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		FBUtility.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
-	public void initInviteFriends() {
+	private void initInviteFriends() {
 		Log.d("PeopleInviteActivity Facebook", "Have to invite");
 
 		if (Utility.isConnectionAvailble(context)) {
@@ -1032,7 +1032,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public void showInvitationDialog() {
+	private void showInvitationDialog() {
 		
 		String idString = "";
 		if(idList!=null)
@@ -1059,7 +1059,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	 * callback for the apprequests dialog which sends an app request to user's
 	 * friends.
 	 */
-	public class AppRequestsListener extends BaseDialogListener {
+	private class AppRequestsListener extends BaseDialogListener {
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
@@ -1090,7 +1090,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	 * Hide Keybord
 	 */
 
-	public void hideKeybord() {
+	private void hideKeybord() {
 
 		// etSearchField
 		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1138,7 +1138,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			searchPanel.setVisibility(View.GONE);
 	}
 
-	public void showSearchPanel(boolean display) {
+	private void showSearchPanel(boolean display) {
 		if (display) {
 			searchPanel.setVisibility(View.VISIBLE);
 

@@ -38,6 +38,7 @@ public class MeetupRequestListActivity extends Activity {
 	private Context context;
 
 	ProgressDialog m_ProgressDialog;
+	
 	String meetupRequestResponse = "";
 	int meetupRequestStatus = 0;
 
@@ -63,7 +64,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	}
 
-	public void initialize() {
+	private void initialize() {
 		context = MeetupRequestListActivity.this;
 
 		imageLoader = new ImageLoader(context);
@@ -75,7 +76,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	}
 
-	public void getMeetupRequest() {
+	private void getMeetupRequest() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Thread thread = new Thread(null, meetupRequestThread,
@@ -131,7 +132,7 @@ public class MeetupRequestListActivity extends Activity {
 		}
 	};
 
-	public void handleResponseMeetupRequest(int status, String response) {
+	private void handleResponseMeetupRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.i("MEETUP REQ RESPONSE", status + ":" + response);
@@ -165,7 +166,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	}
 
-	public View getItemView(final MeetupRequest meetupRequest) {
+	private View getItemView(final MeetupRequest meetupRequest) {
 		final View itemView = inflater.inflate(R.layout.row_meetup_request,
 				null);
 
@@ -346,7 +347,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	// ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void responseToRequest(View itemView, String itemId, String response) {
+	private void responseToRequest(View itemView, String itemId, String response) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 
 			Log.e("ResponseToRequest", itemId + ":" + response);
@@ -409,7 +410,7 @@ public class MeetupRequestListActivity extends Activity {
 		}
 	};
 
-	public void handleResponseToRequest(int status, String response) {
+	private void handleResponseToRequest(int status, String response) {
 		// show proper message through Toast or Dialog
 
 		Log.d("Accept Request", status + ":" + response);
@@ -449,7 +450,7 @@ public class MeetupRequestListActivity extends Activity {
 		}
 	}
 
-	public void updateButtonStatus() {
+	private void updateButtonStatus() {
 		Button btnAcceptRequest = (Button) requestItemView
 				.findViewById(R.id.btnAcceptRequest);
 		Button btnDeclineRequest = (Button) requestItemView

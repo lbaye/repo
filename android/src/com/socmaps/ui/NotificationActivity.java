@@ -104,11 +104,11 @@ public class NotificationActivity extends TabActivity {
 
 	}
 
-	public TabHost getMyTabHost() {
+	 public TabHost getMyTabHost() {
 		return mTabHost;
 	}
 
-	public void initialize() {
+	private void initialize() {
 		buttonActionListener = new ButtonActionListener();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
