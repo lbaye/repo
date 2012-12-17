@@ -175,7 +175,6 @@ class Auth extends Base
 
             if ($user instanceof \Document\User) {
                 $this->debug(sprintf('Found existing fb user - %s', $user->getFirstName()));
-
                 $this->userRepository->setCurrentUser($user);
 
                 if (!empty($data['avatar'])) {
@@ -192,7 +191,9 @@ class Auth extends Base
             } else {
                 $this->debug('Not found existing facebook user, creating now.');
                 $user = $this->userRepository->insert($data);
-
+                // TODO: following two lines should be removed after bugfix from ios end
+                $avatar_url = "https://graph.facebook.com/" . $data['facebookId'] . "/picture?type=normal";
+                $this->userRepository->saveAvatarImage($user->getId(), $avatar_url);
                 $this->debug('New facebook user - ' . $user->getId());
             }
 
