@@ -32,7 +32,7 @@ class AdminUserController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return $this->redirect('login');
     }
 
     /**
@@ -88,7 +88,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
             $qb = $dm->createQueryBuilder('AdminUserBundle:User');
@@ -104,6 +104,9 @@ class AdminUserController extends Controller
                 'entities' => $entities,
                 'pager' => $pagerfanta,
             ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
         }
     }
 
@@ -161,7 +164,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
             if ('POST' == $request->getMethod()) {
@@ -326,7 +329,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
             $qb = $dm->createQueryBuilder('AdminUserBundle:Place');
@@ -344,6 +347,9 @@ class AdminUserController extends Controller
                 'entities' => $entities,
                 'pager' => $pagerfanta,
             ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
         }
     }
 
@@ -605,7 +611,7 @@ class AdminUserController extends Controller
     {
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
 
@@ -624,6 +630,9 @@ class AdminUserController extends Controller
                 'entities' => $entities,
                 'pager' => $pagerfanta,
             ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
         }
     }
 
@@ -685,7 +694,7 @@ class AdminUserController extends Controller
     {
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
             $qb = $dm->createQueryBuilder('AdminUserBundle:Event');
 
@@ -701,6 +710,9 @@ class AdminUserController extends Controller
                 'entities' => $entities,
                 'pager' => $pagerfanta,
             ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
         }
     }
 
@@ -739,7 +751,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
             $qb = $dm->createQueryBuilder('AdminUserBundle:User');
@@ -756,6 +768,9 @@ class AdminUserController extends Controller
                 'entities' => $entities,
                 'pager' => $pagerfanta,
             ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
         }
     }
 
@@ -770,7 +785,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
 
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
@@ -816,7 +831,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
 
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
@@ -861,7 +876,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
 
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
@@ -905,7 +920,7 @@ class AdminUserController extends Controller
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
 
-        if ($this->get('session')->get('user')->getId()) {
+        if ($this->get('session')->get('user')) {
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
             if ('POST' == $request->getMethod()) {
                 $form->bindRequest($request);
