@@ -8,5 +8,7 @@ composer.phar
 .svn
 .DS_Store
 nohup.out
+admin-console/vendor
+admin-console/app/cache
 
 !.gitignore
