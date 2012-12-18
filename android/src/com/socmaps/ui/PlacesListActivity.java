@@ -25,8 +25,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
@@ -49,8 +52,9 @@ import com.socmaps.util.Utility;
 public class PlacesListActivity extends Activity implements OnClickListener,
 		ListItemClickListener {
 
-	private Button btnBack;
+	private Button btnBack, btnNearToMe;
 	private ListView contentListView;
+	private ImageView ivSeparator;
 
 	private Context context;
 	private ContentListAdapter contentAdapter;
@@ -73,6 +77,10 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private int placesStatus;
 
 	private String personID = null;
+	LinearLayout buttonContainerTop;
+
+	String personName = "";
+	TextView titlePlaceEditSave;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,8 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		if (personID != null)
 			Log.d("Person ID", personID);
 
+		personName = getIntent().getStringExtra("PERSON_NAME");
+
 		initialize();
 
 	}
@@ -92,11 +102,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	protected void onResume() {
 
 		super.onResume();
-
-		// Testing purpose ************************
 		callAPI();
-
-		// getPlacesFromServer();
 		setListParameters();
 
 		Log.w("PlacesListActivity ", "onResume()");
@@ -131,6 +137,23 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		btnClearSearch = (Button) findViewById(R.id.btnClearSearch);
 		btnClearSearch.setOnClickListener(this);
 
+		buttonContainerTop = (LinearLayout) findViewById(R.id.buttonContainerTop);
+		btnNearToMe = (Button) findViewById(R.id.btnNearToMe);
+		btnNearToMe.setOnClickListener(this);
+		ivSeparator = (ImageView) findViewById(R.id.ivSeparator);
+
+		if (personID != null) {
+			btnNearToMe.setVisibility(View.INVISIBLE);
+			ivSeparator.setVisibility(View.INVISIBLE);
+			buttonContainerTop.setVisibility(View.GONE);
+		}
+
+		titlePlaceEditSave = (TextView) findViewById(R.id.titlePlaceEditSave);
+
+		if (personName != null && !personName.equals("")) {
+			titlePlaceEditSave.setText(personName + "'s" + " Places");
+		}
+
 	}
 
 	@Override
@@ -150,6 +173,11 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 			etSearchField.setText("");
 			doSearch();
 			// hideKeybord();
+		}
+
+		else if (v == btnNearToMe) {
+			Intent intentToGoPlace = new Intent(context, PlacesNearToMe.class);
+			startActivity(intentToGoPlace);
 		} else if (v == btnBack) {
 
 			finish();
@@ -347,82 +375,6 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		startActivity(intent);
 	}
 
-	/*
-	 * Places places from server
-	 */
-
-	/*
-	 * private void getPlacesFromServer() { // TODO Auto-generated method stub
-	 * if (Utility.isConnectionAvailble(getApplicationContext())) {
-	 * 
-	 * Thread thread = new Thread(null, placesThread,
-	 * "Start get places from server"); thread.start();
-	 * 
-	 * // show progress dialog if needed m_ProgressDialog =
-	 * ProgressDialog.show(context, getResources()
-	 * .getString(R.string.please_wait_text), getResources()
-	 * .getString(R.string.sending_request_text), true, true);
-	 * 
-	 * } else {
-	 * 
-	 * DialogsAndToasts
-	 * .showNoInternetConnectionDialog(getApplicationContext()); } }
-	 * 
-	 * private Runnable placesThread = new Runnable() {
-	 * 
-	 * @Override public void run() { // TODO Auto-generated method stub
-	 * RestClient restClient; if (personID == null) { restClient = new
-	 * RestClient(Constant.smPlaces); } else { restClient = new
-	 * RestClient(Constant.smServerUrl + "/users" + "/" + personID + "/places");
-	 * Log.i("PlaceList URL", Constant.smServerUrl + "/users" + "/" + personID +
-	 * "/places"); }
-	 * 
-	 * restClient.AddHeader(Constant.authTokenParam,
-	 * Utility.getAuthToken(context));
-	 * 
-	 * try { restClient.Execute(RestClient.RequestMethod.GET); } catch
-	 * (Exception e) { e.printStackTrace(); }
-	 * 
-	 * placesResponse = restClient.getResponse(); placesStatus =
-	 * restClient.getResponseCode();
-	 * 
-	 * runOnUiThread(placesResponseFromServer); } };
-	 * 
-	 * private Runnable placesResponseFromServer = new Runnable() {
-	 * 
-	 * @Override public void run() { // TODO Auto-generated method stub
-	 * handleResponsePlaces(placesStatus, placesResponse);
-	 * 
-	 * // dismiss progress dialog if needed
-	 * 
-	 * if (m_ProgressDialog != null) { m_ProgressDialog.dismiss(); } } };
-	 * 
-	 * public void handleResponsePlaces(int status, String response) { // show
-	 * proper message through Toast or Dialog
-	 * Log.w("Got places response from server", status + ":" + response); switch
-	 * (status) { case Constant.STATUS_SUCCESS: // Log.d("Login",
-	 * status+":"+response); // Toast.makeText(context,
-	 * "Places response successful.", // Toast.LENGTH_SHORT).show();
-	 * 
-	 * listMasterContent.clear(); listMasterContent =
-	 * ServerResponseParser.parseSavedPlaces(response);
-	 * 
-	 * sortMasterListData();
-	 * 
-	 * updateContentList(listMasterContent); updateDisplayList(listContent);
-	 * 
-	 * break; case Constant.STATUS_SUCCESS_NODATA:
-	 * Toast.makeText(getApplicationContext(), "No place found.",
-	 * Toast.LENGTH_SHORT).show(); break; default:
-	 * Toast.makeText(getApplicationContext(),
-	 * "An unknown error occured. Please try again!!",
-	 * Toast.LENGTH_SHORT).show(); break;
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
 	private void callAPI() {
 
 		String url;
@@ -440,7 +392,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 				REQUEST_TYPE.GET_SERVER_DATA, true, getResources().getString(
 						R.string.please_wait_text), getResources().getString(
 						R.string.sending_request_text),
-				new BackProcessCallBackListener(),true);
+				new BackProcessCallBackListener(), true);
 
 		backProcess.execute(RestClient.RequestMethod.GET);
 	}

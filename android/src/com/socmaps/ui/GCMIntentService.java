@@ -43,6 +43,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@SuppressWarnings("hiding")
 	private static final String TAG = "GCMIntentService";
 
+	/**
+	 * This constructor refers SENDER_ID; 
+	 * 
+	 */
 	public GCMIntentService() {
 		super(SENDER_ID);
 	}

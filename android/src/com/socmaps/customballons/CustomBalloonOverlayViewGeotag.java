@@ -31,13 +31,13 @@ public class CustomBalloonOverlayViewGeotag<Item extends OverlayItem> extends
 	//private ImageView image;
 	//private ImageDownloader imageDownloader;
 	
-	public CustomBalloonOverlayViewGeotag(Context context,
+	 CustomBalloonOverlayViewGeotag(Context context,
 			int balloonBottomOffset, ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		//this.imageDownloader = imageDownloader;
 	}
 
-	public CustomBalloonOverlayViewGeotag(Context context,
+	 CustomBalloonOverlayViewGeotag(Context context,
 			int balloonBottomOffset) {
 		super(context, balloonBottomOffset);
 	}

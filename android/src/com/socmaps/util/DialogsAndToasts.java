@@ -13,8 +13,13 @@ import com.socmaps.ui.R;
 
 public class DialogsAndToasts {
 
-	public static void showNoInternetConnectionDialog(final Context c) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(c);
+	/**
+	 * Shows appropriate Dialog if Internet connection is unavailable.
+	 * 
+	 * @param context Currently active Context
+	 */
+	public static void showNoInternetConnectionDialog(final Context context) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle("Error!!");
 		builder.setMessage("Sorry! No internet connection!!");
 		builder.setCancelable(true)
@@ -22,7 +27,7 @@ public class DialogsAndToasts {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								((Activity) c)
+								((Activity) context)
 										.startActivity(new Intent(
 												android.provider.Settings.ACTION_WIRELESS_SETTINGS));
 							}
@@ -37,9 +42,16 @@ public class DialogsAndToasts {
 		alert.show();
 	}
 
-	public static Dialog showExtendedInfoDialog(Context c, int layoutResId) {
+	/**
+	 * Generate Dialog with custom layout.
+	 * 
+	 * @param context Currently active Context
+	 * @param layoutResId Resource ID of the layout
+	 * @return Dialog with custom layout
+	 */
+	public static Dialog showExtendedInfoDialog(Context context, int layoutResId) {
 		
-		Dialog dialog = new Dialog(c,R.style.CustomDialogTheme);
+		Dialog dialog = new Dialog(context,R.style.CustomDialogTheme);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(layoutResId);
 
@@ -48,8 +60,13 @@ public class DialogsAndToasts {
 		return dialog;
 	}
 
-	public static Dialog showSendMessage(final Context c) {
-		Dialog dialog = new Dialog(c);
+	/**
+	 * Create custom Dialog for sending message.
+	 * @param context Currently active Context
+	 * @return Custom Dialog for sending message
+	 */
+	public static Dialog showSendMessage(final Context context) {
+		Dialog dialog = new Dialog(context);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.send_message_dialog_layout);
 
@@ -58,8 +75,14 @@ public class DialogsAndToasts {
 		return dialog;
 	}
 
-	public static Dialog showAddFrnd(final Context c) {
-		Dialog dialog = new Dialog(c);
+	/**
+	 * Create custom Dialog for sending friend request.
+	 * 
+	 * @param context Currently active Context
+	 * @return Custom Dialog for sending friend request
+	 */
+	public static Dialog showAddFrnd(final Context context) {
+		Dialog dialog = new Dialog(context);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.send_friend_request_dialog_layout);
 

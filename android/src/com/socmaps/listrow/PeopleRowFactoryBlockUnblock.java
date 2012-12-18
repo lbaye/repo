@@ -19,7 +19,21 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PeopleRowFactoryBlockUnblock {
+public class PeopleRowFactoryBlockUnblock { 
+	
+	/** 
+	 * This method returns a View, that view is associates with corresponding layout. 
+	 * 
+	 * @param inflater to inflate the corresponding layout. 
+	 * @param peopleObj an object of type People. 
+	 * @param con current state of the application/object.
+	 * @param licl which is used for a specific action when button is clicked. 
+	 * @param convertView as view. 
+	 * @param il which is used to download image from a specific url. 
+	 * @param listItemClickListenerPeople  which is used for a specific action when button is clicked. 
+	 * @return View 
+	 * @see View
+	 */
 
 	public static View getView(final LayoutInflater inflater,
 			final Object peopleObj, final Context con,

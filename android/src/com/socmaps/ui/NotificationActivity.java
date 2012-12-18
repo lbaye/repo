@@ -102,7 +102,14 @@ public class NotificationActivity extends TabActivity {
 			}
 		}
 
-	}
+	} 
+	
+	/**
+	 * This method is used to get the Tab Host. 
+	 * 
+	 * @return TabHost 
+	 * @see TabHost
+	 */
 
 	 public TabHost getMyTabHost() {
 		return mTabHost;

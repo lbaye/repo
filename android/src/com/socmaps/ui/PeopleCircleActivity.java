@@ -49,7 +49,13 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 	private static boolean isRefreshCircleList = false;
 
-	private static PeopleCircleActivity ins = null;
+	private static PeopleCircleActivity ins = null; 
+	
+	/** 
+	 * This method holds an object which is static. 
+	 * 
+	 * @return PeopleCircleActivity
+	 */
 
 	public static PeopleCircleActivity getIns() {
 		return ins;
@@ -171,6 +177,11 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		}
 
 	}
+	
+	/**
+	 * This method generates Circle list of a person. 
+	 * 
+	 */
 
 	public void generateCircleView() {
 

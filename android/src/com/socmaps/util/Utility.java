@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -48,6 +50,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,12 +74,15 @@ public class Utility {
 
 	private static final double metricDivisor = 1000;
 	private static final double imperialDivisor = 1760;
-	
+
 	/**
-	 * Returns title of an Object. Object should be instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
+	 * Returns title of an Object. Object should be instance of People, Place,
+	 * SecondDegreePeople, MyInfo, Event or GeoTag
 	 * 
-	 * @param item Object which is an instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
-	 * @return  the title text
+	 * @param item
+	 *            Object which is an instance of People, Place,
+	 *            SecondDegreePeople, MyInfo, Event or GeoTag
+	 * @return the title text
 	 * @see String
 	 */
 	public static String getFieldText(Object item) {
@@ -92,7 +98,7 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			//return name.trim().toLowerCase();
+			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof SecondDegreePeople) {
 
@@ -106,7 +112,7 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			//return name.trim().toLowerCase();
+			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof MyInfo) {
 
@@ -120,19 +126,19 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			//return name.trim().toLowerCase();
+			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof Place) {
 			Place temp = ((Place) item);
-			//return temp.getName().toString().toLowerCase();
+			// return temp.getName().toString().toLowerCase();
 			return temp.getName().toString();
 		} else if (item instanceof Event) {
 			Event temp = ((Event) item);
-			//return temp.getEventTitle().toString().toLowerCase();
+			// return temp.getEventTitle().toString().toLowerCase();
 			return temp.getEventTitle().toString();
 		} else if (item instanceof GeoTag) {
 			GeoTag temp = ((GeoTag) item);
-			//return temp.getTitle().toString().toLowerCase();
+			// return temp.getTitle().toString().toLowerCase();
 			return temp.getTitle().toString();
 		} else if (item instanceof String)
 			return item.toString();
@@ -140,14 +146,16 @@ public class Utility {
 			return "";
 	}
 
-	
 	/**
-	 * Returns a List of searched object based on Object's title({@link #getFieldText(Object)}).
-	 * Object should be instance of People, Place, SecondDegreePeople, MyInfo, Event or GeoTag
-	 *  
-	 * @param masterList  List of object to be searched
-	 * @param key  search key on which search would be performed.
-	 * @return  Searched result of List associated with the search key.
+	 * Returns a List of searched object based on Object's title(
+	 * {@link #getFieldText(Object)}). Object should be instance of People,
+	 * Place, SecondDegreePeople, MyInfo, Event or GeoTag
+	 * 
+	 * @param masterList
+	 *            List of object to be searched
+	 * @param key
+	 *            search key on which search would be performed.
+	 * @return Searched result of List associated with the search key.
 	 * @see #getFieldText(Object)
 	 * @see List
 	 */
@@ -187,14 +195,17 @@ public class Utility {
 
 	}
 
-	
 	/**
-	 * Returns a list of circle with People whose name match with the search key.
+	 * Returns a list of circle with People whose name match with the search
+	 * key.
 	 * 
-	 * @param masterList Original circle list.
-	 * @param orgFriendList Original friend list.
-	 * @param key People name or search text.
-	 * @return List of circles.  
+	 * @param masterList
+	 *            Original circle list.
+	 * @param orgFriendList
+	 *            Original friend list.
+	 * @param key
+	 *            People name or search text.
+	 * @return List of circles.
 	 */
 	public static List<Circle> getSearchResultFromCircle(
 			List<Circle> masterList, List<People> orgFriendList, String key) {
@@ -264,11 +275,15 @@ public class Utility {
 		return newCircles;
 
 	}
-	
+
 	/**
-	 * Converts a distance with specified unit and returns as text that may be used to display on screen. 
-	 * @param distance in meter
-	 * @param unit metric or imperial
+	 * Converts a distance with specified unit and returns as text that may be
+	 * used to display on screen.
+	 * 
+	 * @param distance
+	 *            in meter
+	 * @param unit
+	 *            metric or imperial
 	 * @return Formated distance
 	 * @see String
 	 */
@@ -304,7 +319,8 @@ public class Utility {
 	/**
 	 * Converts a UTC time to local time and return as Date.
 	 * 
-	 * @param timeEntity UTC time as TimeEntity
+	 * @param timeEntity
+	 *            UTC time as TimeEntity
 	 * @return Converted local time
 	 * @see com.socmaps.entity.TimeEntity
 	 * @see Date
@@ -313,7 +329,8 @@ public class Utility {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss");
 		// simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity.getTimeZone()));
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity
+				.getTimeZone()));
 		try {
 			return simpleDateFormat.parse(timeEntity.getDateTimeValue());
 		} catch (ParseException e) {
@@ -326,7 +343,8 @@ public class Utility {
 	/**
 	 * Converts a TimeEntity to formated text to display Event's date and time.
 	 * 
-	 * @param timeEntity UTC time of Event as TimeEntity
+	 * @param timeEntity
+	 *            UTC time of Event as TimeEntity
 	 * @return formated time of the event.
 	 * @see com.socmaps.entity.TimeEntity
 	 * @see String
@@ -348,7 +366,9 @@ public class Utility {
 	}
 
 	/**
-	 * Returns Time zone offset of the system as String. Value would vary from "-12:00" to "+13:00"
+	 * Returns Time zone offset of the system as String. Value would vary from
+	 * "-12:00" to "+13:00"
+	 * 
 	 * @return Offset
 	 * @see String
 	 */
@@ -396,12 +416,12 @@ public class Utility {
 
 	private static SimpleDateFormat eventListTimeFormater = new SimpleDateFormat(
 			"EEEE, MMMM dd, yyyy HH:mm");
-	
 
 	/**
 	 * Converts a TimeEntity to formated text to display date and time.
 	 * 
-	 * @param timeEntity UTC time as TimeEntity
+	 * @param timeEntity
+	 *            UTC time as TimeEntity
 	 * @return formated time.
 	 * @see com.socmaps.entity.TimeEntity
 	 * @see String
@@ -423,11 +443,12 @@ public class Utility {
 		}
 	}
 
-	
 	/**
-	 * Converts a TimeEntity to formated text to display date and time on Map view annotations.
+	 * Converts a TimeEntity to formated text to display date and time on Map
+	 * view annotations.
 	 * 
-	 * @param timeEntity UTC time as TimeEntity
+	 * @param timeEntity
+	 *            UTC time as TimeEntity
 	 * @return formated time.
 	 * @see com.socmaps.entity.TimeEntity
 	 * @see String
@@ -463,8 +484,11 @@ public class Utility {
 	}
 
 	/**
-	 * Returns formated text of a given distance that may be used to display on screen. 
-	 * @param distance in metric or imperial
+	 * Returns formated text of a given distance that may be used to display on
+	 * screen.
+	 * 
+	 * @param distance
+	 *            in metric or imperial
 	 * @return Formated distance
 	 * @see String
 	 */
@@ -474,7 +498,9 @@ public class Utility {
 
 	/**
 	 * Returns the JSONString from a server response associated with "result"
-	 * @param responseString response string from server
+	 * 
+	 * @param responseString
+	 *            response string from server
 	 * @return JSONString
 	 */
 	public static String getJSONStringFromServerResponse(String responseString) {
@@ -492,8 +518,9 @@ public class Utility {
 	/**
 	 * Determines if Internet connection is available or not on the device.
 	 * 
-	 * @param context Currently active Context.
-	 * @return true if connection available, false otherwise.
+	 * @param context
+	 *            Currently active Context.
+	 * @return true if Internet connection is available, false otherwise.
 	 * @see Context
 	 */
 	public static boolean isConnectionAvailble(Context context) {
@@ -509,34 +536,35 @@ public class Utility {
 	/**
 	 * Determines a service is running or not with a given name.
 	 * 
-	 * @param serviceName name of the service.
-	 * @param context Active context
+	 * @param serviceName
+	 *            name of the service.
+	 * @param context
+	 *            Active context
 	 * @return true if service is running, false otherwise
 	 * @see Context
 	 */
-	public static boolean isServiceRunning(String serviceName,
-			Context context) {
+	public static boolean isServiceRunning(String serviceName, Context context) {
 		final ActivityManager activityManager = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
 		final List<RunningServiceInfo> services = activityManager
 				.getRunningServices(Integer.MAX_VALUE);
 
 		for (RunningServiceInfo runningServiceInfo : services) {
-			if (runningServiceInfo.service.getClassName().equals(
-					serviceName)) {
+			if (runningServiceInfo.service.getClassName().equals(serviceName)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Returns the MD5 Hash value of a given string.
 	 * 
-	 * @param string String that needed to be converted
+	 * @param string
+	 *            String that needed to be converted
 	 * @return MD5 Hash value
-	 * @exception NoSuchAlgorithmException returns empty string.
+	 * @exception NoSuchAlgorithmException
+	 *                returns empty string.
 	 */
 	public static String toMD5Hash(String string) {
 		try {
@@ -563,10 +591,11 @@ public class Utility {
 		return "";
 	}
 
-	
 	/**
 	 * Determines if this Email id is valid or not
-	 * @param email Email id to check.
+	 * 
+	 * @param email
+	 *            Email id to check.
 	 * @return true if valid, false otherwise
 	 */
 	public static boolean isValidEmailID(String email) {
@@ -585,8 +614,11 @@ public class Utility {
 	}
 
 	/**
-	 * returns the system date.
-	 * @return System date with "yyyy-MM-dd HH:mm:ss" format.
+	 * returns the system date as String.
+	 * 
+	 * @return System date as String with "yyyy-MM-dd HH:mm:ss" format.
+	 * @see String
+	 * @see SimpleDateFormat
 	 */
 	public static String getdate() {
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(
@@ -597,12 +629,24 @@ public class Utility {
 		// return "2012-01-04 11:49:32";
 	}
 
+	/**
+	 * Returns the current UNIX Timestamp.
+	 * 
+	 * @return UNIX Timestamp of the system.
+	 */
 	public static long getUnixTimestamp() {
 		long unixTime = System.currentTimeMillis() / 1000L;
 
 		return unixTime;
 	}
 
+	/**
+	 * returns the system date as String.
+	 * 
+	 * @return System date as String with specified format.
+	 * @see String
+	 * @see SimpleDateFormat
+	 */
 	public static String getdate(String format) {
 		// "yyyy-MM-dd" = "2012-07-30"
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(format, Locale.US);
@@ -612,6 +656,14 @@ public class Utility {
 		// return "2012-01-04 11:49:32";
 	}
 
+	/**
+	 * Parses Date of Birth obtained from Facebook and returns DOB as
+	 * "yyyy-MM-dd" format.
+	 * 
+	 * @param fbdob
+	 *            Date of birth obtained from Facebook in "MM/dd/yyyy" format
+	 * @return Formated date of birth in "yyyy-MM-dd" format.
+	 */
 	public static String parseFbDob(String fbdob) {
 
 		String[] dobArray = fbdob.split("/");
@@ -622,6 +674,17 @@ public class Utility {
 		return dobFormatted;
 	}
 
+	/**
+	 * Calculates age and returns age as year.
+	 * 
+	 * @param year
+	 *            Year of the Date of Birth in "yyyy" format.
+	 * @param month
+	 *            Month of the Date of Birth in "MM" format.
+	 * @param day
+	 *            Day of the Date of Birth in "dd" format.
+	 * @return Age in years.
+	 */
 	public static int calculateAge(int year, int month, int day) {
 
 		Calendar birthCal = new GregorianCalendar(year, month, day);
@@ -642,6 +705,14 @@ public class Utility {
 		return age;
 	}
 
+	/**
+	 * Returns timestamp difference between a given date-time and system
+	 * date-time.
+	 * 
+	 * @param dateTimeString
+	 *            Date-time in "yyyy-MM-dd HH:mm:ss" format.
+	 * @return Timestamp difference
+	 */
 	public static long getTimeDifference(String dateTimeString) {
 
 		long timeDifference = 0;
@@ -662,8 +733,14 @@ public class Utility {
 		return timeDifference;
 	}
 
+	/**
+	 * Calculates age and returns age as year.
+	 * 
+	 * @param dob
+	 *            Date of Birth in "yyyy-MM-dd" format.
+	 * @return Age in years.
+	 */
 	public static int calculateAge(String dob) {
-		// String dob = "1984-09-20";
 
 		int yearDOB = Integer.parseInt(dob.substring(0, 4));
 		int monthDOB = Integer.parseInt(dob.substring(5, 7));
@@ -694,13 +771,21 @@ public class Utility {
 		return age;
 	}
 
-	public static Calendar stringToCalendar(String strDate) {
+	/**
+	 * Converts a date string to Calendar.
+	 * 
+	 * @param dateString
+	 *            in "yyyy-MM-dd HH:mm:ss" format.
+	 * @return Calendar object converted from dateString
+	 * @see Calendar
+	 */
+	public static Calendar stringToCalendar(String dateString) {
 
 		try {
 			String FORMAT_DATETIME = "yyyy-MM-dd HH:mm:ss";
 			SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATETIME);
 			Date date;
-			date = sdf.parse(strDate);
+			date = sdf.parse(dateString);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 
@@ -713,6 +798,18 @@ public class Utility {
 		return null;
 	}
 
+	/**
+	 * Saves the user's login credentials in Shared Preferences.
+	 * 
+	 * @param email
+	 *            User's email id.
+	 * @param password
+	 *            User's password.
+	 * @param context
+	 *            Currently active context.
+	 * @see SharedPreferences
+	 * @see Context
+	 */
 	public static void storeLoginInfo(String email, String password,
 			Context context) {
 		PreferenceConnector.writeString(context, "email", email);
@@ -721,6 +818,21 @@ public class Utility {
 
 	}
 
+	/**
+	 * Saves user's information obtained from server in Shared Preferences.
+	 * 
+	 * @param id
+	 *            User ID generated by server.
+	 * @param authToken
+	 *            User Auth-Token generated from server.
+	 * @param userData
+	 *            User information obtained from server during login, a valid
+	 *            JSON String.
+	 * @param context
+	 *            Currently active context.
+	 * @see SharedPreferences
+	 * @see Context
+	 */
 	public static void storeSession(String id, String authToken,
 			String userData, Context context) {
 		PreferenceConnector.writeString(context, "id", id);
@@ -729,6 +841,14 @@ public class Utility {
 		PreferenceConnector.writeBoolean(context, "isLoggedInKey", true);
 	}
 
+	/**
+	 * Removes active user's information saved in SharedPreferences
+	 * 
+	 * @param context
+	 *            Currently active Context
+	 * @see SharedPreferences
+	 * @see Context
+	 */
 	public static void destroySession(Context context) {
 		PreferenceConnector.writeString(context, "id", null);
 		PreferenceConnector.writeString(context, "authToken", null);
@@ -736,67 +856,207 @@ public class Utility {
 		PreferenceConnector.writeBoolean(context, "isLoggedInKey", false);
 	}
 
+	/**
+	 * Determines if any user is currently logged in into the application.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return true if logged in, false otherwise.
+	 * @see Context
+	 */
 	public static boolean isLoggedIn(Context context) {
 		return PreferenceConnector.readBoolean(context, "isLoggedInKey", false);
 	}
 
+	/**
+	 * Determines if active user choose to remember login credentials.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return true if choose to remember, false otherwise.
+	 * @see Context
+	 */
 	public static boolean isRememberedLoginInfo(Context context) {
 		return PreferenceConnector.readBoolean(context, "isRememberd", false);
 	}
 
+	/**
+	 * Determines if user already authenticated for beta version.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return true if authenticated, false otherwise.
+	 * @see Context
+	 */
 	public static boolean isBetaAuthenticated(Context context) {
 		return PreferenceConnector.readBoolean(context, "isBetaAuth", false);
 	}
 
+	/**
+	 * Saves beta version authentication status.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param status
+	 *            true if authenticated, false otherwise.
+	 * @see Context
+	 */
 	public static void setBetaAuthenticationStatus(Context context,
 			boolean status) {
 		PreferenceConnector.writeBoolean(context, "isBetaAuth", status);
 	}
 
+	/**
+	 * Returns the Auth-Token of currently logged in user.
+	 * 
+	 * @param context
+	 *            Currently active Context
+	 * @return Auth-Token of the active user.
+	 * @see Context
+	 */
 	public static String getAuthToken(Context context) {
 		return PreferenceConnector.readString(context, "authToken", null);
 	}
 
+	/**
+	 * Returns currently logged in user's information.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return User's information obtained from server as JSON.
+	 * @see Context
+	 */
 	public static String getUserData(Context context) {
 		return PreferenceConnector.readString(context, "userData", null);
 	}
 
+	/**
+	 * Returns currently logged in user's ID.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return User's ID obtained from server.
+	 * @see Context
+	 */
 	public static String getUserId(Context context) {
 		return PreferenceConnector.readString(context, "id", null);
 	}
 
+	/**
+	 * Returns currently logged in user's Email ID.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return User's Email ID used to register and login.
+	 * @see Context
+	 */
 	public static String getEmail(Context context) {
 		return PreferenceConnector.readString(context, "email", null);
 	}
 
+	/**
+	 * Returns currently logged in user's password.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return User's password used to register and login.
+	 * @see Context
+	 */
 	public static String getPassword(Context context) {
 		return PreferenceConnector.readString(context, "password", null);
 	}
 
+	/**
+	 * Saves user's password in Shared Preferences.
+	 * 
+	 * @param password
+	 *            User's password used to register and login.
+	 * @param context
+	 *            Currently active Context.
+	 * @see Context
+	 * @see SharedPreferences
+	 */
 	public static void setPassword(String password, Context context) {
 		PreferenceConnector.writeString(context, "password", password);
 
 	}
 
+	/**
+	 * Saves user's profile image in Shared Preferences if user logged in
+	 * through Facebook
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param avatarString
+	 *            User's profile image encoded to Base64
+	 * @see SharedPreferences
+	 * @see Context
+	 * @see Base64
+	 */
 	public static void setFacebookImage(Context context, String avatarString) {
 		PreferenceConnector.writeString(context, "fbavatar", avatarString);
 	}
 
+	/**
+	 * Returns user's profile image if logged-in through Facebook.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return Base64 encoded user's profile image.
+	 * @see Context
+	 * @see Base64
+	 */
 	public static String getFacebookImage(Context context) {
 		return PreferenceConnector.readString(context, "fbavatar", null);
 	}
 
+	/**
+	 * Saves if Facebook invitation dialog for application is already displayed
+	 * to user or not in Shared Preferences.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param flag
+	 *            true if yes, false otherwise.
+	 * @see Context
+	 * @see SharedPreferences
+	 */
 	public static void setFacebookInvitationDisplayStatus(Context context,
 			boolean flag) {
 		PreferenceConnector
 				.writeBoolean(context, "fbinvitedisplaystatus", flag);
 	}
 
+	/**
+	 * Determines if Facebook invitation dialog for application is already
+	 * displayed to user or not.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @return true if yes, false otherwise.
+	 * @see Context
+	 */
 	public static boolean getFacebookInvitationDisplayStatus(Context context) {
 		return PreferenceConnector.readBoolean(context,
 				"fbinvitedisplaystatus", false);
 	}
 
+	/**
+	 * Converts an image Uri and returns as Bitmap image.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param uri
+	 *            Image Uri.
+	 * @param THUMBNAIL_SIZE
+	 *            Desired size of the Bitmap image.
+	 * @return Bitmap image obtained from Uri.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @see Uri
+	 * @see Bitmap
+	 * @see BitmapFactory
+	 */
 	public static Bitmap getThumbnail(Context context, Uri uri,
 			int THUMBNAIL_SIZE) throws FileNotFoundException, IOException {
 		InputStream input = context.getContentResolver().openInputStream(uri);
@@ -835,31 +1095,18 @@ public class Utility {
 			return k;
 	}
 
-	/*
-	 * public static Bitmap resizeBitmap(Bitmap inputBitmap, int width, int
-	 * height) { Bitmap scaledBitmap;
+	/**
+	 * Resizes a Bitmap image to desired size.
 	 * 
-	 * int orgWidth = inputBitmap.getWidth(); int orgHeight =
-	 * inputBitmap.getHeight();
-	 * 
-	 * int newWidth = width; int newHeight = height;
-	 * 
-	 * if (width <= orgWidth || height <= orgHeight) { newHeight = orgHeight;
-	 * newWidth = orgWidth; } else if (width > 0 && height > 0) { newHeight =
-	 * height; newWidth = width; } else if (height == 0) { // fixed width,
-	 * height should be variable newWidth = width; newHeight = (int) ((orgHeight
-	 * / orgWidth) * newWidth);
-	 * 
-	 * } else if (width == 0) { // fixed height, width should be variable
-	 * newHeight = height; newWidth = (int) ((orgWidth / orgHeight) *
-	 * newHeight); }
-	 * 
-	 * scaledBitmap = Bitmap.createScaledBitmap(inputBitmap, newWidth,
-	 * newHeight, false);
-	 * 
-	 * return scaledBitmap; }
+	 * @param inputBitmap
+	 *            Bitmap image that needed to be scaled.
+	 * @param width
+	 *            Desired new width.
+	 * @param height
+	 *            Desired new height.
+	 * @return Bitmap image sacled with desired height and width.
+	 * @see Bitmap
 	 */
-
 	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width, int height) {
 		if (width == 0) {
 			width = Constant.thumbWidth;
@@ -871,6 +1118,20 @@ public class Utility {
 		return Bitmap.createScaledBitmap(inputBitmap, width, height, true);
 	}
 
+	/**
+	 * Resizes a Bitmap image to desired size.
+	 * 
+	 * @param inputBitmap
+	 *            Bitmap image that needed to be scaled.
+	 * @param width
+	 *            Desired new width.
+	 * @param height
+	 *            Desired new height.
+	 * @param keepAspectRatio
+	 *            true if aspect ratio should be maintained, false otherwise
+	 * @return Bitmap image sacled with desired height and width.
+	 * @see Bitmap
+	 */
 	public static Bitmap resizeBitmap(Bitmap inputBitmap, int width,
 			int height, boolean keepAspectRatio) {
 
@@ -898,6 +1159,15 @@ public class Utility {
 
 	}
 
+	/**
+	 * Returns Bitmap image from a URL.
+	 * 
+	 * @param url
+	 *            URL of the image.
+	 * @return Bitmap image from URL
+	 * @see Bitmap
+	 * @see BitmapFactory
+	 */
 	public static Bitmap loadBitmapFromURL(String url) {
 		Bitmap bm = null;
 		InputStream is = null;
@@ -908,8 +1178,8 @@ public class Utility {
 			is = conn.getInputStream();
 			bis = new BufferedInputStream(is, 8192);
 			bm = BitmapFactory.decodeStream(bis);
-		} catch(FileNotFoundException e){
-			
+		} catch (FileNotFoundException e) {
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -931,6 +1201,15 @@ public class Utility {
 		return bm;
 	}
 
+	/**
+	 * Returns Drawable from a URL.
+	 * 
+	 * @param url
+	 *            URL of the image.
+	 * @return Drawable from the URL.
+	 * @throws IOException
+	 * @see Drawable
+	 */
 	public static Drawable drawableFromUrl(String url) throws IOException {
 		Bitmap x;
 
@@ -943,6 +1222,17 @@ public class Utility {
 		return new BitmapDrawable(x);
 	}
 
+	/**
+	 * Concates List of String items and returns as String.
+	 * 
+	 * @param items
+	 *            List of String items
+	 * @param conjunction
+	 *            Concatenation string between items.
+	 * @return String after concatenation.
+	 * @see List
+	 * @see String
+	 */
 	public static String joinString(List<String> items, String conjunction) {
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
@@ -956,6 +1246,20 @@ public class Utility {
 		return sb.toString();
 	}
 
+	/**
+	 * Returns a list of IDs of people who are selected in List of People and
+	 * Circle.
+	 * 
+	 * @param selectedCircles
+	 *            Selected Circle list
+	 * @param selectedFriends
+	 *            Selected People list.
+	 * @return List of IDs as String.
+	 * @see List
+	 * @see String
+	 * @see People
+	 * @see Circle
+	 */
 	public static List<String> getPeopleListFromFriendsAndCircles(
 			HashMap<String, Boolean> selectedCircles,
 			HashMap<String, Boolean> selectedFriends) {
@@ -1001,6 +1305,16 @@ public class Utility {
 		return mergedList;
 	}
 
+	/**
+	 * Retrieves IDs from HashMap that are set true and returns as a List
+	 * 
+	 * @param map
+	 *            HashMap of IDs with corresponding boolean value.
+	 * @return List of IDs as String
+	 * @see HashMap
+	 * @see List
+	 * @see String
+	 */
 	public static List<String> getListFromHashMap(HashMap<String, Boolean> map) {
 		List<String> list = new ArrayList<String>();
 
@@ -1023,6 +1337,20 @@ public class Utility {
 		return list;
 	}
 
+	/**
+	 * Retrieves address for a corresponding Location object.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param location
+	 *            Location object.
+	 * @param handler
+	 *            Handler to fire appropriate event after address retrieved
+	 *            successfully.
+	 * @see Location
+	 * @see Handler
+	 * @see Context
+	 */
 	public static void getAddressFromLocation(final Context context,
 			final Location location, final Handler handler) {
 		Thread thread = new Thread() {
@@ -1058,6 +1386,21 @@ public class Utility {
 		thread.start();
 	}
 
+	/**
+	 * Retrieves address for corresponding Latitude and Longitude.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param lat
+	 *            Latitude of the location.
+	 * @param lng
+	 *            Longitude of the location.
+	 * @param handler
+	 *            Handler to fire appropriate event after address retrieved
+	 *            successfully.
+	 * @see Handler
+	 * @see Context
+	 */
 	public static void getAddressFromLocation(final Context context,
 			final double lat, final double lng, final Handler handler) {
 		Thread thread = new Thread() {
@@ -1092,7 +1435,21 @@ public class Utility {
 		thread.start();
 	}
 
-	public static void getAddressByCoordinate(final double lat,	final double lng, final Handler handler) {
+	/**
+	 * Retrieves address for corresponding Latitude and Longitude using Google
+	 * Geo-location service.
+	 * 
+	 * @param lat
+	 *            Latitude of the location.
+	 * @param lng
+	 *            Longitude of the location.
+	 * @param handler
+	 *            Handler to fire appropriate event after address retrieved
+	 *            successfully.
+	 * @see Handler
+	 */
+	public static void getAddressByCoordinate(final double lat,
+			final double lng, final Handler handler) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
@@ -1162,12 +1519,19 @@ public class Utility {
 		thread.start();
 	}
 
-	public static void hideKeyboardContext(Context con) {
+	/**
+	 * Forcefully hide the soft keyboard if opened.
+	 * 
+	 * @param context
+	 *            Currently active Context
+	 * @see Context
+	 */
+	public static void hideKeyboardContext(Context context) {
 
 		try {
-			InputMethodManager inputManager = (InputMethodManager) con
+			InputMethodManager inputManager = (InputMethodManager) context
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(((Activity) con)
+			inputManager.hideSoftInputFromWindow(((Activity) context)
 					.getCurrentFocus().getWindowToken(),
 					InputMethodManager.HIDE_NOT_ALWAYS);
 		} catch (Exception e) {
@@ -1177,6 +1541,13 @@ public class Utility {
 
 	}
 
+	/**
+	 * Forcefully hide the soft keyboard if opened.
+	 * 
+	 * @param activity
+	 *            Activity on which keyboard is opened.
+	 * @see Activity
+	 */
 	public static void hideKeyboard(Activity activity) {
 		try {
 			activity.getWindow().setSoftInputMode(
@@ -1188,18 +1559,36 @@ public class Utility {
 
 	}
 
-	public static void unbindDrawables(View view) {
+	/**
+	 * Removes all children from a view.
+	 * 
+	 * @param view
+	 *            Parent view.
+	 * @see View
+	 */
+	public static void removeAllChildrenFromView(View view) {
 		if (view.getBackground() != null) {
 			view.getBackground().setCallback(null);
 		}
 		if (view instanceof ViewGroup) {
 			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-				unbindDrawables(((ViewGroup) view).getChildAt(i));
+				removeAllChildrenFromView(((ViewGroup) view).getChildAt(i));
 			}
 			((ViewGroup) view).removeAllViews();
 		}
 	}
 
+	/**
+	 * Returns the number of messages for a corresponding status.
+	 * 
+	 * @param messageList
+	 *            List of MessageEntity.
+	 * @param status
+	 *            Message status for counting. Status options are "read" and
+	 *            "unread".
+	 * @return Number of messages for corresponding status.
+	 * @see MessageEntity
+	 */
 	public static int getMessageCount(List<MessageEntity> messageList,
 			String status) {
 		int count = 0;
@@ -1218,6 +1607,17 @@ public class Utility {
 		}
 	}
 
+	/**
+	 * Generates a List of Circle IDs for a specific People.
+	 * 
+	 * @param peopleId
+	 *            ID of the people.
+	 * @param circles
+	 *            List of circles to check.
+	 * @return List of IDs of Circle as String if the people is associated with
+	 *         the Circle.
+	 * @see List
+	 */
 	public static List<String> getCircleIdsForPeople(String peopleId,
 			List<Circle> circles) {
 		List<String> circleIds = new ArrayList<String>();
@@ -1235,40 +1635,56 @@ public class Utility {
 		return circleIds;
 	}
 
+	/**
+	 * Returns the People object for a corresponding people id.
+	 * 
+	 * @param peopleId Id of the people.
+	 * @return People object, or null if not found.
+	 * @see People
+	 */
 	public static People getPeopleById(String peopleId) {
 
-		List<People> friendList = StaticValues.myInfo.getFriendList();
-		for (People peopleItem : friendList) {
-			if (peopleItem.getId().equals(peopleId)) {
-				return peopleItem;
+		if (StaticValues.myInfo != null) {
+			List<People> friendList = StaticValues.myInfo.getFriendList();
+			for (People peopleItem : friendList) {
+				if (peopleItem.getId().equals(peopleId)) {
+					return peopleItem;
+				}
 			}
 		}
 
 		return null;
 	}
 
+	/**
+	 *  Returns the People object for a corresponding people id from a List of People.
+	 * @param peopleId Id of the People.
+	 * @param peopleList List of People from which People object should be retrieved.
+	 * @return People object, or null if not found in the List
+	 * @see List
+	 * @see People
+	 */
 	public static People getPeopleById(String peopleId, List<People> peopleList) {
 
-		if(peopleList!=null)
-		{
-			for(int i=0;i<peopleList.size();i++)
-			{
+		if (peopleList != null) {
+			for (int i = 0; i < peopleList.size(); i++) {
 				People people = peopleList.get(i);
-				if(people.getId().equals(peopleId))
-				{
+				if (people.getId().equals(peopleId)) {
 					return people;
 				}
 			}
 		}
-		/*for (People peopleItem : peopleList) {
-			if (peopleItem.getId().equals(peopleId)) {
-				return peopleItem;
-			}
-		}*/
 
 		return null;
 	}
 
+	
+	/**
+	 * Determines a String contains any character or not.
+	 * @param value String which needs to be validated.
+	 * @return true if it contains at least one character, false otherwise.
+	 * @see String
+	 */
 	public static boolean isValidString(String value) {
 		if (value != null)
 			if (!value.equals(""))
@@ -1276,6 +1692,14 @@ public class Utility {
 		return false;
 	}
 
+	/**
+	 * Calculate distance between two GeoPoints.
+	 * 
+	 * @param p1 Source GeoPoint
+	 * @param p2 Destination GeoPoint
+	 * @return Distance in meter
+	 * @see GeoPoint
+	 */
 	public static double calculateDistance(GeoPoint p1, GeoPoint p2) {
 		double lat1 = p1.getLatitudeE6() / 1e6;
 		double lng1 = p1.getLongitudeE6() / 1e6;
@@ -1285,6 +1709,15 @@ public class Utility {
 		return calculateDistance(lat1, lng1, lat2, lng2);
 	}
 
+	/**
+	 * calculate distance between two locations.
+	 * 
+	 * @param sourceLat Latitude of the source
+	 * @param sourceLng Longitude of the source
+	 * @param destLat Latitude of the destination
+	 * @param destLng Longitude of the destination
+	 * @return Distance in meter
+	 */
 	public static double calculateDistance(double sourceLat, double sourceLng,
 			double destLat, double destLng) {
 		float[] dist = new float[1];
@@ -1292,91 +1725,111 @@ public class Utility {
 		return dist[0];
 	}
 
+	
+	/**
+	 * Updates the notification number of activities obtained from GCM.
+	 * 
+	 * @param pushData PushData containing notification number
+	 * @see PushData
+	 */
 	public static void updateNotificationCountFromPush(PushData pushData) {
 		if (pushData != null) {
 			if (StaticValues.myInfo != null) {
 				StaticValues.myInfo.getNotificationCount().setTotalCount(
 						pushData.getBadge());
 				String tabCounts = pushData.getTabCounts().trim();
-				
+
 				Log.i("tabCounts on parser", tabCounts);
-				
+
 				if (!tabCounts.equals("")) {
-					
+
 					String[] tabCountsArray = tabCounts.split("[|]");
-					
-					/*for(int i=0;i<tabCountsArray.length;i++)
-					{
-						Log.i("Item "+i, tabCountsArray[i]+"");
-					}*/
-					
+
 					
 					if (tabCountsArray.length == 3) {
-						Log.i("if tabCountsArray.length", tabCountsArray.length+"");
+						Log.i("if tabCountsArray.length", tabCountsArray.length
+								+ "");
 						StaticValues.myInfo.getNotificationCount()
 								.setMessageCount(
 										Integer.parseInt(tabCountsArray[0]));
-						
+
 						Log.i("messageCount", tabCountsArray[0]);
-						
+
 						StaticValues.myInfo.getNotificationCount()
 								.setFriendRequestCount(
 										Integer.parseInt(tabCountsArray[1]));
 						StaticValues.myInfo.getNotificationCount()
 								.setNotificationCount(
 										Integer.parseInt(tabCountsArray[2]));
-					}
-					else
-					{
-						Log.i("else tabCountsArray.length", tabCountsArray.length+"");
+					} else {
+						Log.i("else tabCountsArray.length",
+								tabCountsArray.length + "");
 					}
 				}
 			}
 		}
 	}
 
+	
+	/**
+	 * Updates the notification number of bubble counter placed at the top of activity.
+	 * 
+	 * @param btnNotification Bubble view that contains the notification number.
+	 */
 	public static void updateNotificationBubbleCounter(Button btnNotification) {
 		// TODO Auto-generated method stub
 		if (StaticValues.myInfo != null && btnNotification != null) {
-			
-			if(StaticValues.myInfo.getNotificationCount()
-					.getTotalCount()>=0)
-			
-			btnNotification.setText(""
-					+ StaticValues.myInfo.getNotificationCount()
-							.getTotalCount());
+
+			if (StaticValues.myInfo.getNotificationCount().getTotalCount() >= 0)
+
+				btnNotification.setText(""
+						+ StaticValues.myInfo.getNotificationCount()
+								.getTotalCount());
 		}
 	}
-	
-	
-	public static Bitmap decodeUri(Uri selectedImage, ContentResolver contentResolver) throws FileNotFoundException {
 
-        // Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o);
+	/**
+	 * Returns the Bitmap image for corresponding image Uri. Basically used for sampling an image to save memory.
+	 * 
+	 * @param selectedImage Uri of the image.
+	 * @param contentResolver Corresponding ContentResolver
+	 * @return Bitmap image from the Uri, or null if not found.
+	 * @see Uri
+	 * @see Bitmap
+	 * @see BitmapFactory
+	 * @see ContentResolver
+	 * @throws FileNotFoundException
+	 */
+	public static Bitmap decodeUri(Uri selectedImage,
+			ContentResolver contentResolver) throws FileNotFoundException {
 
-        // The new size we want to scale to
-        final int REQUIRED_SIZE = 160;
+		// Decode image size
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(
+				contentResolver.openInputStream(selectedImage), null, o);
 
-        // Find the correct scale value. It should be the power of 2.
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE
-               || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
-            }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
+		// The new size we want to scale to
+		final int REQUIRED_SIZE = 160;
 
-        // Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(contentResolver.openInputStream(selectedImage), null, o2);
+		// Find the correct scale value. It should be the power of 2.
+		int width_tmp = o.outWidth, height_tmp = o.outHeight;
+		int scale = 1;
+		while (true) {
+			if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+				break;
+			}
+			width_tmp /= 2;
+			height_tmp /= 2;
+			scale *= 2;
+		}
 
-    }
+		// Decode with inSampleSize
+		BitmapFactory.Options o2 = new BitmapFactory.Options();
+		o2.inSampleSize = scale;
+		return BitmapFactory.decodeStream(
+				contentResolver.openInputStream(selectedImage), null, o2);
+
+	}
 
 }

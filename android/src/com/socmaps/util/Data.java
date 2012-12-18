@@ -28,6 +28,13 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
 public class Data {
+	
+	/**
+	 * Initiates a server call.
+	 * 
+	 * @param serverUrl URL of the server
+	 * @return Response string from server
+	 */
 	public static String getServerResponse(String serverUrl) {
 		String responseString = null;
 		URL url = null;
@@ -59,7 +66,15 @@ public class Data {
 		return responseString;
 	}
 
-	public static String upload(Uri imageUri, String serverUrl, Context c) {
+	/**
+	 * Uploads an image to server.
+	 * 
+	 * @param imageUri Uri of the image to be uploaded
+	 * @param serverUrl URL of the server
+	 * @param context Currently active Context
+	 * @return Response string from server.
+	 */
+	public static String upload(Uri imageUri, String serverUrl, Context context) {
 		HttpURLConnection connection = null;
 		DataOutputStream outputStream = null;
 		String responseString = null;
@@ -75,7 +90,7 @@ public class Data {
 		try {
 			String[] filePathColumn = { MediaColumns.DATA };
 
-			Cursor cursor = c.getContentResolver().query(imageUri,
+			Cursor cursor = context.getContentResolver().query(imageUri,
 					filePathColumn, null, null, null);
 			cursor.moveToFirst();
 
@@ -151,6 +166,13 @@ public class Data {
 
 	}
 
+	
+	/**
+	 * Gets response from server and returns as JSONObject.
+	 * 
+	 * @param url URL of the server
+	 * @return JSONObject of the response if success, null otherwise
+	 */
 	public static JSONObject getJSONfromURL(String url) {
 		// initialize
 		InputStream is = null;
@@ -197,6 +219,14 @@ public class Data {
 		return jArray;
 	}
 
+	/**
+	 * Generates URL from HashMap for server request.
+	 * 
+	 * @param serverUrl URL of the server
+	 * @param paramMap HashMap containing parameter names and values
+	 * @param separator Separator text between URL and parameters
+	 * @return Generated URL
+	 */
 	public static String createUrl(String serverUrl,
 			HashMap<String, String> paramMap, String separator) {
 		int paramCounter = 0;

@@ -12,12 +12,12 @@ public class TransparentRelativePanel extends RelativeLayout {
 
 	private Paint innerPaint, borderPaint;
 
-	public TransparentRelativePanel(Context context, AttributeSet attrs) {
+	private TransparentRelativePanel(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
 
-	public TransparentRelativePanel(Context context) {
+	private TransparentRelativePanel(Context context) {
 		super(context);
 		init();
 	}
@@ -34,11 +34,11 @@ public class TransparentRelativePanel extends RelativeLayout {
 		borderPaint.setStrokeWidth(2);
 	}
 
-	public void setInnerPaint(Paint innerPaint) {
+	private void setInnerPaint(Paint innerPaint) {
 		this.innerPaint = innerPaint;
 	}
 
-	public void setBorderPaint(Paint borderPaint) {
+	private void setBorderPaint(Paint borderPaint) {
 		this.borderPaint = borderPaint;
 	}
 

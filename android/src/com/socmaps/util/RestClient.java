@@ -49,37 +49,99 @@ public class RestClient {
 	}
 
 	public int timeoutConnection = 20000;// in milliseconds, 20 seconds
-	public int timeoutSocket = 20000; // in milliseconds, 20 seconds
+	public int timeoutSocket = 20000; // in milliseconds, 20 seconds 
+	
+	
+	
+	/**
+	 * Returns Response of web service as String. When a user asked for an web service & if it is executed, it'll return it's response. 
+	 * 
+	 * @return  response of web service.
+	 * @see String.
+	 */
 
 	public String getResponse() {
 		return response;
-	}
+	} 
+	
+	/**
+	 * Returns Error message as String. When a user asked for an web service & if it fails, it'll return it's error message.
+	 * 
+	 * @return  error message of web service. 
+	 * @see String.
+	 */
 
 	public String getErrorMessage() {
 		return message;
-	}
+	} 
+	
+	/**
+	 * Returns Response code(Status Code) as Integer. When a user asked for an web service & executes it & based on the result, it'll return an Integer value which indicates it's status. 
+	 * 
+	 * @return  Status Code.
+	 * @see Integer.
+	 */
 
 	public int getResponseCode() {
 		return responseCode;
-	}
+	} 
+	
+	/** 
+	 * Initialization of RestClient constructor with specific URL.
+	 * 
+	 * @param String 
+	 */
 
 	public RestClient(String url) {
 		this.url = url;
 		params = new ArrayList<NameValuePair>();
 		headers = new ArrayList<NameValuePair>();
-	}
+	} 
+	
+	/**
+	 * AddParam method is used to store key-value pair. When we'll send our data/information to web service, that data will go as key-value pair. 
+	 * each key will have a specific value. 
+	 * 
+	 * @param name as String which indicates key. 
+	 * @param value as String which indicates the value of that particular key. 
+	 * @see #BasicNameValuePair(name, value).
+	 */
 
 	public void AddParam(String name, String value) {
 		params.add(new BasicNameValuePair(name, value));
-	}
+	} 
+	
+	/**
+	 * AddParams method is used to store an array list. On that Array List, entries are stored as Key-Value pair. 
+	 * 
+	 * @param param which is an ArrayList of NameValuePair.  
+	 */
 	
 	public void AddParams(ArrayList<NameValuePair> param) {
 		params = param;
-	}
+	} 
+	
+	/**
+	 * AddHeader method is used to store key-value pair. When we'll send our data/information to web service,  Basically on that time, we used to 
+	 * send our own Authentication Token value using key-value pair through this method. 
+	 * 
+	 * @param name as String which indicates key. 
+	 * @param value as String which indicates the value of that particular key. 
+	 * @see #BasicNameValuePair(name, value).
+	 */
 
 	public void AddHeader(String name, String value) {
 		headers.add(new BasicNameValuePair(name, value));
-	}
+	} 
+	
+	/**
+	 * Execute method is used to execute our web service based on our priority or demand. "Get" is used for retrieving data from server, "Post: is used 
+	 * for sending data to server, "Put" is used for if there is any cases of Edit while "Delete" is used for deletion of something from web server. 
+	 * 
+	 * @param GET or POST or PUT or DELETE. it's depends based on service call. 
+	 * @see #HttpGet(url + combinedParams), #executeRequest(request, url), addHeader(), getName(), getValue(), setEntity() methods 
+	 * @see Exception 
+	 */
 
 	public void Execute(RequestMethod method) throws Exception {
 		switch (method) {
@@ -220,11 +282,24 @@ public class RestClient {
 			}
 		}
 		return sb.toString();
-	}
+	} 
+	
+	/**
+	 * This method defines the maximum times in seconds to make a connection with server to deal further steps. If we unable to make 
+	 * a connection within this time, then the Http connection will automatically discard.   
+	 * 
+	 * @param timeInSeconds as Integer. 
+	 */
 
 	public void setConnectionTimeout(int timeInSeconds) {
 		timeoutConnection = timeInSeconds * 1000;
-	}
+	} 
+	
+	/**
+	 * This method defines the maximum time in seconds to be able for data transfer between sockets.     
+	 * 
+	 * @param timeInSeconds as Integer. 
+	 */
 
 	public void setSocketTimeout(int timeInSeconds) {
 		timeoutSocket = timeInSeconds * 1000;

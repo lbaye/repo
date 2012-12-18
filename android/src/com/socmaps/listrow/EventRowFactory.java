@@ -19,7 +19,21 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class EventRowFactory {
+public class EventRowFactory { 
+	
+	/**
+	 * This method returns a View, that view is associates with corresponding layout. 
+	 * 
+	 * @param inflater  to inflate the corresponding layout. 
+	 * @param event     an object of type Event. 
+	 * @param context   current state of the application/object.
+	 * @param clickListener which is used for a specific action when button is clicked. 
+	 * @param position as Integer which refers to the item position of the list
+	 * @param convertView as view. 
+	 * @param il which is used to download image from a specific url. 
+	 * @return View 
+	 * @see View
+	 */
 
 	public static View getView(final LayoutInflater inflater,
 			final Event event, final Context context,

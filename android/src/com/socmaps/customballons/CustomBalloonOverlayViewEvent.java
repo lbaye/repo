@@ -26,13 +26,13 @@ public class CustomBalloonOverlayViewEvent<Item extends OverlayItem> extends
 	
 	private ImageDownloader imageDownloader;
 	
-	public CustomBalloonOverlayViewEvent(Context context,
+	 CustomBalloonOverlayViewEvent(Context context,
 			int balloonBottomOffset,ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		this.imageDownloader = imageDownloader;
 	}
 
-	public CustomBalloonOverlayViewEvent(Context context,
+	 CustomBalloonOverlayViewEvent(Context context,
 			int balloonBottomOffset) {
 		super(context, balloonBottomOffset);
 	}

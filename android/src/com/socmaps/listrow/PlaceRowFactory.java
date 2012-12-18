@@ -14,7 +14,21 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlaceRowFactory {
+public class PlaceRowFactory { 
+	
+	/** 
+	 * This method returns a View, that view is associates with corresponding layout. 
+	 * 
+	 * @param inflater to inflate the corresponding layout. 
+	 * @param placeObj an object of type Place. 
+	 * @param con current state of the application/object.
+	 * @param licl which is used for a specific action when button is clicked. 
+	 * @param convertView as view. 
+	 * @param il which is used to download image from a specific url. 
+	 * @param listItemClickListenerPlace  which is used for a specific action when button is clicked. 
+	 * @return View 
+	 * @see View
+	 */
 
 	public static View getView(final LayoutInflater inflater,
 			final Object placeObj, final Context con,
@@ -128,7 +142,13 @@ public class PlaceRowFactory {
 			}
 		});
 		return view;
-	}
+	} 
+	
+	/**
+	 * This method return the type of the view.
+	 * 
+	 * @return Integer as the integer value reflects the type. 
+	 */
 
 	public int getViewType() {
 		return RowType.PLACE.ordinal();

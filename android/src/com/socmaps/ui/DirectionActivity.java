@@ -73,7 +73,7 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 	String dirflg = "d"; 
 	
-	public Place selectedPlace; 
+	private Place selectedPlace; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

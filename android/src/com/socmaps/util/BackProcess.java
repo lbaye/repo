@@ -30,24 +30,21 @@ public class BackProcess extends AsyncTask<RequestMethod, Void, String> {
 	String progressTitle = "";
 	String progressMessage = "";
 
-	// public BackProcess(Context context, ArrayList<NameValuePair> param,
-	// String url, REQUEST_TYPE type, boolean isShowProgressBar,
-	// BackProcessCallback callback) {
-	// this.context = context;
-	// this.callback = callback;
-	// this.showLoading = isShowProgressBar;
-	// requestType = type.ordinal();
-	//
-	// restClient = new RestClient(url);
-	//
-	// if (Utility.getAuthToken(context) != null) {
-	// restClient.AddHeader(Constant.authTokenParam,
-	// Utility.getAuthToken(context));
-	// }
-	//
-	// restClient.AddParams(param);
-	// }
+	
 
+	/**
+	 * Initiates a server request as a separate thread.
+	 * 
+	 * @param context Current active Context.
+	 * @param param ArrayList of NameValuePair for the request
+	 * @param url Server URL for the request
+	 * @param type Type of the request
+	 * @param isShowProgressBar true if ProgressDialog needed, false otherwise.
+	 * @param title Title text of the ProgressDialog
+	 * @param message Message text of the ProgressDialog
+	 * @param callback Listener to fire appropriate event after end of the request
+	 * @param isProgressDialogCancelable true if the ProgressDialog is cancellable during middle of the process, false otherwise
+	 */
 	public BackProcess(Context context, ArrayList<NameValuePair> param,
 			String url, REQUEST_TYPE type, boolean isShowProgressBar,
 			String title, String message, BackProcessCallback callback,
@@ -73,19 +70,7 @@ public class BackProcess extends AsyncTask<RequestMethod, Void, String> {
 
 	@Override
 	protected void onPreExecute() {
-		// Debug.debug(getClass(), "onPreExecute");
-		// if (showLoading) {
-		// loadingDialog = new LoadingDialog(context,
-		// android.R.style.Theme_Translucent_NoTitleBar);
-		// loadingDialog.setCancelable(false);
-		// try {
-		// loadingDialog.show();
-		// } catch (Exception e) {
-		// Log.e("BackProcess", "error", e);
-		// }
-		// } else if (loadingView != null) {
-		// loadingView.setVisibility(View.KEEP_SCREEN_ON);
-		// }
+		
 
 		if (Utility.isConnectionAvailble(context.getApplicationContext())) {
 			super.onPreExecute();
@@ -129,7 +114,7 @@ public class BackProcess extends AsyncTask<RequestMethod, Void, String> {
 
 	}
 
-	public void showProgressDialog(String title, String message) {
+	private void showProgressDialog(String title, String message) {
 
 		if (showLoading) {
 

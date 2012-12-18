@@ -379,6 +379,7 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Log.d("People Name & ID", peopleUpdate.getFirstName() + " "
 				+ peopleUpdate.getId());
 		intentToGoPlace.putExtra("personID", peopleUpdate.getId());
+		intentToGoPlace.putExtra("PERSON_NAME", peopleUpdate.getFirstName());
 		startActivity(intentToGoPlace);
 		// finish();
 	}

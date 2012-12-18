@@ -44,98 +44,17 @@ import com.socmaps.entity.UserSettings;
 public class ServerResponseParser {
 
 	private static final String JSON_RECIPIENTS = "recipients";
-
-	/*
-	 * public static AccountSettingsEntity parseAccountSettings(String
-	 * response,int flag) { AccountSettingsEntity accountSettingsEntity = new
-	 * AccountSettingsEntity(); JSONObject jo,results; try { if(flag==1) {
+	
+	/**
+	 * Parse server (JSON) response and binds to MyInfo object
 	 * 
-	 * results = (new JSONObject(response)).getJSONObject("result"); } else {
-	 * results=new JSONObject(response); }
-	 * accountSettingsEntity.setSmID(results.getString("id")); Log.i("Id",
-	 * results.getString("id"));
-	 * accountSettingsEntity.setEmail(results.getString("email"));
-	 * Log.i("email", results.getString("email")); if
-	 * (!results.isNull("firstName")) accountSettingsEntity.setFirstName(results
-	 * .getString("firstName")); Log.i("firstName",
-	 * results.getString("firstName"));
-	 * 
-	 * if (!results.isNull("lastName")) accountSettingsEntity
-	 * .setLastName(results.getString("lastName")); Log.i("lastName",
-	 * results.getString("lastName")); if (!results.isNull("username"))
-	 * accountSettingsEntity .setUserName(results.getString("username"));
-	 * Log.i("username", results.getString("username")); if
-	 * (!results.isNull("avatar"))
-	 * accountSettingsEntity.setAvatar(results.getString("avatar"));
-	 * Log.i("avatar", results.getString("avatar")); if
-	 * (!results.isNull("authToken")) accountSettingsEntity.setAuthToken(results
-	 * .getString("authToken")); Log.i("authToken",
-	 * results.getString("authToken"));
-	 * 
-	 * if(!results.isNull("gender"))
-	 * accountSettingsEntity.setGender(results.getString("gender")); else
-	 * accountSettingsEntity.setGender(""); Log.i("gender",
-	 * results.getString("gender")); if (!results.isNull("dateOfBirth"))
-	 * accountSettingsEntity.setDateOfBirth(results.getJSONObject(
-	 * "dateOfBirth").getString("date")); Log.i("dateOfBirth",
-	 * results.getString("dateOfBirth")); if (!results.isNull("regMedia"))
-	 * accountSettingsEntity .setRegMedia(results.getString("regMedia"));
-	 * Log.i("regMedia", results.getString("regMedia")); if
-	 * (!results.isNull("workStatus"))
-	 * accountSettingsEntity.setWorkStatus(results .getString("workStatus"));
-	 * Log.i("workStatus", results.getString("workStatus")); if
-	 * (!results.isNull("relationshipStatus"))
-	 * accountSettingsEntity.setRelationshipStatus(results
-	 * .getString("relationshipStatus")); else
-	 * accountSettingsEntity.setRelationshipStatus("");
-	 * Log.i("relationshipStatus", results.getString("relationshipStatus")); if
-	 * (!results.isNull("bio"))
-	 * accountSettingsEntity.setBio(results.getString("bio")); Log.i("bio",
-	 * results.getString("bio")); if (!results.isNull("interests"))
-	 * accountSettingsEntity.setInterests(results .getString("interests"));
-	 * Log.i("interests", results.getString("interests"));
-	 * 
-	 * if (!results.isNull("loginCount"))
-	 * accountSettingsEntity.setLogInCount(results .getInt("loginCount"));
-	 * Log.i("loginCount", results.getInt("loginCount") + ""); if
-	 * (!results.isNull("currentLocation")) {
-	 * accountSettingsEntity.setCurrentLat(results.getJSONObject(
-	 * "currentLocation").getDouble("lat")); Log.i("lat",
-	 * results.getJSONObject("currentLocation") .getDouble("lat") + "");
-	 * 
-	 * accountSettingsEntity.setCurrentLng(results.getJSONObject(
-	 * "currentLocation").getDouble("lng")); Log.i("lng",
-	 * results.getJSONObject("currentLocation") .getDouble("lng") + ""); } if
-	 * (!results.isNull("address")) {
-	 * 
-	 * if (!results.getJSONObject("address").isNull("street"))
-	 * accountSettingsEntity.setStreetAddress(results
-	 * .getJSONObject("address").getString("street")); Log.i("street",
-	 * results.getJSONObject("address").getString("street"));
-	 * if(!results.getJSONObject("address").isNull("city"))
-	 * accountSettingsEntity.setCity(results.getJSONObject(
-	 * "address").getString("city"));
-	 * 
-	 * Log.i("city", results.getJSONObject("address") .getString("city")); if
-	 * (!results.getJSONObject("address").isNull("country"))
-	 * accountSettingsEntity.setCountry(results.getJSONObject(
-	 * "address").getString("country")); Log.i("country",
-	 * results.getJSONObject("address").getString("country")); if
-	 * (!results.getJSONObject("address").isNull("postCode"))
-	 * accountSettingsEntity.setPostCode(results.getJSONObject(
-	 * "address").getString("postCode")); Log.i("postCode",
-	 * results.getJSONObject("address").getString("postCode")); if
-	 * (!results.getJSONObject("address").isNull("state"))
-	 * accountSettingsEntity.setState(results.getJSONObject(
-	 * "address").getString("state")); Log.i("state",
-	 * results.getJSONObject("address").getString("state")); }
-	 * 
-	 * } catch (JSONException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
-	 * 
-	 * return accountSettingsEntity; }
+	 * @param response would be String converted from server response (JSON file). 
+	 * @param facebookId is user facebookId.
+	 * @param facebookAuthToken is user facebookAuthToken. 
+	 * @param isResult is true if the JSON response starts with result tag, false otherwise.
+	 * @return MyInfo object which is binds with all data.
+	 * @see com.socmaps.entity.MyInfo 
 	 */
-
 	public static MyInfo parseUserProfileInfo(String response,
 			String facebookId, String facebookAuthToken, boolean isResult) {
 
@@ -149,6 +68,15 @@ public class ServerResponseParser {
 		return myInfo;
 
 	}
+	
+	/**
+	 * Parse server (JSON) response and binds to MyInfo object
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @param isResult is true if the JSON response starts with result tag, false otherwise.
+	 * @return MyInfo object which is binds with all data.
+	 * @see com.socmaps.entity.MyInfo 
+	 */
 
 	public static MyInfo parseUserProfileInfo(String response, boolean isResult) {
 		MyInfo myInfo = new MyInfo();
@@ -357,6 +285,13 @@ public class ServerResponseParser {
 		return myInfo;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns CirclesAndFriends object
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return CirclesAndFriends object which is binds with all data.
+	 * @see com.socmaps.entity.CirclesAndFriends 
+	 */
 	public static CirclesAndFriends parseCircleAndFriends(String response) {
 		CirclesAndFriends circlesAndFriends = new CirclesAndFriends();
 
@@ -392,6 +327,15 @@ public class ServerResponseParser {
 
 		return circlesAndFriends;
 	}
+		
+	/**
+	 * Parse server (JSON) response which is people JSONArray
+	 * 
+	 * @param jArray is server response which is people JSONArray
+	 * @return List of peoples. 
+	 * @see List
+	 * @see com.socmaps.entity.People 
+	 */
 
 	public static List<People> parsePeoples(JSONArray jArray) {
 		List<People> friendList = new ArrayList<People>();
@@ -415,6 +359,13 @@ public class ServerResponseParser {
 
 	}
 
+	/**
+	 * Parse server (JSON) response which is circle JSONObject
+	 * 
+	 * @param jObj is server response which is circle JSONObject
+	 * @return Circle object binds with all data.
+	 * @see com.socmaps.entity.Circle
+	 */
 	public static Circle parseCircleEntity(JSONObject jObj) {
 		Circle circle = new Circle();
 
@@ -466,6 +417,14 @@ public class ServerResponseParser {
 		return circle;
 	}
 
+	/**
+	 * Parse server (JSON) response which is circle JSONObject with Details.
+	 * 
+	 * @param jObj is server response which is circle JSONObject
+	 * @return Circle object binds with all data.
+	 * @see com.socmaps.entity.Circle
+	 */
+	
 	public static Circle parseCircleEntityDetails(JSONObject jObj) {
 		Circle circle = new Circle();
 
@@ -513,6 +472,14 @@ public class ServerResponseParser {
 
 		return circle;
 	}
+	
+	/**
+	 * Parse server (JSON) response and returns array of FriendRequest
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return FriendRequest[] array
+	 * @see com.socmaps.entity.FriendRequest
+	 */
 
 	public static FriendRequest[] parseFriendRequest(String response) {
 		FriendRequest[] friendRequests = null;
@@ -581,6 +548,14 @@ public class ServerResponseParser {
 		return friendRequests;
 	}
 
+	/**
+	 * Parse server (JSON) response which is MessageThread JSONObject.
+	 * 
+	 * @param jObject is server response which is MessageThread JSONObject
+	 * @return MessageEntity object 
+	 * @see  com.socmaps.entity.MessageEntity
+	 */
+	
 	public static MessageEntity parseMessageThread(JSONObject jObject) {
 		MessageEntity mEntity = new MessageEntity();
 
@@ -846,6 +821,14 @@ public class ServerResponseParser {
 		return null;
 	}
 
+	/**
+	 *  Parse server (JSON) response and returns List of MessageEntity.
+	 *  
+	 * @param  response would be String converted from server response (JSON file).
+	 * @return List of MessageEntity
+	 * @see List
+	 * @see com.socmaps.entity.MessageEntity
+	 */
 	public static List<MessageEntity> parseMessages(String response) {
 		List<MessageEntity> messages = new ArrayList<MessageEntity>();
 		try {
@@ -862,6 +845,13 @@ public class ServerResponseParser {
 		return messages;
 	}
 
+	/**
+	 *  Parse server (JSON) response and returns LayersPreferences object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return LayersPreferences object.
+	 * @see com.socmaps.entity.LayersPreferences
+	 */
 	public static LayersPreferences parseLayerSettings(String response) {
 		LayersPreferences layersPreferences = new LayersPreferences();
 		try {
@@ -880,9 +870,16 @@ public class ServerResponseParser {
 		}
 		return null;
 	}
-
-	public static NotificationPreferences parseNotificationSettings(
-			String response) {
+	
+	
+	/**
+	 *  Parse server (JSON) response and returns NotificationPreferences object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return NotificationPreferences object.
+	 * @see com.socmaps.entity.NotificationPreferences
+	 */
+	public static NotificationPreferences parseNotificationSettings(String response) {
 		NotificationPreferences notificationPreferences = new NotificationPreferences();
 
 		try {
@@ -913,7 +910,14 @@ public class ServerResponseParser {
 
 		return null;
 	}
-
+	
+	/**
+	 *  Parse server (JSON) response and returns PlatformsPreferences object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return PlatformsPreferences object.
+	 * @see com.socmaps.entity.PlatformsPreferences
+	 */
 	public static PlatformsPreferences parsePlatformsSettings(String response) {
 		PlatformsPreferences platformsPreferences = new PlatformsPreferences();
 		try {
@@ -932,8 +936,14 @@ public class ServerResponseParser {
 		return null;
 	}
 
-	public static InformationSharingPreferences parseInformationSettings(
-			String response) {
+	/**
+	 *  Parse server (JSON) response and returns InformationSharingPreferences object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return InformationSharingPreferences object.
+	 * @see com.socmaps.entity.InformationSharingPreferences
+	 */
+	public static InformationSharingPreferences parseInformationSettings(String response) {
 		InformationSharingPreferences informationSharingPreferences = new InformationSharingPreferences();
 		try {
 			JSONObject jo = new JSONObject(response);
@@ -989,6 +999,13 @@ public class ServerResponseParser {
 		return null;
 	}
 
+	/**
+	 *  Parse server (JSON) response and returns SearchResult object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return SearchResult object.
+	 * @see com.socmaps.entity.SearchResult
+	 */
 	public static SearchResult parseSeachResult(String response) {
 		SearchResult searchResult = new SearchResult();
 		searchResult.setPeoples(parseSearchResultPeople(response));
@@ -998,6 +1015,14 @@ public class ServerResponseParser {
 		return searchResult;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of Place.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of Place. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.Place 
+	 */
 	public static ArrayList<Place> parseSearchResultPlace(String response) {
 
 		ArrayList<Place> places = new ArrayList<Place>();
@@ -1024,7 +1049,15 @@ public class ServerResponseParser {
 
 		return places;
 	}
-
+	
+	
+	/**
+	 * Parse server (JSON) response which is place JSONObject
+	 * 
+	 * @param placeObj is server response which is place JSONObject
+	 * @return Place object binds with all data.
+	 * @see com.socmaps.entity.Place
+	 */
 	public static Place parsePlace(JSONObject placeObj) {
 		Place place = new Place();
 
@@ -1129,6 +1162,14 @@ public class ServerResponseParser {
 		return place;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of Place.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of Place. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.Place 
+	 */
 	public static ArrayList<Place> parseSavedPlaces(String response) {
 
 		ArrayList<Place> places = new ArrayList<Place>();
@@ -1155,7 +1196,14 @@ public class ServerResponseParser {
 
 		return places;
 	}
-
+	
+	/**
+	 *  Parse server (JSON) response and returns LocationSharing object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return LocationSharing object.
+	 * @see com.socmaps.entity.LocationSharing
+	 */
 	public static LocationSharing savedLocationSharingParser(String response) {
 
 		LocationSharing locationSharing = new LocationSharing();
@@ -1495,6 +1543,14 @@ public class ServerResponseParser {
 	 * return people; }
 	 */
 
+	
+	/**
+	 * Parse server (JSON) response which is place JSONObject
+	 * 
+	 * @param placeObj is server response which is place JSONObject
+	 * @return Place object binds with all data.
+	 * @see com.socmaps.entity.Place
+	 */
 	public static Place parseSavedPlace(JSONObject placeObj) {
 		Place place = new Place();
 
@@ -1554,6 +1610,14 @@ public class ServerResponseParser {
 		return place;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of Photo.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of Photo. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.Photo 
+	 */
 	public static ArrayList<Photo> parsePhotos(String response) {
 
 		ArrayList<Photo> photos = new ArrayList<Photo>();
@@ -1581,6 +1645,14 @@ public class ServerResponseParser {
 		return photos;
 	}
 
+	
+	/**
+	 * Parse server (JSON) response which is photo JSONObject
+	 * 
+	 * @param photoObj is server response which is photo JSONObject
+	 * @return Photo object binds with all data.
+	 * @see com.socmaps.entity.Photo
+	 */
 	public static Photo parsePhoto(JSONObject photoObj) {
 
 		/*
@@ -1658,6 +1730,14 @@ public class ServerResponseParser {
 		return photo;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of GeoTag.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of GeoTag. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.GeoTag 
+	 */
 	public static ArrayList<GeoTag> parseGeotags(String response) {
 
 		ArrayList<GeoTag> geotags = new ArrayList<GeoTag>();
@@ -1684,7 +1764,14 @@ public class ServerResponseParser {
 
 		return geotags;
 	}
-
+	
+	/**
+	 * Parse server (JSON) response which is geotag JSONObject
+	 * 
+	 * @param geotagObj is server response which is geotag JSONObject
+	 * @return GeoTag object binds with all data.
+	 * @see com.socmaps.entity.GeoTag
+	 */
 	public static GeoTag parseGeotag(JSONObject geotagObj) {
 
 		GeoTag geotag = new GeoTag();
@@ -1739,6 +1826,14 @@ public class ServerResponseParser {
 		return geotag;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of people.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of People. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.People 
+	 */
 	public static ArrayList<People> parseSearchResultPeople(String response) {
 		ArrayList<People> peoples = new ArrayList<People>();
 		JSONObject peopleJSONObj;
@@ -1766,8 +1861,15 @@ public class ServerResponseParser {
 		return peoples;
 	}
 
-	public static ArrayList<SecondDegreePeople> parseSearchResultSecondDegreePeople(
-			String response) {
+	/**
+	 * Parse server (JSON) response and returns ArrayList of SecondDegreePeople.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of SecondDegreePeople. 
+	 * @see ArrayList
+	 * @see com.socmaps.entity.SecondDegreePeople 
+	 */
+	public static ArrayList<SecondDegreePeople> parseSearchResultSecondDegreePeople(String response) {
 		ArrayList<SecondDegreePeople> secondDegreePeoples = new ArrayList<SecondDegreePeople>();
 		JSONObject peopleJSONObj;
 		try {
@@ -1800,6 +1902,14 @@ public class ServerResponseParser {
 		return secondDegreePeoples;
 	}
 
+
+	/**
+	 * Parse server (JSON) response which is people JSONObject
+	 * 
+	 * @param peopleJSONObj is server response which is people JSONObject
+	 * @return People object binds with all data.
+	 * @see com.socmaps.entity.People
+	 */
 	public static People parsePeople(JSONObject peopleJSONObj) {
 		People people = new People();
 
@@ -1996,6 +2106,14 @@ public class ServerResponseParser {
 		return people;
 	}
 
+
+	/**
+	 * Parse server (JSON) response which is secondDegreePeople JSONObject
+	 * 
+	 * @param peopleJSONObj is server response which is secondDegreePeople JSONObject
+	 * @return SecondDegreePeople object binds with all data.
+	 * @see com.socmaps.entity.SecondDegreePeople
+	 */
 	public static SecondDegreePeople parseSecondDegreePeople(
 			JSONObject peopleJSONObj) {
 		SecondDegreePeople secondDegreePeople = new SecondDegreePeople();
@@ -2081,6 +2199,14 @@ public class ServerResponseParser {
 		return secondDegreePeople;
 	}
 
+	/**
+	 * Converts to MyGeoPoint object with specified latitude and longitude. 
+	 * 
+	 * @param lat in double
+	 * @param lng in double
+	 * @return MyGeoPoint object
+	 * @see com.socmaps.entity.MyGeoPoint
+	 */
 	public static MyGeoPoint getGeoPointByLatLong(double lat, double lng) {
 
 		return new MyGeoPoint((int) (lat * 1E6), (int) (lng * 1E6), null);
@@ -2100,11 +2226,19 @@ public class ServerResponseParser {
 		return peopleList;
 	}
 
-	public static List<Circle> getCircleList(JSONArray ja) throws JSONException {
+	/**
+	 * Parse server (JSON) response which is circle JSONArray
+	 * 
+	 * @param circleJSONArray is server response which is circle JSONArray
+	 * @return List of Circle. 
+	 * @see List
+	 * @see com.socmaps.entity.Circle 
+	 */
+	public static List<Circle> getCircleList(JSONArray circleJSONArray) throws JSONException {
 		List<Circle> circles = new ArrayList<Circle>();
-		for (int i = 0; i < ja.length(); i++) {
+		for (int i = 0; i < circleJSONArray.length(); i++) {
 
-			JSONObject circleObj = ja.getJSONObject(i);
+			JSONObject circleObj = circleJSONArray.getJSONObject(i);
 			Circle circle = parseCircleEntity(circleObj);
 
 			if (!circle.getName().equalsIgnoreCase("second_degree")) {
@@ -2116,6 +2250,15 @@ public class ServerResponseParser {
 		return circles;
 	}
 
+	/**
+	 * Parse server (JSON) response which is circle JSONArray with details
+	 * 
+	 * @param ja is server response which is circle JSONArray
+	 * @return List of Circle. 
+	 * @exception JSONException 
+	 * @see List
+	 * @see com.socmaps.entity.Circle 
+	 */
 	public static List<Circle> getCircleListWithDetails(JSONArray ja)
 			throws JSONException {
 		List<Circle> circles = new ArrayList<Circle>();
@@ -2159,6 +2302,13 @@ public class ServerResponseParser {
 		return timeEntity;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns Event object.
+	 * 
+	 * @param result would be String converted from server response (JSON file).
+	 * @return Event object
+	 * @see com.socmaps.entity.Event
+	 */
 	public static Event parseGetEventDetailsResult(String result) {
 
 		Event event = new Event();
@@ -2174,6 +2324,14 @@ public class ServerResponseParser {
 
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of event.
+	 * 
+	 * @param result would be String converted from server response (JSON file).
+	 * @return ArrayList of Event
+	 * @see ArrayList
+	 * @see com.socmaps.entity.Event 
+	 */
 	public static ArrayList<Event> parseGetEventListResult(String result) {
 		ArrayList<Event> events = new ArrayList<Event>();
 
@@ -2303,6 +2461,15 @@ public class ServerResponseParser {
 		return event;
 	}
 
+
+	/**
+	 * Parse server (JSON) response and returns List of String.
+	 * 
+	 * @param jArray is server response
+	 * @return List of String
+	 * @see List
+	 * @see String 
+	 */
 	public static List<String> getListFromJSONArray(JSONArray jArray) {
 		List<String> itemList = new ArrayList<String>();
 
@@ -2320,6 +2487,14 @@ public class ServerResponseParser {
 		return itemList;
 	}
 
+	/**
+	 * Parse server (JSON) response and returns List of MeetupRequest.
+	 * 
+	 * @param result would be String converted from server response (JSON file).
+	 * @return List of MeetupRequest. 
+	 * @see List
+	 * @see com.socmaps.entity.MeetupRequest 
+	 */
 	public static List<MeetupRequest> parseMeetupRequestList(String result) {
 		List<MeetupRequest> meetups = new ArrayList<MeetupRequest>();
 
@@ -2443,6 +2618,14 @@ public class ServerResponseParser {
 		return meetupEntity;
 	}
 
+	
+	/**
+	 * Parse server (JSON) response and returns RSVP object
+	 * 
+	 * @param jObj is server response which is RSVP JSONObject
+	 * @return RSVP object binds with all data.
+	 * @see com.socmaps.entity.RSVP
+	 */
 	public static RSVP getRSVP(JSONObject jObj) {
 		RSVP rsvp = new RSVP();
 
@@ -2485,6 +2668,15 @@ public class ServerResponseParser {
 		return rsvp;
 	}
 
+
+
+	/**
+	 *  Parse server (JSON) response and returns FacebookErrorResponse object.
+	 *  
+	 * @param response would be String converted from server response (JSON file).
+	 * @return FacebookErrorResponse object.
+	 * @see com.socmaps.entity.FacebookErrorResponse
+	 */
 	public static FacebookErrorResponse parseFacebookError(String response) {
 		FacebookErrorResponse fbResponseEntity = new FacebookErrorResponse();
 
@@ -2514,8 +2706,15 @@ public class ServerResponseParser {
 		return fbResponseEntity;
 	}
 
-	// --------------- for Plan -------------------------- //
 
+
+	/**
+	 * Parse server (JSON) response and returns Plan object.
+	 * 
+	 * @param result would be String converted from server response (JSON file).
+	 * @return Plan object
+	 * @see com.socmaps.entity.Plan
+	 */
 	public static Plan parseGetPlanDetailsResult(String result) {
 
 		// Event event = new Event();
@@ -2533,6 +2732,14 @@ public class ServerResponseParser {
 
 	}
 
+	/**
+	 * Parse server (JSON) response and returns ArrayList of plan.
+	 * 
+	 * @param response would be String converted from server response (JSON file).
+	 * @return ArrayList of Plan
+	 * @see ArrayList
+	 * @see com.socmaps.entity.Plan 
+	 */
 	public static ArrayList<Plan> parseGetPlanListResult(String result) {
 		ArrayList<Plan> plans = new ArrayList<Plan>();
 

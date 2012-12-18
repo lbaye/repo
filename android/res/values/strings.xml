@@ -553,6 +553,8 @@
     <string name="unblockLabel">Unblock</string>
     <string name="addMoveTo">Add/Move to</string>
     <string name="places">Places</string>
+     <string name="placesLabel">My Places</string>
+      <string name="nearToMePlacesLabel">Near to me</string>
     <string name="atoz">A To Z</string>
     <!-- <string name="distance">A To Z</string> -->
 

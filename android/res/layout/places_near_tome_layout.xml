@@ -108,14 +108,14 @@
         android:visibility="visible">
         
         <Button
-            android:id="@+id/btnMyPhotos"
+            android:id="@+id/btnMyPlaces"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:padding="10dip"
             android:layout_marginRight="15dip"
-            android:textColor="@color/gray_dark"
             android:textSize="13dip"
-            android:textStyle="bold"
+            android:textColor="@drawable/selector_btn_transparent_black"
+            android:textStyle="normal" 
             android:text="@string/placesLabel"
             android:background="@color/transparent" />
         
@@ -133,21 +133,20 @@
             android:layout_height="wrap_content"
             android:padding="10dip"
             android:layout_marginLeft="15dip"
-            android:textColor="@drawable/selector_btn_transparent_black"
+           	android:textColor="@color/gray_dark"
             android:textSize="13dip"
-            android:textStyle="normal"        
+            android:textStyle="bold"        
             android:text="@string/nearToMePlacesLabel"
             android:background="@color/transparent" />
         
     </LinearLayout> 
 
     <ListView
-        android:id="@+id/places_list"
+        android:id="@+id/places_list_neartoMe"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/buttonContainerTop"
         android:background="@color/offwhite"
-        android:cacheColorHint="@android:color/white"
-        android:layout_marginTop="10dip" />
+        android:cacheColorHint="@android:color/white" />
 
 </RelativeLayout>

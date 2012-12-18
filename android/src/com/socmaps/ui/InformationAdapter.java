@@ -19,7 +19,15 @@ public class InformationAdapter extends ArrayAdapter<Information> {
 	static class InformationHolder {
 		TextView tvTitle;
 		CheckBox chkInfoSharingSettings;
-	}
+	} 
+	
+	/**
+	 * This is the constructor which is used to refer & to assign values. Super method is used to give a call to a method of the superclass in the base class.
+	 * 
+	 * @param context which is current state of the application/object.
+	 * @param layoutResourceId as Integer which is the id of layout resource. 
+	 * @param data as the array list of type Information. 
+	 */
 
 	public InformationAdapter(Context context, int layoutResourceId,
 			Information[] data) {

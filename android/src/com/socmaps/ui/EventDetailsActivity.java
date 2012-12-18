@@ -28,9 +28,7 @@ import android.widget.Toast;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Event;
 import com.socmaps.entity.People;
-import com.socmaps.images.BitmapManager;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -70,7 +68,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	List<String> inviteMoreSelectedFriendListAll;
 	List<String> invitedGuestList;
 
-	public Event selectedEvent;
+	private Event selectedEvent;
 
 	// private ImageLoader imageLoader;
 	ImageDownloader imageDownloader;

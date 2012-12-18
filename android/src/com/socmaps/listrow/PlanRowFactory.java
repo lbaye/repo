@@ -16,7 +16,22 @@ import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlanRowFactory {
+public class PlanRowFactory { 
+	
+	/**
+	 * This method returns a View, that view is associates with corresponding layout.  
+	 * 
+	 * @param inflater to inflate the corresponding layout. 
+	 * @param plan an object of type Plan.
+	 * @param context current state of the application/object.  
+	 * @param clickListener which is used for a specific action when button is clicked.  
+	 * @param position as Integer which refers to the item position of the list 
+	 * @param convertView as view 
+	 * @param il which is used to download image from a specific url.  
+	 * @param a as Integer which is used to determine if it comes from Own Profile or Friends Profile
+	 * @return View 
+	 * @see View
+	 */
 
 	public static View getView(final LayoutInflater inflater, final Plan plan,
 			final Context context,
