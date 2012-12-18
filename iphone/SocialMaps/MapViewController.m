@@ -47,6 +47,7 @@
 #import "RecommendViewController.h"
 #import "FriendListViewController.h"
 #import "CreatePlanViewController.h"
+#import "ListViewController.h"
 
 @interface MapViewController ()
 

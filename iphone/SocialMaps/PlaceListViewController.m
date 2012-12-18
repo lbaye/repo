@@ -116,7 +116,6 @@
         place = (Place*)[copyListOfItems objectAtIndex:indexPath.row];
     
     CGSize addressStringSize = [place.address sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];
-    CGSize nameStringSize = [place.name sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"placeList"];
     
