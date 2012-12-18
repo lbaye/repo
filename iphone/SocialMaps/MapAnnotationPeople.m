@@ -146,6 +146,19 @@
     [infoView addSubview:lblDist];
     [lblDist release];
     NSLog(@"info %@",NSStringFromCGRect(infoView.frame));
+    
+    if (![locItemPeople.userInfo.source isEqualToString:@"facebook"])
+    {
+        //Profile button
+        UIView *profilePicture = [annoView viewWithTag:11000];
+        UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        profileBtn.frame = profilePicture.frame;
+        [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
+        profileBtn.tag = 11008;
+        [infoView addSubview:[annoView viewWithTag:1234321]]; 
+        [infoView addSubview:profileBtn];    
+    }
+  
     return annoView;
 }
 
@@ -265,10 +278,8 @@
         messageBtn.tag = 11006;
         [infoView addSubview:messageBtn];
         
-        
         //Profile button
         UIButton *profileBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        //profileBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+30+30, 53, 27);
         profileBtn.frame = profilePicture.frame;
         [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         profileBtn.tag = 11008;
@@ -364,7 +375,7 @@
     }
     
     MKAnnotationView *selAnno = (MKAnnotationView*) [[sender superview] superview];
-    LocationItemPlace *locItem = (LocationItemPlace*) [selAnno annotation];
+    LocationItemPeople *locItem = (LocationItemPeople*) [selAnno annotation];
     NSLog(@"Name=%@", locItem.itemName);
     
     if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(performUserAction:type:)]) {
