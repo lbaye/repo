@@ -1156,6 +1156,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         PlaceListViewController *controller = [[PlaceListViewController alloc] initWithNibName:@"PlaceListViewController" bundle:nil];
         controller.otherUserId = userInfo.userId;
         controller.placeType = OtherPeople;
+        controller.userName = userInfo.firstName;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
         [controller release];

@@ -18,13 +18,19 @@
 #import "Place.h"
 #import "CachedImages.h"
 #import "OverlayViewController.h"
+#import "LocationItemPlace.h"
 
-#define     CELL_HEIGHT             130
+
+#define     CELL_HEIGHT                 130
+#define     TAG_TABLEVIEW_PLACES_NEARBY 1001
+#define     TAG_TABLEVIEW_MY_PLACES     1002
+
 
 @implementation PlaceListViewController
 
 @synthesize placeType;
 @synthesize otherUserId;
+@synthesize userName;
 
 - (void)viewDidLoad
 {
@@ -35,15 +41,22 @@
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     
-    if (self.placeType == OtherPeople)
+    if (self.placeType == OtherPeople) {
         [restClient getOtherUserPlacesByUserId:self.otherUserId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-    else
+        labelPlaces.textAlignment = UITextAlignmentLeft;
+        labelPlaces.frame = CGRectMake(labelPlaces.frame.origin.x, labelPlaces.frame.origin.y, 200, labelPlaces.frame.size.height);
+        labelPlaces.text = [NSString stringWithFormat:@"%@'s places", self.userName];
+    }
+    else {
         [restClient getPlaces:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [self showPlacesNearbyTab];
+    }
     
     [smAppDelegate showActivityViewer:self.view];
     
-    
     copyListOfItems = [[NSMutableArray alloc] init];
+    
+    labelPlaces.highlighted = YES;
     
 }
 
@@ -71,6 +84,18 @@
     viewSearch = nil;
     [searchBar release];
     searchBar = nil;
+    [labelNearToMe release];
+    labelNearToMe = nil;
+    [labelPlaces release];
+    labelPlaces = nil;
+    [buttonPlaces release];
+    buttonPlaces = nil;
+    [buttonNearToMe release];
+    buttonNearToMe = nil;
+    [imageViewDivider release];
+    imageViewDivider = nil;
+    [viewTabContainer release];
+    viewTabContainer = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -79,6 +104,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)showPlacesNearbyTab
+{
+    labelNearToMe.hidden = buttonPlaces.hidden = buttonNearToMe.hidden = imageViewDivider.hidden = NO;
 }
 
 -(void) displayNotificationCount 
@@ -107,11 +137,39 @@
         return height;
 }
 
+-(Place*)getPlaceFromLocationItemPlace:(LocationItemPlace*)aPlaceItem
+{
+    Place *place = [[Place alloc] init];
+    place.name = aPlaceItem.itemName;
+    place.address = aPlaceItem.itemAddress;
+    place.photoURL = aPlaceItem.itemCoverPhotoUrl;
+    place.latitude = [aPlaceItem.placeInfo.location.latitude floatValue];
+    place.longitude = [aPlaceItem.placeInfo.location.longitude floatValue];
+    return place;
+}
+
+- (Place*)getPlaceFromList:(int)row
+{
+    Place *place;
+    
+    if (tableViewPlaceList.tag == TAG_TABLEVIEW_PLACES_NEARBY) 
+    {
+        LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:row];
+        place = [self getPlaceFromLocationItemPlace:aPlaceItem];
+    }
+    else 
+    {
+        place = (Place*)[placeList objectAtIndex:row];
+    }
+    
+    return place;
+}
+
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Place *place = (Place*)[placeList objectAtIndex:indexPath.row];
-    
+    Place *place = [self getPlaceFromList:indexPath.row];
+
     if(searching) 
         place = (Place*)[copyListOfItems objectAtIndex:indexPath.row];
     
@@ -155,8 +213,6 @@
         [btnEdit setTitle:@"Edit place" forState:UIControlStateNormal];
         [btnEdit addTarget:self action:@selector(actionEditPlace:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:btnEdit];
-        if (self.placeType == OtherPeople)
-            btnEdit.hidden = YES;
         
         // Footer view
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, CELL_HEIGHT - 30, 300, 25)];
@@ -224,12 +280,8 @@
                                       210, 
                                       [self decideLabelHeight:placeNameTextView]);
     
-    
-    
     UIScrollView *scrollViewAddress = (UIScrollView*)[cell viewWithTag:3003];
     scrollViewAddress.contentSize = addressStringSize;
-    
-    NSLog(@"place address %@", [(Place*)[placeList objectAtIndex:indexPath.row] address]);
     
     UILabel *labelAddress = (UILabel*)[cell viewWithTag:3004];
     labelAddress.frame = CGRectMake(labelAddress.frame.origin.x, labelAddress.frame.origin.y, addressStringSize.width, addressStringSize.height);
@@ -248,6 +300,8 @@
     for (UIView *subView in [cell.contentView subviews]) {
         if ([subView isKindOfClass:[UIButton class]]) {
             subView.tag = indexPath.row;
+            if (self.placeType == OtherPeople || tableView.tag == TAG_TABLEVIEW_PLACES_NEARBY)
+                subView.hidden = YES;
             break;
         }
     }
@@ -258,6 +312,9 @@
             break;
         }
     }
+
+    
+
     
     return cell;
     
@@ -273,7 +330,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return (searching) ? [copyListOfItems count] : [placeList count];
+    return (searching) ? [copyListOfItems count] : (tableView.tag == TAG_TABLEVIEW_PLACES_NEARBY)  ? [smAppDelegate.placeList count] : [placeList count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -320,7 +377,7 @@
 
 -(void)showInMapview:(id)sender 
 {
-    Place *place = (Place*)[placeList objectAtIndex:[sender tag]];
+    Place *place = [self getPlaceFromList:[sender tag]];
     
     if(searching) 
         place = (Place*)[copyListOfItems objectAtIndex:[sender tag]];
@@ -355,6 +412,12 @@
     [totalNotifCount release];
     [viewSearch release];
     [searchBar release];
+    [labelNearToMe release];
+    [labelPlaces release];
+    [buttonPlaces release];
+    [buttonNearToMe release];
+    [imageViewDivider release];
+    [viewTabContainer release];
     [super dealloc];  
 }
 
@@ -388,9 +451,41 @@
     }
 }
 
+- (void)closeSearchBarIfOpen
+{
+    searchBar.text = @"";
+    [searchBar resignFirstResponder];
+    searching = NO;
+    tableViewPlaceList.scrollEnabled = YES;
+    [ovController.view removeFromSuperview];
+    [ovController release];
+    ovController = nil;
+    if (viewSearch.frame.origin.y > 44)
+        [self moveSearchBarAnimation:-44];
+}
+
+- (IBAction)actionPlacesButton:(id)sender 
+{
+    [self closeSearchBarIfOpen];
+    tableViewPlaceList.tag = TAG_TABLEVIEW_MY_PLACES;
+    [tableViewPlaceList reloadData];
+    labelPlaces.highlighted = YES;
+    labelNearToMe.highlighted = NO;
+}
+
+- (IBAction)actionNearToMeButton:(id)sender 
+{
+    [self closeSearchBarIfOpen];
+    tableViewPlaceList.tag = TAG_TABLEVIEW_PLACES_NEARBY;
+    [tableViewPlaceList reloadData];
+    [self loadImagesForOnscreenRows];
+    labelPlaces.highlighted = NO;
+    labelNearToMe.highlighted = YES;
+}
+
 - (void)loadImagesForOnscreenRows {
     
-    if ([placeList count] > 0) {
+    if ([placeList count] > 0 || tableViewPlaceList.tag == TAG_TABLEVIEW_PLACES_NEARBY) {
         
         NSArray *visiblePaths = [tableViewPlaceList indexPathsForVisibleRows];
         
@@ -402,7 +497,7 @@
             
             UIImageView *imgCover = (UIImageView*) [cell viewWithTag:3001];
             
-            Place *place = [placeList objectAtIndex:indexPath.row];
+            Place *place = [self getPlaceFromList:indexPath.row];
             
             if(searching) 
                 place = (Place*)[copyListOfItems objectAtIndex:indexPath.row];
@@ -483,13 +578,28 @@
 	NSString *searchText = searchBar.text;
     
     [copyListOfItems removeAllObjects];
-	for (Place *place in placeList)
-	{
-		NSRange titleResultsRange = [place.name rangeOfString:searchText options:NSCaseInsensitiveSearch];
-		
-		if (titleResultsRange.length > 0)
-			[copyListOfItems addObject:place];
-	}
+    
+    if (tableViewPlaceList.tag == TAG_TABLEVIEW_PLACES_NEARBY) 
+    {
+        for (LocationItemPlace *place in smAppDelegate.placeList)
+        {
+            NSRange titleResultsRange = [place.itemName rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            if (titleResultsRange.length > 0)
+                [copyListOfItems addObject:[self getPlaceFromLocationItemPlace:place]];
+        }
+    } 
+    else 
+    {
+        for (Place *place in placeList)
+        {
+            NSRange titleResultsRange = [place.name rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            if (titleResultsRange.length > 0)
+                [copyListOfItems addObject:place];
+        }
+    }
+	
 }
 
 -(void)moveSearchBarAnimation:(int)moveby
@@ -506,7 +616,8 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:0.3];    
-    [viewSearch setFrame:viewFrame];  
+    [viewSearch setFrame:viewFrame]; 
+    viewTabContainer.frame = CGRectMake(0, viewTabContainer.frame.origin.y + moveby, 320, viewTabContainer.frame.size.height);
     [UIView commitAnimations];    
 }
 

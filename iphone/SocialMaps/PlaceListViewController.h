@@ -23,6 +23,12 @@ typedef enum _PLACE_TYPES {
     IBOutlet    UILabel     *totalNotifCount;
     IBOutlet    UIView      *viewSearch;
     IBOutlet    UISearchBar *searchBar;
+    IBOutlet    UILabel     *labelNearToMe;
+    IBOutlet    UILabel     *labelPlaces;
+    IBOutlet    UIButton    *buttonPlaces;
+    IBOutlet    UIButton    *buttonNearToMe;
+    IBOutlet    UIImageView *imageViewDivider;
+    IBOutlet    UIView      *viewTabContainer;
     
     NSMutableArray      *placeList;
     AppDelegate         *smAppDelegate;
@@ -34,11 +40,14 @@ typedef enum _PLACE_TYPES {
 
 @property (atomic) PLACE_TYPES placeType;
 @property (nonatomic, retain) NSString *otherUserId;
+@property (nonatomic, retain) NSString *userName;
 
 - (IBAction)actionBackMe:(id)sender;
 - (IBAction)gotoNotification:(id)sender;
 - (IBAction)actionOkSearchButton:(id)sender;
 - (IBAction)actionShowSearchBarButton:(id)sender;
+- (IBAction)actionPlacesButton:(id)sender;
+- (IBAction)actionNearToMeButton:(id)sender;
 
 -(void) deletePlace:(Place*)place;
 -(void) loadImagesForOnscreenRows; 
