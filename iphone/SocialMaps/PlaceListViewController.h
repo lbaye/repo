@@ -42,16 +42,75 @@ typedef enum _PLACE_TYPES {
 @property (nonatomic, retain) NSString *otherUserId;
 @property (nonatomic, retain) NSString *userName;
 
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionBackMe:(id)sender;
+
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Pressed ok button of search bar
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionOkSearchButton:(id)sender;
+
+/**
+ * @brief Show search bar
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionShowSearchBarButton:(id)sender;
+
+/**
+ * @brief Display user's saved places
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionPlacesButton:(id)sender;
+
+/**
+ * @brief Display own user nearby places
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionNearToMeButton:(id)sender;
 
+/**
+ * @brief Delete place if user delete place from the edit screen
+ * @param (Place) - Place which will be deleted
+ * @retval none
+ */
 -(void) deletePlace:(Place*)place;
+
+/**
+ * @brief Load cover images of visible cells
+ * @param none
+ * @retval none
+ */
 -(void) loadImagesForOnscreenRows; 
+
+/**
+ * @brief Display the total notification number
+ * @param none
+ * @retval none
+ */
 -(void) displayNotificationCount;
+
+/**
+ * @brief Reload the place list table view
+ * @param none
+ * @retval none
+ */
 -(void) reloadTableView;
 
 @end
