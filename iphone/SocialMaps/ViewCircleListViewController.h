@@ -29,13 +29,19 @@
 @property (nonatomic,retain)  IBOutlet UIView *msgView;
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
 @property (nonatomic)    float itemDistance;
--(IBAction)gotoTabBar:(id)sender;
--(IBAction)gotoInvites:(id)sender;
--(IBAction)gotoCircles:(id)sender;
--(IBAction)gotoBlockUnBlock:(id)sender;
--(IBAction)sendMsg:(id)sender;
--(IBAction)cancelMsg:(id)sender;
-- (IBAction)actionNotificationButton:(id)sender;
+
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
+-(IBAction)actionNotificationButton:(id)sender;
+
+/**
+ * @brief show searchbar for searching
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)showSearch:(id)sender;
 
 @end

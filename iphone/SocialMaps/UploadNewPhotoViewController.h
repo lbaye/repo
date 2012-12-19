@@ -52,15 +52,67 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property (nonatomic,retain) IBOutlet UIScrollView *frndsScrollView;
 @property (nonatomic,retain) IBOutlet UISegmentedControl *segmentControl;
 
--(IBAction)myPhotos:(id)sender;
--(IBAction)addTakePhotos:(id)sender;
--(IBAction)uploadPhotos:(id)sender;
--(IBAction)cancel:(id)sender;
-- (IBAction)actionNotificationButton:(id)sender;
-- (IBAction)backButtonAction:(id)sender;
--(IBAction)segmentChanged:(id)sender;
+/**
+ * @brief Navigate user to my photo tab
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)myPhotos:(id)sender;
 
--(IBAction)saveCustom:(id)sender;
--(IBAction)cancelCustom:(id)sender:(id)sender;
+/**
+ * @brief Image selection for user
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)addTakePhotos:(id)sender;
+
+/**
+ * @brief Upload the photo to server
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)uploadPhotos:(id)sender;
+
+/**
+ * @brief Cancel image upload and get back to my photo tab
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)cancel:(id)sender;
+
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)actionNotificationButton:(id)sender;
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)backButtonAction:(id)sender;
+
+/**
+ * @brief Change friend or circle selection option for custom sharing
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)segmentChanged:(id)sender;
+
+/**
+ * @brief Save custom sharing option
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)saveCustom:(id)sender;
+
+/**
+ * @brief Cancel custom sharing  option
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)cancelCustom:(id)sender;
 
 @end

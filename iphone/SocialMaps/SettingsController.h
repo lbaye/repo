@@ -27,13 +27,60 @@
 @property (retain, nonatomic) IBOutlet UIButton *backButton;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
+/**
+ * @brief Expands platform preference settings
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)expandPlatformSettings:(id)sender;
+
+/**
+ * @brief Expands layer preference settings
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)expandLayersSettings:(id)sender;
+
+/**
+ * @brief Make visible information sharing option
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)setInfoSharing:(id)sender;
+
+/**
+ * @brief Make visible account setting options
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)setAccountSettings:(id)sender;
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)goBack:(id)sender;
+
+/**
+ * @brief Make visible location sharing options
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)setLocationSharing:(id)sender;
+
+/**
+ * @brief Make visible notification options (not implemented yet)
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)setNotifSettings:(id)sender;
--(IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)gotoNotification:(id)sender;
 
 @end

@@ -29,12 +29,32 @@
 @property (nonatomic,retain) IBOutlet UITextView *textViewNewMsg;
 @property (nonatomic,retain) IBOutlet UIButton *selectAllButton;
 
--(IBAction)sendMsg:(id)sender;
--(IBAction)cancelMsg:(id)sender;
-
+/**
+ * @brief cancel view and return to previous view
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancel:(id)sender;
+
+/**
+ * @brief block selected user
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)selectedUser:(id)sender;
+
+/**
+ * @brief select all user
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)selectAllpeople:(id)sender;
-- (IBAction)actionNotificationButton:(id)sender;
+
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
+-(IBAction)actionNotificationButton:(id)sender;
 
 @end

@@ -21,7 +21,18 @@
 @property(nonatomic,retain) IBOutlet UILabel * totalNotifCount;
 @property(nonatomic,retain) UserInfo *userInfo;
 
+/**
+ * @brief navigate user to previous screen
+ * @param (id) - action sender
+ * @retval action
+ **/
 -(IBAction)backButtonAction:(id)sender;
+
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ **/
 -(IBAction)gotoNotification:(id)sender;
 
 @end

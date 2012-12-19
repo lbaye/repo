@@ -18,8 +18,25 @@
 @property(nonatomic,retain) IBOutlet UITableView *planListTableView;
 @property(nonatomic,retain) IBOutlet UILabel * totalNotifCount;
 
--(IBAction)backButtonAction:(id)sender;
--(IBAction)gotoNotification:(id)sender;
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)backButtonAction:(id)sender;
+
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Deletes a plan
+ * @param (NSNotification) - Notification object
+ * @retval none
+ */
 - (void)deletePlan:(NSNotification *)notif;
 
 @end

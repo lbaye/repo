@@ -138,10 +138,39 @@
 @property (nonatomic,retain)  NSMutableArray *myPhotoList;
 @property (nonatomic, assign) BOOL isAppInBackgound;
 
+/**
+ * @brief Get shared instance of a object
+ * @param none
+ * @retval (id) - shared instance of a object
+ */
 + (id) sharedInstance;
+
+/**
+ * @brief Hides the loading indicator
+ * @param none
+ * @retval none
+ */
 - (void) hideActivityViewer;
+
+/**
+ * @brief Show loading indicator
+ * @param (UIView) - View in which loading indicator will be displayed
+ * @retval action
+ */
 - (void) showActivityViewer:(UIView*)sender;
+
+/**
+ * @brief Get user preference and preference data
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (void) getPreferenceSettings:(NSString*) authToken;
+
+/**
+ * @brief Get user information
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (void) getUserInformation:(NSString*) token ;
 
 @end

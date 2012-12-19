@@ -30,14 +30,18 @@
 @property (nonatomic, retain) NSMutableData *activeDownload;
 @property (nonatomic, retain) NSURLConnection *imageConnection;
 
+/**
+ * @brief start download of an event image
+ * @param (id) - action sender
+ * @retval action
+ */
 - (void)startDownload;
+
+/**
+ * @brief cancel download of an event image
+ * @param (id) - action sender
+ * @retval action
+ */
 - (void)cancelDownload;
 
 @end
-
-//@protocol EventImageDownloaderDelegate 
-
-//- (void)appImageDidLoad:(NSIndexPath *)indexPath;
-//- (void)appImageDidLoad:(NSString *)eventId;
-
-//@end
