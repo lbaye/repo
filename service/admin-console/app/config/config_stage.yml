@@ -28,9 +28,9 @@ assetic:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017
+            server: mongodb://10.239.65.85:27017
             options: {}
-    default_database: socialmaps
+    default_database: socialmaps_stage
     document_managers:
         default:
             auto_mapping: true
