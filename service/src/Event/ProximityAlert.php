@@ -79,28 +79,13 @@ class ProximityAlert extends Base
             $this->informFriends($user, $friends);
 
             # Inform user about nearby friends (many to one notification)
-            $filteredFriends = $this->filterFriendsByVisibility($user, $friends);
-            $this->informUser($user, $filteredFriends);
+            $this->informUser($user, $friends);
 
         } else {
             $this->debug('Sad! No one is nearby ' . $user->getFirstName());
         }
     }
 
-
-    private function filterFriendsByVisibility(\Document\User $user, $friends)
-    {
-
-        $friendList = array();
-
-        foreach ($friends as $friendHash) {
-            $friend = $this->userRepository->find($friendHash['_id']->{'$id'});
-            if (($friend->isVisibleTo($user))) {
-                $friendList[] = $friendHash;
-            }
-        }
-        return $friendList;
-    }
 
     private function findNearbyFriends(\Document\User $user)
     {
@@ -139,22 +124,27 @@ class ProximityAlert extends Base
             json_encode($user->getCurrentLocation()));
     }
 
-    private function informUser(\Document\User $user, &$friends)
+    private function informUser(\Document\User $user, &$allFriends)
     {
-
         $this->debug('Informing user - ' . $user->getName() . ' about his nearby friends');
 
-        if (count($friends) == 1) {
-            $friend = $this->userRepository->find($friends[0]['_id']->{'$id'});
-            $message = $this->createNotificationMessage($friend, $user);
-        } else {
-            $message = $this->createGroupNotificationMessage($friends);
-        }
+        $friends = $this->filterFriendsByVisibility($user, $allFriends);
 
-        $this->sendNotification($user, $this->addNotificationsCounts($user, $message));
+        if (!empty($friends)) {
+            if (count($friends) == 1) {
+                $friend = $this->userRepository->find($friends[0]['_id']->{'$id'});
+                $message = $this->createNotificationMessage($friend, $user);
+            } else {
+                $message = $this->createGroupNotificationMessage($friends);
+            }
+
+            $this->sendNotification($user, $this->addNotificationsCounts($user, $message));
+        } else {
+            $this->debug('No visible friend found');
+        }
     }
 
-    private function informFriends(\Document\User $user, $friends)
+    private function informFriends(\Document\User &$user, &$friends)
     {
         $this->debug('Informing friends about - ' . $user->getFirstName() . ' presence.');
 
@@ -169,6 +159,24 @@ class ProximityAlert extends Base
                     $friend, $this->createNotificationMessage($user, $friend)));
             }
         }
+    }
+
+    private function filterFriendsByVisibility(\Document\User &$user, &$friends)
+    {
+        $friendList = array();
+
+        foreach ($friends as $friendHash) {
+            $friend = $this->userRepository->find($friendHash['_id']->{'$id'});
+            $this->userRepository->refresh($friend);
+
+            if (($friend->isVisibleTo($user))) {
+                $friendList[] = $friendHash;
+            } else {
+                $this->debug(sprintf('%s is not visible', $friend->getName()));
+            }
+            $friend = null;
+        }
+        return $friendList;
     }
 
     private function addNotificationsCounts(\Document\User $user, array $messages)

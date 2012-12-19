@@ -1,0 +1,164 @@
+#!/bin/bash
+#
+# do_s3_log_archive v1.0
+# script to archive then upload files to s3
+#
+
+#variables
+
+#script version
+VERSION="1.0"
+
+#log file name
+LOGFILE=do_s3_log_archive.log
+
+#tmp directory
+TMP=/tmp/
+
+#target log directory
+LOGDIR=/var/log/
+
+#e-mail address to e-mail script errors to
+EMAILADDR="khan.tanveer@genweb2.com"
+
+#archive limit in days
+ARCHLIMIT=7
+
+#date variables
+TODAY=`date '+%Y%m%d'`
+YESTERDAY=`date -d'yesterday'  +%Y%m%d`
+YEAR=`date -d'yesterday' '+%Y'`
+MONTH=`date -d'yesterday' '+%m'`
+DAY=`date -d'yesterday' '+%d'`
+PAST=`date --date="$ARCHLIMIT days ago" +'%Y%m%d'`
+
+HOST=10.239.65.85
+PORT=27017
+DATABASE=socialmaps_v13
+PATH_PREFIX=/home/ubuntu/backup
+
+#s3 details
+BUCKET=socialmapsbackup
+
+#filename array
+FILENAMES=( file1.log file2.log )
+
+#usage output
+usage() {
+  echo "usage $0 [cron|test <filename>]"
+  echo "$0 cron: Run through main process to archive then upload to s3"
+  echo "$0 test: Test process with <filename>"
+  exit 1
+}
+
+[ "$1" ] || usage
+
+#banner output
+banner() {
+ echo; tput sgr0
+ echo -en "\E[37;34m--------------------------------------------------------";tput sgr0;echo
+ echo  " $0 version: $VERSION - script@davidodwyer.com"
+ echo  " starting $1 process"
+ echo -en "\E[37;34m--------------------------------------------------------";tput sgr0;echo
+ echo; tput sgr0
+}
+
+#process error check
+error_check () {
+
+	if [ $? != 0 ]; then
+		echo -e "finished $1:"
+		echo -en "\t\t\t\t\t"
+		echo -en "\E[37;41mERROR"; tput sgr0; echo
+		echo -n "ERROR:"  >> $TMP/$LOGFILE
+		echo "$1"  >> $TMP/$LOGFILE
+		exit 1
+
+	else
+		echo -e "finished $1:"
+		echo -en "\t\t\t\t\t"
+		echo -en "\E[37;42mOK"; tput sgr0; echo
+		echo -n "OK:" >> $TMP/$LOGFILE
+		echo "$1" >> $TMP/$LOGFILE
+ fi
+
+
+}
+
+## main processes
+
+do_setup_dir() {
+        echo "started: do_setup_dir"
+	if [ ! -x "$LOGDIR"/ARCHIVE/"$YEAR"/"$MONTH" ]; then
+                        echo ""$LOGDIR"/ARCHIVE/ does not exist"
+                        mkdir -p "$LOGDIR"/ARCHIVE/"
+                else
+                        echo "OK: "$LOGDIR"/ARCHIVE/" does exist"
+        fi
+
+	error_check do_setup_dir
+}
+
+do_compress() {
+    echo "Compress: do_compress"
+
+    NOW=$1
+
+    backup_path=$PATH_PREFIX/$NOW
+    echo Setting backup path - $backup_path
+
+    echo Executing mongodump...
+    /usr/bin/mongodump -h $HOST --port $PORT -d $DATABASE --journal -o $backup_path
+
+    echo Archiving backed up snapshot...
+    /bin/tar -cvf $NOW.tar $NOW
+
+    echo Removing backed up file...
+    rm -rf $backup_path
+}
+do_upload() {
+	echo "started: do_upload $1"
+	s3cmd put $1 s3://$BUCKET/$YEAR/$MONTH/
+	error_check do_upload
+}
+
+do_upload_check() {
+        echo "started: do_upload_check $1"
+	s3cmd --list-md5 ls s3://$BUCKET/$YEAR/$MONTH/ | grep "$YESTERDAY"_"$1" | awk '{ print $4 }'
+}
+
+do_remove_file() {
+	echo "started: do_remove_file"
+	rm -rf $1
+	error_check do_remove_file
+}
+## testing
+
+## switches
+case $1 in
+	cron)
+		banner "cron"
+	        echo "started: do_s3_log_archive"
+
+        NOW=`date +%d%m%Y%H%M`
+		/home/ubuntu/backup/mongo_backup_prod13 $NOW
+		FILE=/home/ubuntu/backup/$NOW.tar
+
+        do_compress $NOW
+        do_upload $FILE
+        do_upload_check $FILE
+        do_remove_file $FILE
+
+		echo -en "\t\t\t\t\t"
+	        echo -en "\E[42;37mFINISHED"; tput sgr0; echo
+
+	exit
+	;;
+	test)
+	    do_compress $2
+		do_upload $2
+		do_upload_check $2
+
+	exit
+	;;
+esac
