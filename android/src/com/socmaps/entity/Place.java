@@ -17,16 +17,12 @@ public class Place implements Serializable {
 	private String address = "";
 	private String venue;
 	private String streetViewImage;
-	
+
 	private String category;
 	private String description;
 	private TimeEntity createDate;
 	private People owner;
 	private String type;
-	
-	// private MyGeoPoint location;
-	// private MyGeoPoint northeast;
-	// private MyGeoPoint southwest;
 
 	public double getLatitude() {
 		return latitude;
@@ -51,14 +47,6 @@ public class Place implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	/*public String getVenue() {
-		return venue;
-	}
-
-	public void setVenue(String venue) {
-		this.venue = venue;
-	}*/
 
 	public void setId(String id) {
 		this.id = id;
@@ -115,20 +103,6 @@ public class Place implements Serializable {
 	public ArrayList<String> getTypes() {
 		return types;
 	}
-
-	/*
-	 * public void setLocation(MyGeoPoint point) { this.location = point; }
-	 * 
-	 * public MyGeoPoint getLocation() { return location; }
-	 * 
-	 * public void setNortheast(MyGeoPoint point) { this.northeast = point; }
-	 * 
-	 * public MyGeoPoint getNortheast() { return northeast; }
-	 * 
-	 * public void setSouthwest(MyGeoPoint point) { this.southwest = point; }
-	 * 
-	 * public MyGeoPoint getSouthwest() { return southwest; }
-	 */
 
 	public String getStreetViewImage() {
 		return streetViewImage;

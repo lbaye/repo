@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -47,7 +46,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 	private Button inviteMoreFriendBtn, deleteBtn, editBtn, backBtn;
 	private LinearLayout rsvpPanel;
 	private Context context;
-	// private ProgressDialog mProgressDialog;
 	int requestCode;
 	String responseString;
 	int responseStatus = 0;
@@ -70,7 +68,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	private Event selectedEvent;
 
-	// private ImageLoader imageLoader;
 	ImageDownloader imageDownloader;
 
 	String source = "";
@@ -117,7 +114,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		public void onCheckedChanged(RadioGroup group, int checkedId) {
 			// TODO Auto-generated method stub
 			if (radioflag) {
-				// RadioButton rb=(RadioButton) group.findViewById(checkedId);
 				switch (checkedId) {
 				case R.id.yes_btn:
 					myResponse = Constant.MY_RESPONSE_YES;
@@ -301,14 +297,11 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			if (selectedEvent.getEventImageUrl() != null) {
 
 				if (!selectedEvent.getEventImageUrl().equalsIgnoreCase("")) {
-					// imageLoader.DisplayImage(selectedEvent.getEventImageUrl(),
-					// eventImage);
 					imageDownloader.download(selectedEvent.getEventImageUrl(),
 							eventImage);
 				}
 
 			} else {
-				// eventImage.setImageResource(R.drawable.event_item_bg);
 			}
 
 			// Rsvp Panel show hide
@@ -374,15 +367,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			profilePic.setImageResource(R.drawable.user_default);
 		}
 
-		// if (avatarUrl != null && !avatarUrl.equals("")) {
-		//
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(
-		// getResources(), R.drawable.user_default));
-		//
-		// BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-		//
-		// }
-
 		proficPicContainer.setBackgroundResource(R.color.highlightGreen);
 
 		return v;
@@ -404,10 +388,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		context = EventDetailsActivity.this;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		// imageLoader = new ImageLoader(context);
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		eventNameText = (TextView) findViewById(R.id.event_name_text);
@@ -443,7 +423,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 			if (source != null) {
 				if (source.equalsIgnoreCase("map")) {
-					// finish();
 
 					StaticValues.isHighlightAnnotation = true;
 					StaticValues.highlightAnnotationItem = selectedEvent;
@@ -452,20 +431,9 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 				} else {
-					/*
-					 * Intent intent = new Intent(context,
-					 * EventListActivity.class); finish();
-					 * startActivity(intent);
-					 */
-
 					finish();
 				}
 			} else {
-				/*
-				 * Intent intent = new Intent(context, EventListActivity.class);
-				 * finish(); startActivity(intent);
-				 */
-
 				finish();
 			}
 
@@ -473,19 +441,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		return false;
 
 	}
-
-	/*
-	 * @Override protected void onActivityResult(int requestCode, int
-	 * resultCode, Intent data) { super.onActivityResult(requestCode,
-	 * resultCode, data); if(resultCode==RESULT_OK &&
-	 * requestCode==Constant.REQUEST_CODE_MAP_PICKER){ String Address =
-	 * data.getStringExtra("ADDRESS"); double Lat=data.getDoubleExtra("LAT",
-	 * 0.0); double Lng=data.getDoubleExtra("LNG", 0.0); Toast.makeText(context,
-	 * Address+" "+Lat+" "+Lng, Toast.LENGTH_SHORT).show();
-	 * 
-	 * 
-	 * } }
-	 */
 
 	@Override
 	public void onClick(View v) {
@@ -499,17 +454,8 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 		} else if (v == showOnMapImage) {
 
-			/*
-			 * Intent intent = new Intent(context, ShowItemOnMap.class);
-			 * intent.putExtra("FLAG", Constant.FLAG_EVENT);
-			 * intent.putExtra("selectedItem", selectedEvent);
-			 * intent.putExtra("lng", selectedEvent.getLongitude());
-			 * startActivity(intent);
-			 */
-
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = selectedEvent;
-			// finish();
 
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -598,10 +544,8 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 
 		if (status == Constant.STATUS_SUCCESS) {
 
-			// etNewMessage.setText("");
 			Toast.makeText(context, "Event deleted successfully.",
 					Toast.LENGTH_SHORT).show();
-			// EventListActivity.isUpdateList = true;
 			Intent intent = new Intent(context, EventListActivity.class);
 			finish();
 			startActivity(intent);
@@ -671,8 +615,6 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 		Log.i("rsvp response", status + ":" + response);
 
 		if (status == Constant.STATUS_SUCCESS) {
-
-			// EventListActivity.isUpdateList = true;
 
 		} else {
 			Toast.makeText(context, "Failed. Please try again.",

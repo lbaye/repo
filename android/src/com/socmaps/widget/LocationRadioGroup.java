@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 
 import com.socmaps.ui.R;
 
+
+/**
+ * LocationRadioGroup class for selecting a particular location.
+ */
 public class LocationRadioGroup extends RelativeLayout implements
 		RadioGroup.OnCheckedChangeListener {
 
@@ -32,11 +36,25 @@ public class LocationRadioGroup extends RelativeLayout implements
 
 	boolean isFirstTime = true;
 
+	
+	/**
+	 * Constructs a view to select a particular location
+	 * 
+	 * @param context Current active Context
+	 * @param locationRadioGroupListener which is used for a specific action when radio button change
+	 */
 	public LocationRadioGroup(Context context,
 			LocationRadioGroupListener locationRadioGroupListener) {
 		this(context, locationRadioGroupListener, null);
 	}
 
+	/**
+	 * Constructs a view to select a particular location
+	 * 
+	 * @param context Current active Context
+	 * @param locationRadioGroupListener which is used for a specific action when radio button change
+	 * @param preSelectedItem is the item of location to track which item selected
+	 */
 	public LocationRadioGroup(Context context,
 			LocationRadioGroupListener locationRadioGroupListener,
 			SelectedItem preSelectedItem) {
@@ -69,6 +87,11 @@ public class LocationRadioGroup extends RelativeLayout implements
 
 	}
 
+	/**
+	 * Set location depends on user choice.
+	 * 
+	 * @param item to set the radio button checked 
+	 */
 	public void setValue(SelectedItem item) {
 		if (item != null) {
 			switch (item) {

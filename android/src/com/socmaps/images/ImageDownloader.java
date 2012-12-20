@@ -75,7 +75,6 @@ public class ImageDownloader {
 		return instance;
 	}
 
-	// private Mode mode = Mode.NO_ASYNC_TASK;
 	private Mode mode = Mode.CORRECT;
 
 	/**
@@ -123,7 +122,6 @@ public class ImageDownloader {
 		if (cancelPotentialDownload(url, imageView)) {
 			switch (mode) {
 			case NO_ASYNC_TASK:
-				// Bitmap bitmap = downloadBitmap(url);
 				Bitmap bitmap = FBUtility.getBitmap(url);
 				addBitmapToCache(url, bitmap);
 				imageView.setImageBitmap(bitmap);
@@ -221,7 +219,6 @@ public class ImageDownloader {
 						InputStream inputStream = null;
 						try {
 							inputStream = entity.getContent();
-							// return BitmapFactory.decodeStream(inputStream);
 							// Bug on slow connections, fixed in future release.
 
 							Bitmap bitmap = BitmapFactory
@@ -331,7 +328,6 @@ public class ImageDownloader {
 		@Override
 		protected Bitmap doInBackground(String... params) {
 			url = params[0];
-			// return downloadBitmap(url);
 			return FBUtility.getBitmap(url);
 		}
 
@@ -496,8 +492,6 @@ public class ImageDownloader {
 	 * after a certain inactivity delay.
 	 */
 	public void clearCache() {
-		// sHardBitmapCache.clear();
-		// sSoftBitmapCache.clear();
 	}
 
 	/**

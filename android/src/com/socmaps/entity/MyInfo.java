@@ -37,9 +37,6 @@ public class MyInfo {
 
 	private int age;
 
-	// private Circle[] circles;
-	// private Friend[] friends;
-
 	private String statusMsg;
 	private String coverPhoto;
 
@@ -48,8 +45,6 @@ public class MyInfo {
 
 	private TimeEntity lastLoginTime;
 
-	//private MyGeoPoint currentPosition;
-	
 	private NotificationCount notificationCount = new NotificationCount();
 
 	public void setCoverPhoto(String url) {
@@ -276,40 +271,22 @@ public class MyInfo {
 		return age;
 	}
 
-	/*
-	 * public void setCircle(Circle[] circles) { this.circles = circles; }
-	 * 
-	 * public Circle[] getCircle() { return circles; }
-	 * 
-	 * public void setFriend(Friend[] friends) { this.friends = friends; }
-	 * 
-	 * public Friend[] getFriend() { return friends; }
-	 */
-
 	public List<People> getFriendList() {
 		return friendList;
 	}
 
 	public void setFriendList(List<People> friendList) {
-		//this.friendList = friendList;
-		
-		if(this.friendList!=null)
-		{
-			if(friendList!=null)
-			{
+
+		if (this.friendList != null) {
+			if (friendList != null) {
 				this.friendList.clear();
-				for(People people:friendList)
-				{
+				for (People people : friendList) {
 					this.friendList.add(people);
 				}
 			}
-			
-			
-		}
-		else
-		{
+		} else {
 			this.friendList = friendList;
-		}	
+		}
 	}
 
 	public List<Circle> getCircleList() {
@@ -317,24 +294,18 @@ public class MyInfo {
 	}
 
 	public void setCircleList(List<Circle> circleList) {
-		if(this.circleList!=null)
-		{
-			if(circleList!=null)
-			{
+		if (this.circleList != null) {
+			if (circleList != null) {
 				this.circleList.clear();
-				for(Circle circle:circleList)
-				{
+				for (Circle circle : circleList) {
 					this.circleList.add(circle);
 				}
 			}
-			
-			
-		}
-		else
-		{
+
+		} else {
 			this.circleList = circleList;
-		}		
-		
+		}
+
 	}
 
 	public TimeEntity getLastLoginTime() {
@@ -344,14 +315,6 @@ public class MyInfo {
 	public void setLastLoginTime(TimeEntity lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
-
-	/*public MyGeoPoint getCurrentPosition() {
-		return currentPosition;
-	}
-
-	public void setCurrentPosition(MyGeoPoint currentPosition) {
-		this.currentPosition = currentPosition;
-	}*/
 
 	public UserSettings getSettings() {
 		return settings;

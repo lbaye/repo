@@ -81,7 +81,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 	List<LinearLayout> circleItemViewList;
 	LinearLayout customSubgroupItem;
 	LinearLayout strangerItem;
-	// List<Place> placeList;
 	List<LinearLayout> placeItemViewList;
 
 	Button btnNewLocation;
@@ -114,11 +113,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		setContentView(R.layout.location_sharing_preferences_layout);
 
 		initialize();
-
-		// generateDummyPlatformList();
-
-		// generateView();
-
 		getLocationSharingDataFromServer();
 
 	}
@@ -130,10 +124,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 		super.onResume();
-		// if (StaticValues.myInfo == null)
-		// startDialogAndBgThread();
-		// else
-		// setFieldValue(StaticValues.myInfo);
 	}
 
 	@Override
@@ -184,7 +174,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		circleItemViewList = new ArrayList<LinearLayout>();
 		platformList = new ArrayList<Platform>();
 		platformItemViewList = new ArrayList<LinearLayout>();
-		// placeList = new ArrayList<Place>();
 		placeItemViewList = new ArrayList<LinearLayout>();
 
 		customSelectedFriendList = new ArrayList<String>();
@@ -209,22 +198,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 	private void generateDummyPlatformList() {
 
-		// if (locationSharing.getPlatforms().size() >= 0) {
-		//
-		// HashMap<String, LsValues> platforms = locationSharing
-		// .getPlatforms();
-		//
-		// for (String key : platforms.keySet()) {
-		//
-		// //LsValues lsValues = platforms.get(key);
-		//
-		// Platform platform = new Platform();
-		// platform.setId(key);
-		// platform.setName(key);
-		// platformList.add(platform);
-		//
-		// }
-
 		String[] platforms = { "Facebook", "Twitter", "Foursqure" };
 		String[] platformIds = { "fb", "twitter", "fs" };
 		for (int i = 0; i < platforms.length; i++) {
@@ -234,16 +207,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 			platformList.add(platform);
 		}
-
-		// }
-
 	}
 
 	private void generateView() {
-		//generateCustomSubgroupView();
-		//generateCircleView();
-		//generatePlatformView();
-		//generateStrangerView();
 		generateGeoFencesView();
 		setStatus();
 	}
@@ -307,132 +273,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	}
 
-	private void generateCustomSubgroupView() {
-
-		int radius = 0;
-		int duration = 0;
-
-		if (locationSharing.getLSFriendsAndCircles() != null) {
-
-			radius = locationSharing.getLSFriendsAndCircles().getRadius();
-			duration = locationSharing.getLSFriendsAndCircles().getDuration();
-
-			if (locationSharing.getLSFriendsAndCircles().getFriends() != null) {
-				customSelectedFriendList = locationSharing
-						.getLSFriendsAndCircles().getFriends();
-			}
-
-			if (locationSharing.getLSFriendsAndCircles().getCircles() != null) {
-				customSelectedCircleList = locationSharing
-						.getLSFriendsAndCircles().getCircles();
-			}
-
-		}
-
-		customSubgroupItem = new LocationPreferenceItemView(context, null,
-				null, duration, radius, false, false, true);
-
-		llCustomSubgroupContents.removeAllViews();
-		llCustomSubgroupContents.addView(customSubgroupItem);
-	}
-
-	private void generateCircleView() {
-
-		List<Circle> circleList = StaticValues.myInfo.getCircleList();
-
-		if (circleList != null) {
-
-			llCircleList.removeAllViews();
-			circleItemViewList.clear();
-			for (int i = 0; i < circleList.size(); i++) {
-				Circle circle = circleList.get(i);
-				if (circle != null) {
-
-					int radius = 0;
-					int duration = 0;
-
-					if (locationSharing.getCirclesOnly() != null) {
-						if (locationSharing.getCirclesOnly().containsKey(
-								circle.getId())) {
-							LsValues values = locationSharing.getCirclesOnly()
-									.get(circle.getId());
-							radius = values.getRadius();
-							duration = values.getDuration();
-						}
-					}
-
-					LinearLayout circleItemView = new LocationPreferenceItemView(
-							context, circle.getId(), circle.getName(),
-							duration, radius, false);
-					circleItemViewList.add(circleItemView);
-					llCircleList.addView(circleItemView);
-				}
-			}
-
-		}
-	}
-
-	private void generatePlatformView() {
-		llPlatformList.removeAllViews();
-		for (int i = 0; i < platformList.size(); i++) {
-			Platform platform = platformList.get(i);
-			if (platform != null) {
-
-				int radius = 0;
-				int duration = 0;
-
-				if (locationSharing.getPlatforms() != null) {
-					if (locationSharing.getPlatforms().containsKey(
-							platform.getId())) {
-						LsValues values = locationSharing.getPlatforms().get(
-								platform.getId());
-						radius = values.getRadius();
-						duration = values.getDuration();
-					}
-				}
-
-				LinearLayout platformItemView = new LocationPreferenceItemView(
-						context, platform.getId(), platform.getName(),
-						duration, radius, false);
-				llPlatformList.addView(platformItemView);
-				platformItemViewList.add(platformItemView);
-			}
-		}
-	}
-
-	private void generateStrangerView() {
-
-		int radius = 0;
-		int duration = 0;
-
-		if (locationSharing.getStrangers() != null) {
-
-			LsValues values = locationSharing.getStrangers();
-			radius = values.getRadius();
-			duration = values.getDuration();
-
-		}
-
-		strangerItem = new LocationPreferenceItemView(context, "1",
-				"Customize sharing for strangers", duration, radius, false);
-		llStrangerContents.removeAllViews();
-		llStrangerContents.addView(strangerItem);
-	}
-
-	/*
-	 * private void generatePlaceView() { //circleList =
-	 * StaticValues.searchResult.getPlaces(); //llPlaceList.removeAllViews();
-	 * 
-	 * String timeLimitTitle =
-	 * getString(R.string.locationSharingInvisibleRadiusTitle);
-	 * 
-	 * for (int i = 0; i < circleList.size(); i++) { Place place =
-	 * circleList.get(i); if (place != null) { LinearLayout placeItemView = new
-	 * LocationPreferenceItemView( context, place.getId(), place.getName(), 0,
-	 * timeLimitTitle); placeItemViewList.add(placeItemView);
-	 * llPlaceList.addView(placeItemView); } } }
-	 */
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -445,27 +285,22 @@ public class LocationSharingSettingsActivity extends Activity implements
 		} else if (v == llCustomSubgroupTitlePanel) {
 			showPeoplePicker(customGroupPickerName);
 		} else if (v == llCircleTitlePanel) {
-			// toggleCirclePanel();
 			togglePanel(llCircleTitlePanel, llCirclePanel);
 		}
 
 		else if (v == llPlatformTitlePanel) {
-			// togglePlatformPanel();
+
 			togglePanel(llPlatformTitlePanel, llPlatformPanel);
 
 		} else if (v == llPlaceTitlePanel) {
-			// togglePlacePanel();
+
 			togglePanel(llPlaceTitlePanel, llPlacePanel);
 		}
 
 		else if (v == btnNewLocation) {
 			getLocationFromMap();
 		} else if (v == btnSave) {
-
 			saveLocationSharingDataToServer();
-			// Toast.makeText(context, "Have to save the data.",
-			// Toast.LENGTH_SHORT).show();
-
 		}
 
 	}
@@ -512,23 +347,9 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 				displayDetailsUI(false);
 
-				// isLocationShared = false;
-				// llLocationShareContents.setVisibility(View.GONE);
-				//
-				// TextView tvTitleTexTop = (TextView) rlLocationShareTitle
-				// .findViewById(R.id.tvTitleTextTop);
-				// tvTitleTexTop.setTypeface(null, Typeface.NORMAL);
-
 			} else if (checkedId == R.id.rbLocationShareOn) {
 
 				displayDetailsUI(true);
-
-				// isLocationShared = true;
-				// llLocationShareContents.setVisibility(View.VISIBLE);
-				//
-				// TextView tvTitleTexTop = (TextView) rlLocationShareTitle
-				// .findViewById(R.id.tvTitleTextTop);
-				// tvTitleTexTop.setTypeface(null, Typeface.BOLD);
 			}
 		}
 
@@ -560,9 +381,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 			double lat = data.getDoubleExtra("LAT", 0.0);
 			double lng = data.getDoubleExtra("LNG", 0.0);
 
-			// MyGeoPoint geoPoint = new MyGeoPoint((int) (lat * 1E6), (int)
-			// (lng * 1E6), address);
-
 			// add new place
 			Place place = new Place();
 			place.setName(name);
@@ -582,7 +400,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		String radiusTitle = getString(R.string.locationSharingInvisibleRadiusTitle);
 
 		if (place != null) {
-			// placeList.add(place);
 			LinearLayout placeItemView = new LocationPreferenceItemView(
 					context, place.getId(), place.getName(), radius,
 					radiusTitle, place.getLatitude(), place.getLongitude());
@@ -671,9 +488,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 	private void setFieldValue(MyInfo myInfo) {
 
-		// remove this line finally
-		// rbLocationShareOn.setChecked(true);
-
 		if (null != myInfo) {
 
 		}
@@ -686,7 +500,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 		public void run() {
 			// TODO Auto-generated method stub
 
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 			handleAccountSettingsResponse(responseStatus, responseString);
@@ -714,15 +528,15 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -756,32 +570,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		}
 	};
 
-	private void startDialogAndBgThread() {
-
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			Thread thread = new Thread(null, getAccountSettingsInfo,
-					"get location sharing");
-			thread.start();
-			m_ProgressDialog = ProgressDialog.show(this, getResources()
-					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true,true);
-
-		} else {
-
-			DialogsAndToasts.showNoInternetConnectionDialog(context);
-		}
-
-	}
-
-	private void updateLocalValue(String responseString) {
-		// TODO Auto-generated method stub
-		MyInfo myInfo = ServerResponseParser.parseUserProfileInfo(
-				responseString, false);
-		if (myInfo != null)
-			StaticValues.myInfo = myInfo;
-	}
-
 	/*
 	 * Get Location Sharing data from server
 	 */
@@ -796,7 +584,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -812,11 +600,8 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 			RestClient restClient = new RestClient(Constant.smServerUrl
 					+ "/settings/share/location");
-			// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/settings/share/location
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
-
-			// restClient.AddParam("users[]", unblockId);
 
 			try {
 				restClient.Execute(RestClient.RequestMethod.GET);
@@ -839,7 +624,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			handleResponseLocation(locationStatus, locationResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -850,10 +635,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 		Log.w("Got location response from server", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-
-			// Toast.makeText(context, "Location sharing response successful.",
-			// Toast.LENGTH_SHORT).show();
-
 			locationSharing = ServerResponseParser
 					.savedLocationSharingParser(response);
 
@@ -891,7 +672,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -907,7 +688,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 
 			RestClient restClient = new RestClient(Constant.smServerUrl
 					+ "/settings/share/location");
-			// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/settings/share/location
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
@@ -934,7 +714,7 @@ public class LocationSharingSettingsActivity extends Activity implements
 			handleSaveLocationSharingResponse(locationStatus, locationResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -952,12 +732,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 					Toast.LENGTH_SHORT).show();
 
 			finish();
-
-			// locationSharing = ServerResponseParser
-			// .savedLocationSharingParser(response);
-			//
-			// generateDummyPlatformList();
-			// generateView();
 
 			break;
 
@@ -980,48 +754,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 			restClient.AddParam("status", "off");
 		}
 
-		/*if (customSelectedFriendList != null) {
-			for (int i = 0; i < customSelectedFriendList.size(); i++) {
-				if (customSelectedFriendList.get(i) != null) {
-					restClient.AddParam("friends_and_circles[friends][]",
-							customSelectedFriendList.get(i));
-				}
-
-			}
-		}
-
-		if (customSelectedCircleList != null) {
-			for (int i = 0; i < customSelectedCircleList.size(); i++) {
-				if (customSelectedCircleList.get(i) != null) {
-					restClient.AddParam("friends_and_circles[circles][]",
-							customSelectedCircleList.get(i));
-				}
-
-			}
-		}
-
-		restClient.AddParam("friends_and_circles[duration]",
-				((LocationPreferenceItemView) customSubgroupItem).getDuration()
-						+ "");
-		restClient.AddParam("friends_and_circles[radius]",
-				((LocationPreferenceItemView) customSubgroupItem).getRadius()
-						+ "");
-
-		for (int i = 0; i < circleItemViewList.size(); i++) {
-			LocationPreferenceItemView itemView = (LocationPreferenceItemView) circleItemViewList
-					.get(i);
-
-			restClient.AddParam("circles_only[" + itemView.getItemId()
-					+ "][duration]", "" + itemView.getDuration());
-			restClient.AddParam("circles_only[" + itemView.getItemId()
-					+ "][radius]", "" + itemView.getRadius());
-		}
-		
-		restClient.AddParam("strangers[duration]",
-				((LocationPreferenceItemView) strangerItem).getDuration() + "");
-		restClient.AddParam("strangers[radius]",
-				((LocationPreferenceItemView) strangerItem).getRadius() + "");*/
-
 		for (int i = 0; i < placeItemViewList.size(); i++) {
 			LocationPreferenceItemView itemView = (LocationPreferenceItemView) placeItemViewList
 					.get(i);
@@ -1035,9 +767,6 @@ public class LocationSharingSettingsActivity extends Activity implements
 			restClient.AddParam("geo_fences[" + i + "][name]",
 					itemView.getTitle());
 		}
-
-		
-
 	}
 
 }

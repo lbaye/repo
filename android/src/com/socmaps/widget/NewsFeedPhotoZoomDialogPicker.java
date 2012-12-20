@@ -8,28 +8,22 @@ package com.socmaps.widget;
  *
  */
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.socmaps.entity.Photo;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.ui.R;
 
+
+/**
+ * NewsFeedPhotoZoomDialogPicker generates a  dialog to display photo zoom.
+ *
+ */
 public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 
 	private Context context;
@@ -41,7 +35,18 @@ public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 
 	List<ImageView> itemViewList;
 
-	ImageView iv;
+	ImageView iv; 
+	
+	/**
+	 * This method is used to perform to enlarge the newsfeed photo. When we click on that photo, the photo will be 
+	 * enlarged through the entire screen. 
+	 * 
+	 * @param context Currently active Context. 
+	 * @param url 	As String which is basically an URL from where we've to download that particular image. 
+	 * @param imageDownloader An instance of ImageDownloader to download a particular image. 
+	 * @see #initialize() 
+	 * @see #loadImage()
+	 */
 
 	public NewsFeedPhotoZoomDialogPicker(Context context, String url,
 			ImageDownloader imageDownloader) {

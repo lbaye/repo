@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Window;
 
-import com.socmaps.ui.LoginActivity;
 import com.socmaps.ui.R;
 
+/**
+ * DialogsAndToasts generates custom dialog and toast.
+ *
+ */
 public class DialogsAndToasts {
 
 	/**

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MeetupRequest;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -38,7 +38,7 @@ public class MeetupRequestListActivity extends Activity {
 	private Context context;
 
 	ProgressDialog m_ProgressDialog;
-	
+
 	String meetupRequestResponse = "";
 	int meetupRequestStatus = 0;
 
@@ -50,7 +50,7 @@ public class MeetupRequestListActivity extends Activity {
 
 	int requestCount = 0;
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 	View selectedView;
 
 	@Override
@@ -67,7 +67,7 @@ public class MeetupRequestListActivity extends Activity {
 	private void initialize() {
 		context = MeetupRequestListActivity.this;
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		buttonActionListener = new ButtonActionListener();
 		meetupRequestListContainer = (LinearLayout) findViewById(R.id.meetup_request_list_container);
@@ -86,7 +86,7 @@ public class MeetupRequestListActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -126,7 +126,7 @@ public class MeetupRequestListActivity extends Activity {
 					meetupRequestResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -138,7 +138,6 @@ public class MeetupRequestListActivity extends Activity {
 		Log.i("MEETUP REQ RESPONSE", status + ":" + response);
 
 		if (status == Constant.STATUS_SUCCESS) {
-			// Log.e("Meetup List", response);
 			try {
 				meetupRequestListContainer.removeAllViews();
 
@@ -159,7 +158,6 @@ public class MeetupRequestListActivity extends Activity {
 				}
 
 			} catch (Exception e) {
-				// Log.e("Parse response", e.getMessage());
 				// TODO: handle exception
 			}
 		}
@@ -199,15 +197,7 @@ public class MeetupRequestListActivity extends Activity {
 
 		String avatarUrl = meetupRequest.getOwnerAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 40, 40);
-			 */
-
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
+			imageDownloader.download(avatarUrl, profilePic);
 		}
 
 		String senderName = "";
@@ -273,7 +263,7 @@ public class MeetupRequestListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 				selectedView = itemView;
 
 				final AlertDialog.Builder aBuilder = new AlertDialog.Builder(
@@ -329,11 +319,7 @@ public class MeetupRequestListActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				/*StaticValues.selectedMeetupRequest = meetupRequest;
-				Intent intent = new Intent(context, ShowItemOnMap.class);
-				intent.putExtra("FLAG", Constant.FLAG_MEETUP);
-				startActivity(intent);*/
-				
+
 				Intent intent = new Intent(context, DirectionActivity.class);
 				intent.putExtra("destLat", meetupRequest.getLat());
 				intent.putExtra("destLng", meetupRequest.getLng());
@@ -344,8 +330,6 @@ public class MeetupRequestListActivity extends Activity {
 
 		return itemView;
 	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private void responseToRequest(View itemView, String itemId, String response) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -363,7 +347,7 @@ public class MeetupRequestListActivity extends Activity {
 			// show progress dialog if needed
 			m_ProgressDialog = ProgressDialog.show(context, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.sending_request_text), true,true);
+					.getString(R.string.sending_request_text), true, true);
 
 		} else {
 
@@ -404,7 +388,7 @@ public class MeetupRequestListActivity extends Activity {
 			handleResponseToRequest(requestStatus, requestResponse);
 
 			// dismiss progress dialog if needed
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 		}
@@ -416,7 +400,6 @@ public class MeetupRequestListActivity extends Activity {
 		Log.d("Accept Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 
 			updateButtonStatus();
 
@@ -435,10 +418,9 @@ public class MeetupRequestListActivity extends Activity {
 			}
 
 			Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show();
-			
+
 			selectedView.setVisibility(View.GONE);
-			
-			
+
 			break;
 
 		default:
@@ -488,15 +470,9 @@ public class MeetupRequestListActivity extends Activity {
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////////////////////
-
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
@@ -514,19 +490,6 @@ public class MeetupRequestListActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
 

@@ -13,25 +13,38 @@ import android.widget.TextView;
 
 import com.socmaps.entity.Event;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class EventRowFactory { 
-	
+
+
+/**
+ * EventRowFactory class for generating a row (view), that row (view) is associates with corresponding layout.
+ *
+ */
+public class EventRowFactory {
+
 	/**
-	 * This method returns a View, that view is associates with corresponding layout. 
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater  to inflate the corresponding layout. 
-	 * @param event     an object of type Event. 
-	 * @param context   current state of the application/object.
-	 * @param clickListener which is used for a specific action when button is clicked. 
-	 * @param position as Integer which refers to the item position of the list
-	 * @param convertView as view. 
-	 * @param il which is used to download image from a specific url. 
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param event
+	 *            an object of type Event.
+	 * @param context
+	 *            current state of the application/object.
+	 * @param clickListener
+	 *            which is used for a specific action when button is clicked.
+	 * @param position
+	 *            as Integer which refers to the item position of the list
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @return View
 	 * @see View
 	 */
 
@@ -83,8 +96,7 @@ public class EventRowFactory {
 		// set address
 		if (event.getAddress() != null) {
 			if (!event.getAddress().equals("")) {
-				holder.addressText.setText(event
-						.getAddress());
+				holder.addressText.setText(event.getAddress());
 				holder.addressText.setVisibility(View.VISIBLE);
 			} else
 				holder.addressText.setVisibility(View.GONE);
@@ -106,25 +118,11 @@ public class EventRowFactory {
 		if (event.getEventImageUrl() != null) {
 
 			if (!event.getEventImageUrl().equalsIgnoreCase("")) {
-				//il.DisplayImage(event.getEventImageUrl(), holder.coverPhoto,R.drawable.img_blank);
 				il.download(event.getEventImageUrl(), holder.coverPhoto);
 			}
+		}
 
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( context.getResources(), R.drawable.event_item_bg)); if
-			 * (!eventEntity.getEventImageUrl().equals("")) {
-			 * Log.e("Event image:", eventEntity.getEventImageUrl());
-			 * 
-			 * holder.coverPhoto.setTag(eventEntity.getEventImageUrl());
-			 * BitmapManager.INSTANCE.loadBitmap(
-			 * eventEntity.getEventImageUrl(), holder.coverPhoto, 320, 180); }
-			 * // holder.statusText.setText(otherUserEntity.getStatusMsg());
-			 */
-		} // else holder.coverPhoto.setImageResource(R.drawable.event_item_bg);
-
-		// Rsvp Panel show hide &&
-		// !("my_event").equalsIgnoreCase(eventEntity.getEvent_type())
+		// Rsvp Panel show hide 
 		if (event.isInvited()
 				&& !("my_event").equalsIgnoreCase(event.getEvent_type())) {
 			holder.rsvpPanel.setVisibility(View.VISIBLE);
@@ -142,19 +140,16 @@ public class EventRowFactory {
 
 		// set distance
 		String unit = Constant.UNIT_METRIC;
-		if(StaticValues.myInfo!=null)
-		{
-			if(StaticValues.myInfo.getSettings()!=null)
-			{
-				if(StaticValues.myInfo.getSettings().getUnit()!=null)
-				{
+		if (StaticValues.myInfo != null) {
+			if (StaticValues.myInfo.getSettings() != null) {
+				if (StaticValues.myInfo.getSettings().getUnit() != null) {
 					unit = StaticValues.myInfo.getSettings().getUnit();
 				}
 			}
 		}
-		
-		holder.distanceText.setText(Utility.getFormatedDistance(event
-				.getDistance(), unit));
+
+		holder.distanceText.setText(Utility.getFormatedDistance(
+				event.getDistance(), unit));
 
 		// set arrowClicklistener
 		holder.rightArrow.setOnClickListener(new OnClickListener() {
@@ -162,7 +157,6 @@ public class EventRowFactory {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				//StaticValues.selectedEvent = event;
 				clickListener.onArrowButtonClick(event);
 			}
 		});
@@ -172,12 +166,9 @@ public class EventRowFactory {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				//StaticValues.selectedEvent = event;
 				clickListener.onItemClick(event);
 			}
 		});
-
-		// set mapButtonClick
 
 		holder.showOnMap.setOnClickListener(new View.OnClickListener() {
 
@@ -225,7 +216,8 @@ public class EventRowFactory {
 			switch (v.getId()) {
 			case R.id.yes_btn:
 				if (checked)
-					mListener.onRSVPSelection(mEntity, Constant.MY_RESPONSE_YES);
+					mListener
+							.onRSVPSelection(mEntity, Constant.MY_RESPONSE_YES);
 				break;
 			case R.id.no_btn:
 				if (checked)
@@ -233,7 +225,8 @@ public class EventRowFactory {
 				break;
 			case R.id.maybe_btn:
 				if (checked)
-					mListener.onRSVPSelection(mEntity, Constant.MY_RESPONSE_MAYBE);
+					mListener.onRSVPSelection(mEntity,
+							Constant.MY_RESPONSE_MAYBE);
 				break;
 			}
 		}
@@ -283,10 +276,4 @@ public class EventRowFactory {
 			this.maybeBtn = rb3;
 		}
 	}
-
-	/*
-	 * @Override public int getViewType() { // TODO Auto-generated method stub
-	 * return 0; }
-	 */
-
 }

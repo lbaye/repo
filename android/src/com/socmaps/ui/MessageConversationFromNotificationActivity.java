@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -31,7 +30,7 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -47,7 +46,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	LinearLayout messageListContainer;
 	private LayoutInflater inflater;
 	private Context context;
-	private Thread mReplyRefresherThread;
 
 	ScrollView scrollViewBody;
 
@@ -62,8 +60,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	// Replies update related variables
 	long lastUpdatedOn;
-	// List<String> visibleRepliesIds = new ArrayList<String>();
-	long fetchNewRepliesAfter = 60 * 1000; // Milliseconds
+	long fetchNewRepliesAfter = 60 * 1000;
 
 	String repliesResponse = "";
 	int repliesStatus = 0;
@@ -72,7 +69,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 	HashMap<String, Boolean> displayedMessageList = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 
 	String itemThreadId;
 	String itemMessageId;
@@ -89,7 +86,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		itemMessageId = getIntent().getStringExtra("itemMessageId");
 		isUnread = getIntent().getBooleanExtra("status", false);
 
-		// handleResponseMessage(responseStatus, responseText);
 		getMessageDetails();
 
 	}
@@ -105,7 +101,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true,true);
+						.getString(R.string.sending_request_text), true, true);
 			} else {
 				Toast.makeText(context, "Message details not found.",
 						Toast.LENGTH_SHORT).show();
@@ -136,9 +132,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 			messageResponse = restClient.getResponse();
 			messageStatus = restClient.getResponseCode();
-			
-			
-			
 
 			runOnUiThread(messageDetailsReturnResponse);
 		}
@@ -149,12 +142,12 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		@Override
 		public void run() {
 
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
-			
+
 			handleResponseMessage(messageStatus, messageResponse);
-			
+
 		}
 
 	};
@@ -188,7 +181,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		} else {
 
-			// DialogsAndToasts.showNoInternetConnectionDialog(getApplicationContext());
 			if (m_ProgressDialog != null) {
 				if (m_ProgressDialog.isShowing()) {
 					m_ProgressDialog.dismiss();
@@ -290,12 +282,15 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
 
 		if (status == Constant.STATUS_SUCCESS) {
-			
-			if(StaticValues.myInfo!=null && isUnread)
-			{
-				StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
-				StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
-				
+
+			if (StaticValues.myInfo != null && isUnread) {
+				StaticValues.myInfo.getNotificationCount().setMessageCount(
+						StaticValues.myInfo.getNotificationCount()
+								.getMessageCount() - 1);
+				StaticValues.myInfo.getNotificationCount().setTotalCount(
+						StaticValues.myInfo.getNotificationCount()
+								.getTotalCount() - 1);
+
 			}
 
 			lastUpdatedOn = Utility.getUnixTimestamp();
@@ -366,7 +361,8 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		if (userId.equalsIgnoreCase(senderId)) {
 			v = inflater.inflate(R.layout.message_conversation_item_left, null);
 		} else {
-			v = inflater.inflate(R.layout.message_conversation_item_right, null);
+			v = inflater
+					.inflate(R.layout.message_conversation_item_right, null);
 		}
 
 		TextView senderName = (TextView) v.findViewById(R.id.senderName);
@@ -401,37 +397,27 @@ public class MessageConversationFromNotificationActivity extends Activity {
 			senderMessage.setText(messageText);
 		}
 
-		/*final ImageView profilePic = (ImageView) v
-				.findViewById(R.id.profilePic);
+		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
 
-		String avatarUrl = mEntity.getSenderAvatar();
-		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
-
-		}*/
-		
-		Button btnDirection = (Button)v.findViewById(R.id.btnDirection);
-		
-		if(mEntity.getMetaContent()!=null)
-		{
-			if(mEntity.getMetaContent().getType().equals(Constant.META_TYPE_VENUE))
-			{
+		if (mEntity.getMetaContent() != null) {
+			if (mEntity.getMetaContent().getType()
+					.equals(Constant.META_TYPE_VENUE)) {
 				btnDirection.setVisibility(View.VISIBLE);
 			}
 		}
-		
-		
+
 		btnDirection.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, DirectionActivity.class);
-				intent.putExtra("destLat", mEntity.getMetaContent().getLatitude());
-				intent.putExtra("destLng", mEntity.getMetaContent().getLongitude());
-				intent.putExtra("destAddress", mEntity.getMetaContent().getAddress());
+				intent.putExtra("destLat", mEntity.getMetaContent()
+						.getLatitude());
+				intent.putExtra("destLng", mEntity.getMetaContent()
+						.getLongitude());
+				intent.putExtra("destAddress", mEntity.getMetaContent()
+						.getAddress());
 				startActivity(intent);
 			}
 		});
@@ -443,7 +429,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		context = MessageConversationFromNotificationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(buttonActionListener);
@@ -463,31 +449,23 @@ public class MessageConversationFromNotificationActivity extends Activity {
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		scrollToBottom();
-
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			finish();
-
 		}
 		return false;
 
@@ -501,8 +479,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						// Log.e("ScrollView", "Scrolling");
-						// int h = linearLayoutBody.getHeight();
 						scrollViewBody.scrollBy(View.FOCUS_LEFT,
 								View.FOCUS_DOWN);
 					}
@@ -538,7 +514,7 @@ public class MessageConversationFromNotificationActivity extends Activity {
 				// show progress dialog if needed
 				m_ProgressDialog = ProgressDialog.show(context, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true,true);
+						.getString(R.string.sending_request_text), true, true);
 			}
 
 		} else {
@@ -577,8 +553,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			// m_ProgressDialog.dismiss();
-
 			handleResponseSendMessage(messageStatus, messageResponse);
 
 		}
@@ -639,7 +613,6 @@ public class MessageConversationFromNotificationActivity extends Activity {
 		} else {
 			info.put("avatar", recipientAvatars.get(0));
 		}
-
 		return info;
 	}
 

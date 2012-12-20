@@ -1,12 +1,24 @@
 package com.socmaps.ui;
 
-import com.google.android.maps.GeoPoint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
 import com.readystatesoftware.mapviewballoons.R;
-//import com.socmaps.ui.MeetupRequestNewActivity.LocationSelectionListener;
-import com.socmaps.entity.MyGeoPoint;
 import com.socmaps.entity.Place;
-//import com.socmaps.ui.MeetupRequestNewActivity.LocationAddressHandler;
-//import com.socmaps.ui.MeetupRequestNewActivity.NearByPlacesPickerhandler;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -16,36 +28,12 @@ import com.socmaps.widget.LocationRadioGroupListener;
 import com.socmaps.widget.NearByPlacesPicker;
 import com.socmaps.widget.NearByPlacesPickerListener;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast; 
-import android.text.Html; 
-
 public class DirectionActivity extends Activity implements OnClickListener {
 
 	ImageView ivDirectionWalk, ivDirectionCar, ivDirectionCycle,
 			ivDirectionTransit;
 	String defaultSourceAdd, defaultDestAdd;
 
-	// --- starts declaration --- //
 	Button btnBack;
 	Button btnOk, btnCancel;
 
@@ -57,29 +45,28 @@ public class DirectionActivity extends Activity implements OnClickListener {
 	LinearLayout locationRadioGroupContainerSource;
 	LinearLayout selectedLocationInfoPanelSource;
 	TextView tvSelectedLocationAddressSource;
-	TextView tvSelectedLocationTitleSource; 
-	
+	TextView tvSelectedLocationTitleSource;
+
 	View view;
 
 	LinearLayout locationRadioGroupContainerDest;
 	LinearLayout selectedLocationInfoPanelDest;
 	TextView tvSelectedLocationAddressDest;
-	TextView tvSelectedLocationTitleDest; 
+	TextView tvSelectedLocationTitleDest;
 	TextView tvTitleDescription, tvTitleAddress;
 
 	String sourceRequestAddress = "", destRequestAddressRe = "";
 	double sourceLat = 0, sourceLng = 0;
 	double destLat = 0, destLng = 0;
 
-	String dirflg = "d"; 
-	
-	private Place selectedPlace; 
+	String dirflg = "d";
+
+	private Place selectedPlace;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.direction_old);
 		setContentView(R.layout.direction_path);
 
 		sourceLat = getIntent().getDoubleExtra("sourceLat", 0);
@@ -88,41 +75,42 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 		destLat = getIntent().getDoubleExtra("destLat", 0);
 		destLng = getIntent().getDoubleExtra("destLng", 0);
-		defaultDestAdd = getIntent().getStringExtra("destAddress"); 
-		
-		Log.d("Received sLat-Lng & dLat-Lng", String.valueOf(sourceLat)+" "+String.valueOf(sourceLng)+" "+String.valueOf(destLat)+" "+String.valueOf(destLng)); 
-		//Log.d("Received sAdd-dAdd", defaultSourceAdd+" "+defaultDestAdd); 
-		
-		Object object = getIntent().getSerializableExtra("selectedPlace"); 
-		if(object != null) {
-			selectedPlace = (Place) (object); 
-			object = null;  
+		defaultDestAdd = getIntent().getStringExtra("destAddress");
+
+		Log.d("Received sLat-Lng & dLat-Lng", String.valueOf(sourceLat) + " "
+				+ String.valueOf(sourceLng) + " " + String.valueOf(destLat)
+				+ " " + String.valueOf(destLng));
+
+		Object object = getIntent().getSerializableExtra("selectedPlace");
+		if (object != null) {
+			selectedPlace = (Place) (object);
+			object = null;
 			Log.d("Place Check", "Name: " + selectedPlace.getName() + " "
-					+ selectedPlace.getVicinity()); 
-			Log.d("Place Check Lat Lng", selectedPlace.getLatitude()+"" + " " + selectedPlace.getLongitude()+"");
+					+ selectedPlace.getVicinity());
+			Log.d("Place Check Lat Lng", selectedPlace.getLatitude() + "" + " "
+					+ selectedPlace.getLongitude() + "");
 		}
-		
+
 		initialize();
 		addLocationRadioGroupSource();
-		
-		if(destLat != 0 && destLng != 0) {
+
+		if (destLat != 0 && destLng != 0) {
 			addLocationRadioGroupDest();
-		} else { 
-			destLat = selectedPlace.getLatitude(); 
+		} else {
+			destLat = selectedPlace.getLatitude();
 			destLng = selectedPlace.getLongitude();
 		}
-		
+
 		setDefaultValues();
 	}
 
 	private void setDefaultValues() {
 		selectTransport(ivDirectionCar, "d");
-	} 
-	
+	}
 
 	private void initialize() {
-		context = DirectionActivity.this; 
-		
+		context = DirectionActivity.this;
+
 		view = (View) findViewById(R.id.view);
 
 		ivDirectionWalk = (ImageView) findViewById(R.id.ivDirectionWalk);
@@ -151,21 +139,20 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		btnCancel.setOnClickListener(this);
 
 		locationRadioGroupContainerSource = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
-		locationRadioGroupContainerDest = (LinearLayout) findViewById(R.id.locationRadioGroupContainerRe); 
-		
-		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
+		locationRadioGroupContainerDest = (LinearLayout) findViewById(R.id.locationRadioGroupContainerRe);
+
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);
 		tvTitleAddress = (TextView) findViewById(R.id.tvTitleAddress);
-		
-		if(destLat != 0 && destLng != 0) 
-		{
-			locationRadioGroupContainerDest.setVisibility(View.VISIBLE); 
+
+		if (destLat != 0 && destLng != 0) {
+			locationRadioGroupContainerDest.setVisibility(View.VISIBLE);
 			view.setVisibility(View.GONE);
 		} else {
-			tvTitleDescription.setVisibility(View.VISIBLE); 
+			tvTitleDescription.setVisibility(View.VISIBLE);
 			tvTitleAddress.setVisibility(View.VISIBLE);
-			tvTitleDescription.setText(selectedPlace.getName()); 
+			tvTitleDescription.setText(selectedPlace.getName());
 			tvTitleAddress.setText(selectedPlace.getVicinity());
-			
+
 		}
 	}
 
@@ -181,10 +168,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 			Log.d("InsideOnActivityForSource", String.valueOf(sourceLat) + "~"
 					+ String.valueOf(sourceLng));
-			/*
-			 * Toast.makeText( context, "For Source" + String.valueOf(sourceLat)
-			 * + "~" + String.valueOf(sourceLng), Toast.LENGTH_SHORT) .show();
-			 */
 
 			displayAddress(null, sourceRequestAddress);
 		}
@@ -197,17 +180,9 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 			Log.d("InsideOnActivityForDestination", String.valueOf(destLat)
 					+ "~" + String.valueOf(destLng));
-			/*
-			 * Toast.makeText( context, "For Destination" +
-			 * String.valueOf(destLat) + "~" + String.valueOf(destLng),
-			 * Toast.LENGTH_SHORT) .show();
-			 */
-
 			displayAddressRe(null, destRequestAddressRe);
 		}
 	}
-
-	// - - - for Source - - - //
 
 	private void addLocationRadioGroupSource() {
 		// TODO Auto-generated method stub
@@ -224,8 +199,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.tvSelectedLocationTitle);
 
 		locationRadioGroupContainerSource.addView(locationRadioGroupViewSource);
-
-		// locationRadioGroupViewSource.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 		if (sourceLat != 0 && sourceLng != 0) {
 			locationRadioGroupViewSource
@@ -270,8 +243,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 				break;
 			}
 
-			
-			
 		}
 	}
 
@@ -368,8 +339,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		public void onPlaceSelect(String pickerName, Place selectedPlace) {
 			// TODO Auto-generated method stub
 			if (selectedPlace != null) {
-				// MyGeoPoint myGeoPoint = selectedPlace.getLocation();
-
 				sourceLat = selectedPlace.getLatitude();
 				sourceLng = selectedPlace.getLongitude();
 				sourceRequestAddress = selectedPlace.getVicinity();
@@ -393,10 +362,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		selectedLocationInfoPanelSource.setVisibility(View.VISIBLE);
 	}
 
-	// - - - Source Ends - - - //
-
-	// - - - for Destination Starts - - - //
-
 	private void addLocationRadioGroupDest() {
 		// TODO Auto-generated method stub
 
@@ -412,8 +377,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.tvSelectedLocationTitle);
 
 		locationRadioGroupContainerDest.addView(locationRadioGroupViewDest);
-
-		// locationRadioGroupViewDest.setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
 
 		if (destLat != 0 && destLng != 0) {
 			locationRadioGroupViewDest
@@ -550,7 +513,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		public void onPlaceSelect(String pickerName, Place selectedPlace) {
 			// TODO Auto-generated method stub
 			if (selectedPlace != null) {
-				
 
 				destLat = selectedPlace.getLatitude();
 				destLng = selectedPlace.getLongitude();
@@ -586,8 +548,6 @@ public class DirectionActivity extends Activity implements OnClickListener {
 		v.setBackgroundResource(R.drawable.button_bg_direction_selected);
 	}
 
-	// - - - for Destination Ends - - - //
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -614,8 +574,8 @@ public class DirectionActivity extends Activity implements OnClickListener {
 
 		String link = "http://maps.google.com/maps?saddr=" + sourceLat + ","
 				+ sourceLng + "&daddr=" + destLat + "," + destLng + "&dirflg="
-				+ dirflg; 
-		Log.d("Dest Lat Lng", destLat+"" + " " + destLng+"");
+				+ dirflg;
+		Log.d("Dest Lat Lng", destLat + "" + " " + destLng + "");
 		Log.d("directionLINK", link);
 
 		Intent intentGoForDirection = new Intent(Intent.ACTION_VIEW,

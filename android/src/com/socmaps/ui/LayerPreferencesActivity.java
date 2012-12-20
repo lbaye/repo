@@ -43,9 +43,6 @@ public class LayerPreferencesActivity extends Activity implements
 		setContentView(R.layout.layer_preferences_layout);
 
 		initialize();
-		
-		
-		
 		setViewOnClickListener();
 	}
 	
@@ -123,13 +120,6 @@ public class LayerPreferencesActivity extends Activity implements
 				m_ProgressDialog.dismiss();
 			}
 			handleLayerSettingsResponse(responseStatus, responseString);
-
-			/*
-			 * AccountSettingsEntity
-			 * accountSettingsEntity=parseServerResponse();
-			 * AppStaticStorages.accountSettingsEntity=accountSettingsEntity;
-			 */
-
 		}
 
 	};
@@ -272,7 +262,6 @@ public class LayerPreferencesActivity extends Activity implements
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(getApplicationContext(),
 					"Information saved successfully!!", Toast.LENGTH_SHORT)
 					.show();

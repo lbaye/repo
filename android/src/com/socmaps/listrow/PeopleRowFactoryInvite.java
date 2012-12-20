@@ -17,19 +17,32 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PeopleRowFactoryInvite { 
-	
-	/** 
-	 * This method returns a View, that view is associates with corresponding layout. 
+
+/**
+ * PeopleRowFactoryInvite class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class PeopleRowFactoryInvite {
+
+	/**
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param peopleObj an object of type People. 
-	 * @param con current state of the application/object.
-	 * @param licl which is used for a specific action when button is clicked. 
-	 * @param convertView as view. 
-	 * @param il which is used to download image from a specific url. 
-	 * @param listItemClickListenerPeople  which is used for a specific action when button is clicked.  
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param peopleObj
+	 *            an object of type People.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerPeople
+	 *            which is used for a specific action when button is clicked.
+	 * @return View
 	 * @see View
 	 */
 
@@ -81,7 +94,6 @@ public class PeopleRowFactoryInvite {
 			if (!people.getRegMedia().equals("")) {
 				if (people.getRegMedia().equals("fb")) {
 					holder.sourceImage.setImageResource(R.drawable.source_fb);
-					// holder.sourceImage.setVisibility(View.VISIBLE);
 					holder.sourceImage.setVisibility(View.GONE);
 				} else
 					holder.sourceImage.setVisibility(View.GONE);
@@ -98,7 +110,6 @@ public class PeopleRowFactoryInvite {
 			if (!people.getStatusMsg().equals("")) {
 
 				holder.statusText.setText(people.getStatusMsg());
-				// holder.statusText.setVisibility(View.VISIBLE);
 				holder.statusText.setVisibility(View.GONE);
 			} else
 				holder.statusText.setVisibility(View.GONE);
@@ -115,7 +126,6 @@ public class PeopleRowFactoryInvite {
 
 			holder.timeText.setText(Utility.getFormattedDisplayDate(people
 					.getLastLogIn()));
-			// holder.timeText.setVisibility(View.VISIBLE);
 			holder.timeText.setVisibility(View.GONE);
 		} else
 			holder.timeText.setVisibility(View.GONE);
@@ -129,35 +139,23 @@ public class PeopleRowFactoryInvite {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
-		// R.drawable.cover_pic_default));
-
 		if (people.getCoverPhoto() != null
 				&& !people.getCoverPhoto().equals("")) {
 
-			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
-			// holder.coverPhoto, 320,150);
-			// il.DisplayImage(people.getCoverPhoto(),
-			// holder.coverPhoto,R.drawable.cover_pic_default);
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.download(people.getCoverPhoto(), holder.coverPhoto);
-		}  else
-			 holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
+		} else
+			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
 
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
-		// R.drawable.icon));
 		holder.avatar.setImageResource(R.drawable.img_blank);
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
-				// holder.avatar, 320,150);
+
 				il.download(people.getAvatar(), holder.avatar);
 			}
-			// holder.statusText.setText(otherUserEntity.getStatusMsg());
-		}// else
-			// holder.avatar.setImageResource(R.drawable.icon);
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
+		}
+
 		if (people.getDistance() < Constant.MAX_ITEM_DISTANCE) {
 			holder.distanceText
 					.setText(Utility.getFormatedDistance(people.getDistance(),
@@ -172,9 +170,6 @@ public class PeopleRowFactoryInvite {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				// AppStaticStorages.selectedPeople=otherUserEntity;
-				// licl.onMapButtonClick(RowType.PEOPLE.ordinal());
 
 				listItemClickListenerPeople.onShowOnMapButtonClick(people);
 
@@ -198,18 +193,6 @@ public class PeopleRowFactoryInvite {
 				listItemClickListenerPeople.onInviteButtonClick(people);
 			}
 		});
-
-		// holder.btnSendMessage.setTag(people);
-		// holder.btnSendMessage.setOnClickListener(messageBtnListener);
-
-		// holder.checked.setChecked(people.isBlocked());
-		// holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
-
-		// if (people.isBlocked()) {
-		// holder.btnBlockUnblock.setText("Unblock");
-		// } else {
-		// holder.btnBlockUnblock.setText("Block");
-		// }
 
 		return view;
 	}

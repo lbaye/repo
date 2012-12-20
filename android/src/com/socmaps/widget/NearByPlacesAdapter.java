@@ -13,11 +13,23 @@ import android.widget.CheckedTextView;
 import com.socmaps.entity.Place;
 import com.socmaps.ui.R;
 
+/**
+ * NearByPlacesAdapter class for generating place list item.
+ *
+ */
 public class NearByPlacesAdapter extends ArrayAdapter<Place> {
 
 	Context context;
 	int layoutResourceId;
-	List<Place> itemList = null;
+	List<Place> itemList = null; 
+	
+	/**
+	 * Initialization of NearByPlacesAdapter with those specified parameters. 
+	 * 
+	 * @param context Currently active Context 
+	 * @param layoutResourceId As Integer which indicates the row. 
+	 * @param itemList An array list which is the list of object of type Place. 
+	 */
 
 	public NearByPlacesAdapter(Context context, int layoutResourceId,
 			List<Place> itemList) {

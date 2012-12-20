@@ -19,7 +19,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +38,7 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MyInfo;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -53,7 +52,7 @@ public class AccountSettingsActivity extends Activity implements
 
 	private Context context;
 	private String selectedUnit = "";
-	private String flag = ""; // UNIT or INFO
+	private String flag = "";
 	private String newPassword = "";
 	EditText etEmail, etFirstName, etLastName, etUserName, etCity, etZipCode,
 			etService, etStreetAddress, etBio, etInterest, etOldPass,
@@ -65,11 +64,7 @@ public class AccountSettingsActivity extends Activity implements
 	Spinner spRelationshipStatus, spGender, spCountry;
 	TextView tvDateOfBirth;
 	DatePicker dpDateOfBirth;
-	// RadioButton metricBtn,imperialBtn;
 	RadioGroup unitRadioGroup;
-	//Uri imageUri;
-	//String tempURLString;
-
 	int requestCode;
 	String responseString;
 
@@ -89,9 +84,6 @@ public class AccountSettingsActivity extends Activity implements
 
 	Handler mHandler;
 
-	// FbAPIsAuthListener fbAPIsAuthListener;
-	// FbAPIsLogoutListener fbAPIsLogoutListener;
-
 	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
@@ -109,16 +101,6 @@ public class AccountSettingsActivity extends Activity implements
 
 		setExpandListener();
 		setViewOnClickListener();
-
-		/*
-		 * // Create the Facebook Object using the app id. FBUtility.mFacebook =
-		 * new Facebook(Constant.FB_APP_ID); FBUtility.mAsyncRunner = new
-		 * AsyncFacebookRunner(FBUtility.mFacebook); // restore session if one
-		 * exists SessionStore.restore(FBUtility.mFacebook, context);
-		 * SessionEvents.addAuthListener(fbAPIsAuthListener);
-		 * SessionEvents.addLogoutListener(fbAPIsLogoutListener);
-		 */
-
 	}
 
 	@Override
@@ -139,9 +121,6 @@ public class AccountSettingsActivity extends Activity implements
 		if (avatar != null) {
 			avatar.recycle();
 		}
-
-		// SessionEvents.removeAuthListener(fbAPIsAuthListener);
-		// SessionEvents.removeLogoutListener(fbAPIsLogoutListener);
 	}
 
 	private void setViewOnClickListener() {
@@ -211,7 +190,6 @@ public class AccountSettingsActivity extends Activity implements
 	};
 
 	private void updateUserSettings(String unit) {
-		// Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
 			selectedUnit = unit;
 			Thread thread = new Thread(null, updateUnitSettings,
@@ -339,7 +317,6 @@ public class AccountSettingsActivity extends Activity implements
 		etUserName = (EditText) findViewById(R.id.etUserName);
 		etCity = (EditText) findViewById(R.id.etCity);
 		etZipCode = (EditText) findViewById(R.id.etZipCode);
-		// etCountry = (EditText) findViewById(R.id.etCountry);
 		etInterest = (EditText) findViewById(R.id.etInterests);
 		tvDateOfBirth = (TextView) findViewById(R.id.tvShowSelectedDate);
 		etBio = (EditText) findViewById(R.id.etBiography);
@@ -368,14 +345,6 @@ public class AccountSettingsActivity extends Activity implements
 		etNewPassRetype = (EditText) findViewById(R.id.retype_new_pass_edit_text);
 
 		unitRadioGroup = (RadioGroup) findViewById(R.id.rgUnit);
-		/*
-		 * metricBtn=(RadioButton)findViewById(R.id.metric_radio);
-		 * imperialBtn=(RadioButton)findViewById(R.id.imperial_radio);
-		 */
-
-		// fbAPIsAuthListener = new FbAPIsAuthListener();
-		// fbAPIsLogoutListener = new FbAPIsLogoutListener();
-
 	}
 
 	private void setRadioGroupValue(RadioGroup rG, String status) {
@@ -391,7 +360,6 @@ public class AccountSettingsActivity extends Activity implements
 
 	private void setFieldValue(MyInfo myInfo) {
 		if (null != myInfo) {
-			// Log.e("profileInfo", profileInfo.getUserName());
 			if (myInfo.getDateOfBirth() != null) {
 				String date = myInfo.getDateOfBirth().split("\\s+")[0];
 				setDateValues(date);
@@ -416,7 +384,6 @@ public class AccountSettingsActivity extends Activity implements
 				etZipCode.setText(myInfo.getPostCode());
 
 			if (myInfo.getCountry() != null) {
-				// etCountry.setText(accountSettingsEntity.getCountry());
 				String countryValue = myInfo.getCountry();
 				ArrayAdapter myAdap = (ArrayAdapter) spCountry.getAdapter();
 
@@ -437,8 +404,6 @@ public class AccountSettingsActivity extends Activity implements
 			if (myInfo.getInterests() != null)
 				etInterest.setText(myInfo.getInterests());
 
-			// spDistanceUnit.setSelection(profileInfo.getUnit());
-
 			if (myInfo.getGender().equalsIgnoreCase("male")) {
 				spGender.setSelection(1);
 			} else if (myInfo.getGender().equalsIgnoreCase("female")) {
@@ -456,12 +421,8 @@ public class AccountSettingsActivity extends Activity implements
 			}
 
 			if (myInfo.getAvatar() != null && avatar == null) {
-
-				// ivProfilePicture.setTag(myInfo.getAvatar());
-				// new DownloadImagesTask().execute(ivProfilePicture);
-				ImageLoader imageLoader = new ImageLoader(context);
-				imageLoader.DisplayImage(myInfo.getAvatar(), ivProfilePicture,
-						R.drawable.thumb);
+				ImageDownloader imageLoader = ImageDownloader.getInstance();
+				imageLoader.download(myInfo.getAvatar(), ivProfilePicture);
 
 			}
 			if (myInfo.getSettings() != null) {
@@ -532,15 +493,15 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -615,11 +576,8 @@ public class AccountSettingsActivity extends Activity implements
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
-				// avatar = (Bitmap) data.getExtras().get("data");
-				// ivProfilePicture.setImageBitmap(avatar);
 
 				if (avatar != null) {
-					// avatar.recycle();
 				}
 				avatar = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
@@ -632,17 +590,19 @@ public class AccountSettingsActivity extends Activity implements
 			}
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				
+
 				Uri selectedImage = data.getData();
-	            try {
-					avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);
-					
+				try {
+					avatar = Utility.resizeBitmap(Utility.decodeUri(
+							selectedImage, getContentResolver()),
+							Constant.thumbWidth, 0, true);
+
 					ivProfilePicture.setImageBitmap(avatar);
-					
+
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}  catch (OutOfMemoryError e) {
+				} catch (OutOfMemoryError e) {
 					Toast.makeText(context,
 							getString(R.string.errorMessageGallery),
 							Toast.LENGTH_SHORT).show();
@@ -655,46 +615,9 @@ public class AccountSettingsActivity extends Activity implements
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
-				/*imageUri = data.getData();
-				try {
-					
-					if (avatar != null) {
-						// avatar.recycle();
-					}
-					avatar = Utility.resizeBitmap(
-							MediaStore.Images.Media.getBitmap(
-									this.getContentResolver(), data.getData()),
-							Constant.thumbWidth, Constant.thumbHeight);
-					ivProfilePicture.setImageBitmap(avatar);
-				} catch (OutOfMemoryError e) {
-					Log.e("Gallery image", "OutOfMemoryError");
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}*/
-				// ivProfilePicture.setImageURI(imageUri);
 			}
 		}
 	}
-
-	/*
-	 * public String getPath(Uri uri) { String[] projection = {
-	 * MediaStore.Images.Media.DATA }; Cursor cursor = managedQuery(uri,
-	 * projection, null, null, null); int column_index = cursor
-	 * .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	 * cursor.moveToFirst(); return cursor.getString(column_index); }
-	 */
 
 	private void selectDate() {
 		DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -771,15 +694,15 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -794,7 +717,6 @@ public class AccountSettingsActivity extends Activity implements
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(getApplicationContext(),
 					"Information saved successfully!!", Toast.LENGTH_SHORT)
 					.show();
@@ -805,15 +727,15 @@ public class AccountSettingsActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -845,10 +767,6 @@ public class AccountSettingsActivity extends Activity implements
 			String avatarString = "";
 
 			RestClient client = new RestClient(Constant.smAccountSettingsUrl);
-
-			// client.AddHeader("GData-Version", "2");
-
-			// String email=Utility.getEmail(context);
 
 			client.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
@@ -888,11 +806,6 @@ public class AccountSettingsActivity extends Activity implements
 
 				ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
 
-				// Bitmap resizedAvatar =
-				// Utility.resizeBitmap(avatar,Constant.thumbWidth,
-				// Constant.thumbHeight);
-				// resizedAvatar.compress(Bitmap.CompressFormat.PNG,
-				// 60,full_stream);
 				avatar.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
 				byte[] full_bytes = full_stream.toByteArray();
@@ -900,8 +813,6 @@ public class AccountSettingsActivity extends Activity implements
 						.encodeToString(full_bytes, Base64.DEFAULT);
 
 				client.AddParam("avatar", avatarString);
-
-				// avatar.recycle();
 			}
 
 			try {
@@ -929,10 +840,7 @@ public class AccountSettingsActivity extends Activity implements
 		} else if (etLastName.getText().toString().trim().equals("")) {
 			flag = false;
 			etLastName.setError("Last Name can not be empty.");
-		} /*
-		 * else if (etUserName.getText().toString().trim().equals("")) { flag =
-		 * false; etUserName.setError("User Name can not be empty."); }
-		 */
+		}
 
 		if (flag) {
 			if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -942,7 +850,7 @@ public class AccountSettingsActivity extends Activity implements
 				thread.start();
 				m_ProgressDialog = ProgressDialog.show(this, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.updating_data_text), true,true);
+						.getString(R.string.updating_data_text), true, true);
 
 			} else {
 
@@ -959,10 +867,7 @@ public class AccountSettingsActivity extends Activity implements
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int item) {
-				/*
-				 * Toast.makeText(getApplicationContext(), items[item],
-				 * Toast.LENGTH_SHORT).show();
-				 */
+
 				if (items[item].equals("Gallery")) {
 					requestCode = Constant.REQUEST_CODE_GALLERY;
 				} else {
@@ -972,73 +877,6 @@ public class AccountSettingsActivity extends Activity implements
 			}
 
 		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void promptClearHistory() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				AccountSettingsActivity.this);
-
-		builder.setTitle("Clear History");
-		builder.setMessage("This action will remove all your data of Social Maps. Are you sure?");
-		builder.setCancelable(true)
-				.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								clearHistory();
-							}
-						}).setNegativeButton("Cancel", null);
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void promptDeleteAccount() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				AccountSettingsActivity.this);
-		builder.setTitle("Delete Account");
-		builder.setMessage("Are you sure you want to remove your account from Social Maps?");
-		builder.setCancelable(true)
-				.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								deleteAccount();
-							}
-						}).setNegativeButton("Cancel", null);
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void clearHistory() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				AccountSettingsActivity.this);
-		builder.setTitle("Success");
-		builder.setMessage("History cleared successfully.");
-		builder.setCancelable(true).setPositiveButton("Ok",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void deleteAccount() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				AccountSettingsActivity.this);
-		builder.setTitle("Success");
-		builder.setMessage("Account removed successfully.");
-		builder.setCancelable(true).setPositiveButton("Ok",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-
-					}
-				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -1082,10 +920,6 @@ public class AccountSettingsActivity extends Activity implements
 
 	private void executeLogout() {
 
-		// AsyncFacebookRunner asyncRunner = new
-		// AsyncFacebookRunner(FBUtility.mFacebook);
-		// asyncRunner.logout(context, new LogoutRequestListener());
-
 		Log.e("Account settings", "You have logged out! ");
 		Utility.setFacebookImage(context, null);
 		Utility.destroySession(context);
@@ -1096,51 +930,6 @@ public class AccountSettingsActivity extends Activity implements
 		startActivity(intent);
 
 	}
-
-	/*
-	 * private class LogoutRequestListener extends BaseRequestListener { //
-	 * 
-	 * @Override
-	 * 
-	 * @Override public void onComplete(String response, final Object state) {
-	 * mHandler.post(new Runnable() { // @Override
-	 * 
-	 * @Override public void run() {
-	 * 
-	 * SessionEvents.onLogoutFinish(); } }); } }
-	 * 
-	 * public class FbAPIsAuthListener implements AuthListener {
-	 * 
-	 * // @Override
-	 * 
-	 * @Override public void onAuthSucceed() {
-	 * 
-	 * }
-	 * 
-	 * // @Override
-	 * 
-	 * @Override public void onAuthFail(String error) { Log.e("HomeActivity",
-	 * "Login Failed: " + error); } }
-	 * 
-	 * 
-	 * public class FbAPIsLogoutListener implements LogoutListener { //
-	 * 
-	 * @Override
-	 * 
-	 * @Override public void onLogoutBegin() { Log.e("Account settings",
-	 * "Logging out..."); }
-	 * 
-	 * // @Override
-	 * 
-	 * @Override public void onLogoutFinish() { Log.e("Account settings",
-	 * "You have logged out! "); Utility.setFacebookImage(context, null);
-	 * 
-	 * Intent intent = new Intent(context, HomeActivity.class);
-	 * intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	 * intent.putExtra("LOGOUT", true); startActivity(intent);
-	 * 
-	 * } }
-	 */
 
 	private void updatePassword() {
 		// TODO Auto-generated method stub
@@ -1168,7 +957,7 @@ public class AccountSettingsActivity extends Activity implements
 				thread.start();
 				m_ProgressDialog = ProgressDialog.show(this, getResources()
 						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.updating_data_text), true,true);
+						.getString(R.string.updating_data_text), true, true);
 
 			} else {
 
@@ -1209,7 +998,4 @@ public class AccountSettingsActivity extends Activity implements
 		runOnUiThread(returnResPasswordChange);
 
 	}
-
-	
-
 }

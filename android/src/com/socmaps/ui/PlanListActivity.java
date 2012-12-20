@@ -28,12 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.Event;
-import com.socmaps.entity.People;
-import com.socmaps.entity.Plan;
 import com.socmaps.entity.Plan;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.listrow.ListItemClickListenerEvent;
 import com.socmaps.listrow.ListItemClickListenerPlan;
 import com.socmaps.listrow.PlanRowFactory;
 import com.socmaps.notificationBroadcast.BroadcastListener;
@@ -67,7 +63,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 	int colorButtonNormal, colorButtonSelected;
 
 	Plan seletedPlan;
-	private People people;
 
 	String personID = null;
 	String personFirstName = "", personLastName = "";
@@ -107,7 +102,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		planList = (ListView) findViewById(R.id.event_list);
 		plans = new ArrayList<Plan>();
 		dateWiseSortedPlans = new ArrayList<Plan>();
-		// contentAdapter=new ContentListAdapter(context,plans);
 		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_plan,
 				plans);
 		planList.setTextFilterEnabled(true);
@@ -202,13 +196,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		public void run() {
 			// TODO Auto-generated method stub
 
-			// RestClient getAccountSettingsClient;
-			// getAccountSettingsClient = new RestClient(Constant.smPlanUrl);
-
 			RestClient getAccountSettingsClient;
 			if (personID == null) {
-				// getAccountSettingsClient = new
-				// RestClient(Constant.smPlanUrl);
 				getAccountSettingsClient = new RestClient(Constant.smServerUrl
 						+ "/me/plans");
 			} else {
@@ -216,8 +205,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 						+ "/users" + "/" + personID + "/plans");
 			}
 
-			// RestClient getAccountSettingsClient = new
-			// RestClient(Constant.smGetPlanUrl);
 			getAccountSettingsClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -254,27 +241,18 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
-			// dateWiseSortedPlans =
-			// ServerResponseParser.parseGetplanListResult(response);
 			dateWiseSortedPlans = ServerResponseParser
 					.parseGetPlanListResult(response);
 
-			/*
-			 * Log.e("plans size", dateWiseSortedPlans.size()+"");
-			 * plans.clear(); plans.addAll(dateWiseSortedPlans);
-			 */
-
 			this.resetAdapterItems();
-
-			// btnFilterByDate.setBackgroundColor(colorButtonSelected);
 			contentAdapter.notifyDataSetChanged();
 
 			break;
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
@@ -285,8 +263,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -299,7 +277,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 	private void resetAdapterItems() {
 		this.plans.clear();
-		// clearFilterButtonSelection();
 		this.plans.addAll(this.dateWiseSortedPlans);
 		contentAdapter.setObjects(this.plans);
 	}
@@ -330,13 +307,9 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		public ListArrayAdapter(Context context, int textViewResourceId,
 				List<Plan> objects) {
 
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 
 			init(context, textViewResourceId, 0, objects);
-			// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(context.getResources(),
-			// R.drawable.Plan_item_bg));
 		}
 
 		@Override
@@ -390,12 +363,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-
-			/*
-			 * return PlanRowFactory.getView(LayoutInflater.from(context),
-			 * mObjects.get(position), context, new ItemListener(), position,
-			 * convertView, imageDownloader);
-			 */
 
 			if (personID == null) {
 				return PlanRowFactory.getView(LayoutInflater.from(context),
@@ -499,23 +466,16 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onItemClick(Plan plan) {
 			// TODO Auto-generated method stub
-			// Toast.makeText(getApplicationContext(), "Item Click Coming Soon",
-			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onArrowButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			// Toast.makeText(getApplicationContext(),
-			// "Arrow Click Coming Soon", Toast.LENGTH_SHORT).show();
-
 		}
 
 		@Override
 		public void onShowOnMapButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			// Toast.makeText(getApplicationContext(),
-			// "Map Button Click Coming Soon", Toast.LENGTH_SHORT).show();
 
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = plan;
@@ -528,8 +488,7 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onShowEditButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			// Toast.makeText(getApplicationContext(),
-			// "Edit Option Coming Soon", Toast.LENGTH_SHORT).show();
+
 			if (plan != null) {
 				seletedPlan = plan;
 				Log.d("Check Plan", seletedPlan.getPlanId());
@@ -544,8 +503,6 @@ public class PlanListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onShowDeleteButtonClick(Plan plan) {
 			// TODO Auto-generated method stub
-			// Toast.makeText(getApplicationContext(),
-			// "Delete Option Coming Soon", Toast.LENGTH_SHORT).show();
 
 			if (plan != null) {
 				seletedPlan = plan;
@@ -634,13 +591,8 @@ public class PlanListActivity extends Activity implements OnClickListener,
 
 		if (status == Constant.STATUS_SUCCESS) {
 
-			// etNewMessage.setText("");
 			Toast.makeText(context, "Plan deleted successfully.",
 					Toast.LENGTH_SHORT).show();
-			// EventListActivity.isUpdateList = true;
-			// Intent intent = new Intent(context, EventListActivity.class);
-			// finish();
-			// startActivity(intent);
 
 			for (int i = 0; i < plans.size(); i++) {
 				if (plans.get(i).getPlanId()

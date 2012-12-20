@@ -31,14 +31,14 @@ import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
-public class MessageConversationActivity extends Activity{
+public class MessageConversationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;
 	Button btnSend;
@@ -60,8 +60,7 @@ public class MessageConversationActivity extends Activity{
 
 	// Replies update related variables
 	long lastUpdatedOn;
-	// List<String> visibleRepliesIds = new ArrayList<String>();
-	long fetchNewRepliesAfter = 60 * 1000; // Milliseconds
+	long fetchNewRepliesAfter = 60 * 1000;
 
 	String repliesResponse = "";
 	int repliesStatus = 0;
@@ -70,7 +69,7 @@ public class MessageConversationActivity extends Activity{
 
 	HashMap<String, Boolean> displayedMessageList = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,22 +83,9 @@ public class MessageConversationActivity extends Activity{
 
 		lastUpdatedOn = Utility.getUnixTimestamp();
 		handleResponseMessage(responseStatus, responseText);
-		// getMessages();
-		// initiateFetchNewRepliesThread();
-
 		getRepliesPeriodically();
 
 	}
-
-	/*
-	 * private void initiateFetchNewRepliesThread() { mReplyRefresherThread =
-	 * new Thread(new Runnable() {
-	 * 
-	 * @Override public void run() { // Request replies web service // Update
-	 * lastUpdatedOn with currentUnixTimestamp // If result found call
-	 * onNewRepli event // Check with visibleRepliesIds list if already exists
-	 * // don't append on the view // Otherwise do nothing } }); }
-	 */
 
 	private void getRepliesPeriodically() {
 		final int delay = 30;
@@ -127,18 +113,7 @@ public class MessageConversationActivity extends Activity{
 
 			Thread thread = new Thread(null, replyThread, "Start get replies");
 			thread.start();
-
-			// show progress dialog if needed m_ProgressDialog =
-			/*
-			 * if(!m_ProgressDialog.isShowing()) { m_ProgressDialog =
-			 * ProgressDialog.show(MessageGroupActivity.group, getResources()
-			 * .getString(R.string.please_wait_text), getResources()
-			 * .getString(R.string.sending_request_text), true); }
-			 */
-
 		} else {
-
-			// DialogsAndToasts.showNoInternetConnectionDialog(getApplicationContext());
 			if (m_ProgressDialog != null) {
 				if (m_ProgressDialog.isShowing()) {
 					m_ProgressDialog.dismiss();
@@ -184,8 +159,6 @@ public class MessageConversationActivity extends Activity{
 			}
 
 			handleResponseReplies(repliesStatus, repliesResponse);
-
-			// dismiss progress dialog if needed m_ProgressDialog.dismiss();
 		}
 	};
 
@@ -275,12 +248,9 @@ public class MessageConversationActivity extends Activity{
 									messageListContainer.addView(rView);
 									displayedMessageList.put(messageId, true);
 								}
-
 							}
 						}
-
 						// end of replies
-
 					}
 
 				} catch (JSONException e) {
@@ -325,11 +295,6 @@ public class MessageConversationActivity extends Activity{
 
 		senderName.setText(name);
 
-		/*
-		 * if (mEntity.getCreateDate() != null) {
-		 * sentTime.setText(mEntity.getCreateDate()); }
-		 */
-
 		if (mEntity.getUpdateTimeEntity() != null) {
 			sentTime.setText(Utility.getFormattedDisplayDate(mEntity
 					.getUpdateTimeEntity()));
@@ -340,17 +305,6 @@ public class MessageConversationActivity extends Activity{
 
 			senderMessage.setText(messageText);
 		}
-
-		/*final ImageView profilePic = (ImageView) v
-				.findViewById(R.id.profilePic);
-
-		String avatarUrl = mEntity.getSenderAvatar();
-		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
-
-		}*/
 
 		Button btnDirection = (Button) v.findViewById(R.id.btnDirection);
 
@@ -384,7 +338,7 @@ public class MessageConversationActivity extends Activity{
 		context = MessageConversationActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		btnSend = (Button) findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(buttonActionListener);
@@ -401,10 +355,6 @@ public class MessageConversationActivity extends Activity{
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
@@ -424,19 +374,6 @@ public class MessageConversationActivity extends Activity{
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
 
@@ -450,8 +387,6 @@ public class MessageConversationActivity extends Activity{
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						// Log.e("ScrollView", "Scrolling");
-						// int h = linearLayoutBody.getHeight();
 						scrollViewBody.scrollBy(View.FOCUS_LEFT,
 								View.FOCUS_DOWN);
 					}
@@ -494,7 +429,8 @@ public class MessageConversationActivity extends Activity{
 								getResources().getString(
 										R.string.please_wait_text),
 								getResources().getString(
-										R.string.sending_request_text), true,true);
+										R.string.sending_request_text), true,
+								true);
 			}
 
 		} else {
@@ -533,8 +469,6 @@ public class MessageConversationActivity extends Activity{
 
 		@Override
 		public void run() { // TODO Auto-generated method stub
-			// m_ProgressDialog.dismiss();
-
 			handleResponseSendMessage(messageStatus, messageResponse);
 
 		}
@@ -546,30 +480,6 @@ public class MessageConversationActivity extends Activity{
 		Log.i("MESSAGE RESPONSE", status + ":" + response);
 
 		if (status == Constant.STATUS_CREATED) {
-
-			/*
-			 * String message = etNewMessage.getText().toString().trim();
-			 * 
-			 * MessageEntity mEntity = new MessageEntity();
-			 * mEntity.setSenderId(AppStaticStorages.accountSettingsEntity
-			 * .getSmID());
-			 * mEntity.setSenderFirstName(AppStaticStorages.accountSettingsEntity
-			 * .getFirstName());
-			 * mEntity.setSenderLastName(AppStaticStorages.accountSettingsEntity
-			 * .getLastName()); mEntity.setCreateDate(Utility.getdate());
-			 * mEntity.setSenderAvatar(AppStaticStorages.accountSettingsEntity
-			 * .getAvatar()); mEntity.setContent(message);
-			 * 
-			 * View v = getListItem(mEntity); messageListContainer.addView(v);
-			 * 
-			 * // add sent message to the view etNewMessage.setText("");
-			 * 
-			 * scrollToBottom();
-			 */
-
-			// Toast.makeText(MessageGroupActivity.group,
-			// "Message sent successfully.", Toast.LENGTH_SHORT).show();
-
 			Toast.makeText(MessageGroupActivity.group,
 					"Message sent successfully.", Toast.LENGTH_SHORT).show();
 
@@ -587,8 +497,6 @@ public class MessageConversationActivity extends Activity{
 		}
 
 	}
-
-	
 
 	private Map<String, String> buildViewableMessageInfo(MessageEntity message) {
 

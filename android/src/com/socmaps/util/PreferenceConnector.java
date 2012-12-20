@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+/**
+ * PreferenceConnector class is communicator for storing some data in
+ * SharedPreferences.
+ * 
+ */
 public class PreferenceConnector {
 	public static final String PREF_NAME = "SM_PREFERENCES";
 	public static final int MODE = Context.MODE_PRIVATE;

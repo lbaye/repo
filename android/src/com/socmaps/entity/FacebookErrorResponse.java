@@ -7,11 +7,6 @@ package com.socmaps.entity;
  * @author hasan.mahadi
  * 
  */
-/*
- * { "error": { "message": "Error validating access token: The session is
- * invalid because the user logged out.", "type": "OAuthException", "code": 190
- * "error_subcode": 467 } }
- */
 
 public class FacebookErrorResponse {
 	String message;

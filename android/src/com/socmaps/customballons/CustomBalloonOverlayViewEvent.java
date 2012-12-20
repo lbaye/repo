@@ -30,7 +30,8 @@ public class CustomBalloonOverlayViewEvent<Item extends OverlayItem> extends
 			int balloonBottomOffset,ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		this.imageDownloader = imageDownloader;
-	}
+	} 
+	
 
 	 CustomBalloonOverlayViewEvent(Context context,
 			int balloonBottomOffset) {

@@ -17,6 +17,10 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+/**
+ * LocationPreferenceItemView class for generating location sharing list item.
+ */
 public class LocationPreferenceItemView extends LinearLayout implements
 		View.OnClickListener, OnCheckedChangeListener {
 
@@ -47,15 +51,24 @@ public class LocationPreferenceItemView extends LinearLayout implements
 	
 	private double latitude, longitude;
 
-	public boolean isExpanded = false;
+	private boolean isExpanded = false;
 
 	private LinearLayout llTimeLimitPanel, llRadiusPanel, llPermissionPanel;
 
 	private TextView tvTimeLimitTitle, tvRadiusTitle, tvPermissionNeededTitle;
 	
-	
-	
-
+	/**
+	 * Constructs a view for location sharing list item based on parameters.
+	 * 
+	 * @param context Current active Context
+	 * @param itemId which is associated with corresponding item
+	 * @param title default title
+	 * @param radius default value for radius
+	 * @param radiusTitle default radius title
+	 * @param latitude default latitude 
+	 * @param longitude default longitude
+	 * @see Context
+	 */
 	public LocationPreferenceItemView(Context context, String itemId,
 			String title, int radius, String radiusTitle, double latitude, double longitude) {
 		this(context, itemId, title, 0, radius, false, true, false, true,
@@ -69,6 +82,16 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	}
 
+	/**
+	 * Constructs a view for location sharing list item based on parameters.
+	 * 
+	 * @param context Current active Context
+	 * @param itemId which is associated with corresponding item
+	 * @param title default title
+	 * @param timeLimit default value for time limit
+	 * @param radius default value for radius
+	 * @param isPermissionNeeded true if visible this panel, false otherwise
+	 */
 	public LocationPreferenceItemView(Context context, String itemId,
 			String title, int timeLimit, int radius, boolean isPermissionNeeded) {
 		this(context, itemId, title, timeLimit, radius, isPermissionNeeded,
@@ -76,6 +99,18 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	}
 
+	/**
+	 * Constructs a view for location sharing list item based on parameters.
+	 * 
+	 * @param context Current active Context.
+	 * @param itemId which is associated with corresponding item
+	 * @param title default title
+	 * @param timeLimit default value for time limit
+	 * @param radius default value for radius
+	 * @param isPermissionNeeded true if visible this panel, false otherwise
+	 * @param isToggle is true if we want to expand the panel, false otherwise 
+	 * @param hideHeader true if we hide the header, false otherwise
+	 */
 	public LocationPreferenceItemView(Context context, String itemId,
 			String title, int timeLimit, int radius,
 			boolean isPermissionNeeded, boolean isToggle, boolean hideHeader) {
@@ -84,6 +119,21 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	}
 
+	/**
+	 * Constructs a view for location sharing list item based on parameters.
+	 * 
+	 * @param context Current active Context.
+	 * @param itemId which is associated with particular item
+	 * @param title default title
+	 * @param timeLimit default value for time limit
+	 * @param radius default value for radius
+	 * @param isPermissionNeeded true if visible this panel, false otherwise
+	 * @param isToggle true if we want to expand the panel, false otherwise 
+	 * @param hideHeader true if we hide the header, false otherwise
+	 * @param hideTimeLimitPanel true if we want to hide the time limit panel, false otherwise
+	 * @param hideRadiusPanel true if we want to hide the radius panel, false otherwise
+	 * @param hidePermissionPanel true if we want to hide the permission panel, false otherwise
+	 */
 	public LocationPreferenceItemView(Context context, String itemId,
 			String title, int timeLimit, int radius,
 			boolean isPermissionNeeded, boolean isToggle, boolean hideHeader,
@@ -95,6 +145,23 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	}
 
+	/**
+	 * Constructs a view for location sharing list item based on parameters.
+	 * 
+	 * @param context Current active Context.
+	 * @param itemId which is associated with particular item
+	 * @param title default title
+	 * @param timeLimit default value for time limit
+	 * @param radius default value for radius
+	 * @param isPermissionNeeded true if visible this panel, false otherwise
+	 * @param isToggle true if we want to expand the panel, false otherwise 
+	 * @param hideHeader  true if we hide the header, false otherwise
+	 * @param hideTimeLimitPanel true if we want to hide the time limit panel, false otherwise
+	 * @param hideRadiusPanel true if we want to hide the radius panel, false otherwise
+	 * @param hidePermissionPanel true if we want to hide the permission panel, false otherwise
+	 * @param attrs This interface provides an efficient mechanism for retrieving data from compiled XML files
+	 * @see AttributeSet
+	 */
 	public LocationPreferenceItemView(Context context, String itemId,
 			String title, int timeLimit, int radius,
 			boolean isPermissionNeeded, boolean isToggle, boolean hideHeader,
@@ -228,8 +295,7 @@ public class LocationPreferenceItemView extends LinearLayout implements
 
 	}
 
-	private void changeRadiusValue(boolean isIncrease) {
-		// Integer.parseInt(tvRadiusValue.getText().toString().trim());
+	private void changeRadiusValue(boolean isIncrease) {	
 		try {
 			radius = Integer
 					.parseInt(etRadiusValue.getText().toString().trim());
@@ -250,7 +316,6 @@ public class LocationPreferenceItemView extends LinearLayout implements
 	}
 
 	private void changeTimeLimitValue(boolean isIncrease) {
-		// Integer.parseInt(tvTimeLimitValue.getText().toString().trim());
 
 		try {
 			timeLimit = Integer.parseInt(etTimeLimitValue.getText().toString()
@@ -270,6 +335,12 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		etTimeLimitValue.setText("" + timeLimit);
 	}
 
+	
+	/**
+	 * Generates integer value of radius based on user changes.
+	 * 
+	 * @return integer 
+	 */
 	public int getRadius() {
 
 		try {
@@ -283,6 +354,11 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		return radius;
 	}
 
+	/**
+	 * Generates integer value of time duration based on user changes.
+	 * 
+	 * @return integer
+	 */
 	public int getDuration() {
 		try {
 			timeLimit = Integer.parseInt(etTimeLimitValue.getText().toString()
@@ -315,6 +391,10 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		return isPermissionNeeded;
 	}
 
+	
+	/**
+	 * Reverse the expandable panel or view.
+	 */
 	public void toggle() {
 		if (isExpanded) {
 			llItemContents.setVisibility(View.GONE);
@@ -333,6 +413,9 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		isExpanded = !isExpanded;
 	}
 
+	/**
+	 * Some UI changes based on panel expand or collapse
+	 */
 	public void show() {
 		llItemContents.setVisibility(View.VISIBLE);
 		ivArrowRight.setImageResource(R.drawable.icon_arrow_up);
@@ -341,6 +424,10 @@ public class LocationPreferenceItemView extends LinearLayout implements
 		isExpanded = true;
 	}
 
+	
+	/**
+	 * Hide some content of location sharing panel's 
+	 */
 	public void hide() {
 		llItemContents.setVisibility(View.GONE);
 		ivArrowRight.setImageResource(R.drawable.icon_arrow_down);

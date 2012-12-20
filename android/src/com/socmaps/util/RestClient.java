@@ -23,14 +23,13 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
 /**
- * @author hasan.mahadi
- * 
+ * RestClient class for sending request to server.
+ *
  */
 public class RestClient {
 
@@ -212,8 +211,6 @@ public class RestClient {
 			}
 
 			if (!params.isEmpty()) {
-				// request.setEntity(new UrlEncodedFormEntity(params,
-				// HTTP.UTF_8));
 			}
 
 			executeRequest(request, url);
@@ -223,12 +220,7 @@ public class RestClient {
 	}
 
 	private void executeRequest(HttpUriRequest request, String url) {
-		BasicHttpParams httpParams = new BasicHttpParams();
-		// HttpConnectionParams.setConnectionTimeout(httpParams,
-		// timeoutConnection);
-		// HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
-		// HttpClient client = new DefaultHttpClient(httpParams);
-
+		
 		HttpClient client = new DefaultHttpClient();
 
 		HttpResponse httpResponse;
@@ -237,8 +229,6 @@ public class RestClient {
 			httpResponse = client.execute(request);
 			responseCode = httpResponse.getStatusLine().getStatusCode();
 			message = httpResponse.getStatusLine().getReasonPhrase();
-
-			// httpResponse.getHeaders(name)
 
 			HttpEntity entity = httpResponse.getEntity();
 

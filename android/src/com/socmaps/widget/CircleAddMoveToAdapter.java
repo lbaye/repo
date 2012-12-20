@@ -13,6 +13,10 @@ import android.widget.CheckedTextView;
 import com.socmaps.entity.Circle;
 import com.socmaps.ui.R;
 
+/**
+ * CircleAddMoveToAdapter class for generating circle list item.
+ *
+ */
 public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 
 	Context context;
@@ -20,6 +24,20 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 	private List<Circle> itemList = null;
 	private List<String> selectedCircleList = null;
 
+	/**
+	 * Generates a Circle list which is corresponding to list item or row.
+	 * 
+	 * @param context
+	 *            Current active Context
+	 * @param layoutResourceId
+	 *            Layout Id in Integer to inflate corresponding Layout
+	 * @param itemList
+	 *            is the List of Circles object
+	 * @param selectedCircleList
+	 *            List of String which are selected item (id) of circle list
+	 * @see LayoutInflater
+	 * @see Context
+	 */
 	public CircleAddMoveToAdapter(Context context, int layoutResourceId,
 			List<Circle> itemList, List<String> selectedCircleList) {
 		super(context, layoutResourceId, itemList);
@@ -43,19 +61,12 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			// v = inflater.inflate(layoutResourceId, null);
-
 			v = inflater.inflate(R.layout.create_circle_list_item, null);
 
 			holder = new ItemHolder();
 
 			holder.itemTitle = (CheckedTextView) v
 					.findViewById(R.id.circleNameTxt);
-
-			// holder.title = (TextView) v.findViewById(R.id.tvTitle);
-
-			// holder.checkBox = (CheckBox) v
-			// .findViewById(R.id.chkInfoSharingSettings);
 
 			v.setTag(holder);
 		} else {
@@ -67,33 +78,14 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 		holder.itemTitle.setText(circle.getName() + " ("
 				+ circle.getFriendList().size() + ")");
 
-		// holder.title.setText(circle.getName() + " ("
-		// + circle.getFriendList().size() + ")");
-
 		Log.i("circle.getId() in getView() " + circle.getId(), "selecetdId: "
 				+ selectedCircleList);
-
-		// if (selectedCircleList.contains(circle.getId())) {
-		//
-		// holder.itemTitle.setChecked(true);
-		//
-		// // holder.checkBox.setChecked(true);
-		//
-		// Log.w("circle.getId() in if condition " + circle.getId(),
-		// "selecetdId: " + circle.getId());
-		//
-		// } else {
-		// holder.itemTitle.setChecked(false);
-		// }
 
 		return v;
 	}
 
 	private static class ItemHolder {
 		public CheckedTextView itemTitle;
-
-		// public TextView title;
-		// public CheckBox checkBox;
 
 	}
 

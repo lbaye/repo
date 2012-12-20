@@ -31,6 +31,9 @@ import com.google.android.maps.OverlayItem;
 import com.socmaps.ui.R;
 import com.socmaps.util.Utility;
 
+/**
+ * LocationPicker MapActivity for providing expected location.
+ */
 public class LocationPicker extends MapActivity implements OnClickListener {
 	private MapView map = null;
 	private MyLocationOverlay me = null;
@@ -53,7 +56,7 @@ public class LocationPicker extends MapActivity implements OnClickListener {
 
 		updateMap();
 		addMyLocationOverlay();
-		// map.getController().setCenter(getPoint(23.790116,90.422437));
+	
 
 	}
 
@@ -75,7 +78,7 @@ public class LocationPicker extends MapActivity implements OnClickListener {
 		SitesOverlay sitesOverlay = new SitesOverlay(marker);
 		sitesOverlay.addOverlay(new OverlayItem(getPoint(lat, lng), "", ""));
 		mapOverlays.add(sitesOverlay);
-		// mapController.setCenter(getPoint(lat,lng));
+		
 		mapController.animateTo(getPoint(lat, lng));
 	}
 
@@ -133,14 +136,13 @@ public class LocationPicker extends MapActivity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 
-		// me.enableCompass();
+		
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		// me.disableCompass();
 	}
 
 	@Override

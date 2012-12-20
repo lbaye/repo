@@ -11,6 +11,10 @@ import android.util.Log;
 
 import com.socmaps.util.RestClient.RequestMethod;
 
+/**
+ * BackProcess class for generating a server request as a separate thread.
+ *
+ */
 public class BackProcess extends AsyncTask<RequestMethod, Void, String> {
 	private Context context;
 

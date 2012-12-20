@@ -3,10 +3,6 @@
  */
 package com.socmaps.widget;
 
-/**
- * @author hasan.mahadi
- *
- */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +16,11 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -38,11 +33,16 @@ import android.widget.TextView;
 
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+/**
+ * PeoplePicker generates a custom dialog to display friends list item.
+ *
+ */
 public class PeoplePicker extends Dialog implements OnClickListener {
 	Button btnCancel, btnOk;
 
@@ -69,9 +69,25 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 	List<String> removedFriendList;
 	List<String> removedCircleList;
 
-	ImageLoader imageLoader; 
-	
+	ImageDownloader imageDownloader;
+
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
+
+	/**
+	 * Initialization of PeoplePicker constructor using those specified
+	 * parameters.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param peoplePickerListener
+	 *            An instance of PeoplePickerListener.
+	 * @param pickerName
+	 *            As String which indicates on sharing with.
+	 * @param preSelectedFriendList
+	 *            An array list of String which holds our preselected friends.
+	 * @param preSelectedCircleList
+	 *            An array list of String which holds our preselected circles.
+	 */
 
 	public PeoplePicker(Context context,
 			PeoplePickerListener peoplePickerListener, String pickerName,
@@ -80,6 +96,31 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		this(context, peoplePickerListener, pickerName, preSelectedFriendList,
 				preSelectedCircleList, null, null);
 	}
+
+	/**
+	 * Initialization of PeoplePicker constructor using those specified
+	 * parameters.
+	 * 
+	 * @param context
+	 *            Currently active Context.
+	 * @param peoplePickerListener
+	 *            An instance of PeoplePickerListener.
+	 * @param pickerName
+	 *            As String which indicates on sharing with.
+	 * @param preSelectedFriendList
+	 *            An array list of String which holds our preselected friends.
+	 * @param preSelectedCircleList
+	 *            An array list of String which holds our preselected circles.
+	 * @param removedFriendList
+	 *            An array list of String which holds the names of friends that
+	 *            will be deleted.
+	 * @param removedCircleList
+	 *            An array list of String which holds the names of circles that
+	 *            will be deleted.
+	 * @see #initialize()
+	 * @see #generateFriendList()
+	 * @see #showFriendList()
+	 */
 
 	public PeoplePicker(Context context,
 			PeoplePickerListener peoplePickerListener, String pickerName,
@@ -91,7 +132,7 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		this.context = context;
 		this.pickerName = pickerName;
 
-		imageLoader = new ImageLoader(this.context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		this.preSelectedFriendList = preSelectedFriendList;
 		this.preSelectedCircleList = preSelectedCircleList;
@@ -141,29 +182,18 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		friendListContainer = (LinearLayout) findViewById(R.id.friendListContainer);
 		circleListContainer = (LinearLayout) findViewById(R.id.circleListContainer);
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
-		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles); 
-		
-		etFriendSearch.addTextChangedListener(filterTextWatcher);
-		
-		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
-		    public boolean onKey(View v, int keyCode, KeyEvent event) {
-		    		Log.d("inside On Key", "INSIDE ON KEY"); 
-		    		if(event.ACTION_DOWN == 0) {
-		    			doSearch(); 
-		    			Log.d("Do Search", "Do Search Method Called  " + etFriendSearch.getText().toString().trim()); 
-		    			//hideKeyBoard(); 
-		    		}
-		            return false;
-		        }
-		    });*/
+		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
-	} 
-	
-	private void hideKeyBoard() { 
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+		etFriendSearch.addTextChangedListener(filterTextWatcher);
+
+	}
+
+	private void hideKeyBoard() {
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(etFriendSearch.getWindowToken(), 0);
 	}
-	
+
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
 		@Override
@@ -178,8 +208,9 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			//contentAdapter.getFilter().filter(s); 
-			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+
+			Log.d("Do Search", "Do Search Method Called  "
+					+ etFriendSearch.getText().toString().trim());
 			doSearch();
 		}
 
@@ -188,7 +219,7 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == btnCancel) {
-			dismiss(); 
+			dismiss();
 			hideKeyBoard();
 		}
 		if (v == btnOk) {
@@ -255,7 +286,7 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 			peoplePickerListener.onSelect(pickerName, selectedFriendList,
 					selectedCircleList, selectedCircleFriendList,
 					selectedFriendListAll);
-			dismiss(); 
+			dismiss();
 			hideKeyBoard();
 		}
 
@@ -275,13 +306,9 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		friendListContainer.removeAllViews();
 		List<People> friends = StaticValues.myInfo.getFriendList();
 
-		// Log.e("Friends count", friends.length+"");
 		if (friends != null) {
 
 			for (int i = 0; i < friends.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
-
 				String friendId = friends.get(i).getId();
 				if (friendId != null) {
 					if (!removedFriendList.contains(friendId)) {
@@ -322,6 +349,16 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 
 	}
 
+	/**
+	 * This method generates a view that will depicts as a people. The view will
+	 * also contain that person's name. The person's avatar is downloaded from a
+	 * specific uri. If we click on the item, it's background will change.
+	 * 
+	 * @param people
+	 *            An object of type People.
+	 * @return View It'll be treated as a people.
+	 */
+
 	public View getItemViewFriend(People people) {
 
 		View v = inflater.inflate(R.layout.people_item, null);
@@ -352,24 +389,16 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		nameView.setText(name);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
+			imageDownloader.download(avatarUrl, profilePic);
 
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( context.getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
+		}
 
-		} 
-		
-		if(backupSelectedFriends.containsKey(id)) 
-		{
-			boolean preValue = backupSelectedFriends.get(id); 
-			
-			if(preValue) {
-				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+		if (backupSelectedFriends.containsKey(id)) {
+			boolean preValue = backupSelectedFriends.get(id);
+
+			if (preValue) {
+				proficPicContainer
+						.setBackgroundResource(R.color.highlightGreen);
 				selectedFriends.put(id, preValue);
 			}
 		}
@@ -403,6 +432,15 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 
 		return v;
 	}
+
+	/**
+	 * This method generates a circle that belong to a circle list. If we press
+	 * any circle, it's background will change.
+	 * 
+	 * @param cEntity
+	 *            An object of type Circle, which contains a people list.
+	 * @return View It contains a list of people.
+	 */
 
 	public View getItemViewCircle(Circle cEntity) {
 
@@ -438,6 +476,10 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		return v;
 	}
 
+	/**
+	 * This method performs to show the Friend list of a particular user.
+	 */
+
 	public void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
@@ -451,6 +493,10 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		scrollViewFriends.setVisibility(View.VISIBLE);
 	}
 
+	/**
+	 * This method performs to show the Circle list of a particular user.
+	 */
+
 	public void showCircleList() {
 		btnFriendSelect.setTextAppearance(context,
 				R.style.ButtonTextStyleNormal);
@@ -463,6 +509,11 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		scrollViewCircles.setVisibility(View.VISIBLE);
 	}
 
+	/**
+	 * This method performs to select all the items from friend list or circle
+	 * list.
+	 */
+
 	public void selectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(true);
@@ -471,6 +522,11 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		}
 	}
 
+	/**
+	 * This method performs to unselect all the items from friend list or circle
+	 * list.
+	 */
+
 	public void unselectAll() {
 		if (scrollViewFriends.getVisibility() == View.VISIBLE) {
 			selectionFriends(false);
@@ -478,6 +534,15 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 			selectionCircles(false);
 		}
 	}
+
+	/**
+	 * This method performs to select an item from friend list. If the item is
+	 * selected then the background will change.
+	 * 
+	 * @param isSelect
+	 *            A boolean which indicates the state(if it is selected or not)
+	 *            of selected user.
+	 */
 
 	public void selectionFriends(boolean isSelect) {
 		int selectionColor;
@@ -505,6 +570,15 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		}
 	}
 
+	/**
+	 * This method performs to select a circle from circle list. If the circle
+	 * is selected then the background of that circle will change.
+	 * 
+	 * @param isSelect
+	 *            A boolean which indicates the state(if it is selected or not)
+	 *            of selected circle.
+	 */
+
 	public void selectionCircles(boolean isSelect) {
 
 		int totalChild = circleListContainer.getChildCount();
@@ -514,15 +588,16 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 			chkCircle.setChecked(isSelect);
 		}
 
-		/*
-		 * Set set = selectedCircles.entrySet(); Iterator iterator =
-		 * set.iterator(); while (iterator.hasNext()) { Map.Entry me =
-		 * (Map.Entry) iterator.next();
-		 * 
-		 * String key = (String) me.getKey(); selectedCircles.put(key,
-		 * isSelect); }
-		 */
 	}
+
+	/**
+	 * This method performs to set the text of Buttons.
+	 * 
+	 * @param positiveButtonLabel
+	 *            as String which indicates a text, OK.
+	 * @param negativeButtonLabel
+	 *            as String which indicates a text, Cancel.
+	 */
 
 	public void setButtonLabels(String positiveButtonLabel,
 			String negativeButtonLabel) {
@@ -542,8 +617,6 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 		List<Object> list = (Utility.getSearchResult(dataList, etFriendSearch
 				.getText().toString().trim()));
 		friendListContainer.removeAllViews();
-
-		// backUpSelectedFriends = selectedFriends;
 		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
 		selectedFriends.clear();
 		for (int i = 0; i < list.size(); i++) {

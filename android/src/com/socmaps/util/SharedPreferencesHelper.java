@@ -6,8 +6,12 @@ import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
+/**
+ * SharedPreferencesHelper class for storing some values.
+ *
+ */
 public class SharedPreferencesHelper {
-	// private static final String PREF_FILE = "Settings";
 
 	private static Map<Context, SharedPreferencesHelper> instances = new HashMap<Context, SharedPreferencesHelper>();
 

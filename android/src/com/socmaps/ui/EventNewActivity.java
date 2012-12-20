@@ -56,7 +56,7 @@ import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
@@ -128,13 +128,12 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	double eventLat = 0, eventLng = 0;
 	Date eventDate;
 	DatePicker eventDatePicker;
-	// Uri imageUri;
 	Bitmap eventPicture;
 	Calendar now = Calendar.getInstance();
 
 	String permissionValue = "";
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 
 	private Place selectedPlace;
 	int flagBack;
@@ -144,17 +143,9 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_new_layout); 
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-		/*
-		 * eventLat = getIntent().getDoubleExtra("destLat", 0); eventLng =
-		 * getIntent().getDoubleExtra("destLng", 0); eventAddress =
-		 * getIntent().getStringExtra("destAddress");
-		 * 
-		 * Log.d("Received Place GTag", String.valueOf(eventLat)+" "+
-		 * String.valueOf(eventLng));
-		 */
+		setContentView(R.layout.event_new_layout);
+		this.getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		flagBack = getIntent().getIntExtra("flag", 0);
 
@@ -177,8 +168,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		initialize();
 		setExpandListener();
-
-		// addLocationRadioGroup();
 
 		if (eventLat == 0 && eventLng == 0) {
 			addLocationRadioGroup();
@@ -244,7 +233,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		context = EventNewActivity.this;
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		buttonActionListener = new ButtonActionListener();
 
@@ -318,29 +307,14 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 			locationRadioGroupContainer.setVisibility(View.VISIBLE);
 		} else {
 			tvTitle.setVisibility(View.VISIBLE);
-			// tvTitleDescription.setVisibility(View.VISIBLE);
 			tvTitleAddress.setVisibility(View.VISIBLE);
 			tvTitle.setText("Venue: " + selectedPlace.getName());
-			// tvTitleDescription.setText(selectedPlace.getName());
 			tvTitleAddress.setText(selectedPlace.getVicinity());
-		} 
-		
+		}
+
 		etFriendSearch.addTextChangedListener(filterTextWatcher);
+	}
 
-		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				Log.d("inside On Key", "INSIDE ON KEY");
-				if (event.ACTION_DOWN == 0 || event.getAction() == event.KEYCODE_BACK) {
-					Log.d("Do Search", "Do Search Method Called  "
-							+ etFriendSearch.getText().toString().trim());
-					doSearch();
-				}
-				return false;
-			}
-		});*/
-
-	} 
-	
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
 		@Override
@@ -355,8 +329,8 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			//contentAdapter.getFilter().filter(s); 
-			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			Log.d("Do Search", "Do Search Method Called  "
+					+ etFriendSearch.getText().toString().trim());
 			doSearch();
 		}
 
@@ -384,11 +358,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				.findViewById(R.id.tvSelectedLocationTitle);
 
 		locationRadioGroupContainer.addView(locationRadioGroupView);
-
-		/*
-		 * locationRadioGroupView
-		 * .setValue(LocationRadioGroup.SelectedItem.CURRENT_LOCATION);
-		 */
 
 		if (eventLat != 0 && eventLng != 0) {
 			locationRadioGroupView
@@ -475,13 +444,10 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 						NotificationActivity.class);
 				startActivity(notificationIntent);
 			} else if (v == btnSave) {
-				// showPeoplePicker();
 				validateEvent();
 			}
 
 			else if (v == btnCancel) {
-				// showPeoplePicker();
-				// finish();
 				Intent intent = new Intent(context, EventListActivity.class);
 				finish();
 				startActivity(intent);
@@ -513,8 +479,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				capturePhoto();
 			} else if (v == btnCanclePhoto) {
 				cleareImage();
-				// Toast.makeText(context, "Photo Image Delete Option",
-				// Toast.LENGTH_SHORT).show();
 			}
 
 		}
@@ -535,13 +499,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 			validated = false;
 			messageText = "Please enter event date.";
 		}
-		/*
-		 * else if (eventSummary.equals("")) { validated = false; messageText =
-		 * "Please enter event summary."; } else if
-		 * (eventDescription.equals("")) { validated = false; messageText =
-		 * "Please enter event description."; } else if (eventPicture == null) {
-		 * validated = false; messageText = "Please enter event photo."; }
-		 */
 
 		if (validated) {
 			initiateSendEventData();
@@ -607,15 +564,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 			}
 			// end of permitted users
 
-			// add invited people
-			/*
-			 * List<String> invitedPeopleList = Utility
-			 * .getPeopleListFromFriendsAndCircles(selectedCircles,
-			 * selectedFriends); for (int i = 0; i < invitedPeopleList.size();
-			 * i++) { restClient.AddParam("guests[]", invitedPeopleList.get(i));
-			 * }
-			 */
-
 			List<String> invitedPeopleList = Utility
 					.getListFromHashMap(selectedFriends);
 			for (int i = 0; i < invitedPeopleList.size(); i++) {
@@ -638,14 +586,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				/* Get the image as string */
 				// Normal
 				ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
-
-				// avatar = Utility..resizeBitmap
-
-				// Bitmap resizedAvatar =
-				// Utility.resizeBitmap(eventPicture,Constant.eventPhotoWidth,
-				// Constant.eventPhotoHeight);
-				// resizedAvatar.compress(Bitmap.CompressFormat.PNG, 60,
-				// full_stream);
 				eventPicture.compress(Bitmap.CompressFormat.PNG, 60,
 						full_stream);
 
@@ -693,11 +633,9 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		if (status == Constant.STATUS_CREATED) {
 
-			// etNewMessage.setText("");
 			Toast.makeText(context, "Event created successfully.",
 					Toast.LENGTH_SHORT).show();
 
-			// EventListActivity.isUpdateList = true;
 			if (flagBack == 0) {
 				Intent intent = new Intent(context, EventListActivity.class);
 				finish();
@@ -725,12 +663,9 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		friendListContainer.removeAllViews();
 		List<People> friends = StaticValues.myInfo.getFriendList();
 
-		// Log.e("Friends count", friends.length+"");
 		if (friends != null) {
 
 			for (int i = 0; i < friends.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
 				View v = getItemViewFriend(friends.get(i));
 				friendListContainer.addView(v);
 			}
@@ -740,8 +675,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		List<Circle> circles = StaticValues.myInfo.getCircleList();
 		if (circles != null) {
 			for (int i = 0; i < circles.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
 
 				String circleId = circles.get(i).getId();
 				if (circleId != null) {
@@ -771,39 +704,17 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		/*String firstName = fEntity.getFirstName();
-		String lastName = fEntity.getLastName();*/
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
 
-		String name = ""; 
-		name = Utility.getFieldText(fEntity); 
+		String name = "";
+		name = Utility.getFieldText(fEntity);
 		nameView.setText(name);
-		
-		
-		/*if (firstName != null) {
-			name = firstName + " ";
-		}
-		if (lastName != null) {
-			name += lastName;
-		}*/
 
 		selectedFriends.put(id, false);
 
-		
-
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
-
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
-
+			imageDownloader.download(avatarUrl, profilePic);
 		}
 
 		if (backupSelectedFriends.containsKey(id)) {
@@ -946,15 +857,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 			CheckBox chkCircle = (CheckBox) v.findViewById(R.id.chkCircle);
 			chkCircle.setChecked(isSelect);
 		}
-
-		/*
-		 * Set set = selectedCircles.entrySet(); Iterator iterator =
-		 * set.iterator(); while (iterator.hasNext()) { Map.Entry me =
-		 * (Map.Entry) iterator.next();
-		 * 
-		 * String key = (String) me.getKey(); selectedCircles.put(key,
-		 * isSelect); }
-		 */
 	}
 
 	@Override
@@ -1072,8 +974,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				android.provider.Settings.System.TIME_12_24);
 		final boolean is24h = !(timeS == null || timeS.equals("12"));
 
-		// final boolean is24h = true;
-
 		if (!eventDateString.equals("")) {
 			Calendar calendar = Utility.stringToCalendar(eventDateString);
 			if (calendar != null) {
@@ -1172,7 +1072,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 	}
 
 	private void cleareImage() {
-		// ivEventImage.setImageResource(0);
 		ivEventImage.setImageDrawable(null);
 	}
 
@@ -1221,16 +1120,8 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
-				// eventPicture = (Bitmap) data.getExtras().get("data");
 				if (eventPicture != null) {
-					// eventPicture.recycle();
 				}
-				/*
-				 * eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
-				 * .get("data"), Constant.eventPhotoWidth,
-				 * Constant.eventPhotoHeight);
-				 */
-
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
 						.get("data"), Constant.profileCoverWidth, 0, true);
 
@@ -1243,63 +1134,18 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				
-				
-				
-				///////////////////////////////////////////////////////////////////////
-				
-				/*Uri selectedImage = data.getData();
-	            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-	            Cursor cursor = getContentResolver().query(
-	                               selectedImage, filePathColumn, null, null, null);
-	            cursor.moveToFirst();
-
-	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	            String filePath = cursor.getString(columnIndex);
-	            cursor.close();*/
 
 				Uri selectedImage = data.getData();
-	            try {
-					eventPicture = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.eventPhotoWidth, 0, true);
-					
+				try {
+					eventPicture = Utility.resizeBitmap(Utility.decodeUri(
+							selectedImage, getContentResolver()),
+							Constant.eventPhotoWidth, 0, true);
+
 					ivEventImage.setImageBitmap(eventPicture);
-					
+
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}  catch (OutOfMemoryError e) {
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
-					Log.e("Gallery image", "OutOfMemoryError");
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-				
-				///////////////////////////////////////////////////////////////////////
-
-				/*try {
-
-					if (eventPicture != null) {
-						// eventPicture.recycle();
-					}
-					
-
-					eventPicture = Utility.resizeBitmap(
-							MediaStore.Images.Media.getBitmap(
-									this.getContentResolver(), data.getData()),
-							Constant.profileCoverWidth, 0, true);
-
-					ivEventImage.setImageBitmap(eventPicture);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (OutOfMemoryError e) {
 					Toast.makeText(context,
 							getString(R.string.errorMessageGallery),
@@ -1312,7 +1158,7 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
-				}*/
+				}
 			}
 		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
 				&& resultCode == RESULT_OK) {
@@ -1509,7 +1355,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 				.getText().toString().trim()));
 		friendListContainer.removeAllViews();
 
-		// backUpSelectedFriends = selectedFriends;
 		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
 		selectedFriends.clear();
 		for (int i = 0; i < list.size(); i++) {
@@ -1518,6 +1363,5 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 		}
 
 	}
-
 
 }

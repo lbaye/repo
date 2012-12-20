@@ -61,10 +61,6 @@ public class InformationSharingSettingsActivity extends Activity implements
 		setContentView(R.layout.information_sharing_layout);
 		
 		initialize();
-		
-		
-		
-		
 		setViewOnClickListener();
 		setExpandListener();
 
@@ -213,10 +209,6 @@ public class InformationSharingSettingsActivity extends Activity implements
 		} else if ("custom".equals(status)) {
 			((RadioButton) rG.findViewById(R.id.radioCustom)).setChecked(true);
 		}
-		// else
-		// {
-		// ((RadioButton)rG.findViewById(R.id.radioAllUsers)).setChecked(true);
-		// }
 	}
 
 	private void initialize() {

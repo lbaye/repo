@@ -33,7 +33,8 @@ public class GpsService {
 
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				|| locationManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+				|| locationManager
 						.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
 			Log.e("Location service", "Enabled");
 
@@ -44,7 +45,8 @@ public class GpsService {
 				if (locationProvider
 						.equalsIgnoreCase(LocationManager.GPS_PROVIDER)
 						|| locationProvider
-								.equalsIgnoreCase(LocationManager.NETWORK_PROVIDER) || locationProvider
+								.equalsIgnoreCase(LocationManager.NETWORK_PROVIDER)
+						|| locationProvider
 								.equalsIgnoreCase(LocationManager.PASSIVE_PROVIDER)) {
 					locationManager.requestLocationUpdates(locationProvider,
 							minTime, minDistance, deviceLocationListener);
@@ -53,23 +55,6 @@ public class GpsService {
 		} else {
 			Log.e("Location service", "Disabled");
 		}
-
-		/*
-		 * if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-		 * { locationProvider = LocationManager.GPS_PROVIDER;
-		 * locationManager.requestLocationUpdates(locationProvider, minTime,
-		 * minDistance,deviceLocationListener); }
-		 * 
-		 * else if
-		 * (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-		 * { locationProvider = LocationManager.NETWORK_PROVIDER;
-		 * locationManager.requestLocationUpdates(locationProvider, minTime,
-		 * minDistance,deviceLocationListener); } else { Criteria criteria =
-		 * getCriteria(); locationProvider =
-		 * locationManager.getBestProvider(criteria, true);
-		 * //locationManager.requestLocationUpdates(locationProvider, minTime,
-		 * minDistance,deviceLocationListener); }
-		 */
 	}
 
 	public Location getLastLocation() {
@@ -101,9 +86,11 @@ public class GpsService {
 			if (location != null) {
 				if (isBetterLocation(location, currentLocation))
 					currentLocation = location;
-			} else
+			} else {
 				currentLocation = locationManager
 						.getLastKnownLocation(locationProvider);
+			}
+
 			iLocationUpdateIndicator.catchLocationUpdate(currentLocation);
 		}
 

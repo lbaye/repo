@@ -30,7 +30,7 @@ public class NotificationActivity extends TabActivity {
 	Button btnBack, btnSearch, btnNotification;
 
 	private TabHost mTabHost;
-	
+
 	static TextView tabView1, tabView2, tabView3;
 	static int tabCounter = 0;
 
@@ -48,8 +48,6 @@ public class NotificationActivity extends TabActivity {
 		setContentView(R.layout.notification_activity);
 
 		initialize();
-		
-		
 
 		setupTabHost();
 
@@ -62,56 +60,49 @@ public class NotificationActivity extends TabActivity {
 		Drawable notifyTabIcon = getResources().getDrawable(
 				R.drawable.tab_item_notification_notification);
 
-		/*
-		 * // Tab for message TabSpec messageSpec =
-		 * mTabHost.newTabSpec("Message"); // setting Title and Icon for the Tab
-		 * //messageSpec.setIndicator("Message",
-		 * getResources().getDrawable(R.drawable.icon_message_tab)); Intent
-		 * messageIntent = new Intent(getApplicationContext(),
-		 * MessageNotificationActivity.class);
-		 * messageSpec.setContent(messageIntent);
-		 */
-
 		Intent messageIntent = new Intent(NotificationActivity.this,
 				MessageNotificationActivity.class);
 		Intent frIntent = new Intent(NotificationActivity.this,
 				FriendRequestNotificationActivity.class);
 		Intent notifyIntent = new Intent(NotificationActivity.this,
 				NotifyNotificationActivity.class);
-		
+
 		String messageCount = "0";
 		String friendRequestCount = "0";
 		String notificationCount = "0";
-		if(StaticValues.myInfo!=null)
-		{
-			messageCount = ""+StaticValues.myInfo.getNotificationCount().getMessageCount();
-			friendRequestCount = ""+StaticValues.myInfo.getNotificationCount().getFriendRequestCount();
-			notificationCount = ""+StaticValues.myInfo.getNotificationCount().getNotificationCount();
+		if (StaticValues.myInfo != null) {
+			messageCount = ""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getMessageCount();
+			friendRequestCount = ""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getFriendRequestCount();
+			notificationCount = ""
+					+ StaticValues.myInfo.getNotificationCount()
+							.getNotificationCount();
 		}
 
 		setupTab(messageIntent, messageTabIcon, messageCount);
 		setupTab(frIntent, friendRequestTabIcon, friendRequestCount);
 		setupTab(notifyIntent, notifyTabIcon, notificationCount);
-		
-		
-		if(getIntent().getStringExtra("selectedTab")!=null)
-		{
-			if(getIntent().getStringExtra("selectedTab").equals(Constant.PUSH_NOTIFICATION_FRIEND_REQUEST))
-			{
+
+		if (getIntent().getStringExtra("selectedTab") != null) {
+			if (getIntent().getStringExtra("selectedTab").equals(
+					Constant.PUSH_NOTIFICATION_FRIEND_REQUEST)) {
 				mTabHost.setCurrentTab(1);
 			}
 		}
 
-	} 
-	
+	}
+
 	/**
-	 * This method is used to get the Tab Host. 
+	 * This method is used to get the Tab Host.
 	 * 
-	 * @return TabHost 
+	 * @return TabHost
 	 * @see TabHost
 	 */
 
-	 public TabHost getMyTabHost() {
+	public TabHost getMyTabHost() {
 		return mTabHost;
 	}
 
@@ -158,15 +149,12 @@ public class NotificationActivity extends TabActivity {
 		TextView tvItemCountDisplay = (TextView) tabItemLayout
 				.findViewById(R.id.tvItemCountDisplay);
 		tvItemCountDisplay.setText(text);
-		
-		if(tabCounter == 0)
-		{
+
+		if (tabCounter == 0) {
 			tabView1 = tvItemCountDisplay;
-		} else if(tabCounter == 1)
-		{
+		} else if (tabCounter == 1) {
 			tabView2 = tvItemCountDisplay;
-		} else if(tabCounter == 2)
-		{
+		} else if (tabCounter == 2) {
 			tabView3 = tvItemCountDisplay;
 		}
 		tabCounter++;
@@ -177,33 +165,13 @@ public class NotificationActivity extends TabActivity {
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
-		
-		
-		
-		/*if(StaticValues.myInfo!=null)
-		{
-			
-			TextView tabLabel = (TextView) mTabHost.getChildAt(0).findViewById(R.id.tvItemCountDisplay);
-			tabLabel.setText("" + StaticValues.myInfo.getNotificationCount().getMessageCount());
-			
-			TextView tabLabel2 = (TextView) mTabHost.getChildAt(1).findViewById(R.id.tvItemCountDisplay);
-			tabLabel2.setText("" + StaticValues.myInfo.getNotificationCount().getFriendRequestCount());
-		}*/
-		
-
-
 	}
 
 	@Override
@@ -216,18 +184,6 @@ public class NotificationActivity extends TabActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
 
@@ -246,9 +202,6 @@ public class NotificationActivity extends TabActivity {
 			if (v == btnBack) {
 				finish();
 			}
-
 		}
-
 	}
-
 }

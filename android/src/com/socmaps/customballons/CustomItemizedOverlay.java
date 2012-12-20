@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.PopupWindow;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
@@ -21,29 +22,19 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends
 	private int typeFlag;
 	private ImageDownloader imageDownloader;
 
-	/*
-	 * private boolean isVisible=true;
+	/**
+	 * Initialization of CustomItemizedOverlay constructor using the specified parameters. 
 	 * 
-	 * 
-	 * @Override //protected final boolean onTap(int index) { public final
-	 * boolean onTap(int index) {
-	 * 
-	 * if(isVisible) { super.onTap(index); }
-	 * 
-	 * return true; }
-	 * 
-	 * 
-	 * @Override public void draw(Canvas canvas, MapView mapView, boolean
-	 * shadow) { // TODO Auto-generated method stub
-	 * 
-	 * if(isVisible) { super.draw(canvas, mapView, shadow); } }
-	 * 
-	 * public Boolean getIsVisible() { return isVisible; }
-	 * 
-	 * public void setIsVisible(Boolean visible) { this.isVisible = visible; }
-	 * 
-	 * public void toggleVisible() { this.isVisible = !isVisible; }
+	 * @param defaultMarker 	a Drawable instance which is used for default case only. 
+	 * @param mapView			an instance of MapView on which we'll display our objects. 
+	 * @param bth 				an instance of interface BubleTapHandle. 
+	 * @param flag 				as Integer which defines the flag type. 
+	 * @param imageDownloader 	an instance of ImageDownloader which is used to download image from a specific uri. 
+	 * @see Drawable 
+	 * @see ImageDownloader 
+	 * @see MapView 
 	 */
+	
 	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView,
 			BubleTapHandle bth, int flag, ImageDownloader imageDownloader) {
 		super(boundCenter(defaultMarker), mapView);
@@ -52,12 +43,26 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends
 		this.typeFlag = flag;
 		this.imageDownloader = imageDownloader;
 	}
+	
+	/**
+	 * This method adds the CustomOverlayItem items to an array list. 
+	 * 
+	 * @param overlay 	object of type CustomOverlayItem which can be People, Place, Event, Meetup, MySelf, SecondDegreePeople or GeoTag. 
+	 * @see #populate() 
+	 */
 
 	public void addOverlay(CustomOverlayItem overlay) {
 		m_overlays.add(overlay);
 		populate();
-	}
-
+	} 
+	
+	/**
+	 * This method populates overlay items. 
+	 * 
+	 * @see #populate() 
+	 * @see #setLastFocusedIndex(int) 
+	 */ 
+	
 	public void populateItemizedOverlay() {
 		populate();
 		setLastFocusedIndex(-1);
@@ -75,11 +80,6 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends
 
 	@Override
 	protected boolean onBalloonTap(int index, CustomOverlayItem item) {
-		/*
-		 * Toast.makeText(c, "onBalloonTap for overlay index " +
-		 * item.getUser().getFirstName(), Toast.LENGTH_LONG).show();
-		 */
-		// DialogsAndToasts.showExtendedUserInfoDialog(c);
 		bubleTapHandle.catchBubleTap(item, typeFlag);
 		return true;
 	}
@@ -106,16 +106,32 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends
 		else if (typeFlag == Constant.FLAG_GEOTAG)
 			return new CustomBalloonOverlayViewGeotag<CustomOverlayItem>(
 					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
+		
 		else
 			return new CustomBalloonOverlayViewSelf<CustomOverlayItem>(
 					getMapView().getContext(), getBalloonBottomOffset(),imageDownloader);
-	}
+	} 
+	
+	/**
+	 * This methods performs the deletion of a particular item from the Map View. 
+	 * Actually it deletes the position of that item from the array list. 
+	 * 
+	 * @param i 	as Integer which indicates the index of that particular item. 
+	 * @see #removeItem(int) 
+	 * @see #populate()
+	 */
 
 	public void removeItem(int i) {
 		m_overlays.remove(i);
 
 		populate();
-	}
+	} 
+	
+	/**
+	 * This methods removes all the item. On other case, it clears the array list which holds all the items. 
+	 * 
+	 *  @see #populate() 
+	 */
 
 	public void removeAllItem() {
 		m_overlays.clear();

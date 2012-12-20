@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.socmaps.entity.Event;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.listrow.EventRowFactory;
 import com.socmaps.listrow.ListItemClickListenerEvent;
 import com.socmaps.notificationBroadcast.BroadcastListener;
@@ -54,7 +53,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			btnFilterByDistance, btnFilterByFriendsEvent, btnFilterByMyEvent,
 			btnFilterByPublicEvent;
 	private ListView eventList;
-	// private ContentListAdapter contentAdapter;
 	private ListArrayAdapter contentAdapter;
 	private List<Event> events;
 	private List<Event> dateWiseSortedEvents;
@@ -64,7 +62,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 	int responseStatus = 0;
 	Event selctedEventForRSVP;
 	String rsvpValue;
-	// public static boolean isUpdateList = false;
 	private NotificationCountBroadcastReciever broadcastReceiver;
 
 	int colorButtonNormal, colorButtonSelected;
@@ -125,7 +122,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 		eventList = (ListView) findViewById(R.id.event_list);
 		events = new ArrayList<Event>();
 		dateWiseSortedEvents = new ArrayList<Event>();
-		// contentAdapter=new ContentListAdapter(context,events);
 		contentAdapter = new ListArrayAdapter(context, R.layout.row_list_event,
 				events);
 		eventList.setTextFilterEnabled(true);
@@ -171,24 +167,10 @@ public class EventListActivity extends Activity implements OnClickListener,
 		findViewById(R.id.mainLayout).requestFocus();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
-
-		/*
-		 * if (isUpdateList) { isUpdateList = !isUpdateList; fetchDataForList();
-		 * // resetFilterEditText();
-		 * 
-		 * }
-		 */
-
-		/*
-		 * for(int i=0;i<10;i++) { EventEntity eventEntity=new EventEntity();
-		 * events.add(eventEntity); } contentAdapter.notifyDataSetChanged();
-		 */
 	}
 
 	private void resetFilterEditText() {
-		// searchEditText.clearFocus();
 		searchEditText.setText("");
-		// searchEditText.setHint("Your search");
 	}
 
 	private void fetchDataForList() {
@@ -253,14 +235,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			else
 				return -1;
 		}
-
-		/*
-		 * private double getDistance(EventEntity object) { if (object
-		 * instanceof OtherUserEntity) return ((OtherUserEntity)
-		 * object).getDistance(); else if (object instanceof PlaceEntity) return
-		 * ((PlaceEntity) object).getDistance(); else return 0; }
-		 */
-
 	}
 
 	private Runnable viewList = new Runnable() {
@@ -307,10 +281,7 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 			dateWiseSortedEvents = ServerResponseParser
 					.parseGetEventListResult(response);
-			/*
-			 * Log.e("Events size", dateWiseSortedEvents.size()+"");
-			 * events.clear(); events.addAll(dateWiseSortedEvents);
-			 */
+
 			resetFilterEditText();
 			this.resetAdapterItems();
 
@@ -321,15 +292,15 @@ public class EventListActivity extends Activity implements OnClickListener,
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -358,16 +329,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 		}
 
 	};
-
-	/*
-	 * @Override public void onArrowButtonClick() { // TODO Auto-generated
-	 * method stub
-	 * 
-	 * finish();
-	 * 
-	 * Intent eventDetailsIntent = new Intent(context,
-	 * EventDetailsActivity.class); startActivity(eventDetailsIntent); }
-	 */
 
 	private void clearFilterButtonSelection() {
 		btnFilterByDate.setBackgroundColor(colorButtonNormal);
@@ -458,13 +419,9 @@ public class EventListActivity extends Activity implements OnClickListener,
 		private ListArrayAdapter(Context context, int textViewResourceId,
 				List<Event> objects) {
 
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 
 			init(context, textViewResourceId, 0, objects);
-			// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(context.getResources(),
-			// R.drawable.event_item_bg));
 		}
 
 		@Override
@@ -622,26 +579,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	/*
-	 * @Override public void onMapButtonClicked(Event event) { // TODO
-	 * Auto-generated method stub // new MapViewDialog(ListOfEvents.this, //
-	 * event.getEventLocation()).show(); StaticValues.selectedEvent = event;
-	 * Intent intent = new Intent(context, ShowItemOnMap.class);
-	 * intent.putExtra("FLAG", Constant.FLAG_EVENT); startActivity(intent); }
-	 */
-
-	/*
-	 * @Override public void onRadioButtonChecked(String s, Event event) { if
-	 * (!s.equalsIgnoreCase(event.getMyResponse())) { selctedEventForRSVP =
-	 * event; rsvpValue = s; // Toast.makeText(context, s,
-	 * Toast.LENGTH_SHORT).show();
-	 * 
-	 * String[] params = new String[2]; params[0] = s; params[1] =
-	 * event.getEventId(); if (Utility.isConnectionAvailble(context)) new
-	 * UpdateRSVPTask().execute(params); else
-	 * DialogsAndToasts.showNoInternetConnectionDialog(context); } }
-	 */
-
 	private class UpdateRSVPTask extends AsyncTask<String, String, Long> {
 		private ProgressDialog updateDialog;
 
@@ -650,7 +587,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			super.onPostExecute(result);
 			updateDialog.dismiss();
 			if (result == Constant.STATUS_SUCCESS) {
-				// event.setMyResponse(s);
 				selctedEventForRSVP.setMyResponse(rsvpValue);
 			} else {
 				Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
@@ -680,8 +616,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 				e.printStackTrace();
 			}
 
-			// String response = updateRSVPClient.getResponse();
-
 			int status = updateRSVPClient.getResponseCode();
 			return (long) status;
 		}
@@ -691,8 +625,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 	@Override
 	public void updateNotificationCountBuble(Intent intent) {
 		String counter = intent.getStringExtra("counter");
-		// btnNotification.setText(counter);
-
 	}
 
 	private class ItemListener implements ListItemClickListenerEvent {
@@ -700,7 +632,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onItemClick(Event event) {
 			// TODO Auto-generated method stub
-			// finish();
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
@@ -711,7 +642,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onArrowButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			// finish();
 
 			Intent eventDetailsIntent = new Intent(context,
 					EventDetailsActivity.class);
@@ -727,7 +657,6 @@ public class EventListActivity extends Activity implements OnClickListener,
 			if (!response.equalsIgnoreCase(event.getMyResponse())) {
 				selctedEventForRSVP = event;
 				rsvpValue = response;
-				// Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
 
 				String[] params = new String[2];
 				params[0] = response;
@@ -743,16 +672,11 @@ public class EventListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onShowOnMapButtonClick(Event event) {
 			// TODO Auto-generated method stub
-			/*
-			 * Intent intent = new Intent(context, ShowItemOnMap.class);
-			 * intent.putExtra("FLAG", Constant.FLAG_EVENT);
-			 * startActivity(intent);
-			 */
+
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = event;
 			finish();
 		}
-
 	}
 
 }

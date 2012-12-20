@@ -1,7 +1,6 @@
 package com.socmaps.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GeoTag implements Serializable {
 

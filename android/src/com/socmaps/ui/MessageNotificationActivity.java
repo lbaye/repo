@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.MessageEntity;
@@ -38,9 +37,6 @@ public class MessageNotificationActivity extends Activity {
 	ProgressDialog m_ProgressDialog;
 	String messageResponse = "";
 	int messageStatus = 0;
-
-	private String itemMessageId;
-	private String itemThreadId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,9 +118,6 @@ public class MessageNotificationActivity extends Activity {
 
 				if (messages != null) {
 
-					
-					/*tabLabel.setText("" + Utility.getMessageCount(messages, Constant.STATUS_MESSAGE_UNREAD));*/
-
 					for (int i = 0; i < messages.size(); i++) {
 
 						MessageEntity messageEntity = messages.get(i);
@@ -179,9 +172,6 @@ public class MessageNotificationActivity extends Activity {
 
 										@Override
 										public void onClick(View arg0) {
-											//getMessageDetails(messageId,threadId);
-											
-											
 											
 											Intent i = new Intent(context,
 													MessageConversationFromNotificationActivity.class);
@@ -278,75 +268,4 @@ public class MessageNotificationActivity extends Activity {
 		}
 
 	}
-
-	/*public void getMessageDetails(String messageId, String threadId) {
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			itemMessageId = messageId;
-			itemThreadId = threadId;
-
-			if (itemMessageId != null && !itemMessageId.equalsIgnoreCase("")) {
-				Thread thread = new Thread(null, messagesDetailsThread,
-						"Start get message details");
-				thread.start();
-
-				// show progress dialog if needed
-				m_ProgressDialog = ProgressDialog.show(context, getResources()
-						.getString(R.string.please_wait_text), getResources()
-						.getString(R.string.sending_request_text), true);
-			} else {
-				Toast.makeText(context, "Message ID not found.",
-						Toast.LENGTH_SHORT).show();
-			}
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
-	}
-
-	private Runnable messagesDetailsThread = new Runnable() {
-		@Override
-		public void run() {
-			RestClient restClient = new RestClient(Constant.smMessagesUrl + "/"
-					+ itemMessageId);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			messageResponse = restClient.getResponse();
-			messageStatus = restClient.getResponseCode();
-
-			runOnUiThread(messageDetailsReturnResponse);
-		}
-	};
-
-	private Runnable messageDetailsReturnResponse = new Runnable() {
-
-		@Override
-		public void run() {
-			handleMessageDetailsResponse(messageStatus, messageResponse);
-			m_ProgressDialog.dismiss();
-		}
-
-	};
-
-	private void handleMessageDetailsResponse(int status, String response) {
-
-		Log.e("Message Details", response);
-		Intent i = new Intent(context,
-				MessageConversationFromNotificationActivity.class);
-		i.putExtra("messageStatus", status);
-		i.putExtra("messageResponse", response);
-
-		startActivity(i);
-
-	}*/
-
 }

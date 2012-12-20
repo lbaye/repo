@@ -74,16 +74,7 @@ public class LoginButtonOld extends Button {
 		this.loginLabel = loginLabel;
 		this.logoutLabel = logoutLabel;
 
-		// setBackgroundColor(Color.TRANSPARENT);
-		// setImageResource(fb.isSessionValid() ? R.drawable.logout_button :
-		// R.drawable.login_button);
-		// setBackgroundResource(fb.isSessionValid() ?
-		// R.drawable.selector_btn_dark : R.drawable.selector_btn_dark);
-		// setBackgroundResource(R.drawable.selector_fb_connect);
 		drawableStateChanged();
-
-		// setText(fb.isSessionValid() ? logoutLabel : loginLabel);
-		// setTextColor(R.color.white);
 
 		SessionEvents.addAuthListener(mSessionListener);
 		SessionEvents.addLogoutListener(mSessionListener);
@@ -107,9 +98,6 @@ public class LoginButtonOld extends Button {
 				Log.e("LoginButton", "isSessionValid = false");
 				mFb.authorize(mActivity, mPermissions, mActivityCode,
 						new LoginDialogListener());
-				// mFb.authorize(mActivity,
-				// mPermissions,Facebook.FORCE_DIALOG_AUTH, new
-				// LoginDialogListener());
 			}
 		}
 	}
@@ -160,8 +148,6 @@ public class LoginButtonOld extends Button {
 
 		// @Override
 		public void onAuthSucceed() {
-			// setImageResource(R.drawable.selector_fb_connect);
-			// setBackgroundResource(R.drawable.selector_btn_dark);
 			setText(logoutLabel);
 			SessionStore.save(mFb, getContext());
 		}
@@ -177,8 +163,6 @@ public class LoginButtonOld extends Button {
 		// @Override
 		public void onLogoutFinish() {
 			SessionStore.clear(getContext());
-			// setImageResource(R.drawable.selector_fb_connect);
-			// setBackgroundResource(R.drawable.selector_btn_dark);
 			setText(loginLabel);
 		}
 	}

@@ -8,8 +8,6 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,7 +41,6 @@ import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
@@ -63,24 +60,15 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 	private List<Place> listContent;
 	private List<Place> listDisplayableContent;
 
-	boolean isSearchEnabled = false;
-
-	private Dialog msgDialog;
-
-	private ProgressDialog m_ProgressDialog;
-
+	private boolean isSearchEnabled = false;
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
-
-	private String placesResponse;
-	private int placesStatus;
-
 	private String personID = null;
-	LinearLayout buttonContainerTop;
+	private LinearLayout buttonContainerTop;
 
-	String personName = "";
-	TextView titlePlaceEditSave;
+	private String personName = "";
+	private TextView titlePlaceEditSave;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,13 +154,10 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
-			// hideKeybord();
-			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
-			// hideKeybord();
 		}
 
 		else if (v == btnNearToMe) {
@@ -214,8 +199,6 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		public ContentListAdapter(Context context, List<Place> itemsList) {
 
 			this.items = itemsList;
-			// imageDownloader = new ImageDownloader();
-			// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 		}
 
@@ -302,7 +285,7 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 		Collections.sort(this.listMasterContent, new ListComparator());
 	}
 
-	class ListComparator implements Comparator<Place> {
+	private class ListComparator implements Comparator<Place> {
 
 		@Override
 		public int compare(Place first, Place last) {

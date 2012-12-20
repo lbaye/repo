@@ -30,6 +30,10 @@ import com.socmaps.entity.Photo;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.ui.R;
 
+/**
+ * PhotoZoomDialogPicker generates a custom dialog to display photo zoom.
+ *
+ */
 public class PhotoZoomDialogPicker extends Dialog implements
 		View.OnClickListener, OnGestureListener {
 
@@ -49,8 +53,8 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 	List<ImageView> itemViewList;
 	private LayoutInflater inflater;
+	
 	// Gester part
-
 	private GestureDetector detector;
 
 	private static final int SWIPE_MIN_DISTANCE = 150;
@@ -58,7 +62,24 @@ public class PhotoZoomDialogPicker extends Dialog implements
 	private static final int SWIPE_MAX_OFF_PATH = 100;
 
 	private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-	private boolean isShow = false;
+	private boolean isShow = false; 
+	
+	/**
+	 * This methods performs to pick out a particular photo to zoom out. 
+	 * 
+	 * @param context 			Currently active Context. 
+	 * @param pickerName 		As String which is the name of the item. 
+	 * @param photoList 		An array list of type Photo which contains a list of photos. 
+	 * @param imageDownloader 	An instance of ImageDownloader which is used to download image from a particular uri. 
+	 * @param position 			As Integer which indicates the idex of a particular photo. 
+	 * @see Context 
+	 * @see String 
+	 * @see ImageDownloader 
+	 * @see #initialize() 
+	 * @see #generateViewList() 
+	 * @see #displayItems() 
+	 * @see #showHideButton(boolean)
+	 */
 
 	public PhotoZoomDialogPicker(Context context, String pickerName,
 			List<Photo> photoList, ImageDownloader imageDownloader, int position) {
@@ -148,23 +169,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 		itemViewList = new ArrayList<ImageView>();
 
-		// ivPhotoZoom = (ImageView) findViewById(R.id.ivPhotoZoom);
-		// ivPhotoZoom.setOnClickListener(this);
 		detector = new GestureDetector(context, this);
-		// photoContainer.setOnTouchListener(new OnTouchListener() {
-		//
-		// @Override
-		// public boolean onTouch(View v, MotionEvent event) {
-		//
-		// detector.onTouchEvent(event);
-		//
-		// showHideButton();
-		//
-		// return true;
-		//
-		// }
-		//
-		// });
 
 	}
 
@@ -185,48 +190,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 			dismiss();
 		}
 
-		// if (v == photoContainer) {
-		// showHideButton(true);
-		// }
-
 	}
-
-	/*
-	 * Download image from url
-	 */
-	/*
-	 * private void downloadImage(int position) {
-	 * 
-	 * Log.w("downloadImage PhotoZoomDialogPicker", "position: " + position);
-	 * 
-	 * ivPhotoZoom.setImageResource(R.drawable.img_blank);
-	 * 
-	 * if (position < photoList.size() && position >= 0) {
-	 * 
-	 * if (photoList != null) { photo = photoList.get(position);
-	 * 
-	 * if (photo.getImageLarge() != null && photo.getImageLarge() != "") {
-	 * imageDownloader .download(photo.getImageLarge(), ivPhotoZoom); }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
-	// private void showHideButton(boolean isShow) {
-	//
-	// if (isShow && photoContainer.getVisibility() == View.VISIBLE) {
-	// btnPhotoZoomRight.setVisibility(View.VISIBLE);
-	// btnPhotoZoomLeft.setVisibility(View.VISIBLE);
-	// btnClose.setVisibility(View.VISIBLE);
-	// } else {
-	// btnPhotoZoomRight.setVisibility(View.INVISIBLE);
-	// btnPhotoZoomLeft.setVisibility(View.INVISIBLE);
-	// btnClose.setVisibility(View.INVISIBLE);
-	// }
-	// }
 
 	private void showHideButton(boolean isShow) {
 
@@ -262,18 +226,10 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 		Math.abs(dX) >= SWIPE_MIN_DISTANCE) {
 
-			if (dX > 0) {
-
-				// Toast.makeText(context.getApplicationContext(),
-				// "Right Swipe",
-				// Toast.LENGTH_SHORT).show();
-
+			if (dX > 0) {			
 				showPrevScreen();
 
 			} else {
-
-				// Toast.makeText(context.getApplicationContext(), "Left Swipe",
-				// Toast.LENGTH_SHORT).show();
 				showNextScreen();
 
 			}
@@ -288,13 +244,7 @@ public class PhotoZoomDialogPicker extends Dialog implements
 
 			if (dY > 0) {
 
-				// Toast.makeText(context.getApplicationContext(), "Up Swipe",
-				// Toast.LENGTH_SHORT).show();
-
 			} else {
-
-				// Toast.makeText(context.getApplicationContext(), "Down Swipe",
-				// Toast.LENGTH_SHORT).show();
 
 			}
 

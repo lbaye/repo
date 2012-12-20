@@ -19,13 +19,13 @@ public class CustomBalloonOverlayViewMeetup<Item extends OverlayItem> extends
 	private TextView address, distance;
 	private ImageDownloader imageDownloader;
 
-	 CustomBalloonOverlayViewMeetup(Context context,
-			int balloonBottomOffset,ImageDownloader imageDownloader) {
+	protected CustomBalloonOverlayViewMeetup(Context context,
+			int balloonBottomOffset, ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		this.imageDownloader = imageDownloader;
 	}
-	
-	 CustomBalloonOverlayViewMeetup(Context context,
+
+	protected CustomBalloonOverlayViewMeetup(Context context,
 			int balloonBottomOffset) {
 		super(context, balloonBottomOffset);
 	}
@@ -51,12 +51,9 @@ public class CustomBalloonOverlayViewMeetup<Item extends OverlayItem> extends
 		// map our custom item data to fields
 
 		address.setText(item.getMeetup().getAddress());
-		// distance.setText(String.format("%.2f",
-		// item.getMeetup().getDistance())+" miles away");
 		distance.setText(Utility.getFormatedDistance(item.getMeetup()
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit())
 				+ " away");
-
 	}
 
 }

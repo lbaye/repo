@@ -14,19 +14,32 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlaceRowFactory { 
-	
-	/** 
-	 * This method returns a View, that view is associates with corresponding layout. 
+
+/**
+ * PlaceRowFactory class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class PlaceRowFactory {
+
+	/**
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param placeObj an object of type Place. 
-	 * @param con current state of the application/object.
-	 * @param licl which is used for a specific action when button is clicked. 
-	 * @param convertView as view. 
-	 * @param il which is used to download image from a specific url. 
-	 * @param listItemClickListenerPlace  which is used for a specific action when button is clicked. 
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param placeObj
+	 *            an object of type Place.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerPlace
+	 *            which is used for a specific action when button is clicked.
+	 * @return View
 	 * @see View
 	 */
 
@@ -64,42 +77,15 @@ public class PlaceRowFactory {
 			if (!place.getName().equals(""))
 				holder.titleText.setText(place.getName());
 		}
-		// String
-		// url="http://www.marcjulienhomes.com/wp-content/uploads/2011/03/0040-320x150.jpg";
 		String iconUrl = place.getIconUrl();
 		if (iconUrl != null) {
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * (con.getResources(), R.drawable.cover_pic_default));
-			 * BitmapManager.INSTANCE.loadBitmap(url, holder.coverPhoto,
-			 * 320,150);
-			 */
-			// il.DisplayImage(iconUrl, holder.avatar,R.drawable.img_blank);
 
 			holder.avatar.setImageResource(R.drawable.img_blank);
 			il.download(iconUrl, holder.avatar);
-			/*
-			 * new FetchImageTask() {
-			 * 
-			 * @Override protected void onPostExecute(Bitmap result) { if
-			 * (result != null) {
-			 * 
-			 * holder.avatar.setImageBitmap(result); } else {
-			 * holder.avatar.setImageResource(R.drawable.img_blank); } }
-			 * }.execute(iconUrl);
-			 */
-
 		}
 
-		if (place.getStreetViewImage() != null && !place.getStreetViewImage().equals("")) {
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * (con.getResources(), R.drawable.cover_pic_default));
-			 * BitmapManager.INSTANCE.loadBitmap(url, holder.coverPhoto,
-			 * 320,150);
-			 */
-			// il.DisplayImage(url, holder.coverPhoto, R.drawable.img_blank);
-
+		if (place.getStreetViewImage() != null
+				&& !place.getStreetViewImage().equals("")) {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.download(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
@@ -114,10 +100,6 @@ public class PlaceRowFactory {
 			holder.addressText.setVisibility(View.VISIBLE);
 		} else
 			holder.addressText.setVisibility(View.GONE);
-		/*
-		 * holder.descriptionView.setText(animal.getDescription());
-		 * holder.titleView.setText(animal.getName());
-		 */
 
 		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
 
@@ -135,19 +117,17 @@ public class PlaceRowFactory {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// AppStaticStorages.selectedPlace=placeEntity;
-				// licl.onMapButtonClick(RowType.PLACE.ordinal());
 
 				listItemClickListenerPlace.onShowOnMapButtonClick(place);
 			}
 		});
 		return view;
-	} 
-	
+	}
+
 	/**
 	 * This method return the type of the view.
 	 * 
-	 * @return Integer as the integer value reflects the type. 
+	 * @return Integer as the integer value reflects the type.
 	 */
 
 	public int getViewType() {
@@ -179,13 +159,4 @@ public class PlaceRowFactory {
 		}
 	}
 
-	/*
-	 * private static class FetchImageTask extends AsyncTask<String, Integer,
-	 * Bitmap> {
-	 * 
-	 * @Override protected Bitmap doInBackground(String... arg0) { Bitmap b =
-	 * null; try { b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-	 * .getContent()); } catch (MalformedURLException e) { e.printStackTrace();
-	 * } catch (IOException e) { e.printStackTrace(); } return b; } }
-	 */
 }

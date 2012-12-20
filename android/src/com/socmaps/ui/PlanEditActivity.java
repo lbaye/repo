@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,16 +11,12 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Debug;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,19 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.Place;
 import com.socmaps.entity.Plan;
 import com.socmaps.util.Constant;
 import com.socmaps.util.Constant.Permission;
 import com.socmaps.util.RestClient;
-import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.DateTimePicker;
-import com.socmaps.widget.LocationPicker;
 import com.socmaps.widget.LocationRadioGroup;
-import com.socmaps.widget.LocationRadioGroupListener;
-import com.socmaps.widget.NearByPlacesPicker;
-import com.socmaps.widget.NearByPlacesPickerListener;
 import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
@@ -65,8 +53,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	LinearLayout locationRadioGroupContainer;
 	LinearLayout selectedLocationInfoPanel;
 	TextView tvSelectedLocationAddress;
-	TextView tvSelectedLocationTitle; 
-	TextView tvTitle, tvTitleDescription; 
+	TextView tvSelectedLocationTitle;
+	TextView tvTitle, tvTitleDescription;
 
 	ProgressDialog m_ProgressDialog;
 
@@ -75,8 +63,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	int responseStatus = 0;
 
 	ButtonActionListener buttonActionListener;
-
-	private LayoutInflater inflater;
 
 	EditText etMessage;
 	TextView tvShowSelectedDate;
@@ -100,23 +86,13 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	List<String> shareWithSelectedCircleFriendList;
 	List<String> shareWithSelectedFriendListAll;
 
-	Plan selectedPlan; 
-	
+	Plan selectedPlan;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.plan_layout_update);
-
-		/*
-		 * eventLat = getIntent().getDoubleExtra("destLat", 0); eventLng =
-		 * getIntent().getDoubleExtra("destLng", 0); eventAddress =
-		 * getIntent().getStringExtra("destAddress");
-		 * 
-		 * Log.d("Received Place GTag", String.valueOf(eventLat)+" "+
-		 * String.valueOf(eventLng));
-		 */
 
 		Object selectedItem = getIntent().getSerializableExtra("selectedPlan");
 		if (selectedItem != null) {
@@ -127,9 +103,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		setLatLngFromSeletedPlan();
 
 		initialize();
-		//addLocationRadioGroup();
 		addPermissionRadioGroup();
-
 		setDefaultValues();
 	}
 
@@ -154,9 +128,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// Intent intent = new Intent(context, EventListActivity.class);
 			finish();
-			// startActivity(intent);
 		}
 		return false;
 
@@ -173,9 +145,9 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 	private void setLatLngFromSeletedPlan() {
 		if (selectedPlan != null) {
 			eventLat = selectedPlan.getLatitude();
-			eventLng = selectedPlan.getLongitude(); 
-			
-			Log.d("Lat LNG", eventLat+"" +" " + eventLng+"");
+			eventLng = selectedPlan.getLongitude();
+
+			Log.d("Lat LNG", eventLat + "" + " " + eventLng + "");
 		}
 	}
 
@@ -197,7 +169,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		btnCancel.setOnClickListener(buttonActionListener);
 
 		tvDate = (TextView) findViewById(R.id.tvDate);
-		//tvDate.setOnClickListener(buttonActionListener);
 
 		btnDate = (Button) findViewById(R.id.btnSelectDate);
 		btnDate.setOnClickListener(buttonActionListener);
@@ -205,15 +176,12 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		etMessage = (EditText) findViewById(R.id.etMessage);
 		tvShowSelectedDate = (TextView) findViewById(R.id.tvShowSelectedDate);
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 		shareWithRadioGroupContainer = (LinearLayout) findViewById(R.id.shareWithRadioGroupContainer);
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
-		
-		tvTitle = (TextView) findViewById(R.id.tvTitle); 
-		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription); 
-		
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+
+		tvTitle = (TextView) findViewById(R.id.tvTitle);
+		tvTitleDescription = (TextView) findViewById(R.id.tvTitleDescription);
+
 	}
 
 	private class ButtonActionListener implements OnClickListener {
@@ -229,8 +197,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 						NotificationActivity.class);
 				startActivity(notificationIntent);
 			} else if (v == btnUpdate) {
-				// Toast.makeText(context, "Coming Soon",
-				// Toast.LENGTH_SHORT).show();
 				updatePlan();
 			} else if (v == btnCancel) {
 				finish();
@@ -256,8 +222,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			}
 
 			if (selectedPlan.getPlanTime().getDateTimeValue() != null) {
-				// eventDateString =
-				// selectedPlan.getPlanTime().getDateTimeValue();
 				eventDateString = Utility
 						.getFormattedDisplayDateEventList(selectedPlan
 								.getPlanTime());
@@ -269,19 +233,13 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			}
 
 			etMessage.setText(planDescription);
-			tvShowSelectedDate.setText(eventDateString); 
+			tvShowSelectedDate.setText(eventDateString);
 			tvTitle.setText("Venue: " + selectedPlan.getAddress());
-			//tvTitleDescription.setText(selectedPlan.getAddress());
 		}
 	}
 
 	private void addPermissionRadioGroup() {
 		// TODO Auto-generated method stub
-		/*
-		 * permissionRadioGroupView = new PermissionRadioGroup(context, new
-		 * ShareWithSelectionListener());
-		 * shareWithRadioGroupContainer.addView(permissionRadioGroupView);
-		 */
 
 		String permission = selectedPlan.getPermission();
 		Permission preSelectedItem = Permission.NONE;
@@ -297,7 +255,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 				preSelectedItem = Permission.NONE;
 			} else if (permission.equalsIgnoreCase(Constant.PERMISSION_PUBLIC)) {
 				preSelectedItem = Permission.PUBLIC;
-			} 
+			}
 		}
 
 		permissionRadioGroupView = new PermissionRadioGroup(context,
@@ -305,8 +263,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
 
 	}
-
-	
 
 	private class ShareWithSelectionListener implements
 			PermissionRadioGroupListener {
@@ -317,17 +273,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			// TODO Auto-generated method stub
 
 			permissionValue = "";
-
-			/*
-			 * switch (selectedItem) { case PUBLIC: permissionValue =
-			 * Constant.PERMISSION_PUBLIC; break; case FRIENDS: permissionValue
-			 * = Constant.PERMISSION_FRIENDS; break; case NONE: permissionValue
-			 * = Constant.PERMISSION_NONE; break; case CIRCLES: permissionValue
-			 * = Constant.PERMISSION_CIRCLES; break; case CUSTOM:
-			 * permissionValue = Constant.PERMISSION_CUSTOM;
-			 * showPeoplePicker(shareWithPickerName); break; default:
-			 * permissionValue = Constant.PERMISSION_NONE; break; }
-			 */
 
 			if (isPermissionValueSet) {
 				switch (selectedItem) {
@@ -359,8 +304,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	private void showPeoplePicker(String pickerName) {
 		// custom dialog
-		// Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
-		// shareWithSelectedFriendList, shareWithSelectedCircleList);
 
 		Dialog peoplePicker = new PeoplePicker(context,
 				(PeoplePickerListener) this, pickerName,
@@ -383,7 +326,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	}
 
-
 	private void selectDateDetails() {
 		// Create the dialog
 		final Dialog mDateTimeDialog = new Dialog(context);
@@ -400,8 +342,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 				getContentResolver(),
 				android.provider.Settings.System.TIME_12_24);
 		final boolean is24h = !(timeS == null || timeS.equals("12"));
-
-		// final boolean is24h = true;
 
 		if (!eventDateString.equals("")) {
 			Calendar calendar = Utility.stringToCalendar(eventDateString);
@@ -422,12 +362,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 					public void onClick(View v) {
 						mDateTimePicker.clearFocus();
 						// TODO Auto-generated method stub
-
-						/*
-						 * Calendar cal=Calendar.getInstance(); SimpleDateFormat
-						 * month_date = new SimpleDateFormat("MMMMMMMMM");
-						 * String month_name = month_date.format(cal.getTime());
-						 */
 
 						String selectedDateTime = "";
 
@@ -467,7 +401,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 						if (Utility.getTimeDifference(selectedDateTime) > 0) {
 							eventDateString = selectedDateTime;
-							// tvShowSelectedDate.setText(eventDateString);
 							tvShowSelectedDate.setText(dateFormate);
 							mDateTimeDialog.dismiss();
 						} else {
@@ -512,8 +445,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	private void updatePlan() {
 		boolean validated = true;
-		String messageText = ""; 
-		
+		String messageText = "";
+
 		planDescription = etMessage.getText().toString().trim();
 
 		if (eventLat == 0 && eventLng == 0) {
@@ -522,9 +455,8 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		} else if (eventDateString.equals("")) {
 			validated = false;
 			messageText = "Please enter plan date.";
-		} else if (planDescription.equals(""))
-		{
-			validated = false; 
+		} else if (planDescription.equals("")) {
+			validated = false;
 			messageText = "Please enter plan description";
 		}
 
@@ -543,7 +475,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		// show progress dialog if needed
 		m_ProgressDialog = ProgressDialog.show(context, getResources()
 				.getString(R.string.please_wait_text), getResources()
-				.getString(R.string.sending_request_text), true,true);
+				.getString(R.string.sending_request_text), true, true);
 	}
 
 	private Runnable sendPlanThread = new Runnable() {
@@ -555,15 +487,13 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
-			//planDescription = etMessage.getText().toString().trim();
-			Log.d("Description", planDescription); 
-			Log.d("Lat LNG Recheck", eventLat+"" +" " + eventLng+"");
+			Log.d("Description", planDescription);
+			Log.d("Lat LNG Recheck", eventLat + "" + " " + eventLng + "");
 
 			restClient.AddParam("description", planDescription);
 			restClient.AddParam("address", eventAddress);
 			restClient.AddParam("time",
 					eventDateString + " " + Utility.getTimezoneOffset());
-			// restClient.AddParam("time", eventDateString);
 			Log.d("DATE CHECK", eventDateString);
 			restClient.AddParam("lat", eventLat + "");
 			restClient.AddParam("lng", eventLng + "");
@@ -598,7 +528,6 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 			// end of permitted users
 
 			try {
-				// restClient.Execute(RestClient.RequestMethod.POST);
 				restClient.Execute(RestClient.RequestMethod.PUT);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -616,7 +545,7 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 		@Override
 		public void run() { // TODO Auto-generated method stub
 
-			if(m_ProgressDialog!=null){
+			if (m_ProgressDialog != null) {
 				m_ProgressDialog.dismiss();
 			}
 
@@ -632,11 +561,9 @@ public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 		if (status == Constant.STATUS_SUCCESS) {
 
-			// etNewMessage.setText("");
 			Toast.makeText(context, "Plan updated successfully.",
 					Toast.LENGTH_SHORT).show();
 
-			// EventListActivity.isUpdateList = true;
 			Intent intent = new Intent(context, ProfileActivity.class);
 			finish();
 			startActivity(intent);

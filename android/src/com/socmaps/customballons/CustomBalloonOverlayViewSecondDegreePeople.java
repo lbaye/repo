@@ -1,15 +1,6 @@
 package com.socmaps.customballons;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +11,6 @@ import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
-import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class CustomBalloonOverlayViewSecondDegreePeople<Item extends OverlayItem>
@@ -30,16 +19,16 @@ public class CustomBalloonOverlayViewSecondDegreePeople<Item extends OverlayItem
 	private TextView name, address, date;
 
 	private ImageView image;
-	
+
 	private ImageDownloader imageDownloader;
-	
-	public CustomBalloonOverlayViewSecondDegreePeople(Context context,
+
+	protected CustomBalloonOverlayViewSecondDegreePeople(Context context,
 			int balloonBottomOffset, ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		this.imageDownloader = imageDownloader;
 	}
 
-	public CustomBalloonOverlayViewSecondDegreePeople(Context context,
+	protected CustomBalloonOverlayViewSecondDegreePeople(Context context,
 			int balloonBottomOffset) {
 		super(context, balloonBottomOffset);
 	}
@@ -71,63 +60,27 @@ public class CustomBalloonOverlayViewSecondDegreePeople<Item extends OverlayItem
 	protected void setBalloonData(CustomOverlayItem item, ViewGroup parent) {
 
 		// map our custom item data to fields
-		/*
-		 * if(isValid(item.getUser().getFirstName())) {
-		 * name.setText(item.getUser().getFirstName());
-		 * name.setVisibility(View.VISIBLE); } else
-		 * name.setVisibility(View.GONE);
-		 */
-
 		name.setText(Utility.getFieldText(item.getSecondDegreePeople()));
 		name.setVisibility(View.VISIBLE);
 
-
-
 		if (item.getSecondDegreePeople().getLastSeenAt() != null) {
-			address.setText("at "+item.getSecondDegreePeople().getLastSeenAt());
+			address.setText("at "
+					+ item.getSecondDegreePeople().getLastSeenAt());
 			address.setVisibility(View.VISIBLE);
 		} else {
 			address.setVisibility(View.GONE);
 		}
-		
+
 		if (item.getSecondDegreePeople().getCreateTime() != null) {
-			date.setText(Utility.getFormattedDisplayDateForMap(item.getSecondDegreePeople().getCreateTime()));
+			date.setText(Utility.getFormattedDisplayDateForMap(item
+					.getSecondDegreePeople().getCreateTime()));
 			date.setVisibility(View.VISIBLE);
 		} else {
 			date.setVisibility(View.GONE);
 		}
 
-
 		image.setImageResource(R.drawable.img_blank);
-		imageDownloader.download(item.getSecondDegreePeople().getAvatar(), image);
-		/*new FetchImageTask() {
-			@Override
-			protected void onPostExecute(Bitmap result) {
-				if (result != null) {
-					image.setImageBitmap(result);
-				}
-			}
-		}.execute(item.getSecondDegreePeople().getAvatar());*/
-		
-		//ImageLoader il = new ImageLoader(getContext());
-		//il.DisplayImage(item.getUser().getAvatar(), image, R.drawable.img_blank);		
-
+		imageDownloader.download(item.getSecondDegreePeople().getAvatar(),
+				image);
 	}
-
-	/*private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... arg0) {
-			Bitmap b = null;
-			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return b;
-		}
-	}*/
-
 }

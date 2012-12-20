@@ -7,6 +7,11 @@ import android.view.View.OnClickListener;
 
 import com.socmaps.ui.R;
 
+
+
+/**
+ * LocationPicker Activity for displaying an item on map.
+ */
 public class MapViewDialog extends Activity implements OnClickListener {
 
 	private int flag = -1;

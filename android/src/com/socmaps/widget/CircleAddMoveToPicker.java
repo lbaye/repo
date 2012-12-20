@@ -3,11 +3,6 @@
  */
 package com.socmaps.widget;
 
-/**
- * @author hasan.mahadi
- *
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -40,12 +34,15 @@ import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * CircleAddMoveToPicker generates a custom dialog to display circle list item.
+ *
+ */
 public class CircleAddMoveToPicker extends Dialog implements
 		OnItemClickListener, View.OnClickListener {
 
@@ -59,22 +56,31 @@ public class CircleAddMoveToPicker extends Dialog implements
 	private ListView listView;
 
 	private EditText editTextCircleName;
-	private ProgressDialog m_ProgressDialog;
-
-	private String createCircleResponse = "";
-	private int createCircleStatus = 0;
-
-	private String moveToSelectedCirclesResponse = "";
-	private int moveToSelectedCirclesStatus = 0;
-
 	String circleName;
 	CircleAddMoveToAdapter nearByPlacesAdapter;
-	private String id;
+
 	private ArrayList<String> selectedArrayList = new ArrayList<String>();
 
 	private People people;
 	private RelativeLayout mainLayout;
 
+	/**
+	 * Generates a Circle list item.
+	 * 
+	 * @param context
+	 *            Current active Context
+	 * @param circleAddMoveToPickerListener
+	 *            which is used for a specific action when button is clicked
+	 * @param pickerName
+	 *            is the Dialog Title
+	 * @param circleList
+	 *            List of Circle object
+	 * @param selectedCircleList
+	 *            List of String which are selected item (id) of circle list
+	 * @param people
+	 *            People object
+	 * @see Context
+	 */
 	public CircleAddMoveToPicker(Context context,
 			CircleAddMoveToPickerListener circleAddMoveToPickerListener,
 			String pickerName, List<Circle> circleList,
@@ -84,7 +90,6 @@ public class CircleAddMoveToPicker extends Dialog implements
 		this.context = context;
 		this.pickerName = pickerName;
 		this.circleList = circleList;
-		// this.selectedPlace = selectedPlace;
 		this.selectedCircleList = selectedCircleList;
 		this.people = people;
 
@@ -132,6 +137,9 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 	@Override
 	public void onClick(View v) {
+
+		Utility.hideKeyboardContext(context);
+
 		if (v == btnCancel) {
 			dismiss();
 
@@ -166,9 +174,6 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 				}
 
-			// Api calling
-			// moveToSelectedCircle();
-
 			moveSelectedPersonToParticularCircleAPICall();
 
 			// Dialog cancel
@@ -183,7 +188,6 @@ public class CircleAddMoveToPicker extends Dialog implements
 			if (!circleName.equals("")) {
 
 				// sendCircleNameToServer();
-				// Another way
 				addNewCircleAPICall();
 
 			} else {
@@ -226,159 +230,10 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 			}
 
-			// nearByPlacesAdapter = new CircleAddMoveToAdapter(context,
-			// R.layout.row_list_item_multiple_select, circleList,
-			// selectedCircleList);
-			//
-			// listView.setAdapter(nearByPlacesAdapter);
-
 			listView.setOnItemClickListener(this);
 		}
 
 	}
-
-	// Refresh circle list
-	private void refreshCircleList() {
-
-		circleList = StaticValues.myInfo.getCircleList();
-
-		if (circleList != null) {
-
-			nearByPlacesAdapter = new CircleAddMoveToAdapter(context,
-					android.R.layout.simple_list_item_multiple_choice,
-					circleList, selectedCircleList);
-			listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-			listView.setAdapter(nearByPlacesAdapter);
-
-			for (int i = 0; i < circleList.size(); i++) {
-
-				if (selectedCircleList.contains(circleList.get(i).getId())) {
-
-					listView.setItemChecked(i, true);
-
-				}
-
-			}
-
-			nearByPlacesAdapter.notifyDataSetChanged();
-
-		}
-
-	}
-
-	/*
-	 * Add Circle to server
-	 */
-	// private void sendCircleNameToServer() {
-	// // TODO Auto-generated method stub
-	//
-	// if (Utility.isConnectionAvailble(context)) {
-	//
-	// Thread thread = new Thread(null, sendCircleNameThread,
-	// "Start add circle");
-	// thread.start();
-	//
-	// // show progress dialog if needed
-	// m_ProgressDialog = ProgressDialog
-	// .show(context,
-	// context.getResources().getString(
-	// R.string.please_wait_text),
-	// context.getResources().getString(
-	// R.string.sending_request_text), true, true);
-	//
-	// } else {
-	//
-	// DialogsAndToasts.showNoInternetConnectionDialog(context);
-	// }
-	//
-	// }
-	//
-	// private Runnable sendCircleNameThread = new Runnable() {
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// RestClient restClient = new RestClient(Constant.smCircleUrl);
-	// restClient.AddHeader(Constant.authTokenParam,
-	// Utility.getAuthToken(context));
-	//
-	// restClient.AddParam("name", circleName);
-	//
-	// try {
-	// restClient.Execute(RestClient.RequestMethod.POST);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// createCircleResponse = restClient.getResponse();
-	// createCircleStatus = restClient.getResponseCode();
-	//
-	// ((Activity) context).runOnUiThread(sendCircleNameReturnResponse);
-	//
-	// // handleResponseSendMessage(createCircleStatus,
-	// // createCircleResponse);
-	//
-	// // dismiss progress dialog if needed
-	// // m_ProgressDialog.dismiss();
-	// }
-	// };
-	//
-	// private Runnable sendCircleNameReturnResponse = new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// handleResponseCircleName(createCircleStatus, createCircleResponse);
-	//
-	// // dismiss progress dialog if needed
-	//
-	// if (m_ProgressDialog != null) {
-	// m_ProgressDialog.dismiss();
-	// }
-	// }
-	// };
-	//
-	// public void handleResponseCircleName(int status, String response) {
-	// // show proper message through Toast or Dialog
-	// Log.w("New Circle Add ", status + ":" + response);
-	//
-	// switch (status) {
-	// case Constant.STATUS_CREATED:
-	// // Log.d("Login", status+":"+response);
-	// Toast.makeText(context, "Successfully added new circle.",
-	// Toast.LENGTH_SHORT).show();
-	//
-	// try {
-	// JSONArray jArray = new JSONArray(response);
-	// List<Circle> circles = ServerResponseParser
-	// .getCircleListWithDetails(jArray);
-	// if (circles.size() > 0) {
-	// StaticValues.myInfo.setCircleList(circles);
-	// }
-	//
-	// } catch (Exception e) {
-	// // TODO: handle exception
-	// }
-	//
-	// // Refresh Circle list
-	// if (PeopleCircleActivity.getIns() != null) {
-	// PeopleCircleActivity.getIns().generateCircleView();
-	// }
-	//
-	// break;
-	//
-	// default:
-	// Toast.makeText(context,
-	// "An unknown error occured. Please try again!!",
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	//
-	// }
-	//
-	// }
-
-	// End *******************************************************
-
-	// Another way
 
 	private void addNewCircleAPICall() {
 
@@ -392,7 +247,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 				REQUEST_TYPE.ADD, true, context.getResources().getString(
 						R.string.please_wait_text), context.getResources()
 						.getString(R.string.sending_request_text),
-				new BackProcessCallBackListener(),true);
+				new BackProcessCallBackListener(), true);
 
 		backProcess.execute(RestClient.RequestMethod.POST);
 
@@ -416,7 +271,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 				REQUEST_TYPE.MOVE, true, context.getResources().getString(
 						R.string.please_wait_text), context.getResources()
 						.getString(R.string.sending_request_text),
-				new BackProcessCallBackListener(),true);
+				new BackProcessCallBackListener(), true);
 
 		backProcess.execute(RestClient.RequestMethod.PUT);
 
@@ -438,8 +293,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 				try {
 					JSONArray jArray = new JSONArray(response);
-					// List<Circle> circles = ServerResponseParser
-					// .getCircleList(jArray);
+
 					List<Circle> circles = ServerResponseParser
 							.getCircleListWithDetails(jArray);
 
@@ -498,137 +352,8 @@ public class CircleAddMoveToPicker extends Dialog implements
 
 	}
 
-	/*
-	 * Move a particular friend to selected Circles
-	 */
-	// private void moveToSelectedCircle() {
-	// // TODO Auto-generated method stub
-	//
-	// if (Utility.isConnectionAvailble(context)) {
-	//
-	// Thread thread = new Thread(null, moveToSelectedCirclesThread,
-	// "Start move to selected circles");
-	// thread.start();
-	//
-	// // show progress dialog if needed
-	// m_ProgressDialog = ProgressDialog
-	// .show(context,
-	// context.getResources().getString(
-	// R.string.please_wait_text),
-	// context.getResources().getString(
-	// R.string.sending_request_text), true, true);
-	//
-	// } else {
-	//
-	// DialogsAndToasts.showNoInternetConnectionDialog(context);
-	// }
-	//
-	// }
-	//
-	// private Runnable moveToSelectedCirclesThread = new Runnable() {
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	//
-	// String id = people.getId();
-	//
-	// RestClient restClient = new RestClient(Constant.smCircleUrl
-	// + "/friend/" + id);
-	//
-	// Log.w("Request Url  >>", Constant.smCircleUrl + "/friend/" + id);
-	//
-	// restClient.AddHeader(Constant.authTokenParam,
-	// Utility.getAuthToken(context));
-	//
-	// for (String ids : selectedArrayList) {
-	// restClient.AddParam("circles[]", ids);
-	// }
-	//
-	// try {
-	// restClient.Execute(RestClient.RequestMethod.PUT);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// moveToSelectedCirclesResponse = restClient.getResponse();
-	// moveToSelectedCirclesStatus = restClient.getResponseCode();
-	//
-	// ((Activity) context)
-	// .runOnUiThread(moveToSelectedCirclesResponseRunable);
-	//
-	// }
-	// };
-	//
-	// private Runnable moveToSelectedCirclesResponseRunable = new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// handleResponsemoveToSelectedCircles(moveToSelectedCirclesStatus,
-	// moveToSelectedCirclesResponse);
-	//
-	// // dismiss progress dialog if needed
-	//
-	// if (m_ProgressDialog != null) {
-	// m_ProgressDialog.dismiss();
-	// }
-	// }
-	// };
-	//
-	// public void handleResponsemoveToSelectedCircles(int status, String
-	// response) {
-	// // show proper message through Toast or Dialog
-	// Log.w("Move to selected circles", status + ":" + response);
-	//
-	// switch (status) {
-	// case Constant.STATUS_SUCCESS:
-	// // Log.d("Login", status+":"+response);
-	// Toast.makeText(context, "Moved selected circles successfully.",
-	// Toast.LENGTH_SHORT).show();
-	//
-	// try {
-	// JSONArray jArray = new JSONArray(response);
-	// List<Circle> circles = ServerResponseParser
-	// .getCircleList(jArray);
-	// if (circles.size() > 0) {
-	// StaticValues.myInfo.setCircleList(circles);
-	// }
-	//
-	// } catch (JSONException e) {
-	// // TODO: handle exception
-	// }
-	//
-	// // Refresh Circle list
-	// if (PeopleCircleActivity.getIns() != null) {
-	//
-	// PeopleCircleActivity.getIns().generateCircleView();
-	// }
-	//
-	// break;
-	//
-	// default:
-	// Toast.makeText(context,
-	// "An unknown error occured. Please try again!!",
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	//
-	// }
-	//
-	// }
-
-	// End ********************************
-
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3) {
-
-		// if (index == 1) {
-		// listView.setItemChecked(1, false);
-		// }
-
-		// selectedCircle = circleList.get(index);
-		//
-		// circleAddMoveToPickerListener
-		// .onCircleSelect(pickerName, selectedCircle);
 
 		hideKeybord();
 	}
@@ -637,20 +362,7 @@ public class CircleAddMoveToPicker extends Dialog implements
 	 * Hide Keybord
 	 */
 
-	public void hideKeybord() {
-
-		// etSearchField
-		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		//
-		// public void onFocusChange(View v, boolean flag) {
-		// if (flag == false) {
-		// InputMethodManager inputMethodManager = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// inputMethodManager.hideSoftInputFromWindow(
-		// v.getWindowToken(), 0);
-		// }
-		// }
-		// });
+	private void hideKeybord() {
 
 		InputMethodManager mgr = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);

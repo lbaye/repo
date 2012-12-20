@@ -3,7 +3,6 @@ package com.socmaps.ui;
 import com.socmaps.util.Constant;
 import com.socmaps.util.Utility;
 
-
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,10 +26,10 @@ public class MessageActivity extends TabActivity {
 	ButtonActionListener buttonActionListener;
 
 	Button btnBack;
-	
+
 	static Button btnNotification;
 
-	private TabHost mTabHost; 
+	private TabHost mTabHost;
 	Context context;
 
 	@Override
@@ -47,9 +46,6 @@ public class MessageActivity extends TabActivity {
 		setContentView(R.layout.message_activity);
 
 		initialize();
-		
-		
-
 		setupTabHost();
 
 		mTabHost.getTabWidget().setDividerDrawable(R.drawable.seperator);
@@ -58,20 +54,7 @@ public class MessageActivity extends TabActivity {
 				R.drawable.tab_item_message);
 		Drawable meetupRequestTabIcon = getResources().getDrawable(
 				R.drawable.tab_item_meetup);
-		/*
-		 * // Tab for message TabSpec messageSpec =
-		 * mTabHost.newTabSpec("Message"); // setting Title and Icon for the Tab
-		 * //messageSpec.setIndicator("Message",
-		 * getResources().getDrawable(R.drawable.icon_message_tab)); Intent
-		 * messageIntent = new Intent(getApplicationContext(),
-		 * MessageNotificationActivity.class);
-		 * messageSpec.setContent(messageIntent);
-		 */
 
-		/*
-		 * Intent messageListIntent = new Intent(MessageActivity.this,
-		 * MessageListActivity.class);
-		 */
 		Intent messageGroupIntent = new Intent().setClass(this,
 				MessageGroupActivity.class);
 		Intent meetupListIntent = new Intent(MessageActivity.this,
@@ -81,26 +64,25 @@ public class MessageActivity extends TabActivity {
 				.toString());
 		setupTab(meetupListIntent, meetupRequestTabIcon,
 				getText(R.string.meetuprequests).toString());
-		
-		if(getIntent().getStringExtra("selectedTab")!=null)
-		{
-			Log.i("Message:selectedTab", getIntent().getStringExtra("selectedTab"));
-			if(getIntent().getStringExtra("selectedTab").equals(Constant.PUSH_NOTIFICATION_MEETUP))
-			{
+
+		if (getIntent().getStringExtra("selectedTab") != null) {
+			Log.i("Message:selectedTab",
+					getIntent().getStringExtra("selectedTab"));
+			if (getIntent().getStringExtra("selectedTab").equals(
+					Constant.PUSH_NOTIFICATION_MEETUP)) {
 				mTabHost.setCurrentTab(1);
 			}
 		}
-
 	}
 
 	private TabHost getMyTabHost() {
 		return mTabHost;
 	}
 
-	private void initialize() { 
-		
+	private void initialize() {
+
 		context = MessageActivity.this;
-		
+
 		buttonActionListener = new ButtonActionListener();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
@@ -108,7 +90,6 @@ public class MessageActivity extends TabActivity {
 
 		btnNotification = (Button) findViewById(R.id.btnNotification);
 		btnNotification.setOnClickListener(buttonActionListener);
-
 	}
 
 	private void setupTabHost() {
@@ -123,8 +104,6 @@ public class MessageActivity extends TabActivity {
 		TabSpec setContent = mTabHost.newTabSpec(tag).setIndicator(tabview)
 				.setContent(intent);
 		mTabHost.addTab(setContent);
-		// Log.i("TabHost", mTabHost.getChildCount()+"");
-
 	}
 
 	private static View createTabView(final Context context, Drawable tabIcon,
@@ -142,10 +121,6 @@ public class MessageActivity extends TabActivity {
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
@@ -158,28 +133,14 @@ public class MessageActivity extends TabActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
-
 	}
 
 	private class ButtonActionListener implements OnClickListener {
@@ -193,7 +154,7 @@ public class MessageActivity extends TabActivity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			if (v == btnBack) {
-				finish(); 
+				finish();
 				Utility.hideKeyboardContext(context);
 			}
 			if (v == btnNotification) {
@@ -201,9 +162,6 @@ public class MessageActivity extends TabActivity {
 						NotificationActivity.class);
 				startActivity(i);
 			}
-
 		}
-
 	}
-
 }

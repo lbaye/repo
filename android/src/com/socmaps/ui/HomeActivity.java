@@ -110,20 +110,9 @@ public class HomeActivity extends MapActivity implements
 		OnClickListener {
 
 	private NotificationCountBroadcastReciever broadcastReceiver;
-	// private Intent countServiceIntent;
-	private final int MENU_ITEM_PEOPLE = Menu.FIRST + 1;
-	private final int MENU_ITEM_PROFILE = Menu.FIRST + 2;
-	private final int MENU_ITEM_DEAL = Menu.FIRST + 3;
-	private final int MENU_ITEM_VENUE = Menu.FIRST + 4;
-	private final int MENU_ITEM_SETTINGS = Menu.FIRST + 5;
-	private final int MENU_ITEM_LOGOUT = Menu.FIRST + 6;
-	private final int MENU_ITEM_MESSAGE = Menu.FIRST + 7;
-	private final int MENU_ITEM_EVENT = Menu.FIRST + 8;
-	private final int MENU_ITEM_MEETUP = Menu.FIRST + 9;
 
 	Button btnNotification;
 	Button topCloseButton, bottomCloseButton;
-	// Button mOpenButton;
 	MultiDirectionSlidingDrawer topDrawer, bottomDrawer;
 
 	TopDrawerListener topDrawerListener;
@@ -142,7 +131,6 @@ public class HomeActivity extends MapActivity implements
 
 	private double myLat, myLng;
 
-	// Drawable drawable, drawableSelf, drawablePlace, drawableSecondDegree;
 	int requestCode;
 	String responseString;
 	int responseStatus = 0;
@@ -152,8 +140,6 @@ public class HomeActivity extends MapActivity implements
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayGeotag;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlaySelf;
 	CustomItemizedOverlay<CustomOverlayItem> itemizedOverlayPlace;
-
-	// private static boolean flag = false;
 
 	private ImageView avatar, placeIconImage;
 	private Dialog d, msgDialog, frndRequestDialog;
@@ -192,11 +178,6 @@ public class HomeActivity extends MapActivity implements
 	Permission locationSharingPermission;
 	String shareWithPickerName = "sharewith";
 	ShareWithSelectionListener shareWithSelectionListener;
-
-	// List<String> shareWithSelectedFriendList;
-	// List<String> shareWithSelectedCircleList;
-	// List<String> shareWithSelectedCircleFriendList;
-	// List<String> shareWithSelectedFriendListAll;
 
 	RelativeLayout circleMenu;
 	LinearLayout btnCloseCircleMenu;
@@ -266,21 +247,11 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	/*
-	 * private void setDefaultNotificationValue() { // TODO Auto-generated
-	 * method stub if (StaticValues.myInfo != null && btnNotification !=null) {
-	 * btnNotification.setText("" + StaticValues.myInfo.getNotificationCount()
-	 * .getTotalCount()); } }
-	 */
-
 	private void initialize() {
 
 		context = HomeActivity.this;
 		gpsService = new GpsService(context, this);
 		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
-
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		mapView.setBuiltInZoomControls(false);
@@ -345,16 +316,12 @@ public class HomeActivity extends MapActivity implements
 		itemizedOverlayGeotag.populateItemizedOverlay();
 		mapOverlays.add(itemizedOverlayGeotag);
 
-		// mapView.setBuiltInZoomControls(true);
-
 		mapView.setSatellite(false);
 		mapController.setZoom(16);
 
 		topDrawerListener = new TopDrawerListener();
 		bottomDrawerListener = new BottomDrawerListener();
 		shareWithSelectionListener = new ShareWithSelectionListener();
-
-		// geoMapView = (MapView) findViewById(R.id.myGMap);
 
 		topDrawer = (MultiDirectionSlidingDrawer) findViewById(R.id.topDrawer);
 		topDrawer.setOnDrawerOpenListener(topDrawerListener);
@@ -451,7 +418,6 @@ public class HomeActivity extends MapActivity implements
 	}
 
 	private void getMapDataFromServer() {
-		// sendSelfLocationToServer();
 		getSearchResult();
 		getEventList();
 		getGeotagList();
@@ -469,63 +435,12 @@ public class HomeActivity extends MapActivity implements
 		timer.schedule(task, 500, updateInterval);
 	}
 
-	/*
-	 * private final BroadcastReceiver mHandleMessageReceiver = new
-	 * BroadcastReceiver() {
-	 * 
-	 * @Override public void onReceive(Context context, Intent intent) {
-	 * 
-	 * PushData pushData = (PushData)intent.getSerializableExtra("intent");
-	 * 
-	 * //String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
-	 * Log.e("GCM: HOME", pushData.getMessage()); } };
-	 */
-
 	private void checkNotNull(Object reference, String name) {
 		if (reference == null) {
 			throw new NullPointerException(getString(R.string.error_config,
 					name));
 		}
 	}
-
-	/*
-	 * private void registerPushNotification() { // TODO Auto-generated method
-	 * stub checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
-	 * checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID"); // Make sure the
-	 * device has the proper dependencies. GCMRegistrar.checkDevice(this); //
-	 * Make sure the manifest was properly set - comment out this line // while
-	 * developing the app, then uncomment it when it's ready.
-	 * GCMRegistrar.checkManifest(this);
-	 * 
-	 * // registerReceiver(mHandleMessageReceiver, new //
-	 * IntentFilter(DISPLAY_MESSAGE_ACTION)); final String regId =
-	 * GCMRegistrar.getRegistrationId(this); if (regId.equals("")) { //
-	 * Automatically registers application on startup.
-	 * GCMRegistrar.register(getApplicationContext(),
-	 * CommonUtilities.SENDER_ID); } else { // Device is already registered on
-	 * GCM, check server. if (GCMRegistrar.isRegisteredOnServer(this)) { //
-	 * Skips registration. //
-	 * mDisplay.append(getString(R.string.already_registered) + // "\n");
-	 * Log.e("GCM", getString(R.string.already_registered)); } else { // Try to
-	 * register again, but not in the UI thread. // It's also necessary to
-	 * cancel the thread onDestroy(), // hence the use of AsyncTask instead of a
-	 * raw thread. final Context context = this; mRegisterTask = new
-	 * AsyncTask<Void, Void, Void>() {
-	 * 
-	 * @Override protected Void doInBackground(Void... params) { boolean
-	 * registered = ServerUtilities.register(context, regId); // At this point
-	 * all attempts to register with the app // server failed, so we need to
-	 * unregister the device // from GCM - the app will try to register again
-	 * when // it is restarted. Note that GCM will send an // unregistered
-	 * callback upon completion, but // GCMIntentService.onUnregistered() will
-	 * ignore it. if (!registered) { GCMRegistrar.unregister(context); } return
-	 * null; }
-	 * 
-	 * @Override protected void onPostExecute(Void result) { mRegisterTask =
-	 * null; }
-	 * 
-	 * }; mRegisterTask.execute(null, null, null); } } }
-	 */
 
 	private void registerPushNotification() throws IOException {
 		// TODO Auto-generated method stub
@@ -536,12 +451,10 @@ public class HomeActivity extends MapActivity implements
 		// Make sure the manifest was properly set - comment out this line
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
-
-		// registerReceiver(mHandleMessageReceiver, new
-		// IntentFilter(DISPLAY_MESSAGE_ACTION));
+;
 		final String regId = GCMRegistrar.getRegistrationId(this);
 
-		boolean forceRegister = true;
+		//boolean forceRegister = true;
 
 		Log.i("GCM RegID", "inside registerPushNotification");
 
@@ -552,18 +465,6 @@ public class HomeActivity extends MapActivity implements
 					CommonUtilities.SENDER_ID);
 		} else {
 			registerDeviceOnServer(regId);
-			/*
-			 * // Device is already registered on GCM, check server. if
-			 * (GCMRegistrar.isRegisteredOnServer(this)) { // Skips
-			 * registration. //
-			 * mDisplay.append(getString(R.string.already_registered) + //
-			 * "\n"); Log.e("GCM", getString(R.string.already_registered)); }
-			 * else { // Try to register again, but not in the UI thread. //
-			 * It's also necessary to cancel the thread onDestroy(), // hence
-			 * the use of AsyncTask instead of a raw thread.
-			 * 
-			 * registerDeviceOnServer(regId); }
-			 */
 		}
 
 	}
@@ -598,48 +499,6 @@ public class HomeActivity extends MapActivity implements
 		};
 		mRegisterTask.execute(null, null, null);
 	}
-
-	/*
-	 * private void registerPushNotification() throws IOException {
-	 * 
-	 * checkNotNull(CommonUtilities.SERVER_URL, "SERVER_URL");
-	 * checkNotNull(CommonUtilities.SENDER_ID, "SENDER_ID");
-	 * 
-	 * GCMRegistrar.checkDevice(this);
-	 * 
-	 * GCMRegistrar.checkManifest(this);
-	 * 
-	 * 
-	 * final String regId = GCMRegistrar.getRegistrationId(this);
-	 * 
-	 * boolean forceRegister = true; Log.i("GCM REG_ID", regId+"");
-	 * 
-	 * if(regId==null || regId.equals("")) { try {
-	 * GCMRegistrar.register(getApplicationContext(),
-	 * CommonUtilities.SENDER_ID);
-	 * 
-	 * } catch (Exception e) {
-	 * 
-	 * } }
-	 * 
-	 * Log.i("GCM REG_ID", regId); if (regId != null) { final Context context =
-	 * this; mRegisterTask = new AsyncTask<Void, Void, Void>() {
-	 * 
-	 * @Override protected Void doInBackground(Void... params) { boolean
-	 * registered = ServerUtilities.register(context, regId);
-	 * 
-	 * if (!registered) { GCMRegistrar.unregister(context); } return null; }
-	 * 
-	 * @Override protected void onPostExecute(Void result) { mRegisterTask =
-	 * null; }
-	 * 
-	 * }; mRegisterTask.execute(null, null, null);
-	 * 
-	 * }
-	 * 
-	 * 
-	 * }
-	 */
 
 	private void startGpsService() {
 		gpsService.StartListener();
@@ -676,7 +535,6 @@ public class HomeActivity extends MapActivity implements
 		if (mRegisterTask != null) {
 			mRegisterTask.cancel(true);
 		}
-		// stopService(countServiceIntent);// delete this line for production
 
 		try {
 			unregisterReceiver(broadcastReceiver);
@@ -709,8 +567,6 @@ public class HomeActivity extends MapActivity implements
 		Log.e("location.getLatitude():" + location.getLatitude(),
 				"location.getLongitude():" + location.getLongitude());
 
-		// isFirstLocationUpdate = true;
-
 		Log.e("Size mapoverlay self", mapOverlays.size() + "");
 
 		itemizedOverlaySelf = (CustomItemizedOverlay) mapOverlays.get(0);
@@ -719,8 +575,6 @@ public class HomeActivity extends MapActivity implements
 		CustomOverlayItem overlayItem = new CustomOverlayItem(point, "self",
 				"", StaticValues.myInfo);
 		itemizedOverlaySelf.addOverlay(overlayItem);
-		// mapOverlays.add(itemizedOverlay2);
-		// }
 
 		if (isFirstLocationUpdate) {
 			relocationCurrentPosition();
@@ -731,12 +585,6 @@ public class HomeActivity extends MapActivity implements
 		mapView.invalidate();
 
 		sendSelfLocationToServer();
-
-		// make them periodic
-		// getSearchResult();
-		// getEventList();
-		// getGeotagList();
-
 	}
 
 	private void getSearchResult() {
@@ -779,17 +627,13 @@ public class HomeActivity extends MapActivity implements
 		public void run() {
 			// TODO Auto-generated method stub
 			handleGetSearchResultResponse(responseStatus, responseString);
-			// responseString = null;
 		}
 	};
 
 	private void handleGetSearchResultResponse(int status, String response) {
 		Log.d("Get Search result", status + ":" + response);
-		// userList.clear();
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// userList =
-			// ServerResponseParser.parseSearchResultPeople(response);
 			StaticValues.searchResult = ServerResponseParser
 					.parseSeachResult(response);
 			populateMasterList();
@@ -800,26 +644,22 @@ public class HomeActivity extends MapActivity implements
 				updateContentList(listMasterContent);
 				updateMapDisplay(listContent);
 			}
-
-			// flag = true;
 			break;
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
-			// Toast.makeText(getApplicationContext(),"An unknown error occured.",
-			// Toast.LENGTH_LONG).show();
 			break;
 
 		}
@@ -870,8 +710,6 @@ public class HomeActivity extends MapActivity implements
 	};
 
 	private void handleGetGeotagListResponse(int status, String response) {
-		// Log.d("Get Search result", status + ":" + response);
-		// userList.clear();
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
 
@@ -889,20 +727,18 @@ public class HomeActivity extends MapActivity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
-			// Toast.makeText(getApplicationContext(),"An unknown error occured.",
-			// Toast.LENGTH_LONG).show();
 			break;
 
 		}
@@ -951,12 +787,9 @@ public class HomeActivity extends MapActivity implements
 	};
 
 	private void handleGetEventListResponse(int status, String response) {
-		// Log.d("Get Search result", status + ":" + response);
-		// userList.clear();
+
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// userList =
-			// ServerResponseParser.parseSearchResultPeople(response);
 			eventList = ServerResponseParser.parseGetEventListResult(response);
 
 			populateMasterList();
@@ -972,20 +805,18 @@ public class HomeActivity extends MapActivity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
-			// Toast.makeText(getApplicationContext(),"An unknown error occured.",
-			// Toast.LENGTH_LONG).show();
 			break;
 
 		}
@@ -1007,11 +838,6 @@ public class HomeActivity extends MapActivity implements
 		if (geotagList != null) {
 			addGeotagsToMasterList();
 		}
-
-		/*
-		 * if (listMasterContent.size() > 0) { sortMasterListData(); }
-		 */
-
 	}
 
 	private void addPlacesToMasterList() {
@@ -1056,29 +882,6 @@ public class HomeActivity extends MapActivity implements
 			listMasterContent.add(geotagList.get(i));
 		}
 	}
-
-	/*
-	 * private void sortMasterListData() {
-	 * Collections.sort(this.listMasterContent, new ListComparator()); }
-	 * 
-	 * class ListComparator implements Comparator<Object> {
-	 * 
-	 * @Override public int compare(Object first, Object last) { double
-	 * firstDistance = getDistance(first); double lastDistance =
-	 * getDistance(last);
-	 * 
-	 * if (firstDistance > lastDistance) return 1; else if (firstDistance ==
-	 * lastDistance) return 0; else return -1; }
-	 * 
-	 * private double getDistance(Object object) { if (object instanceof People)
-	 * return ((People) object).getDistance(); else if (object instanceof Place)
-	 * return ((Place) object).getDistance(); else if (object instanceof
-	 * SecondDegreePeople) return ((SecondDegreePeople) object).getDistance();
-	 * else if (object instanceof Event) return ((Event) object).getDistance();
-	 * else return 0; }
-	 * 
-	 * }
-	 */
 
 	private void updateContentList(List<Object> list) {
 		listContent.clear();
@@ -1160,6 +963,7 @@ public class HomeActivity extends MapActivity implements
 
 				CustomOverlayItem overlayItem = new CustomOverlayItem(geoPoint,
 						"", "", user);
+	
 				itemizedOverlayOtherPeople.addOverlay(overlayItem);
 
 				displayedItemCounter++;
@@ -1260,59 +1064,6 @@ public class HomeActivity extends MapActivity implements
 							|| eventList.size() > 0 || geotagList.size() > 0)) {
 
 				highlightAnnotation();
-
-				/*
-				 * circleMenu.setVisibility(View.GONE);
-				 * 
-				 * selectedGeoPoint = new GeoPoint(0, 0);
-				 * 
-				 * if (StaticValues.highlightAnnotationItem instanceof People) {
-				 * 
-				 * People selectedPeople = (People)
-				 * StaticValues.highlightAnnotationItem;
-				 * 
-				 * selectedGeoPoint = new GeoPoint( (int)
-				 * (selectedPeople.getCurrentLat() * 1E6), (int)
-				 * (selectedPeople.getCurrentLng() * 1E6));
-				 * 
-				 * // selectedGeoPoint = ((People) //
-				 * StaticValues.highlightAnnotationItem).getCurrentPosition();
-				 * itemizedOverlayOtherPeople.onTap(selectedGeoPoint, mapView);
-				 * 
-				 * } else if (StaticValues.highlightAnnotationItem instanceof
-				 * Place) { selectedGeoPoint = ((Place)
-				 * StaticValues.highlightAnnotationItem) .getLocation();
-				 * itemizedOverlayPlace.onTap(selectedGeoPoint, mapView); } else
-				 * if (StaticValues.highlightAnnotationItem instanceof
-				 * SecondDegreePeople) { // selectedGeoPoint =
-				 * ((SecondDegreePeople) //
-				 * StaticValues.highlightAnnotationItem).getCurrentPosition();
-				 * 
-				 * SecondDegreePeople selectedPeople = (SecondDegreePeople)
-				 * StaticValues.highlightAnnotationItem; selectedGeoPoint = new
-				 * GeoPoint( (int) (selectedPeople.getCurrentLat() * 1E6), (int)
-				 * (selectedPeople.getCurrentLng() * 1E6));
-				 * 
-				 * itemizedOverlaySecondDegreePeople.onTap(selectedGeoPoint,
-				 * mapView);
-				 * 
-				 * } else if (StaticValues.highlightAnnotationItem instanceof
-				 * Event) { // selectedGeoPoint = ((SecondDegreePeople) //
-				 * StaticValues.highlightAnnotationItem).getCurrentPosition();
-				 * 
-				 * Event event = (Event) StaticValues.highlightAnnotationItem;
-				 * selectedGeoPoint = new GeoPoint( (int) (event.getLatitude() *
-				 * 1E6), (int) (event.getLongitude() * 1E6));
-				 * 
-				 * itemizedOverlayEvent.onTap(selectedGeoPoint, mapView);
-				 * 
-				 * }
-				 * 
-				 * 
-				 * StaticValues.highlightAnnotationItem = null;
-				 * StaticValues.isHighlightAnnotation = false;
-				 */
-
 			}
 
 			else if (focusedItemPeople != null) {
@@ -1343,64 +1094,6 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	/*
-	 * private void updateMap() { // TODO Auto-generated method stub
-	 * 
-	 * if (peopleCheckBox.isChecked()) putPeopleOnMap(); if
-	 * (placeCheckBox.isChecked()) putPlacesOnMap();
-	 * 
-	 * mapView.invalidate();
-	 * 
-	 * // setStationsOnMap(); }
-	 */
-
-	/*
-	 * private void putPlacesOnMap() { // TODO Auto-generated method stub if
-	 * (searchResultEntity.getPlaces().size() > 0) { int i;
-	 * 
-	 * itemizedOverlayPlace = (CustomItemizedOverlay) mapOverlays.get(2);
-	 * Log.e("size of itemized overlay", itemizedOverlayPlace.size() + "");
-	 * 
-	 * itemizedOverlayPlace.removeAllItem(); Log.e("size of itemized overlay",
-	 * itemizedOverlayPlace.size() + ""); Log.e("places",
-	 * searchResultEntity.getPlaces().size() + ""); for (i = 0; i <
-	 * searchResultEntity.getPlaces().size(); i++) {
-	 * 
-	 * PlaceEntity place = searchResultEntity.getPlaces().get(i);
-	 * CustomOverlayItem overlayItem = new CustomOverlayItem(
-	 * place.getLocation(), "", "", place);
-	 * itemizedOverlayPlace.addOverlay(overlayItem);
-	 * 
-	 * } Log.e("size of itemized overlay", itemizedOverlayPlace.size() + "");
-	 * 
-	 * itemizedOverlayPlace.populateItemizedOverlay(); }
-	 * 
-	 * }
-	 * 
-	 * private void putPeopleOnMap() { // TODO Auto-generated method stub if
-	 * (searchResultEntity.getPeoples().size() > 0) { int i;
-	 * 
-	 * itemizedOverlayOtherPeople = (CustomItemizedOverlay) mapOverlays .get(1);
-	 * Log.e("size of itemized overlay", itemizedOverlayOtherPeople.size() +
-	 * "");
-	 * 
-	 * itemizedOverlayOtherPeople.removeAllItem();
-	 * Log.e("size of itemized overlay", itemizedOverlayOtherPeople.size() +
-	 * ""); Log.e("users", searchResultEntity.getPeoples().size() + ""); for (i
-	 * = 0; i < searchResultEntity.getPeoples().size(); i++) {
-	 * 
-	 * OtherUserEntity user = searchResultEntity.getPeoples().get(i);
-	 * 
-	 * CustomOverlayItem overlayItem = new CustomOverlayItem(
-	 * user.getCurrentPosition(), "", "", user);
-	 * itemizedOverlayOtherPeople.addOverlay(overlayItem);
-	 * 
-	 * } Log.e("size of itemized overlay", itemizedOverlayOtherPeople.size() +
-	 * ""); itemizedOverlayOtherPeople.populateItemizedOverlay(); }
-	 * 
-	 * }
-	 */
-
 	private void setOnCheckChangeListener() {
 		// TODO Auto-generated method stub
 		peopleCheckBox.setOnCheckedChangeListener(this);
@@ -1426,9 +1119,6 @@ public class HomeActivity extends MapActivity implements
 			locationSharingPermission = Permission.PUBLIC;
 		}
 
-		// Log.i("Permission value:login", locationSharingPermission.ordinal()+
-		// ":" + StaticValues.myInfo.getSettings().getShareLocation());
-
 		permissionRadioGroupView = new PermissionRadioGroupLess(context,
 				shareWithSelectionListener, locationSharingPermission);
 		shareWithRadioGroupContainer.addView(permissionRadioGroupView);
@@ -1437,64 +1127,17 @@ public class HomeActivity extends MapActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		/*
-		 * menu.add(Menu.NONE, MENU_ITEM_SETTINGS, Menu.NONE,
-		 * "Settings").setIcon( R.drawable.icon_settings_small);
-		 * menu.add(Menu.NONE, MENU_ITEM_MESSAGE, Menu.NONE,
-		 * "Messages").setIcon( R.drawable.icon_messages_small);
-		 * menu.add(Menu.NONE, MENU_ITEM_PROFILE, Menu.NONE, "Profile").setIcon(
-		 * R.drawable.icon_profile); menu.add(Menu.NONE, MENU_ITEM_EVENT,
-		 * Menu.NONE, "Events").setIcon( R.drawable.icon_event_small);
-		 * 
-		 * menu.add(Menu.NONE, MENU_ITEM_MEETUP, Menu.NONE, "Meet-up").setIcon(
-		 * R.drawable.icon_meet_up_small);
-		 */
-
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		/*
-		 * switch (item.getItemId()) { case MENU_ITEM_PEOPLE:
-		 * 
-		 * break;
-		 * 
-		 * case MENU_ITEM_PROFILE: // finish(); Intent profileIntent = new
-		 * Intent(getApplicationContext(), ProfileActivity.class);
-		 * startActivity(profileIntent); break;
-		 * 
-		 * case MENU_ITEM_DEAL:
-		 * 
-		 * break; case MENU_ITEM_VENUE:
-		 * 
-		 * break; case MENU_ITEM_SETTINGS: // finish(); Intent settingsIntent =
-		 * new Intent(getApplicationContext(), SettingsActivity.class);
-		 * startActivity(settingsIntent); break; case MENU_ITEM_LOGOUT:
-		 * PreferenceConnector.writeBoolean(getApplicationContext(),
-		 * "isLoggedInKey", false); finish(); Intent logoutIntent = new
-		 * Intent(getApplicationContext(), LoginActivity.class);
-		 * startActivity(logoutIntent); break; case MENU_ITEM_MESSAGE: //
-		 * finish(); Intent messageIntent = new Intent(getApplicationContext(),
-		 * MessageActivity.class); startActivity(messageIntent); break;
-		 * 
-		 * case MENU_ITEM_EVENT: // finish(); Intent eventIntent = new
-		 * Intent(getApplicationContext(), ListOfEvents.class);
-		 * startActivity(eventIntent); break;
-		 * 
-		 * case MENU_ITEM_MEETUP: // finish(); Intent meetupIntent = new
-		 * Intent(getApplicationContext(), MeetupNewActivity.class);
-		 * startActivity(meetupIntent); break; }
-		 */
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize();
 	}
 
 	@Override
@@ -1513,12 +1156,8 @@ public class HomeActivity extends MapActivity implements
 
 		gpsService.stopListener();
 
-		// unregisterReceiver(broadcastReceiver);
-
 		StaticValues.highlightAnnotationItem = null;
 		StaticValues.isHighlightAnnotation = false;
-
-		// clearMap(0, true);
 
 		listMasterContent.clear();
 		listContent.clear();
@@ -1558,11 +1197,6 @@ public class HomeActivity extends MapActivity implements
 					Log.i("Home:PushData:Type", pushData.getObjectType());
 					if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_NEW)) {
-						/*
-						 * Intent intent2 = new Intent(context,
-						 * MessageActivity.class); startActivity(intent2);
-						 */
-
 						Intent i = new Intent(
 								context,
 								MessageConversationFromNotificationActivity.class);
@@ -1573,11 +1207,10 @@ public class HomeActivity extends MapActivity implements
 
 					} else if (pushData.getObjectType().equals(
 							Constant.PUSH_NOTIFICATION_MESSAGE_REPLY)) {
-						/*
-						 * Intent intent2 = new Intent(context,
-						 * MessageActivity.class); startActivity(intent2);
-						 */
-						Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
+
+						Intent i = new Intent(
+								context,
+								MessageConversationFromNotificationActivity.class);
 						i.putExtra("itemThreadId", pushData.getObjectId());
 						i.putExtra("itemMessageId", pushData.getObjectId());
 						i.putExtra("status", true);
@@ -1660,9 +1293,8 @@ public class HomeActivity extends MapActivity implements
 				e.printStackTrace();
 			}
 
-			// restClient.getResponse();
 			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
-				// StaticValues.myInfo.getSettings().setShareLocation(locationSharingPermission.ordinal());
+
 				if (restClient.getResponse() != null
 						&& !restClient.getResponse().equals("")) {
 					CirclesAndFriends circlesAndFriends = ServerResponseParser
@@ -1691,7 +1323,6 @@ public class HomeActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// setCheckBoxSelection();
 
 		isRunning = true;
 		Log.i("Home:onResume memory before",
@@ -1717,16 +1348,12 @@ public class HomeActivity extends MapActivity implements
 			updateContentList(listMasterContent);
 
 			updateMapDisplay(listContent);
-
-			// highlightAnnotation();
 		}
 
 		startGpsService();
 
 		Log.i("Home:onResume memory after",
 				"" + Debug.getNativeHeapAllocatedSize());
-
-		// handleNavigationFromNotificationBar(getIntent());
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
 	}
@@ -1752,11 +1379,6 @@ public class HomeActivity extends MapActivity implements
 					.getSerializableExtra("pushData");
 
 			Utility.updateNotificationCountFromPush(pushData);
-			/*
-			 * if(StaticValues.myInfo!=null) {
-			 * btnNotification.setText(""+StaticValues
-			 * .myInfo.getNotificationCount() .getTotalCount()); }
-			 */
 
 			Utility.updateNotificationBubbleCounter(btnNotification);
 
@@ -1777,8 +1399,6 @@ public class HomeActivity extends MapActivity implements
 					(int) (selectedPeople.getCurrentLat() * 1E6),
 					(int) (selectedPeople.getCurrentLng() * 1E6));
 
-			// selectedGeoPoint = ((People)
-			// StaticValues.highlightAnnotationItem).getCurrentPosition();
 			itemizedOverlayOtherPeople.onTap(selectedGeoPoint, mapView);
 
 		} else if (StaticValues.highlightAnnotationItem instanceof Place) {
@@ -1788,8 +1408,6 @@ public class HomeActivity extends MapActivity implements
 
 			itemizedOverlayPlace.onTap(selectedGeoPoint, mapView);
 		} else if (StaticValues.highlightAnnotationItem instanceof SecondDegreePeople) {
-			// selectedGeoPoint = ((SecondDegreePeople)
-			// StaticValues.highlightAnnotationItem).getCurrentPosition();
 
 			SecondDegreePeople selectedPeople = (SecondDegreePeople) StaticValues.highlightAnnotationItem;
 			selectedGeoPoint = new GeoPoint(
@@ -1799,8 +1417,6 @@ public class HomeActivity extends MapActivity implements
 			itemizedOverlaySecondDegreePeople.onTap(selectedGeoPoint, mapView);
 
 		} else if (StaticValues.highlightAnnotationItem instanceof Event) {
-			// selectedGeoPoint = ((SecondDegreePeople)
-			// StaticValues.highlightAnnotationItem).getCurrentPosition();
 
 			Event event = (Event) StaticValues.highlightAnnotationItem;
 			selectedGeoPoint = new GeoPoint((int) (event.getLatitude() * 1E6),
@@ -1809,9 +1425,6 @@ public class HomeActivity extends MapActivity implements
 			itemizedOverlayEvent.onTap(selectedGeoPoint, mapView);
 
 		} else if (StaticValues.highlightAnnotationItem instanceof GeoTag) {
-			// selectedGeoPoint = ((SecondDegreePeople)
-			// StaticValues.highlightAnnotationItem).getCurrentPosition();
-
 			GeoTag geoTag = (GeoTag) StaticValues.highlightAnnotationItem;
 			selectedGeoPoint = new GeoPoint((int) (geoTag.getLatitude() * 1E6),
 					(int) (geoTag.getLongitude() * 1E6));
@@ -1829,18 +1442,6 @@ public class HomeActivity extends MapActivity implements
 		showSearchPanel(false);
 		isSearchEnabled = false;
 	}
-
-	/*
-	 * private void initializeNotificationCountBroadcast() {
-	 * 
-	 * // For production following is not necessary //countServiceIntent = new
-	 * Intent(this, BroadcastService.class); //startService(countServiceIntent);
-	 * // .......................................................
-	 * 
-	 * broadcastReceiver = NotificationCountBroadcastReciever.getInstance();
-	 * broadcastReceiver.setCallback(this); registerReceiver(broadcastReceiver,
-	 * new IntentFilter( BroadcastService.BROADCAST_ACTION)); }
-	 */
 
 	@Override
 	public void onAttachedToWindow() {
@@ -1867,9 +1468,6 @@ public class HomeActivity extends MapActivity implements
 	private void facebookAuthentication() {
 
 		Log.i("HomeActivity", "facebookAuthentication");
-
-		// initInviteFriends();
-		// askForFacebookAccount();
 
 		if (StaticValues.myInfo != null
 				&& !Utility.getFacebookInvitationDisplayStatus(context)
@@ -1929,26 +1527,14 @@ public class HomeActivity extends MapActivity implements
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request sent", Toast.LENGTH_SHORT); toast.show();
-			 */
 		}
 
 		@Override
 		public void onFacebookError(FacebookError error) {
-			/*
-			 * Toast.makeText(getApplicationContext(), "Facebook Error: " +
-			 * error.getMessage(), Toast.LENGTH_SHORT) .show();
-			 */
 		}
 
 		@Override
 		public void onCancel() {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request cancelled", Toast.LENGTH_SHORT); toast.show();
-			 */
 		}
 	}
 
@@ -2015,8 +1601,6 @@ public class HomeActivity extends MapActivity implements
 		if (typeFlag == Constant.FLAG_PEOPLE) {
 
 			showPeoplePopUpDetails(item);
-
-			// Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
 		}
 
 		else if (typeFlag == Constant.FLAG_PLACE) {
@@ -2027,15 +1611,9 @@ public class HomeActivity extends MapActivity implements
 		}
 		if (typeFlag == Constant.FLAG_SELF) {
 
-			// Log.e("Self click", "clicked");
-
 			Intent profileIntent = new Intent(context, ProfileActivity.class);
 			startActivity(profileIntent);
 		} else if (typeFlag == Constant.FLAG_SECOND_DEGREE) {
-
-			// showSecondDegreePeoplePopUpDetails(item);
-
-			// Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
 		} else {
 			// do nothing
 		}
@@ -2060,8 +1638,6 @@ public class HomeActivity extends MapActivity implements
 
 		TextView distance = (TextView) d.findViewById(R.id.distance_text);
 		double distanceValue = item.getPlace().getDistance();
-		// String distanceString = String.format("%.2f", distanceValue);
-		// distance.setText(distanceString + " miles AWAY");
 		distance.setText(Utility.getFormatedDistance(distanceValue,
 				StaticValues.myInfo.getSettings().getUnit()) + " away");
 
@@ -2079,7 +1655,6 @@ public class HomeActivity extends MapActivity implements
 		String iconUrl = item.getPlace().getIconUrl();
 		if (iconUrl != null && !iconUrl.equals("")) {
 
-			// placeIconImage.setImageResource(R.drawable.icon);
 			new FetchImageTask() {
 				@Override
 				protected void onPostExecute(Bitmap result) {
@@ -2088,9 +1663,6 @@ public class HomeActivity extends MapActivity implements
 					}
 				}
 			}.execute(iconUrl);
-
-			// imageLoader.DisplayImage(iconUrl, placeIconImage,
-			// R.drawable.icon);
 
 		}
 
@@ -2110,8 +1682,6 @@ public class HomeActivity extends MapActivity implements
 				startActivity(peopleIntent);
 			}
 		});
-
-		// -- for meet up when Place Pop Up appear -- //
 
 		Button meet_up = (Button) d.findViewById(R.id.meet_up_btn);
 		meet_up.setOnClickListener(new OnClickListener() {
@@ -2133,13 +1703,10 @@ public class HomeActivity extends MapActivity implements
 						.getLongitude());
 				intentForMeetup.putExtra("destAddress", item.getPlace()
 						.getVicinity());
-				// intentForMeetup.putExtra("flagToIdentify", 1);
 				intentForMeetup.putExtra("selectedPlace", item.getPlace());
 				startActivity(intentForMeetup);
 			}
 		});
-
-		// -- for event when Place Pop Up appear -- //
 
 		Button event_btn = (Button) d.findViewById(R.id.event_btn);
 		event_btn.setOnClickListener(new OnClickListener() {
@@ -2155,20 +1722,11 @@ public class HomeActivity extends MapActivity implements
 
 				Intent intentForEvent = new Intent(context,
 						EventNewActivity.class);
-				/*
-				 * intentForMeetup.putExtra("destLat", item.getPlace()
-				 * .getLatitude()); intentForMeetup.putExtra("destLng",
-				 * item.getPlace() .getLongitude());
-				 * intentForMeetup.putExtra("destAddress", item.getPlace()
-				 * .getAddress());
-				 */
 				intentForEvent.putExtra("flag", 1);
 				intentForEvent.putExtra("selectedPlace", item.getPlace());
 				startActivity(intentForEvent);
 			}
 		});
-
-		// -- for recommandation when Place Pop Up appear -- //
 
 		Button recommend_btn = (Button) d.findViewById(R.id.recommend_btn);
 		recommend_btn.setOnClickListener(new OnClickListener() {
@@ -2192,17 +1750,10 @@ public class HomeActivity extends MapActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				// Toast.makeText(context, "Plan feature is coming soon",
-				// Toast.LENGTH_SHORT).show();
 
 				Place place = item.getPlace();
 
 				Intent intent = new Intent(context, PlanCreateActivity.class);
-				/*
-				 * intent.putExtra("destLat", item.getPlace().getLatitude());
-				 * intent.putExtra("destLng", item.getPlace().getLongitude());
-				 * intent.putExtra("destAddress", item.getPlace().getAddress());
-				 */
 
 				intent.putExtra("selectedPlace", place);
 
@@ -2228,14 +1779,8 @@ public class HomeActivity extends MapActivity implements
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				Place place = item.getPlace();
 
 				Intent intent = new Intent(context, DirectionActivity.class);
-				/*
-				 * intent.putExtra("destLat", place.getLatitude());
-				 * intent.putExtra("destLng", place.getLongitude());
-				 * intent.putExtra("destAddress", place.getAddress());
-				 */
 				intent.putExtra("selectedPlace", item.getPlace());
 				Log.d("Place Check", item.getPlace().getName() + " "
 						+ item.getPlace().getVicinity() + " "
@@ -2270,10 +1815,6 @@ public class HomeActivity extends MapActivity implements
 
 		TextView firstName = (TextView) d.findViewById(R.id.first_name_text);
 		firstName.setText(Utility.getFieldText(item.getUser()));
-		/*
-		 * String fName = item.getUser().getFirstName(); if (fName != null &&
-		 * !fName.equals("")) { firstName.setText(fName); }
-		 */
 
 		LinearLayout genderInfoContainer = (LinearLayout) d
 				.findViewById(R.id.genderInfoContainer);
@@ -2311,7 +1852,6 @@ public class HomeActivity extends MapActivity implements
 		if (sName != null && !sName.equals("")) {
 			street.setText(sName);
 		} else {
-			// street.setVisibility(View.GONE);
 		}
 
 		TextView gender = (TextView) d.findViewById(R.id.gender_text);
@@ -2347,10 +1887,9 @@ public class HomeActivity extends MapActivity implements
 		} else {
 			workInfoContainer.setVisibility(View.GONE);
 		}
-		
+
 		ImageView ivOnline = (ImageView) d.findViewById(R.id.ivOnline);
-		if(item.getUser().isOnline())
-		{
+		if (item.getUser().isOnline()) {
 			ivOnline.setImageResource(R.drawable.online);
 		}
 
@@ -2359,17 +1898,7 @@ public class HomeActivity extends MapActivity implements
 		String avatarUrl = item.getUser().getAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			// avatar.setImageResource(R.drawable.icon);
-			/*
-			 * new FetchImageTask() {
-			 * 
-			 * @Override protected void onPostExecute(Bitmap result) { if
-			 * (result != null) { avatar.setImageBitmap(result); } }
-			 * }.execute(item.getUser().getAvatar());
-			 */
 			imageDownloader.download(avatarUrl, avatar);
-
-			// imageLoader.DisplayImage(avatarUrl, avatar, R.drawable.icon);
 		}
 
 		avatar.setOnClickListener(new OnClickListener() {
@@ -2390,7 +1919,6 @@ public class HomeActivity extends MapActivity implements
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
 		Button addFrndBtn = (Button) d.findViewById(R.id.add_frnd_btn);
 		Button directionBtn = (Button) d.findViewById(R.id.directions_btn);
-		// Button profileBtn = (Button) d.findViewById(R.id.profile_btn);
 
 		TextView tvFriendshipStatus = (TextView) d
 				.findViewById(R.id.tvFriendshipStatus);
@@ -2462,26 +1990,13 @@ public class HomeActivity extends MapActivity implements
 			}
 		});
 
-		/*
-		 * profileBtn.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub Intent intent = new Intent(context,
-		 * ProfileActivity2.class); intent.putExtra("otherUser",
-		 * item.getUser()); startActivity(intent); } });
-		 */
-
 		sendMessageBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				// d.dismiss();
+
 				showMessageDialog(item);
-				/*
-				 * Dialog msgDialog = DialogsAndToasts
-				 * .showSendMessage(context); msgDialog.show();
-				 */
 			}
 
 		});
@@ -2501,18 +2016,8 @@ public class HomeActivity extends MapActivity implements
 
 				Intent intent = new Intent(context,
 						MeetupRequestNewActivity.class);
-				/*
-				 * intent.putExtra("destLat", item.getUser().getCurrentLat());
-				 * intent.putExtra("destLng", item.getUser().getCurrentLng());
-				 * intent.putExtra("destAddress",
-				 * item.getUser().getCurrentAddress());
-				 */
 				intent.putExtra("selectedPeople", people);
 				startActivity(intent);
-				/*
-				 * Dialog msgDialog = DialogsAndToasts
-				 * .showSendMessage(context); msgDialog.show();
-				 */
 			}
 
 		});
@@ -2569,14 +2074,11 @@ public class HomeActivity extends MapActivity implements
 		if (sName != null && !sName.equals("")) {
 			street.setText(sName);
 		} else {
-			// street.setVisibility(View.GONE);
 		}
 
 		avatar = (ImageView) d.findViewById(R.id.avater_image);
 		String avatarUrl = secondDegreePeople.getAvatar();
 		if (avatarUrl != null && !avatarUrl.equals("")) {
-
-			// avatar.setImageResource(R.drawable.icon);
 			new FetchImageTask() {
 				@Override
 				protected void onPostExecute(Bitmap result) {
@@ -2585,8 +2087,6 @@ public class HomeActivity extends MapActivity implements
 					}
 				}
 			}.execute(secondDegreePeople.getAvatar());
-
-			// imageLoader.DisplayImage(avatarUrl, avatar, R.drawable.icon);
 		}
 
 		ImageView closeBtn = (ImageView) d.findViewById(R.id.close_btn);
@@ -2599,7 +2099,6 @@ public class HomeActivity extends MapActivity implements
 			}
 		});
 
-		// --- Secondary People's meet up & direction --- //
 		Button meet_up_btn_2 = (Button) d.findViewById(R.id.meet_up_btn_2);
 		meet_up_btn_2.setOnClickListener(new OnClickListener() {
 
@@ -2692,8 +2191,6 @@ public class HomeActivity extends MapActivity implements
 		});
 		msgDialog.show();
 	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private void sendSelfLocationToServer() {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -2823,8 +2320,6 @@ public class HomeActivity extends MapActivity implements
 		Log.d("Send Frnd Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-
 			handleSuccssfulFriendRequest();
 
 			Toast.makeText(context, "Request sent successfully.",
@@ -2866,8 +2361,6 @@ public class HomeActivity extends MapActivity implements
 		}
 
 		StaticValues.searchResult.setPeoples(peopleList);
-
-		// updateMap();
 
 	}
 
@@ -2938,7 +2431,6 @@ public class HomeActivity extends MapActivity implements
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Message sent successfully.",
 					Toast.LENGTH_SHORT).show();
 			msgDialog.dismiss();
@@ -3005,12 +2497,6 @@ public class HomeActivity extends MapActivity implements
 
 	}
 
-	/*
-	 * private void hideShowMarkers(CustomItemizedOverlay<OverlayItem> items,
-	 * boolean flag) { items.setIsVisible(flag); items.hideAllBalloons();
-	 * items.populateItemizedOverlay(); }
-	 */
-
 	private void removeAllItemFromItemizedOverlay(
 			CustomItemizedOverlay<OverlayItem> items) {
 		items.removeAllItem();
@@ -3033,13 +2519,6 @@ public class HomeActivity extends MapActivity implements
 					Constant.PEOPLE, isChecked);
 
 			updateMapDisplay(listContent);
-
-			/*
-			 * if (isChecked) { putPeopleOnMap(); mapView.invalidate(); } else {
-			 * removeAllItemFromItemizedOverlay((CustomItemizedOverlay)
-			 * mapOverlays .get(1)); }
-			 */
-
 		}
 		if (buttonView == placeCheckBox) {
 
@@ -3047,13 +2526,6 @@ public class HomeActivity extends MapActivity implements
 					Constant.PLACE, isChecked);
 
 			updateMapDisplay(listContent);
-
-			/*
-			 * if (isChecked) { putPlacesOnMap(); mapView.invalidate(); } else {
-			 * removeAllItemFromItemizedOverlay((CustomItemizedOverlay)
-			 * mapOverlays .get(2)); }
-			 */
-
 		}
 		if (buttonView == eventCheckBox) {
 
@@ -3061,18 +2533,10 @@ public class HomeActivity extends MapActivity implements
 					Constant.EVENT, isChecked);
 
 			updateMapDisplay(listContent);
-
-			/*
-			 * if (isChecked) { putPlacesOnMap(); mapView.invalidate(); } else {
-			 * removeAllItemFromItemizedOverlay((CustomItemizedOverlay)
-			 * mapOverlays .get(2)); }
-			 */
-
 		}
 		if (buttonView == dealCheckBox) {
 			SharedPreferencesHelper.getInstance(context).setBoolean(
 					Constant.DEAL, isChecked);
-			// Toast.makeText(context, "Deals", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -3130,9 +2594,6 @@ public class HomeActivity extends MapActivity implements
 					FriendListActivity.class);
 			startActivity(messageIntent);
 
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
 		} else if (v == btnCircleMenuItemMessages) {
 			Intent messageIntent = new Intent(getApplicationContext(),
 					MessageActivity.class);
@@ -3142,28 +2603,17 @@ public class HomeActivity extends MapActivity implements
 			Intent messageIntent = new Intent(getApplicationContext(),
 					NewsFeedActivity.class);
 			startActivity(messageIntent);
-
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
 		} else if (v == btnCircleMenuItemPeople) {
 
 			Intent peopleIntent = new Intent(getApplicationContext(),
 					PeopleListActivity.class);
 			startActivity(peopleIntent);
 
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
 		} else if (v == btnCircleMenuItemPlaces) {
 
 			Intent placeIntent = new Intent(getApplicationContext(),
 					PlacesListActivity.class);
 			startActivity(placeIntent);
-
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
 		} else if (v == btnCircleMenuItemProfile) {
 			Intent profileIntent = new Intent(getApplicationContext(),
 					ProfileActivity.class);
@@ -3184,7 +2634,6 @@ public class HomeActivity extends MapActivity implements
 				doSearch();
 			}
 
-			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			if (listMasterContent.size() > 0
 					&& !etSearchField.getText().toString().trim()
@@ -3199,7 +2648,6 @@ public class HomeActivity extends MapActivity implements
 	}
 
 	private void doSearch() {
-		//
 		List<Object> list = Utility.getSearchResult(listMasterContent,
 				etSearchField.getText().toString().trim());
 
@@ -3245,17 +2693,6 @@ public class HomeActivity extends MapActivity implements
 
 				updateLocationSharingPermission();
 			}
-
-			/*
-			 * switch (selectedItem) { case PUBLIC: permissionValue =
-			 * Constant.PERMISSION_PUBLIC; break; case FRIENDS: permissionValue
-			 * = Constant.PERMISSION_FRIENDS; break; case NONE: permissionValue
-			 * = Constant.PERMISSION_NONE; break; case CIRCLES: permissionValue
-			 * = Constant.PERMISSION_CIRCLES; break; case CUSTOM:
-			 * permissionValue = Constant.PERMISSION_CUSTOM;
-			 * showPeoplePicker(shareWithPickerName); break; default:
-			 * permissionValue = Constant.PERMISSION_NONE; break; }
-			 */
 		}
 	}
 
@@ -3285,7 +2722,6 @@ public class HomeActivity extends MapActivity implements
 				e.printStackTrace();
 			}
 
-			// restClient.getResponse();
 			if (restClient.getResponseCode() == Constant.STATUS_SUCCESS) {
 				StaticValues.myInfo.getSettings().setShareLocation(
 						locationSharingPermission.ordinal());
@@ -3295,34 +2731,6 @@ public class HomeActivity extends MapActivity implements
 					+ restClient.getResponse());
 		}
 	};
-
-	/*
-	 * public void showPeoplePicker(String pickerName) { // custom dialog Dialog
-	 * peoplePicker = new PeoplePicker(context, new
-	 * ShareWithPeoplePickerListener(), pickerName, shareWithSelectedFriendList,
-	 * shareWithSelectedCircleList);
-	 * 
-	 * peoplePicker.show(); }
-	 */
-
-	/*
-	 * public class ShareWithPeoplePickerListener implements
-	 * PeoplePickerListener {
-	 * 
-	 * @Override public void onSelect(String pickerName, List<String>
-	 * selectedFriendList, List<String> selectedCircleList, List<String>
-	 * selectedCircleFriendList, List<String> selectedFriendListAll) {
-	 * 
-	 * if (pickerName.equalsIgnoreCase(shareWithPickerName)) {
-	 * shareWithSelectedFriendList = selectedFriendList;
-	 * shareWithSelectedCircleList = selectedCircleList;
-	 * shareWithSelectedCircleFriendList = selectedCircleFriendList;
-	 * shareWithSelectedFriendListAll = selectedFriendListAll; }
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
 
 	private void showFirstTimeDialog(final Context c) {
 
@@ -3343,18 +2751,6 @@ public class HomeActivity extends MapActivity implements
 		// SessionStore.restore(FBUtility.mFacebook, c);
 		SessionEvents.addAuthListener(fbAPIsAuthListener);
 		SessionEvents.addLogoutListener(fbAPIsLogoutListener);
-
-		/*
-		 * btnFBLogin.init(HomeActivity.this,
-		 * Constant.AUTHORIZE_ACTIVITY_RESULT_CODE, FBUtility.mFacebook,
-		 * Constant.facebookPermissions, getString(R.string.connectWithFbLabel),
-		 * getString(R.string.connectWithFbLabel));
-		 */
-		/*
-		 * btnFBLogin.init(HomeActivity.this,
-		 * Constant.AUTHORIZE_ACTIVITY_RESULT_CODE, FBUtility.mFacebook,
-		 * Constant.facebookPermissions);
-		 */
 
 		btnFBLogin.setOnClickListener(new OnClickListener() {
 
@@ -3422,12 +2818,7 @@ public class HomeActivity extends MapActivity implements
 		public void onLogoutFinish() {
 			Log.e("HomeActivity", "You have logged out! ");
 
-			// mahadi:start login again
-			// btnFBLogin.setVisibility(View.GONE);
-			// btnFBLogin2.setVisibility(View.VISIBLE);
 			Utility.setFacebookImage(context, null);
-			// ivFacebookProfile.setImageDrawable(getResources().getDrawable(
-			// R.drawable.icon_facebook));
 
 			FBUtility.mFacebook.authorize(HomeActivity.this,
 					Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH,

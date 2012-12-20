@@ -1,5 +1,10 @@
 package com.socmaps.util;
 
+
+/**
+ * Constant class for providing necessary constant values.
+ *
+ */
 public class Constant {
 
 	final static public String APP_SHARED_PREFS = "com.socmap.socmaps_preferences";
@@ -103,22 +108,22 @@ public class Constant {
 	final static public String smLocationSharingUrl = smServerUrl+"/settings/sharing_privacy_mode";
 
 	/*
-	 * GENERAL STATUS CODE: 400 – Bad Request 401 – Unauthorized, Auth-Token
-	 * missing / Invalid Auth-Token / User not authorized 404 – Not Found, The
-	 * requested resource is not found 501 – Not Implemented, The requested
-	 * endpoint is not implemented (pending or business decision) 503 – Service
+	 * GENERAL STATUS CODE: 400 ï¿½ Bad Request 401 ï¿½ Unauthorized, Auth-Token
+	 * missing / Invalid Auth-Token / User not authorized 404 ï¿½ Not Found, The
+	 * requested resource is not found 501 ï¿½ Not Implemented, The requested
+	 * endpoint is not implemented (pending or business decision) 503 ï¿½ Service
 	 * Unavailable, server or DB down
 	 * 
 	 * GET: Success (content available): 200 Success (no content) : 204 Bad
 	 * Request: 400 Unauthorized: 401
 	 * 
-	 * POST: Created: 201 Expectation Failed: 417 – Required data missing
-	 * Conflict: 409 – The resource already exist (duplicate unique field)
+	 * POST: Created: 201 Expectation Failed: 417 ï¿½ Required data missing
+	 * Conflict: 409 ï¿½ The resource already exist (duplicate unique field)
 	 * 
-	 * PUT: Success: 200 Expectation Failed: 417 – Required data missing
-	 * Conflict: 409 – The resource already exist (duplicate unique field)
+	 * PUT: Success: 200 Expectation Failed: 417 ï¿½ Required data missing
+	 * Conflict: 409 ï¿½ The resource already exist (duplicate unique field)
 	 * 
-	 * DELETE: Success: 200 Not Found: 404 – The requested resource is not found
+	 * DELETE: Success: 200 Not Found: 404 ï¿½ The requested resource is not found
 	 */
 	public final static String UNIT_METRIC = "metric";
 	public final static String UNIT_IMPERIAL = "imperial";

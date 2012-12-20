@@ -13,19 +13,32 @@ import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class SecondDegreePeopleRowFactory2 { 
-	
+
+/**
+ * SecondDegreePeopleRowFactory2 class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class SecondDegreePeopleRowFactory2 {
+
 	/**
-	 * This method returns a View, that view is associates with corresponding layout.  
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param peopleObj an object of type Secondary People. 
-	 * @param con current state of the application/object. 
-	 * @param licl which is used for a specific action when button is clicked.  
-	 * @param convertView as view.  
-	 * @param il which is used to download image from a specific url.  
-	 * @param listItemClickListenerSecondDegreePeople which is used for a specific action when button is clicked. 
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param peopleObj
+	 *            an object of type Secondary People.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerSecondDegreePeople
+	 *            which is used for a specific action when button is clicked.
+	 * @return View
 	 * @see View
 	 */
 
@@ -74,8 +87,6 @@ public class SecondDegreePeopleRowFactory2 {
 				+ Utility.getFormattedDisplayDateForMap(people.getCreateTime());
 		holder.statusText.setText(status);
 
-		// holder.timeText.setVisibility(View.GONE);
-
 		// ******************************************************************current
 		// position
 
@@ -84,8 +95,6 @@ public class SecondDegreePeopleRowFactory2 {
 			holder.addressText.setVisibility(View.VISIBLE);
 		} else
 			holder.addressText.setVisibility(View.GONE);
-
-		// holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
 
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
@@ -99,7 +108,6 @@ public class SecondDegreePeopleRowFactory2 {
 
 		}
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
 		holder.distanceText.setText(Utility.getFormatedDistance(people
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
 
@@ -108,9 +116,6 @@ public class SecondDegreePeopleRowFactory2 {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				// AppStaticStorages.selectedPeople=otherUserEntity;
-				// licl.onMapButtonClick(RowType.PEOPLE.ordinal());
 
 				listItemClickListenerSecondDegreePeople
 						.onShowOnMapButtonClick(people);
@@ -123,24 +128,10 @@ public class SecondDegreePeopleRowFactory2 {
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.download(people.getAvatar(), holder.coverPhoto);
-			
 
 		} else
 			holder.coverPhoto
 					.setImageResource(R.drawable.cover_pic_second_degree);
-
-		// holder.btnSendMessage.setOnClickListener(new View.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // TODO Auto-generated method stub
-		// listItemClickListenerSecondDegreePeople
-		// .onSendMessageButtonClick(people);
-		// }
-		// });
-
-		// holder.btnSendMessage.setVisibility(View.INVISIBLE);
-		// holder.btnSendInvite.setVisibility(View.INVISIBLE);
 
 		return view;
 	}

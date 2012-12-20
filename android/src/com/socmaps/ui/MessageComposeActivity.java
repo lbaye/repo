@@ -33,7 +33,7 @@ import android.widget.Toast;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -61,7 +61,7 @@ public class MessageComposeActivity extends Activity {
 	HashMap<String, Boolean> selectedFriends = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> selectedCircles = new HashMap<String, Boolean>();
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
 	@Override
@@ -71,12 +71,7 @@ public class MessageComposeActivity extends Activity {
 		setContentView(R.layout.message_compose_activity);
 
 		initialize();
-
-		// MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-		// generate list
 		generateList();
-
 		showFriendList();
 	}
 
@@ -85,12 +80,9 @@ public class MessageComposeActivity extends Activity {
 		friendListContainer.removeAllViews();
 		List<People> friends = StaticValues.myInfo.getFriendList();
 
-		// Log.e("Friends count", friends.length+"");
 		if (friends != null) {
 
 			for (int i = 0; i < friends.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
 				View v = getItemViewFriend(friends.get(i));
 				friendListContainer.addView(v);
 			}
@@ -113,9 +105,6 @@ public class MessageComposeActivity extends Activity {
 						}
 					}
 				}
-
-				// View v = getItemViewCircle(circles.get(i));
-				// circleListContainer.addView(v);
 			}
 		}
 
@@ -132,44 +121,25 @@ public class MessageComposeActivity extends Activity {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		/*String firstName = fEntity.getFirstName();
-		String lastName = fEntity.getLastName();*/
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
 
-		String name = ""; 
-		name = Utility.getFieldText(fEntity); 
+		String name = "";
+		name = Utility.getFieldText(fEntity);
 		nameView.setText(name);
-
-		/*if (firstName != null) {
-			name = firstName + " ";
-		}
-		if (lastName != null) {
-			name += lastName;
-		}*/
 
 		selectedFriends.put(id, false);
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
+			imageDownloader.download(avatarUrl, profilePic);
+		}
 
-			/*
-			 * BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource
-			 * ( getResources(), R.drawable.user_default));
-			 * 
-			 * BitmapManager.INSTANCE.loadBitmap(avatarUrl, profilePic, 55, 55);
-			 */
+		if (backupSelectedFriends.containsKey(id)) {
+			boolean preValue = backupSelectedFriends.get(id);
 
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
-
-		} 
-		
-		if(backupSelectedFriends.containsKey(id)) 
-		{
-			boolean preValue = backupSelectedFriends.get(id); 
-			
-			if(preValue) {
-				proficPicContainer.setBackgroundResource(R.color.highlightGreen);
+			if (preValue) {
+				proficPicContainer
+						.setBackgroundResource(R.color.highlightGreen);
 				selectedFriends.put(id, preValue);
 			}
 		}
@@ -233,7 +203,7 @@ public class MessageComposeActivity extends Activity {
 		context = MessageComposeActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		btnFriendSelect = (Button) findViewById(R.id.btnFriendSelect);
 		btnFriendSelect.setOnClickListener(buttonActionListener);
@@ -258,25 +228,11 @@ public class MessageComposeActivity extends Activity {
 		circleListContainer = (LinearLayout) findViewById(R.id.circleListContainer);
 
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
-		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles); 
-		
+		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
+
 		etFriendSearch.addTextChangedListener(filterTextWatcher);
+	}
 
-		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				Log.d("inside On Key", "INSIDE ON KEY");
-				if (event.ACTION_DOWN == 0) {
-					doSearch();
-					Log.d("Do Search", "Do Search Method Called  "
-							+ etFriendSearch.getText().toString().trim()); 
-					//hideKeyBoard2();
-				}
-				return false;
-			}
-		});*/
-
-	} 
-	
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
 		@Override
@@ -291,17 +247,12 @@ public class MessageComposeActivity extends Activity {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			//contentAdapter.getFilter().filter(s); 
-			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			Log.d("Do Search", "Do Search Method Called  "
+					+ etFriendSearch.getText().toString().trim());
 			doSearch();
 		}
 
 	};
-	
-	/*private void hideKeyBoard2() {
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(etFriendSearch.getWindowToken(), 0);
-	}*/
 
 	private void showFriendList() {
 
@@ -378,15 +329,6 @@ public class MessageComposeActivity extends Activity {
 			CheckBox chkCircle = (CheckBox) v.findViewById(R.id.chkCircle);
 			chkCircle.setChecked(isSelect);
 		}
-
-		/*
-		 * Set set = selectedCircles.entrySet(); Iterator iterator =
-		 * set.iterator(); while (iterator.hasNext()) { Map.Entry me =
-		 * (Map.Entry) iterator.next();
-		 * 
-		 * String key = (String) me.getKey(); selectedCircles.put(key,
-		 * isSelect); }
-		 */
 	}
 
 	private void validateNewMessage() {
@@ -524,9 +466,6 @@ public class MessageComposeActivity extends Activity {
 			messageResponse = restClient.getResponse();
 			messageStatus = restClient.getResponseCode();
 
-			// messageResponse = "success";
-			// messageStatus = 201;
-
 			runOnUiThread(sendMessageReturnResponse);
 		}
 	};
@@ -552,14 +491,10 @@ public class MessageComposeActivity extends Activity {
 
 		if (status == Constant.STATUS_CREATED) {
 
-			// etNewMessage.setText("");
 			Toast.makeText(MessageGroupActivity.group,
 					"Message sent successfully.", Toast.LENGTH_SHORT).show();
 
 			MessageGroupActivity.group.back();
-
-			// Toast.makeText(MessageGroupActivity.group,
-			// "Message sent successfully.", Toast.LENGTH_SHORT).show();
 
 		} else {
 			Toast.makeText(MessageGroupActivity.group,
@@ -572,22 +507,16 @@ public class MessageComposeActivity extends Activity {
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 	}
 
 	@Override
@@ -622,7 +551,6 @@ public class MessageComposeActivity extends Activity {
 			} else if (v == btnSend) {
 				hideKeyBoard();
 				validateNewMessage();
-				// MessageComposeActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			} else if (v == btnCancel) {
 				hideKeyBoard();
 				MessageGroupActivity.group.back();
@@ -645,7 +573,6 @@ public class MessageComposeActivity extends Activity {
 				.getText().toString().trim()));
 		friendListContainer.removeAllViews();
 
-		// backUpSelectedFriends = selectedFriends;
 		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
 		selectedFriends.clear();
 		for (int i = 0; i < list.size(); i++) {
@@ -654,14 +581,4 @@ public class MessageComposeActivity extends Activity {
 		}
 
 	}
-
-	/*
-	 * private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
-	 * 
-	 * @Override protected Bitmap doInBackground(String... arg0) { Bitmap b =
-	 * null; try { b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-	 * .getContent()); } catch (MalformedURLException e) { e.printStackTrace();
-	 * } catch (IOException e) { e.printStackTrace(); } return b; } }
-	 */
-
 }

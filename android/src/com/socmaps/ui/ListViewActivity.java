@@ -12,7 +12,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +31,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
@@ -35,7 +40,6 @@ import com.socmaps.entity.Place;
 import com.socmaps.entity.SearchResult;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerPlace;
@@ -84,40 +88,35 @@ public class ListViewActivity extends Activity implements
 			btnCircleMenuItemDeals, btnCircleMenuItemPlaces,
 			btnCircleMenuItemNewsfeed, btnCircleMenuItemSettings;
 
+	double lat;
+	double lng;
+	double latitude, longitude;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_view_layout);
 
 		initialize();
-		
-		
-		
 		getIntentData();
 		setListParameters();
 
 	}
-	
-
-	
 
 	/** Register for the updates when Activity is in foreground */
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		
+
 		setCheckBoxSelection();
 		setOnCheckChangeListener();
-		
+
 		populateMasterList();
 
 		updateContentList(listMasterContent);
 		updateDisplayList(listContent);
-		
-		
-
 	}
 
 	private void setListParameters() {
@@ -133,7 +132,6 @@ public class ListViewActivity extends Activity implements
 		contentListView.setDivider(new GradientDrawable(Orientation.TOP_BOTTOM,
 				colors));
 		contentListView.setDividerHeight(2);
-
 	}
 
 	private void getIntentData() {
@@ -174,7 +172,6 @@ public class ListViewActivity extends Activity implements
 		btnListView.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.icon_list_view_selected));
 
-		
 		topCloseButton = (Button) topDrawer.findViewById(R.id.topHandle);
 		bottomCloseButton = (Button) bottomDrawer
 				.findViewById(R.id.bottomHandle);
@@ -219,9 +216,6 @@ public class ListViewActivity extends Activity implements
 		btnCircleMenuItemNewsfeed.setOnClickListener(this);
 		btnCircleMenuItemSettings = (Button) findViewById(R.id.btnCircleMenuItemSettings);
 		btnCircleMenuItemSettings.setOnClickListener(this);
-
-		// objects=new ArrayList<Object>();
-
 	}
 
 	private void setOnCheckChangeListener() {
@@ -309,11 +303,6 @@ public class ListViewActivity extends Activity implements
 	private void sortMasterListData() {
 		Collections.sort(this.listMasterContent, new ListComparator());
 	}
-
-	/*
-	 * private void sortDisplayableListData() {
-	 * Collections.sort(this.listDisplayableContent, new ListComparator()); }
-	 */
 
 	class ListComparator implements Comparator<Object> {
 
@@ -469,16 +458,12 @@ public class ListViewActivity extends Activity implements
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		// private ImageLoader imageLoader;
 
-		private ImageDownloader imageDownloader;// = new ImageDownloader();
+		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			// imageLoader = new ImageLoader(context);
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 
 		}
@@ -541,10 +526,6 @@ public class ListViewActivity extends Activity implements
 			}
 		}
 
-		public ImageDownloader getImageDownloader() {
-			return imageDownloader;
-		}
-
 	}
 
 	private class PeopleItemListener implements ListItemClickListenerPeople {
@@ -554,25 +535,11 @@ public class ListViewActivity extends Activity implements
 			// TODO Auto-generated method stub
 			// send user to profile screen with people object
 
-			/*
-			 * Log.d("People Info",
-			 * "Avater: "+people.getAvatar()+"~"+"CoverPhoto: "
-			 * +people.getCoverPhoto()+"~"+"Reg Media: "+
-			 * people.getRegMedia()+"~"+
-			 * "First Name: "+people.getFirstName()+"~"
-			 * +"Last Name: "+people.getLastName
-			 * ()+"~"+"Status: "+people.getStatusMsg
-			 * ()+"~"+"Address: "+people.getStreetAddress()+
-			 * "~"+"Last Log: "+people
-			 * .getLastLogIn()+"~"+"Age: "+people.getAge()
-			 * +"~"+"RShip Status: "+people
-			 * .getRelationshipStatus()+"~"+"City: "+ people.getCity()+
-			 * "~"+"Work Info: "+people.getWorkStatus());
-			 */
-
 			Intent intent = new Intent(context, ProfileActivity2.class);
 			intent.putExtra("otherUser", people);
+			Log.d("People Age", people.getAge() + "");
 			startActivity(intent);
+			finish();
 
 		}
 
@@ -612,6 +579,7 @@ public class ListViewActivity extends Activity implements
 
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
+
 			finish();
 
 		}
@@ -774,7 +742,6 @@ public class ListViewActivity extends Activity implements
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
-			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
@@ -791,8 +758,6 @@ public class ListViewActivity extends Activity implements
 			Intent friendIntent = new Intent(getApplicationContext(),
 					FriendListActivity.class);
 			startActivity(friendIntent);
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemMessages) {
 			Intent messageIntent = new Intent(context, MessageActivity.class);
@@ -802,25 +767,34 @@ public class ListViewActivity extends Activity implements
 			Intent messageIntent = new Intent(getApplicationContext(),
 					NewsFeedActivity.class);
 			startActivity(messageIntent);
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
-
 		} else if (v == btnCircleMenuItemPeople) {
-
 			Intent peopleIntent = new Intent(getApplicationContext(),
 					PeopleListActivity.class);
 			startActivity(peopleIntent);
 
-			// Toast.makeText(context, "Coming soon People functionality.",
-			// Toast.LENGTH_SHORT).show();
+		} else if (v == btnCircleMenuItemPlaces) {
+			getLocationLatLong();
+
+			Intent directionIntent = new Intent(context,
+					DirectionActivity.class);
+
+			directionIntent.putExtra("sourceLat", latitude);
+			directionIntent.putExtra("sourceLng", longitude);
+			directionIntent
+					.putExtra("sourceAddress", "R#1, H#2, Banani, Dhaka");
+
+			directionIntent.putExtra("destLat", 23.74866);
+			directionIntent.putExtra("destLng", 90.37388);
+			directionIntent.putExtra("destAddress", "R#11, Dhanmondi, Dhaka");
+
+			finish();
+			startActivity(directionIntent);
 
 		} else if (v == btnCircleMenuItemPlaces) {
 
 			Intent placeIntent = new Intent(getApplicationContext(),
 					PlacesListActivity.class);
 			startActivity(placeIntent);
-			// Toast.makeText(context, "Coming soon.",
-			// Toast.LENGTH_SHORT).show();
 
 		} else if (v == btnCircleMenuItemProfile) {
 			Intent profileIntent = new Intent(context, ProfileActivity.class);
@@ -833,6 +807,46 @@ public class ListViewActivity extends Activity implements
 		}
 	}
 
+	private void getLocationLatLong() {
+		LocationManager locManager;
+		locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L,
+				500.0f, locationListener);
+		Location location = locManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (location != null) {
+			latitude = location.getLatitude();
+			longitude = location.getLongitude();
+		}
+	}
+
+	private void updateWithNewLocation(Location location) {
+		String latLongString = "";
+		if (location != null) {
+			lat = location.getLatitude();
+			lng = location.getLongitude();
+			latLongString = "Lat:" + lat + "\nLong:" + lng;
+		} else {
+			latLongString = "No location found";
+		}
+	}
+
+	private final LocationListener locationListener = new LocationListener() {
+		public void onLocationChanged(Location location) {
+			updateWithNewLocation(location);
+		}
+
+		public void onProviderDisabled(String provider) {
+			updateWithNewLocation(null);
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+	};
+
 	@Override
 	public void onMapButtonClick(int flag) {
 		Intent intent = new Intent(context, ShowItemOnMap.class);
@@ -841,7 +855,6 @@ public class ListViewActivity extends Activity implements
 	}
 
 	private void doSearch() {
-		//
 		List<Object> list = (Utility.getSearchResult(listMasterContent,
 				etSearchField.getText().toString().trim()));
 

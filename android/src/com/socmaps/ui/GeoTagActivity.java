@@ -1,9 +1,5 @@
 package com.socmaps.ui;
 
-/*public class GeoTagActivity extends Activity {
-
- }*/
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,7 +25,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -56,7 +51,7 @@ import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.Circle;
 import com.socmaps.entity.People;
 import com.socmaps.entity.Place;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
@@ -95,7 +90,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	String responseString;
 	int responseStatus = 0;
 
-	// ExpandablePanel shareWithPanel, invitePeoplePanel;
 	ButtonActionListener buttonActionListener;
 
 	private LayoutInflater inflater;
@@ -115,16 +109,15 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	String shareWithPickerName = "sharewith";
 
 	String eventName = "", eventSummary = "", eventDescription = "",
-	/* eventDateString = "", */eventAddress = "", eventListItem = "";
+			eventAddress = "", eventListItem = "";
 	double eventLat = 0, eventLng = 0;
 
-	// Uri imageUri;
 	Bitmap eventPicture;
 	Calendar now = Calendar.getInstance();
 
 	String permissionValue = "";
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 	HashMap<String, Boolean> backupSelectedFriends = new HashMap<String, Boolean>();
 
 	@Override
@@ -133,11 +126,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		setContentView(R.layout.geo_tag_test);
 
 		initialize();
-
-		// setExpandListener();
-
 		addLocationRadioGroup();
-
 		generateFriendList();
 		showFriendList();
 	}
@@ -165,9 +154,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// Intent intent = new Intent(context, EventListActivity.class);
 			finish();
-			// startActivity(intent);
 		}
 		return false;
 
@@ -185,7 +172,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		context = GeoTagActivity.this;
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		buttonActionListener = new ButtonActionListener();
 
@@ -215,9 +202,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		ivEventImage = (ImageView) findViewById(R.id.ivEventImage);
 		ivEventImage.setOnClickListener(buttonActionListener);
 
-		// invitePeoplePanel = (ExpandablePanel)
-		// findViewById(R.id.invitePeoplePanel);
-
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -236,24 +220,11 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		scrollViewFriends = (ScrollView) findViewById(R.id.scrollViewFriends);
 		scrollViewCircles = (ScrollView) findViewById(R.id.scrollViewCircles);
 
-		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer); 
-		
+		locationRadioGroupContainer = (LinearLayout) findViewById(R.id.locationRadioGroupContainer);
+
 		etFriendSearch.addTextChangedListener(filterTextWatcher);
+	}
 
-		/*etFriendSearch.setOnKeyListener(new EditText.OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				Log.d("inside On Key", "INSIDE ON KEY");
-				if (event.ACTION_DOWN == 0) {
-					doSearch();
-					Log.d("Do Search", "Do Search Method Called  "
-							+ etFriendSearch.getText().toString().trim());
-				}
-				return false;
-			}
-		});*/
-
-	} 
-	
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
 		@Override
@@ -268,8 +239,8 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			//contentAdapter.getFilter().filter(s); 
-			Log.d("Do Search", "Do Search Method Called  "+ etFriendSearch.getText().toString().trim());
+			Log.d("Do Search", "Do Search Method Called  "
+					+ etFriendSearch.getText().toString().trim());
 			doSearch();
 		}
 
@@ -295,8 +266,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 	}
 
-	
-
 	private class ButtonActionListener implements OnClickListener {
 
 		@Override
@@ -310,8 +279,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				startActivity(notificationIntent);
 			} else if (v == btnSave) {
 				validateEvent();
-				// Toast.makeText(context, "Coming Soon",
-				// Toast.LENGTH_SHORT).show();
 			}
 
 			else if (v == btnCancel) {
@@ -368,11 +335,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 						String listItem1 = listItem.toLowerCase().toString();
 						eventListItem = listItem1.replace(" ", "_")
 								.toLowerCase();
-						/*
-						 * Toast.makeText( getApplicationContext(),
-						 * relArray[position] + " " + listItem + " " + listItem1
-						 * + " " + eventListItem, Toast.LENGTH_SHORT) .show();
-						 */
 						Log.d("Item Selection", relArray[position] + " "
 								+ listItem + " " + listItem1 + " "
 								+ eventListItem);
@@ -503,9 +465,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 					Toast.LENGTH_SHORT).show();
 
 			finish();
-			// Intent intent = new Intent(context, ProfileActivity.class);
-			// startActivity(intent);
-
 		} else {
 			Toast.makeText(context, "Failed. Please try again.",
 					Toast.LENGTH_SHORT).show();
@@ -513,25 +472,15 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 	}
 
-	private void showPeoplePicker(String pickerName) {
-		// custom dialog
-		Dialog peoplePicker = new PeoplePicker(context, this, pickerName,
-				shareWithSelectedFriendList, shareWithSelectedCircleList);
-
-		peoplePicker.show();
-	}
 
 	private void generateFriendList() {
 
 		friendListContainer.removeAllViews();
 		List<People> friends = StaticValues.myInfo.getFriendList();
 
-		// Log.e("Friends count", friends.length+"");
 		if (friends != null) {
 
 			for (int i = 0; i < friends.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
 				View v = getItemViewFriend(friends.get(i));
 				friendListContainer.addView(v);
 			}
@@ -541,8 +490,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		List<Circle> circles = StaticValues.myInfo.getCircleList();
 		if (circles != null) {
 			for (int i = 0; i < circles.size(); i++) {
-				// Log.e("FriendList",
-				// friends[i].getId()+", "+friends[i].getFirstName());
 
 				String circleId = circles.get(i).getId();
 				if (circleId != null) {
@@ -572,10 +519,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		final LinearLayout proficPicContainer = (LinearLayout) v
 				.findViewById(R.id.proficPicContainer);
 
-		/*
-		 * String firstName = fEntity.getFirstName(); String lastName =
-		 * fEntity.getLastName();
-		 */
 		final String id = fEntity.getId();
 		String avatarUrl = fEntity.getAvatar();
 
@@ -583,18 +526,11 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		name = Utility.getFieldText(fEntity);
 		nameView.setText(name);
 
-		/*
-		 * if (firstName != null) { name = firstName + " "; } if (lastName !=
-		 * null) { name += lastName; }
-		 */
-
 		selectedFriends.put(id, false);
-
 
 		if (avatarUrl != null && !avatarUrl.equals("")) {
 
-			imageLoader.DisplayImage(avatarUrl, profilePic,
-					R.drawable.user_default);
+			imageDownloader.download(avatarUrl, profilePic);
 
 		}
 
@@ -883,9 +819,9 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constant.REQUEST_CODE_CAMERA) {
 			if (resultCode == RESULT_OK) {
-				// eventPicture = (Bitmap) data.getExtras().get("data");
+
 				if (eventPicture != null) {
-					// eventPicture.recycle();
+
 				}
 				eventPicture = Utility.resizeBitmap((Bitmap) data.getExtras()
 						.get("data"), Constant.eventPhotoWidth, 0, true);
@@ -899,52 +835,18 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				
 
 				Uri selectedImage = data.getData();
-	            try {
-					eventPicture = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.eventPhotoWidth, 0, true);
-					
+				try {
+					eventPicture = Utility.resizeBitmap(Utility.decodeUri(
+							selectedImage, getContentResolver()),
+							Constant.eventPhotoWidth, 0, true);
+
 					ivEventImage.setImageBitmap(eventPicture);
-					
+
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}  catch (OutOfMemoryError e) {
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
-					Log.e("Gallery image", "OutOfMemoryError");
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-				
-				/* Uri imageUri = data.getData();
-				try {
-					// eventPicture =
-					// MediaStore.Images.Media.getBitmap(this.getContentResolver(),
-					// imageUri);
-
-					if (eventPicture != null) {
-						// eventPicture.recycle();
-					}
-					eventPicture = Utility
-							.resizeBitmap(
-									MediaStore.Images.Media.getBitmap(
-											this.getContentResolver(),
-											data.getData()),
-									Constant.eventPhotoWidth,
-									Constant.eventPhotoHeight);
-
-					ivEventImage.setImageBitmap(eventPicture);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (OutOfMemoryError e) {
 					Toast.makeText(context,
 							getString(R.string.errorMessageGallery),
@@ -957,7 +859,7 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
-				}*/
+				}
 			}
 		} else if (requestCode == Constant.REQUEST_CODE_MAP_PICKER
 				&& resultCode == RESULT_OK) {
@@ -1112,7 +1014,6 @@ public class GeoTagActivity extends Activity implements PeoplePickerListener {
 				.getText().toString().trim()));
 		friendListContainer.removeAllViews();
 
-		// backUpSelectedFriends = selectedFriends;
 		backupSelectedFriends = new HashMap<String, Boolean>(selectedFriends);
 		selectedFriends.clear();
 		for (int i = 0; i < list.size(); i++) {

@@ -38,7 +38,6 @@ public class BroadcastService extends Service {
 	private void DisplayLoggingInfo() {
 		Log.d(TAG, "entered DisplayLoggingInfo");
 
-		// intent.putExtra("time", new Date().toLocaleString());
 		intent.putExtra("counter", String.valueOf(++counter));
 		sendBroadcast(intent);
 	}

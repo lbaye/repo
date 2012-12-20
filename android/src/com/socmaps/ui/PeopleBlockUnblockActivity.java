@@ -10,8 +10,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,14 +38,12 @@ import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPeople;
-import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
 import com.socmaps.listrow.PeopleRowFactoryBlockUnblock;
 import com.socmaps.listrow.RowType;
 import com.socmaps.util.BackProcess;
 import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
@@ -57,20 +53,15 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		OnClickListener, ListItemClickListener {
 
 	private Context context;
-	private ProgressDialog m_ProgressDialog;
-	View requestItemView;
-
 	private boolean isSearchEnabled = false;
-	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel,
-			btnDoSearch, btnClearSearch, btnSeleceUnselectAllUser,
-			btnCancelInvite, topCloseButton, btnBack, btnInvitePeople,
-			btnCirclePeople, btnBlockUnblockPeople, btnSelectedFriends,
-			btnPeopleByDistance;
+	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch,
+			btnSeleceUnselectAllUser, btnCancelInvite, btnBack,
+			btnInvitePeople, btnCirclePeople, btnBlockUnblockPeople,
+			btnSelectedFriends, btnPeopleByDistance;
 
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
 
-	// private int colorButtonSelected;
 	private List<Object> listMasterContent;
 	private List<Object> listContent;
 	private List<Object> listDisplayableContent;
@@ -78,21 +69,9 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
 
-	private Dialog msgDialog;
-	private String sendMessageFriendId = "";
-	private String sendMessageSubject = "";
-	private String sendMessageContent = "";
-	private String sendMessageResponse = "";
-	private int sendMessageStatus = 0;
-
 	private boolean isAllSelect = false;
 
 	private HashMap<String, Boolean> selectedArrayList;
-
-	private String blockUnblockResponse;
-	private int blockUnblockStatus;
-	private String unblockId;
-	private String blockId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +103,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		context = PeopleBlockUnblockActivity.this;
 
 		selectedArrayList = new HashMap<String, Boolean>();
-		// colorButtonSelected = getResources().getColor(R.color.gray_light);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -174,13 +152,15 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
+		Utility.hideKeyboardContext(context);
+		
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
 			hideKeybord();
-			// toggleSearchPanel();
+
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
@@ -213,24 +193,17 @@ public class PeopleBlockUnblockActivity extends Activity implements
 			finish();
 		} else if (v == btnBlockUnblockPeople) {
 
-			// Intent blickUnblockiIntent = new Intent(getApplicationContext(),
-			// PeopleBlockUnblockActivity.class);
-			// blickUnblockiIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// startActivity(blickUnblockiIntent);
-			// finish();
-
 		} else if (v == btnSeleceUnselectAllUser) {
 
 			isAllSelect = !isAllSelect;
 
 			String unit = "";
 			if (isAllSelect) {
-				// StaticValues.PEOPLE_SELECT_ALL_USERS = false;
+
 				btnSeleceUnselectAllUser
 						.setText(getString(R.string.unselectAllLabel));
 				unit = getString(R.string.unselectAllLabel);
 			} else {
-				// StaticValues.PEOPLE_SELECT_ALL_USERS = true;
 
 				btnSeleceUnselectAllUser
 						.setText(getString(R.string.selectAllLabel));
@@ -271,21 +244,18 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 			for (String key : selectedArrayList.keySet()) {
 
-				// Log.w("key ", key);
-
 				boolean value = selectedArrayList.get(key);
 
 				if (value) {
-					// Log.i("People Id: " + key, "isChecked: " + value);
+
 					checkCounter++;
 				}
 
 			}
 			Log.i("Total Checked:", "" + checkCounter);
 
-			//sendSelectedPeopleToServer();
 			blockOrUnblockSelectedUsers();
-			
+
 		} else if (v == btnBack) {
 
 			finish();
@@ -294,327 +264,30 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 	}
 
-	/*
-	 * Do Individual UnBlock
-	 */
-//	private void sendUnBlockToServer() {
-//		// TODO Auto-generated method stub
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			Thread thread = new Thread(null, unBlockThread,
-//					"Start send block  to server");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true, true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable unBlockThread = new Runnable() {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			RestClient restClient = new RestClient(Constant.smUnBlockUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			if (unblockId != null) {
-//				restClient.AddParam("users[]", unblockId);
-//			}
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.PUT);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			blockUnblockResponse = restClient.getResponse();
-//			blockUnblockStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(unblockReturnResponse);
-//		}
-//	};
-//
-//	private Runnable unblockReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseUnBlock(blockUnblockStatus, blockUnblockResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if (m_ProgressDialog != null) {
-//				m_ProgressDialog.dismiss();
-//			}
-//
-//		}
-//	};
-//
-//	public void handleResponseUnBlock(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.w("Send Unblock  Return Response", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_SUCCESS:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Unblocked successfully.",
-//					Toast.LENGTH_SHORT).show();
-//
-//			for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-//
-//				People p = StaticValues.searchResult.getPeoples().get(i);
-//				if (unblockId.equals(p.getId())) {
-//					StaticValues.searchResult.getPeoples().get(i)
-//							.setBlocked(false);
-//					break;
-//				}
-//
-//			}
-//
-//			populateListData();
-//
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"An unknown error occured. Please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
-
-	/*
-	 * Do Individual Block
-	 */
-//	private void sendBlockToServer() {
-//		// TODO Auto-generated method stub
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			Thread thread = new Thread(null, blockThread,
-//					"Start send block  to server");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true, true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable blockThread = new Runnable() {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			RestClient restClient = new RestClient(Constant.smBlockUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			if (blockId != null) {
-//				restClient.AddParam("users[]", blockId);
-//			}
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.PUT);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			blockUnblockResponse = restClient.getResponse();
-//			blockUnblockStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(blockReturnResponse);
-//		}
-//	};
-//
-//	private Runnable blockReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseBlock(blockUnblockStatus, blockUnblockResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if (m_ProgressDialog != null) {
-//				m_ProgressDialog.dismiss();
-//			}
-//		}
-//	};
-//
-//	public void handleResponseBlock(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Block  Return Response", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_SUCCESS:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Blocked successfully.", Toast.LENGTH_SHORT)
-//					.show();
-//
-//			for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-//
-//				People p = StaticValues.searchResult.getPeoples().get(i);
-//				if (blockId.equals(p.getId())) {
-//					StaticValues.searchResult.getPeoples().get(i)
-//							.setBlocked(true);
-//					break;
-//				}
-//
-//			}
-//			populateListData();
-//
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"An unknown error occured. Please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
-
-	/*
-	 * Do Block or Unblock Selected users
-	 */
-//	private void sendSelectedPeopleToServer() {
-//		// TODO Auto-generated method stub
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			Thread thread = new Thread(null, blockOrUnblockThread,
-//					"Start send block unblock list to server");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true, true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable blockOrUnblockThread = new Runnable() {
-//		@Override
-//		public void run() {
-//
-//			RestClient restClient = new RestClient(Constant.smBlockUnblockUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			for (String key : selectedArrayList.keySet()) {
-//
-//				boolean value = selectedArrayList.get(key);
-//
-//				if (value) {
-//
-//					restClient.AddParam("users[]", key);
-//				}
-//
-//			}
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.PUT);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			blockUnblockResponse = restClient.getResponse();
-//			blockUnblockStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(blockUnblockReturnResponse);
-//		}
-//	};
-//
-//	private Runnable blockUnblockReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseBlockUnblock(blockUnblockStatus, blockUnblockResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if (m_ProgressDialog != null) {
-//				m_ProgressDialog.dismiss();
-//			}
-//		}
-//	};
-//
-//	public void handleResponseBlockUnblock(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Block Unblock Return Response", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_SUCCESS:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Request sent successfully.",
-//					Toast.LENGTH_SHORT).show();
-//
-//			for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-//
-//				People p = StaticValues.searchResult.getPeoples().get(i);
-//
-//				StaticValues.searchResult.getPeoples().get(i)
-//						.setBlocked(selectedArrayList.get(p.getId()));
-//
-//			}
-//
-//			populateListData();
-//
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"An unknown error occured. Please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
-
-	//Another way**************
 	private void blockOrUnblockSelectedUsers() {
 
-			String url = Constant.smBlockUnblockUrl;
+		String url = Constant.smBlockUnblockUrl;
 
-			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			for (String key : selectedArrayList.keySet()) {
+		for (String key : selectedArrayList.keySet()) {
 
-				boolean value = selectedArrayList.get(key);
+			boolean value = selectedArrayList.get(key);
 
-				if (value) {
+			if (value) {
 
-					params.add(new BasicNameValuePair("users[]", key));
-				}
-
+				params.add(new BasicNameValuePair("users[]", key));
 			}
 
-			BackProcess backProcess = new BackProcess(context, params, url,
-					REQUEST_TYPE.GET_SERVER_DATA, true, getResources()
-							.getString(R.string.please_wait_text),
-					getResources().getString(R.string.sending_request_text),
-					new BackProcessCallBackListener(),true);
+		}
 
-			backProcess.execute(RestClient.RequestMethod.PUT);
+		BackProcess backProcess = new BackProcess(context, params, url,
+				REQUEST_TYPE.GET_SERVER_DATA, true, getResources().getString(
+						R.string.please_wait_text), getResources().getString(
+						R.string.sending_request_text),
+				new BackProcessCallBackListener(), true);
+
+		backProcess.execute(RestClient.RequestMethod.PUT);
 
 	}
 
@@ -628,7 +301,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 					status + ":" + result);
 			switch (status) {
 			case Constant.STATUS_SUCCESS:
-				// Log.d("Login", status+":"+response);
 				Toast.makeText(context, "Request sent successfully.",
 						Toast.LENGTH_SHORT).show();
 
@@ -639,8 +311,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 					StaticValues.searchResult.getPeoples().get(i)
 							.setBlocked(selectedArrayList.get(p.getId()));
-					
-					
+
 					StaticValues.searchResult.getPeoples().get(i).setUnit("");
 
 				}
@@ -660,8 +331,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		}
 
 	}
-
-	// **********************************
 
 	private void setListParameters() {
 
@@ -698,8 +367,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			// imageDownloader = new ImageDownloader();
-			// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 		}
 
@@ -744,16 +411,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 						LayoutInflater.from(context), items.get(position),
 						context, PeopleBlockUnblockActivity.this, convertView,
 						imageDownloader, new PeopleItemListener());
-			}
-
-			// if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal())
-			// {
-			// return SecondDegreePeopleRowFactoryBlockUnblock.getView(
-			// LayoutInflater.from(context), items.get(position),
-			// context, PeopleBlockUnblockActivity.this, convertView,
-			// imageLoader, new SecondDegreePeopleItemListener());
-			// }
-			else {
+			} else {
 				return null;
 			}
 
@@ -823,19 +481,11 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		}
 	}
 
-	private void addSecondDegreePeoplesToMasterList() {
-		for (int i = 0; i < peoplesAndPlacesEntity.getSecondDegreePeoples()
-				.size(); i++) {
-			listMasterContent.add(peoplesAndPlacesEntity
-					.getSecondDegreePeoples().get(i));
-		}
-	}
-
 	private void sortMasterListData() {
 		Collections.sort(this.listMasterContent, new ListComparator());
 	}
 
-	class ListComparator implements Comparator<Object> {
+	private class ListComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object first, Object last) {
@@ -890,25 +540,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		@Override
 		public void onBlockButtonClick(People people) {
 			// TODO Auto-generated method stub
-
-			Log.w("PeopleBlockUnblockActivity", "onBlockButtonClick");
-
-			if (people.isBlocked()) {
-
-				// Log.w("PeopleBlockUnblockActivity ",
-				// "onBlockButtonClick if people.isBlocked(): "+people.isBlocked());
-
-				unblockId = people.getId();
-				//sendUnBlockToServer();
-			} else {
-
-				// Log.w("PeopleBlockUnblockActivity",
-				// "onBlockButtonClick else  people.isBlocked(): "+people.isBlocked());
-
-				blockId = people.getId();
-				//sendBlockToServer();
-			}
-
 		}
 
 		@Override
@@ -920,11 +551,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		@Override
 		public void onShowOnMapButtonClick(People people) {
 			// TODO Auto-generated method stub
-
-			// StaticValues.isHighlightAnnotation = true;
-			// StaticValues.highlightAnnotationItem = people;
-			// finish();
-
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
 
@@ -937,7 +563,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		@Override
 		public void onSendMessageButtonClick(People people) {
 			// TODO Auto-generated method stub
-			//showMessageDialog(people);
+			
 		}
 
 		@Override
@@ -954,72 +580,7 @@ public class PeopleBlockUnblockActivity extends Activity implements
 
 	}
 
-	private class SecondDegreePeopleItemListener implements
-			ListItemClickListenerSecondDegreePeople {
 
-		@Override
-		public void onItemClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onArrowButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onInviteButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onAddFriendButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onBlockButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onUnBlockButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShowOnMapButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-			finish();
-		}
-
-		@Override
-		public void onSendMessageButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onMeetupButtonClick(SecondDegreePeople people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCheckChange(String itemId, boolean isChecked) {
-			// TODO Auto-generated method stub
-			selectedArrayList.put(itemId, isChecked);
-		}
-
-	}
 
 	@Override
 	public void onMapButtonClick(int flag) {
@@ -1029,158 +590,15 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		startActivity(intent);
 	}
 
-	/*
-	 * Send Message to individual Person
-	 */
-//	private void showMessageDialog(final People people) {
-//		// TODO Auto-generated method stub
-//		msgDialog = DialogsAndToasts.showSendMessage(context);
-//		final EditText msgEditText = (EditText) msgDialog
-//				.findViewById(R.id.message_body_text);
-//		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
-//		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
-//		send.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				if (!msgEditText.getText().toString().trim().equals("")) {
-//					sendMessage(people.getId(), "Message", msgEditText
-//							.getText().toString().trim());
-//				} else {
-//					msgEditText.setError("Please enter your message!!");
-//				}
-//
-//				hideMessageDialogKeybord(msgEditText);
-//			}
-//		});
-//		cancel.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//
-//				hideMessageDialogKeybord(msgEditText);
-//				msgDialog.dismiss();
-//
-//			}
-//		});
-//		msgDialog.show();
-//	}
-//
-//	public void sendMessage(String friendId, String subject, String content) {
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			sendMessageFriendId = friendId;
-//			sendMessageSubject = subject;
-//			sendMessageContent = content;
-//
-//			Thread thread = new Thread(null, sendMessageThread,
-//					"Start send message");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true, true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable sendMessageThread = new Runnable() {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			restClient.AddParam("recipients[]", sendMessageFriendId);
-//			restClient.AddParam("subject", sendMessageSubject);
-//			restClient.AddParam("content", sendMessageContent);
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.POST);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			sendMessageResponse = restClient.getResponse();
-//			sendMessageStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(sendMessageReturnResponse);
-//		}
-//	};
-//
-//	private Runnable sendMessageReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if (m_ProgressDialog != null) {
-//				m_ProgressDialog.dismiss();
-//			}
-//		}
-//	};
-//
-//	public void handleResponseSendMessage(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Message", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_CREATED:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Message sent successfully.",
-//					Toast.LENGTH_SHORT).show();
-//			msgDialog.dismiss();
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"Message not delivered,please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
+	
 
 	/*
 	 * Hide Keybord
 	 */
 
 	private void hideKeybord() {
-
-		// etSearchField
-		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		//
-		// public void onFocusChange(View v, boolean flag) {
-		// if (flag == false) {
-		// InputMethodManager inputMethodManager = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// inputMethodManager.hideSoftInputFromWindow(
-		// v.getWindowToken(), 0);
-		// }
-		// }
-		// });
-
 		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-	}
-
-	protected void hideMessageDialogKeybord(EditText msgEditText) {
-		// TODO Auto-generated method stub
-
-		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-
 	}
 
 	/*
@@ -1238,9 +656,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		// StaticValues.PEOPLE_SELECT_ALL_USERS = false;
-
-		Log.w("PeopleBlockUnblockActivity", "onStop");
 
 	}
 
@@ -1250,8 +665,6 @@ public class PeopleBlockUnblockActivity extends Activity implements
 		super.onDestroy();
 
 		for (int i = 0; i < StaticValues.searchResult.getPeoples().size(); i++) {
-
-			People p = StaticValues.searchResult.getPeoples().get(i);
 
 			StaticValues.searchResult.getPeoples().get(i).setUnit("");
 

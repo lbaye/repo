@@ -11,6 +11,10 @@ import com.socmaps.entity.Place;
 import com.socmaps.entity.PlatformsPreferences;
 import com.socmaps.entity.SearchResult;
 
+/**
+ * StaticValues class for providing some data which is reusable.
+ *
+ */
 public class StaticValues {
 
 	public static MyInfo myInfo = null;

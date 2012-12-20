@@ -20,7 +20,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.socmaps.entity.People;
@@ -40,22 +39,21 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			btnDeletePhotos, btnMyPhotos;
 
 	private ImageView ivSeperator;
-	private TextView tvPhotos;
 
-	ProgressDialog mProgressDialog;
+	private ProgressDialog mProgressDialog;
 
 	private LinearLayout listContainer;
 	private List<Photo> photoList;
-	LinearLayout buttonContainerBottom, buttonContainerTop;
+	private LinearLayout buttonContainerBottom, buttonContainerTop;
 	private LayoutInflater inflater;
 
-	HashMap<String, Boolean> selectedPhoto;
+	private HashMap<String, Boolean> selectedPhoto;
 
-	String responseString = "";
-	int responseStatus = 0;
+	private String responseString = "";
+	private int responseStatus = 0;
 
-	ImageDownloader imageDownloader;
-	String userID = null;
+	private ImageDownloader imageDownloader;
+	private String userID = null;
 	private People people;
 
 	static boolean isUploadNewPhoto = false;
@@ -84,9 +82,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// Log.d("onResume PhotoListActivity",
-		// getIntent().getIntExtra("IS_UPLOAD_NEW_PHOTO", 0) + " ");
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
 
@@ -124,7 +119,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		btnDeletePhotos.setOnClickListener(this);
 
 		ivSeperator = (ImageView) findViewById(R.id.ivSeparator);
-		tvPhotos = (TextView) findViewById(R.id.tvPhotos);
 
 		listContainer = (LinearLayout) findViewById(R.id.listContainer);
 		buttonContainerTop = (LinearLayout) findViewById(R.id.buttonContainerTop);
@@ -133,9 +127,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		selectedPhoto = new HashMap<String, Boolean>();
-
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		if (userID != null) {
@@ -158,7 +149,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 			Intent uploadPhotoIntent = new Intent(context,
 					PhotoUploadNewPhotoActivity.class);
 			startActivity(uploadPhotoIntent);
-			// finish();
 
 		} else if (v == btnDeletePhotos) {
 			initiateDeletePhotos();
@@ -260,20 +250,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 						LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
 
-				// String[] URLS = new String[photoList.size()];
-				//
-				// for (int i = 0; i < photoList.size(); i++) {
-				// URLS[i] = photoList.get(i).getImageLarge();
-				//
-				// }
-				//
-				// Intent zoomIntent = new Intent(context,
-				// PhotoZoomActivity.class);
-				// zoomIntent.putExtra("PHOTO_ZOOM_POSITION",
-				// photoList.indexOf(photo));
-				// zoomIntent.putExtra("PHOTO_URLS", URLS);
-				// startActivity(zoomIntent);
-
 			}
 		});
 
@@ -298,7 +274,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 		int counter = 0;
 
 		for (Map.Entry<String, Boolean> entry : selectedPhoto.entrySet()) {
-			String key = entry.getKey();
 			boolean value = entry.getValue();
 			if (value) {
 				counter++;
@@ -333,8 +308,6 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 				restClient = new RestClient(Constant.smServerUrl + "/photos"
 						+ "/users" + "/" + userID);
 			}
-
-			// RestClient restClient = new RestClient(Constant.smPhotoUrl);
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 			try {
@@ -387,15 +360,15 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -496,15 +469,15 @@ public class PhotoListActivity extends Activity implements OnClickListener {
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:

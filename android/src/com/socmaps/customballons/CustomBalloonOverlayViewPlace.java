@@ -1,14 +1,6 @@
 package com.socmaps.customballons;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +11,6 @@ import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
@@ -30,14 +21,14 @@ public class CustomBalloonOverlayViewPlace<Item extends OverlayItem> extends
 
 	private ImageView image;
 	private ImageDownloader imageDownloader;
-	
-	public CustomBalloonOverlayViewPlace(Context context,
+
+	protected CustomBalloonOverlayViewPlace(Context context,
 			int balloonBottomOffset, ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
 		this.imageDownloader = imageDownloader;
 	}
 
-	public CustomBalloonOverlayViewPlace(Context context,
+	protected CustomBalloonOverlayViewPlace(Context context,
 			int balloonBottomOffset) {
 		super(context, balloonBottomOffset);
 	}
@@ -66,42 +57,11 @@ public class CustomBalloonOverlayViewPlace<Item extends OverlayItem> extends
 
 		title.setText(item.getPlace().getName());
 		address.setText(item.getPlace().getVicinity());
-		// distance.setText(String.format("%.2f",
-		// item.getPlace().getDistance())+" miles away");
 		distance.setText(Utility.getFormatedDistance(item.getPlace()
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit())
 				+ " away");
 
 		image.setImageResource(R.drawable.img_blank);
 		imageDownloader.download(item.getPlace().getIconUrl(), image);
-		/*new FetchImageTask() {
-			@Override
-			protected void onPostExecute(Bitmap result) {
-				if (result != null) {
-					image.setImageBitmap(result);
-				}
-			}
-		}.execute(item.getPlace().getIconUrl());*/
-		
-		//ImageLoader il = new ImageLoader(getContext());
-		//il.DisplayImage(item.getPlace().getIconUrl(), image, R.drawable.img_blank);
-
 	}
-
-	/*private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
-		@Override
-		protected Bitmap doInBackground(String... arg0) {
-			Bitmap b = null;
-			try {
-				b = BitmapFactory.decodeStream((InputStream) new URL(arg0[0])
-						.getContent());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return b;
-		}
-	}*/
-
 }

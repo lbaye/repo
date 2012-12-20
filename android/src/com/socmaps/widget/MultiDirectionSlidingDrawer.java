@@ -18,6 +18,9 @@ import android.view.accessibility.AccessibilityEvent;
 
 import com.socmaps.ui.R;
 
+/**
+ * MultiDirectionSlidingDrawer class for providing multiple direction Drawer.
+ */
 public class MultiDirectionSlidingDrawer extends ViewGroup {
 
 	public static final int ORIENTATION_RTL = 0;

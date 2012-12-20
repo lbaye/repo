@@ -134,13 +134,6 @@ public class FriendRequestNotificationActivity extends Activity {
 						.parseFriendRequest(response);
 
 				if (friendRequests != null) {
-					/*
-					 * NotificationActivity ta = (NotificationActivity)
-					 * this.getParent(); TabHost th = ta.getMyTabHost(); View
-					 * tab = th.getChildAt(1); TextView tabLabel =
-					 * (TextView)tab.findViewById(R.id.tvItemCountDisplay);
-					 * tabLabel.setText(""+friendRequests.length);
-					 */
 
 					for (int i = 0; i < friendRequests.length; i++) {
 						if (friendRequests[i] != null) {
@@ -174,10 +167,6 @@ public class FriendRequestNotificationActivity extends Activity {
 											+ "\"");
 								}
 							}
-
-							// accept_friend_request_btn
-							// decline_friend_request_btn
-							// ignore_friend_request_btn
 
 							Button acceptButton = (Button) itemView
 									.findViewById(R.id.btnAcceptRequest);
@@ -228,14 +217,11 @@ public class FriendRequestNotificationActivity extends Activity {
 				}
 
 			} catch (Exception e) {
-				// Log.e("Parse response", e.getMessage());
+				
 				// TODO: handle exception
 			}
 		}
-
 	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private void acceptFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -301,7 +287,6 @@ public class FriendRequestNotificationActivity extends Activity {
 		Log.d("Accept Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			if(selectedView!=null)
 			{
 				if(StaticValues.myInfo!=null)
@@ -338,8 +323,6 @@ public class FriendRequestNotificationActivity extends Activity {
 
 		}
 	}
-
-	// //////////////////////////////////////////////////////////////////////////////////
 
 	private void declineFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -405,7 +388,6 @@ public class FriendRequestNotificationActivity extends Activity {
 		Log.d("Decline Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Friend request declined.",
 					Toast.LENGTH_SHORT).show();
 			if(selectedView!=null)
@@ -432,7 +414,6 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////////////////////
 
 	private void ignoreFriendRequest(String senderId) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -497,7 +478,6 @@ public class FriendRequestNotificationActivity extends Activity {
 		Log.d("Ignore Friend Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Friend request ignored.",
 					Toast.LENGTH_SHORT).show();
 			break;
@@ -511,45 +491,25 @@ public class FriendRequestNotificationActivity extends Activity {
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
 

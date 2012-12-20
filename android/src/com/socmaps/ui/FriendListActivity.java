@@ -1,6 +1,5 @@
 package com.socmaps.ui;
 
-import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,14 +38,13 @@ import com.socmaps.entity.Place;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.BackProcess;
+import com.socmaps.util.BackProcess.REQUEST_TYPE;
 import com.socmaps.util.BackProcessCallback;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
-import com.socmaps.util.BackProcess.REQUEST_TYPE;
 
 public class FriendListActivity extends Activity implements OnClickListener {
 
@@ -55,17 +52,11 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		ATOZ, DISTANCE, CIRCLES
 	}
 
-	private class Users {
-		private List<People> friendList;
-		private HashMap<String, List<String>> circles;
-		private HashMap<String, People> friendMap;
-	}
-
 	private Context context;
 	private Button btnBack, aToZBtn, distanceBtn, circleBtn, btnNotification;
 
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
-	// boolean isSearchEnabled = false;
+
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
 	private LinearLayout listContainer;
@@ -78,17 +69,11 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	private LayoutInflater inflater;
 	private int selectedTab;
 
-	HashMap<String, Boolean> selectedPhoto;
-	private ProgressDialog m_ProgressDialog;
-	private String friendsResponse;
-	private int friendsStatus;
+	private HashMap<String, Boolean> selectedPhoto;
+
 	private ImageDownloader imageDownloader;
 
 	private String personID = null;
-
-	// String selectedId = null;
-
-	// private View selectedView;
 
 	private List<Circle> mainCircleList;
 
@@ -102,8 +87,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.friend_list_layout);
 
 		initialize();
-
-		// personID = StaticValues.myInfo.getId();
 		personID = getIntent().getStringExtra("PERSON_ID");
 
 		if (personID == null) {
@@ -114,28 +97,11 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		if (personID != null) {
 
-			// getFriendsOfFriendsFromServer();
-
-			// Another way
 			callAPI();
 
 			Log.w("FriendListActivity onCreate", "personID not null");
 
-		}/*
-		 * else {
-		 * 
-		 * getFriendList();
-		 * 
-		 * updateContentList(originalFriendList);
-		 * 
-		 * updateCircleContentList(mainCircleList);
-		 * 
-		 * generateListViewForAToZ();
-		 * 
-		 * Log.w("FriendListActivity onCreate", "personID is null");
-		 * 
-		 * }
-		 */
+		}
 
 	}
 
@@ -144,7 +110,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		// reSetView();
 
 	}
 
@@ -198,8 +163,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedPhoto = new HashMap<String, Boolean>();
 
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 	}
 
@@ -250,11 +213,10 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
-			// isSearchEnabled = true;
+
 			doSearch();
 
 		} else if (v == btnClearSearch) {
-			// isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
 
@@ -275,8 +237,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 	private void generateListViewForAToZ() {
 
 		listContainer.removeAllViews();
-		// Log.w("generateListViewForAToZ() a to z", tempFriendList.size()
-		// + " before sort size of tempFriendList");
 
 		sortDataAlphabetically();
 
@@ -285,7 +245,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			Log.i("generateListViewForAToZ() a to z", tempFriendList.size()
 					+ "After sort size of tempFriendList");
 
-			// if (tempFriendList.size() > 0) {
 			String startingChar = "";
 
 			LinearLayout itemRow = getAFreshRow();
@@ -319,7 +278,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			addAlreadyCreatedRow(itemRow);
 		}
 
-		// }
 	}
 
 	private View getItemViewFriend(final People people) {
@@ -330,9 +288,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.profilePic);
 		final TextView name = (TextView) v.findViewById(R.id.txtFriendName);
 
-		final RelativeLayout proficPicContainer = (RelativeLayout) v
-				.findViewById(R.id.proficPicContainer2);
-
 		Display display = getWindowManager().getDefaultDisplay();
 
 		int width = display.getWidth();
@@ -340,45 +295,17 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		v.setLayoutParams(new LinearLayout.LayoutParams(width / 4,
 				LayoutParams.WRAP_CONTENT));
 
-		final String id = people.getId();
-
 		if (people.getAvatar() != null && people.getAvatar() != "") {
 			imageDownloader.download(people.getAvatar(), profilePic);
 		}
 
 		name.setText(Utility.getFieldText(people));
 
-		// if (people.getFirstName() != null && people.getFirstName() != "") {
-		// name.setText(people.getFirstName());
-		// }
-
-		/*
-		 * if (avatarUrl != null && !avatarUrl.equals("")) {
-		 * 
-		 * BitmapManager.INSTANCE.setPlaceholder(
-		 * BitmapFactory.decodeResource(getResources(),
-		 * R.drawable.user_default));
-		 * 
-		 * BitmapManager.INSTANCE.loadBitmap( avatarUrl, profilePic, 55, 55);
-		 * 
-		 * 
-		 * }
-		 */
-
 		profilePic.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				/*
-				 * if (selectedPhoto.get(id)) { proficPicContainer
-				 * .setBackgroundResource(R.color.transparent);
-				 * selectedPhoto.put(id, false); } else { proficPicContainer
-				 * .setBackgroundResource(R.color.highlightGreen);
-				 * selectedPhoto.put(id, true); // selectedId = id; }
-				 * selectedView = v;
-				 */
 
 				// go user profile
 
@@ -399,28 +326,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 		return v;
 	}
 
-	// private void reSetView() {
-	// // TODO Auto-generated method stub
-	// if (selectedView != null) {
-	//
-	// // final RelativeLayout proficPicContainer = (RelativeLayout)
-	// // selectedView
-	// // .findViewById(R.id.proficPicContainer2);
-	// // proficPicContainer.setBackgroundResource(R.color.transparent);
-	//
-	// selectedView.setBackgroundResource(R.color.transparent);
-	// }
-	// }
-
 	private LinearLayout getAFreshRow() {
-
-		/*
-		 * LinearLayout row = new LinearLayout(this);
-		 * row.setOrientation(LinearLayout.HORIZONTAL); row.setLayoutParams(new
-		 * LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		 * row.setPadding(10, 10, 10, 0);
-		 */
-
 		LinearLayout row = (LinearLayout) inflater.inflate(
 				R.layout.friend_list_row, null);
 
@@ -459,22 +365,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	// get friend list from server
-	private void getFriendList() {
-
-		for (People people : StaticValues.myInfo.getFriendList()) {
-
-			originalFriendList.add(people);
-
-		}
-
-		for (Circle circle : StaticValues.myInfo.getCircleList()) {
-
-			mainCircleList.add(circle);
-		}
-
-	}
-
 	private void updateContentList(List<People> list) {
 
 		if (list != null) {
@@ -499,145 +389,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	/*
-	 * Friends from server
-	 */
-	// private void getFriendsOfFriendsFromServer() {
-	// // TODO Auto-generated method stub
-	// if (Utility.isConnectionAvailble(getApplicationContext())) {
-	//
-	// Thread thread = new Thread(null, friendsThread,
-	// "Start get friends from server");
-	// thread.start();
-	//
-	// // show progress dialog if needed
-	// m_ProgressDialog = ProgressDialog.show(context, getResources()
-	// .getString(R.string.please_wait_text), getResources()
-	// .getString(R.string.sending_request_text), true, true);
-	//
-	// } else {
-	//
-	// DialogsAndToasts
-	// .showNoInternetConnectionDialog(getApplicationContext());
-	// }
-	// }
-	//
-	// private Runnable friendsThread = new Runnable() {
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// RestClient restClient;
-	// // if(personID == null)
-	// // {
-	// // restClient = new RestClient(Constant.smPlaces);
-	// // }
-	// // else
-	// // {
-	// restClient = new RestClient(Constant.smServerUrl + "/" + personID
-	// + "/friends");
-	// // }
-	//
-	// restClient.AddHeader(Constant.authTokenParam,
-	// Utility.getAuthToken(context));
-	//
-	// // restClient.AddParam("users[]", unblockId);
-	//
-	// try {
-	// restClient.Execute(RestClient.RequestMethod.GET);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// friendsResponse = restClient.getResponse();
-	// friendsStatus = restClient.getResponseCode();
-	//
-	// runOnUiThread(friendsResponseFromServer);
-	// }
-	// };
-	//
-	// private Runnable friendsResponseFromServer = new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// handleResponseFriends(friendsStatus, friendsResponse);
-	//
-	// // dismiss progress dialog if needed
-	// if (m_ProgressDialog != null) {
-	// m_ProgressDialog.dismiss();
-	// }
-	// }
-	// };
-	//
-	// public void handleResponseFriends(int status, String response) {
-	// // show proper message through Toast or Dialog
-	// Log.w("Got friends response from server", status + ":" + response);
-	// switch (status) {
-	// case Constant.STATUS_SUCCESS:
-	// // Log.d("Login", status+":"+response);
-	// // Toast.makeText(context, "Places response successful.",
-	// // Toast.LENGTH_SHORT).show();
-	//
-	// try {
-	//
-	// JSONObject jsonObject = new JSONObject(response);
-	//
-	// if (!jsonObject.isNull("friends")) {
-	//
-	// JSONArray jArrayFriends = jsonObject
-	// .getJSONArray("friends");
-	//
-	// originalFriendList = ServerResponseParser
-	// .parsePeoples(jArrayFriends);
-	//
-	// }
-	//
-	// if (!jsonObject.isNull("circles")) {
-	//
-	// JSONArray jArrayCircles = jsonObject
-	// .getJSONArray("circles");
-	//
-	// mainCircleList = ServerResponseParser
-	// .getCircleList(jArrayCircles);
-	//
-	// }
-	//
-	// if (StaticValues.myInfo != null) {
-	// if (originalFriendList != null && mainCircleList != null
-	// && personID.equals(StaticValues.myInfo.getId())) {
-	// StaticValues.myInfo.setFriendList(originalFriendList);
-	// StaticValues.myInfo.setCircleList(mainCircleList);
-	// }
-	// }
-	//
-	// updateContentList(originalFriendList);
-	// updateCircleContentList(mainCircleList);
-	//
-	// generateListViewForAToZ();
-	//
-	// } catch (JSONException e) {
-	// // TODO: handle exception
-	// }
-	//
-	// // sortMasterListData();
-	// //
-	// // updateContentList(listMasterContent);
-	// // updateDisplayList(listContent);
-	//
-	// break;
-	//
-	// default:
-	// Toast.makeText(getApplicationContext(),
-	// "An unknown error occured. Please try again!!",
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	//
-	// }
-	//
-	// }
-
-	// Another way***************
-
 	private void callAPI() {
 
 		String url = Constant.smServerUrl + "/" + personID + "/friends";
@@ -648,7 +399,7 @@ public class FriendListActivity extends Activity implements OnClickListener {
 				REQUEST_TYPE.GET_SERVER_DATA, true, getResources().getString(
 						R.string.please_wait_text), getResources().getString(
 						R.string.sending_request_text),
-				new BackProcessCallBackListener(),true);
+				new BackProcessCallBackListener(), true);
 
 		backProcess.execute(RestClient.RequestMethod.GET);
 	}
@@ -662,9 +413,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			Log.w("Got friends response from server", status + ":" + response);
 			switch (status) {
 			case Constant.STATUS_SUCCESS:
-				// Log.d("Login", status+":"+response);
-				// Toast.makeText(context, "Places response successful.",
-				// Toast.LENGTH_SHORT).show();
 
 				try {
 
@@ -728,11 +476,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 	}
 
-	// private List<People> sortDataWithDistance(List<People> friends) {
-	// Collections.sort(friends, new ListComparatorName());
-	// return friends;
-	// }
-
 	private class ListComparatorName implements Comparator<People> {
 
 		@Override
@@ -740,16 +483,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			String firstString = first.getFirstName();
 			String secondString = last.getFirstName();
 			return firstString.compareToIgnoreCase(secondString);
-		}
-
-	}
-
-	private	class ListComparatorDistance implements Comparator<People> {
-
-		@Override
-		public int compare(People first, People last) {
-
-			return 0;
 		}
 
 	}
@@ -803,18 +536,12 @@ public class FriendListActivity extends Activity implements OnClickListener {
 								selectedPhoto.put(circleFriendList.get(j)
 										.getId(), false);
 
-								// itemRow.addView(getItemViewFriend(circleFriendList
-								// .get(j)));
-
 								itemRow.addView(getItemViewFriend(people));
 
 								counter++;
 							}
 
 						}
-
-						// String firstNameTemp = circleFriendList.get(j)
-						// .getFirstName();
 
 					}
 					addAlreadyCreatedRow(itemRow);
@@ -831,8 +558,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 
 		sortMasterListDistance();
 
-		// tempFriendList = originalFriendList;
-
 		if (tempFriendListDistance != null) {
 			String startingDistance = "";
 
@@ -842,12 +567,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			for (int i = 0; i < tempFriendListDistance.size(); i++) {
 
 				People people = tempFriendListDistance.get(i);
-
-				// String distance = Utility.getFormatedDistance(Utility
-				// .calculateDistance(StaticValues.myPoint, new GeoPoint(
-				// (int) (people.getCurrentLat() * 1E6),
-				// (int) (people.getCurrentLng() * 1E6))),
-				// StaticValues.myInfo.getSettings().getUnit());
 
 				double distances = Utility.calculateDistance(
 						StaticValues.myPoint,
@@ -920,11 +639,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			Collections.sort(this.tempFriendListDistance, new ListComparator());
 		}
 	}
-
-	/*
-	 * private void sortDisplayableListData() {
-	 * Collections.sort(this.listDisplayableContent, new ListComparator()); }
-	 */
 
 	private class ListComparator implements Comparator<Object> {
 
@@ -1007,10 +721,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			generateListViewForDistance();
 
 		} else if (selectedTab == SelectedTab.CIRCLES.ordinal()) {
-			// It is for circle search
-
-			// List<Circle> dataList = new ArrayList<Circle>();
-			// dataList.addAll(mainCircleList);
 
 			List<Circle> list = Utility.getSearchResultFromCircle(
 					mainCircleList, originalFriendList, etSearchField.getText()
@@ -1021,10 +731,6 @@ public class FriendListActivity extends Activity implements OnClickListener {
 			Log.w("doSearch() circle", list.size() + " size of list");
 
 			tempCircleList.addAll(list);
-
-			// for (Object obj : list) {
-			// tempCircleList.add((Circle) obj);
-			// }
 
 			generateListViewForCircles();
 

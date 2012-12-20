@@ -91,18 +91,45 @@ public class PullToRefreshListView extends ListView {
 	private ProgressBar spinner;
 	private TextView text;
 	private OnItemClickListener onItemClickListener;
-	private OnRefreshListener onRefreshListener;
+	private OnRefreshListener onRefreshListener; 
+	
+	/**
+	 * Initialization of PullToRefreshListView constructor with specified context. 
+	 * 
+	 * @param context 	Currently active Context. 
+	 */
 
 	public PullToRefreshListView(Context context) {
 		super(context);
 		init();
-	}
+	} 
+	
+	/** 
+	 * Initialization of PullToRefreshListView constructor with those specified parameters. 
+	 * 
+	 * @param context 	Currently active Context.
+	 * @param attrs 	An instance of AttributeSet, this interface provides an efficient mechanism for retrieving 
+	 * 					data from compiled XML files, which can be retrieved for a particular XmlPullParser through 
+	 * 					Xml.asAttributeSet(). 
+	 * @see #init()
+	 */
 
 	public PullToRefreshListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
 
+	
+	/** 
+	 * Initialization of PullToRefreshListView constructor with those specified parameters. 
+	 * 
+	 * @param context 	Currently active Context.
+	 * @param attrs 	An instance of AttributeSet, this interface provides an efficient mechanism for retrieving 
+	 * 					data from compiled XML files, which can be retrieved for a particular XmlPullParser through 
+	 * 					Xml.asAttributeSet().
+	 * @param defStyle  As Integer which indicates the index. 
+	 * @see #init()
+	 */
 	public PullToRefreshListView(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);

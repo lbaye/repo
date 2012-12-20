@@ -124,15 +124,15 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 		default:
@@ -156,13 +156,6 @@ public class PlatformPreferencesActivity extends Activity implements
 			}
 
 			handlePlatformSettingsResponse(responseStatus, responseString);
-
-			/*
-			 * AccountSettingsEntity
-			 * accountSettingsEntity=parseServerResponse();
-			 * AppStaticStorages.accountSettingsEntity=accountSettingsEntity;
-			 */
-
 		}
 
 	};
@@ -200,7 +193,7 @@ public class PlatformPreferencesActivity extends Activity implements
 			thread.start();
 			m_ProgressDialog = ProgressDialog.show(this, getResources()
 					.getString(R.string.please_wait_text), getResources()
-					.getString(R.string.fetching_data_text), true,true);
+					.getString(R.string.fetching_data_text), true, true);
 
 		} else {
 
@@ -224,13 +217,6 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		fbAPIsAuthListener = new FbAPIsAuthListener();
 		fbAPIsLogoutListener = new FbAPIsLogoutListener();
-
-		/*
-		 * chkFB=(CheckBox) findViewById(R.id.chkFB); chk4sq=(CheckBox)
-		 * findViewById(R.id.chk4sq); chkGplus=(CheckBox)
-		 * findViewById(R.id.chkGplus); btnSave=(Button)
-		 * findViewById(R.id.btnSave);
-		 */
 	}
 
 	private void setViewOnClickListener() {
@@ -260,14 +246,6 @@ public class PlatformPreferencesActivity extends Activity implements
 		} else {
 			return 1;
 		}
-		/*
-		 * switch (checkedRadioButton) { case R.id.off_radio :
-		 * radioButtonSelected = 0; break; case R.id.on_radio :
-		 * radioButtonSelected = 1; break;
-		 * 
-		 * }
-		 */
-
 	}
 
 	private void sendDataToServer() {
@@ -312,7 +290,6 @@ public class PlatformPreferencesActivity extends Activity implements
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(getApplicationContext(),
 					"Information saved successfully!!", Toast.LENGTH_SHORT)
 					.show();
@@ -322,15 +299,15 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		case Constant.STATUS_BADREQUEST:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 
 			break;
 
 		case Constant.STATUS_NOTFOUND:
 			Toast.makeText(getApplicationContext(),
-					Utility.getJSONStringFromServerResponse(response), Toast.LENGTH_LONG)
-					.show();
+					Utility.getJSONStringFromServerResponse(response),
+					Toast.LENGTH_LONG).show();
 			break;
 		default:
 			Toast.makeText(getApplicationContext(),
@@ -349,7 +326,8 @@ public class PlatformPreferencesActivity extends Activity implements
 
 		m_ProgressDialog = ProgressDialog.show(this,
 				getResources().getString(R.string.please_wait_text),
-				getResources().getString(R.string.updating_data_text), true,true);
+				getResources().getString(R.string.updating_data_text), true,
+				true);
 		m_ProgressDialog.show();
 	}
 
@@ -423,12 +401,7 @@ public class PlatformPreferencesActivity extends Activity implements
 		public void onLogoutFinish() {
 			Log.e("HomeActivity", "You have logged out! ");
 
-			// mahadi:start login again
-			// btnFBLogin.setVisibility(View.GONE);
-			// btnFBLogin2.setVisibility(View.VISIBLE);
 			Utility.setFacebookImage(context, null);
-			// ivFacebookProfile.setImageDrawable(getResources().getDrawable(
-			// R.drawable.icon_facebook));
 
 			FBUtility.mFacebook.authorize((Activity) context,
 					Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH,
@@ -502,26 +475,14 @@ public class PlatformPreferencesActivity extends Activity implements
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request sent", Toast.LENGTH_SHORT); toast.show();
-			 */
 		}
 
 		@Override
 		public void onFacebookError(FacebookError error) {
-			/*
-			 * Toast.makeText(getApplicationContext(), "Facebook Error: " +
-			 * error.getMessage(), Toast.LENGTH_SHORT) .show();
-			 */
 		}
 
 		@Override
 		public void onCancel() {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request cancelled", Toast.LENGTH_SHORT); toast.show();
-			 */
 		}
 	}
 

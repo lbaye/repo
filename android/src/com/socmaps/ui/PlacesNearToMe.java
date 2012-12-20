@@ -32,23 +32,20 @@ import com.socmaps.listrow.ListItemClickListener;
 import com.socmaps.listrow.ListItemClickListenerPlace;
 import com.socmaps.listrow.PlaceRowFactory;
 import com.socmaps.listrow.RowType;
-import com.socmaps.util.Constant;
-import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class PlacesNearToMe extends Activity implements OnClickListener,
 		ListItemClickListener {
 
-	Button btnNotification;
-	Button topCloseButton, bottomCloseButton, btnMyPlaces, btnBack;
+	private Button btnNotification;
+	private Button btnMyPlaces, btnBack;
 
 	private Context context;
 	private ListView contentListView;
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
-	private Button  btnToggleSearchPanel, btnDoSearch,
-			btnClearSearch;
+	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
@@ -65,7 +62,6 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		setContentView(R.layout.places_near_tome_layout);
 
 		initialize();
-		getIntentData();
 		setListParameters();
 
 	}
@@ -76,8 +72,8 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		super.onResume();
 
 		Utility.updateNotificationBubbleCounter(btnNotification);
-		populateMasterList();
 
+		populateMasterList();
 		updateContentList(listMasterContent);
 		updateDisplayList(listContent);
 
@@ -121,7 +117,7 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 		Utility.hideKeyboardContext(context);
 
-		 if (v == btnNotification) {
+		if (v == btnNotification) {
 			Intent i = new Intent(context, NotificationActivity.class);
 			startActivity(i);
 		} else if (v == btnToggleSearchPanel) {
@@ -129,17 +125,11 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		} else if (v == btnDoSearch) {
 			isSearchEnabled = true;
 			doSearch();
-			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
 		} else if (v == btnMyPlaces) {
-
-//			Intent intentToGoPlace = new Intent(context,
-//					PlacesListActivity.class);
-//			startActivity(intentToGoPlace);
-			
 			finish();
 
 		} else if (v == btnBack) {
@@ -163,10 +153,6 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 	}
 
-	private void getIntentData() {
-		peoplesAndPlacesEntity = StaticValues.searchResult;
-	}
-
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
@@ -186,9 +172,7 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		for (int i = 0; i < list.size(); i++) {
 
 			Object item = list.get(i);
-			if (item instanceof Place
-					&& SharedPreferencesHelper.getInstance(context).getBoolean(
-							Constant.PLACE, false)) {
+			if (item instanceof Place) {
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 			}
@@ -209,6 +193,9 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	}
 
 	private void populateMasterList() {
+
+		peoplesAndPlacesEntity = StaticValues.searchResult;
+
 		listMasterContent.clear();
 
 		if (peoplesAndPlacesEntity != null) {
@@ -267,9 +254,10 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 
 		private List<Object> items;
 		private ImageDownloader imageDownloader;
+
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
-			this.items = itemsList;		
+			this.items = itemsList;
 			imageDownloader = ImageDownloader.getInstance();
 
 		}
@@ -343,12 +331,13 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 			// TODO Auto-generated method stub
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = place;
-			finish();
+
+			Intent intent = new Intent(context, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 		}
 
 	}
-
-
 
 	@Override
 	public void onMapButtonClick(int flag) {
@@ -358,7 +347,7 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 	}
 
 	private void doSearch() {
-		//
+
 		List<Object> list = (Utility.getSearchResult(listMasterContent,
 				etSearchField.getText().toString().trim()));
 
@@ -383,7 +372,7 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 			searchPanel.setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -398,13 +387,12 @@ public class PlacesNearToMe extends Activity implements OnClickListener,
 		return false;
 
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		System.gc();
 	}
-
 
 }

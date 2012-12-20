@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,13 +44,10 @@ import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.listrow.ListItemClickListener;
-import com.socmaps.listrow.ListItemClickListenerPeople;
 import com.socmaps.listrow.ListItemClickListenerSecondDegreePeople;
 import com.socmaps.listrow.RowType;
 import com.socmaps.listrow.SecondDegreePeopleRowFactoryPeopleInvite;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.RestClient;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -61,20 +56,18 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		ListItemClickListener {
 
 	private Context context;
-	private ProgressDialog m_ProgressDialog;
+
 	View requestItemView;
 
 	private boolean isSearchEnabled = false;
-	private Button btnMapView, btnListView, btnCircle, btnToggleSearchPanel,
-			btnDoSearch, btnClearSearch, btnSeleceUnselectAllUser,
-			btnCancelInvite, topCloseButton, btnBack, btnInvitePeople,
-			btnCirclePeople, btnBlockUnblockPeople, btnPeopleByDistance,
-			btnInviteSelectedUsers;
+	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch,
+			btnSeleceUnselectAllUser, btnCancelInvite, btnBack,
+			btnInvitePeople, btnCirclePeople, btnBlockUnblockPeople,
+			btnPeopleByDistance, btnInviteSelectedUsers;
 
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
 
-	// private int colorButtonSelected;
 	private List<Object> listMasterContent;
 	private List<Object> listContent;
 	private List<Object> listDisplayableContent;
@@ -82,23 +75,13 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	private ContentListAdapter contentAdapter;
 	private SearchResult peoplesAndPlacesEntity;
 
-	private Dialog msgDialog;
-	private String sendMessageFriendId = "";
-	private String sendMessageSubject = "";
-	private String sendMessageContent = "";
-	private String sendMessageResponse = "";
-	private int sendMessageStatus = 0;
-
 	private boolean isAllSelect = false;
 	private HashMap<String, Boolean> selectedArrayList;
 
-	private String invitePeopleServerResponse;
-	private int invitePeopleStatus;
+	private FbAPIsAuthListener fbAPIsAuthListener;
+	private FbAPIsLogoutListener fbAPIsLogoutListener;
 
-	FbAPIsAuthListener fbAPIsAuthListener;
-	FbAPIsLogoutListener fbAPIsLogoutListener;
-	
-	List<String> idList= new ArrayList<String>();
+	private List<String> idList = new ArrayList<String>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -125,9 +108,9 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	}
 
 	private void initialize() {
+		
 		context = PeopleInvityActivity.this;
-		// colorButtonSelected = getResources().getColor(R.color.gray_light);
-
+		
 		selectedArrayList = new HashMap<String, Boolean>();
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
@@ -163,8 +146,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		listDisplayableContent = new ArrayList<Object>();
 		contentAdapter = new ContentListAdapter(context, listDisplayableContent);
 
-		// StaticValues.PEOPLE_IS_DISPLAY_CHECKBOX = true;
-
 		btnSeleceUnselectAllUser = (Button) findViewById(R.id.btnSeleceUnselectAllUser);
 		btnSeleceUnselectAllUser.setOnClickListener(this);
 
@@ -182,6 +163,8 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 
+		Utility.hideKeyboardContext(context);
+
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
@@ -189,7 +172,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			doSearch();
 			hideKeybord();
 
-			// toggleSearchPanel();
 		} else if (v == btnClearSearch) {
 			isSearchEnabled = false;
 			etSearchField.setText("");
@@ -245,38 +227,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 			updateListView();
 
-			// isAllSelect = !isAllSelect;
-			//
-			// String unit = "";
-			// if (isAllSelect) {
-			// // StaticValues.PEOPLE_SELECT_ALL_USERS = false;
-			// btnSeleceUnselectAllUser
-			// .setText(getString(R.string.unselectAllLabel));
-			// unit = getString(R.string.unselectAllLabel);
-			// } else {
-			// // StaticValues.PEOPLE_SELECT_ALL_USERS = true;
-			//
-			// btnSeleceUnselectAllUser
-			// .setText(getString(R.string.selectAllLabel));
-			// unit = getString(R.string.selectAllLabel);
-			// }
-			//
-			// for (int i = 0; i < listDisplayableContent.size(); i++) {
-			//
-			// ((People) listDisplayableContent.get(i)).setUnit(unit);
-			//
-			// }
-			//
-			// updateListView();
-			//
-			// for (int i = 0; i < listDisplayableContent.size(); i++) {
-			//
-			// selectedArrayList.put(
-			// ((People) listDisplayableContent.get(i)).getId(),
-			// isAllSelect);
-			//
-			// }
-
 		} else if (v == btnCancelInvite) {
 
 			Intent peopleList = new Intent(getApplicationContext(),
@@ -288,7 +238,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		} else if (v == btnInviteSelectedUsers) {
 
 			int checkCounter = 0;
-			
+
 			idList.clear();
 
 			for (String key : selectedArrayList.keySet()) {
@@ -296,7 +246,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 				boolean value = selectedArrayList.get(key);
 
 				if (value) {
-					// Log.i("People Id: " + key, "isChecked: " + value);
 					checkCounter++;
 					idList.add(key);
 				}
@@ -305,24 +254,21 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 			Log.i("Total Checked:", "" + checkCounter);
 
 			// sendSelectedPeopleToServer();
-			if(checkCounter == 0)
-			{
-				Toast.makeText(context, "No friend is selected to invite.", Toast.LENGTH_SHORT).show();
-			}
-			else if(checkCounter>50)
-			{
-				Toast.makeText(context, "You can't invite more than 50 users at a time.", Toast.LENGTH_SHORT).show();
-			}
-			else
-			{
-				if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb") && FBUtility.mFacebook!=null) {
+			if (checkCounter == 0) {
+				Toast.makeText(context, "No friend is selected to invite.",
+						Toast.LENGTH_SHORT).show();
+			} else if (checkCounter > 50) {
+				Toast.makeText(context,
+						"You can't invite more than 50 users at a time.",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				if (StaticValues.myInfo.getRegMedia().equalsIgnoreCase("fb")
+						&& FBUtility.mFacebook != null) {
 					initInviteFriends();
 				} else {
 					initInvitationDialog();
 				}
 			}
-			
-			
 
 		} else if (v == btnBack) {
 			finish();
@@ -359,8 +305,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 			imageDownloader = ImageDownloader.getInstance();
 		}
 
@@ -371,12 +315,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 		@Override
 		public int getItemViewType(int position) {
-			// if (items.get(position) instanceof People) {
-			//
-			// return RowType.PEOPLE.ordinal();
-			// } else
-			//
-
 			if (items.get(position) instanceof SecondDegreePeople) {
 
 				return RowType.SECOND_DEGREE.ordinal();
@@ -403,19 +341,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			// if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
-			// return PeopleRowFactoryInvite.getView(
-			// LayoutInflater.from(context), items.get(position),
-			// context, PeopleInvityActivity.this, convertView,
-			// imageDownloader, new PeopleItemListener());
-			// }
-
 			if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
-
-				Log.e("Test Test getView regenerate>>",
-						selectedArrayList.get(((SecondDegreePeople) items
-								.get(position)).getRefId()) + "");
-
 				return SecondDegreePeopleRowFactoryPeopleInvite.getView(
 						LayoutInflater.from(context), items.get(position),
 						context, PeopleInvityActivity.this, convertView,
@@ -457,7 +383,8 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 
-				selectedArrayList.put(((SecondDegreePeople) item).getRefId(),false);
+				selectedArrayList.put(((SecondDegreePeople) item).getRefId(),
+						false);
 
 			}
 
@@ -477,24 +404,12 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		peoplesAndPlacesEntity = StaticValues.searchResult;
 
 		listMasterContent.clear();
-		// addPeoplesToMasterList();
 
 		if (peoplesAndPlacesEntity != null) {
 
 			addSecondDegreePeoplesToMasterList();
 
 			sortMasterListData();
-		}
-	}
-
-	private void addPeoplesToMasterList() {
-
-		if (peoplesAndPlacesEntity.getPeoples() != null) {
-
-			for (int i = 0; i < peoplesAndPlacesEntity.getPeoples().size(); i++) {
-				listMasterContent.add(peoplesAndPlacesEntity.getPeoples()
-						.get(i));
-			}
 		}
 	}
 
@@ -514,7 +429,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		Collections.sort(this.listMasterContent, new ListComparator());
 	}
 
-	class ListComparator implements Comparator<Object> {
+	private class ListComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object first, Object last) {
@@ -540,79 +455,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 
 	}
 
-	private class PeopleItemListener implements ListItemClickListenerPeople {
-
-		@Override
-		public void onItemClick(People people) {
-			// TODO Auto-generated method stub
-			// send user to profile screen with people object
-		}
-
-		@Override
-		public void onArrowButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onInviteButtonClick(People people) {
-
-			Toast.makeText(context, "Comming soon", 1000).show();
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onAddFriendButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onBlockButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onUnBlockButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShowOnMapButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-			StaticValues.isHighlightAnnotation = true;
-			StaticValues.highlightAnnotationItem = people;
-
-			Intent intent = new Intent(context, HomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-
-		}
-
-		@Override
-		public void onSendMessageButtonClick(People people) {
-			// TODO Auto-generated method stub
-			//showMessageDialog(people);
-		}
-
-		@Override
-		public void onMeetupButtonClick(People people) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onCheckChange(String itemId, boolean isChecked) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
 	private class SecondDegreePeopleItemListener implements
 			ListItemClickListenerSecondDegreePeople {
 
@@ -631,7 +473,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		@Override
 		public void onInviteButtonClick(SecondDegreePeople people) {
 			// TODO Auto-generated method stub
-			Toast.makeText(context, "Comming soon", 1000).show();
+			Toast.makeText(context, "Comming soon", Toast.LENGTH_SHORT).show();
 
 		}
 
@@ -689,237 +531,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		startActivity(intent);
 	}
 
-	/*
-	 * Send Message to individual Person
-	 */
-//	private void showMessageDialog(final People people) {
-//		// TODO Auto-generated method stub
-//		msgDialog = DialogsAndToasts.showSendMessage(context);
-//		final EditText msgEditText = (EditText) msgDialog
-//				.findViewById(R.id.message_body_text);
-//		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
-//		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
-//		send.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				if (!msgEditText.getText().toString().trim().equals("")) {
-//					sendMessage(people.getId(), "Message", msgEditText
-//							.getText().toString().trim());
-//				} else {
-//					msgEditText.setError("Please enter your message!!");
-//				}
-//
-//				hideMessageDialogKeybord(msgEditText);
-//			}
-//		});
-//		cancel.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//
-//				hideMessageDialogKeybord(msgEditText);
-//				msgDialog.dismiss();
-//
-//			}
-//		});
-//		msgDialog.show();
-//	}
-//
-//	public void sendMessage(String friendId, String subject, String content) {
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			sendMessageFriendId = friendId;
-//			sendMessageSubject = subject;
-//			sendMessageContent = content;
-//
-//			Thread thread = new Thread(null, sendMessageThread,
-//					"Start send message");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true,true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable sendMessageThread = new Runnable() {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			restClient.AddParam("recipients[]", sendMessageFriendId);
-//			restClient.AddParam("subject", sendMessageSubject);
-//			restClient.AddParam("content", sendMessageContent);
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.POST);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			sendMessageResponse = restClient.getResponse();
-//			sendMessageStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(sendMessageReturnResponse);
-//		}
-//	};
-//
-//	private Runnable sendMessageReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if(m_ProgressDialog!=null){
-//				m_ProgressDialog.dismiss();
-//			}
-//
-//		}
-//	};
-//
-//	public void handleResponseSendMessage(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Message", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_CREATED:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Message sent successfully.",
-//					Toast.LENGTH_SHORT).show();
-//			msgDialog.dismiss();
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"Message not delivered,please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//
-//			break;
-//
-//		}
-//
-//	}
-
-	/*
-	 * Invite Selected users
-	 */
-//	private void sendSelectedPeopleToServer() {
-//		// TODO Auto-generated method stub
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			Thread thread = new Thread(null, invitePeopleThread,
-//					"Start send block unblock list to server");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true,true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable invitePeopleThread = new Runnable() {
-//		@Override
-//		public void run() {
-//
-//			RestClient restClient = new RestClient(Constant.smBlockUnblockUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			for (String key : selectedArrayList.keySet()) {
-//
-//				boolean value = selectedArrayList.get(key);
-//
-//				if (value) {
-//
-//					restClient.AddParam("users[]", key);
-//				}
-//
-//			}
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.PUT);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			invitePeopleServerResponse = restClient.getResponse();
-//			invitePeopleStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(invitePeopleResponse);
-//		}
-//	};
-//
-//	private Runnable invitePeopleResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseInvitePeople(invitePeopleStatus,
-//					invitePeopleServerResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if(m_ProgressDialog!=null){
-//				m_ProgressDialog.dismiss();
-//			}
-//			
-//		}
-//	};
-//
-//	public void handleResponseInvitePeople(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Block Unblock Return Response", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_SUCCESS:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Request sent successfully.",
-//					Toast.LENGTH_SHORT).show();
-//
-//			for (int i = 0; i < StaticValues.searchResult
-//					.getSecondDegreePeoples().size(); i++) {
-//
-//				SecondDegreePeople p = StaticValues.searchResult
-//						.getSecondDegreePeoples().get(i);
-//
-//				// StaticValues.searchResult.getSecondDegreePeoples().get(i)
-//				// .setBlocked(selectedArrayList.get(p.getId()));
-//
-//			}
-//			//
-//			// populateListData();
-//
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"An unknown error occured. Please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
-
 	// **** Invite fb friends ******************************
 
 	private void initInvitationDialog() {
@@ -968,13 +579,7 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		public void onLogoutFinish() {
 			Log.e("PeopleInviteActivity", "You have logged out! ");
 
-			// mahadi:start login again
-			// btnFBLogin.setVisibility(View.GONE);
-			// btnFBLogin2.setVisibility(View.VISIBLE);
 			Utility.setFacebookImage(context, null);
-			// ivFacebookProfile.setImageDrawable(getResources().getDrawable(
-			// R.drawable.icon_facebook));
-
 			FBUtility.mFacebook.authorize((Activity) context,
 					Constant.facebookPermissions, Facebook.FORCE_DIALOG_AUTH,
 					new LoginDialogListener());
@@ -1033,21 +638,18 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	}
 
 	private void showInvitationDialog() {
-		
+
 		String idString = "";
-		if(idList!=null)
-		{
-			for(int i=0;i<idList.size();i++)
-			{
-				idString += idList.get(i)+",";
+		if (idList != null) {
+			for (int i = 0; i < idList.size(); i++) {
+				idString += idList.get(i) + ",";
 			}
 		}
-		if(idString.length()>1)
-		{
-			idString = idString.substring(0, idString.length()-1);
+		if (idString.length() > 1) {
+			idString = idString.substring(0, idString.length() - 1);
 		}
 		Log.i("IdList", idString);
-		
+
 		Bundle params = new Bundle();
 		params.putString("message", "Checkout the app.");
 		params.putString("to", idString);
@@ -1063,26 +665,17 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		// @Override
 		@Override
 		public void onComplete(Bundle values) {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request sent", Toast.LENGTH_SHORT); toast.show();
-			 */
+
 		}
 
 		@Override
 		public void onFacebookError(FacebookError error) {
-			/*
-			 * Toast.makeText(getApplicationContext(), "Facebook Error: " +
-			 * error.getMessage(), Toast.LENGTH_SHORT) .show();
-			 */
+
 		}
 
 		@Override
 		public void onCancel() {
-			/*
-			 * Toast toast = Toast.makeText(getApplicationContext(),
-			 * "App request cancelled", Toast.LENGTH_SHORT); toast.show();
-			 */
+
 		}
 	}
 
@@ -1091,30 +684,8 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 	 */
 
 	private void hideKeybord() {
-
-		// etSearchField
-		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		//
-		// public void onFocusChange(View v, boolean flag) {
-		// if (flag == false) {
-		// InputMethodManager inputMethodManager = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// inputMethodManager.hideSoftInputFromWindow(
-		// v.getWindowToken(), 0);
-		// }
-		// }
-		// });
-
 		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-	}
-
-	protected void hideMessageDialogKeybord(EditText msgEditText) {
-		// TODO Auto-generated method stub
-
-		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-
 	}
 
 	/*
@@ -1173,8 +744,6 @@ public class PeopleInvityActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		super.onStop();
 		StaticValues.PEOPLE_SELECT_ALL_USERS = false;
-
-		Log.w("PeopleInvityActivity", "onStop");
 	}
 
 	@Override

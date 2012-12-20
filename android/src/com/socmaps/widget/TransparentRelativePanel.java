@@ -8,6 +8,11 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+
+/**
+ * TransparentRelativePanel class for generating transparent panel (view).
+ *
+ */
 public class TransparentRelativePanel extends RelativeLayout {
 
 	private Paint innerPaint, borderPaint;

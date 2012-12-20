@@ -21,15 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.socmaps.entity.MessageEntity;
-import com.socmaps.images.ImageLoader;
+import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
-import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
 public class MessageListActivity extends Activity {
@@ -47,7 +43,7 @@ public class MessageListActivity extends Activity {
 	String itemMessageId = "";
 	String itemThreadId = "";
 
-	ImageLoader imageLoader;
+	ImageDownloader imageDownloader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,55 +52,10 @@ public class MessageListActivity extends Activity {
 
 		initialize();
 
-		// listIntent.putExtra("messageStatus", status);
-		// listIntent.putExtra("messageResponse", response);
-
 		int responseStatus = getIntent().getIntExtra("messageStatus", 404);
 		String responseText = getIntent().getStringExtra("messageResponse");
 		handleResponseMessage(responseStatus, responseText);
-		// getMessages();
-
 	}
-
-	/*
-	 * public void getMessages() { if
-	 * (Utility.isConnectionAvailble(getApplicationContext())) {
-	 * 
-	 * Thread thread = new Thread(null, messagesThread, "Start get messages");
-	 * thread.start();
-	 * 
-	 * // show progress dialog if needed m_ProgressDialog =
-	 * ProgressDialog.show(this, getResources()
-	 * .getString(R.string.please_wait_text), getResources()
-	 * .getString(R.string.sending_request_text), true);
-	 * 
-	 * } else {
-	 * 
-	 * DialogsAndToasts
-	 * .showNoInternetConnectionDialog(getApplicationContext()); } }
-	 * 
-	 * private Runnable messagesThread = new Runnable() {
-	 * 
-	 * @Override public void run() { // TODO Auto-generated method stub
-	 * RestClient restClient = new RestClient(Constant.smMessagesUrl +
-	 * "/inbox"); restClient.AddHeader(Constant.authTokenParam,
-	 * Utility.getAuthToken(context));
-	 * 
-	 * try { restClient.Execute(RestClient.RequestMethod.GET); } catch
-	 * (Exception e) { e.printStackTrace(); }
-	 * 
-	 * messageResponse = restClient.getResponse(); messageStatus =
-	 * restClient.getResponseCode();
-	 * 
-	 * runOnUiThread(messageReturnResponse); } };
-	 * 
-	 * private Runnable messageReturnResponse = new Runnable() {
-	 * 
-	 * @Override public void run() { // TODO Auto-generated method stub
-	 * handleResponseMessage(messageStatus, messageResponse);
-	 * 
-	 * // dismiss progress dialog if needed m_ProgressDialog.dismiss(); } };
-	 */
 
 	private void handleResponseMessage(int status, String response) {
 		// show proper message through Toast or Dialog
@@ -134,12 +85,11 @@ public class MessageListActivity extends Activity {
 									R.layout.message_list_item, null);
 							RelativeLayout listItemParent = (RelativeLayout) v
 									.findViewById(R.id.listItemParent);
-							
-							
-							if(messageEntity.getStatus().equalsIgnoreCase(Constant.STATUS_MESSAGE_UNREAD))
-							{
+
+							if (messageEntity.getStatus().equalsIgnoreCase(
+									Constant.STATUS_MESSAGE_UNREAD)) {
 								v.setBackgroundResource(R.drawable.list_item_selector_highlighted);
-								
+
 							}
 
 							TextView senderName = (TextView) v
@@ -153,10 +103,6 @@ public class MessageListActivity extends Activity {
 
 							senderName.setText(messageInfoMap.get("title"));
 
-							/*
-							 * if (messages[i].getCreateDate() != null) {
-							 * sentTime.setText(messages[i].getCreateDate()); }
-							 */
 							if (messageEntity.getUpdateTimeEntity() != null) {
 								sentTime.setText(Utility
 										.getFormattedDisplayDate(messageEntity
@@ -165,10 +111,6 @@ public class MessageListActivity extends Activity {
 
 							if (messageEntity.getContent() != null) {
 								String messageText = messageEntity.getContent();
-								/*
-								 * if (messageText.length() > 60) { messageText
-								 * = messageText.substring(0, 60) + "..."; }
-								 */
 
 								senderMessage.setText(messageText);
 							}
@@ -180,12 +122,7 @@ public class MessageListActivity extends Activity {
 
 							if (avatarUrl != null && !avatarUrl.equals("")) {
 
-								// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(getResources(),R.drawable.user_default));
-								// BitmapManager.INSTANCE.loadBitmap(avatarUrl,profilePic,
-								// 55, 55);
-								// Log.e("ImageLoader", avatarUrl);
-								imageLoader.DisplayImage(avatarUrl, profilePic,
-										R.drawable.user_default);
+								imageDownloader.download(avatarUrl, profilePic);
 							}
 
 							listItemParent
@@ -195,37 +132,30 @@ public class MessageListActivity extends Activity {
 										public void onClick(View arg0) {
 											// TODO Auto-generated method stub
 											boolean isUnread = false;
-											if(messageEntity.getStatus().equalsIgnoreCase(Constant.STATUS_MESSAGE_UNREAD))
-											{
+											if (messageEntity
+													.getStatus()
+													.equalsIgnoreCase(
+															Constant.STATUS_MESSAGE_UNREAD)) {
 												isUnread = true;
-												/*v.setBackgroundResource(R.drawable.list_item_selector);
-												if(StaticValues.myInfo!=null)
-												{
-													StaticValues.myInfo.getNotificationCount().setMessageCount(StaticValues.myInfo.getNotificationCount().getMessageCount()-1);
-													StaticValues.myInfo.getNotificationCount().setTotalCount(StaticValues.myInfo.getNotificationCount().getTotalCount()-1);
-													
-													Utility.updateNotificationBubbleCounter(MessageActivity.btnNotification);
-													
-												}*/
 											}
-											
+
 											v.setBackgroundResource(R.drawable.list_item_selector);
-											Intent i = new Intent(context, MessageConversationFromNotificationActivity.class);
+											Intent i = new Intent(
+													context,
+													MessageConversationFromNotificationActivity.class);
 											i.putExtra("itemThreadId", threadId);
-											i.putExtra("itemMessageId", messageId);
+											i.putExtra("itemMessageId",
+													messageId);
 											i.putExtra("status", isUnread);
 											startActivity(i);
-											
-											//getMessageDetails(messageId, threadId);
+
 										}
 									});
-							
-							
-							if(messageEntity.getStatus().equalsIgnoreCase("unread")){
-								
+
+							if (messageEntity.getStatus().equalsIgnoreCase(
+									"unread")) {
+
 								senderMessage.setBackgroundColor(Color.GRAY);
-								//v.setBackgroundColor(Color.GRAY);
-								
 							}
 
 							messageListContainer.addView(v);
@@ -280,7 +210,7 @@ public class MessageListActivity extends Activity {
 		context = MessageListActivity.this;
 		buttonActionListener = new ButtonActionListener();
 
-		imageLoader = new ImageLoader(context);
+		imageDownloader = ImageDownloader.getInstance();
 
 		btnNewMessage = (Button) findViewById(R.id.btnNewMessage);
 		btnNewMessage.setOnClickListener(buttonActionListener);
@@ -293,40 +223,22 @@ public class MessageListActivity extends Activity {
 	@Override
 	public void onContentChanged() {
 		super.onContentChanged();
-
-		// initialize
-		// initialize();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			finish();
-			/*
-			 * AlertDialog.Builder adb = new AlertDialog.Builder(this); //
-			 * adb.setTitle("Set Title here");
-			 * adb.setMessage("Are you sure you want to exit from this application?"
-			 * ); adb.setPositiveButton("Yes", new
-			 * DialogInterface.OnClickListener() { public void
-			 * onClick(DialogInterface dialog, int id) { finish(); } });
-			 * adb.setNegativeButton("No", new DialogInterface.OnClickListener()
-			 * { public void onClick(DialogInterface dialog, int id) {
-			 * dialog.cancel(); } }); adb.show();
-			 */
-
 		}
 		return false;
 
@@ -359,95 +271,4 @@ public class MessageListActivity extends Activity {
 		MessageGroupActivity.group.replaceView(view);
 
 	}
-
-	private void getMessageDetails(String messageId, String threadId) {
-		if (Utility.isConnectionAvailble(getApplicationContext())) {
-
-			itemMessageId = messageId;
-			itemThreadId = threadId;
-
-			if (itemMessageId != null && !itemMessageId.equalsIgnoreCase("")) {
-				Thread thread = new Thread(null, messagesThread,
-						"Start get message details");
-				thread.start();
-
-				// show progress dialog if needed
-				m_ProgressDialog = ProgressDialog
-						.show(MessageGroupActivity.group,
-								getResources().getString(
-										R.string.please_wait_text),
-								getResources().getString(
-										R.string.sending_request_text), true,true);
-			} else {
-				Toast.makeText(context, "Message ID not found.",
-						Toast.LENGTH_SHORT).show();
-			}
-
-		} else {
-
-			DialogsAndToasts
-					.showNoInternetConnectionDialog(getApplicationContext());
-		}
-	}
-
-	private Runnable messagesThread = new Runnable() {
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RestClient restClient = new RestClient(Constant.smMessagesUrl + "/"
-					+ itemMessageId);
-			restClient.AddHeader(Constant.authTokenParam,
-					Utility.getAuthToken(context));
-
-			try {
-				restClient.Execute(RestClient.RequestMethod.GET);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			messageResponse = restClient.getResponse();
-			messageStatus = restClient.getResponseCode();
-
-			runOnUiThread(messageReturnResponse);
-		}
-	};
-
-	private Runnable messageReturnResponse = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			handleMessageDetailsResponse(messageStatus, messageResponse);
-
-			// dismiss progress dialog if needed
-			
-			if (m_ProgressDialog != null) {
-
-				m_ProgressDialog.dismiss();
-			}
-			
-		}
-
-	};
-
-	private void handleMessageDetailsResponse(int status, String response) {
-
-		Log.e("Message Details", response);
-		// TODO Auto-generated method stub
-		Intent i = new Intent(context, MessageConversationActivity.class);
-		i.putExtra("messageStatus", status);
-		i.putExtra("messageResponse", response);
-
-		// Create the view using FirstGroup's LocalActivityManager
-		View view = MessageGroupActivity.group
-				.getLocalActivityManager()
-				.startActivity("Conversation",
-						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-				.getDecorView();
-
-		// Again, replace the view
-		MessageGroupActivity.group.replaceView(view);
-
-	}
-
 }

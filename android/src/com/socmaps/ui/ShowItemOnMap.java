@@ -115,7 +115,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// gpsService.stopListener();
 	}
 
 	private void updateMap() {
@@ -130,8 +129,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		if (flag == Constant.FLAG_MEETUP)
 			putMeetupOnMap();
 		mapView.invalidate();
-
-		// setStationsOnMap();
 	}
 
 	private void putEventOnMap() {
@@ -198,7 +195,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 	private void putPeopleOnMap() {
 		// TODO Auto-generated method stub
-		// People people = StaticValues.selectedPeople;
 
 		People people = (People) selectedItem;
 
@@ -219,8 +215,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 
 		context = ShowItemOnMap.this;
 
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		mapView = (TapControlledMapView) findViewById(R.id.myGMap);
@@ -293,14 +287,11 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		if (typeFlag == Constant.FLAG_PEOPLE) {
 
 			showPeoplePopUpDetails(item);
-
-			// Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
 		}
 
 		else if (typeFlag == Constant.FLAG_PLACE) {
 			showPlacePopUpDetails(item);
 		} else {
-			// do nothing
 		}
 	}
 
@@ -349,8 +340,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 					}
 				}
 			}.execute(iconUrl);
-
-			// city.setText(cityValue);
 		}
 
 		d.show();
@@ -424,8 +413,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 					}
 				}
 			}.execute(item.getUser().getAvatar());
-
-			// city.setText(cityValue);
 		}
 
 		Button addFrndBtn = (Button) d.findViewById(R.id.add_frnd_btn);
@@ -496,12 +483,7 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				// d.dismiss();
 				showMessageDialog(item);
-				/*
-				 * Dialog msgDialog = DialogsAndToasts
-				 * .showSendMessage(context); msgDialog.show();
-				 */
 			}
 
 		});
@@ -568,8 +550,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		});
 		msgDialog.show();
 	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private void sendFriendRequest(String friendId, String message) {
 		if (Utility.isConnectionAvailble(getApplicationContext())) {
@@ -640,7 +620,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		Log.d("Send Frnd Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			if (!friendRequestSentList.contains(friendRequestFriendId)) {
 				friendRequestSentList.add(friendRequestFriendId);
 			}
@@ -741,7 +720,6 @@ public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Message sent successfully.",
 					Toast.LENGTH_SHORT).show();
 			msgDialog.dismiss();

@@ -16,20 +16,35 @@ import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlanRowFactory { 
-	
+
+/**
+ * PlanRowFactory class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class PlanRowFactory {
+
 	/**
-	 * This method returns a View, that view is associates with corresponding layout.  
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param plan an object of type Plan.
-	 * @param context current state of the application/object.  
-	 * @param clickListener which is used for a specific action when button is clicked.  
-	 * @param position as Integer which refers to the item position of the list 
-	 * @param convertView as view 
-	 * @param il which is used to download image from a specific url.  
-	 * @param a as Integer which is used to determine if it comes from Own Profile or Friends Profile
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param plan
+	 *            an object of type Plan.
+	 * @param context
+	 *            current state of the application/object.
+	 * @param clickListener
+	 *            which is used for a specific action when button is clicked.
+	 * @param position
+	 *            as Integer which refers to the item position of the list
+	 * @param convertView
+	 *            as view
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param a
+	 *            as Integer which is used to determine if it comes from Own
+	 *            Profile or Friends Profile
+	 * @return View
 	 * @see View
 	 */
 
@@ -81,7 +96,6 @@ public class PlanRowFactory {
 		// set Date
 		if (plan.getPlanTime() != null) {
 
-			// holder.planDateTimeText.setText(Utility.getFormattedDisplayDateplanList(plan.getPlanTime()));
 			holder.planDateTimeText.setText(Utility
 					.getFormattedDisplayDateEventList(plan.getPlanTime()));
 			holder.planDateTimeText.setVisibility(View.VISIBLE);
@@ -94,15 +108,12 @@ public class PlanRowFactory {
 		if (plan.getPlanImageUrl() != null) {
 
 			if (!plan.getPlanImageUrl().equalsIgnoreCase("")) {
-				// il.DisplayImage(plan.getplanImageUrl(),
-				// holder.coverPhoto,R.drawable.img_blank);
 				il.download(plan.getPlanImageUrl(), holder.coverPhoto);
 			}
 		}
 
 		// set distance
-		// holder.distanceText.setText(Utility.getFormatedDistance(((Plan)
-		// plan).getDistance(), StaticValues.myInfo.getSettings().getUnit()));
+
 		if (StaticValues.myPoint != null) {
 			holder.distanceText.setText(Utility.getFormatedDistance(Utility
 					.calculateDistance(StaticValues.myPoint,
@@ -147,12 +158,10 @@ public class PlanRowFactory {
 			holder.btnEdit.setVisibility(View.VISIBLE);
 			holder.btnDelete.setVisibility(View.VISIBLE);
 			holder.ivSeparator.setVisibility(View.VISIBLE);
-			// holder.btnEditPlace.setVisibility(View.VISIBLE);
 		} else {
 			holder.btnEdit.setVisibility(View.INVISIBLE);
 			holder.btnDelete.setVisibility(View.INVISIBLE);
 			holder.ivSeparator.setVisibility(View.INVISIBLE);
-			// holder.btnEditPlace.setVisibility(View.INVISIBLE);
 		}
 
 		holder.btnEdit.setOnClickListener(new View.OnClickListener() {

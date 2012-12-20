@@ -14,24 +14,36 @@ import android.widget.TextView;
 
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class SecondDegreePeopleRowFactoryBlockUnblock { 
-	
+
+/**
+ * SecondDegreePeopleRowFactoryBlockUnblock class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class SecondDegreePeopleRowFactoryBlockUnblock {
+
 	/**
-	 * This method returns a View, that view is associates with corresponding layout.  
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param peopleObj an object of type Secondary People. 
-	 * @param con current state of the application/object. 
-	 * @param licl which is used for a specific action when button is clicked.  
-	 * @param convertView as view.  
-	 * @param il which is used to download image from a specific url.  
-	 * @param listItemClickListenerSecondDegreePeople which is used for a specific action when button is clicked. 
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param peopleObj
+	 *            an object of type Secondary People.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerSecondDegreePeople
+	 *            which is used for a specific action when button is clicked.
+	 * @return View
 	 * @see View
 	 */
 
@@ -95,19 +107,13 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		// holder.coverPhoto.setImageResource(R.drawable.cover_pic_default);
-
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
-		// R.drawable.icon));
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
-				// holder.avatar, 320,150);
+
 				il.download(people.getAvatar(), holder.avatar);
 			}
-			// holder.statusText.setText(otherUserEntity.getStatusMsg());
-		} // else
-			// holder.avatar.setImageResource(R.drawable.icon);
+
+		}
 
 		if (people.getCoverPhoto() != null
 				&& !people.getCoverPhoto().equals("")) {
@@ -119,7 +125,6 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 			holder.coverPhoto
 					.setImageResource(R.drawable.cover_pic_second_degree);
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
 		holder.distanceText.setText(Utility.getFormatedDistance(people
 				.getDistance(), StaticValues.myInfo.getSettings().getUnit()));
 
@@ -128,9 +133,6 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				// AppStaticStorages.selectedPeople=otherUserEntity;
-				// licl.onMapButtonClick(RowType.PEOPLE.ordinal());
 
 				listItemClickListenerSecondDegreePeople
 						.onShowOnMapButtonClick(people);
@@ -162,12 +164,6 @@ public class SecondDegreePeopleRowFactoryBlockUnblock {
 								people.getRefId(), arg1);
 					}
 				});
-
-		// if (StaticValues.PEOPLE_SELECT_ALL_USERS) {
-		// holder.checked.setChecked(StaticValues.PEOPLE_SELECT_ALL_USERS);
-		// } else if (people.isBlocked()) {
-		// holder.checked.setChecked(people.isBlocked());
-		// }
 
 		return view;
 	}

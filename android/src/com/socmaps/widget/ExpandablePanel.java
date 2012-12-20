@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 
 import com.socmaps.ui.R;
 
+
+/**
+ * ExpandablePanel class for providing customize expandable panel.
+ */
 public class ExpandablePanel extends LinearLayout {
 
 	private final int mHandleId;
@@ -25,10 +29,22 @@ public class ExpandablePanel extends LinearLayout {
 
 	private OnExpandListener mListener;
 
+	/**
+	 * Construct a expandable panel (view) 
+	 * 
+	 * @param context Current active Context.
+	 */
 	public ExpandablePanel(Context context) {
 		this(context, null);
 	}
 
+	/**
+	 * Construct a expandable panel (view) 
+	 * 
+	 * @param context Current active Context.
+	 * @param attrs is AttributeSet
+	 * @see AttributeSet
+	 */
 	public ExpandablePanel(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mListener = new DefaultOnExpandListener();
@@ -65,14 +81,29 @@ public class ExpandablePanel extends LinearLayout {
 		a.recycle();
 	}
 
+	/**
+	 * To expand and collapse a panel or view
+	 * 
+	 * @param listener in type OnExpandListener which is use for a specific action
+	 */
 	public void setOnExpandListener(OnExpandListener listener) {
 		mListener = listener;
 	}
 
+	/**
+	 * To fix up expandable panel height.
+	 * 
+	 * @param collapsedHeight in integer which is use to fix expandable panel height.
+	 */
 	public void setCollapsedHeight(int collapsedHeight) {
 		mCollapsedHeight = collapsedHeight;
 	}
 
+	/**
+	 * Animation time duration
+	 * 
+	 * @param animationDuration in integer  
+	 */
 	public void setAnimationDuration(int animationDuration) {
 		mAnimationDuration = animationDuration;
 	}
@@ -135,6 +166,10 @@ public class ExpandablePanel extends LinearLayout {
 		}
 	}
 
+	
+	/**
+	 * Reverse the expandable panel or view
+	 */
 	public void togglePanel() {
 		Animation a;
 		if (mExpanded) {
@@ -149,7 +184,7 @@ public class ExpandablePanel extends LinearLayout {
 		mExpanded = !mExpanded;
 	}
 
-	public void showPanel() {
+	private void showPanel() {
 
 		if (!mExpanded) {
 			Animation a = new ExpandAnimation(mCollapsedHeight, mContentHeight);
@@ -161,6 +196,9 @@ public class ExpandablePanel extends LinearLayout {
 
 	}
 
+	/**
+	 * Hide the expandable panel or view which is already expanded
+	 */
 	public void hidePanel() {
 
 		if (mExpanded) {
@@ -175,12 +213,7 @@ public class ExpandablePanel extends LinearLayout {
 
 	@Override
 	public void invalidate() {
-		/*
-		 * if(mExpanded) { int oldHeight = mContentHeight; mContentHeight =
-		 * mContent.getMeasuredHeight(); Animation a = new
-		 * ExpandAnimation(oldHeight, mContentHeight);
-		 * a.setDuration(mAnimationDuration); mContent.startAnimation(a); }
-		 */
+		
 	}
 
 	private class ExpandAnimation extends Animation {

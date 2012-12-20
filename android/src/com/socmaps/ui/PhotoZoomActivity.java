@@ -28,7 +28,6 @@ public class PhotoZoomActivity extends Activity {
 	ImagePagerAdapter adapter;
 	private int position = 0;
 	private String[] photo_url;
-	private int focusedPage = 0;
 	private ProgressBar progressBar;
 	boolean isShow = false;
 	ProgressDialog pDialog;
@@ -82,19 +81,7 @@ public class PhotoZoomActivity extends Activity {
 			public void onPageSelected(int position) {
 				// TODO Auto-generated method stub
 
-				focusedPage = position;
 				isShow = true;
-
-				// viewPager.getChildAt(position)
-				// .findViewById(R.id.btnPhotoZoomRight)
-				// .setVisibility(View.INVISIBLE);
-				// viewPager.getChildAt(position)
-				// .findViewById(R.id.btnPhotoZoomLeft)
-				// .setVisibility(View.INVISIBLE);
-				// viewPager.getChildAt(position)
-				// .findViewById(R.id.btnPhotoZoomClose)
-				// .setVisibility(View.INVISIBLE);
-
 				Log.i("viewPager onPageSelected", "position:" + position);
 
 			}
@@ -102,17 +89,11 @@ public class PhotoZoomActivity extends Activity {
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
-				// Log.w("viewPager onPageScrolled", "arg0:" + arg0 + " arg2:"
-				// + arg2 + " arg1:" + arg1);
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
 				// TODO Auto-generated method stub
-
-				// Log.d("viewPager onPageScrollStateChanged", "state:" +
-				// state);
-
 				if (state == ViewPager.SCROLL_STATE_IDLE) {
 
 					Log.d("viewPager onPageScrollStateChanged  SCROLL_STATE_IDLE",
@@ -172,20 +153,7 @@ public class PhotoZoomActivity extends Activity {
 	}
 
 	private class ImagePagerAdapter extends PagerAdapter {
-		// private int[] mImages = new int[] { R.drawable.chiang_mai,
-		// R.drawable.himeji, R.drawable.petronas_twin_tower,
-		// R.drawable.ulm };
-
-		// private String[] URLS = {
-		// "http://lh5.ggpht.com/_mrb7w4gF8Ds/TCpetKSqM1I/AAAAAAAAD2c/Qef6Gsqf12Y/s144-c/_DSC4374%20copy.jpg",
-		// "http://lh5.ggpht.com/_Z6tbBnE-swM/TB0CryLkiLI/AAAAAAAAVSo/n6B78hsDUz4/s144-c/_DSC3454.jpg",
-		// "http://lh3.ggpht.com/_GEnSvSHk4iE/TDSfmyCfn0I/AAAAAAAAF8Y/cqmhEoxbwys/s144-c/_MG_3675.jpg",
-		// "http://lh6.ggpht.com/_Nsxc889y6hY/TBp7jfx-cgI/AAAAAAAAHAg/Rr7jX44r2Gc/s144-c/IMGP9775a.jpg",
-		// "http://lh3.ggpht.com/_lLj6go_T1CQ/TCD8PW09KBI/AAAAAAAAQdc/AqmOJ7eg5ig/s144-c/Juvenile%20Gannet%20despute.jpg",
-		// "http://lh6.ggpht.com/_ZN5zQnkI67I/TCFFZaJHDnI/AAAAAAAABVk/YoUbDQHJRdo/s144-c/P9250508.JPG",
-		// "http://lh4.ggpht.com/_XjNwVI0kmW8/TCOwNtzGheI/AAAAAAAAC84/SxFJhG7Scgo/s144-c/0014.jpg"
-		//
-		// };
+	
 
 		@Override
 		public int getCount() {
@@ -199,30 +167,13 @@ public class PhotoZoomActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.startUpdate(container);
 
-			// showHideButton(container.getChildAt(R.id.btnPhotoZoomRight),
-			// container.getChildAt(R.id.btnPhotoZoomLeft),
-			// container.getChildAt(R.id.btnPhotoZoomClose));
-			// Log.w("Test startUpdate ViewGroup", "????");
+			
 		}
 
-		// @Override
-		// public int getItemPosition(Object object) {
-		// // TODO Auto-generated method stub
-		// return POSITION_NONE;
-		// }
 
 		@Override
 		public boolean isViewFromObject(View view, Object object) {
-			// return view == ((ImageView) object);
-
-			// Log.w("Test isViewFromObject", "????");
-
-			/*
-			 * showHideButton( ((View)
-			 * object).findViewById(R.id.btnPhotoZoomRight), ((View)
-			 * object).findViewById(R.id.btnPhotoZoomLeft), ((View)
-			 * object).findViewById(R.id.btnPhotoZoomClose));
-			 */
+			
 
 			if (isShow) {
 				showHideButton(view.findViewById(R.id.btnPhotoZoomRight),
@@ -236,9 +187,7 @@ public class PhotoZoomActivity extends Activity {
 				Log.w("Test isViewFromObject", "isShow false");
 
 			}
-			// showHideButton(view.findViewById(R.id.btnPhotoZoomRight),
-			// view.findViewById(R.id.btnPhotoZoomLeft),
-			// view.findViewById(R.id.btnPhotoZoomClose));
+		
 
 			return view == object;
 
@@ -260,9 +209,6 @@ public class PhotoZoomActivity extends Activity {
 			final Button btnPhotoZoomClose = (Button) view
 					.findViewById(R.id.btnPhotoZoomClose);
 
-			// viewPager.setTag(btnPhotoZoomRight);
-
-			// btnPhotoZoomRight.setTag(btnPhotoZoomRight);
 
 			ivPhotoZoom.setOnClickListener(new OnClickListener() {
 
@@ -281,8 +227,6 @@ public class PhotoZoomActivity extends Activity {
 
 					showNextScreen(position);
 
-					// showHideButton(btnPhotoZoomRight, btnPhotoZoomLeft,
-					// btnPhotoZoomClose);
 				}
 			});
 
@@ -293,9 +237,7 @@ public class PhotoZoomActivity extends Activity {
 
 					showPrevScreen(position);
 
-					// showHideButton(btnPhotoZoomRight, btnPhotoZoomLeft,
-					// btnPhotoZoomClose);
-
+				
 				}
 			});
 
@@ -328,14 +270,9 @@ public class PhotoZoomActivity extends Activity {
 	}
 
 	public void showHideButton(View v, View v1, View v2) {
-
-		// viewPager.findViewWithTag(v).setVisibility(View.INVISIBLE);
-
 		v.setVisibility(View.INVISIBLE);
 		v1.setVisibility(View.INVISIBLE);
 		v2.setVisibility(View.INVISIBLE);
-
-		// v.findViewWithTag(v).setVisibility(View.INVISIBLE);
 
 	}
 

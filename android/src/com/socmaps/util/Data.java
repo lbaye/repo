@@ -27,6 +27,12 @@ import android.net.Uri;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
+
+
+/**
+ * Data class  for sending request to server and receive response.
+ *
+ */
 public class Data {
 	
 	/**
@@ -60,7 +66,6 @@ public class Data {
 
 		} catch (Exception e) {
 			Log.e("Server error", e.getMessage());
-			// e.printStackTrace();
 		}
 
 		return responseString;
@@ -98,9 +103,6 @@ public class Data {
 			String filePath = cursor.getString(columnIndex);
 			cursor.close();
 
-			// Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-
-			// Bitmap bm=BitmapFactory.decodeFile(imageUri.getPath());
 			FileInputStream fileInputStream = new FileInputStream(new File(
 					filePath));
 

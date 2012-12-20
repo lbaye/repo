@@ -8,15 +8,22 @@ public class Circle {
 	private String id;
 	private String name;
 	private String type;
-	// private Friend[] friends;
 	private List<People> friendList=new ArrayList<People>();
 
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 
+	/**
+	 * @return the id
+	 */
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public void setName(String name) {
@@ -35,11 +42,6 @@ public class Circle {
 		return type;
 	}
 
-	/*
-	 * public void setFriends(Friend[] friends) { this.friends = friends; }
-	 * 
-	 * public Friend[] getFriends() { return friends; }
-	 */
 	public List<People> getFriendList() {
 		return friendList;
 	}

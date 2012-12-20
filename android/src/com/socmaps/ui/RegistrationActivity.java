@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -52,7 +51,6 @@ public class RegistrationActivity extends Activity {
 	ImageView ivProfilePicture;
 	Button btnSubmit, btnSelectDate, btnBack;
 	Spinner spRelationshipStatus, spGender, spCountry;
-	// CheckBox chkRememberPassword;
 	TextView tvTerms, tvShowSelectedDate;
 	DatePicker dpDateOfBirth;
 	private ProgressDialog m_ProgressDialog;
@@ -70,7 +68,7 @@ public class RegistrationActivity extends Activity {
 
 	String responseString = "";
 	int responseStatus = 0;
-	
+
 	Context context;
 
 	@Override
@@ -143,8 +141,7 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 
 				final CharSequence[] items = { "Gallery", "Camera" };
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						context);
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				builder.setTitle("Select");
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 					@Override
@@ -194,14 +191,13 @@ public class RegistrationActivity extends Activity {
 				} else if (etLastName.getText().toString().length() == 0) {
 					flag = false;
 					etLastName.setError("Last name can not be empty.");
-				} else if (etUserName.getText().toString().length() == 0) { 
-					flag = false; 
+				} else if (etUserName.getText().toString().length() == 0) {
+					flag = false;
 					etUserName.setError("User name can not be empty");
 				}
 
 				if (flag) {
-					locationSharingDisclaimerDialog = new Dialog(
-							context,
+					locationSharingDisclaimerDialog = new Dialog(context,
 							android.R.style.Theme_Light_NoTitleBar);
 					locationSharingDisclaimerDialog
 							.setContentView(R.layout.location_sharing_disclaimer_layout);
@@ -240,11 +236,10 @@ public class RegistrationActivity extends Activity {
 								Thread thread = new Thread(null,
 										requestRunnable, "MagentoBackground");
 								thread.start();
-								m_ProgressDialog = ProgressDialog.show(
-										context,
+								m_ProgressDialog = ProgressDialog.show(context,
 										"Registration",
 										"Sending request. Please wait...",
-										true,true);
+										true, true);
 
 							} else {
 								Toast.makeText(context,
@@ -268,8 +263,6 @@ public class RegistrationActivity extends Activity {
 		public void run() {
 
 			// have to do something here
-			// Toast.makeText(getApplicationContext(),pInfo.getUserName(),
-			// Toast.LENGTH_SHORT).show();
 
 			handleResponse(responseStatus, responseString);
 
@@ -285,7 +278,6 @@ public class RegistrationActivity extends Activity {
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
 			registrationSuccess(response);
 			break;
 
@@ -312,14 +304,6 @@ public class RegistrationActivity extends Activity {
 		if (avatar != null) {
 
 			ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
-
-			// avatar = Utility..resizeBitmap
-
-			// Bitmap resizedAvatar =
-			// Utility.resizeBitmap(avatar,Constant.thumbWidth,
-			// Constant.thumbHeight);
-			// resizedAvatar.compress(Bitmap.CompressFormat.PNG, 60,
-			// full_stream);
 			avatar.compress(Bitmap.CompressFormat.PNG, 60, full_stream);
 
 			byte[] full_bytes = full_stream.toByteArray();
@@ -328,8 +312,6 @@ public class RegistrationActivity extends Activity {
 		}
 
 		RestClient client = new RestClient(Constant.smRegistrationUrl);
-
-		// client.AddHeader("GData-Version", "2"); 
 		Log.d("userName", etUserName.getText().toString());
 
 		client.AddParam("email", email);
@@ -344,7 +326,6 @@ public class RegistrationActivity extends Activity {
 		client.AddParam("street", etStreetAddress.getText().toString());
 		client.AddParam("city", etCity.getText().toString());
 		client.AddParam("postCode", etZipCode.getText().toString());
-		// client.AddParam("country", etCountry.getText().toString());
 
 		if (spCountry.getSelectedItemPosition() > 0) {
 			client.AddParam("country", spCountry.getSelectedItem().toString());
@@ -394,12 +375,10 @@ public class RegistrationActivity extends Activity {
 
 			// save the authToken, id to the storage
 			Utility.storeSession(StaticValues.myInfo.getId(),
-					StaticValues.myInfo.getAuthToken(),response,
-					context);
+					StaticValues.myInfo.getAuthToken(), response, context);
 
 			finish();
-			Intent myIntent = new Intent(context,
-					HomeActivity.class);
+			Intent myIntent = new Intent(context, HomeActivity.class);
 			startActivity(myIntent);
 		} else {
 			Log.e("Facebook Login Error", "Error during parsing response");
@@ -426,9 +405,9 @@ public class RegistrationActivity extends Activity {
 	}
 
 	private void initialize() {
-		
+
 		context = getApplicationContext();
-		
+
 		btnBack = (Button) findViewById(R.id.btnBack);
 		etEmail = (EditText) findViewById(R.id.etEmail);
 		etPassword = (EditText) findViewById(R.id.etPassword);
@@ -438,7 +417,6 @@ public class RegistrationActivity extends Activity {
 		etUserName = (EditText) findViewById(R.id.etUserName);
 		etCity = (EditText) findViewById(R.id.etCity);
 		etZipCode = (EditText) findViewById(R.id.etZipCode);
-		// etCountry = (EditText) findViewById(R.id.etCountry);
 		btnSelectDate = (Button) findViewById(R.id.btnSelectDate);
 		tvShowSelectedDate = (TextView) findViewById(R.id.tvShowSelectedDate);
 		etBio = (EditText) findViewById(R.id.etBiography);
@@ -448,10 +426,7 @@ public class RegistrationActivity extends Activity {
 		spRelationshipStatus = (Spinner) findViewById(R.id.spRelationshipStatus);
 		spGender = (Spinner) findViewById(R.id.spGender);
 		spCountry = (Spinner) findViewById(R.id.spCountry);
-		// chkRememberPassword=(CheckBox)
-		// findViewById(R.id.chkRememberPassword);
 		btnSubmit = (Button) findViewById(R.id.btnSubmit);
-		// tvTerms=(TextView) findViewById(R.id.tvTerms);
 		toggleOptionalInfoLayout = (LinearLayout) findViewById(R.id.toggleOptionalInfoLayout);
 		optionalInfoLayout = (LinearLayout) findViewById(R.id.optionalInfoLayout);
 	}
@@ -463,10 +438,7 @@ public class RegistrationActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 
 				if (avatar != null) {
-					//avatar.recycle();
 				}
-
-				// avatar = (Bitmap) data.getExtras().get("data");
 				avatar = Utility.resizeBitmap(
 						(Bitmap) data.getExtras().get("data"),
 						Constant.thumbWidth, 0, true);
@@ -479,17 +451,19 @@ public class RegistrationActivity extends Activity {
 
 		} else if (requestCode == Constant.REQUEST_CODE_GALLERY) {
 			if (resultCode == RESULT_OK) {
-				
+
 				Uri selectedImage = data.getData();
-	            try {
-					avatar = Utility.resizeBitmap(Utility.decodeUri(selectedImage, getContentResolver()), Constant.thumbWidth, 0, true);
-					
+				try {
+					avatar = Utility.resizeBitmap(Utility.decodeUri(
+							selectedImage, getContentResolver()),
+							Constant.thumbWidth, 0, true);
+
 					ivProfilePicture.setImageBitmap(avatar);
-					
+
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}  catch (OutOfMemoryError e) {
+				} catch (OutOfMemoryError e) {
 					Toast.makeText(context,
 							getString(R.string.errorMessageGallery),
 							Toast.LENGTH_SHORT).show();
@@ -502,31 +476,6 @@ public class RegistrationActivity extends Activity {
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
-				/*try {					
-					if (avatar != null) {
-						//avatar.recycle();
-					}
-					avatar = Utility.resizeBitmap(
-							MediaStore.Images.Media.getBitmap(
-									this.getContentResolver(), data.getData()),
-							Constant.thumbWidth, Constant.thumbHeight);
-					ivProfilePicture.setImageBitmap(avatar);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch(OutOfMemoryError e)	{
-					Log.e("Gallery image", "OutOfMemoryError");
-					Toast.makeText(getApplicationContext(), getString(R.string.errorMessageGallery), Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}*/
-				
 			}
 		}
 	}
@@ -542,8 +491,7 @@ public class RegistrationActivity extends Activity {
 
 	private void onClose() {
 		finish();
-		Intent myIntent = new Intent(context,
-				LoginActivity.class);
+		Intent myIntent = new Intent(context, LoginActivity.class);
 		startActivity(myIntent);
 	}
 

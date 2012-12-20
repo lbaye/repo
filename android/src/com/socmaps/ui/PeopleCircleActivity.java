@@ -3,7 +3,6 @@ package com.socmaps.ui;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -24,35 +22,20 @@ import com.socmaps.widget.PeopleCirclePrefaranceItemView;
 
 public class PeopleCircleActivity extends Activity implements OnClickListener {
 
-	// private LinearLayout meetupRequestListContainer;
-
 	private Context context;
-
-	//ProgressDialog m_ProgressDialog;
 
 	View requestItemView;
 
-	// ImageLoader imageLoader;
-	private boolean isSearchEnabled = false;
-
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 
-	private Button btnBack, btnInvitePeople, btnCirclePeople,
-			btnBlockUnblockPeople, btnPeopleByDistance;
-
-	private EditText etSearchField;
+	private Button btnBack, btnInvitePeople, btnCirclePeople,btnBlockUnblockPeople, btnPeopleByDistance;
 	private RelativeLayout searchPanel;
-	// private int selectedBtnColor;
 
 	private LinearLayout llCircleList;
-	private LinearLayout circleItemView;
+	private static PeopleCircleActivity ins = null;
 
-	private static boolean isRefreshCircleList = false;
-
-	private static PeopleCircleActivity ins = null; 
-	
-	/** 
-	 * This method holds an object which is static. 
+	/**
+	 * This method holds an object which is static.
 	 * 
 	 * @return PeopleCircleActivity
 	 */
@@ -85,11 +68,9 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 		ins = PeopleCircleActivity.this;
 		context = PeopleCircleActivity.this;
-		// imageLoader = new ImageLoader(context);
+
 		imageDownloader = new ImageDownloader();
 		imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
-
-		// selectedBtnColor = getResources().getColor(R.color.gray_light);
 
 		btnToggleSearchPanel = (Button) findViewById(R.id.btnSearch);
 		btnToggleSearchPanel.setOnClickListener(this);
@@ -101,7 +82,6 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		btnClearSearch.setOnClickListener(this);
 
 		searchPanel = (RelativeLayout) findViewById(R.id.searchPanel);
-		etSearchField = (EditText) findViewById(R.id.etSearchField);
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
@@ -119,7 +99,6 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 		btnBlockUnblockPeople = (Button) findViewById(R.id.btnBlockUnblockPeople);
 		btnBlockUnblockPeople.setOnClickListener(this);
 
-		// circleItemViewList = new ArrayList<LinearLayout>();
 		llCircleList = (LinearLayout) findViewById(R.id.llCircleList);
 
 	}
@@ -128,15 +107,11 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 
 		if (v == btnToggleSearchPanel) {
-			toggleSearchPanel();
+
 		} else if (v == btnDoSearch) {
-			isSearchEnabled = true;
-			doSearch();
-			// toggleSearchPanel();
+
 		} else if (v == btnClearSearch) {
-			isSearchEnabled = false;
-			etSearchField.setText("");
-			doSearch();
+
 		} else if (v == btnPeopleByDistance) {
 
 			Intent circleIntent = new Intent(getApplicationContext(),
@@ -157,12 +132,6 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 		} else if (v == btnCirclePeople) {
 
-			// Intent circleIntent = new Intent(getApplicationContext(),
-			// PeopleCircleActivity.class);
-			// circleIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// startActivity(circleIntent);
-			// finish();
-
 		} else if (v == btnBlockUnblockPeople) {
 			Intent blickUnblockiIntent = new Intent(getApplicationContext(),
 					PeopleBlockUnblockActivity.class);
@@ -171,15 +140,14 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 			finish();
 		} else if (v == btnBack) {
 
-			
 			finish();
 
 		}
 
 	}
-	
+
 	/**
-	 * This method generates Circle list of a person. 
+	 * This method generates Circle list of a person.
 	 * 
 	 */
 
@@ -198,27 +166,6 @@ public class PeopleCircleActivity extends Activity implements OnClickListener {
 			}
 		}
 
-	}
-
-	/*
-	 * Search portion
-	 */
-	private void doSearch() {
-
-		// List<Object> list = (Utility.getSearchResult(listMasterContent,
-		// etSearchField.getText().toString().trim()));
-		//
-		// listContent.clear();
-		// listContent.addAll(list);
-		//
-		// updateDisplayList(listContent);
-	}
-
-	private void toggleSearchPanel() {
-		if (!searchPanel.isShown())
-			searchPanel.setVisibility(View.VISIBLE);
-		else
-			searchPanel.setVisibility(View.GONE);
 	}
 
 	private void showSearchPanel(boolean display) {

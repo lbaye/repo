@@ -41,19 +41,29 @@ import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
 import com.socmaps.entity.UserSettings;
 
+
+/**
+ * ServerResponseParser class for parsing all server response.
+ *
+ */
 public class ServerResponseParser {
 
 	private static final String JSON_RECIPIENTS = "recipients";
-	
+
 	/**
-	 * Parse server (JSON) response and binds to MyInfo object
+	 * Parse server (JSON) response and binds to MyInfo object.
 	 * 
-	 * @param response would be String converted from server response (JSON file). 
-	 * @param facebookId is user facebookId.
-	 * @param facebookAuthToken is user facebookAuthToken. 
-	 * @param isResult is true if the JSON response starts with result tag, false otherwise.
-	 * @return MyInfo object which is binds with all data.
-	 * @see com.socmaps.entity.MyInfo 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @param facebookId
+	 *            is user facebookId
+	 * @param facebookAuthToken
+	 *            is user facebookAuthToken
+	 * @param isResult
+	 *            is true if the JSON response starts with result tag, false
+	 *            otherwise
+	 * @return MyInfo object which is binds with all data
+	 * @see com.socmaps.entity.MyInfo
 	 */
 	public static MyInfo parseUserProfileInfo(String response,
 			String facebookId, String facebookAuthToken, boolean isResult) {
@@ -68,14 +78,17 @@ public class ServerResponseParser {
 		return myInfo;
 
 	}
-	
+
 	/**
-	 * Parse server (JSON) response and binds to MyInfo object
+	 * Parse server (JSON) response and binds to MyInfo object.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @param isResult is true if the JSON response starts with result tag, false otherwise.
-	 * @return MyInfo object which is binds with all data.
-	 * @see com.socmaps.entity.MyInfo 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @param isResult
+	 *            is true if the JSON response starts with result tag, false
+	 *            otherwise
+	 * @return MyInfo object which is binds with all data
+	 * @see com.socmaps.entity.MyInfo
 	 */
 
 	public static MyInfo parseUserProfileInfo(String response, boolean isResult) {
@@ -90,29 +103,22 @@ public class ServerResponseParser {
 			}
 
 			myInfo.setId(results.getString("id"));
-			// Log.i("Id", results.getString("id"));
 			myInfo.setEmail(results.getString("email"));
-			// Log.i("email", results.getString("email"));
 			if (!results.isNull("firstName"))
 				myInfo.setFirstName(results.getString("firstName"));
-			// Log.i("firstName", results.getString("firstName"));
 
 			if (!results.isNull("lastName"))
 				myInfo.setLastName(results.getString("lastName"));
-			// Log.i("lastName", results.getString("lastName"));
 			if (!results.isNull("username"))
 				myInfo.setUserName(results.getString("username"));
-			// Log.i("username", results.getString("username"));
 			if (!results.isNull("avatar"))
 				myInfo.setAvatar(results.getString("avatar"));
-			// Log.i("avatar", results.getString("avatar"));
 
 			if (!results.isNull("coverPhoto"))
 				myInfo.setCoverPhoto(results.getString("coverPhoto"));
 
 			if (!results.isNull("authToken"))
 				myInfo.setAuthToken(results.getString("authToken"));
-			// Log.i("authToken", results.getString("authToken"));
 
 			UserSettings userSettings = new UserSettings();
 
@@ -139,12 +145,10 @@ public class ServerResponseParser {
 				myInfo.setGender(results.getString("gender"));
 			else
 				myInfo.setGender("");
-			// Log.i("gender", results.getString("gender"));
 
 			if (!results.isNull("dateOfBirth"))
 				myInfo.setDateOfBirth(results.getJSONObject("dateOfBirth")
 						.getString("date"));
-			// Log.i("dateOfBirth", results.getString("dateOfBirth"));
 
 			if (!results.isNull("lastLogin")) {
 				myInfo.setLastLogInDate(results.getJSONObject("lastLogin")
@@ -153,33 +157,23 @@ public class ServerResponseParser {
 						.getJSONObject("lastLogin")));
 			}
 
-			// Log.i("dateOfBirth", results.getString("dateOfBirth"));
-
 			if (!results.isNull("regMedia"))
 				myInfo.setRegMedia(results.getString("regMedia"));
-			// Log.i("regMedia", results.getString("regMedia"));
 			if (!results.isNull("workStatus"))
 				myInfo.setWorkStatus(results.getString("workStatus"));
-			// Log.i("workStatus", results.getString("workStatus"));
 			if (!results.isNull("relationshipStatus"))
 				myInfo.setRelationshipStatus(results
 						.getString("relationshipStatus"));
 			else
 				myInfo.setRelationshipStatus("");
-			// Log.i("relationshipStatus",
-			// results.getString("relationshipStatus"));
 			if (!results.isNull("bio"))
 				myInfo.setBio(results.getString("bio"));
-			// Log.i("bio", results.getString("bio"));
 			if (!results.isNull("interests"))
 				myInfo.setInterests(results.getString("interests"));
-			// Log.i("interests", results.getString("interests"));
 
 			if (!results.isNull("loginCount")) {
 				myInfo.setLogInCount(results.getInt("loginCount"));
 			}
-
-			// Log.i("loginCount", results.getInt("loginCount") + "");
 
 			if (!results.isNull("status")) {
 				myInfo.setStatusMsg(results.getString("status"));
@@ -195,9 +189,6 @@ public class ServerResponseParser {
 
 				myInfo.setCurrentLng(results.getJSONObject("currentLocation")
 						.getDouble("lng"));
-
-				// myInfo.setCurrentPosition(getGeoPointFromjsonObject(results.getJSONObject("currentLocation")));
-
 			}
 
 			if (!results.isNull("address")) {
@@ -205,26 +196,18 @@ public class ServerResponseParser {
 				if (!results.getJSONObject("address").isNull("street"))
 					myInfo.setStreetAddress(results.getJSONObject("address")
 							.getString("street"));
-				// Log.i("street",results.getJSONObject("address").getString("street"));
 				if (!results.getJSONObject("address").isNull("city"))
 					myInfo.setCity(results.getJSONObject("address").getString(
 							"city"));
-
-				// Log.i("city",
-				// results.getJSONObject("address").getString("city"));
 				if (!results.getJSONObject("address").isNull("country"))
 					myInfo.setCountry(results.getJSONObject("address")
 							.getString("country"));
-				// Log.i("country",results.getJSONObject("address").getString("country"));
 				if (!results.getJSONObject("address").isNull("postCode"))
 					myInfo.setPostCode(results.getJSONObject("address")
 							.getString("postCode"));
-				// Log.i("postCode",results.getJSONObject("address").getString("postCode"));
 				if (!results.getJSONObject("address").isNull("state"))
 					myInfo.setState(results.getJSONObject("address").getString(
 							"state"));
-				// Log.i("state",results.getJSONObject("address").getString("state"));
-
 			}
 
 			if (!results.isNull("circles")) {
@@ -243,8 +226,6 @@ public class ServerResponseParser {
 				if (fjArray != null) {
 
 					myInfo.setFriendList(parsePeoples(fjArray));
-					// accountSettingsEntity.setFriend(friends);
-
 				}
 			}
 
@@ -257,7 +238,6 @@ public class ServerResponseParser {
 				int messageCount = 0;
 
 				if (!nObj.isNull("notifications")) {
-					// notifications = nObj.getInt("notifications");
 					notificationCount.setNotificationCount(notifications);
 				}
 				if (!nObj.isNull("friendRequest")) {
@@ -286,11 +266,12 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 * Parse server (JSON) response and returns CirclesAndFriends object
+	 * Parse server (JSON) response and returns CirclesAndFriends object.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return CirclesAndFriends object which is binds with all data.
-	 * @see com.socmaps.entity.CirclesAndFriends 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return CirclesAndFriends object which is binds with all data
+	 * @see com.socmaps.entity.CirclesAndFriends
 	 */
 	public static CirclesAndFriends parseCircleAndFriends(String response) {
 		CirclesAndFriends circlesAndFriends = new CirclesAndFriends();
@@ -314,8 +295,6 @@ public class ServerResponseParser {
 				if (fjArray != null) {
 
 					circlesAndFriends.setFriends(parsePeoples(fjArray));
-					// accountSettingsEntity.setFriend(friends);
-
 				}
 			}
 
@@ -327,20 +306,19 @@ public class ServerResponseParser {
 
 		return circlesAndFriends;
 	}
-		
+
 	/**
-	 * Parse server (JSON) response which is people JSONArray
+	 * Parse server (JSON) response which is people JSONArray.
 	 * 
-	 * @param jArray is server response which is people JSONArray
-	 * @return List of peoples. 
+	 * @param jArray
+	 *            is server response which is people JSONArray
+	 * @return List of peoples
 	 * @see List
-	 * @see com.socmaps.entity.People 
+	 * @see com.socmaps.entity.People
 	 */
 
 	public static List<People> parsePeoples(JSONArray jArray) {
 		List<People> friendList = new ArrayList<People>();
-
-		// Friend[] friends = new Friend[fjArray.length()];
 
 		try {
 			for (int i = 0; i < jArray.length(); i++) {
@@ -360,10 +338,11 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 * Parse server (JSON) response which is circle JSONObject
+	 * Parse server (JSON) response which is circle JSONObject.
 	 * 
-	 * @param jObj is server response which is circle JSONObject
-	 * @return Circle object binds with all data.
+	 * @param jObj
+	 *            is server response which is circle JSONObject
+	 * @return Circle object binds with all data
 	 * @see com.socmaps.entity.Circle
 	 */
 	public static Circle parseCircleEntity(JSONObject jObj) {
@@ -383,7 +362,6 @@ public class ServerResponseParser {
 
 			if (!jObj.isNull("friends")) {
 				JSONArray fjArray = jObj.getJSONArray("friends");
-				// Friend[] friends = new Friend[fjArray.length()];
 				List<People> friendList = new ArrayList<People>();
 
 				for (int j = 0; j < fjArray.length(); j++) {
@@ -391,17 +369,6 @@ public class ServerResponseParser {
 					String friendId = fjArray.getString(j);
 
 					people.setId(friendId);
-
-					/*
-					 * try { JSONObject friendInfo = fjArray.getJSONObject(j);
-					 * Log.d(ServerResponseParser.class.getName(),
-					 * friendInfo.toString());
-					 * people.setId(friendInfo.getString("id")); } catch
-					 * (JSONException e) {
-					 * Log.w(ServerResponseParser.class.getName(), e);
-					 * people.setId(fjArray.getString(j)); }
-					 */
-
 					friendList.add(people);
 				}
 
@@ -420,11 +387,12 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response which is circle JSONObject with Details.
 	 * 
-	 * @param jObj is server response which is circle JSONObject
-	 * @return Circle object binds with all data.
+	 * @param jObj
+	 *            is server response which is circle JSONObject
+	 * @return Circle object binds with all data
 	 * @see com.socmaps.entity.Circle
 	 */
-	
+
 	public static Circle parseCircleEntityDetails(JSONObject jObj) {
 		Circle circle = new Circle();
 
@@ -442,22 +410,10 @@ public class ServerResponseParser {
 
 			if (!jObj.isNull("friends")) {
 				JSONArray fjArray = jObj.getJSONArray("friends");
-				// Friend[] friends = new Friend[fjArray.length()];
 				List<People> friendList = new ArrayList<People>();
 
 				for (int j = 0; j < fjArray.length(); j++) {
 					People people = parsePeople(fjArray.getJSONObject(j));
-
-					/*
-					 * try { JSONObject friendInfo = fjArray.getJSONObject(j);
-					 * Log.d(ServerResponseParser.class.getName(),
-					 * friendInfo.toString());
-					 * people.setId(friendInfo.getString("id")); } catch
-					 * (JSONException e) {
-					 * Log.w(ServerResponseParser.class.getName(), e);
-					 * people.setId(fjArray.getString(j)); }
-					 */
-
 					friendList.add(people);
 				}
 
@@ -472,11 +428,12 @@ public class ServerResponseParser {
 
 		return circle;
 	}
-	
+
 	/**
-	 * Parse server (JSON) response and returns array of FriendRequest
+	 * Parse server (JSON) response and returns array of FriendRequest.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
+	 * @param response
+	 *            would be String converted from server response (JSON file)
 	 * @return FriendRequest[] array
 	 * @see com.socmaps.entity.FriendRequest
 	 */
@@ -528,8 +485,6 @@ public class ServerResponseParser {
 					friendRequests[i].setAccepted(accepted);
 				}
 
-				String date;
-
 				if (!jObject.isNull("createDate")) {
 
 					friendRequests[i]
@@ -551,17 +506,16 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response which is MessageThread JSONObject.
 	 * 
-	 * @param jObject is server response which is MessageThread JSONObject
-	 * @return MessageEntity object 
-	 * @see  com.socmaps.entity.MessageEntity
+	 * @param jObject
+	 *            is server response which is MessageThread JSONObject
+	 * @return MessageEntity object
+	 * @see com.socmaps.entity.MessageEntity
 	 */
-	
+
 	public static MessageEntity parseMessageThread(JSONObject jObject) {
 		MessageEntity mEntity = new MessageEntity();
 
 		try {
-
-			// ////////////////////////////////////////////////////////////////
 			String messageId;
 			if (!jObject.isNull("id")) {
 				messageId = jObject.getString("id");
@@ -690,8 +644,6 @@ public class ServerResponseParser {
 
 			mEntity.setReplies(buildReplies(jObject));
 			mEntity.setRecipients(buildRecipients(jObject));
-			// Log.e("Recipients", mEntity.getRecipients().toString());
-
 		} catch (JSONException e) {
 			// TODO: handle exception
 		}
@@ -822,9 +774,10 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 *  Parse server (JSON) response and returns List of MessageEntity.
-	 *  
-	 * @param  response would be String converted from server response (JSON file).
+	 * Parse server (JSON) response and returns List of MessageEntity.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
 	 * @return List of MessageEntity
 	 * @see List
 	 * @see com.socmaps.entity.MessageEntity
@@ -846,10 +799,11 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 *  Parse server (JSON) response and returns LayersPreferences object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return LayersPreferences object.
+	 * Parse server (JSON) response and returns LayersPreferences object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return LayersPreferences object
 	 * @see com.socmaps.entity.LayersPreferences
 	 */
 	public static LayersPreferences parseLayerSettings(String response) {
@@ -870,16 +824,17 @@ public class ServerResponseParser {
 		}
 		return null;
 	}
-	
-	
+
 	/**
-	 *  Parse server (JSON) response and returns NotificationPreferences object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return NotificationPreferences object.
+	 * Parse server (JSON) response and returns NotificationPreferences object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return NotificationPreferences object
 	 * @see com.socmaps.entity.NotificationPreferences
 	 */
-	public static NotificationPreferences parseNotificationSettings(String response) {
+	public static NotificationPreferences parseNotificationSettings(
+			String response) {
 		NotificationPreferences notificationPreferences = new NotificationPreferences();
 
 		try {
@@ -910,12 +865,13 @@ public class ServerResponseParser {
 
 		return null;
 	}
-	
+
 	/**
-	 *  Parse server (JSON) response and returns PlatformsPreferences object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return PlatformsPreferences object.
+	 * Parse server (JSON) response and returns PlatformsPreferences object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return PlatformsPreferences object
 	 * @see com.socmaps.entity.PlatformsPreferences
 	 */
 	public static PlatformsPreferences parsePlatformsSettings(String response) {
@@ -937,13 +893,16 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 *  Parse server (JSON) response and returns InformationSharingPreferences object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return InformationSharingPreferences object.
+	 * Parse server (JSON) response and returns InformationSharingPreferences
+	 * object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return InformationSharingPreferences object
 	 * @see com.socmaps.entity.InformationSharingPreferences
 	 */
-	public static InformationSharingPreferences parseInformationSettings(String response) {
+	public static InformationSharingPreferences parseInformationSettings(
+			String response) {
 		InformationSharingPreferences informationSharingPreferences = new InformationSharingPreferences();
 		try {
 			JSONObject jo = new JSONObject(response);
@@ -984,26 +943,12 @@ public class ServerResponseParser {
 		return null;
 	}
 
-	private static String getDateFromObject(String objectString) {
-		if (objectString != null) {
-			JSONObject jo;
-			try {
-				jo = new JSONObject(objectString);
-				return jo.getString("date");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		return null;
-	}
-
 	/**
-	 *  Parse server (JSON) response and returns SearchResult object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return SearchResult object.
+	 * Parse server (JSON) response and returns SearchResult object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return SearchResult object
 	 * @see com.socmaps.entity.SearchResult
 	 */
 	public static SearchResult parseSeachResult(String response) {
@@ -1018,10 +963,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of Place.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of Place. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of Place
 	 * @see ArrayList
-	 * @see com.socmaps.entity.Place 
+	 * @see com.socmaps.entity.Place
 	 */
 	public static ArrayList<Place> parseSearchResultPlace(String response) {
 
@@ -1049,13 +995,13 @@ public class ServerResponseParser {
 
 		return places;
 	}
-	
-	
+
 	/**
 	 * Parse server (JSON) response which is place JSONObject
 	 * 
-	 * @param placeObj is server response which is place JSONObject
-	 * @return Place object binds with all data.
+	 * @param placeObj
+	 *            is server response which is place JSONObject
+	 * @return Place object binds with all data
 	 * @see com.socmaps.entity.Place
 	 */
 	public static Place parsePlace(JSONObject placeObj) {
@@ -1064,31 +1010,25 @@ public class ServerResponseParser {
 		try {
 			if (!placeObj.isNull("id")) {
 				place.setId(placeObj.getString("id"));
-				// Log.i("Place id", temp.getString("id"));
 			}
 			if (!placeObj.isNull("name")) {
 				place.setName(placeObj.getString("name"));
-				// Log.i("Place Name", temp.getString("name"));
 			}
 			if (!placeObj.isNull("reference")) {
 				place.setReference(placeObj.getString("reference"));
-				// Log.i("Place Reference", temp.getString("reference"));
 			}
 
 			if (!placeObj.isNull("icon")) {
 				place.setIconUrl(placeObj.getString("icon"));
-				// Log.i("Place iconUrl", temp.getString("icon"));
 			}
 
 			if (!placeObj.isNull("vicinity")) {
 				place.setVicinity(placeObj.getString("vicinity"));
-				// Log.i("Place Vicinity", temp.getString("vicinity"));
 			}
 
 			if (!placeObj.isNull("distance")) {
 
 				place.setDistance(placeObj.getDouble("distance"));
-				// Log.i("Distance", temp.getDouble("distance") + "");
 			}
 
 			if (!placeObj.isNull("streetViewImage")) {
@@ -1100,52 +1040,24 @@ public class ServerResponseParser {
 				JSONArray jArrayTypes = placeObj.getJSONArray("types");
 				for (int j = 0; j < jArrayTypes.length(); j++) {
 					types.add(jArrayTypes.getString(j));
-					// Log.i("Types", jArrayTypes.getString(j));
 				}
 				if (types.size() > 0) {
 					place.setTypes(types);
 				}
 			}
 
-			/*
-			 * if (!placeObj.isNull("lastSeenAt")) {
-			 * 
-			 * place.setVenue(placeObj.getString("lastSeenAt"));
-			 * 
-			 * }
-			 */
 			if (!placeObj.isNull("geometry")) {
 				JSONObject geometry = placeObj.getJSONObject("geometry");
 				if (!geometry.isNull("location")) {
 					JSONObject location = geometry.getJSONObject("location");
-					/*
-					 * double lat = location.getDouble("lat"); double lng =
-					 * location.getDouble("lng"); Log.i("Location", lat + " " +
-					 * lng);
-					 */
+
 					if (!location.isNull("lat")) {
 						place.setLatitude(location.getDouble("lat"));
 					}
 					if (!location.isNull("lng")) {
 						place.setLongitude(location.getDouble("lng"));
 					}
-
-					// 'place.setLocation(getGeoPointFromjsonObject(location));
-
 				}
-
-				/*
-				 * if (!geometry.isNull("viewport")) { JSONObject viewPort =
-				 * geometry .getJSONObject("viewport"); if
-				 * (!viewPort.isNull("northeast")) { JSONObject northeast =
-				 * viewPort .getJSONObject("northeast");
-				 * 
-				 * place.setNortheast(getGeoPointFromjsonObject(northeast)); }
-				 * if (!viewPort.isNull("southwest")) { JSONObject southwest =
-				 * viewPort .getJSONObject("southwest");
-				 * 
-				 * place.setSouthwest(getGeoPointFromjsonObject(southwest)); } }
-				 */
 			}
 		} catch (NullPointerException e) {
 			return null;
@@ -1165,10 +1077,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of Place.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of Place. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of Place
 	 * @see ArrayList
-	 * @see com.socmaps.entity.Place 
+	 * @see com.socmaps.entity.Place
 	 */
 	public static ArrayList<Place> parseSavedPlaces(String response) {
 
@@ -1196,11 +1109,12 @@ public class ServerResponseParser {
 
 		return places;
 	}
-	
+
 	/**
-	 *  Parse server (JSON) response and returns LocationSharing object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
+	 * Parse server (JSON) response and returns LocationSharing object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
 	 * @return LocationSharing object.
 	 * @see com.socmaps.entity.LocationSharing
 	 */
@@ -1210,13 +1124,6 @@ public class ServerResponseParser {
 		JSONObject results;
 
 		try {
-
-			/*
-			 * { "result": { "status": "on", "friends_and_circles": {...},-
-			 * "circles_only": [(0)], "strangers": {...},- "geo_fences": [(0)]
-			 * }- }
-			 */
-
 			results = (new JSONObject(response)).getJSONObject("result");
 
 			if (!results.isNull("status")) {
@@ -1231,15 +1138,6 @@ public class ServerResponseParser {
 				locationSharing
 						.setLSFriendsAndCircles(parseLsFriends(friends_and_circlesJsonObject));
 			}
-
-			// if (!results.isNull("friends")) {
-			//
-			// JSONObject lsFriendsJsonObject = results
-			// .getJSONObject("friends");
-			//
-			// locationSharing
-			// .setLSFriendsAndCircles(parseLsFriends(lsFriendsJsonObject));
-			// }
 
 			if (!results.isNull("strangers")) {
 
@@ -1260,8 +1158,6 @@ public class ServerResponseParser {
 			}
 
 			if (!results.isNull("circles_only")) {
-
-				// http://stackoverflow.com/questions/7284663/json-java-check-element-is-a-jsonarray-or-jsonobject
 
 				JSONObject circlesOnlyJsonObject = results
 						.optJSONObject("circles_only");
@@ -1303,7 +1199,6 @@ public class ServerResponseParser {
 		return locationSharing;
 	}
 
-	// http://stackoverflow.com/questions/10880988/android-sdk-parsing-unknow-json-array-key-name-and-quantity
 	private static HashMap<String, LsValues> parseLsCirclesOnly(
 			JSONArray circlesOnlyJsonArray) {
 
@@ -1382,24 +1277,6 @@ public class ServerResponseParser {
 				}
 
 			}
-
-			// if (!platformsJsonObject.isNull("fb")) {
-			//
-			// JSONObject fbJsonObject = platformsJsonObject
-			// .getJSONObject("fb");
-			//
-			// platform.put("fb", parseLsValues(fbJsonObject));
-			//
-			// }
-			//
-			// if (!platformsJsonObject.isNull("sm")) {
-			//
-			// JSONObject fbJsonObject = platformsJsonObject
-			// .getJSONObject("sm");
-			//
-			// platform.put("sm", parseLsValues(fbJsonObject));
-			//
-			// }
 
 		} catch (JSONException e) {
 
@@ -1518,37 +1395,12 @@ public class ServerResponseParser {
 		return lSFriendsAndCircles;
 	}
 
-	/*
-	 * public static ArrayList<People> parseFriendsOfFriends(String response) {
-	 * 
-	 * ArrayList<People> people = new ArrayList<People>(); JSONObject peopleObj;
-	 * try {
-	 * 
-	 * JSONObject jsonObject = new JSONObject(response);
-	 * 
-	 * if (!jsonObject.isNull("friends")) {
-	 * 
-	 * JSONArray arrayFriends = jsonObject.getJSONArray("friends");
-	 * 
-	 * for (int i = 0; i < arrayFriends.length(); i++) {
-	 * 
-	 * peopleObj = arrayFriends.getJSONObject(i);
-	 * people.add(parsePeople(peopleObj)); }
-	 * 
-	 * } } catch (NullPointerException e) { return null; } catch (JSONException
-	 * e) { // TODO Auto-generated catch block e.printStackTrace(); return null;
-	 * 
-	 * } catch (Exception e) { // TODO: handle exception return null; }
-	 * 
-	 * return people; }
-	 */
-
-	
 	/**
-	 * Parse server (JSON) response which is place JSONObject
+	 * Parse server (JSON) response which is place JSONObject.
 	 * 
-	 * @param placeObj is server response which is place JSONObject
-	 * @return Place object binds with all data.
+	 * @param placeObj
+	 *            is server response which is place JSONObject
+	 * @return Place object binds with all data
 	 * @see com.socmaps.entity.Place
 	 */
 	public static Place parseSavedPlace(JSONObject placeObj) {
@@ -1574,10 +1426,6 @@ public class ServerResponseParser {
 				place.setCreateDate(getTimeEntityFromJsonObject(placeObj
 						.getJSONObject("createDate")));
 			}
-			/*
-			 * if(!placeObj.isNull("owner")) {
-			 * place.setOwner(parsePeople(placeObj.getJSONObject("owner"))); }
-			 */
 			if (!placeObj.isNull("location")) {
 				JSONObject location = placeObj.getJSONObject("location");
 
@@ -1599,7 +1447,6 @@ public class ServerResponseParser {
 			if (!placeObj.isNull("distance")) {
 
 				place.setDistance(placeObj.getDouble("distance"));
-				// Log.i("Distance", temp.getDouble("distance") + "");
 			}
 
 		} catch (JSONException e) {
@@ -1613,10 +1460,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of Photo.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of Photo. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of Photo
 	 * @see ArrayList
-	 * @see com.socmaps.entity.Photo 
+	 * @see com.socmaps.entity.Photo
 	 */
 	public static ArrayList<Photo> parsePhotos(String response) {
 
@@ -1645,23 +1493,15 @@ public class ServerResponseParser {
 		return photos;
 	}
 
-	
 	/**
-	 * Parse server (JSON) response which is photo JSONObject
+	 * Parse server (JSON) response which is photo JSONObject.
 	 * 
-	 * @param photoObj is server response which is photo JSONObject
-	 * @return Photo object binds with all data.
+	 * @param photoObj
+	 *            is server response which is photo JSONObject
+	 * @return Photo object binds with all data
 	 * @see com.socmaps.entity.Photo
 	 */
 	public static Photo parsePhoto(JSONObject photoObj) {
-
-		/*
-		 * String id; String description; String title; String permission;
-		 * List<String> permittedUsers; List<String> permittedCircles; String
-		 * imageThumb; String imageMedium; String imageLarge; double latitude;
-		 * double longitude; String address; People owner; TimeEntity createDate
-		 */
-
 		Photo photo = new Photo();
 
 		try {
@@ -1701,7 +1541,6 @@ public class ServerResponseParser {
 			}
 
 			if (!photoObj.isNull("owner")) {
-				// photo.setOwner(parsePeople(photoObj.getJSONObject("owner")));
 			}
 			if (!photoObj.isNull("location")) {
 				JSONObject location = photoObj.getJSONObject("location");
@@ -1733,10 +1572,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of GeoTag.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of GeoTag. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of GeoTag
 	 * @see ArrayList
-	 * @see com.socmaps.entity.GeoTag 
+	 * @see com.socmaps.entity.GeoTag
 	 */
 	public static ArrayList<GeoTag> parseGeotags(String response) {
 
@@ -1764,12 +1604,13 @@ public class ServerResponseParser {
 
 		return geotags;
 	}
-	
+
 	/**
-	 * Parse server (JSON) response which is geotag JSONObject
+	 * Parse server (JSON) response which is geotag JSONObject.
 	 * 
-	 * @param geotagObj is server response which is geotag JSONObject
-	 * @return GeoTag object binds with all data.
+	 * @param geotagObj
+	 *            is server response which is geotag JSONObject
+	 * @return GeoTag object binds with all data
 	 * @see com.socmaps.entity.GeoTag
 	 */
 	public static GeoTag parseGeotag(JSONObject geotagObj) {
@@ -1829,10 +1670,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of people.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of People. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of People
 	 * @see ArrayList
-	 * @see com.socmaps.entity.People 
+	 * @see com.socmaps.entity.People
 	 */
 	public static ArrayList<People> parseSearchResultPeople(String response) {
 		ArrayList<People> peoples = new ArrayList<People>();
@@ -1864,12 +1706,14 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of SecondDegreePeople.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
-	 * @return ArrayList of SecondDegreePeople. 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return ArrayList of SecondDegreePeople
 	 * @see ArrayList
-	 * @see com.socmaps.entity.SecondDegreePeople 
+	 * @see com.socmaps.entity.SecondDegreePeople
 	 */
-	public static ArrayList<SecondDegreePeople> parseSearchResultSecondDegreePeople(String response) {
+	public static ArrayList<SecondDegreePeople> parseSearchResultSecondDegreePeople(
+			String response) {
 		ArrayList<SecondDegreePeople> secondDegreePeoples = new ArrayList<SecondDegreePeople>();
 		JSONObject peopleJSONObj;
 		try {
@@ -1902,12 +1746,12 @@ public class ServerResponseParser {
 		return secondDegreePeoples;
 	}
 
-
 	/**
-	 * Parse server (JSON) response which is people JSONObject
+	 * Parse server (JSON) response which is people JSONObject.
 	 * 
-	 * @param peopleJSONObj is server response which is people JSONObject
-	 * @return People object binds with all data.
+	 * @param peopleJSONObj
+	 *            is server response which is people JSONObject
+	 * @return People object binds with all data
 	 * @see com.socmaps.entity.People
 	 */
 	public static People parsePeople(JSONObject peopleJSONObj) {
@@ -1916,37 +1760,26 @@ public class ServerResponseParser {
 		try {
 			if (!peopleJSONObj.isNull("id")) {
 				people.setId(peopleJSONObj.getString("id"));
-				// Log.i("Id", temp.getString("id"));
 			}
 
 			if (!peopleJSONObj.isNull("email")) {
 				people.setEmail(peopleJSONObj.getString("email"));
-				// Log.i("email", temp.getString("email"));
 			}
 
 			if (!peopleJSONObj.isNull("firstName"))
 				people.setFirstName(peopleJSONObj.getString("firstName"));
-			// Log.i("firstName", temp.getString("firstName"));
 
 			if (!peopleJSONObj.isNull("lastName"))
 				people.setLastName(peopleJSONObj.getString("lastName"));
-			// Log.i("lastName", temp.getString("lastName"));
 
-			if (!peopleJSONObj.isNull("avatar"))
-			{
+			if (!peopleJSONObj.isNull("avatar")) {
 				String avatar = peopleJSONObj.getString("avatar");
-				//Log.i("avatar before", avatar);
-				if(avatar.contains("?type=normal"))
-				{
-					//String[] avatars = avatar.split("?type");
-					//avatar = avatars[0];
-					//Log.i("avatar after", avatar);
+				if (avatar.contains("?type=normal")) {
 				}
-				
+
 				people.setAvatar(avatar);
-				 
+
 			}
-				
 
 			if (!peopleJSONObj.isNull("gender"))
 				people.setGender(peopleJSONObj.getString("gender"));
@@ -1956,15 +1789,12 @@ public class ServerResponseParser {
 			if (!peopleJSONObj.isNull("dateOfBirth")) {
 				people.setDateOfBirth(peopleJSONObj
 						.getJSONObject("dateOfBirth").getString("date"));
-				// Log.i("dateOfBirth", temp.getString("dateOfBirth"));
 			}
 			if (!peopleJSONObj.isNull("regMedia")) {
 				people.setRegMedia(peopleJSONObj.getString("regMedia"));
-				// Log.i("regMedia", temp.getString("regMedia"));
 			}
 			if (!peopleJSONObj.isNull("workStatus")) {
 				people.setWorkStatus(peopleJSONObj.getString("workStatus"));
-				// Log.i("workStatus", temp.getString("workStatus"));
 			}
 			if (!peopleJSONObj.isNull("relationshipStatus"))
 				people.setRelationshipStatus(peopleJSONObj
@@ -1974,19 +1804,14 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("bio")) {
 				people.setBio(peopleJSONObj.getString("bio"));
-				// Log.i("bio", temp.getString("bio"));
 			}
 			if (!peopleJSONObj.isNull("interests")) {
 				people.setInterests(peopleJSONObj.getString("interests"));
-				// Log.i("interests", temp.getString("interests"));
 			}
 			if (!peopleJSONObj.isNull("loginCount")) {
 				people.setLogInCount(peopleJSONObj.getInt("loginCount"));
-				// Log.i("loginCount", temp.getInt("loginCount") + "");
 			}
 			if (!peopleJSONObj.isNull("currentLocation")) {
-
-				// people.setCurrentPosition(getGeoPointFromjsonObject(peopleJSONObj.getJSONObject("currentLocation")));
 
 				JSONObject jo = peopleJSONObj.getJSONObject("currentLocation");
 
@@ -1994,8 +1819,6 @@ public class ServerResponseParser {
 					people.setCurrentLat(jo.getDouble("lat"));
 				if (!jo.isNull("lng"))
 					people.setCurrentLng(jo.getDouble("lng"));
-				// if
-				// (!jo.isNull("address"))people.setCurrentAddress(jo.getString("address"));
 			}
 			if (!peopleJSONObj.isNull("address")) {
 
@@ -2030,38 +1853,22 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("age")) {
 				people.setAge(peopleJSONObj.getInt("age"));
-				// Log.i("age", temp.getInt("age") + "");
 			}
 
 			if (!peopleJSONObj.isNull("distance")) {
 				people.setDistance(peopleJSONObj.getDouble("distance"));
-				//Log.i("distance", peopleJSONObj.getDouble("distance") + ":"+ people.getFirstName());
 			}
 			if (!peopleJSONObj.isNull("isFriend")) {
 				people.setIsFrnd(peopleJSONObj.getBoolean("isFriend"));
-				// Log.i("isFriend",temp.getBoolean("isFriend")+"");
 			}
 			if (!peopleJSONObj.isNull("status")) {
 				people.setStatusMsg(peopleJSONObj.getString("status"));
-				// Log.i("Status msg", temp.getString("status"));
 			}
 			if (!peopleJSONObj.isNull("coverPhoto")) {
 				people.setCoverPhoto(peopleJSONObj.getString("coverPhoto"));
-				// Log.i("Cover photo", temp.getString("coverPhoto"));
 			}
 
 			if (!peopleJSONObj.isNull("lastLogin")) {
-				/*
-				 * TimeEntity timeEntity = new TimeEntity();
-				 * timeEntity.setDateTimeValue(peopleJSONObj.getJSONObject(
-				 * "lastLogin").getString("date"));
-				 * timeEntity.setTimeZoneType(peopleJSONObj.getJSONObject(
-				 * "lastLogin").getInt("timezone_type"));
-				 * timeEntity.setTimeZone(
-				 * peopleJSONObj.getJSONObject("lastLogin")
-				 * .getString("timezone"));
-				 */
-
 				people.setLastLogIn(getTimeEntityFromJsonObject(peopleJSONObj
 						.getJSONObject("lastLogin")));
 
@@ -2069,15 +1876,12 @@ public class ServerResponseParser {
 			if (!peopleJSONObj.isNull("lastSeenAt")) {
 
 				people.setCurrentAddress(peopleJSONObj.getString("lastSeenAt"));
-				//Log.i("lastSeenAt", peopleJSONObj.getString("lastSeenAt"));
-
 			}
 
 			if (!peopleJSONObj.isNull("friendship")) {
 
 				people.setFriendshipStatus(peopleJSONObj
 						.getString("friendship"));
-				//Log.i("FriendShip Status",peopleJSONObj.getString("friendship"));
 			}
 
 			if (!peopleJSONObj.isNull("blockStatus")) {
@@ -2090,13 +1894,11 @@ public class ServerResponseParser {
 				}
 
 			}
-			
+
 			if (!peopleJSONObj.isNull("online")) {
-				
-					people.setOnline(peopleJSONObj.getBoolean("online"));
+
+				people.setOnline(peopleJSONObj.getBoolean("online"));
 			}
-			
-			
 
 		} catch (JSONException e) {
 			// TODO: handle exception
@@ -2106,12 +1908,12 @@ public class ServerResponseParser {
 		return people;
 	}
 
-
 	/**
-	 * Parse server (JSON) response which is secondDegreePeople JSONObject
+	 * Parse server (JSON) response which is secondDegreePeople JSONObject.
 	 * 
-	 * @param peopleJSONObj is server response which is secondDegreePeople JSONObject
-	 * @return SecondDegreePeople object binds with all data.
+	 * @param peopleJSONObj
+	 *            is server response which is secondDegreePeople JSONObject
+	 * @return SecondDegreePeople object binds with all data
 	 * @see com.socmaps.entity.SecondDegreePeople
 	 */
 	public static SecondDegreePeople parseSecondDegreePeople(
@@ -2147,8 +1949,6 @@ public class ServerResponseParser {
 
 			if (!peopleJSONObj.isNull("currentLocation")) {
 
-				// secondDegreePeople.setCurrentPosition(getGeoPointFromjsonObject(peopleJSONObj.getJSONObject("currentLocation")));
-
 				JSONObject jo = peopleJSONObj.getJSONObject("currentLocation");
 
 				if (!jo.isNull("lat"))
@@ -2164,7 +1964,6 @@ public class ServerResponseParser {
 			if (!peopleJSONObj.isNull("distance")) {
 				secondDegreePeople.setDistance(peopleJSONObj
 						.getDouble("distance"));
-				// Log.i("distance", temp.getDouble("distance") + "");
 			}
 
 			if (!peopleJSONObj.isNull("createdAt")) {
@@ -2200,10 +1999,12 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 * Converts to MyGeoPoint object with specified latitude and longitude. 
+	 * Converts to MyGeoPoint object with specified latitude and longitude.
 	 * 
-	 * @param lat in double
-	 * @param lng in double
+	 * @param lat
+	 *            in double
+	 * @param lng
+	 *            in double
 	 * @return MyGeoPoint object
 	 * @see com.socmaps.entity.MyGeoPoint
 	 */
@@ -2227,14 +2028,16 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 * Parse server (JSON) response which is circle JSONArray
+	 * Parse server (JSON) response which is circle JSONArray.
 	 * 
-	 * @param circleJSONArray is server response which is circle JSONArray
-	 * @return List of Circle. 
+	 * @param circleJSONArray
+	 *            is server response which is circle JSONArray
+	 * @return List of Circle
 	 * @see List
-	 * @see com.socmaps.entity.Circle 
+	 * @see com.socmaps.entity.Circle
 	 */
-	public static List<Circle> getCircleList(JSONArray circleJSONArray) throws JSONException {
+	public static List<Circle> getCircleList(JSONArray circleJSONArray)
+			throws JSONException {
 		List<Circle> circles = new ArrayList<Circle>();
 		for (int i = 0; i < circleJSONArray.length(); i++) {
 
@@ -2251,13 +2054,14 @@ public class ServerResponseParser {
 	}
 
 	/**
-	 * Parse server (JSON) response which is circle JSONArray with details
+	 * Parse server (JSON) response which is circle JSONArray with details.
 	 * 
-	 * @param ja is server response which is circle JSONArray
-	 * @return List of Circle. 
-	 * @exception JSONException 
+	 * @param ja
+	 *            is server response which is circle JSONArray
+	 * @return List of Circle
+	 * @exception JSONException
 	 * @see List
-	 * @see com.socmaps.entity.Circle 
+	 * @see com.socmaps.entity.Circle
 	 */
 	public static List<Circle> getCircleListWithDetails(JSONArray ja)
 			throws JSONException {
@@ -2278,7 +2082,6 @@ public class ServerResponseParser {
 
 	private static MyGeoPoint getGeoPointFromjsonObject(JSONObject jo)
 			throws JSONException {
-		// oMyGeoPoint point=new MyGeoPoint(latitudeE6, longitudeE6)
 		double lat = 0, lng = 0;
 		String add = "";
 		if (!jo.isNull("lat"))
@@ -2305,7 +2108,8 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns Event object.
 	 * 
-	 * @param result would be String converted from server response (JSON file).
+	 * @param result
+	 *            would be String converted from server response (JSON file)
 	 * @return Event object
 	 * @see com.socmaps.entity.Event
 	 */
@@ -2327,10 +2131,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of event.
 	 * 
-	 * @param result would be String converted from server response (JSON file).
+	 * @param result
+	 *            would be String converted from server response (JSON file)
 	 * @return ArrayList of Event
 	 * @see ArrayList
-	 * @see com.socmaps.entity.Event 
+	 * @see com.socmaps.entity.Event
 	 */
 	public static ArrayList<Event> parseGetEventListResult(String result) {
 		ArrayList<Event> events = new ArrayList<Event>();
@@ -2355,39 +2160,31 @@ public class ServerResponseParser {
 		// TODO Auto-generated method stub
 		if (!jsonObject.isNull("id")) {
 			event.setEventId(jsonObject.getString("id"));
-			// Log.i("Event", jsonObject.getString("id"));
 		}
 
 		if (!jsonObject.isNull("title")) {
 			event.setEventTitle(jsonObject.getString("title"));
-			// Log.i("Event", jsonObject.getString("title"));
 		}
 
 		if (!jsonObject.isNull("description")) {
 			event.setDescription(jsonObject.getString("description"));
-			// Log.i("Event", jsonObject.getString("description"));
 		}
 
 		if (!jsonObject.isNull("eventShortSummary")) {
 			event.setShortSummary(jsonObject.getString("eventShortSummary"));
-			// Log.i("Event", jsonObject.getString("eventShortSummary"));
 		}
 
 		if (!jsonObject.isNull("eventImage")) {
 			event.setEventImageUrl(jsonObject.getString("eventImage"));
-			// Log.i("Event", jsonObject.getString("eventImage"));
 		}
 		if (!jsonObject.isNull("owner")) {
 			event.setOwner(jsonObject.getString("owner"));
-			// Log.i("Event", jsonObject.getString("owner"));
 		}
 		if (!jsonObject.isNull("event_type")) {
 			event.setEvent_type(jsonObject.getString("event_type"));
-			// Log.i("Event", jsonObject.getString("event_type"));
 		}
 		if (!jsonObject.isNull("my_response")) {
 			event.setMyResponse(jsonObject.getString("my_response"));
-			// Log.i("Event", jsonObject.getString("my_response"));
 		}
 
 		if (!jsonObject.isNull("time")) {
@@ -2402,23 +2199,16 @@ public class ServerResponseParser {
 
 		if (!jsonObject.isNull("distance")) {
 			event.setDistance(jsonObject.getDouble("distance"));
-			// Log.i("distance", jsonObject.getDouble("distance") + "");
 		}
 
 		if (!jsonObject.isNull("guestsCanInvite")) {
 			event.setGuestCanInvite(jsonObject.getBoolean("guestsCanInvite"));
-			// Log.i("isFriend",temp.getBoolean("isFriend")+"");
 		}
 
 		if (!jsonObject.isNull("is_invited")) {
 			event.setInvited(jsonObject.getBoolean("is_invited"));
-			// Log.i("isFriend",temp.getBoolean("isFriend")+"");
 		}
 		if (!jsonObject.isNull("location")) {
-			/*
-			 * event.setEventLocation(getGeoPointFromjsonObject(jsonObject
-			 * .getJSONObject("location")));
-			 */
 
 			JSONObject jo = jsonObject.getJSONObject("location");
 
@@ -2461,14 +2251,14 @@ public class ServerResponseParser {
 		return event;
 	}
 
-
 	/**
 	 * Parse server (JSON) response and returns List of String.
 	 * 
-	 * @param jArray is server response
+	 * @param jArray
+	 *            is server response
 	 * @return List of String
 	 * @see List
-	 * @see String 
+	 * @see String
 	 */
 	public static List<String> getListFromJSONArray(JSONArray jArray) {
 		List<String> itemList = new ArrayList<String>();
@@ -2490,10 +2280,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns List of MeetupRequest.
 	 * 
-	 * @param result would be String converted from server response (JSON file).
-	 * @return List of MeetupRequest. 
+	 * @param result
+	 *            would be String converted from server response (JSON file)
+	 * @return List of MeetupRequest
 	 * @see List
-	 * @see com.socmaps.entity.MeetupRequest 
+	 * @see com.socmaps.entity.MeetupRequest
 	 */
 	public static List<MeetupRequest> parseMeetupRequestList(String result) {
 		List<MeetupRequest> meetups = new ArrayList<MeetupRequest>();
@@ -2569,11 +2360,6 @@ public class ServerResponseParser {
 					.getBoolean("sendDirection"));
 		}
 
-		/*
-		 * if (!jsonObject.isNull("is_invited")) {
-		 * meetupEntity.setInvited(jsonObject.getBoolean("is_invited")); //
-		 * Log.i("isFriend",temp.getBoolean("isFriend")+""); }
-		 */
 		if (!jsonObject.isNull("location")) {
 
 			JSONObject locationObj = jsonObject.getJSONObject("location");
@@ -2618,12 +2404,12 @@ public class ServerResponseParser {
 		return meetupEntity;
 	}
 
-	
 	/**
 	 * Parse server (JSON) response and returns RSVP object
 	 * 
-	 * @param jObj is server response which is RSVP JSONObject
-	 * @return RSVP object binds with all data.
+	 * @param jObj
+	 *            is server response which is RSVP JSONObject
+	 * @return RSVP object binds with all data
 	 * @see com.socmaps.entity.RSVP
 	 */
 	public static RSVP getRSVP(JSONObject jObj) {
@@ -2668,13 +2454,12 @@ public class ServerResponseParser {
 		return rsvp;
 	}
 
-
-
 	/**
-	 *  Parse server (JSON) response and returns FacebookErrorResponse object.
-	 *  
-	 * @param response would be String converted from server response (JSON file).
-	 * @return FacebookErrorResponse object.
+	 * Parse server (JSON) response and returns FacebookErrorResponse object.
+	 * 
+	 * @param response
+	 *            would be String converted from server response (JSON file)
+	 * @return FacebookErrorResponse object
 	 * @see com.socmaps.entity.FacebookErrorResponse
 	 */
 	public static FacebookErrorResponse parseFacebookError(String response) {
@@ -2706,23 +2491,20 @@ public class ServerResponseParser {
 		return fbResponseEntity;
 	}
 
-
-
 	/**
 	 * Parse server (JSON) response and returns Plan object.
 	 * 
-	 * @param result would be String converted from server response (JSON file).
+	 * @param result
+	 *            would be String converted from server response (JSON file)
 	 * @return Plan object
 	 * @see com.socmaps.entity.Plan
 	 */
 	public static Plan parseGetPlanDetailsResult(String result) {
 
-		// Event event = new Event();
 		Plan plan = new Plan();
 		JSONObject jo;
 		try {
 			jo = new JSONObject(result);
-			// plan = parseIndividualEvent(jo, plan);
 			plan = parseIndividualPlan(jo, plan);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -2735,10 +2517,11 @@ public class ServerResponseParser {
 	/**
 	 * Parse server (JSON) response and returns ArrayList of plan.
 	 * 
-	 * @param response would be String converted from server response (JSON file).
+	 * @param response
+	 *            would be String converted from server response (JSON file)
 	 * @return ArrayList of Plan
 	 * @see ArrayList
-	 * @see com.socmaps.entity.Plan 
+	 * @see com.socmaps.entity.Plan
 	 */
 	public static ArrayList<Plan> parseGetPlanListResult(String result) {
 		ArrayList<Plan> plans = new ArrayList<Plan>();
@@ -2746,9 +2529,7 @@ public class ServerResponseParser {
 		try {
 			JSONArray jArray = new JSONArray(result);
 			for (int i = 0; i < jArray.length(); i++) {
-				// Event event = new Event();
 				Plan plan = new Plan();
-				// parseIndividualEvent(jArray.getJSONObject(i), plan);
 				parseIndividualPlan(jArray.getJSONObject(i), plan);
 				plans.add(plan);
 			}
@@ -2765,34 +2546,26 @@ public class ServerResponseParser {
 		// TODO Auto-generated method stub
 		if (!jsonObject.isNull("id")) {
 			plan.setPlanId(jsonObject.getString("id"));
-			// event.setEventId(jsonObject.getString("id"));
-			// Log.i("Event", jsonObject.getString("id"));
 		}
 
 		if (!jsonObject.isNull("title")) {
 			plan.setPlanTitle(jsonObject.getString("title"));
-			// Log.i("Event", jsonObject.getString("title"));
 		}
 
 		if (!jsonObject.isNull("description")) {
 			plan.setDescription(jsonObject.getString("description"));
-			// Log.i("Event", jsonObject.getString("description"));
 		}
 
 		if (!jsonObject.isNull("image")) {
 			plan.setPlanImageUrl(jsonObject.getString("image"));
-			// event.setEventImageUrl(jsonObject.getString("eventImage"));
-			// Log.i("Event", jsonObject.getString("eventImage"));
 		}
 
 		if (!jsonObject.isNull("time")) {
-			// event.setEventTime(getTimeEntityFromJsonObject(jsonObject.getJSONObject("time")));
 			plan.setPlanTime(getTimeEntityFromJsonObject(jsonObject
 					.getJSONObject("time")));
 		}
 
 		if (!jsonObject.isNull("createDate")) {
-			// event.setCreateDate(getTimeEntityFromJsonObject(jsonObject.getJSONObject("createDate")));
 			plan.setCreateDate(getTimeEntityFromJsonObject(jsonObject
 					.getJSONObject("createDate")));
 		}
@@ -2802,34 +2575,25 @@ public class ServerResponseParser {
 		}
 
 		if (!jsonObject.isNull("location")) {
-			/*
-			 * event.setEventLocation(getGeoPointFromjsonObject(jsonObject
-			 * .getJSONObject("location")));
-			 */
-
 			JSONObject jo = jsonObject.getJSONObject("location");
 
 			if (!jo.isNull("lat"))
 				plan.setLatitude(jo.getDouble("lat"));
-			// event.setLatitude(jo.getDouble("lat"));
+
 			if (!jo.isNull("lng"))
 				plan.setLongitude(jo.getDouble("lng"));
-			// event.setLongitude(jo.getDouble("lng"));
+
 			if (!jo.isNull("address"))
 				plan.setAddress(jo.getString("address"));
-			// event.setAddress(jo.getString("address"));
-
 		}
 		if (!jsonObject.isNull("guests")) {
 
 			JSONObject guestObj = jsonObject.getJSONObject("guests");
 			if (!guestObj.isNull("users")) {
-				// event.setGuestList(getGuestList(guestObj.getJSONArray("users")));
 				plan.setGuestList(getGuestList(guestObj.getJSONArray("users")));
 			}
 
 			if (!guestObj.isNull("circles")) {
-				// event.setCircleList(getCircleList(guestObj.getJSONArray("circles")));
 				plan.setCircleList(getCircleList(guestObj
 						.getJSONArray("circles")));
 			}
@@ -2837,23 +2601,17 @@ public class ServerResponseParser {
 		}
 
 		if (!jsonObject.isNull("permission")) {
-			// event.setPermission(jsonObject.getString("permission"));
 			plan.setPermission(jsonObject.getString("permission"));
 		}
 
 		if (!jsonObject.isNull("permittedUsers")) {
-
-			// event.setPermittedUserList(getListFromJSONArray(jsonObject.getJSONArray("permittedUsers")));
 			plan.setPermittedUserList(getListFromJSONArray(jsonObject
 					.getJSONArray("permittedUsers")));
 		}
 		if (!jsonObject.isNull("permittedCircles")) {
-			// event.setPermittedCircleList(getListFromJSONArray(jsonObject.getJSONArray("permittedCircles")));
 			plan.setPermittedCircleList(getListFromJSONArray(jsonObject
 					.getJSONArray("permittedCircles")));
 		}
-
-		// return event;
 		return plan;
 	}
 

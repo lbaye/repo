@@ -64,8 +64,6 @@ public class MessageGroupActivity extends ActivityGroup {
 			// TODO Auto-generated method stub
 			RestClient restClient = new RestClient(Constant.smMessagesUrl
 					+ "/inbox?show_last_reply=1");
-			// RestClient restClient = new
-			// RestClient(Constant.smMessagesUrl+"/inbox");
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 

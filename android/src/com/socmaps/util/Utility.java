@@ -4,13 +4,11 @@ import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream.GetField;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,6 +68,9 @@ import com.socmaps.entity.PushData;
 import com.socmaps.entity.SecondDegreePeople;
 import com.socmaps.entity.TimeEntity;
 
+/**
+ * Utility class for providing reusable methods 
+ */
 public class Utility {
 
 	private static final double metricDivisor = 1000;
@@ -98,7 +99,6 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof SecondDegreePeople) {
 
@@ -112,7 +112,6 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof MyInfo) {
 
@@ -126,19 +125,15 @@ public class Utility {
 			if (temp.getLastName() != null) {
 				name += " " + temp.getLastName();
 			}
-			// return name.trim().toLowerCase();
 			return name.trim();
 		} else if (item instanceof Place) {
 			Place temp = ((Place) item);
-			// return temp.getName().toString().toLowerCase();
 			return temp.getName().toString();
 		} else if (item instanceof Event) {
 			Event temp = ((Event) item);
-			// return temp.getEventTitle().toString().toLowerCase();
 			return temp.getEventTitle().toString();
 		} else if (item instanceof GeoTag) {
 			GeoTag temp = ((GeoTag) item);
-			// return temp.getTitle().toString().toLowerCase();
 			return temp.getTitle().toString();
 		} else if (item instanceof String)
 			return item.toString();
@@ -261,9 +256,6 @@ public class Utility {
 						circleNew.setId(circle.getId());
 						circleNew.setFriendList(newFriendList);
 
-						// circle.setFriendList(newFriendList);
-						// newCircles.add(circle);
-
 						newCircles.add(circleNew);
 					}
 
@@ -297,14 +289,12 @@ public class Utility {
 				result = String.format("%.2f", distance / imperialDivisor)
 						+ "miles";
 			else
-				// result=String.format("%.2f", distance)+"yards";
 				result = (int) distance + "yd";
 
 		} else {
 			if (distance >= metricDivisor)
 				result = String.format("%.2f", distance / metricDivisor) + "km";
 			else
-				// result=String.format("%.2f", distance)+"m";
 				result = (int) distance + "m";
 		}
 
@@ -328,7 +318,6 @@ public class Utility {
 	public static Date getLocalTimeFromUTC(TimeEntity timeEntity) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss");
-		// simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeEntity
 				.getTimeZone()));
 		try {
@@ -463,10 +452,7 @@ public class Utility {
 
 		if (today(targetDate, now)) {
 			return "at " + todayTimeFormater.format(targetDate);
-		} /*
-		 * else if (dateIsOlderThan7Days(targetDate, now)) { return
-		 * "on "+withinSevenDaysTimeFormater.format(targetDate); }
-		 */else {
+		} else {
 			return "on " + otherTimeFormater.format(targetDate);
 		}
 	}
@@ -512,7 +498,6 @@ public class Utility {
 			e.printStackTrace();
 			return null;
 		}
-		// return null;
 	}
 
 	/**
@@ -626,7 +611,6 @@ public class Utility {
 		String newtime = sdfDateTime
 				.format(new Date(System.currentTimeMillis()));
 		return newtime;
-		// return "2012-01-04 11:49:32";
 	}
 
 	/**
@@ -648,12 +632,12 @@ public class Utility {
 	 * @see SimpleDateFormat
 	 */
 	public static String getdate(String format) {
-		// "yyyy-MM-dd" = "2012-07-30"
+		// "yyyy-MM-dd" 
 		SimpleDateFormat sdfDateTime = new SimpleDateFormat(format, Locale.US);
 		String newtime = sdfDateTime
 				.format(new Date(System.currentTimeMillis()));
 		return newtime;
-		// return "2012-01-04 11:49:32";
+
 	}
 
 	/**

@@ -2,14 +2,6 @@ package com.socmaps.entity;
 
 public class FriendRequest {
 
-	/*
-	 * { "id": "5034e673f69c29a054000000", "userId": "503098d0f69c294849000000",
-	 * "message": "Hi, Please accept my request.", "friendName": "Mahadi Masum",
-	 * "recipientId": "50349a0af69c29ca4c000012", "createDate": { "date":
-	 * "2012-08-22 15:02:27", "timezone_type": 3, "timezone": "Europe/London"
-	 * },- "accepted": null }
-	 */
-
 	private String requestId;
 	private String senderId;
 	private String message;
@@ -65,14 +57,6 @@ public class FriendRequest {
 	public String getAccepted() {
 		return accepted;
 	}
-
-	/*public void setDate(String date) {
-		this.date = date;
-	}
-
-	public String getDate() {
-		return date;
-	}*/
 
 	public TimeEntity getSentTime() {
 		return sentTime;

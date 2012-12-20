@@ -16,20 +16,36 @@ import com.socmaps.ui.R;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PlaceRowFactoryForSavedPlace { 
-	
+
+
+/**
+ * PlaceRowFactoryForSavedPlace class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class PlaceRowFactoryForSavedPlace {
+
 	/**
-	 * This method returns a View, that view is associates with corresponding layout. 
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout.  
-	 * @param placeObj an object of type Place.  
-	 * @param con current state of the application/object. 
-	 * @param licl which is used for a specific action when button is clicked. 
-	 * @param convertView as view.  
-	 * @param il which is used to download image from a specific url.  
-	 * @param listItemClickListenerPlace  which is used for a specific action when button is clicked. 
-	 * @param a as Integer which is used to determine if it comes from Own Profile or Friends Profile
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param placeObj
+	 *            an object of type Place.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerPlace
+	 *            which is used for a specific action when button is clicked.
+	 * @param a
+	 *            as Integer which is used to determine if it comes from Own
+	 *            Profile or Friends Profile
+	 * @return View
 	 * @see View
 	 */
 
@@ -65,14 +81,8 @@ public class PlaceRowFactoryForSavedPlace {
 				holder.titleText.setText(place.getName());
 		}
 
-		// String iconUrl = place.getIconUrl();
-		// if (iconUrl != null) {
-		// holder.avatar.setImageResource(R.drawable.img_blank);
-		// il.download(iconUrl, holder.avatar);
-		// }
-
-	
-		if (place.getStreetViewImage() != null&& !place.getStreetViewImage().equals("")) {
+		if (place.getStreetViewImage() != null
+				&& !place.getStreetViewImage().equals("")) {
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 			il.download(place.getStreetViewImage(), holder.coverPhoto);
 		} else {
@@ -88,8 +98,6 @@ public class PlaceRowFactoryForSavedPlace {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
-
 		if (StaticValues.myPoint != null) {
 			holder.distanceText.setText(Utility.getFormatedDistance(Utility
 					.calculateDistance(StaticValues.myPoint,
@@ -103,8 +111,6 @@ public class PlaceRowFactoryForSavedPlace {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// AppStaticStorages.selectedPlace=placeEntity;
-				// licl.onMapButtonClick(RowType.PLACE.ordinal());
 
 				listItemClickListenerPlace.onShowOnMapButtonClick(place);
 			}
@@ -121,8 +127,6 @@ public class PlaceRowFactoryForSavedPlace {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// AppStaticStorages.selectedPlace=placeEntity;
-				// licl.onMapButtonClick(RowType.PLACE.ordinal());
 
 				listItemClickListenerPlace.onReviewButtonClick(place);
 			}
@@ -135,12 +139,12 @@ public class PlaceRowFactoryForSavedPlace {
 						+ place.getCategory());
 
 		return view;
-	} 
-	
+	}
+
 	/**
 	 * This method return the type of the view.
 	 * 
-	 * @return Integer as the integer value reflects the type. 
+	 * @return Integer as the integer value reflects the type.
 	 */
 
 	public int getViewType() {

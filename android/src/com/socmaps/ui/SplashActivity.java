@@ -2,7 +2,6 @@ package com.socmaps.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.util.Constant;
@@ -39,8 +37,7 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
-		//Log.i("UserData", "" + Utility.getUserData(getApplicationContext()));
-
+		
 		initialize();
 
 	}
@@ -101,22 +98,11 @@ public class SplashActivity extends Activity {
 									parseUserData(Utility
 											.getUserData(getApplicationContext()));
 								}
-
-								/*
-								 * if (isRequestingToServer == false) {
-								 * splashHandler.sendEmptyMessage(0); }
-								 */
-
-								// splashHandler.sendEmptyMessage(0);
-								//
-								// .sendEmptyMessageDelayed(0,
-								// 0);
 							}
 						}
 					} catch (Throwable t) {
 
 					}
-					// splashHandler.sendEmptyMessageDelayed(0, 0);
 				}
 			}.start();
 
@@ -157,9 +143,6 @@ public class SplashActivity extends Activity {
 		public void run() {
 
 			// have to do something here
-			// Toast.makeText(getApplicationContext(),pInfo.getUserName(),
-			// Toast.LENGTH_SHORT).show();
-
 			handleResponse(responseStatus, responseString);
 		}
 	};
@@ -173,15 +156,11 @@ public class SplashActivity extends Activity {
 		} else {
 			switch (status) {
 			case Constant.STATUS_SUCCESS:
-				// Log.d("Login", status+":"+response);
 				parseUserData(response);
 				break;
 
 			default:
 				parseUserData(null);
-				// finish();
-				// Toast.makeText(getApplicationContext(),"An unknown error occured. Please try again.",
-				// Toast.LENGTH_SHORT).show();
 				break;
 
 			}
@@ -215,8 +194,6 @@ public class SplashActivity extends Activity {
 
 		}
 		if (isError) {
-			// Toast.makeText(getApplicationContext(),"An unknown error occured. Please try again.",
-			// Toast.LENGTH_SHORT).show();
 			splashHandler.sendEmptyMessage(0);
 		}
 	}
@@ -254,14 +231,6 @@ public class SplashActivity extends Activity {
 				
 				startActivity(new Intent(SplashActivity.this,
 						LoginActivity.class));
-
-				/*if (Utility.isBetaAuthenticated(getApplicationContext())) {
-					startActivity(new Intent(SplashActivity.this,
-							LoginActivity.class));
-				} else {
-					startActivity(new Intent(SplashActivity.this,
-							BetaLoginActivity.class));
-				}*/
 
 				break;
 

@@ -67,13 +67,8 @@ public class NotificationPreferencesActivity extends Activity implements
 		setContentView(R.layout.notification_preferences_layout);
 
 		initialize();
-		
-		
-		
 		setExpandListener();
-
 		updateUI();
-
 		setViewOnclickListener();
 	}
 
@@ -206,18 +201,6 @@ public class NotificationPreferencesActivity extends Activity implements
 	}
 
 	private void initialize() {
-		/*
-		 * chkFriendRequest=(CheckBox) findViewById(R.id.chkFriendRequest);
-		 * chkPostsByFriends=(CheckBox) findViewById(R.id.chkPostsByFriends);
-		 * chkComments=(CheckBox) findViewById(R.id.chkComments);
-		 * chkMessages=(CheckBox) findViewById(R.id.chkMessages);
-		 * chkRecommendations=(CheckBox) findViewById(R.id.chkRecommendations);
-		 * chkOfflineNotifications=(CheckBox)
-		 * findViewById(R.id.chkOfflineNotifications); chkRadius=(CheckBox)
-		 * findViewById(R.id.chkRadius); etRadius=(EditText)
-		 * findViewById(R.id.etRadius); btnSave=(Button)
-		 * findViewById(R.id.btnSave);
-		 */
 		context = NotificationPreferencesActivity.this;
 		radioGroupFrndRequest = (RadioGroup) findViewById(R.id.radioFriendRequestGroup);
 		radioGroupPost = (RadioGroup) findViewById(R.id.radioPostGroup);
@@ -292,8 +275,6 @@ public class NotificationPreferencesActivity extends Activity implements
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						// Log.e("ScrollView", "Scrolling");
-						// int h = linearLayoutBody.getHeight();
 						scrollViewBody.scrollBy(View.FOCUS_LEFT,
 								View.FOCUS_DOWN);
 					}
@@ -340,7 +321,6 @@ public class NotificationPreferencesActivity extends Activity implements
 	private void sendDataToServer() {
 		RestClient client = new RestClient(Constant.smNotificationSettingsUrl);
 
-		// client.AddHeader("GData-Version", "2");
 		client.AddHeader(Constant.authTokenParam, Utility.getAuthToken(context));
 		client.AddParam("friend_requests_sm",
 				getRadioStatus(radioGroupFrndRequest) + "");
@@ -391,7 +371,6 @@ public class NotificationPreferencesActivity extends Activity implements
 		Log.d("Registration", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(getApplicationContext(),
 					"Information saved successfully!!", Toast.LENGTH_SHORT)
 					.show();
@@ -437,10 +416,4 @@ public class NotificationPreferencesActivity extends Activity implements
 		// TODO Auto-generated method stub
 		proximityValueText.setText("" + Value);
 	}
-
-	/*
-	 * private boolean isValidMove(int currentValue) {
-	 * if(currentValue>proximityLowerRange && currentValue <
-	 * proximityHigherRange) return true; else return false; }
-	 */
 }

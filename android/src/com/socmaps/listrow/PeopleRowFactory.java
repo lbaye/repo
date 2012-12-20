@@ -1,14 +1,6 @@
 package com.socmaps.listrow;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,25 +11,36 @@ import android.widget.TextView;
 
 import com.socmaps.entity.People;
 import com.socmaps.images.ImageDownloader;
-import com.socmaps.images.ImageLoader;
 import com.socmaps.ui.R;
 import com.socmaps.util.Constant;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
-public class PeopleRowFactory { 
-	
-	/** 
-	 * This method returns a View, that view is associates with corresponding layout. 
+/**
+ * PeopleRowFactory class for generating a row (view), which row (view) is associates with corresponding layout.
+ *
+ */
+public class PeopleRowFactory {
+
+	/**
+	 * This method returns a View, that view is associates with corresponding
+	 * layout.
 	 * 
-	 * @param inflater to inflate the corresponding layout. 
-	 * @param peopleObj an object of type People. 
-	 * @param con current state of the application/object.
-	 * @param licl which is used for a specific action when button is clicked. 
-	 * @param convertView as view. 
-	 * @param il which is used to download image from a specific url. 
-	 * @param listItemClickListenerPeople  which is used for a specific action when button is clicked. 
-	 * @return View 
+	 * @param inflater
+	 *            to inflate the corresponding layout.
+	 * @param peopleObj
+	 *            an object of type People.
+	 * @param con
+	 *            current state of the application/object.
+	 * @param licl
+	 *            which is used for a specific action when button is clicked.
+	 * @param convertView
+	 *            as view.
+	 * @param il
+	 *            which is used to download image from a specific url.
+	 * @param listItemClickListenerPeople
+	 *            which is used for a specific action when button is clicked.
+	 * @return View
 	 * @see View
 	 */
 
@@ -99,19 +102,7 @@ public class PeopleRowFactory {
 				holder.sourceImage.setVisibility(View.GONE);
 		}
 
-		// ******************************************************************first
-		// name
-		/*
-		 * if(otherUserEntity.getFirstName()!=null) {
-		 * if(!otherUserEntity.getFirstName().equals("")) {
-		 * holder.firstNameText.setText(otherUserEntity.getFirstName());
-		 * holder.firstNameText.setVisibility(View.VISIBLE); } else
-		 * holder.firstNameText.setVisibility(View.GONE); } else
-		 * holder.firstNameText.setVisibility(View.GONE);
-		 */
-
 		holder.firstNameText.setText(Utility.getFieldText(people));
-		// ******************************************************************status
 		if (people.getStatusMsg() != null) {
 			if (!people.getStatusMsg().equals("")) {
 
@@ -122,9 +113,6 @@ public class PeopleRowFactory {
 				holder.statusText.setVisibility(View.GONE);
 		} else
 			holder.statusText.setVisibility(View.GONE);
-
-		// ******************************************************************last
-		// log in
 
 		if (people.getLastLogIn() != null) {
 
@@ -137,76 +125,35 @@ public class PeopleRowFactory {
 		} else
 			holder.timeText.setVisibility(View.GONE);
 
-		// ******************************************************************current
-		// position
-
 		if (people.getCurrentAddress() != null) {
 			holder.addressText.setText(people.getCurrentAddress());
 			holder.addressText.setVisibility(View.VISIBLE);
 			Log.d("People Row Factory1", people.getCurrentAddress());
 		} else {
 			holder.addressText.setVisibility(View.GONE);
-			// Log.d("People Row Factory2", people.getCurrentAddress());
 		}
 
 		if (people.isOnline()) {
 			holder.ivOnline.setImageResource(R.drawable.online);
 		}
 
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
-		// R.drawable.cover_pic_default));
 		if (people.getCoverPhoto() != null
 				&& !people.getCoverPhoto().equals("")) {
-
-			// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getCoverPhoto(),
-			// holder.coverPhoto, 320,150);
-
-			// il.DisplayImage(people.getCoverPhoto(),
-			// holder.coverPhoto,R.drawable.img_blank);
 
 			holder.coverPhoto.setImageResource(R.drawable.img_blank);
 
 			il.download(people.getCoverPhoto(), holder.coverPhoto);
-			/*
-			 * new FetchImageTask() {
-			 * 
-			 * @Override protected void onPostExecute(Bitmap result) { if
-			 * (result != null) {
-			 * 
-			 * holder.coverPhoto.setImageBitmap(result); } }
-			 * }.execute(people.getCoverPhoto());
-			 */
-
 		} else
 			holder.coverPhoto.setImageResource(R.drawable.cover_pic_people);
-
-		// BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(con.getResources(),
-		// R.drawable.icon));
 		if (people.getAvatar() != null) {
 			if (!people.getAvatar().equals("")) {
-				// BitmapManager.INSTANCE.loadBitmap(otherUserEntity.getAvatar(),
-				// holder.avatar, 320,150);
-				// il.DisplayImage(people.getAvatar(), holder.avatar,
-				// R.drawable.img_blank);
 
 				holder.avatar.setImageResource(R.drawable.img_blank);
 				il.download(people.getAvatar(), holder.avatar);
-				/*
-				 * new FetchImageTask() {
-				 * 
-				 * @Override protected void onPostExecute(Bitmap result) { if
-				 * (result != null) {
-				 * 
-				 * holder.avatar.setImageBitmap(result); } else {
-				 * holder.avatar.setImageResource(R.drawable.img_blank); } }
-				 * }.execute(people.getAvatar());
-				 */
 
 			}
-			// holder.statusText.setText(otherUserEntity.getStatusMsg());
-		} // else holder.avatar.setImageResource(R.drawable.icon);
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((OtherUserEntity)people).getDistance())+"m");
+		}
 
 		if (people.getDistance() < Constant.MAX_ITEM_DISTANCE) {
 			holder.distanceText
@@ -223,8 +170,6 @@ public class PeopleRowFactory {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				// AppStaticStorages.selectedPeople=otherUserEntity;
-				// licl.onMapButtonClick(RowType.PEOPLE.ordinal());
 				listItemClickListenerPeople.onShowOnMapButtonClick(people);
 
 			}
@@ -259,7 +204,6 @@ public class PeopleRowFactory {
 
 		} else {
 			holder.llFriendshipStatusContainer.setVisibility(View.GONE);
-			// Log.d("People Row Factory2", people.getCurrentAddress());
 		}
 
 		return view;

@@ -2,7 +2,6 @@ package com.socmaps.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
@@ -17,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -69,8 +67,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 	private Bitmap photoIcon;
 	private int requestCode;
 	private EditText editImageDiscription;
-	private String eventName = "", eventSummary = "", eventDescription = "",
-			eventDateString = "", address = "";
+	private String  address = "";
 	private double latitude = 0, longitude = 0;
 
 	List<String> shareWithSelectedFriendList;
@@ -147,9 +144,6 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 
 				uploadImageToServer();
 
-				// Toast.makeText(context, "comming soon", Toast.LENGTH_SHORT)
-				// .show();
-
 			} else if (v == btnMyPhotos) {
 
 				Intent uploadPhotoIntent = new Intent(context,
@@ -213,7 +207,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			if (resultCode == RESULT_OK) {
 
 				if (photoIcon != null) {
-					// photoIcon.recycle();
+					
 				}
 
 				photoIcon = Utility.resizeBitmap(
@@ -246,45 +240,10 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 							Toast.LENGTH_SHORT).show();
 					Log.e("Gallery image", "OutOfMemoryError");
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO: handle exception
 					e.printStackTrace();
 				}
-				
-				
-				
-				/*imageUri = data.getData();
-				try {
-
-					if (photoIcon != null) {
-						// photoIcon.recycle();
-					}
-					photoIcon = Utility.resizeBitmap(
-							MediaStore.Images.Media.getBitmap(
-									this.getContentResolver(), data.getData()),
-							Constant.profileCoverWidth, 0, true);
-					ivPhoto.setImageBitmap(photoIcon);
-
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (OutOfMemoryError e) {
-
-					Log.e("Gallery image", "OutOfMemoryError");
-					Toast.makeText(context,
-							getString(R.string.errorMessageGallery),
-							Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}*/
 				
 			}
 		}
@@ -563,15 +522,6 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 			restClient.AddHeader(Constant.authTokenParam,
 					Utility.getAuthToken(context));
 
-			/*
-			 * Log.w("PhotoUploadNewPhotoActivity Save a new Place", "title:" +
-			 * title + " lat:" + latitude + " long:" + longitude +
-			 * " description: " + description + " " + " Address: " + address +
-			 * " permissionValue: " + permissionValue);
-			 */
-
-			// *title, *image, *description, lat, lng, address, permission
-
 			if (title != null) {
 				if (!title.equals("")) {
 					restClient.AddParam("title", title);
@@ -649,7 +599,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 		Log.w("Photo upload response from server", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
+			
 			Toast.makeText(context, "Photo uploaded successfully.",
 					Toast.LENGTH_SHORT).show();
 
@@ -659,7 +609,7 @@ public class PhotoUploadNewPhotoActivity extends Activity implements
 					PhotoListActivity.class);
 
 			uploadPhotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// uploadPhotoIntent.putExtra("IS_UPLOAD_NEW_PHOTO",5);
+		
 			startActivity(uploadPhotoIntent);
 
 			finish();

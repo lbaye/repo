@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,8 +42,6 @@ import com.socmaps.listrow.PeopleRowFactory2;
 import com.socmaps.listrow.RowType;
 import com.socmaps.listrow.SecondDegreePeopleRowFactory2;
 import com.socmaps.util.Constant;
-import com.socmaps.util.DialogsAndToasts;
-import com.socmaps.util.RestClient;
 import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
@@ -59,11 +54,9 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			btnBlockUnblockPeople, btnPeopleByDistance;
 	private Button topCloseButton;
 
-	ListView contentListView;
+	private ListView contentListView;
 
 	private Context context;
-	ArrayList<People> userList;
-	private SearchResult searchResult;
 	private SearchResult peoplesAndPlacesEntity;
 	private ContentListAdapter contentAdapter;
 
@@ -72,19 +65,12 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private List<Object> listDisplayableContent;
 
 	boolean isSearchEnabled = false;
-	MultiDirectionSlidingDrawer topDrawer;
-	TopDrawerListener topDrawerListener;
+	private MultiDirectionSlidingDrawer topDrawer;
+	private TopDrawerListener topDrawerListener;
 	private CheckBox socialmapsCheckBox, facebookCheckBox;
 
 	private boolean checkBoxFlag = false;
-	private Dialog msgDialog;
-	String sendMessageFriendId = "";
-	String sendMessageSubject = "";
-	String sendMessageContent = "";
-	String sendMessageResponse = "";
-	int sendMessageStatus = 0;
-	private ProgressDialog m_ProgressDialog;
-
+	
 	private Button btnToggleSearchPanel, btnDoSearch, btnClearSearch;
 	private EditText etSearchField;
 	private RelativeLayout searchPanel;
@@ -117,10 +103,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private void initialize() {
 
 		context = PeopleListActivity.this;
-
-		userList = new ArrayList<People>();
-		// searchResult = new SearchResult();
-
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 
@@ -172,18 +154,23 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 
+		Utility.hideKeyboardContext(context);
+		
 		if (v == btnToggleSearchPanel) {
 			toggleSearchPanel();
 		} else if (v == btnDoSearch) {
+			
 			isSearchEnabled = true;
 			doSearch();
 			hideKeybord();
-			// toggleSearchPanel();
+			
 		} else if (v == btnClearSearch) {
+			
 			isSearchEnabled = false;
 			etSearchField.setText("");
 			doSearch();
 			hideKeybord();
+			
 		} else if (v == btnPeopleInvite) {
 
 			Intent inviteIntent = new Intent(getApplicationContext(),
@@ -215,13 +202,9 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	}
 
 	private void getIntentData() {
-
+		
 		peoplesAndPlacesEntity = StaticValues.searchResult;
-
-		// Log.e("List Page:", "People count:" +
-		// peoplesAndPlacesEntity.getPeoples().size());
-		// Log.e("List Page:", "Place count:" +
-		// peoplesAndPlacesEntity.getPlaces().size());
+		
 	}
 
 	private void setListParameters() {
@@ -248,16 +231,12 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 	private class ContentListAdapter extends BaseAdapter {
 
 		private List<Object> items;
-		// private ImageLoader imageLoader;
 		private ImageDownloader imageDownloader;
 
 		public ContentListAdapter(Context context, List<Object> itemsList) {
 
 			this.items = itemsList;
-			// imageLoader = new ImageLoader(context);
-
-			//imageDownloader = new ImageDownloader();
-			//imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
+			
 			imageDownloader = ImageDownloader.getInstance();
 		}
 
@@ -271,11 +250,7 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 			if (items.get(position) instanceof People) {
 
 				return RowType.PEOPLE.ordinal();
-			} /*
-			 * else if (items.get(position) instanceof Place) {
-			 * 
-			 * return RowType.PLACE.ordinal(); }
-			 */else if (items.get(position) instanceof SecondDegreePeople) {
+			} else if (items.get(position) instanceof SecondDegreePeople) {
 
 				return RowType.SECOND_DEGREE.ordinal();
 			} else {
@@ -306,29 +281,12 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 						items.get(position), context, PeopleListActivity.this,
 						convertView, imageDownloader, new PeopleItemListener());
 			}
-
-			// if (getItemViewType(position) == RowType.PEOPLE.ordinal()) {
-			// return PeopleRowFactory2.getView(LayoutInflater.from(context),
-			// items.get(position), context, PeopleListActivity.this,
-			// convertView, imageLoader, new PeopleItemListener());
-			// }
-
 			if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal()) {
 				return SecondDegreePeopleRowFactory2.getView(
 						LayoutInflater.from(context), items.get(position),
 						context, PeopleListActivity.this, convertView,
 						imageDownloader, new SecondDegreePeopleItemListener());
-			}
-
-			// if (getItemViewType(position) == RowType.SECOND_DEGREE.ordinal())
-			// {
-			// return SecondDegreePeopleRowFactory2.getView(
-			// LayoutInflater.from(context), items.get(position),
-			// context, PeopleListActivity.this, convertView,
-			// imageDownloader, new SecondDegreePeopleItemListener());
-			// }
-
-			else {
+			}else {
 				return null;
 			}
 
@@ -362,14 +320,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 				listDisplayableContent.add(item);
 				displayedItemCounter++;
 			}
-
-			/*
-			 * else if (item instanceof Place &&
-			 * SharedPreferencesHelper.getInstance(context).getBoolean(
-			 * Constant.PLACE, true)) { listDisplayableContent.add(item);
-			 * displayedItemCounter++; }
-			 */
-
 		}
 
 		// update the list view
@@ -385,8 +335,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 		socialmapsCheckBox.setChecked(SharedPreferencesHelper.getInstance(
 				context).getBoolean(Constant.PEOPLE_SOCIALMAPS, true));
-		// placeCheckBox.setChecked(SharedPreferencesHelper.getInstance(context)
-		// .getBoolean(Constant.PLACE, true));
 		facebookCheckBox.setChecked(SharedPreferencesHelper
 				.getInstance(context)
 				.getBoolean(Constant.PEOPLE_FACEBOOK, true));
@@ -397,35 +345,13 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		checkBoxFlag = true;
 		socialmapsCheckBox.setOnCheckedChangeListener(this);
-		// placeCheckBox.setOnCheckedChangeListener(this);
 		facebookCheckBox.setOnCheckedChangeListener(this);
 
 		checkBoxFlag = false;
 	}
 
 	private void populateMasterList() {
-
 		listMasterContent.clear();
-
-		// SharedPreferences appSharedPrefs = PreferenceManager
-		// .getDefaultSharedPreferences(this.getApplicationContext());
-		// Gson gson = new Gson();
-		// String json = appSharedPrefs.getString("SearchResult", "");
-		//
-		// SearchResult obj = gson.fromJson(json, SearchResult.class);
-		//
-		// for (int i = 0; i < obj.getPlaces().size(); i++) {
-		// listMasterContent.add(obj.getPlaces().get(i));
-		// }
-		//
-		// for (int i = 0; i < obj.getPeoples().size(); i++) {
-		// listMasterContent.add(obj.getPeoples().get(i));
-		// }
-		//
-		// for (int i = 0; i < obj.getSecondDegreePeoples().size(); i++) {
-		// listMasterContent.add(obj.getSecondDegreePeoples().get(i));
-		// }
-
 		addPeoplesToMasterList();
 		addSecondDegreePeoplesToMasterList();
 
@@ -464,7 +390,7 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		Collections.sort(this.listMasterContent, new ListComparator());
 	}
 
-	class ListComparator implements Comparator<Object> {
+	private class ListComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object first, Object last) {
@@ -546,7 +472,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onSendMessageButtonClick(People people) {
 			// TODO Auto-generated method stub
-			//showMessageDialog(people);
 		}
 
 		@Override
@@ -618,8 +543,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 				SecondDegreePeople secondDegreePeople) {
 			// TODO Auto-generated method stub
 
-			//showMessageDialog(secondDegreePeople);
-
 		}
 
 		@Override
@@ -651,11 +574,6 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		@Override
 		public void onDrawerOpened() {
 			// TODO Auto-generated method stub
-
-			// if (bottomDrawer.isOpened()) {
-			// bottomDrawer.animateClose();
-			// }
-
 			Drawable closeIcon = getResources().getDrawable(
 					R.drawable.btn_slider_close);
 			topCloseButton.setBackgroundDrawable(closeIcon);
@@ -692,199 +610,15 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	// private OnClickListener messageBtnListener = new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	//
-	// People p = (People) v.getTag();
-	//
-	// if (v.getId() == R.id.btnMessagePeopleSocialMaps) {
-	// Toast.makeText(context,
-	// "Message Button Click ok: " + p.getFirstName(), 1000)
-	// .show();
-	// showMessageDialog(p);
-	//
-	// }
-	//
-	// }
-	// };
-
-	/*
-	 * Send Message to individual Person
-	 */
-//	private void showMessageDialog(final Object people) {
-//		// TODO Auto-generated method stub
-//		msgDialog = DialogsAndToasts.showSendMessage(context);
-//		final EditText msgEditText = (EditText) msgDialog
-//				.findViewById(R.id.message_body_text);
-//		Button send = (Button) msgDialog.findViewById(R.id.btnSend);
-//		Button cancel = (Button) msgDialog.findViewById(R.id.btnCancel);
-//
-//		// final People p = (People) people;
-//
-//		send.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//
-//				People p = null;
-//				SecondDegreePeople secondDegreePeople = null;
-//
-//				if (people instanceof People) {
-//
-//					p = (People) people;
-//					if (!msgEditText.getText().toString().trim().equals("")) {
-//						sendMessage(p.getId(), "Message", msgEditText.getText()
-//								.toString().trim());
-//					} else {
-//						msgEditText.setError("Please enter your message!!");
-//					}
-//
-//				} else if (people instanceof SecondDegreePeople) {
-//					secondDegreePeople = (SecondDegreePeople) people;
-//
-//					if (!msgEditText.getText().toString().trim().equals("")) {
-//						sendMessage(secondDegreePeople.getRefId(), "Message",
-//								msgEditText.getText().toString().trim());
-//					} else {
-//						msgEditText.setError("Please enter your message!!");
-//					}
-//
-//				}
-//
-//				hideMessageDialogKeybord(msgEditText);
-//
-//			}
-//		});
-//		cancel.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//
-//				hideMessageDialogKeybord(msgEditText);
-//				msgDialog.dismiss();
-//
-//			}
-//		});
-//		msgDialog.show();
-//	}
-//
-//	public void sendMessage(String friendId, String subject, String content) {
-//		if (Utility.isConnectionAvailble(getApplicationContext())) {
-//
-//			sendMessageFriendId = friendId;
-//			sendMessageSubject = subject;
-//			sendMessageContent = content;
-//
-//			Thread thread = new Thread(null, sendMessageThread,
-//					"Start send message");
-//			thread.start();
-//
-//			// show progress dialog if needed
-//			m_ProgressDialog = ProgressDialog.show(context, getResources()
-//					.getString(R.string.please_wait_text), getResources()
-//					.getString(R.string.sending_request_text), true,true);
-//
-//		} else {
-//
-//			DialogsAndToasts
-//					.showNoInternetConnectionDialog(getApplicationContext());
-//		}
-//	}
-//
-//	private Runnable sendMessageThread = new Runnable() {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			RestClient restClient = new RestClient(Constant.smMessagesUrl);
-//			restClient.AddHeader(Constant.authTokenParam,
-//					Utility.getAuthToken(context));
-//
-//			restClient.AddParam("recipients[]", sendMessageFriendId);
-//			restClient.AddParam("subject", sendMessageSubject);
-//			restClient.AddParam("content", sendMessageContent);
-//
-//			try {
-//				restClient.Execute(RestClient.RequestMethod.POST);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			sendMessageResponse = restClient.getResponse();
-//			sendMessageStatus = restClient.getResponseCode();
-//
-//			runOnUiThread(sendMessageReturnResponse);
-//		}
-//	};
-//
-//	private Runnable sendMessageReturnResponse = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			handleResponseSendMessage(sendMessageStatus, sendMessageResponse);
-//
-//			// dismiss progress dialog if needed
-//
-//			if(m_ProgressDialog!=null){
-//				m_ProgressDialog.dismiss();
-//			}
-//		}
-//	};
-//
-//	public void handleResponseSendMessage(int status, String response) {
-//		// show proper message through Toast or Dialog
-//		Log.d("Send Message", status + ":" + response);
-//		switch (status) {
-//		case Constant.STATUS_CREATED:
-//			// Log.d("Login", status+":"+response);
-//			Toast.makeText(context, "Message sent successfully.",
-//					Toast.LENGTH_SHORT).show();
-//			msgDialog.dismiss();
-//			break;
-//
-//		default:
-//			Toast.makeText(getApplicationContext(),
-//					"Message not delivered,please try again!!",
-//					Toast.LENGTH_SHORT).show();
-//			break;
-//
-//		}
-//
-//	}
+	
 
 	/*
 	 * Hide Keybord
 	 */
 
 	private void hideKeybord() {
-
-		// etSearchField
-		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
-		//
-		// public void onFocusChange(View v, boolean flag) {
-		// if (flag == false) {
-		// InputMethodManager inputMethodManager = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// inputMethodManager.hideSoftInputFromWindow(
-		// v.getWindowToken(), 0);
-		// }
-		// }
-		// });
-
 		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mgr.hideSoftInputFromWindow(etSearchField.getWindowToken(), 0);
-	}
-
-	protected void hideMessageDialogKeybord(EditText msgEditText) {
-		// TODO Auto-generated method stub
-
-		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(msgEditText.getWindowToken(), 0);
-
 	}
 
 	/*

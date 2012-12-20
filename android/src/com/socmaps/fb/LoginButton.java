@@ -69,8 +69,7 @@ public class LoginButton extends Button {
         mPermissions = permissions;
         mHandler = new Handler();
 
-        //setBackgroundColor(Color.TRANSPARENT);
-        //setImageResource(fb.isSessionValid() ? R.drawable.logout_button : R.drawable.login_button);
+        
         drawableStateChanged();
 
         SessionEvents.addAuthListener(mSessionListener);
@@ -142,7 +141,6 @@ public class LoginButton extends Button {
         @Override
         public void onAuthSucceed() {
         	Log.i("SessionListener", "onAuthSucceed");
-            //setImageResource(R.drawable.logout_button);
         	setText(logoutLabel);
             SessionStore.save(mFb, getContext());
         }
@@ -161,7 +159,6 @@ public class LoginButton extends Button {
         public void onLogoutFinish() {
         	Log.i("SessionListener", "onLogoutFinish");
             SessionStore.clear(getContext());
-            //setImageResource(R.drawable.login_button);
             setText(loginLabel);
         }
     }

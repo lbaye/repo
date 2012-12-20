@@ -22,6 +22,11 @@ import android.widget.ListView;
 import com.socmaps.entity.Place;
 import com.socmaps.ui.R;
 
+
+/**
+ * NearByPlacesPicker generates a custom dialog to display near by place list item.
+ *
+ */
 public class NearByPlacesPicker extends Dialog implements OnItemClickListener,
 		View.OnClickListener {
 	Button btnCancel, btnOk;
@@ -34,13 +39,34 @@ public class NearByPlacesPicker extends Dialog implements OnItemClickListener,
 
 	Place selectedPlace;
 
-	ListView listView;
+	ListView listView; 
+	
+	/**
+	 * Initialization of NearByPlacesPicker using those specified parameters. 
+	 * 
+	 * @param context Currently active Context 
+	 * @param nearByPlacesPickerListener An intance of NearByPlacesPickerListener. 
+	 * @param pickerName As String which indicates a text that Near To Me. 
+	 * @param placeList An array list of type Place which is the list of places those are near to my place. 
+	 */
 
 	public NearByPlacesPicker(Context context,
 			NearByPlacesPickerListener nearByPlacesPickerListener,
 			String pickerName, List<Place> placeList) {
 		this(context, nearByPlacesPickerListener, pickerName, placeList, null);
-	}
+	} 
+	
+	/**
+	 * Initialization of NearByPlacesPicker using those specified parameters. 
+	 * 
+	 * @param context Currently active Context 
+	 * @param nearByPlacesPickerListener An intance of NearByPlacesPickerListener. 
+	 * @param pickerName As String which indicates a text that Near To Me. 
+	 * @param placeList An array list of type Place which is the list of places those are near to my place.  
+	 * @param selectedPlace An object of type Place which indicates the pre-selected item. 
+	 * @see #initialize() 
+	 * @see #generateList()
+	 */
 
 	public NearByPlacesPicker(Context context,
 			NearByPlacesPickerListener nearByPlacesPickerListener,

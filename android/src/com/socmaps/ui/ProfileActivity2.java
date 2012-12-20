@@ -17,7 +17,6 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -94,7 +93,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	TextView tvFriendshipStatus, tvFriendshipCheck;
 
 	private Dialog msgDialog, frndRequestDialog;
-	// public Dialog currentBubbleDialog;
 
 	String friendRequestFriendId = "";
 	String friendRequestMessage = "";
@@ -126,7 +124,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			people = (People) (obj);
 			peopleId = people.getId();
 			obj = null;
-			// Log.d("CHECK VALUE", "Address: " + people.getStreetAddress());
 		}
 
 		initialize();
@@ -154,9 +151,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 	private void initialize() {
 		context = ProfileActivity2.this;
-
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		btnBack = (Button) findViewById(R.id.btnBack);
@@ -175,8 +169,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		btnEvent = (ImageView) findViewById(R.id.btnEvent);
 		btnEvent.setOnClickListener(this);
 
-		// ----- for last part ------ //
-
 		photos_icon_image = (ImageView) findViewById(R.id.photos_icon_image);
 		photos_icon_image.setOnClickListener(this);
 
@@ -191,8 +183,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		plan_icon_image = (ImageView) findViewById(R.id.plan_icon_image);
 		plan_icon_image.setOnClickListener(this);
-
-		// ------------ for last part end ---------- //
 
 		tvName = (TextView) findViewById(R.id.tvName);
 		tvStatusMessage = (TextView) findViewById(R.id.tvStatusMessage);
@@ -232,18 +222,9 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 		layEditProfilePic = (LinearLayout) findViewById(R.id.layEditProfilePic);
 		tvFriendshipCheck = (TextView) findViewById(R.id.tvFriendshipCheck);
-		
+
 		ivOnline = (ImageView) findViewById(R.id.ivOnline);
 
-		/*
-		 * if (people.getFriendshipStatus() != null) { if
-		 * (people.getFriendshipStatus().equalsIgnoreCase(
-		 * Constant.STATUS_FRIENDSHIP_FRIEND)) {
-		 * layEditProfilePic.setVisibility(View.VISIBLE);
-		 * lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE); } }
-		 */
-
-		// newsfeed portion
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		webViewNewsFeed = (WebView) findViewById(R.id.webViewNewsFeed);
 
@@ -261,8 +242,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		webViewNewsFeed.setHorizontalScrollBarEnabled(false);
 		webViewNewsFeed.getSettings().setBuiltInZoomControls(false);
 
-		// Our application's main page will be loaded
-		// http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/me/newsfeed.html?authToken=51a610291d73b70b022deaefd7f53e3aa4d746f7
 		webViewNewsFeed.loadUrl(Constant.smServerUrl + "/" + peopleId
 				+ "/newsfeed.html?authToken="
 				+ StaticValues.myInfo.getAuthToken());
@@ -293,9 +272,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == btnNavigateToMap) {
-			// Toast.makeText(context, "Will Go To Map", Toast.LENGTH_SHORT)
-			// .show();
-
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = peopleUpdate;
 
@@ -304,7 +280,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			startActivity(intent);
 
 		} else if (v == btnEvent) {
-			// finish();
 			Intent i = new Intent(context, EventListActivityOther.class);
 			i.putExtra("user", peopleUpdate);
 			startActivity(i);
@@ -322,13 +297,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					FriendListActivity.class);
 			friendIntent.putExtra("PERSON_ID", peopleUpdate.getId());
 			startActivity(friendIntent);
-
-			//
-			// Toast.makeText(
-			// getApplicationContext(),
-			// people.getFirstName() + "'s"
-			// + " friends will be shown later on",
-			// Toast.LENGTH_SHORT).show();
 		} else if (v == places_icon_image) {
 			goToShowPlaces();
 		} else if (v == interest_icon_image) {
@@ -348,7 +316,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	}
 
 	private void goToShowPlanList() {
-		// Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(context, PlanListActivity.class);
 		intent.putExtra("personID", peopleUpdate.getId());
 		intent.putExtra("firstName", peopleUpdate.getFirstName());
@@ -358,54 +325,33 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 	}
 
 	private void showOtherPeoplePhoto() {
-		/*
-		 * if(!people.getFriendshipStatus().equalsIgnoreCase(Constant.
-		 * STATUS_FRIENDSHIP_FRIEND)) { Toast.makeText(getApplicationContext(),
-		 * "You Are Not Friend of This User", Toast.LENGTH_SHORT).show(); } else
-		 * {
-		 */
 		Intent intent = new Intent(getApplicationContext(),
 				PhotoListActivity.class);
 		intent.putExtra("user", peopleUpdate);
 		startActivity(intent);
-		// finish();
-		// }
 	}
 
 	private void goToShowPlaces() {
-		// Toast.makeText(context, "will be added very soon",
-		// Toast.LENGTH_SHORT).show();
 		Intent intentToGoPlace = new Intent(context, PlacesListActivity.class);
 		Log.d("People Name & ID", peopleUpdate.getFirstName() + " "
 				+ peopleUpdate.getId());
 		intentToGoPlace.putExtra("personID", peopleUpdate.getId());
 		intentToGoPlace.putExtra("PERSON_NAME", peopleUpdate.getFirstName());
 		startActivity(intentToGoPlace);
-		// finish();
 	}
 
 	private void goToMeetUp() {
-		// Toast.makeText(context, "Not This Time", Toast.LENGTH_SHORT).show();
-
 		Log.d("LAT LNG Meetup People",
 				String.valueOf(peopleUpdate.getCurrentLat()) + " "
 						+ String.valueOf(peopleUpdate.getCurrentLng()));
 
 		Intent intentToShowMeetUp = new Intent(context,
 				MeetupRequestNewActivity.class);
-		/*
-		 * intentToShowMeetUp.putExtra("destLat", peopleUpdate.getCurrentLat());
-		 * intentToShowMeetUp.putExtra("destLng", peopleUpdate.getCurrentLng());
-		 * intentToShowMeetUp
-		 * .putExtra("destAddress",peopleUpdate.getCurrentAddress());
-		 */
 		intentToShowMeetUp.putExtra("selectedPeople", peopleUpdate);
 		startActivity(intentToShowMeetUp);
 	}
 
 	private void goToDirection() {
-		// Toast.makeText(context, "A dialog will open to send message",
-		// Toast.LENGTH_SHORT).show();
 
 		Intent intentToGoDirection = new Intent(context,
 				DirectionActivity.class);
@@ -431,42 +377,22 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 
 				if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_NONE)) {
-					// tvFriendshipStatus.setVisibility(View.GONE);
-					// relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
-					// tvFriendshipStatus.setText("No Friendship");
 
-					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
-																	// ---
-																	// //
-					// relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE);
+					relativeLayoutMeetUp.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
-
 					relativeLayoutFriend.setVisibility(View.VISIBLE);
 
 				} else if (friendshipStatus
 						.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_FRIEND)) {
-					// tvFriendshipStatus.setVisibility(View.GONE);
-					// tvFriendshipStatus.setText("Friend");
 
-					relativeLayoutFriend.setVisibility(View.GONE); // --- extra
-																	// ---
-																	// //
-					// relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE);
-					// // ---/
+					relativeLayoutFriend.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.GONE);
 
 					relativeLayoutMeetUp.setVisibility(View.VISIBLE);
 				} else {
-					// tvFriendshipStatus.setVisibility(View.VISIBLE);
-					// relativeLayoutFriend.setVisibility(View.GONE);
 					relativeLayoutFriendshipStatus.setVisibility(View.VISIBLE);
-
-					// relativeLayoutFriend.setVisibility(View.INVISIBLE);
 					relativeLayoutFriend.setVisibility(View.GONE);
-
-					relativeLayoutMeetUp.setVisibility(View.GONE); // --- extra
-																	// ---
-																	// //
+					relativeLayoutMeetUp.setVisibility(View.GONE);
 
 					String status = "";
 					if (friendshipStatus
@@ -474,14 +400,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 						status = getString(R.string.status_friend_request_friend);
 						relativeLayoutMeetUp.setVisibility(View.VISIBLE);
 
-						relativeLayoutFriend.setVisibility(View.GONE); // ---
-																		// extra
-																		// ---
-																		// //
-						// relativeLayoutFriendshipStatus.setVisibility(View.INVISIBLE);
-						// // --- extra ---
+						relativeLayoutFriend.setVisibility(View.GONE);
 						relativeLayoutFriendshipStatus.setVisibility(View.GONE);
-						// //
 					} else if (friendshipStatus
 							.equalsIgnoreCase(Constant.STATUS_FRIENDSHIP_PENDING)) {
 						status = getString(R.string.status_friend_request_pending);
@@ -515,11 +435,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-
-				/*
-				 * sendFriendRequest(item.getUser().getId(),
-				 * msgEditText.getText() .toString().trim());
-				 */
 
 				sendFriendRequest(people.getId(), msgEditText.getText()
 						.toString().trim());
@@ -606,8 +521,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Log.d("Send Frnd Request", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-			// Log.d("Login", status+":"+response);
-
 			handleSuccssfulFriendRequest();
 
 			Toast.makeText(context, "Request sent successfully.",
@@ -648,7 +561,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 			}
 		}
 		StaticValues.searchResult.setPeoples(peopleList);
-		// updateMap();
 	}
 
 	private void showMessageDialog(final People people) {
@@ -751,7 +663,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Log.d("Send Message", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_CREATED:
-			// Log.d("Login", status+":"+response);
 			Toast.makeText(context, "Message sent successfully.",
 					Toast.LENGTH_SHORT).show();
 			msgDialog.dismiss();
@@ -788,14 +699,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		public boolean shouldOverrideUrlLoading(final WebView view,
 				final String url) {
 
-			// Log.d("clicked data is ", url);
-			//
-			// final Intent intent = new Intent(Intent.ACTION_VIEW,
-			// Uri.parse(url));
-			// startActivity(intent);
-
-			// view.loadUrl(url);
-
 			Log.i("URL URL URL ", url);
 
 			String subURL = url.substring(6);
@@ -820,22 +723,12 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 				Log.d("URL", imageURL);
 
 				NewsFeedPhotoZoomDialogPicker photoZoomPicker = new NewsFeedPhotoZoomDialogPicker(
-						context, imageURL, imageDownloader);
+
+				context, imageURL, imageDownloader);
 				photoZoomPicker.getWindow().setLayout(LayoutParams.FILL_PARENT,
 						LayoutParams.FILL_PARENT);
 				photoZoomPicker.show();
 			} else if (subURL.startsWith("geotag")) {
-				String geoTagDetail = subURL.substring(7);
-				String[] geoTag = geoTagDetail.split(":");
-
-				String geoTagName = geoTag[0];
-				String geoTagNameFinal = geoTagName.replace("%20", " ");
-
-				String geoLat = geoTag[1];
-				String geoLng = geoTag[2];
-
-				// Toast.makeText(context, geoTagNameFinal + "\t" + geoLat+"" +
-				// "\t" + geoLng+"", Toast.LENGTH_LONG).show();
 			}
 
 			return true;
@@ -904,8 +797,6 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		Log.w("Got friends response from server", status + ":" + response);
 		switch (status) {
 		case Constant.STATUS_SUCCESS:
-
-			// JSONObject jsonObject = new JSONObject(response);
 			try {
 
 				JSONObject jsonObject = new JSONObject(response);
@@ -946,23 +837,16 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 					Constant.STATUS_FRIENDSHIP_FRIEND)) {
 				layEditProfilePic.setVisibility(View.VISIBLE);
 				lenearLayoutFirstMeetUp.setVisibility(View.VISIBLE);
-				// linearLayoutFirstPlan.setVisibility(View.VISIBLE);
 			}
 		}
 
-		// imageDownloader.clearCache();
-
 		if (peopleUpdate.getAvatar() != null) {
-
 			ivProfilePic.setImageResource(R.drawable.thumb);
 			imageDownloader.download(peopleUpdate.getAvatar(), ivProfilePic);
+
 		}
 
 		if (peopleUpdate.getCoverPhoto() != null) {
-
-			// ImageLoader imageLoader = new ImageLoader(context);
-			// imageLoader.DisplayImage(peopleUpdate.getCoverPhoto(),
-			// ivCoverPic, R.drawable.img_blank);
 
 			Log.i("CoverPic", peopleUpdate.getCoverPhoto());
 			ivCoverPic.setImageResource(R.drawable.img_blank);
@@ -993,26 +877,14 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		}
 
 		if (peopleUpdate.getStreetAddress() != null) {
-			// tvAddress.setText(people.getStreetAddress());
-			tvAddress.setText(peopleUpdate.getCurrentAddress()); 
+			tvAddress.setText(peopleUpdate.getCurrentAddress());
 		}
 
-		/* extra work : may be discard later on */
 		if (peopleUpdate.getStreetAddress() == null) {
 			tvAddress.setVisibility(View.INVISIBLE);
 		}
-		
-		
-		/* finished */
 
 		if (Utility.getFormatedDistance(peopleUpdate.getDistance()) != null) {
-			// tvDistance.setText(Utility.getFormatedDistance(people.getDistance()));
-
-			/*
-			 * tvDistance .setText(Utility.getFormatedDistance(peopleUpdate
-			 * .getDistance(), StaticValues.myInfo.getSettings() .getUnit()));
-			 */
-
 			tvDistance.setText(Utility.getFormatedDistance(Utility
 					.calculateDistance(StaticValues.myPoint, new GeoPoint(
 							(int) (peopleUpdate.getCurrentLat() * 1E6),
@@ -1043,9 +915,8 @@ public class ProfileActivity2 extends Activity implements OnClickListener {
 		if (peopleUpdate.getWorkStatus() != null) {
 			tvCompany.setText(peopleUpdate.getWorkStatus());
 		}
-		
-		if(peopleUpdate.isOnline())
-		{
+
+		if (peopleUpdate.isOnline()) {
 			ivOnline.setImageResource(R.drawable.online);
 		}
 	}

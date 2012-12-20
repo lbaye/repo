@@ -16,23 +16,40 @@ import android.widget.RelativeLayout;
 import com.socmaps.util.Constant.Permission;
 import com.socmaps.ui.R;
 
+/**
+ * PermissionRadioGroup class for generating  radio group (view).
+ *
+ */
 public class PermissionRadioGroup extends RelativeLayout implements
 		RadioGroup.OnCheckedChangeListener {
-
-	/*public static enum Permission {
-		NULL, PUBLIC, FRIENDS, NONE, CIRCLES, CUSTOM
-	}*/
-
+	
 	Context context;
 	PermissionRadioGroupListener permissionRadioGroupListener;
 	RadioGroup rgPermission;
 	RadioButton rbPublic, rbFriends, rbNone, rbCircles, rbCustom;
-	Permission preSelectedItem;
+	Permission preSelectedItem; 
+	
+	/**
+	 * Initialization of PermissionRadioGroupLess constructor using those specified parameters. 
+	 * 
+	 * @param context Currently active Context. 	 
+	 * @param permissionRadioGroupListener An instance of PermissionRadioGroupListener. 
+	 */
 
 	public PermissionRadioGroup(Context context,
 			PermissionRadioGroupListener permissionRadioGroupListener) {
 		this(context, permissionRadioGroupListener, Permission.NONE);
-	}
+	} 
+	
+	/** 
+	 * Initialization of PermissionRadioGroupLess constructor using those specified parameters.
+	 * 
+	 * @param context Currently active Context.  
+	 * @param permissionRadioGroupListener An instance of PermissionRadioGroupListener.  
+	 * @param preSelectedItem Check if there is any item that is pre-selected.  
+	 * @see #initialize() 
+	 * @see #setValue(Permission)
+	 */
 
 	public PermissionRadioGroup(Context context,
 			PermissionRadioGroupListener permissionRadioGroupListener,
@@ -64,7 +81,13 @@ public class PermissionRadioGroup extends RelativeLayout implements
 		rbCustom = (RadioButton) rgPermission.findViewById(R.id.rbCustom);
 		rbNone = (RadioButton) rgPermission.findViewById(R.id.rbNone);
 
-	}
+	} 
+	
+	/**
+	 * This method sets the value of item. 
+	 * 
+	 * @param item 	An instance of Permission which can be either Public, Friends , None, Circle or Custom. 
+	 */
 
 	public void setValue(Permission item) {
 		if (item != null) {
