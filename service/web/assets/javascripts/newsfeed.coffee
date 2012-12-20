@@ -49,7 +49,7 @@ class NewsfeedApp
             @likeThis(el)
 
     tapOnUnLike: (el) ->
-        @showMessage 'success', 'You have unliked it'
+        @unlikeThis(el)
 
     tapOnComment: (el) ->
         alert 'Comment'
@@ -72,6 +72,14 @@ class NewsfeedApp
 
         @incrementCount @$(el).parent().find('.link_likes'), 1
         @disableLikeButton @$(el)
+
+    unlikeThis: (el) ->
+        that = @
+        uri = '/newsfeed/' + el.attr('data-objectid') + '/unlike'
+        @sendRequestTo(uri).success((r) -> that.processServerResponse(el, r))
+
+        @incrementCount @$(el).parent().find('.link_likes'), -1
+        @enableLikeButton @$(el)
 
     processServerResponse: (el, response) ->
         @showMessage 'success', response.message
@@ -124,6 +132,10 @@ class NewsfeedApp
     disableLikeButton: (el) ->
         el.removeClass('enabled').addClass('disabled').hide()
         el.parent().find('.link_unlike').removeClass('disabled').addClass('enabled').show()
+
+    enableLikeButton: (el) ->
+        el.parent().find('.link_like').removeClass('disabled').addClass('enabled').show()
+        el.removeClass('enabled').addClass('disabled').hide()
 
     enableButton: (el) ->
         el.css('data-ui-enabled', 'true').removeClass('disabled').addClass('enabled')

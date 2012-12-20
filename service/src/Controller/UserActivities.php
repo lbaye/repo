@@ -187,6 +187,29 @@ class UserActivities extends Base {
     }
 
     /**
+     * PUT /newsfeed/{id}/unlike
+     *
+     * Unlike a specific newsfeed from the stream
+     *
+     * @param  $id
+     * @param string $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unlikeById($id, $type = self::DEFAULT_CONTENT_TYPE) {
+        $this->_ensureLoggedIn();
+
+        $activity = $this->userActivitiesRepo->find($id);
+        if (is_null($activity)) return $this->_generate404();
+
+        if ($this->userActivitiesRepo->unlike($activity, $this->user))
+            return $this->_generateResponse(
+                array('status' => 'true', 'message' => 'You have unliked it'));
+        else
+            return $this->_generateResponse(
+                array('status' => 'false', 'message' => 'You have failed to unlike it'));
+    }
+
+    /**
      * GET /newsfeed/{id}/likes.html
      *
      * Retrieve list of likes from a specific newsfeed
