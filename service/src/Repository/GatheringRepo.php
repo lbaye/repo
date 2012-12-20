@@ -263,6 +263,7 @@ class GatheringRepo extends Base implements Likable
 
         $meetUpLIst = $this->createQueryBuilder()
             ->field('rsvp.no')->notIn($userId)
+            ->field('guests')->in(array($userId))
             ->field('time')->gte($_dateTime)
             ->sort(array('createDate' => 'DESC'))
             ->getQuery()
