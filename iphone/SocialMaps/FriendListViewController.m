@@ -43,7 +43,6 @@
 - (void) selectUserId:(NSString *)_userId {
     
     self.userId = _userId;
-    
 }
 
 -(void) displayNotificationCount 

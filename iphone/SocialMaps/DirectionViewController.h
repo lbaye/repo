@@ -37,11 +37,46 @@
 @property (nonatomic, retain) NSString *currentAddress;
 @property (nonatomic, assign) CLLocationCoordinate2D coordinateTo;
 
+/**
+ * @brief Display total notification count
+ * @param none
+ * @retval none
+ */
 - (void)displayNotificationCount; 
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionBackMe:(id)sender;
+
+/**
+ * @brief Navigate to notificaiton screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Cancel button pressed and goto previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionCancelButton:(id)sender;
+
+/**
+ * @brief Ok button pressed, close socialmaps and open map app installed on device
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionOkButton:(id)sender;
+
+/**
+ * @brief Set address from latitude and longitude
+ * @param (DDAnnotation) - Annotation for which address is required
+ * @retval none
+ */
 - (void)setAddressLabelFromLatLon:(DDAnnotation*)annotation;
 
 @end

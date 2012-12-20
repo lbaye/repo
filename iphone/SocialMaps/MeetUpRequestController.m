@@ -52,53 +52,19 @@ DDAnnotation *annotation;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
-//    CustomRadioButton *radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(10, 93, self.view.frame.size.width - 20, 41) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:2000];
-//    radio.delegate = self;
-//    [self.view addSubview:radio];
-    
-    /*
-    NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool:NO], nil];
-    NSArray *layers = [NSArray arrayWithObjects:@"Send direction", nil];
-    
-    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:CGRectMake(184, 314, 140, 20) boxLocType:LabelPositionRight numBoxes:1 default:def labels:layers];
-    chkBox.tag = 1003;
-    chkBox.backgroundColor = [UIColor clearColor];
-    //chkBox.delegate = self;
-    [self.view addSubview:chkBox];
-    */
     //friends list
     frndListScrollView.delegate = self;
     selectedFriendsIndex=[[NSMutableArray alloc] init];
     filteredList=[[NSMutableArray alloc] init];
     friendListArr=[[NSMutableArray alloc] init];
-    //dicImages_msg = [[NSMutableDictionary alloc] init];
     imageDownloadsInProgress = [NSMutableDictionary dictionary];
     [imageDownloadsInProgress retain];
     
     //set scroll view content size.
     [self loadDummydata];
     
-    //reloading scrollview to start asynchronous download.
-    //[self reloadScrolview]; 
-    
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-   
-//    //load map data
-//    CLLocationCoordinate2D theCoordinate;
-//	theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
-//    theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
-//	
-//	annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-//    
-//	annotation.title = @"Drag to Move Pin";
-//    
-//    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
-//    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
-//    [pointOnMapView setRegion:adjustedRegion animated:NO];
-//    
-//	[pointOnMapView addAnnotation:annotation];
     
     //tableView setup
     tableViewPlaces.dataSource = self;
@@ -177,12 +143,6 @@ DDAnnotation *annotation;
     radio.delegate = self;
     [self.view addSubview:radio];
     
-    /*
-    for (int i = 0; i < [selectedFriendsIndex count]; i++) {
-        NSString *userId = ((UserFriends*)[filteredList objectAtIndex:[[selectedFriendsIndex objectAtIndex:i] intValue]]).userId;
-        [userIDs addObject:userId];
-    }
-     */
     [self reloadScrolview];
     smAppDelegate.currentModelViewController = self;
 }
@@ -299,9 +259,6 @@ DDAnnotation *annotation;
             CLLocationCoordinate2D theCoordinate;
             theCoordinate.latitude = annotation.coordinate.latitude;
             theCoordinate.longitude =annotation.coordinate.longitude;
-//            MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
-//            MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
-//            [pointOnMapView setRegion:adjustedRegion animated:YES]; 
             [pointOnMapView setCenterCoordinate:annotation.coordinate];
             [self performSelector:@selector(setAddressLabelFromLatLon) withObject:nil afterDelay:.3];
             break;
@@ -335,12 +292,7 @@ DDAnnotation *annotation;
     labelAddress.text = @"Retrieving address ...";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         labelAddress.text=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-        //dispatch_async(dispatch_get_main_queue(), ^{
-            //annotation.subtitle=addressLabel.text;
-        //});
     });
-    
-    //labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
 
 - (void)getMyPlaces:(NSNotification *)notif {
@@ -413,7 +365,6 @@ DDAnnotation *annotation;
                     labelPlaceName.text = self.currentAddress;
                 });
             });
-            //self.currentAddress = [UtilityClass getAddressFromLatLon:[smAppDelegate.currPosition.latitude doubleValue] withLongitude:[smAppDelegate.currPosition.longitude doubleValue]];
         }
         NSLog(@"current address = %@", self.currentAddress);
         labelPlaceName.text = self.currentAddress;
@@ -473,16 +424,6 @@ DDAnnotation *annotation;
         labelAddress.text = aPlaceItem.placeInfo.name;
         annotation.coordinate = aPlaceItem.coordinate;
     }
-    /*
-    CLLocationCoordinate2D theCoordinate;
-	theCoordinate.latitude = annotation.coordinate.latitude;
-    theCoordinate.longitude =annotation.coordinate.longitude;
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
-    MKCoordinateRegion adjustedRegion = [pointOnMapView regionThatFits:viewRegion];  
-    [pointOnMapView setRegion:adjustedRegion animated:NO]; 
-
-	[pointOnMapView setCenterCoordinate:annotation.coordinate];
-    */
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
@@ -512,7 +453,6 @@ DDAnnotation *annotation;
     else 
     {
         [selectedFriendsIndex addObject:[NSString stringWithFormat:@"%d",[sender.view tag]]];
-        
     }
     
     for (int l=0; l<[subviews count]; l++)
@@ -550,18 +490,12 @@ DDAnnotation *annotation;
 {
     isDragging_msg = FALSE;
 }
-
 //lazy load method ends
 
 
 //search bar delegate method starts
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText 
 {
-    // We don't want to do anything until the user clicks 
-    // the 'Search' button.
-    // If you wanted to display results as the user types 
-    // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     searchText=friendSearchbar.text;
     
     if ([searchText length]>0) 
@@ -584,10 +518,6 @@ DDAnnotation *annotation;
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar 
 {
-    // searchBarTextDidBeginEditing is called whenever 
-    // focus is given to the UISearchBar
-    // call our activate method so that we can do some 
-    // additional things when the UISearchBar shows.
     searchTexts=friendSearchbar.text;
     [UIView beginAnimations:@"FadeIn" context:nil];
     [UIView setAnimationDuration:0.5];
@@ -597,10 +527,6 @@ DDAnnotation *annotation;
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar 
 {
-    // searchBarTextDidEndEditing is fired whenever the 
-    // UISearchBar loses focus
-    // We don't need to do anything here.
-    //    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
 }
@@ -621,12 +547,6 @@ DDAnnotation *annotation;
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
-    // Do the search and show the results in tableview
-    // Deactivate the UISearchBar
-    // You'll probably want to do this on another thread
-    // SomeService is just a dummy class representing some 
-    // api that you are using to do the search
-    
     searchTexts=friendSearchbar.text;
     searchFlag=false;
     [self searchResult];
@@ -635,11 +555,7 @@ DDAnnotation *annotation;
 
 -(void)searchResult
 {
-    //[self loadDummydata];
     searchTexts = friendSearchbar.text;
-    
-    //NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList,friendListArr,[filteredList count],[friendListArr count], dicImages_msg);
-    
     [filteredList removeAllObjects];
     
     if ([searchTexts isEqualToString:@""])
@@ -735,9 +651,6 @@ DDAnnotation *annotation;
     if ([text isEqualToString:@"\n"]) {
         [self actionSavePersonalMsgBtn:nil];
         
-        //if ([textView.text isEqualToString:@""])
-            //[textView setPlaceHolderText:[textView getPlaceHolderText]];
-        
         return NO;
     }
     else
@@ -764,7 +677,6 @@ DDAnnotation *annotation;
     {
         if(i< [filteredList count]) 
         { 
-            //UserFriends *userFrnd=[[UserFriends alloc] init];
             UserFriends *userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
             
@@ -776,35 +688,20 @@ DDAnnotation *annotation;
             
             else 
             { 
-                //if(!isDragging_msg && !isDecliring_msg) 
-                if(!isDragging_msg && !isDecliring_msg)// && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))    
+                if(!isDragging_msg && !isDecliring_msg)   
                 {
-                    //If scroll view moves set a placeholder image and start download image. 
-                    //[dicImages_msg setObject:[UIImage imageNamed:@"NO_IMAGE"] forKey:userFrnd.imageUrl]; 
-                    //[dicImages_msg setObject:[[UIImage alloc] init] forKey:userFrnd.imageUrl]; 
-                    //[dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
-                    //[self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                    //imgView.image = [UIImage imageNamed:@"girl.png"];   
-                    
                     if (!iconDownloader) {
                         iconDownloader = [[IconDownloader alloc] init];
                     }
-                    //
+                    
                     iconDownloader.userFriends = userFrnd;
                     iconDownloader.delegate = self;
-                    //imgView.image = [[UIImage alloc] init];
-                    iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
+                    
+                    iconDownloader.scrollSubViewTag = 420 + i;
                     [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
                     [iconDownloader startDownload];
                     
                 }
-                   /*
-                else 
-                { 
-                    // Image is not available, so set a placeholder image
-                    //imgView.image = [UIImage imageNamed:@"girl.png"];                   
-                }    
-                    */
             }
             
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 45, 45)];
@@ -827,17 +724,15 @@ DDAnnotation *annotation;
             [imgView.layer setCornerRadius:7.0];
             
             imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+            
             for (int c=0; c<[selectedFriendsIndex count]; c++)
             {
                 if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
                 {
                     imgView.layer.borderColor=[[UIColor greenColor] CGColor];
                 }
-                else
-                {
-                }
-                
             }
+            
             [aView addSubview:imgView];
             [aView addSubview:name];
             UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
@@ -880,8 +775,6 @@ DDAnnotation *annotation;
         [iconDownloader release];
     }
     
-    //[dicImages_msg setObject:image forKey:userFriends.imageUrl];
-    
     int tag = scrollSubViewTag - 420;
     
     if (tag == 0) {
@@ -905,29 +798,6 @@ DDAnnotation *annotation;
     }
 }
 
-/*
--(void)DownLoad:(NSNumber *)path
-{
-    NSLog(@"in Download");
-    //NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
-    int index = [path intValue];
-    UserFriends *userFrnd=[[UserFriends alloc] init];
-    userFrnd=[filteredList objectAtIndex:index];
-    
-    NSString *Link = userFrnd.imageUrl;
-    //Start download image from url
-    UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
-    {
-        //If download complete, set that image to dictionary
-        [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-        [self reloadScrolview];
-    }
-    // Now, we need to reload scroll view to load downloaded image
-    //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-    //[pl release];
-}
-*/
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];

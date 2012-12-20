@@ -14,11 +14,16 @@
     
     NSMutableArray *meetUpRequestList;
     UIViewController *parentViewController;
-    //int selectedRow;
     IBOutlet UITableView *tableViewMeetUps;
     NSMutableDictionary *imageDownloadsInProgress;
 }
 
+/**
+ * @brief Initialize view
+ * @param (CGrect) - Frame for view
+ * @param (UIViewController) - Parent view controller of the view
+ * @retval self
+ */
 - (id)initWithFrame:(CGRect)frame andParentControllder:(UIViewController*)controller;
 
 

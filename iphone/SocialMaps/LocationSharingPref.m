@@ -46,7 +46,7 @@
         if ((prefs & LocationSharingPrefTypeRadius) != 0) {
             //
             rowFrame = CGRectMake(self.frame.origin.x+level*10, ROW_HEIGHT*prefCount++, self.frame.size.width-level*10, ROW_HEIGHT);
-            radius = [[CounterItem alloc] initWithFrame:rowFrame title:@"Radius for location sharing (in km):" subTitle:@"" defVal:rad sender:sender tag:self.tag+200];
+            radius = [[CounterItem alloc] initWithFrame:rowFrame title:@"Radius for invisibility (in km):" subTitle:@"" defVal:rad sender:sender tag:self.tag+200];
             radius.backgroundColor = [UIColor clearColor];
             [self addSubview:radius];
         }
