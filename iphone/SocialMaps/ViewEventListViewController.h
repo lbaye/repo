@@ -45,23 +45,88 @@
 @property(nonatomic,retain) IBOutlet UIButton *publicEventButton;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 
-
+/**
+ * @brief sort event list according to date
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)dateAction:(id)sender;
+
+/**
+ * @brief sort event list according to distance
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)distanceAction:(id)sender;
+
+/**
+ * @brief filter friends event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)friendsEventAction:(id)sender;
+
+/**
+ * @brief filter user's event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)myEventAction:(id)sender;
+
+/**
+ * @brief filter public event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)publicEventAction:(id)sender;
+
+/**
+ * @brief creates new event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)newEventAction:(id)sender;
 
--(IBAction)yesButton:(id)sender;
--(IBAction)noButton:(id)sender;
--(IBAction)maybeButton:(id)sender;
+/**
+ * @brief view event on map view
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)viewLocationButton:(id)sender;
 
+/**
+ * @brief closes map view for event on map
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)closeMapView:(id)sender;
+
+/**
+ * @brief navigate user to previous screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)backButton:(id)sender;
+
+/**
+ * @brief load data for event list
+ * @param (id) - action sender
+ * @retval action
+ */
 -(NSMutableArray *)loadDummyData;
+
+/**
+ * @brief set images if event image downloaded from an url.
+ * @param (id) - action sender
+ * @retval action
+ */
 - (void)appImageDidLoad:(NSString *)eventID;
+
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)gotoNotification:(id)sender;
 
 @end

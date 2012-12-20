@@ -359,7 +359,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
 }
 
--(IBAction)geotagButton:(id)sender
+-(IBAction)friendRequestButton:(id)sender
 {
 /*    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"GeoTagStoryboard" bundle:nil];
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"createGeotag"];

@@ -32,7 +32,18 @@
 @property (nonatomic, retain) NSMutableData *activeDownload;
 @property (nonatomic, retain) NSURLConnection *imageConnection;
 
+/**
+ * @brief Start download of plan image
+ * @param none
+ * @retval none
+ */
 - (void)startDownload;
+
+/**
+ * @brief Cancel download of plan image
+ * @param none
+ * @retval none
+ */
 - (void)cancelDownload;
 
 @end

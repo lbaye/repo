@@ -23,6 +23,7 @@
 #import "RestClient.h"
 #import "NotificationController.h"
 #import "UIImageView+Cached.h"
+#import "FriendsProfileViewController.h"
 
 #pragma mark -
 #pragma mark EmailMenuItem
@@ -475,6 +476,13 @@ int renameCircleOndex;
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:indexPath.section];
+    UserFriends *userFrnd=[sectionInfo.userCircle.friends objectAtIndex:indexPath.row];
+    
+    FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+    controller.friendsId=userFrnd.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
     NSLog(@"indexPath %@",indexPath);
 }
 

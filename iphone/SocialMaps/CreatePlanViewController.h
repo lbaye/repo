@@ -42,7 +42,6 @@
 @property(nonatomic,retain) IBOutlet UILabel *dateLabel;
 @property(nonatomic,retain) IBOutlet UIButton *dateButton;
 @property(nonatomic,retain) IBOutlet UIView *mapContainerView;
-
 @property(nonatomic,retain) IBOutlet UITableView *circleTableView;
 @property(nonatomic,retain) IBOutlet UIScrollView *frndsScrollView;
 @property(nonatomic,retain) IBOutlet UISegmentedControl *segmentControl;
@@ -50,20 +49,77 @@
 @property(nonatomic,retain) Plan *plan;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
 @property(nonatomic,retain) NSIndexPath *editIndexPath;
-
 @property(nonatomic,retain) IBOutlet UILabel *titleLabel;
 @property(nonatomic,retain) IBOutlet UIButton *saveButton;    
 
+/**
+ * @brief create a plan
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)savePlan:(id)sender;
 
--(IBAction)savePlan:(id)sender;
--(IBAction)cancelPlan:(id)sender;
--(IBAction)selecDate:(id)sender;
--(IBAction)back:(id)sender;
--(IBAction)saveMapLocation:(id)sender;
--(IBAction)cancelMapLocation:(id)sender;
--(IBAction)segmentChanged:(id)sender;
--(IBAction)gotoNotification:(id)sender;
+/**
+ * @brief Cancel plan and navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)cancelPlan:(id)sender;
+
+/**
+ * @brief Prompt user to select plan date
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)selecDate:(id)sender;
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)back:(id)sender;
+
+/**
+ * @brief Save plan location on map
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)saveMapLocation:(id)sender;
+
+/**
+ * @brief Cancel plan location selection option
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)cancelMapLocation:(id)sender;
+
+/**
+ * @brief Change segment for friends or circle selection
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)segmentChanged:(id)sender;
+
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Notify user whether plan updated successfully or not
+ * @param (NSNotification) - Notification object
+ * @retval action
+ */
 - (void)updatePlanDone:(NSNotification *)notif;
+
+/**
+ * @brief Notify user whether plan created successfully or not
+ * @param (NSNotification) - Notification object
+ * @retval action
+ */
 - (void)createPlanDone:(NSNotification *)notif;
 
 @end

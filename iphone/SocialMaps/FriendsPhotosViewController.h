@@ -32,14 +32,39 @@
 @property(nonatomic,retain) IBOutlet UIButton *nextButton;
 @property(nonatomic,retain) IBOutlet UIButton *prevButton;    
 
--(IBAction)myPhotosAction:(id)sender;
--(IBAction)uploadNewPhotoAction:(id)sender;
--(IBAction)deleteSelectedPhotosAction:(id)sender;
-
+/**
+ * @brief Closes full screen view of a photo
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)closeZoomView:(id)sender;
+
+/**
+ * @brief Show user previous image
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)viewPrevImage:(id)sender;
+
+/**
+ * @brief show user next image
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)viewNextImage:(id)sender;
-- (IBAction)actionNotificationButton:(id)sender;
-- (IBAction)backButtonAction:(id)sender;
+
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
+-(IBAction)actionNotificationButton:(id)sender;
+
+/**
+ * @brief navigate user to previous screen
+ * @param (id) - action sender
+ * @retval action
+ */
+-(IBAction)backButtonAction:(id)sender;
 
 @end

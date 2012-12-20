@@ -79,28 +79,95 @@
 @property(nonatomic,retain) IBOutlet UISegmentedControl *segmentControl;
 @property(nonatomic,retain) IBOutlet UIView *customView;
 
+/**
+ * @brief download event image
+ * @param downloading index
+ * @retval none
+ */
 -(void)DownLoad:(NSNumber *)path;
+
+/**
+ * @brief reloads guest scroll view
+ * @param downloading index
+ * @retval none
+ */
 -(void) reloadScrolview;
 
+/**
+ * @brief show event location on map
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)viewMapButton:(id)sender;
--(IBAction)yesAttendAction:(id)sender;
--(IBAction)noAttendAction:(id)sender;
--(IBAction)maybeAttendAction:(id)sender;
 
+/**
+ * @brief show guest list
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)guestList:(id)sender;
+
+/**
+ * @brief invite more people to event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)invitePeople:(id)sender;
+
+/**
+ * @brief delete evnt
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)deleteEvent:(id)sender;
+
+/**
+ * @brief edit event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)editEvent:(id)sender;
-- (IBAction)menuTapped;
+
+/**
+ * @brief closes map view for event on map
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)closeMap:(id)sender;
 
+/**
+ * @brief navigate user to previous screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)backButton:(id)sender;
 
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief segement changes for invite more people screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)segmentChanged:(id)sender;
--(void)resetButton:(int)index;
--(void)loadScrollView;
+
+/**
+ * @brief save invited custom data
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)saveCustom:(id)sender;
+
+/**
+ * @brief cancel custom invitation
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelCustom:(id)sender;
 
 @end

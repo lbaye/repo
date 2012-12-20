@@ -21,6 +21,7 @@
 #import "NotificationController.h"
 #import "UserFriends.h"
 #import "UIImageView+Cached.h"
+#import "FriendsProfileViewController.h"
 
 @interface BlockUnblockCircleViewController ()
 -(void)inviteButtonAction:(id)sender;
@@ -673,20 +674,10 @@ bool searchFlag3=true;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    
-    // [smAppDelegate showActivityViewer:self.view];
-    // RestClient *rc=[[RestClient alloc] init];
-    // Event *aEvent=[[Event alloc] init];
-    // aEvent=[filteredList objectAtIndex:indexPath.row];
-    // globalEvent=[[Event alloc] init];
-    // globalEvent=aEvent;
-    // NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
-    // UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    // ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    // [self presentModalViewController:controller animated:YES];
-    
+    FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+    controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 //Lazy loading method starts

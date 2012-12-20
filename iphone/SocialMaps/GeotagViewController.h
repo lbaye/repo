@@ -146,56 +146,200 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIScrollView *largePhotoScroller;
 @property(nonatomic,retain) IBOutlet UITextField *titleTextField;
 
+/**
+ * @brief Save geotag name
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)nameButtonAction;
+
+/**
+ * @brief Save geotag date
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)dateButtonAction:(id)sender;
+
+/**
+ * @brief Save geotag photo
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)photoButtonAction;
+
+/**
+ * @brief Save geotag categories
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)categoriesButtonAction:(id)sender;
 
+/**
+ * @brief Remove geotag image
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)deleteButtonAction;    
 
--(IBAction)privateButtonAction;
--(IBAction)friendsButtonAction;
--(IBAction)degreeFriendsButtonAction;    
--(IBAction)peopleButtonAction;
--(IBAction)customButtonAction;        
-
+/**
+ * @brief Save geotag sharing user circle
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)showCircle:(id)sender;
 
+/**
+ * @brief Unselect all user
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)unSelectAll:(id)sender;
--(IBAction)addAll:(id)sender;
--(IBAction)createEvent:(id)sender;
--(IBAction)cancelEvent:(id)sender;
 
+/**
+ * @brief Add all user
+ * @param (id) - Action sender
+ * @retval action
+ **/
+-(IBAction)addAll:(id)sender;
+
+/**
+ * @brief Save geotag
+ * @param (id) - Action sender
+ * @retval action
+ **/
+-(IBAction)createGeotag:(id)sender;
+
+/**
+ * @brief Cancel geotag
+ * @param (id) - Action sender
+ * @retval action
+ **/
+-(IBAction)cancelGeotag:(id)sender;
+
+/**
+ * @brief Save geotag entity
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)saveEntity:(id)sender;
+
+/**
+ * @brief Cancel geotag cancel
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelEntity:(id)sender;
 
+/**
+ * @brief Save geotag map location
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)saveMapLoc:(id)sender;
+
+/**
+ * @brief Cancel geotag map location
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelMapLoc:(id)sender;
 
+/**
+ * @brief Save geotag sharing circle
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)saveCircle:(id)sender;
+
+/**
+ * @brief Cancel geotag sharing circle
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelCircle:(id)sender;
 
+/**
+ * @brief Save geotag sharing custom friends and circle
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)saveCustom:(id)sender;
+
+/**
+ * @brief Cancel geotag sharing custom friends and circle
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelCustom:(id)sender;
+
+/**
+ * @brief Change custom segment
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)customSegment:(id)sender;
 
+/**
+ * @brief Text input begin 
+ * @param - Action sender
+ * @retval action
+ **/
 -(void)beganEditing:(UISearchBar *)searchBar;
+
+/**
+ * @brief Text input end 
+ * @param - Action sender
+ * @retval action
+ **/
 -(void)endEditing;
--(void)scrollToPage:(int)page:(BOOL)animated;
+
+/**
+ * @brief Get back to previous screen 
+ * @param - Action sender
+ * @retval action
+ **/
 -(IBAction)backButton:(id)sender;
 
+/**
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)gotoNotification:(id)sender;
 
+/**
+ * @brief Save geotag comments
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)saveComments:(id)sender;
+
+/**
+ * @brief Cancel geotag comments
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelComments:(id)sender;
 
+/**
+ * @brief Save geotag photo
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)savePhoto:(id)sender;
+
+/**
+ * @brief Cancel geotag photo
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)cancelPhoto:(id)sender;
--(IBAction)closeZoomView:(id)sender;
 
--(IBAction)viewPrevImage:(id)sender;
-
--(IBAction)viewNextImage:(id)sender;
+/**
+ * @brief Hide keyboard
+ * @param (id) - Action sender
+ * @retval action
+ **/
 -(IBAction)hideKeyboard:(id)sender;
 
 @end

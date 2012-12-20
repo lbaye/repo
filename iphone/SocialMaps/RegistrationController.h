@@ -41,18 +41,13 @@ PhotoPickerDelegate> {
 @property (nonatomic, retain) PhotoPicker *photoPicker;
 @property (nonatomic,retain)  IBOutlet IBOutlet UIView *basicInfoView;
 @property (nonatomic,retain)  IBOutlet UIView *moreInfoView;
-
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
 @property (retain, nonatomic) IBOutlet UIPickerView *selMaleFemale;
-- (IBAction)selectGender:(id)sender;
 @property (retain, nonatomic) IBOutlet UITextField *regGender;
-- (IBAction)createAccount:(id)sender;
 @property (retain, nonatomic) IBOutlet UITextField *regEmail;
 @property (retain, nonatomic) IBOutlet UITextField *regPassword;
 @property (retain, nonatomic) IBOutlet UITextField *regName;
 @property (retain, nonatomic) IBOutlet UITextField *regFirstName;
 @property (retain, nonatomic) IBOutlet UIButton *picSelButton;
-
 @property(nonatomic,retain) IBOutlet UITextField *dateOfBirthTxtField;
 @property(nonatomic,retain) IBOutlet UITextField *biographyTxtField;
 @property(nonatomic,retain) IBOutlet UITextField *interestsTxtField;
@@ -64,10 +59,61 @@ PhotoPickerDelegate> {
 @property(nonatomic,retain) IBOutlet UITextField *relatioshipStatusTxtField;
 @property(nonatomic,retain) IBOutlet UIScrollView *registrationScrollView;
 
+/**
+ * @brief Gender selection of an user
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)selectGender:(id)sender;
+
+/**
+ * @brief Animate textfield while editing if that is hides by keyboard
+ * @param (UITextField) - Action sender
+ * @param (BOOL) - Action sender
+ * @retval action
+ */
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up;
+
+/**
+ * @brief Hides the keyboard
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)hideKeyboard:(id)sender;
+
+/**
+ * @brief Select image for registration
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)selPicOption:(id)sender;
+
+/**
+ * @brief Date of  birth selection of an user
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)selectDateOfBirthAction:(id)sender;
+
+/**
+ * @brief Country selection of an user
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)selectCountryAction:(id)sender;
+
+/**
+ * @brief Select relationship satus of an user
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)selectRelStatus:(id)sender;
+
+/**
+ * @brief Creates a new accout for user
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)createAccount:(id)sender;
 
 @end

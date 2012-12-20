@@ -130,49 +130,179 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) NSString *venueAddress;
 @property(nonatomic,retain) Geolocation *geolocation;
 
+/**
+ * @brief save event name
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)nameButtonAction;
--(IBAction)summaryButtonAction;    
+
+/**
+ * @brief save event sumary
+ * @param (id) - action sender
+ * @retval action
+ */
+-(IBAction)summaryButtonAction;
+
+/**
+ * @brief save event description
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)descriptionButtonAction;
+
+/**
+ * @brief save event date
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)dateButtonAction:(id)sender;
+
+/**
+ * @brief save event photo
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)photoButtonAction;
+
+/**
+ * @brief delete event photo
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)deleteButtonAction;    
 
--(IBAction)privateButtonAction;
--(IBAction)friendsButtonAction;
--(IBAction)degreeFriendsButtonAction;    
--(IBAction)peopleButtonAction;
--(IBAction)customButtonAction;        
-
--(IBAction)curLocButtonAction;
--(IBAction)myPlaceButtonAction;    
--(IBAction)neamePlaceButtonAction:(id)sender;
--(IBAction)pointOnMapButtonAction;    
-
+/**
+ * @brief show user circle list
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)showCircle:(id)sender;
 
+/**
+ * @brief guest can invite friends
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)guestCanInvite:(id)sender;
+
+/**
+ * @brief unselect all friends
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)unSelectAll:(id)sender;
+
+/**
+ * @brief add all friends
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)addAll:(id)sender;
+
+/**
+ * @brief creates an event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)createEvent:(id)sender;
+
+/**
+ * @brief cancel an event
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelEvent:(id)sender;
 
+/**
+ * @brief save event entity
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)saveEntity:(id)sender;
+
+/**
+ * @brief cancel event entity
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelEntity:(id)sender;
 
+/**
+ * @brief save event map location
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)saveMapLoc:(id)sender;
+
+/**
+ * @brief cancel event map location
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelMapLoc:(id)sender;
 
+/**
+ * @brief save invited circle
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)saveCircle:(id)sender;
+
+/**
+ * @brief cancel invited circle
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelCircle:(id)sender;
 
+/**
+ * @brief save custom invited guest
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)saveCustom:(id)sender;
+
+/**
+ * @brief cancel custom invited guest
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)cancelCustom:(id)sender;
+
+/**
+ * @brief manage segment for inviting friends or circle 
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)customSegment:(id)sender;
 
+/**
+ * @brief control begin editing, move textfield if that hides by keyboard
+ * @param (id) - action sender
+ * @retval action
+ */
 -(void)beganEditing:(UISearchBar *)searchBar;
+
+/**
+ * @brief control end editing, move textfield to original position if that hides by keyboard
+ * @param (id) - action sender
+ * @retval action
+ */
 -(void)endEditing;
+
+/**
+ * @brief navigate user to previous screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)backButton:(id)sender;
 
+/**
+ * @brief navigate user to notification screen
+ * @param (id) - action sender
+ * @retval action
+ */
 -(IBAction)gotoNotification:(id)sender;
 
 @end

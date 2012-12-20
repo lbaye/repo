@@ -692,7 +692,7 @@ int geoCounter=0;
     [self reloadScrolview];
 }
 
--(IBAction)createEvent:(id)sender
+-(IBAction)createGeotag:(id)sender
 {
     [commentsView resignFirstResponder];
     [titleTextField resignFirstResponder];
@@ -811,7 +811,7 @@ int geoCounter=0;
     [commentsView resignFirstResponder];
 }
 
--(IBAction)cancelEvent:(id)sender
+-(IBAction)cancelGeotag:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
 }

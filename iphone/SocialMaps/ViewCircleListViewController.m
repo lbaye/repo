@@ -21,6 +21,7 @@
 #import "RestClient.h"
 #import "NotificationController.h"
 #import "UIImageView+Cached.h"
+#import "FriendsProfileViewController.h"
 
 @interface ViewCircleListViewController ()
 @end
@@ -581,9 +582,11 @@ bool showSM=true;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
-{
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
-    smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
+{    
+    FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
+    controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
 }
 
 - (void)loadImagesForOnscreenRows {
