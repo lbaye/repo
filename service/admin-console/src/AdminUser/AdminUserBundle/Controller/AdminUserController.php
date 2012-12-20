@@ -423,7 +423,8 @@ class AdminUserController extends Controller
                 $entity->setAddress($location['address']);
             }
 
-            $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
+            $form = $this->get('form.factory')
+                ->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
 
             if ($request->getMethod() === 'POST') {
                 $form->bindRequest($request);

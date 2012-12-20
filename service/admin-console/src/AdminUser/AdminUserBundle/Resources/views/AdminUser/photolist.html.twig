@@ -36,7 +36,7 @@
 
             <td>{{ photo.title }}</td>
             <td>{{ photo.description }}</td>
-            <td><img src="../../../../web{{ photo.uriThumb }}" class="img-polaroid"></td>
+            <td><img src="{{ image_path }}{{ photo.uriThumb }}" class="img-polaroid"></td>
 
             <td style="width: 90px;">
                 <div class="actions">
