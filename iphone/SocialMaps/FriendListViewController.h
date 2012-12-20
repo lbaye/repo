@@ -34,11 +34,39 @@ typedef enum _FILTER_BY {
 
 @property (nonatomic, retain) NSString* userId;
 
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionBackMe:(id)sender;
+
+/**
+ * @brief Show search bar
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionShowSearchBar:(id)sender;
+
+/**
+ * @brief Navigate to notification screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)gotoNotification:(id)sender;
 
+/**
+ * @brief Display total notification count
+ * @param none
+ * @retval none
+ */
 - (void)displayNotificationCount;
+
+/**
+ * @brief Set user id for whom friend list need to be shown
+ * @param none
+ * @retval none
+ */
 - (void) selectUserId:(NSString *)_userId;
 
 @end

@@ -470,7 +470,6 @@
         buttonSelectPlace.frame = CGRectMake(320-35, 18-10, 21, 21);
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateSelected];
         [buttonSelectPlace setImage:[UIImage imageNamed:@"location_bar_radio.png"] forState:UIControlStateNormal];
-        //[buttonSelectPlace addTarget:self action:@selector(actionSelectPlaceButton:) forControlEvents:UIControlEventTouchUpInside];
         buttonSelectPlace.userInteractionEnabled = NO;
         
         [cell.contentView addSubview:buttonSelectPlace];
