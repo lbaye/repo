@@ -27,6 +27,11 @@
 
 @property (assign) id<MeetUpListButtonsDelegate> delegate;
 
+/**
+ * @brief Make already pressed meet up decision button as disable
+ * @param (MeetUpRequest) - Meetup request for which buttons need to be adjusted 
+ * @retval none
+ */
 - (void)adjustButtons:(MeetUpRequest*)meetUpReq;
 
 @end
