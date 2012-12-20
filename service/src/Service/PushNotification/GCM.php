@@ -2,6 +2,9 @@
 
 namespace Service\PushNotification;
 
+/**
+ * Android GCM compatible push notification implementation
+ */
 class GCM extends Notifier
 {
     public function __construct($apiKey, $endpoint = 'https://android.googleapis.com/gcm/send')

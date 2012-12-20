@@ -2,6 +2,9 @@
 
 namespace Service\PushNotification;
 
+/**
+ * iOS compatible push notification implementation
+ */
 class IOS extends Notifier
 {
     protected $pemFile = null;

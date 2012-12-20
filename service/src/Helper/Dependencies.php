@@ -1,6 +1,9 @@
 <?php
 namespace Helper;
 
+/**
+ * Helper for exposing dependent instances
+ */
 class Dependencies {
 
     /**

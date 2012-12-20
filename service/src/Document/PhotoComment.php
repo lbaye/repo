@@ -9,7 +9,10 @@ use Document\User;
 use Document\Photo;
 use Repository\UserRepo as userRepository;
 use Repository\PhotosRepo as photoRepository;
+
 /**
+ * Domain model for storing comments on photo, this model is used as an embedded model
+ *
  * @ODM\EmbeddedDocument
  */
 class PhotoComment

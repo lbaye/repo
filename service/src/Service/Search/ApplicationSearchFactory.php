@@ -2,6 +2,9 @@
 
 namespace Service\Search;
 
+/**
+ * Application search factory
+ */
 class ApplicationSearchFactory {
 
     const AS_DEFAULT = 'default';

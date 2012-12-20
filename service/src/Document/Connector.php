@@ -6,6 +6,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * @ignore
  * @ODM\EmbeddedDocument
  */
 class Connector

@@ -10,6 +10,8 @@ use Document\Place as Place;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing geotag related data. this model is linked with "places" collection
+ *
  * @ODM\Document(collection="places", repositoryClass="Repository\PlaceRepo")
  */
 class Geotag extends Landmark

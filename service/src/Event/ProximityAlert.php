@@ -4,6 +4,9 @@ namespace Event;
 
 use Repository\UserRepo as UserRepository;
 
+/**
+ * Background job for sending out proximity alert based on user's current location
+ */
 class ProximityAlert extends Base
 {
     /**

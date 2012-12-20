@@ -5,6 +5,9 @@ namespace Event;
 use Repository\UserRepo as UserRepository;
 use \Service\Search\ApplicationSearchFactory as AppSearchFactory;
 
+/**
+ * Background job for creating search result cache based on user location changes
+ */
 class CreateSearchCache extends Base {
     /**
      * @var UserRepository

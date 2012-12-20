@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing meetup related data. this model is linked with "meetups" collection
+ *
  * @ODM\Document(collection="meetups",repositoryClass="Repository\GatheringRepo")
  */
 class Meetup extends Gathering

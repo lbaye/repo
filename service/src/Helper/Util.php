@@ -5,6 +5,9 @@ namespace Helper;
 use Monolog\Logger as Logger,
     Monolog\Handler\StreamHandler as StreamHandler;
 
+/**
+ * Utility class for storing commonly used helper methods.
+ */
 class Util {
     static $streamHandlers = array();
 

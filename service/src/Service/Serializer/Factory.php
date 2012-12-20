@@ -1,6 +1,9 @@
 <?php
 namespace Service\Serializer;
 
+/**
+ * Serializer factory
+ */
 class Factory
 {
     static $serializerInstances = array();

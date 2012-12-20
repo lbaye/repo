@@ -4,6 +4,9 @@ namespace Event;
 
 use Symfony\Component\Yaml\Parser;
 
+/**
+ * Base abstract class for background job
+ */
 abstract class Base {
     /**
      * @var array
@@ -78,8 +81,21 @@ abstract class Base {
         return ((time() - intval($workload->timestamp)) < intval($workload->validity));
     }
 
+    /**
+     * Set background job event name
+     *
+     * @abstract
+     * @return void
+     */
     abstract protected function setFunction();
 
+    /**
+     * Execute background job
+     *
+     * @abstract
+     * @param \GearmanJob $job
+     * @return void
+     */
     abstract public function run(\GearmanJob $job);
 
     public function setLogger($logger) {

@@ -8,6 +8,8 @@ use Respect\Validation\Validator;
 use Document\User as User;
 
 /**
+ * Domain model for storing photo related data. This model is linked with "photos" collection
+ *
  * @ODM\Document(collection="photos",repositoryClass="Repository\PhotosRepo")
  */
 class Photo extends Content implements ParticipativeDoc {

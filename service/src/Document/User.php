@@ -9,6 +9,8 @@ use Document\Circle;
 use Helper\ShareConstant;
 
 /**
+ * Domain model for storing user related data. this model is linked with "users" collection
+ *
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  * @ODM\Index(keys={"notification"="desc"})

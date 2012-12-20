@@ -1,6 +1,9 @@
 <?php
 namespace Helper;
 
+/**
+ * HTTP response status code related constants
+ */
 class Status {
     
     // HTTP Status codes

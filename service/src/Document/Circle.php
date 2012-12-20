@@ -7,7 +7,10 @@ use Respect\Validation\Validator;
 
 use Document\User;
 use Repository\UserRepo as userRepository;
+
 /**
+ * Domain model for circle data, this is an embedded model.
+ *
  * @ODM\EmbeddedDocument
  */
 class Circle

@@ -10,6 +10,9 @@ use Document\CheckIn as CheckIn;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
+/**
+ * Data access functionality for check in model
+ */
 class CheckInRepo extends Base
 {
     public function map(array $data, UserDocument $owner, CheckIn $checkIn = null)

@@ -7,22 +7,16 @@ use Repository\PlaceRepo as placeRepository;
 use Repository\DealRepo as DealRepository;
 use Helper\Status;
 
+/**
+ * This is a common controller to generate list from places, users, deals and other collections.
+ * @ignore
+ */
 class AllList extends Base
 {
-    /**
-     * This can be object of place repository or geotag repository
-     * @var placeRepository
-     */
     private $LocationMarkRepository;
 
-    /**
-     * @var  dealRepository
-     */
     private $dealRepository;
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         $this->response = new Response();

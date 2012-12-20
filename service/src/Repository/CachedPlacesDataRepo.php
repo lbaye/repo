@@ -4,6 +4,9 @@ namespace Repository;
 
 use Document\CachedPlacesData as CachedPlacesData;
 
+/**
+ * Data access functionality for cached places data model
+ */
 class CachedPlacesDataRepo extends Base {
 
     public function map(array $data, CachedPlacesData $instance = null) {

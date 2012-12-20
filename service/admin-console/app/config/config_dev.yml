@@ -25,11 +25,12 @@ assetic:
 #swiftmailer:
 #    delivery_address: me@example.com
 
-#doctrine_odm.mongodb:
-#  server: mongodb://localhost:27017
-#  options:
-#    connect: true
-#    default_database: socialmaps
-#    document_managers:
-#        default:
-#            auto_mapping: true
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://localhost:27017
+            options: {}
+    default_database: socialmaps
+    document_managers:
+        default:
+            auto_mapping: true

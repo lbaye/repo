@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing deals
+ *
  * @ODM\Document(collection="deals",repositoryClass="Repository\DealRepo")
  * @ODM\Index(keys={"location"="2d"})
  */
