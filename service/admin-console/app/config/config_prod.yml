@@ -7,6 +7,13 @@ imports:
 #        result_cache_driver: apc
 #        query_cache_driver: apc
 
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+       image_path:      "http://192.168.1.71/social_maps/web"
+
 monolog:
     handlers:
         main:

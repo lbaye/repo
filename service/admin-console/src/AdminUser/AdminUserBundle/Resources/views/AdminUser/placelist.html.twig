@@ -35,7 +35,7 @@
     <tbody>
     {% for place in entities %}
     <tr>
-        <td><a href="{{ path('admin_user_updatepage', {'id': place.id}) }}">{{ place.id }}</a></td>
+        <td><a href="{{ path('manage_place_edit', {'id': place.id}) }}">{{ place.id }}</a></td>
         <td>{{ place.category }}</td>
         <td>{{ place.title }}</td>
         <td>{{ place.description }}</td>
