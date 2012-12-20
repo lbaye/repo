@@ -1,7 +1,10 @@
 <?php
 
 namespace Repository;
- 
+
+/**
+ * Interface for document observer
+ */
 interface DocumentObserver {
     public function beforeValidation(&$object);
     public function beforeCreate(&$object);

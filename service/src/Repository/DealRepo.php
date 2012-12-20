@@ -7,6 +7,9 @@ use Document\Deal as DealDocument;
 use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
+/**
+ * Data access functionality for deal model
+ */
 class DealRepo extends Base
 {
     public function getNearBy($lat, $lng, $limit = 20)

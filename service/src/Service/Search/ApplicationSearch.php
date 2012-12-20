@@ -2,6 +2,9 @@
 
 namespace Service\Search;
 
+/**
+ * Application search implementation
+ */
 class ApplicationSearch implements ApplicationSearchInterface {
 
     private $dm;

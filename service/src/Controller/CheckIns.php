@@ -9,6 +9,9 @@ use Repository\CheckInRepo as CheckInRepository;
 use Document\CheckIn as CheckInDocument;
 use Helper\Image as ImageHelper;
 
+/**
+ * Manage venue checkins related resources
+ */
 class CheckIns extends Base
 {
     private $checkInRepo;
@@ -25,6 +28,13 @@ class CheckIns extends Base
         $this->_ensureLoggedIn();
     }
 
+    /**
+     * POST /checkins
+     *
+     * Create new checkin
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function create()
     {
 
@@ -60,6 +70,14 @@ class CheckIns extends Base
         return $this->_generateResponse($checkIn->toArray(), Status::CREATED);
     }
 
+    /**
+     * GET /checkins/{id}
+     *
+     * Retrieve checkin by the given id
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function show($id)
     {
         $checkIn = $this->checkInRepo->find($id);
@@ -69,6 +87,14 @@ class CheckIns extends Base
         return $this->_generateResponse($checkIn->toArray(), Status::OK);
     }
 
+    /**
+     * PUT /checkins/{id}
+     *
+     * Update a specific checkin
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function update($id)
     {
         $data = $this->request->request->all();
@@ -86,6 +112,14 @@ class CheckIns extends Base
         return $this->_generateResponse($checkIn->toArray(), Status::OK);
     }
 
+    /**
+     * DELETE /checkins/{id}
+     *
+     * Delete a specific checkin
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function delete($id)
     {
         $checkIn = $this->checkInRepo->find($id);
@@ -102,6 +136,14 @@ class CheckIns extends Base
         return $this->_generateResponse(array('message' => 'Deleted Successfully'));
     }
 
+    /**
+     * GET /checkins/venue/{venue}
+     * 
+     * Retrieve checkins by the given venue
+     *
+     * @param  $venue
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByVenue($venue)
     {
         $checkIns = $this->checkInRepo->getByVenue($venue);
@@ -113,6 +155,14 @@ class CheckIns extends Base
         }
     }
 
+    /**
+     * GET /checkins/venue_type/{venue_type}
+     *
+     * Retrieve checkins by specific venue type
+     *
+     * @param  $venue_type
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByVenueType($venue_type)
     {
         $checkIns = $this->checkInRepo->GetByVenueType($venue_type);

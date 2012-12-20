@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing message related data, this model is linked to "messages" collection
+ *
  * @ODM\Document(collection="messages",repositoryClass="Repository\MessageRepo")
  */
 class Message

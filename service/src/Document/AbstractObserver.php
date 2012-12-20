@@ -1,6 +1,9 @@
 <?php
 namespace Document;
 
+/**
+ * Observer abstract implement for domain model
+ */
 class AbstractObserver implements \Repository\DocumentObserver {
     public function getName() {
         // TODO: Implement getName() method.

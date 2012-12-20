@@ -9,6 +9,9 @@ use Repository\PhotosRepo as photoRepository;
 use Document\Photo as photoDocument;
 use Helper\Image as ImageHelper;
 
+/**
+ * Manage photo related resources
+ */
 class Photos extends Base
 {
     private $photoRepo;
@@ -29,6 +32,8 @@ class Photos extends Base
     /**
      * GET /photos
      *
+     * Retrieve all photos by current user
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -46,6 +51,13 @@ class Photos extends Base
         }
     }
 
+    /**
+     * POST /photos
+     *
+     * Create new photo
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function create()
     {
         $postData = $this->request->request->all();
@@ -124,6 +136,13 @@ class Photos extends Base
     }
 
 
+    /**
+     * GET /photos/me
+     *
+     * Retrieve all photos by the current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByAuthenticatedUser()
     {
         $photos = $this->photoRepo->getByUser($this->user);
@@ -134,12 +153,28 @@ class Photos extends Base
         }
     }
 
+    /**
+     * GET /photos/{id}
+     *
+     * Retrieve a specific photo by the given id
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getById($id)
     {
         $photos = $this->photoRepo->getByPhotoId($this->user, $id);
         return $this->_generateResponse($this->_toArrayAll($photos->toArray()));
     }
 
+    /**
+     * GET /photos/users/{id}
+     *
+     * Retrieve list of photos by the specified user
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByUserId($id)
     {
         $user = $this->userRepository->find($id);
@@ -156,6 +191,14 @@ class Photos extends Base
         }
     }
 
+    /**
+     * PUT /photos/{id}
+     *
+     * Update an existing photo
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function update($id)
     {
 
@@ -172,6 +215,14 @@ class Photos extends Base
         return $this->_generateResponse($photo->toArray(), Status::OK);
     }
 
+    /**
+     * DELETE /photos/{id}
+     *
+     * Delete an existing photo
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function delete($id)
     {
         $photo = $this->photoRepo->find($id);
@@ -191,6 +242,13 @@ class Photos extends Base
         return $this->_generateResponse(array('message' => 'Deleted Successfully.'));
     }
 
+    /**
+     * POST /photos/deletephotos
+     *
+     * Delete a list of photos by given photo ids
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deletePhotos()
     {
         $postData = $this->request->request->all();
@@ -221,6 +279,8 @@ class Photos extends Base
 
     /**
      * POST /photos/{id}/like
+     *
+     * Like a specific photo
      *
      * @param $id
      *
@@ -255,6 +315,8 @@ class Photos extends Base
 
     /**
      * POST /photos/{id}/unlike
+     *
+     * Unlike a specific photo
      *
      * @param $id
      *
@@ -291,6 +353,8 @@ class Photos extends Base
     /**
      * POST /photos/{id}/comments
      *
+     * Create new comment on a photo
+     *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -311,7 +375,9 @@ class Photos extends Base
     }
 
     /**
-     * POST /photos/{id}/comments/{commentId}
+     * DELETE /photos/{id}/comments/{commentId}
+     *
+     * Delete a specific comment from a photo
      *
      * @param $id
      * @param $commentId
@@ -342,6 +408,14 @@ class Photos extends Base
         return $this->response;
     }
 
+    /**
+     * GET /photos/{id}/comments
+     *
+     * Retrieve a list of comments from a specific photo
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getCommentsByPhotoId($id)
     {
         $photoComment = $this->photoRepo->find($id);

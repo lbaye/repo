@@ -12,6 +12,9 @@ use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 
+/**
+ * Data access functionality for gathering model
+ */
 class GatheringRepo extends Base implements Likable
 {
 

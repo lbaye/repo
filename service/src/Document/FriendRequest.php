@@ -7,7 +7,10 @@ use Respect\Validation\Validator;
 
 use Document\User;
 use Repository\UserRepo as userRepository;
+
 /**
+ * Domain model for storing friend request related data, this is an embedded object.
+ *
  * @ODM\EmbeddedDocument
  */
 class FriendRequest

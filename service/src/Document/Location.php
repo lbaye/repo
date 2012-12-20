@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing location specific data, this is used as embedded model.
+ *
  * @ODM\EmbeddedDocument
  */
 class Location

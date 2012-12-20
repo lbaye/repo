@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper methods for interacting with http get, put, delete and post requests
+ */
 class Remote
 {
     public static function sendGetRequest($url, $data = array(), $headers = array())

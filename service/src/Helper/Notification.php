@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Utility method for storing notification
+ */
 class Notification
 {
     public static function send($data, $users)

@@ -4,6 +4,9 @@ namespace Event;
 
 use Repository\UserRepo as UserRepository;
 
+/**
+ * @ignore
+ */
 class TestEvent extends Base
 {
     /**

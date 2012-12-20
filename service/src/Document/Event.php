@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing event related data, this model is linked with "events" collection
+ *
  * @ODM\Document(collection="events",repositoryClass="Repository\GatheringRepo")
  */
 class Event extends Gathering

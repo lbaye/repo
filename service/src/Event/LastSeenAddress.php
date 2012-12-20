@@ -4,6 +4,9 @@ namespace Event;
 
 use Repository\UserRepo as UserRepository;
 
+/**
+ * Background job for updating user's last seen at attribute based on it's current location
+ */
 class LastSeenAddress extends Base
 {
     /**

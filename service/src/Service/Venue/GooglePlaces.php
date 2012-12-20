@@ -2,6 +2,9 @@
 
 namespace Service\Venue;
 
+/**
+ * Search venue using google places API
+ */
 class GooglePlaces extends Base
 {
     protected $apiKey;

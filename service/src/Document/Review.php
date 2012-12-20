@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing reviews, this model is linked with "reviews" collection
+ *
  * @ODM\Document(collection="reviews",repositoryClass="Repository\ReviewRepo")
  */
 class Review extends Content

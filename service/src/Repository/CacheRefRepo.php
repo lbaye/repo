@@ -4,6 +4,9 @@ namespace Repository;
 
 use Document\CacheRef as CacheRef;
 
+/**
+ * Data access functionality for cache references model
+ */
 class CacheRefRepo extends Base {
 
     public function getReferencesWhereImCached(\Document\User &$user) {

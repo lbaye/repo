@@ -11,6 +11,9 @@ use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 use Helper\Util as Util;
 
+/**
+ * Data access functionality for user model
+ */
 class UserRepo extends Base {
     const MAX_NOTIFICATIONS = 20;
     const EVENT_ADDED_FRIEND = 'added_friend';

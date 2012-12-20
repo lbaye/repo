@@ -5,6 +5,10 @@ use Swift_Mailer;
 use Swift_SmtpTransport;
 use Swift_Message;
 
+/**
+ * Helper for providing email related services
+ * @ignore
+ */
 class Email
 {
     public static function sendMail($email, $data)

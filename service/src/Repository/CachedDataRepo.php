@@ -4,6 +4,9 @@ namespace Repository;
 
 use Document\CachedData as CachedData;
 
+/**
+ * Data access functionality for cached data model
+ */
 class CachedDataRepo extends Base {
 
     public function buildId($id , $type) {

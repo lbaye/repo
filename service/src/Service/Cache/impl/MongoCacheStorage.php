@@ -3,10 +3,8 @@
 namespace Service\Cache\impl;
 
 /**
- * Find search results from cached google places record.
+ * Mongodb based caching storage implementation
  */
-
-
 class MongoCacheStorage implements \Service\Cache\CacheStorage
 {
 

@@ -12,6 +12,9 @@ use Helper\Image as ImageHelper;
 use Document\PhotosObserver;
 use Repository\Likable;
 
+/**
+ * Data access functionality for photo model
+ */
 class PhotosRepo extends Base implements Likable {
 
     protected function bindObservers() {

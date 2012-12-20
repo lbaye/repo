@@ -3,6 +3,9 @@ namespace Service\PushNotification;
 
 use Symfony\Component\Yaml\Parser;
 
+/**
+ * Factory for getting push notification implementation
+ */
 class PushFactory
 {
     public static function getNotifier($deviceType)
