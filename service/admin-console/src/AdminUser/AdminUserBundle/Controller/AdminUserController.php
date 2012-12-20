@@ -416,6 +416,13 @@ class AdminUserController extends Controller
             $request = $this->get('request');
             $dm = $this->get('doctrine.odm.mongodb.document_manager');
             $entity = $dm->getRepository('AdminUserBundle:Place')->findOneBy(array('_id' => $id));
+            if (!empty($entity)) {
+                $location = $entity->getLocation();
+                $entity->setLat($location['lat']);
+                $entity->setLng($location['lng']);
+                $entity->setAddress($location['address']);
+            }
+
             $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
 
             if ($request->getMethod() === 'POST') {
@@ -437,6 +444,8 @@ class AdminUserController extends Controller
 
                     if (!empty($existPlaceIcon)) {
                         $placeIcon = $postData->getIcon();
+                    } else {
+                        $placeIcon = null;
                     }
 
                     if (!empty($existPlacePhoto)) {
@@ -444,7 +453,7 @@ class AdminUserController extends Controller
                     }
 
                     $this->get('session')->setFlash('notice', 'Place updated successfully!');
-                    return $this->redirect('placelist');
+                    return $this->redirect('../placelist');
                 }
 
             }
