@@ -5,6 +5,9 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Helper\Status;
 
+/**
+ * @ignore
+ */
 class Hello extends Base
 {
     public function world()

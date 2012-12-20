@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing breadcrumb marker related data. this model is used as an embedded model
+ *
  * @ODM\EmbeddedDocument
  */
 class Marker

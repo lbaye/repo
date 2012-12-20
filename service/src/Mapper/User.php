@@ -4,6 +4,9 @@ namespace Mapper;
 
 use Document\User as UserEntity;
 
+/**
+ * @ignore
+ */
 class User
 {
     /**

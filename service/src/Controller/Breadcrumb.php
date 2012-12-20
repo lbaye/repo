@@ -8,6 +8,10 @@ use Repository\UserRepo as userRepository;
 use Repository\BreadcrumbRepo as breadcrumbRepository;
 use Helper\Status;
 
+/**
+ * Manage breadcrumbs
+ * @ignore
+ */
 class Breadcrumb extends Base
 {
     /**
@@ -16,9 +20,6 @@ class Breadcrumb extends Base
     private $breadcrumbRepository;
 
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         $this->response = new Response();
@@ -34,6 +35,8 @@ class Breadcrumb extends Base
 
     /**
      * GET /breadcrumbs
+     *
+     * Generate list of breadcrumbs, Specify 'start' or 'limit' parameters to limit number of rows.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -58,6 +61,8 @@ class Breadcrumb extends Base
     /**
      * GET /breadcrumbs/{id}
      *
+     * Retrieve breadcrumb by given id
+     *
      * @param $id  breadcrumb id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -81,6 +86,8 @@ class Breadcrumb extends Base
     /**
      * GET /me/breadcrumbs
      *
+     * Retrieve list of current user owned breadcrumbs
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getByCurrentUser()
@@ -101,6 +108,8 @@ class Breadcrumb extends Base
     /**
      * GET /user/{userId}/breadcrumbs
      *
+     * Retrieve breadcrumbs from the specified user
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getByUser()
@@ -113,6 +122,8 @@ class Breadcrumb extends Base
 
     /**
      * POST /breadcrumbs
+     *
+     * Create new breadcrumb
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -137,6 +148,8 @@ class Breadcrumb extends Base
 
     /**
      * PUT /breadcrumbs/{id}
+     *
+     * Update an existing breadcrumb
      *
      * @param $id
      *

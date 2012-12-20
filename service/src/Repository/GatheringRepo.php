@@ -12,6 +12,9 @@ use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 use Helper\Constants as Constants;
 
+/**
+ * Data access functionality for gathering model
+ */
 class GatheringRepo extends Base implements Likable
 {
 
@@ -263,6 +266,7 @@ class GatheringRepo extends Base implements Likable
 
         $meetUpLIst = $this->createQueryBuilder()
             ->field('rsvp.no')->notIn($userId)
+            ->field('guests')->in(array($userId))
             ->field('time')->gte($_dateTime)
             ->sort(array('createDate' => 'DESC'))
             ->getQuery()

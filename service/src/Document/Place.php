@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing place related data, this model is linked with "places" collection
+ *
  * @ODM\Document(collection="places",repositoryClass="Repository\PlaceRepo")
  */
 class Place extends Landmark

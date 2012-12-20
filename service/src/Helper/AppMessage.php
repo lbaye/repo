@@ -1,6 +1,9 @@
 <?php
 namespace Helper;
- 
+
+/**
+ * Helper for preparing application notification related message
+ */
 class AppMessage {
     const FRIEND_REQUEST = 'friend_request';
     const ACCEPTED_FRIEND_REQUEST = 'accepted_request';

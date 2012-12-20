@@ -4,6 +4,9 @@ namespace Service\Geolocation;
 
 use \Service\Cache\CacheServiceFactory as CacheServiceFactory;
 
+/**
+ * Convert geo location to a specific address using google places API
+ */
 class Reverse extends Base
 {
 

@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing cached places data, this model is linked with "cached_places_data" collection
+ *
  * @ODM\Document(collection="cached_places_data",repositoryClass="Repository\CachedPlacesDataRepo")
  */
 class CachedPlacesData {

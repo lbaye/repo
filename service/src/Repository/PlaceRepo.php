@@ -9,6 +9,9 @@ use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 use Helper\Image as ImageHelper;
 
+/**
+ * Data access functionality for place model
+ */
 class PlaceRepo extends Base implements Likable
 {
     protected function bindObservers() {

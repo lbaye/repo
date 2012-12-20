@@ -3,7 +3,10 @@
 namespace Document;
 
 use Repository\UserActivityRepo as ActivityRepo;
- 
+
+/**
+ * Observer for storing user activity based on new place creation
+ */
 class PlacesObserver extends AbstractObserver {
 
     private $activityRepo;

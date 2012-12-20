@@ -2,6 +2,9 @@
 
 namespace Service\PushNotification;
 
+/**
+ * @ignore
+ */
 abstract class Notifier
 {
     protected $apiKey;

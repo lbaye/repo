@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper for image related processing
+ */
 class Image
 {
     public static function saveImageFromBase64($base64Str, $filePath)

@@ -4,7 +4,11 @@ namespace Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
-/* @ODM\MappedSuperclass */
+/**
+ * Abstract Base domain model for providing reusable methods and attributes.
+ *
+ * @ODM\MappedSuperclass
+ */
 abstract class Content
 {
     /** @ODM\Id */

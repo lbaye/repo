@@ -8,13 +8,13 @@ use Helper\Location;
 use Helper\Status;
 use Helper\ShareConstant;
 
+/**
+ * Manage user related settings
+ */
 class Settings extends Base {
 
     const ALLOWED_DISTANCE = 100; # Meters
 
-    /**
-     * Initialize the controller.
-     */
     public function init() {
         parent::init();
 
@@ -30,6 +30,8 @@ class Settings extends Base {
     /**
      * PUT /settings/share/location
      * GET /settings/share/location
+     *
+     * Store location sharing related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -60,6 +62,8 @@ class Settings extends Base {
      * PUT /settings/geo_fence
      * PUT /settings/geo_fence
      *
+     * Store geo fence related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function geoFence() {
@@ -87,6 +91,8 @@ class Settings extends Base {
     /**
      * PUT /settings/notifications
      * GET /settings/notifications
+     *
+     * Store notification related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -125,6 +131,8 @@ class Settings extends Base {
      * PUT /settings/platforms
      * GET /settings/platforms
      *
+     * Store platforms related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function platforms() {
@@ -148,6 +156,8 @@ class Settings extends Base {
     /**
      * PUT /settings/layers
      * GET /settings/layers
+     *
+     * Store layers related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -173,6 +183,8 @@ class Settings extends Base {
      * GET /settings/push
      * PUT /settings/push
      *
+     * Store push notification related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function push() {
@@ -196,6 +208,8 @@ class Settings extends Base {
     /**
      * PUT /settings/account_settings
      * GET /settings/account_settings
+     *
+     * Store account settings related preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -247,6 +261,8 @@ class Settings extends Base {
     /**
      * PUT /settings/sharing_preference_settings
      *
+     * Store location sharing related preferences
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sharingPreference() {
@@ -265,6 +281,8 @@ class Settings extends Base {
 
     /**
      * PUT /settings/sharing_privacy_mode
+     *
+     * Store location sharing privacy mode
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -307,6 +325,8 @@ class Settings extends Base {
 
     /**
      * PUT /current-location
+     *
+     * Store user's current location
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -366,11 +386,8 @@ class Settings extends Base {
         return $distance > self::ALLOWED_DISTANCE;
     }
 
-    /**
+    /*
      * Update users visibility based on geo-fence settings and current location
-     *
-     * @param \Document\User $user
-     *
      */
     private function _updateVisibility(\Document\User $user) {
         $fnc = $user->getGeoFence();
@@ -384,11 +401,8 @@ class Settings extends Base {
 
     }
 
-    /**
+    /*
      * Update the address user currently at
-     *
-     * @param \Document\User $user
-     *
      */
     private function _updateLastSeenAt(\Document\User $user) {
         $this->debug('Requesting for address update');
@@ -429,6 +443,8 @@ class Settings extends Base {
 
     /**
      * GET /settings/all
+     *
+     * Retrieve user's all preferences
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

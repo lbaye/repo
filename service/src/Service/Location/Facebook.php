@@ -2,6 +2,9 @@
 
 namespace Service\Location;
 
+/**
+ * Facebook Graph API integration
+ */
 class Facebook extends Base {
     public function getFriendLocation($userId, $authToken) {
         $fql = '

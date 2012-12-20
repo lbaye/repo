@@ -8,6 +8,9 @@ use Document\User as UserDocument;
 use Repository\UserRepo as UserRepository;
 use Helper\Image as ImageHelper;
 
+/**
+ * Data access functionality for breadcrumb model
+ */
 class BreadcrumbRepo extends Base
 {
     public function update($data, $id)

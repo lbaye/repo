@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing checkins related data, this model is linked with "checkIns" collections
+ *
  * @ODM\Document(collection="checkIns",repositoryClass="Repository\CheckInRepo")
  */
 class CheckIn extends Content

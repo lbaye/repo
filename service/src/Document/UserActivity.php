@@ -8,6 +8,8 @@ use Respect\Validation\Validator;
 use Document\User as User;
 
 /**
+ * Domain model for storing user activity related data. this model is linked with "user_activities" collection
+ *
  * @ODM\Document(collection="user_activities",repositoryClass="Repository\UserActivityRepo")
  */
 class UserActivity implements ParticipativeDoc {

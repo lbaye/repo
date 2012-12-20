@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing external users information (such as facebook users), this model is linked with "external_users" collection
+ *
  * @ODM\Document(collection="external_users",repositoryClass="Repository\ExternalUserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  * @ODM\Index(keys={"refId"="asc"})

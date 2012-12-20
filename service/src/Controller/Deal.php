@@ -9,7 +9,7 @@ use Repository\DealRepo as DealRepository;
 use Helper\Status;
 
 /**
- * Template class for all content serving controllers
+ * Manage deal related resources
  */
 class Deal extends Base
 {
@@ -18,9 +18,6 @@ class Deal extends Base
      */
     private $dealRepository;
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();

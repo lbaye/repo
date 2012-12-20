@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper for URL related utility methods
+ */
 class Url
 {
     public static function getSlug($str, $replace = array(), $delimiter = '-')

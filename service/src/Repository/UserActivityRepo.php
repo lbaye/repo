@@ -10,6 +10,9 @@ use Repository\UserRepo as UserRepo;
 use Repository\PhotosRepo as PhotoRepo;
 use Repository\Likable;
 
+/**
+ * Data access functionality for user activity model
+ */
 class UserActivityRepo extends Base implements Likable
 {
 

@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Base abstract class for storing location related data.
+ *
  * @abstract
  * @ODM\Document(collection="places",repositoryClass="Repository\Place")
  * @ODM\InheritanceType("SINGLE_COLLECTION")

@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for cache reference, this model is linked with "cacheRefs" collection
+ *
  * @ODM\Document(collection="cacheRefs", repositoryClass="Repository\CacheRefRepo")
  * @ODM\Index(keys={"location"="2d"})
  */

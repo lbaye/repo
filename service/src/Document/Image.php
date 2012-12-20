@@ -5,9 +5,10 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing image related data, this is used as embedded model.
+ *
  * @ODM\EmbeddedDocument
  */
-
 class Image
 {
     /** @ODM\Id */

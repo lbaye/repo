@@ -4,6 +4,9 @@ namespace Event;
 
 use Repository\UserRepo as UserRepository;
 
+/**
+ * Background job for retrieving their facebook or (other platforms) users based on their connection preference.
+ */
 class FetchExternalLocation extends Base {
     /**
      * @var UserRepository
