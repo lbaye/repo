@@ -85,8 +85,6 @@ NSMutableArray *unreadMesg;
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/%@/minifeed.html?authToken=%@&r=1353821908.182321",smAppDelegate.userId,smAppDelegate.authToken]]]];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
 
 }
 
@@ -109,7 +107,7 @@ NSMutableArray *unreadMesg;
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewDidAppear:animated];
     
     [self displayNotificationCount];
     
@@ -124,6 +122,7 @@ NSMutableArray *unreadMesg;
         [self showFriendRequests:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewMessageDone:) name:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     [smAppDelegate showActivityViewer:self.view];
