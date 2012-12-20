@@ -6900,6 +6900,7 @@ AppDelegate *smAppDelegate;
 -(void) getFriendListWithAuthKey:(NSString *)authTokenKey tokenValue:(NSString *)authTokenValue andFriendId:(NSString*)friendId
 {
     NSString *route = [NSString stringWithFormat:@"%@/%@/friends", WS_URL, friendId];
+    NSLog(@"route %@",route);
     NSURL *url = [NSURL URLWithString:route];
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
