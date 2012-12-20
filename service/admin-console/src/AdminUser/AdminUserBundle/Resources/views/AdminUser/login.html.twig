@@ -1,0 +1,13 @@
+{% extends "AdminUserBundle::layout.html.twig" %}
+
+{% block title "Social Maps - Login form" %}
+
+{% block content %}
+
+<form class="form-signin" action="" method="POST">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    {{ form_rest(form) }}
+
+    <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+</form>
+{% endblock %}

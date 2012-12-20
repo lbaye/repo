@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+HOST=10.239.65.85
+PORT=27017
+DATABASE=socialmaps_v13
+PATH_PREFIX=/home/ubuntu/backup
+
+NOW=$1
+
+backup_path=$PATH_PREFIX/$NOW
+echo Setting backup path - $backup_path
+
+echo Executing mongodump...
+/usr/bin/mongodump -h $HOST --port $PORT -d $DATABASE --journal -o $backup_path
+
+echo Archiving backed up snapshot...
+/bin/tar -cvf $NOW.tar $NOW
+
+echo Removing backed up file...
+rm -rf $backup_path
+
+#echo Uploading backed up file...
+#/usr/bin/java -jar $PATH_PREFIX/uploader-0.0.6-jar-with-dependencies.jar --credentials $PATH_PREFIX/aws.properties -e https://glacier.eu-west-1.amazonaws.com -v MongoDbBackup -u $NOW.tar
+
+#rm $NOW.tar
+
+echo Done

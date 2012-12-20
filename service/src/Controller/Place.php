@@ -8,6 +8,9 @@ use Repository\PlaceRepo as placeRepository;
 use Helper\Status;
 use Helper\AppMessage as AppMessage;
 
+/**
+ * Manage geo position related resources. ie - places and geotags
+ */
 class Place extends Base
 {
     /**
@@ -16,9 +19,6 @@ class Place extends Base
      */
     private $LocationMarkRepository;
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();
@@ -37,6 +37,9 @@ class Place extends Base
 
     /**
      * GET /places
+     *
+     * Retrieve all places from current user. Using "start" and "limit"
+     * parameters this list could be controlled.
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -78,6 +81,8 @@ class Place extends Base
     /**
      * GET /places/{id}
      *
+     * Retrieve a specific place by it's id
+     *
      * @param $id  place id
      * @param $type
      *
@@ -108,6 +113,8 @@ class Place extends Base
     /**
      * GET /geotags/all
      *
+     * Retrieve all places with in a specific geo radius.
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -127,6 +134,8 @@ class Place extends Base
 
     /**
      * GET /me/places
+     *
+     * Retrieve all places from current user
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -150,6 +159,8 @@ class Place extends Base
 
     /**
      * GET /users/{userId}/places
+     *
+     * Retrieve all places by the given user id
      *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
@@ -208,6 +219,8 @@ class Place extends Base
     /**
      * POST /places
      *
+     * Create new place
+     *
      * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -240,6 +253,8 @@ class Place extends Base
 
     /**
      * PUT /places/{id}
+     *
+     * Update an existing place
      *
      * @param $id
      * @param $type
@@ -279,6 +294,8 @@ class Place extends Base
     /**
      * DELETE /places/{id}
      *
+     * Delete an existing place
+     *
      * @param $id
      *
      * @param $type
@@ -309,8 +326,9 @@ class Place extends Base
     /**
      * POST /recommend/{recommendType}/{id}
      *
-     * @param $id
+     * Recommend a specific place
      *
+     * @param $id
      * @param $recommendType
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -404,6 +422,8 @@ class Place extends Base
 
     /**
      * POST  /places/recommend/fbcheckin/{id}
+     *
+     * Recommend a specific place and share over facebook
      *
      * @param $id
      *

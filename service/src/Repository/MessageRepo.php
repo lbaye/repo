@@ -8,6 +8,9 @@ use Repository\UserRepo as UserRepository;
 use Document\Message as MessageDocument;
 use Helper\Security as SecurityHelper;
 
+/**
+ * Data access functionality for message model
+ */
 class MessageRepo extends Base {
 
     private $userRepository;

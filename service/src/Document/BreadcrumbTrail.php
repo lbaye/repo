@@ -9,6 +9,8 @@ use Document\User as User;
 use Document\Location as Location;
 
 /**
+ * Domain model for storing breadcrumb trail related data, this model is liked with "breadcrumbTrails" collection
+ *
  * @ODM\Document(collection="breadcrumbTrails",repositoryClass="Repository\TrailRepo")
  */
 class BreadcrumbTrail extends Trail

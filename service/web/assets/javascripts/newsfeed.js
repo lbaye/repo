@@ -91,7 +91,7 @@
     };
 
     NewsfeedApp.prototype.tapOnUnLike = function(el) {
-      return this.showMessage('success', 'You have unliked it');
+      return this.unlikeThis(el);
     };
 
     NewsfeedApp.prototype.tapOnComment = function(el) {
@@ -121,6 +121,17 @@
       });
       this.incrementCount(this.$(el).parent().find('.link_likes'), 1);
       return this.disableLikeButton(this.$(el));
+    };
+
+    NewsfeedApp.prototype.unlikeThis = function(el) {
+      var that, uri;
+      that = this;
+      uri = '/newsfeed/' + el.attr('data-objectid') + '/unlike';
+      this.sendRequestTo(uri).success(function(r) {
+        return that.processServerResponse(el, r);
+      });
+      this.incrementCount(this.$(el).parent().find('.link_likes'), -1);
+      return this.enableLikeButton(this.$(el));
     };
 
     NewsfeedApp.prototype.processServerResponse = function(el, response) {
@@ -192,6 +203,11 @@
     NewsfeedApp.prototype.disableLikeButton = function(el) {
       el.removeClass('enabled').addClass('disabled').hide();
       return el.parent().find('.link_unlike').removeClass('disabled').addClass('enabled').show();
+    };
+
+    NewsfeedApp.prototype.enableLikeButton = function(el) {
+      el.parent().find('.link_like').removeClass('disabled').addClass('enabled').show();
+      return el.removeClass('enabled').addClass('disabled').hide();
     };
 
     NewsfeedApp.prototype.enableButton = function(el) {

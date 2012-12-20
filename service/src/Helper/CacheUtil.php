@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper for storing and invalidating cached data
+ */
 class CacheUtil {
 
     public static function hasExpired(&$cachePath) {

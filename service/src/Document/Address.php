@@ -6,6 +6,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
 
 /**
+ * Domain model for storing address related data, This model is meant to be an embedded object
+ *
  * @ODM\EmbeddedDocument
  */
 class Address

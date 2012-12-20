@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * Helper for location related utility methods.
+ */
 class Location
 {
     const PLACES_KEY = 'AIzaSyAblaI77qQF6DDi5wbhWKePxK00zdFzg-w';

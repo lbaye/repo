@@ -9,7 +9,9 @@ use Repository\UserRepo as UserRepository;
 use Document\Review as Review;
 use Helper\Security as SecurityHelper;
 
-
+/**
+ * Data access functionality for review model
+ */
 class ReviewRepo extends Base
 {
     public function map(array $data, UserDocument $owner, Review $review = null)

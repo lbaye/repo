@@ -5,6 +5,8 @@ namespace Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
+ * Domain model for storing cached data, this model is linked with "cached_data" collection
+ *
  * @ODM\Document(collection="cached_data",repositoryClass="Repository\CachedDataRepo")
  */
 class CachedData

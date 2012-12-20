@@ -1,0 +1,12 @@
+admin_user:
+    resource: "@AdminUserBundle/Resources/config/routing.yml"
+    prefix:   /admin
+
+#admin:
+#    resource: "@AdminBundle/Resources/config/routing.yml"
+#    prefix:   /
+
+# Internal routing configuration to handle ESI
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal

@@ -5,7 +5,7 @@
       %title Hello
       - $updateTime = filemtime($baseDir . '/assets/stylesheets/newsfeed.css')
       - $url = $baseUrl . '/assets/stylesheets/newsfeed.css?' . $updateTime
-      - $target = $networkFeed > 0 ? $currentUser->getId() . "/network" :  $currentUser->getId()
+      - $target = $networkFeed > 0 ? $contextUser->getId() . "/network" :  $contextUser->getId()
       %link(rel='stylesheet' href=$url)
       %meta(name="viewport" content="initial-scale=1.0, user-scalable=no")
 
@@ -160,8 +160,7 @@
                   .row.list_of_likes(id=$rowLikesId style='display:none')
         .more
           %span
-            %a
-              Load more...
+            Load more...
           - $loadingImage = $baseUrl . '/assets/images/loading.gif?'
           %img(src=$loadingImage)
 

@@ -5,7 +5,7 @@ namespace Service\Location;
 use Monolog\Logger as Logger;
 
 /**
- * Provide factory methods for managing places instance.
+ * Factory for providing place search related implementation
  */
 class PlacesServiceFactory {
 

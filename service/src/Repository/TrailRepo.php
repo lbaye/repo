@@ -10,7 +10,7 @@ use Document\User as UserDocument;
 use Helper\Security as SecurityHelper;
 
 /**
- *
+ * Data access functionality for trail model
  */
 class TrailRepo extends Base
 {

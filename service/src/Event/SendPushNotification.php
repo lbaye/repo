@@ -5,6 +5,9 @@ namespace Event;
 use Repository\UserRepo as UserRepository;
 use Repository\MessageRepo as MessageRepository;
 
+/**
+ * Background job for sending push notification to a specific user
+ */
 class SendPushNotification extends Base
 {
     /**

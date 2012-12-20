@@ -5,6 +5,9 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Helper\Status;
 
+/**
+ * Manage user's generated messages
+ */
 class Messages extends Base {
     /**
      * @var \Repository\MessageRepo
@@ -25,6 +28,14 @@ class Messages extends Base {
         $this->_ensureLoggedIn();
     }
 
+    /**
+     * GET /messages/{id}
+     *
+     * Retrieve message by the specific id
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getById($id) {
         $message = $this->messageRepository->find($id);
         if (empty($message)) {
@@ -61,6 +72,13 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * POST /messages
+     *
+     * Create new message with required paramters
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function create() {
         $postData = $this->request->request->all();
 
@@ -119,11 +137,25 @@ class Messages extends Base {
         }
     }
 
+    /**
+     * GET /messages/sent
+     *
+     * Retrieve messages by current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getByCurrentUser() {
         return $this->_generateResponse(
             $this->messageRepository->getByUser($this->user));
     }
 
+    /**
+     * GET /messages/inbox
+     *
+     * Retrieve message inbox by current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getInbox() {
         $showLastReply = (boolean)$this->request->get('show_last_reply');
 
@@ -167,8 +199,12 @@ class Messages extends Base {
     }
 
     /**
-     * Flag a message as READ or UNREAD
+     * PUT /messages/{id}/status/{status}
+     *
+     * Flag a specific message as READ or UNREAD
+     *
      * @param $status Accepts only READ or UNREAD
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateStatus($id, $status) {
         try {
@@ -188,6 +224,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * PUT /messages/{id}/recipients
+     *
+     * Modify recipients list from the specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
@@ -218,6 +262,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * GET /messages/{id}/replies
+     *
+     * Retrieve replies which were created after a specific timestamp from a specific message.
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getRepliesByLastVisitedSince($id) {
         try {
             $message = $this->messageRepository->find($id);
@@ -260,6 +312,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * DELETE /messsages/{id}
+     *
+     * Delete a specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function delete($id) {
         try {
             $this->messageRepository->delete($id);
@@ -278,6 +338,14 @@ class Messages extends Base {
         return $this->user->getFirstName() . $msgText;
     }
 
+    /**
+     * PUT /messages/{id}/recipients/add
+     *
+     * Add new recipient to a specific message
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function addRecipients($id) {
         # Find existing object
         $message = $this->messageRepository->find($id);
@@ -315,6 +383,14 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * GET /messages/{id}/unread
+     *
+     * Retrieve a specific messages and keep it's status "unread"
+     *
+     * @param  $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getUnreadMessagesById($id) {
         $message = $this->messageRepository->find($id);
         if (empty($message)) {

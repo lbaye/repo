@@ -2,6 +2,9 @@
 
 namespace Helper;
 
+/**
+ * @ignore
+ */
 class Security
 {
     public static function hash($string, $salt)

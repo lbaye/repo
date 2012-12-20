@@ -10,6 +10,9 @@ use Helper\Location;
 use Helper\Status;
 use Service\Search\ApplicationSearchFactory as ApplicationSearchFactory;
 
+/**
+ * Perform search on users, places and external users
+ */
 class Search extends Base {
     /**
      * Maximum allowed older checkins to show in the list.
@@ -18,9 +21,6 @@ class Search extends Base {
 
     private $extUserRepo;
 
-    /**
-     * Initialize the controller.
-     */
     public function init() {
         parent::init();
 
@@ -34,6 +34,13 @@ class Search extends Base {
         $this->_ensureLoggedIn();
     }
 
+    /**
+     * POST /search
+     *
+     * Retrieve people, places and external users from the given location.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function all() {
         $this->debug('Preparing search result');
         $data = $this->request->request->all();
@@ -57,6 +64,11 @@ class Search extends Base {
             $data, array('user' => $this->user, 'limit' => \Helper\Constants::PEOPLE_LIMIT));
     }
 
+    /**
+     * GET /search/people
+     *
+     * Retrieve all people from the specific location
+     */
     public function allPeopleList() {
         $data = $this->request->request->all();
         $appSearch = ApplicationSearchFactory::

@@ -1,6 +1,9 @@
 <?php
 namespace Helper;
 
+/**
+ * Location sharing related constants
+ */
 class ShareConstant {
 
     //Share location,profile picture and news feed

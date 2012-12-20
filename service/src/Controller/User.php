@@ -9,12 +9,11 @@ use Document\FriendRequest;
 use Helper\Status;
 use Helper\AppMessage as AppMessage;
 
-
+/**
+ * Manage SocialMaps system user
+ */
 class User extends Base
 {
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         $this->response = new Response();
@@ -29,6 +28,8 @@ class User extends Base
 
     /**
      * GET /users
+     *
+     * Retrieve all users from the system
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -61,6 +62,8 @@ class User extends Base
 
     /**
      * GET /me/notifications
+     *
+     * Retrieve notifications from the current user
      *`
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -92,6 +95,8 @@ class User extends Base
 
     /**
      * GET /request/friend
+     *
+     * Retrieve all pending friend requests from the current user
      *
      * @param string $status all | accepted | unaccepted
      *
@@ -131,6 +136,8 @@ class User extends Base
 
     /**
      * POST /request/friend/:friendId
+     *
+     * Send new friend request between current user and another SocialMaps user
      *
      * @param $friendId
      *
@@ -183,6 +190,8 @@ class User extends Base
     /**
      * GET /me
      *
+     * Retrieve profile information for the current user
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCurrentUser()
@@ -210,6 +219,8 @@ class User extends Base
 
     /**
      * GET /users/{id}
+     *
+     * Retrieve profile information for the specific user
      *
      * @param $id
      *
@@ -240,6 +251,8 @@ class User extends Base
     /**
      * GET /users/{email}
      *
+     * Retrieve user by email address
+     *
      * @param $email
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -267,6 +280,8 @@ class User extends Base
 
     /**
      * POST /users
+     *
+     * Create new user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -299,6 +314,8 @@ class User extends Base
 
     /**
      * PUT /users/{id}
+     *
+     * Update an existing user profile
      *
      * @param $id
      *
@@ -349,6 +366,8 @@ class User extends Base
     /**
      * DELETE /users/{id}
      *
+     * Delete an existing user
+     *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -375,6 +394,8 @@ class User extends Base
 
     /**
      * POST /me/circles
+     *
+     * Create new circle for the current user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -403,6 +424,8 @@ class User extends Base
     /**
      * GET /me/circles
      *
+     * Retrieve all circles from the current user
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getCircles()
@@ -426,6 +449,8 @@ class User extends Base
 
     /**
      * PUT /request/friend/:friendId/:response
+     *
+     * Accept friend request from the other SocialMaps user
      *
      * @param $friendId
      * @param $response
@@ -470,6 +495,8 @@ class User extends Base
     /**
      * PUT /me/notification/{notificationId}
      *
+     * Update an existing notification
+     *
      * @param $notificationId
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -501,6 +528,8 @@ class User extends Base
 
     /**
      * GET /request/notification
+     *
+     * Retrieve all user's notifications
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -543,6 +572,7 @@ class User extends Base
     /**
      * PUT /users/block
      *
+     * Block a set of users for the current user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -595,6 +625,7 @@ class User extends Base
     /**
      * PUT /me/users/block/overwrite
      *
+     * Update blocked users list for the current user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -648,6 +679,8 @@ class User extends Base
     /**
      * GET /me/circles/:id
      *
+     * Retrieve detail information for a specific circle for the current user.
+     *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -673,6 +706,8 @@ class User extends Base
 
     /**
      * PUT /me/circles/:id
+     *
+     * Update a specific circle for the current user
      *
      * @param $id
      *
@@ -728,6 +763,8 @@ class User extends Base
      * GET /me/friends
      * GET /{id}/friends
      *
+     * Retrieve friends list from current or the specific user
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -761,6 +798,8 @@ class User extends Base
     /**
      * DELETE /me/circles/{id}
      *
+     * Delete a specific circle from the current user
+     *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -790,6 +829,8 @@ class User extends Base
 
     /**
      * PUT /circles/:id/remove
+     *
+     * Remove friend from a specific circle
      *
      * @param $id
      *
@@ -842,6 +883,8 @@ class User extends Base
     /**
      * PUT  /me/circles/friends/:id
      *
+     * Add friend to multiple circles
+     *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -878,11 +921,13 @@ class User extends Base
         return $this->response;
     }
 
-    /*
-    * PUT /me/users/un-block
-    *
-    * @return \Symfony\Component\HttpFoundation\Response
-    */
+    /**
+     * PUT /me/users/un-block
+     *
+     * Unblock set of users from the current user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function unblockUsers()
     {
         $this->_ensureLoggedIn();
@@ -911,12 +956,13 @@ class User extends Base
         return $this->response;
     }
 
-    /*
+    /**
      * GET /me/blockes-users
+     *
+     * Retrieve list of blocked users from the current user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-
     public function getBlockedUsers()
     {
 
@@ -938,6 +984,8 @@ class User extends Base
 
     /**
      * RENAME /me/circles/{id}/rename
+     *
+     * Rename a specific circle from the current user
      *
      * @param $id
      *

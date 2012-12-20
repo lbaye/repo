@@ -3,14 +3,10 @@ namespace Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Respect\Validation\Validator;
+
 /**
- * Created by JetBrains PhpStorm.
- * User: zunaid
- * Date: 10/13/12
- * Time: 9:27 PM
- * To change this template use File | Settings | File Templates.
- */
-/**
+ * Domain model for storing trail related data. this model is linked with "trails" collection
+ *
  * @ODM\Document(collection="trails",repositoryClass="Repository\TrailRepo")
  */
 class Trail extends Content

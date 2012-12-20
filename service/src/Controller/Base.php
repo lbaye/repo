@@ -13,8 +13,16 @@ use Repository\UserRepo as userRepository;
 use Helper\Status;
 use Helper\ShareConstant;
 
+/**
+ * Base controller class for providing basic and reusable methods across all controllers.
+ * @abstract
+ * @ignore
+ */
 abstract class Base {
 
+    /**
+     * Default response content type
+     */
     const DEFAULT_CONTENT_TYPE = 'json';
     const CONTENT_TYPE_HTML = 'html';
 
@@ -64,6 +72,9 @@ abstract class Base {
 
     protected $missingFields;
 
+    /**
+     * @var \MtHaml\Environment
+     */
     private $hamlEnvironment;
 
     private $cacheRefRepo;
@@ -116,9 +127,6 @@ abstract class Base {
         $this->config = $config;
     }
 
-    /**
-     * Initializer function to be used by child classes.
-     */
     public function init() {
         $this->response = new Response();
         $this->response->headers->set('Content-Type', 'application/json');
@@ -351,6 +359,13 @@ abstract class Base {
         return $this->hamlEnvironment;
     }
 
+    /**
+     * Render HAML based HTML view
+     *
+     * @param array $vars
+     * @param string $templateFile
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function render($vars = array(), $templateFile = null) {
         if (empty($templateFile))
             $templateFile = $this->getTemplateFile(debug_backtrace());
@@ -417,6 +432,14 @@ abstract class Base {
         return $parts[count($parts) - 1];
     }
 
+    /**
+     * Cache generated response.
+     *
+     * @param  $cachePath - File where cache will be stored
+     * @param  $funcName - Function which will be invoked to generate the response
+     * @param  $params - http parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     protected function cacheAndReturn(&$cachePath, $funcName, $params) {
         if (\Helper\CacheUtil::hasExpired($cachePath)) {
             $this->cacheAndBuildResponse($cachePath, $funcName, $params);

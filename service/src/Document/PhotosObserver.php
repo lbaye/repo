@@ -3,7 +3,10 @@
 namespace Document;
 
 use Repository\UserActivityRepo as ActivityRepo;
- 
+
+/**
+ * Observer for create user activity based on new photo creation
+ */
 class PhotosObserver extends AbstractObserver {
 
     private $activityRepo;

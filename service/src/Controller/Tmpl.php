@@ -10,6 +10,7 @@ use Helper\Status;
 
 /**
  * Template class for all content serving controllers
+ * @ignore
  */
 class Tmpl extends Base
 {

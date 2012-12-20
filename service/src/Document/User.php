@@ -9,6 +9,8 @@ use Document\Circle;
 use Helper\ShareConstant;
 
 /**
+ * Domain model for storing user related data. this model is linked with "users" collection
+ *
  * @ODM\Document(collection="users",repositoryClass="Repository\UserRepo")
  * @ODM\Index(keys={"currentLocation"="2d"})
  * @ODM\Index(keys={"notification"="desc"})
@@ -1020,7 +1022,7 @@ class User {
             return false;
 
         // Check Location sharing type
-        if (!$this->isSharedLocation($app_user))
+        if (!$this->isSharedLocation($app_user, $settings))
             return false;
 
         // Ensure user is not in within_restricted_fench?
@@ -1049,7 +1051,7 @@ class User {
         return true;
     }
 
-    private function isSharedLocation(\Document\User $appUser) {
+    private function isSharedLocation(\Document\User $appUser, $options) {
         $sharingType = (int)$this->getShareLocation();
 
         switch ($sharingType) {
@@ -1060,18 +1062,52 @@ class User {
                 return false;
 
             case \Helper\ShareConstant::SHARING_CUSTOM:
-                return $this->isCustomSettingAllows($appUser);
+                return $this->isCustomSettingAllows($appUser, $options);
 
-            # TODO: Implement circles
+            case \Helper\ShareConstant::SHARING_CIRCLES:
+                return $this->isInCircles($appUser, $options);
 
             default:
                 return true;
         }
     }
 
-    private function isCustomSettingAllows($appUser) {
-        # TODO: implement rules based on custom settings
-        return true;
+    private function isInCircles(\Document\User &$visitor, $options) {
+        $circles = @$options['circles_only'];
+        if (!empty($circles)) {
+            $circleIds = array_keys($circles);
+            $friendIds = $this->getCircleFriends($circleIds);
+
+            return in_array($visitor->getId(), $friendIds);
+        } else {
+            return false;
+        }
+    }
+
+    private function isCustomSettingAllows(\Document\User &$visitor, $options) {
+        $friendsAndCircles = $options['friends_and_circles'];
+        $allowed = false;
+
+        // Check whether visitor is in friends list
+        if (isset($friendsAndCircles['friends']) && !empty($friendsAndCircles['friends'])) {
+            $friendIds = $friendsAndCircles['friends'];
+            if (in_array($visitor->getId(), $friendIds))
+                $allowed = true;
+        }
+
+        // Check whether visitor is in a circle
+        if (!$allowed && isset($friendsAndCircles['circles']) && !empty($friendsAndCircles['circles'])) {
+            $circleIds = $friendsAndCircles['circles'];
+            if ($this->isVisitorInCircles($circleIds, $visitor))
+                $allowed = true;
+        }
+
+        return $allowed;
+    }
+
+    private function isVisitorInCircles($circleIds, \Document\User &$visitor) {
+        $friendIds = $this->getCircleFriends($circleIds);
+        return in_array($visitor->getId(), $friendIds);
     }
 
     private function insideGeoFence(\Document\User $appUser, $settings) {

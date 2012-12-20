@@ -10,6 +10,8 @@ use Document\Location as Location;
 use Helper\Location as LocationHelper;
 
 /**
+ * Base abstract class for all schedule related models (ie. events, plan and meetups)
+ *
  * @abstract
  * @ODM\InheritanceType("COLLECTION_PER_CLASS")
  */

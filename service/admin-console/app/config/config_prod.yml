@@ -1,0 +1,36 @@
+imports:
+    - { resource: config.yml }
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+       image_path:      "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6"
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+
+doctrine_mongodb:
+    connections:
+        default:
+            server: mongodb://10.239.65.85:27017
+            options: {}
+    default_database: socialmaps_prodtest
+    document_managers:
+        default:
+            auto_mapping: true

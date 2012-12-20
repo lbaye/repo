@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Helper\Email as EmailHelper;
 use Helper\Status;
 
+/**
+ * This controller is responsible for providing user registration, authentication and
+ * verification process.
+ */
 class Auth extends Base
 {
 
-    /**
-     * Initialize the controller.
-     */
     public function init()
     {
         parent::init();
@@ -30,6 +31,9 @@ class Auth extends Base
 
     /**
      * POST /users
+     *
+     * Register new user with at least 'email', 'firstName', 'lastName', 'password' and 'avatar' fields.
+     * Upon providing valid fields new user object will be created.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -108,6 +112,10 @@ class Auth extends Base
     /**
      * POST /auth/login
      *
+     * Authenticate user with 'email' and 'password'
+     * Generate response with 404 if user has failed to authenticate
+     * otherwise generate response with user object.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function login()
@@ -148,6 +156,10 @@ class Auth extends Base
     /**
      * POST /auth/login/fb
      *
+     * Authenticate user with facebookAuthToken and facebookId.
+     * Generate response with 406 if invalid authentication attempt
+     * otherwise generate user object.
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function fbLogin()
@@ -175,7 +187,6 @@ class Auth extends Base
 
             if ($user instanceof \Document\User) {
                 $this->debug(sprintf('Found existing fb user - %s', $user->getFirstName()));
-
                 $this->userRepository->setCurrentUser($user);
 
                 if (!empty($data['avatar'])) {
@@ -192,7 +203,9 @@ class Auth extends Base
             } else {
                 $this->debug('Not found existing facebook user, creating now.');
                 $user = $this->userRepository->insert($data);
-
+                // TODO: following two lines should be removed after bugfix from ios end
+                $avatar_url = "https://graph.facebook.com/" . $data['facebookId'] . "/picture?type=normal";
+                $this->userRepository->saveAvatarImage($user->getId(), $avatar_url);
                 $this->debug('New facebook user - ' . $user->getId());
             }
 
@@ -226,6 +239,9 @@ class Auth extends Base
 
     /**
      * POST /auth/fb_connect
+     *
+     * Connect facebook credential with an existing user.
+     * Generate response with 406 if invalid request.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -272,7 +288,10 @@ class Auth extends Base
     /**
      * GET /auth/forgot_pass/:email
      *
-     * @param $email
+     * Send request for resetting user password.
+     * This request must be made with "email" address.
+     *
+     * @param $email - Valid SocialMaps account associated email address.
      *
      * @throws \Exception\ResourceNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
@@ -309,7 +328,10 @@ class Auth extends Base
     /**
      * GET /auth/pass/token/:passwordToken
      *
-     * @param $passwordToken
+     * Confirm user's password resetting request. This request must be made with password token.
+     * This request must be invoked with "passwordToken" parameter.
+     *
+     * @param $passwordToken - Valid password token which was generated prior requesting upon 'getPassword' action.
      *
      * @throws \Exception\ResourceNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
@@ -329,6 +351,9 @@ class Auth extends Base
 
     /**
      * POST /auth/reset_pass
+     *
+     * Store user's new password, which was requested through "getPassword" action
+     * This action must be invoked with "email", "retypePassword" and "password" parameters.
      *
      * @throws \Exception\ResourceNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
@@ -361,6 +386,8 @@ class Auth extends Base
 
     /**
      * POST /auth/change_pass
+     *
+     * Change password for an existing SM user, this action is valid for already authenticated user.
      *
      * @throws \Exception\ResourceNotFoundException
      * @return \Symfony\Component\HttpFoundation\Response
