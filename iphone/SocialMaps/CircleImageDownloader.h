@@ -30,14 +30,29 @@ NSURLConnection *imageConnection;
 @property (nonatomic, retain) NSMutableData *activeDownload;
 @property (nonatomic, retain) NSURLConnection *imageConnection;
 
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (void)startDownload;
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (void)cancelDownload;
 
 @end
 
 @protocol EventImageDownloaderDelegate 
 
-//- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+/**
+ * @brief Delegate method, performed when image loaded
+ * @param (NSString) - User id
+ * @retval none
+ */
 - (void)appImageDidLoad:(NSString *)userId;
 
 @end

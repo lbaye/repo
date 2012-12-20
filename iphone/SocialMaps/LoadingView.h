@@ -13,7 +13,18 @@
 
 }
 
+/**
+ * @brief Show loading indicotr in the param view
+ * @param (UIView) - View in which loading indicator will be displayed
+ * @retval action
+ */
 + (id)loadingViewInView:(UIView *)aSuperview;
+
+/**
+ * @brief Remove loading indicotr from view
+ * @param none
+ * @retval none
+ */
 - (void)removeView;
 
 @end

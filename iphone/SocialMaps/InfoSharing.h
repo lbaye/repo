@@ -10,6 +10,15 @@
 #define INFO_SHARING_ROW_HEIGHT 45
 
 @interface InfoSharing : UIScrollView
+
+/**
+ * @brief Create information sharing scroll view
+ * @param (CGRect) - Position and size of scroll view
+ * @param (NSArray) - Information list
+ * @param (NSArray) - Default list
+ * @param (id) - Action sender
+ * @retval (UIScrollView) - Created information sharing scroll view
+ */
 - (UIScrollView*) initWithFrame:(CGRect)frame infoList:(NSArray*)infoList
                         defList:(NSArray*)defList sender:(id) sender;
 

@@ -23,8 +23,25 @@
 @property(nonatomic,retain) NSMutableData *activeDownload;
 @property(nonatomic,retain) IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
 
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 -(IBAction)backButton:(id)sender;
+
+/**
+ * @brief Navigate user to navigation screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 -(IBAction)gotoNotification:(id)sender;
+
+/**
+ * @brief Close newsfeed enlarged image view
+ * @param (id) - Action sender
+ * @retval action
+ */
 -(IBAction)closeNewsfeedImgView:(id)sender;
 
 @end

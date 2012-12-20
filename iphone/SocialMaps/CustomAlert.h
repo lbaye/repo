@@ -10,6 +10,12 @@
 
 @interface CustomAlert : UIAlertView
 
+/**
+ * @brief Create custom alert with specific color
+ * @param (UIColor) - Background color of alert
+ * @param (UIColor) - Stroke color of alert
+ * @retval action
+ */
 + (void) setBackgroundColor:(UIColor *) background 
             withStrokeColor:(UIColor *) stroke;
 

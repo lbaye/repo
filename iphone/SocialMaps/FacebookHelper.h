@@ -14,10 +14,39 @@
 }
 @property (nonatomic, retain) Facebook *facebook;
 
+/**
+ * @brief Return shared instance of an object
+ * @param (id) - Action sender
+ * @retval (id) - Shared object
+ */
 + (id) sharedInstance;
+
+/**
+ * @brief Get user information
+ * @param (id) - Action sender
+ * @retval none
+ */
 - (void)getUserInfo:(id)sender;
+
+/**
+ * @brief Get user's facebook friend list
+ * @param (id) - Action sender
+ * @retval none
+ */
 - (void)getUserFriendListRequest:(id)sender;
--(void)getUserFriendListFromFB:(id)sender;
--(void)inviteFriends:(NSMutableArray *)frndList;
+
+/**
+ * @brief Get user's friend list and generate friends image url
+ * @param (id) - Action sender
+ * @retval none
+ */
+- (void)getUserFriendListFromFB:(id)sender;
+
+/**
+ * @brief Invite facebook friends to social map
+ * @param (NSMutableArray) - Friend facebook id array
+ * @retval none
+ */
+- (void)inviteFriends:(NSMutableArray *)frndList;
 
 @end

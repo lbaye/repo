@@ -1,11 +1,9 @@
 //
 //  ODRefreshControl.h
-//  ODRefreshControl
+//  SocialMaps
 //
-//  Created by Fabio Ritrovato on 6/13/12.
-//  Copyright (c) 2012 orange in a day. All rights reserved.
-//
-// https://github.com/Sephiroth87/ODRefreshControl
+//  Created by Abdullah Md. Zubair on 10/29/12.
+//  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

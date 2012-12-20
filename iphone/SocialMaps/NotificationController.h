@@ -39,11 +39,47 @@ typedef enum _NOTIFY_TYPES {
 @property (nonatomic,retain) IBOutlet UIButton *reqButton;
 @property (nonatomic,retain) IBOutlet UIWebView *webView;
 
+/**
+ * @brief Make selection type message and display unread message
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)showMessages:(id)sender;
+
+/**
+ * @brief Make selection type friend request and display all friend request
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)showFriendRequests:(id)sender;
+
+/**
+ * @brief Make selection type notification and display all notifications
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)showNotifications:(id)sender;
+
+/**
+ * @brief Make an unread message read
+ * @param (id) - Action sender
+ * @retval none
+ */
 - (void)moreButtonTapped:(id)sender;
+
+/**
+ * @brief Accept/ Decline friend request
+ * @param (NSString) - Operation name accept/decline
+ * @param (int) - Selected table row
+ * @retval none
+ */
 - (void) buttonClicked:(NSString*)name cellRow:(int)row;
+
+/**
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval action
+ */
 - (IBAction)actionBackMe:(id)sender;
 
 @end

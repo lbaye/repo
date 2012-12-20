@@ -48,13 +48,70 @@ typedef enum _MAP_USER_ACTION {
 @property (nonatomic, retain) MKAnnotationView *annoView;
 @property (nonatomic,assign) id<MapAnnotationDelegate>    delegate;
 
+/**
+ * @brief Change state of annotation
+ * @param (id) - Action sender
+ * @retval none
+ */
 - (void) changeStateClicked:(id) sender;
+
+/**
+ * @brief Change annotation state to detail state
+ * @param (id) - Annotation
+ * @retval none
+ */
 - (void) changeStateToDetails:(id) anno;
+
+/**
+ * @brief Change annotation state to normal state
+ * @param (id) - Annotation
+ * @retval none
+ */
 - (void) changeStateToNormal:(id) anno;
+
+/**
+ * @brief Change annotation state to summary state
+ * @param (id) - Annotation
+ * @retval none
+ */
 - (void) changeStateToSummary:(id) anno;
+
+/**
+ * @brief Get annotation view for normal state
+ * @param (LocationItem) - Location item map annotation
+ * @retval (MKAnnotationView) - Annotation view
+ */
 - (MKAnnotationView*) getViewForStateNormal:(LocationItem*) locItem;
+
+/**
+ * @brief Get annotation view for summary view
+ * @param (LocationItem) - Location item map annotation
+ * @retval (MKAnnotationView) - Annotation view
+ */
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem;
+
+/**
+ * @brief Get annotation view for detail state
+ * @param (LocationItem) - Location item map annotation
+ * @retval (MKAnnotationView) - Annotation view
+ */
 - (MKAnnotationView*) getViewForStateDetailed:(LocationItem*) locItem;
+
+/**
+ * @brief Get annotation view for a desire state
+ * @param (MAP_ANNOTATION_STATE) - Desired state
+ * @param (LocationItem) - Location item map annotation
+ * @retval (MKAnnotationView) - Annotation view
+ */
 - (MKAnnotationView*) getViewForState:(MAP_ANNOTATION_STATE)state loc:(LocationItem*)loc;
+
+/**
+ * @brief Get view for annotation
+ * @param (MKMapView) - Map view
+ * @param (MKAnnotation) - Map annotation
+ * @param (LocationItem) - Location item
+ * @retval (MKAnnotationView) - Annotation view
+ */
 - (MKAnnotationView *)mapView:(MKMapView *)newMapView viewForAnnotation:(id <MKAnnotation>)newAnnotation item:(LocationItem*)locItem;
+
 @end

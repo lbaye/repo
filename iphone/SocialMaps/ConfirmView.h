@@ -23,7 +23,14 @@
 @property (nonatomic) int btnTag;
 @property (nonatomic, retain) id parent;
 
+/**
+ * @brief Initialize confirm view with frame, title, sender and tag
+ * @param (CGRect) - View position and size 
+ * @param (NSString) - View title
+ * @param (id) - Action sender
+ * @param (int) - View tag
+ * @retval action
+ */
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr sender:(id) sender tag:(int)tag;
-
 
 @end
