@@ -42,12 +42,6 @@
 {
     // Drawing code
     self.backgroundColor = [UIColor clearColor]; 
-    /*UIImageView *bgImageView = [[UIImageView alloc] 
-                                initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) ];
-    [bgImageView setContentMode:UIViewContentModeScaleToFill];
-    
-    bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
-    [self addSubview:bgImageView];*/
     
     CGSize titleStringSize = [titleString sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:14.0]];
     

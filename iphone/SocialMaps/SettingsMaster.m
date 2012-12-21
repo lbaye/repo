@@ -26,18 +26,6 @@
 
 - (id)initWithFrame:(CGRect)frame title:(NSString*)titleStr subTitle:(NSString*)subTitleStr bgImage:(NSString*)bgImgName type:(int) dispType sender:(id) sender tag:(int)tag
 {
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        // Initialization code
-//        btnTag = tag;
-//        titleString = [NSString stringWithString:titleStr];
-//        subtitleString = [NSString stringWithString:subTitleStr];
-//        parent = sender;
-//        self.bgImageName = bgImgName;
-//        self.backgroundColor = [UIColor clearColor];
-//        self.settingsType = dispType;
-//    }
-//    return self;
     return [self initWithFrame:frame title:titleStr subTitle:subTitleStr bgImage:bgImgName type:dispType sender:sender tag:tag level:0];
 }
 
@@ -122,7 +110,6 @@
     // Position arrow image to the right of the button
     btn.imageEdgeInsets = UIEdgeInsetsMake(0.0, self.frame.size.width-BUTTON_WIDTH-5-15*level, 0.0, 5+15*level);
     
-    //btn.tag = btnTag;
     self.tag = btnTag;
     
     [self addSubview:btn];

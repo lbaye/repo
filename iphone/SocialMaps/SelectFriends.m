@@ -244,7 +244,6 @@
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 //
-// [UIColor colorWithRed:148.0/255.0 green:193.0/255.0 blue:28.0/255.0 alpha:1.0].CGColor]
 //
 - (void)drawRect:(CGRect)rect
 {
@@ -264,7 +263,6 @@
         NSLog(@"friend:%@, x=%f,y=%f,width=%f,height=%f", aFriend.userId, imgFrame.origin.x, imgFrame.origin.y,
               imgFrame.size.width, imgFrame.size.height);
         
-        //NSString *imgName = [NSString stringWithFormat:@"Photo-%d.png",i%4];
         UIImageView *friendImg = [UIImageView imageViewWithRectImage:imgFrame andImage:aFriend.icon withCornerradius:10.0f];
         friendImg.tag = 20000+i;
         friendImg.userInteractionEnabled = YES;
@@ -328,7 +326,6 @@
     photoScrollView.hidden = FALSE;
     circleScrollView.hidden = TRUE;
     searchBar.userInteractionEnabled = TRUE;
-    //[self setNeedsDisplay];
 }
 
 - (void) circleButtonClicked:(id) sender {
@@ -337,7 +334,6 @@
     photoScrollView.hidden = TRUE;
     circleScrollView.hidden = FALSE;
     searchBar.userInteractionEnabled = FALSE;
-    //[self setNeedsDisplay];
 }
 
 - (void) unselectAll:(id) sender {

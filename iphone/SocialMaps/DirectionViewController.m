@@ -405,7 +405,6 @@
 // NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
 - (void)coordinateChanged_:(NSNotification *)notification
 {	
-	//annotation = notification.object;
     [self performSelector:@selector(setAddressLabelFromLatLon:) withObject:notification.object afterDelay:.3];
 }
 
@@ -415,9 +414,8 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
 {
 	
-	if (oldState == MKAnnotationViewDragStateDragging) 
+	if (oldState == MKAnnotationViewDragStateDragging)
     {
-		//annotation = (DDAnnotation *)annotationView.annotation;
         [self performSelector:@selector(setAddressLabelFromLatLon:) withObject:annotationView.annotation afterDelay:.3];
 	}
 }

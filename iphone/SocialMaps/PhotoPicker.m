@@ -39,21 +39,6 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-*/
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -223,9 +208,6 @@
 
 //
 - (void) takePhoto:(id)sender {
-    //UIView * caller = (UIView*) sender;
-    //[[[caller superview] window] addSubview:self.view];
-    //[[self.view window] addSubview:self.view];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[appDelegate window] addSubview:self.view];
     [[appDelegate window] bringSubviewToFront:self.view];

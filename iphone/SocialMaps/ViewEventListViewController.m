@@ -44,7 +44,6 @@ __strong NSMutableDictionary *eventListIndex;
 NSString *searchText=@"";
 AppDelegate         *smAppDelegate;
 
-//rsvpFlag=
 bool searchFlags=true;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -82,8 +81,6 @@ bool searchFlags=true;
 -(void)viewWillAppear:(BOOL)animated
 {
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    filteredList=[[self loadDummyData] mutableCopy]; 
-//    eventListArray=[[self loadDummyData] mutableCopy];
     [self displayNotificationCount];
     [self.mapContainer removeFromSuperview];
     
@@ -143,7 +140,6 @@ bool searchFlags=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventListGlobalArray=[[notif object] mutableCopy];
     NSLog(@"GOT SERVICE DATA EVENT.. :D  %@",[notif object]);
-//    [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [self hideActivity];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self.view setNeedsDisplay];
@@ -181,9 +177,7 @@ bool searchFlags=true;
 -(IBAction)dateAction:(id)sender
 {
     NSLog(@"date");
-        [self.eventSearchBar resignFirstResponder];
-    //Event *even=[[Event alloc] init];
-    //even.eventDate.date
+    [self.eventSearchBar resignFirstResponder];
     
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
@@ -307,7 +301,6 @@ bool searchFlags=true;
 
 -(IBAction)newEventAction:(id)sender
 {
-//    [self.eventListTableView reloadData];
     [self.eventSearchBar resignFirstResponder];
     NSLog(@"new event");
     isFromVenue=FALSE;
@@ -417,7 +410,6 @@ bool searchFlags=true;
     }
     // Configure the cell...
     cell.eventDate.text = [NSString stringWithFormat:@"event date"];
-//    cell.eventDetail.text = [NSString stringWithFormat:@"1"];
     cell.eventDistance.text = [NSString stringWithFormat:@"event distance"];
     cell.viewEventOnMap.tag=indexPath.row;
     [cell.viewEventOnMap addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -426,7 +418,6 @@ bool searchFlags=true;
     cell1.noButton.tag=indexPath.row;
     cell1.maybesButton.tag=indexPath.row;
     cell1.viewEventOnMap.tag=indexPath.row;
-//    NSLog(@"event.myResponse: %@",event.myResponse);
     NSLog(@"event: %@",event);
     if ((event.isInvited==true)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
     {
@@ -493,7 +484,6 @@ bool searchFlags=true;
         cell.eventName.text = cellValue;
         cell.eventDetail.text=event.eventShortSummary;
         cell.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
-//        cell.eventDate.text=event.eventDate.date;
         cell.eventAddress.text=event.eventAddress;
         CGSize lblStringSize1 = [event.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0f]];
         
@@ -509,7 +499,6 @@ bool searchFlags=true;
         cell1.eventName.frame=CGRectMake(cell.eventName.frame.origin.x, cell.eventName.frame.origin.y, lblStringSize.width, lblStringSize.height);
         cell1.eventNameScrollView.contentSize=cell.eventName.frame.size;
         cell1.eventDetail.text=event.eventShortSummary;
-//        cell1.eventDate.text=event.eventDate.date;
         cell1.eventDate.text=[UtilityClass getCurrentTimeOrDate:event.eventDate.date];
         cell1.eventAddress.text=event.eventAddress;
 
@@ -546,18 +535,6 @@ bool searchFlags=true;
             cell.eventImage.image=[UIImage imageNamed:@"blank.png"];                
             cell1.eventImage.image=[UIImage imageNamed:@"blank.png"];      
         }
-        
-//        else if ([[imageDownloadsInProgress objectForKey:event.eventID]isEqual:event.eventID]&&([imageDownloadsInProgress objectForKey:event.eventImage]!=NULL) ) 
-//        {
-//             EventImageDownloader *iconDownloader=[imageDownloadsInProgress objectForKey:event.eventID];
-//            cell.eventImage.image = iconDownloader.event.eventImage;
-//            cell1.eventImage.image = iconDownloader.event.eventImage;
-//        }
-//        else
-//        {
-//            cell.eventImage.image = event.eventImage;
-//            cell1.eventImage.image=event.eventImage;                
-//        }
     }
     
     cell.eventImage.contentMode = UIViewContentModeScaleAspectFit;
@@ -565,7 +542,6 @@ bool searchFlags=true;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell1.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@"dicImages_msg c: %@ %d",dicImages_msg,[dicImages_msg count]);
-//    cell.eventImage.image = eventPhoto;
     if (event.isInvited==false)
     {
         return cell;        
@@ -596,8 +572,6 @@ bool searchFlags=true;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    
-//    [smAppDelegate showActivityViewer:self.view];
     Event *aEvent=[[Event alloc] init];
     aEvent=[filteredList objectAtIndex:indexPath.row];
     globalEvent=[[Event alloc] init];
@@ -626,7 +600,6 @@ bool searchFlags=true;
         [dicIcondownloaderEvents setObject:iconDownloader forKey:event.eventID];
         NSLog(@"imageDownloadsInProgress %@",dicIcondownloaderEvents);
         [iconDownloader startDownload];
-        //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
         NSLog(@"start downloads ... %@ %d",event.eventID, indexPath.row);
         [iconDownloader release];   
     }
@@ -666,7 +639,6 @@ bool searchFlags=true;
         [dicImages_msg setValue:iconDownloader.event.eventImage forKey:eventID];
         cell.eventImage.image = iconDownloader.event.eventImage;
         cell1.eventImage.image = iconDownloader.event.eventImage;
-        //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
         [self.eventListTableView reloadData];
     }
 }
@@ -698,7 +670,6 @@ bool searchFlags=true;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     searchText=eventSearchBar.text;
     
     [newEventButton setUserInteractionEnabled:NO];
@@ -712,7 +683,6 @@ bool searchFlags=true;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
         NSLog(@"eventListGlobalArray: %@",eventListGlobalArray);
@@ -831,8 +801,6 @@ bool searchFlags=true;
     [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
-
-//    -(void)setEventRsvp:(NSString *) eventID:(NSString *) rsvp:(NSString *)authToken:(NSString *)authTokenValue
 }
 
 -(IBAction)noButton:(id)sender
@@ -884,7 +852,6 @@ bool searchFlags=true;
     RestClient *rc=[[RestClient alloc] init];
     
     [smAppDelegate hideActivityViewer];
-//    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     if ([sender tag] == 20001) 
     {
@@ -942,8 +909,6 @@ bool searchFlags=true;
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES]; 
 
-    
-    //[self.mapView setRegion:newRegion animated:YES];
     NSLog(@"lat %lf ",[aEvent.eventLocation.latitude doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
 

@@ -324,13 +324,6 @@ int uploadPhotoCounter=0;
 -(void)getCurrentAddress
 {
     addressDetailLabel.text=@"";
-//    if ((![curAddress isEqualToString:@""]) && (curAddress))
-//    {
-//        addressLabel.text=curAddress;
-//        NSLog(@"use existing add");
-//    }
-//    else 
-//    {
         NSLog(@"load new add");
         addressLabel.text = @"Loading current address...";
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -347,7 +340,6 @@ int uploadPhotoCounter=0;
                 NSLog(@"get current address.");
             });
         });
-//    }
 }
 
 - (void)uploadPhotoDone:(NSNotification *)notif
@@ -402,7 +394,6 @@ int uploadPhotoCounter=0;
 {
     [UtilityClass endEditing];
     if (!(textView.textColor == [UIColor lightGrayColor])) {
-//        textView.text = @"Your comments...";
         textView.textColor = [UIColor lightGrayColor];
     }
     photo.comment=commentView.text;
@@ -424,7 +415,6 @@ int uploadPhotoCounter=0;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }  
         
@@ -463,9 +453,7 @@ int uploadPhotoCounter=0;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -511,7 +499,6 @@ int uploadPhotoCounter=0;
 {
     if (isBgTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         UserFriends *userFrnd=[[UserFriends alloc] init];
         userFrnd=[FriendList objectAtIndex:index];
@@ -526,15 +513,12 @@ int uploadPhotoCounter=0;
             [self reloadScrollview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrollview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndsScrollView.subviews];
     if ([selectedFriends containsObject:[FriendList objectAtIndex:[sender.view tag]]])
     {
@@ -561,15 +545,6 @@ int uploadPhotoCounter=0;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrollview];
 }
@@ -640,7 +615,6 @@ int uploadPhotoCounter=0;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -689,8 +663,6 @@ int uploadPhotoCounter=0;
         [friendListArr addObject:frnds];
     }    
     FriendList=[friendListArr mutableCopy];
-    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
-    
 }
 
 //search bar delegate method starts
@@ -713,7 +685,6 @@ int uploadPhotoCounter=0;
         else
         {
             searchText=@"";
-            //[self loadFriendListsData]; TODO: commented this
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrollview];
@@ -735,7 +706,6 @@ int uploadPhotoCounter=0;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrollview];
@@ -764,7 +734,6 @@ int uploadPhotoCounter=0;
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
-    //    [self.eventListTableView reloadData];
     [UtilityClass endEditing];
     [friendSearchbar resignFirstResponder];
 }

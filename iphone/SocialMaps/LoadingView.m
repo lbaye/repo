@@ -141,9 +141,6 @@ CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius)
 	[animation setType:kCATransitionFade];
 	[[aSuperview layer] addAnimation:animation forKey:@"layerAnimation"];
 	
-//    UIView *disableView=[[UIView alloc] initWithFrame:[aSuperview bounds]];
-//    [disableView setBackgroundColor:[UIColor lightTextColor]];
-//    [aSuperview addSubview:disableView];
 	return loadingView;
 }
 

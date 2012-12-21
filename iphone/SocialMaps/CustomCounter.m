@@ -64,7 +64,6 @@
         countDisp.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         countDisp.autocapitalizationType = UITextAutocapitalizationTypeNone;
         countDisp.inputView = nil;
-        //[countDisp setKeyboardType:UIKeyboardTypeNumberPad];
         [countDisp setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
         countDisp.delegate = self;
 

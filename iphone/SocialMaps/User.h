@@ -32,7 +32,6 @@
     NSString* authToken;
     NSString* message;
     UIImage * bg;
-    //UIImage * avatar;
     bool    isOnline;
     NSString    *address;
     NSString    *friendRequest;

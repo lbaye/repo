@@ -40,8 +40,6 @@
     MKCoordinateRegion adjustedRegion = [self.mapViewLoacation regionThatFits:viewRegion];  
     [self.mapViewLoacation setRegion:adjustedRegion animated:YES]; 
     
-    //annotation.title =[NSString stringWithFormat:@"Address: %@",locationItem.itemAddress];
-    
     [self.mapViewLoacation setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapViewLoacation addAnnotation:annotation];
     
@@ -55,12 +53,7 @@
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.currentModelViewController = self;
 }
-/*
-- (void)setAddressLabelFromLatLon 
-{
-    labelAddress.text = [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
-}
-*/
+
 - (void)viewDidUnload
 {
     [self setMapViewLoacation:nil];

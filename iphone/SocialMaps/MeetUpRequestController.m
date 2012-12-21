@@ -508,7 +508,6 @@ DDAnnotation *annotation;
     {
         searchText=@"";
         [selectedFriendsIndex removeAllObjects];
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];

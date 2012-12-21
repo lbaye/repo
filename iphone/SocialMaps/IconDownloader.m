@@ -108,7 +108,6 @@
     [image release]; image = nil;
     
     // call our delegate and tell it that our icon is ready for display
-    //[delegate appImageDidLoad:self.indexPathInTableView];
     if (delegate != nil)
         [delegate appImageDidLoad:self.userFriends.userId];
 }

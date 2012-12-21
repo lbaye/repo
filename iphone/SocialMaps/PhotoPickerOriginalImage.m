@@ -39,20 +39,6 @@
 
 #pragma mark - View lifecycle
 
-/*
- // Implement loadView to create a view hierarchy programmatically, without using a nib.
- - (void)loadView
- {
- }
- */
-
-/*
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
- - (void)viewDidLoad
- {
- [super viewDidLoad];
- }
- */
 
 - (void)viewDidUnload
 {
@@ -123,21 +109,6 @@
     }
 }
 
-//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-//    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
-//    NSLog(@"After image selection: width=%f, height=%f",
-//          selectedImage.size.width, selectedImage.size.height);
-//    UIImage *scaledImage = selectedImage;
-//    NSLog(@"After image scaled: width=%f, height=%f",
-//          scaledImage.size.width, scaledImage.size.height);    
-//    regPhoto = scaledImage;
-//	[self dismissModalViewControllerAnimated:NO];
-//    // Call delegate method photoPickerDone:(bool)status image:(UIImage*)img
-//    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(photoPickerDone:image:)]) {
-//        [self.delegate photoPickerDone:TRUE  image:regPhoto];
-//    }
-//}
-
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo {
     
     UIImage *scaledImage = img;
@@ -153,15 +124,6 @@
     regPhoto=[self imageByScalingProportionallyToSize:regPhoto];
     NSLog(@"After image selection: width=%f, height=%f",
           regPhoto.size.width, regPhoto.size.height);
-
-//    UIImage *selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
-//    NSLog(@"After image selection: width=%f, height=%f",
-//          selectedImage.size.width, selectedImage.size.height);
-//    UIImage *scaledImage = selectedImage;
-//    NSLog(@"After image scaled: width=%f, height=%f",
-//          scaledImage.size.width, scaledImage.size.height);    
-//    regPhoto = scaledImage;
-    
     
     [self dismissModalViewControllerAnimated:NO];
     // Call delegate method photoPickerDone:(bool)status image:(UIImage*)img
@@ -241,9 +203,6 @@
 
 //
 - (void) takePhoto:(id)sender {
-    //UIView * caller = (UIView*) sender;
-    //[[[caller superview] window] addSubview:self.view];
-    //[[self.view window] addSubview:self.view];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[appDelegate window] addSubview:self.view];
     [[appDelegate window] bringSubviewToFront:self.view];

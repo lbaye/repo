@@ -141,41 +141,11 @@ ButtonClickCallbackData callBackData;
         pin = [mapAnnoEvent mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
         pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
     }
-    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
-        //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
+    else {
         pin = nil;
     }
     
     return pin;
-    
-    
-    
-    
-    
-    /*
-    LocationItem * locItem = (LocationItem*) newAnnotation;
-    
-    MKAnnotationView *pin = nil;
-    
-    if ([locItem isKindOfClass:[LocationItemPeople class]]) {
-        pin = [mapAnnoPeople mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
-    } else if ([locItem isKindOfClass:[LocationItemPlace class]]) {
-        pin = [mapAnnoPlace mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
-    }
-    else if ([locItem isKindOfClass:[LocationItem class]])
-    {
-        pin = [mapAnnoEvent mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-        pin.centerOffset = CGPointMake(pin.centerOffset.x, -pin.frame.size.height / 2);
-    }
-    else {//if (smAppDelegate.userAccountPrefs.icon != nil) {
-        //pin = [mapAnno mapView:_mapView viewForAnnotation:newAnnotation item:locItem];
-        pin = nil;
-    }
-     
-    return pin;
-     */
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -469,7 +439,6 @@ ButtonClickCallbackData callBackData;
 - (void) mapAnnotationChanged:(id <MKAnnotation>) anno {
     
     NSLog(@"MapViewController:mapAnnotationChanged");
-//    [_mapView setCenterCoordinate:anno.coordinate animated:YES];
     if (selectedAnno != nil && selectedAnno != anno) {
         LocationItem *selLocation = (LocationItem*) selectedAnno;
         selLocation.currDisplayState = MapAnnotationStateNormal;
@@ -478,7 +447,6 @@ ButtonClickCallbackData callBackData;
         
     }
     
-    //if (selectedAnno != anno) {
     if (((LocationItem*)anno).currDisplayState != MapAnnotationStateNormal) {
         [self startMoveMap:(LocationItem*)anno];
     }
@@ -711,8 +679,6 @@ ButtonClickCallbackData callBackData;
 - (void) performUserAction:(MKAnnotationView*) annoView type:(MAP_USER_ACTION) actionType {
     LocationItem *locItem = (LocationItem*) [annoView annotation];
     
-    
-    //selectedAnno = [annoView annotation];
     [self mapAnnotationInfoUpdated:[annoView annotation]];
     [_mapView bringSubviewToFront:annoView];
     
@@ -784,13 +750,6 @@ ButtonClickCallbackData callBackData;
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}*/
-
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];  
@@ -820,8 +779,6 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
-//
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
     [self performSelectorInBackground:@selector(saveFBProfileImage) withObject:nil];
@@ -948,11 +905,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)startGetLocation:(NSTimer*)timer
 {
-    //if (!isDownloadingLocation) {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-        //isDownloadingLocation = YES;
-    //}
 }
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
@@ -1306,11 +1260,7 @@ ButtonClickCallbackData callBackData;
         // Send new location to server
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         
-        // by Rishi
-        ////[restClient getLocation:smAppDelegate.currPosition :@"Auth-Token" :smAppDelegate.authToken];
-
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-        //smAppDelegate.gotListing = TRUE;
     }
 
 }
@@ -1322,7 +1272,6 @@ ButtonClickCallbackData callBackData;
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
     if (smAppDelegate.needToCenterMap == TRUE) {
-        //smAppDelegate.needToCenterMap = FALSE;
         [mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     }
     NSLog(@"update location");
@@ -1347,10 +1296,6 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [mapView bringSubviewToFront:view];
-    //if ([view isKindOfClass:[MKPinAnnotationView class]]) {
-        //NSLog(@"current location tapped %@", view);
-        //[self gotoBasicProfile:nil];
-    //}
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -1406,7 +1351,6 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"do connect fb");
     Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
-//    [smAppDelegate showActivityViewer:self.view];
     if ([facebookApi isSessionValid])
     {
         [fbHelper inviteFriends:nil];        
@@ -1429,7 +1373,6 @@ ButtonClickCallbackData callBackData;
                                 @"friends_checkins",
                                 nil];
         [facebookApi authorize:permissions];
-        //    smAppDelegate.facebookLogin=TRUE;
         [permissions release];
     }
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
@@ -1477,28 +1420,6 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)gotoCircle:(id)sender
 {
-/*    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
-    UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
-    [[UITabBar appearance] setTintColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_settings_list_bg_solid.png"]]];
-    initialHelpView.modalPresentationStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:initialHelpView animated:YES];
-    [[UITabBarItem appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor blackColor], UITextAttributeTextColor, 
-      [UIColor whiteColor], UITextAttributeTextShadowColor, 
-      [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset, 
-      [UIFont fontWithName:@"Helvetica" size:12.0], UITextAttributeFont, 
-      nil] forState:UIControlStateNormal];
-    
-    [[UITabBarItem appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor darkGrayColor], UITextAttributeTextColor, 
-      [UIColor whiteColor], UITextAttributeTextShadowColor, 
-      [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset, 
-      [UIFont fontWithName:@"Helvetica" size:12.0], UITextAttributeFont, 
-      nil] forState:UIControlStateHighlighted];
-*/    
-    
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
     [[UITabBar appearance] setTintColor:[UIColor blackColor]];
@@ -1528,14 +1449,10 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMyPlaces:(id)sender
 {
-//    [self performSegueWithIdentifier:@"createEvent" sender: self];   
-//    RestClient *rc=[[RestClient alloc] init];    
-//    [rc getEventDetailById:@"503b590ff69c29a105000000":@"Auth-Token":@"1dee739f6e1ad7f99964d40cab3a66ae27b9915b"];
 }
 
 - (IBAction)gotoDirections:(id)sender 
 {
-    //RestClient *rc=[[RestClient alloc] init];
     Platform *aPlatform=[[Platform alloc] init];
     aPlatform.facebook=@"1";
     aPlatform.fourSquare=@"1";
@@ -1556,24 +1473,11 @@ ButtonClickCallbackData callBackData;
     geo.lng=@"90.1212";
     geo.radius=@"2";
     userInfo.firstName=@"sample ";
-//    [rc setPlatForm:aPlatform:@"Auth-Token":@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-//    [rc setLayer:alayer:@"Auth-Token":@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-//    [rc getAccountSettings:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
-//    [rc setAccountSettings:userInfo:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18" ];
-//    NSLog(@"alayer.wikipedia method: %@",alayer.wikipedia);
-//      [rc setNotifications:aNotificationPref:@"Auth-Token":@"181ba543f1820a8580c7c3fa0e0f3398acdf5d60"];
-//    [rc setPlatForm:aPlatform:@"Auth-Token",@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-//    [rc setPlatForm:aPlatform:@"":@""];
-//    [rc getPlatForm];
-//    [rc getGeofence:@"Auth-Token":@"394387e9dbb35924873567783a2e7c7226849c18"];
-
-//    [self performSelector:@selector(getAllEvents) withObject:nil afterDelay:0.0];    
    // viewEventList
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
-    //[smAppDelegate showActivityViewer:self.view];
 }
 
 -(void)getAllEvents
@@ -1589,7 +1493,6 @@ ButtonClickCallbackData callBackData;
     
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     NSLog(@"Connected with fb :D %@",[notif object]);
-//    [UtilityClass showAlert:@"Social Maps" :[notif object]];
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif
@@ -1622,7 +1525,6 @@ ButtonClickCallbackData callBackData;
         else
         {
             [smAppDelegate hideActivityViewer];
-//            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
         }
     }
 }
@@ -1658,18 +1560,11 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoMapix:(id)sender
 {
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
-//    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
-    
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UIViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
     
     initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
-
-
 }
 
 -(IBAction)addCircleView:(id)sender
@@ -1737,7 +1632,6 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.showEvents = true;
         [_showDealsButton setImage:[UIImage imageNamed:@"people_checked.png"] forState:UIControlStateNormal];
     }
-//    [self getSortedDisplayList];
     [self loadAnnotationForEvents];
     [self loadAnnotationForGeotag];
     [self loadAnnotations:YES];
@@ -1854,8 +1748,6 @@ ButtonClickCallbackData callBackData;
 
 -(void)initPullView
 {
-    //_mapPulldown.hidden = NO;
-    
     CGFloat xOffset = 0;
     pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
     pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
@@ -1863,7 +1755,6 @@ ButtonClickCallbackData callBackData;
     pullUpView.center = pullUpView.closedCenter;
     pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
     pullUpView.delegate = self;
-    //pullUpView.backgroundColor = [UIColor blueColor];
     
     [pullUpView addSubview:_mapPullupMenu];
     _mapPullupMenu.userInteractionEnabled = NO;
@@ -1887,12 +1778,8 @@ ButtonClickCallbackData callBackData;
     pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 - 105);
     pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 + 34);
     pullDownView.center = pullDownView.closedCenter;
-    //self.view.userInteractionEnabled = YES;
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
     pullDownView.delegate = self;
-    //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
-    
-    //pullDownView.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:pullDownView];
     [self.view bringSubviewToFront:viewSearch];
@@ -1901,9 +1788,7 @@ ButtonClickCallbackData callBackData;
     [self.view bringSubviewToFront:viewNotification];
     _mapPulldown.userInteractionEnabled = NO;
     for (UIView *view in [_mapPulldown subviews]) {
-        //if ([view isKindOfClass:[UIButton class]]) {
             [pullDownView addSubview:view];
-        //}
     }
     _mapPulldown.hidden = NO;
     _mapPulldown.frame = CGRectMake(0, 0, _mapPulldown.frame.size.width, _mapPulldown.frame.size.height);
@@ -2065,11 +1950,8 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-//                        NSLog(@"Name=%@ %@ Location=%f,%f",item.firstName, item.lastName, loc.latitude,loc.longitude);
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
-//                        NSString *address = [UtilityClass getAddressFromLatLon:loc.latitude withLongitude:loc.longitude];
-                        //NSString *address = @"Address";
                         
                         LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
                         
@@ -2092,8 +1974,6 @@ ButtonClickCallbackData callBackData;
                                         //it was crashing sometimes... errorlog trying to get objectAtIndex of an empty array... above if condition added - Rishi
                                         LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
                                         person.itemIcon = image;
-                                        //
-                                        //[image release];
                                         if (smAppDelegate.showPeople == TRUE)
                                             [self mapAnnotationInfoUpdated:person];
                                     }
@@ -2114,16 +1994,7 @@ ButtonClickCallbackData callBackData;
                             aPerson.coordinate = loc;
                         }
 
-                        //by Rishi
-                        //aPerson.userInfo.friendshipStatus = item.friendshipStatus;
-                        
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
-                        //aPerson.itemDistance = distanceFromMe;
-
-                        /*
-                        if (smAppDelegate.showPeople == TRUE)
-                            [self mapAnnotationInfoUpdated:aPerson];
-                        */
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         
@@ -2237,7 +2108,6 @@ ButtonClickCallbackData callBackData;
                     
                     CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                     aPlace.itemDistance = distanceFromMe;
-//                    NSLog(@"Distance: service=%@, calculated=%f", item.distance, distanceFromMe);
                 }
             }
 
@@ -2259,16 +2129,12 @@ ButtonClickCallbackData callBackData;
             isFirstTimeDownloading = YES;
         }
     }
-    
-    
-    //isDownloadingLocation = NO;
 }
 
 - (void)downloadImage:(LocationItemPeople*)person 
 {
     if ([person.userInfo.avatar length] > 0) {// Need to retrieve avatar image
         
-        //__block int itemIndex = smAppDelegate.peopleList.count-1;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:person.userInfo.avatar]];
             UIImage* image = [[UIImage alloc] initWithData:imageData];
@@ -2277,10 +2143,6 @@ ButtonClickCallbackData callBackData;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                     person.itemIcon = image;
-                    //
-                    //[image release];
-                
-                    //LocationItem *selLocation = (LocationItem*) selectedAnno;
                 person.currDisplayState = MapAnnotationStateNormal;
                 if (smAppDelegate.showPeople == TRUE) {
                     [_mapView removeAnnotation:(id <MKAnnotation>)person];
@@ -2381,12 +2243,10 @@ ButtonClickCallbackData callBackData;
                     LocationItem *anno = (LocationItem*) [smAppDelegate.geotagList objectAtIndex:i];
                     if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                     {
-                        //                    [_mapView addAnnotation:anno];
-                        if (![smAppDelegate.displayList containsObject:anno]) 
+                        if (![smAppDelegate.displayList containsObject:anno])
                         {
                             [smAppDelegate.displayList addObject:anno];
                         }
-                        
                     }
                 }
             }
@@ -2402,14 +2262,11 @@ ButtonClickCallbackData callBackData;
                 LocationItem *anno = (LocationItem*) [smAppDelegate.geotagList objectAtIndex:i];
                 if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                 {
-                    //[_mapView addAnnotation:anno];
                     [smAppDelegate.displayList removeObject:anno];
-                    
                 }
             }
         }
     }
-
 }
 
 -(void)loadAnnotationForEvents
@@ -2452,8 +2309,7 @@ ButtonClickCallbackData callBackData;
                     LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
                     if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                     {
-//                    [_mapView addAnnotation:anno];
-                        if (![smAppDelegate.displayList containsObject:anno]) 
+                        if (![smAppDelegate.displayList containsObject:anno])
                         {
                             [smAppDelegate.displayList addObject:anno];
                         }
@@ -2473,9 +2329,7 @@ ButtonClickCallbackData callBackData;
                 LocationItem *anno = (LocationItem*) [smAppDelegate.eventList objectAtIndex:i];
                 if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
                 {
-                    //[_mapView addAnnotation:anno];
                     [smAppDelegate.displayList removeObject:anno];
-                    
                 }
             }
         }

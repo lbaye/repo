@@ -167,8 +167,6 @@ int geoCounter=0;
         {
             [friendListArr addObject:frnds];
             NSLog(@"non invited added %@",frnds.userName);
-            //        [friendListArr replaceObjectAtIndex:i withObject:frnds];
-            //
         }
         
         
@@ -178,7 +176,6 @@ int geoCounter=0;
     
     filteredList1=[friendListArr mutableCopy];
     filteredList2=[friendListArr mutableCopy];
-    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
 
@@ -266,7 +263,6 @@ int geoCounter=0;
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
     [self.mapView setRegion:adjustedRegion animated:YES];
     
-    //    [self.mapView setRegion:newRegion animated:YES];
     
 	[self.mapView setCenterCoordinate:annotation.coordinate];
     
@@ -457,8 +453,6 @@ int geoCounter=0;
     editFlag=false;
     ImgesName=nil;
     frndListScrollView=nil;
-    
-    //    [self viewDidUnload];
 }
 
 
@@ -604,7 +598,6 @@ int geoCounter=0;
     
     for (int i=0; i<[customSelectedPhotoIndex count]; i++)
     {
-        //        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
         [permittedUserArr addObject:((UserFriends *)[customSelectedPhotoIndex objectAtIndex:i]).userId];
     }
     NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
@@ -663,7 +656,6 @@ int geoCounter=0;
 //show circle
 -(IBAction)showCircle:(id)sender
 {
-    //    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
     [self.view addSubview:circleView];
 }
 
@@ -747,7 +739,6 @@ int geoCounter=0;
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-//    [commentsView resignFirstResponder];
     [UtilityClass beganEditing:(UIControl *)textField];
     return YES;
 }
@@ -761,12 +752,10 @@ int geoCounter=0;
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
         NSLog(@"textview did begin");
-//    [titleTextField resignFirstResponder];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-//    [commentsView resignFirstResponder];
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField
@@ -787,7 +776,6 @@ int geoCounter=0;
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     NSLog(@"textview should begin");
-//    [titleTextField resignFirstResponder];
     [UtilityClass beganEditing:(UIControl *)textView];
     if (!(textView.textColor == [UIColor blackColor])) 
     {
@@ -804,7 +792,6 @@ int geoCounter=0;
 {
     [UtilityClass endEditing];
     if (!(textView.textColor == [UIColor lightGrayColor])) {
-        //        textView.text = @"Your comments...";
         textView.textColor = [UIColor lightGrayColor];
     }
     geotag.geoTagDescription=commentsView.text;
@@ -835,7 +822,6 @@ int geoCounter=0;
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
 	//Selection was made
-//	int selectedCircleIndex = [selectedIndex intValue];
 }
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
@@ -872,7 +858,6 @@ int geoCounter=0;
     [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
     dateString = [dateFormatter stringFromDate:date];    
     dateButton.titleLabel.text=dateString;
-    //selectedDate=dateString 2012-09-12 08.50;
 }
 
 
@@ -919,8 +904,6 @@ int geoCounter=0;
 {
     static NSString *CellIdentifier = @"circleTableCell";
     static NSString *CustomCellIdentifier = @"customCircleTableCell";
-    
-//    int nodeCount = [filteredList1 count];
     
     SelectCircleTableCell *cell = [circleTableView
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -987,7 +970,6 @@ int geoCounter=0;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -1005,7 +987,6 @@ int geoCounter=0;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.customTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCustomCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCustomCircleCheckArr removeObject:clickedButtonPath];
@@ -1028,10 +1009,7 @@ int geoCounter=0;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
-        //        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
-        //        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
-        
-		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 	}
 }
@@ -1071,7 +1049,6 @@ int geoCounter=0;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-    //    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
     [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
@@ -1080,14 +1057,6 @@ int geoCounter=0;
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
-
-//- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation 
-//{
-//    
-//    self.currentLocation = newLocation;
-//    self.currentLat =  newLocation.coordinate.latitude; 
-//    self.currentLong =  newLocation.coordinate.longitude; 
-//}
 
 //draggable annotations changed
 
@@ -1110,7 +1079,6 @@ int geoCounter=0;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }
         NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
@@ -1122,7 +1090,6 @@ int geoCounter=0;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }   
         
@@ -1163,9 +1130,7 @@ int geoCounter=0;
                         imgView.image = [UIImage imageNamed:@"thum.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1213,7 +1178,6 @@ int geoCounter=0;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         UserFriends *userFrnd=[[UserFriends alloc] init];
         userFrnd=[filteredList1 objectAtIndex:index];
@@ -1228,15 +1192,12 @@ int geoCounter=0;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -1263,15 +1224,6 @@ int geoCounter=0;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrolview];
 }
@@ -1337,7 +1289,6 @@ int geoCounter=0;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     if (searchBar==customSearchBar)
     {
         searchText=customSearchBar.text;
@@ -1351,13 +1302,10 @@ int geoCounter=0;
         else
         {
             searchText=@"";
-            //[self loadFriendListsData]; TODO: commented this
             [filteredList2 removeAllObjects];
             filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrolview];
         }
-        
-        
     }
     else
     {
@@ -1374,7 +1322,6 @@ int geoCounter=0;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList1 removeAllObjects];
         filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
@@ -1410,7 +1357,6 @@ int geoCounter=0;
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
-    //    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
     [customSearchBar resignFirstResponder];

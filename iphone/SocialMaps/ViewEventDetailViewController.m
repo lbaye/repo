@@ -83,7 +83,6 @@ NSString *searchText;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     eventName.text=globalEvent.eventName;
     eventDate.text=[UtilityClass getCurrentTimeOrDate:globalEvent.eventDate.date];
-//    eventDate.text=globalEvent.eventDate.date;
     eventShortDetail.text=globalEvent.eventShortSummary;
     CGSize lblStringSize = [globalEvent.eventAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:11.0f]];
     eventAddress.frame=CGRectMake(eventAddress.frame.origin.x, eventAddress.frame.origin.y, lblStringSize.width, lblStringSize.height);
@@ -117,8 +116,6 @@ NSString *searchText;
         aEvent.eventAddress=@"Address not found";
     }
 	annotation.title =[NSString stringWithFormat:@"%@",aEvent.eventAddress];
-//	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-//	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",[aEvent.eventDistance doubleValue]];
     annotation.subtitle = [UtilityClass getDistanceWithFormattingFromLocation:globalEvent.eventLocation];
 
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
@@ -232,7 +229,6 @@ NSString *searchText;
        }
     }    
     FriendList=[friendListArr mutableCopy];
-    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
 
@@ -291,9 +287,7 @@ NSString *searchText;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
     RestClient *rc=[[RestClient alloc] init];
-    
     [smAppDelegate hideActivityViewer];
-    //    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     if ([sender tag] == 20001) 
     {
@@ -368,7 +362,6 @@ NSString *searchText;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }  
         
@@ -407,9 +400,7 @@ NSString *searchText;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -455,7 +446,6 @@ NSString *searchText;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         UserFriends *userFrnd=[[UserFriends alloc] init];
         userFrnd=[FriendList objectAtIndex:index];
@@ -470,15 +460,12 @@ NSString *searchText;
             [self reloadFriendsScrollview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrollview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndsScrollView.subviews];
     if ([selectedFriends containsObject:[FriendList objectAtIndex:[sender.view tag]]])
     {
@@ -505,15 +492,6 @@ NSString *searchText;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadFriendsScrollview];
 }
@@ -570,11 +548,6 @@ NSString *searchText;
 -(IBAction)backButton:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
-//    [self viewDidUnload];
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
 }
 
 -(void)resetButton:(int)index
@@ -652,15 +625,6 @@ NSString *searchText;
 
 -(IBAction)invitePeople:(id)sender
 {
-//    detNotfCounter=0;
-//    NSLog(@"invite people");    
-//    globalEditEvent=globalEvent;
-//    editFlag=true;
-//    isFromVenue=FALSE;
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"createEvent"];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
      [self.view addSubview:customView];
 }
 
@@ -713,10 +677,7 @@ NSString *searchText;
     {
         NSLog(@"invited %@",[notif object]);
         [UtilityClass showAlert:@"Social Maps" :@"Guest invited"];
-//        [self dismissModalViewControllerAnimated:YES];
     }
-//    globalEvent=[notif object];
-//    [self initView];
     [smAppDelegate hideActivityViewer];
     [self hideActivity];
     [smAppDelegate.window setUserInteractionEnabled:YES];
@@ -724,7 +685,6 @@ NSString *searchText;
 
 -(void)loadScrollView
 {
-//    guestScrollView.contentSize=CGSizeMake(600, 60);
     for (int i=0; i<[imageArr count]; i++)
     {
         UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(i*60, 0, 60, 65)];
@@ -785,7 +745,6 @@ NSString *searchText;
     if (isBackgroundTaskRunning==TRUE)  
     {
     NSLog(@"event detail isBackgroundTaskRunning %i",isBackgroundTaskRunning);
-//    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int x=0; //declared for imageview x-axis point    
     
     NSArray* subviews = [NSArray arrayWithArray: guestScrollView.subviews];
@@ -797,7 +756,6 @@ NSString *searchText;
         }
         else if([view isKindOfClass :[UIImageView class]])
         {
-            // [view removeFromSuperview];
         }
     }
     guestScrollView.contentSize=CGSizeMake([imagesName count]*65, 65);
@@ -821,8 +779,6 @@ NSString *searchText;
                     NSLog(@"downloading called");
                     //If scroll view moves set a placeholder image and start download image. 
                     [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-//                    [self performSelector:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i] afterDelay:0.1];
-//                    [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[imagesName objectAtIndex:i]]; 
                     imgView.image = [UIImage imageNamed:@""];
                 }
                 else 
@@ -873,7 +829,6 @@ NSString *searchText;
         }       
             x+=65;   
     }
-//    [pl drain];
     }
 }
 
@@ -898,15 +853,9 @@ NSString *searchText;
         [dicImages_msg setObject:img forKey:[imagesName objectAtIndex:index]];
         NSLog(@"img: %@    %@",img,[imagesName objectAtIndex:index]);
         [self reloadScrolview];
-//        [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
         
     }
-//    else
-//    {
-//        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:[ImgesName objectAtIndex:index]];
-//    }
     // Now, we need to reload scroll view to load downloaded image
-//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
     [pl release];
     }
 }
@@ -1028,7 +977,6 @@ NSString *searchText;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -1048,7 +996,6 @@ NSString *searchText;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     if (searchBar==friendSearchbar)
     {
         searchText=friendSearchbar.text;
@@ -1061,13 +1008,10 @@ NSString *searchText;
         else
         {
             searchText=@"";
-            //[self loadFriendListsData]; TODO: commented this
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadFriendsScrollview];
         }
-        
-        
     }
     else
     {
@@ -1083,12 +1027,10 @@ NSString *searchText;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadFriendsScrollview];
     }
-    
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar 
@@ -1112,7 +1054,6 @@ NSString *searchText;
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
-    //    [self.eventListTableView reloadData];
     [UtilityClass endEditing];
     [friendSearchbar resignFirstResponder];
 }
@@ -1207,7 +1148,6 @@ NSString *searchText;
     
     NSLog(@"[globalEvent.guestList count] %d",[globalEvent.guestList count]);
         
-//    if (detNotfCounter==1)
     {
         UserFriends *frnd;
         [imagesName removeAllObjects];
@@ -1221,7 +1161,6 @@ NSString *searchText;
             NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
             if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
             {
-                //            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
                 NSLog(@"img url null %d",i);
             }
             else
@@ -1239,13 +1178,11 @@ NSString *searchText;
         [self reloadFriendsScrollview];
         [self reloadScrolview];
     }
-//    [self.view setNeedsDisplay];
     NSLog(@"detNotfCounter: %d  globalEvent.guestList: %@ %d",detNotfCounter, globalEvent.guestList,[imagesName count]);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [self hideActivity];
     NSLog(@"guestScrollView size %@ %@",NSStringFromCGSize(guestScrollView.contentSize),imagesName);
-//    [self reloadScrolview];    
 }
 
 -(void)loadScrollData
@@ -1262,7 +1199,6 @@ NSString *searchText;
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
         if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
         {
-            //            frnd.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
             NSLog(@"img url null %d",i);
         }
         else
@@ -1308,11 +1244,6 @@ NSString *searchText;
 -(void)viewWillDisappear:(BOOL)animated
 {
     isBackgroundTaskRunning=FALSE;
-//    [self viewDidUnload];
-//    dicImages_msg=nil;
-//    imagesName=nil;
-//    nameArr=nil;
-//    guestScrollView=nil;
     detNotfCounter=0;
 }
 

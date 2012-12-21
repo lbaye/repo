@@ -65,7 +65,6 @@
     txtName.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     txtName.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     txtName.delegate = self;
-    //btn.tag = btnTag;
     self.tag = btnTag;
     
     [self addSubview:txtName];

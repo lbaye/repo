@@ -74,7 +74,6 @@
         self.frame = viewFrame;
         
         self.selGender = [[UIPickerView alloc] init];
-        //self.selGender.delegate = self;
         
         self.photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
         self.photoPicker.delegate = self;
@@ -110,7 +109,6 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-//btn_update_dark.png
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code 

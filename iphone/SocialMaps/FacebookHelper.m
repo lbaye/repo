@@ -41,7 +41,6 @@ UserDefault *userDefault;
     if (self) {
         // Work your initialising magic here as you normally would
         facebook = [[Facebook alloc] initWithAppId:FB_APPID andDelegate:self];
-        //[facebook requestWithGraphPath:@"me/friends" andDelegate:self];
 
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         if ([defaults objectForKey:@"FBAccessTokenKey"] 
@@ -58,15 +57,9 @@ UserDefault *userDefault;
 // However, I like to include it so I know what memory I'm using (and incase, one day, I convert away from Singleton).
 -(void)dealloc
 {
-    // I'm never called!
     [super dealloc];
 }
 
-// We don't want to allocate a new instance, so return the current one.
-/*+ (id)allocWithZone:(NSZone*)zone {
- //return [[self sharedInstance] retain];
- return [self sharedInstance];
- }*/
 
 // Equally, we don't want to generate multiple copies of the singleton.
 - (id)copyWithZone:(NSZone *)zone {
@@ -110,16 +103,10 @@ UserDefault *userDefault;
     [self getUserInfo:self];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     smAppDelegate.fbAccessToken = [facebook accessToken];
-//    if (smAppDelegate.smLogin==TRUE)
-//    {
-//        NSLog(@"do connect fb with invite");
-//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
-//    }
 }
 
 - (void)fbDidNotLogin:(BOOL)cancelled {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:nil];
-    
 }
 
 - (void)fbSessionInvalidated {
@@ -184,7 +171,6 @@ UserDefault *userDefault;
  */
 - (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
     NSLog(@"Inside didReceiveResponse: received response");
-    //NSLog(@"Status Code @", [response statusCode]);
     NSLog(@"URL %@", [response URL]);
 }
 
@@ -194,12 +180,9 @@ UserDefault *userDefault;
  * or a number, depending on the format of the API response. If you need access
  * to the raw response, use:
  *
- * (void)request:(FBRequest *)request
- *      didReceiveResponse:(NSURLResponse *)response
  */
 - (void)request:(FBRequest *)request didLoad:(id)result {
     NSLog(@"Inside didLoad");
-//    if (frndListFlag==FALSE) 
     {
         NSString *name;
         NSString *firstName;
@@ -214,7 +197,6 @@ UserDefault *userDefault;
         }
         // When we ask for user infor this will happen.
         if ([result isKindOfClass:[NSDictionary class]]){
-            //NSDictionary *hash = result;
             NSLog(@"Birthday: %@", [result objectForKey:@"birthday"]);
             NSLog(@"Name: %@", [result objectForKey:@"name"]); 
             firstName = [result objectForKey:@"first_name"];
@@ -232,11 +214,8 @@ UserDefault *userDefault;
         if ([result isKindOfClass:[NSData class]])
         {
             NSLog(@"Profile Picture");
-            //[profilePicture release];
-            //profilePicture = [[UIImage alloc] initWithData: result];
         }
         NSLog(@"request returns %@",result);
-        //if ([result objectForKey:@"owner"]) {}
         User *aUser = [[User alloc] init];
         [aUser setFirstName:firstName];
         [aUser setLastName:lastName];
@@ -265,15 +244,8 @@ UserDefault *userDefault;
         [prefs synchronize];
         }
         frndListFlag=TRUE;
-        //[self getUserFriendListRequest:self];
     }
     
-//    else
-//    {
-//        //Getting friend list from user by zubair
-//        [self getUserFriendListFromFB:result];
-//       
-//    }
 };
                                                                       
 /**
@@ -296,7 +268,6 @@ UserDefault *userDefault;
                                        @"Come check out Social Maps.",  @"message",
                                        stringOfFriends, @"to",smAppDelegate.fbAccessToken, @"access_token",
                                        nil]; 
-        //        [params setObject:stringOfFriends forKey:@"to"];
 
     }
     else if ([userDefault readFromUserDefaults:@"FBAccessTokenKey"]) 
@@ -307,7 +278,6 @@ UserDefault *userDefault;
                                        @"Come check out Social Maps.",  @"message",
                                        stringOfFriends, @"to",[prefs stringForKey:@"FBAccessTokenKey"], @"access_token",
                                        nil]; 
-        //        [params setObject:stringOfFriends forKey:@"to"];
 
     }
     
@@ -322,7 +292,6 @@ UserDefault *userDefault;
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error 
 {
-    //[self.label setText:[error localizedDescription]];
 };
 
 @end

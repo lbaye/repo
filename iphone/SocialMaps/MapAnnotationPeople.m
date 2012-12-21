@@ -82,7 +82,6 @@
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
     {
         msg=[NSString stringWithFormat:@"     at %@",[[locItemPeople.userInfo.lastSeenAt componentsSeparatedByString:@","] objectAtIndex:0]];
-        //locItemPeople.userInfo.lastSeenAt
     }
     else
     {
@@ -96,8 +95,6 @@
     lblMsg.font = [UIFont fontWithName:@"Helvetica" size:11.0f];
     lblMsg.textColor = [UIColor blackColor];
 
-//    [(UIImageView*)[annoView viewWithTag:12002] removeFromSuperview];    
-//    [(UIImageView*)[super.annoView viewWithTag:12002] removeFromSuperview];        
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"]) {
         UIImageView *sourceIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
         sourceIcon.image=[UIImage imageNamed:@"fbCheckinIcon.png"];
@@ -185,7 +182,6 @@
 
     // TODO: making the height smaller for appstore submission as we are removing the 
     // buttons at the bottom
-//    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4-37);
     Geolocation *geoLocation=[[Geolocation alloc] init];
     geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
     geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
@@ -271,7 +267,6 @@
         // TODO: repositioning message button for appstore submission. SInce we are hiding
         // meetup/direction we are putting this under friend request button
         messageBtn.frame = CGRectMake(infoView.frame.size.width-15-57, infoView.frame.size.height-10-27, 57, 27);
-        // messageBtn.frame = CGRectMake(2, ANNO_IMG_HEIGHT+5+35, 57, 27);
         [messageBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         [messageBtn setImage:[UIImage imageNamed:@"map_message.png"] forState:UIControlStateNormal];
         messageBtn.backgroundColor = [UIColor clearColor];
@@ -289,7 +284,6 @@
     
     // Add friend
     UIButton *addFriendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    //addFriendBtn.frame = CGRectMake(5, ANNO_IMG_HEIGHT+15, 53, 32);
     addFriendBtn.frame = CGRectMake(profilePicture.frame.origin.x + 2, infoView.frame.size.height-10-30, 57, 32);
     [addFriendBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
     [addFriendBtn setImage:[UIImage imageNamed:@"map_add_friend.png"] forState:UIControlStateNormal];

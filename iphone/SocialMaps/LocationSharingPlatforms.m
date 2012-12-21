@@ -28,7 +28,6 @@
 - (LocationSharingPlatforms*) initWithFrame:(CGRect)scrollFrame sender:(id)sender tag:(int)tag {
     self = [super initWithFrame:scrollFrame];
     if (self) {
-        //self.frame = scrollFrame;
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         numSections = smAppDelegate.locSharingPrefs.platforms.count;
         // Add facebook if empty

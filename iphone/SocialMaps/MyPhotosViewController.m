@@ -53,7 +53,6 @@ AppDelegate *smAppdelegate;
     smAppdelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserAllPhotoDone:) name:NOTIF_GET_USER_ALL_PHOTO object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePhotoDone:) name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
-    //    [self reloadScrolview];
     [smAppdelegate showActivityViewer:self.view];
     [smAppdelegate.window setUserInteractionEnabled:NO];
     [rc getPhotos:@"Auth-Token" :smAppdelegate.authToken];
@@ -68,10 +67,6 @@ AppDelegate *smAppdelegate;
     getAllPhotoCounter=0;
     if (willLoadPhotoData==TRUE)
     {
-//        [smAppdelegate showActivityViewer:self.view];
-//        [smAppdelegate.window setUserInteractionEnabled:NO];
-//        NSLog(@"load all photos");
-//        [rc getPhotos:@"Auth-Token" :smAppdelegate.authToken];
         [self loadData:smAppdelegate.myPhotoList];
         [self reloadScrolview];
     }
@@ -149,7 +144,6 @@ AppDelegate *smAppdelegate;
 {
     NSLog(@"delete photos");
     if ([selectedFriendsIndex count]>0) {
-        //    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
         [smAppdelegate.window setUserInteractionEnabled:NO];
         [smAppdelegate showActivityViewer:self.view];
         [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
@@ -196,7 +190,6 @@ AppDelegate *smAppdelegate;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }
         NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
@@ -208,7 +201,6 @@ AppDelegate *smAppdelegate;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }   
         
@@ -323,7 +315,6 @@ AppDelegate *smAppdelegate;
                         //If scroll view moves set a placeholder image and start download image. 
                         [dicImages_msg setObject:[dicImages_msg valueForKey:photo.photoThum] forKey:photo.imageUrl]; 
                         [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-//                        imgView.image = [UIImage imageNamed:@"blank.png"];  
                         imgView.image = [dicImages_msg valueForKey:photo.photoThum];
                         NSLog(@"scroll if %@",[dicImages_msg valueForKey:photo.photoThum]);
                     }
@@ -334,9 +325,7 @@ AppDelegate *smAppdelegate;
                         NSLog(@"scroll else");
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -351,7 +340,6 @@ AppDelegate *smAppdelegate;
                 imgView.layer.borderColor=[[UIColor clearColor] CGColor];
                 imgView.userInteractionEnabled=YES;
                 imgView.layer.borderWidth=2.0;
-//                [imgView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85]];
                 imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.masksToBounds = YES;
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
@@ -367,11 +355,6 @@ AppDelegate *smAppdelegate;
                     }
                 }
                 [aView addSubview:imgView];
-//                [aView addSubview:name];
-//                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
-//                tapGesture.numberOfTapsRequired = 1;
-//                [aView addGestureRecognizer:tapGesture];
-//                [tapGesture release];           
                 [customScrollView addSubview:aView];
             }        
             x2+=320;
@@ -404,7 +387,6 @@ AppDelegate *smAppdelegate;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         Photo *photo=[[Photo alloc] init];
         photo=[filteredList1 objectAtIndex:index];
@@ -419,8 +401,6 @@ AppDelegate *smAppdelegate;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
@@ -428,7 +408,6 @@ AppDelegate *smAppdelegate;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         Photo *photo=[[Photo alloc] init];
         photo=[filteredList1 objectAtIndex:index];
@@ -443,8 +422,6 @@ AppDelegate *smAppdelegate;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
@@ -452,7 +429,6 @@ AppDelegate *smAppdelegate;
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
     [selectedFriendsIndex retain];
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: photoScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -480,15 +456,6 @@ AppDelegate *smAppdelegate;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-//        else
-//        {
-//            UIView *im1=[subviews objectAtIndex:l];
-//            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-//            UIImageView *im2=[subviews2 objectAtIndex:0];
-//            [im2 setAlpha:0.4];
-//            im2.layer.borderWidth=2.0;
-//            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-//        }
     }
     [self reloadScrolview];
 }
@@ -496,7 +463,6 @@ AppDelegate *smAppdelegate;
 //handling selection from custom scroll view of friends selection
 -(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
     if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
     {

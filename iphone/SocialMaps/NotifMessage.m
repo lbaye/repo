@@ -49,7 +49,6 @@
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	
-	//UILabel *lblCust;
 	UILabel *lblSender;
     UILabel *lblFixed; // "says:"
 	UILabel *lblTime;

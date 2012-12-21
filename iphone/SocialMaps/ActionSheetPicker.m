@@ -18,7 +18,6 @@
 @synthesize title = _title;
 
 @synthesize selectedDate = _selectedDate;
-//@synthesize selectedYearIndex = _selectedDate;
 @synthesize datePickerMode = _datePickerMode;
 
 @synthesize target = _target;

@@ -100,7 +100,6 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
 @property(nonatomic,retain) IBOutlet UIView *circleView;
 @property(nonatomic,retain) IBOutlet UIView *connectToFBView;
-//@property(nonatomic,retain) NSMutableDictionary *imageDownloadsInProgress; 
 
 /**
  * @brief Show pull down menu

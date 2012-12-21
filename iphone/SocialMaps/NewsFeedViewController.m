@@ -44,14 +44,8 @@ UILabel *statusLabel;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    newsFeedView.scrollView.delegate=self;
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:newsFeedScroller];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
-//    statusLabel=[[UILabel alloc] initWithFrame:CGRectMake(120, -30, 80, 15)];
-//    statusLabel.backgroundColor=[UIColor clearColor];
-//    statusLabel.text=@"refresh...";
-//    statusLabel.textColor=[UIColor darkGrayColor];
-//    [newsFeedScroller addSubview:statusLabel];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -77,7 +71,6 @@ UILabel *statusLabel;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];    
     [smAppDelegate showActivityViewer:self.view];
      NSString *urlStr = [NSString stringWithFormat:@"%@/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
-//   urlStr = [NSString stringWithFormat:@"192.168.1.219:8888/me/network/newsfeed.html?authToken=%@&r=%@",WS_URL,smAppDelegate.authToken,[UtilityClass convertNSDateToUnix:[NSDate date]]];
 
     NSLog(@"urlStr %@",urlStr);
     [self displayNotificationCount];
@@ -228,37 +221,6 @@ UILabel *statusLabel;
     [newsFeedImageIndicator stopAnimating];
     [newsfeedImgFullView removeFromSuperview];
 }
-
-
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-////    NSLog(@"did scroll %f",newsFeedView.scrollView.contentOffset.y);
-//    if (scrollView==newsFeedScroller)
-//    {
-//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-//        {
-//            reloadNewsFeedCounter++;
-//            if (reloadNewsFeedCounter==1) {
-//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-//                [smAppDelegate showActivityViewer:self.view];
-//                [newsFeedView reload];
-//            }
-//        }
-//    }
-//    else if (scrollView==newsFeedView.scrollView)
-//    {
-//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(newsFeedscrollHeight+60)))
-//        {
-//            reloadNewsFeedCounter++;
-//            if (reloadNewsFeedCounter==1) {
-//                NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,newsFeedscrollHeight);
-//                [smAppDelegate showActivityViewer:self.view];
-//                [newsFeedView reload];
-//            }
-//        }
-//    }
-//    
-//}
 
 -(IBAction)backButton:(id)sender
 {

@@ -28,7 +28,6 @@ LocationItem *locationItem;
 - (MKAnnotationView*) getViewForStateSummary:(LocationItem*) locItem {
     NSLog(@"loading summary detail.");
     annoView = [super getViewForStateSummary:locItem];
-//    LocationItemPlace *locItemPlace = (LocationItemPlace*) locItem;
     UIView *infoView = [annoView viewWithTag:11002];
     
     CGRect sumFrame = CGRectMake(annoView.frame.origin.x, annoView.frame.origin.y, 
@@ -53,7 +52,6 @@ LocationItem *locationItem;
     CGRect catIconFrame = CGRectMake(infoView.frame.size.width-33-2, 2, 33, 25);
     UIImageView *imgCatIcon = [[UIImageView alloc] initWithFrame:catIconFrame];
     
-//    [imgCatIcon setImage:[LocationItemPlace getIconForCategory:locItemPlace.placeInfo.reference]];
     [imgCatIcon setImage:locItem.itemBg];
     imgCatIcon.hidden = TRUE; // Temporary - until we get proper icons
     [infoView addSubview:imgCatIcon];

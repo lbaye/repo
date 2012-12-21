@@ -61,13 +61,6 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -132,7 +125,6 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-//    [self animateTextField: textField up: YES];
     [UtilityClass beganEditing:(UIControl *)textField];
 }
 
@@ -144,7 +136,6 @@
     userInfo.firstName = regFirstName.text;
     userInfo.lastName = regName.text;
     userInfo.gender = regGender.text;
-//    [self animateTextField: textField up: NO];
         [UtilityClass endEditing];
 }
 
@@ -208,7 +199,6 @@
 }
 
 - (IBAction)selectGender:(id)sender {
-//    selMaleFemale.hidden = FALSE;
     [ActionSheetPicker displayActionPickerWithView:sender data:arrayGender selectedIndex:0 target:self action:@selector(genderWasSelected::) title:@"Select Gender"];
 }
 
@@ -216,25 +206,6 @@
 {
     regGender.text = [arrayGender objectAtIndex:[selectedIndex intValue]];
 }
-
-//- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
-//    
-//    return 1;
-//}
-//- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component {
-//    
-//    return [arrayGender count];
-//}
-//- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-//    return [arrayGender objectAtIndex:row];
-//}
-//
-//- (void)pickerView:(UIPickerView *)thePickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-//    
-//    NSLog(@"Selected Gender: %@. Index of selected color: %i", [arrayGender objectAtIndex:row], row);
-//    selMaleFemale.hidden = TRUE;
-//    regGender.text = [arrayGender objectAtIndex:row];
-//}
 
 - (IBAction)createAccount:(id)sender {
     if (![UtilityClass hasConnectivity]) {

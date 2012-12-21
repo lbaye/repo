@@ -257,15 +257,12 @@ static AppDelegate *sharedInstance=nil;
     // Temporary - set count to zero
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
-        //RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
-        //[restClient getLocation:currPosition :@"Auth-Token" :authToken];
         
         if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
             
-            /////[restClient getInbox:@"Auth-Token" authTokenVal:authToken];
             
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             
@@ -293,7 +290,6 @@ static AppDelegate *sharedInstance=nil;
                     notifMessage.notifTime = nil;
                     notifMessage.notifAvater = @"avater";
                     controller.selectedMessage = notifMessage;
-                    //[self.messages addObject:notifMessage];
                     [notifMessage release];
                 }
             }
@@ -463,11 +459,6 @@ static AppDelegate *sharedInstance=nil;
 
 -(void)hideActivityViewer
 {
-    /*
-    [activityView stopAnimating];
-	[activityView removeFromSuperview];
-	activityView = nil;
-     */
     [self.window setUserInteractionEnabled:YES];
     LoadingView *loadingView2 =(LoadingView *)[self.window viewWithTag:11111111];
     [loadingView2 removeView];

@@ -63,12 +63,6 @@ PullableView *pullUpView;
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-
-}*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -93,7 +87,6 @@ PullableView *pullUpView;
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
     CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
-//    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showEvents], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Events", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
     [chkBox release];
@@ -120,7 +113,6 @@ PullableView *pullUpView;
     [copyDisplayListArray addObjectsFromArray:smAppDelegate.displayList];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.itemList];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
-    //copyDisplayListArray = [smAppDelegate.displayList mutableCopy];
 }
 
 - (void) viewDidAppear:(BOOL)animated
@@ -154,20 +146,8 @@ PullableView *pullUpView;
     });
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (scrollView.contentOffset.y < -30 && ![[[self.view subviews] lastObject] isKindOfClass:[UIActivityIndicatorView class]]) {
-//        NSLog(@"At the top");
-//        [smAppDelegate showActivityViewer:self.view];
-//        [smAppDelegate performSelector:@selector(hideActivityViewer) withObject:nil afterDelay:1];
-//        [self getSortedDisplayList];
-//        [itemList reloadData];
-//    }
-//}
-
 -(void)initPullView
 {
-    //listPullupMenu.hidden = YES;
-    
     CGFloat xOffset = 0;
     pullUpView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 60)];
     pullUpView.openedCenter = CGPointMake(160 + xOffset,self.view.frame.size.height - 30);
@@ -175,7 +155,6 @@ PullableView *pullUpView;
     pullUpView.center = pullUpView.closedCenter;
     pullUpView.handleView.frame = CGRectMake(0, 0, 320, 40);
     pullUpView.delegate = self;
-    //pullUpView.backgroundColor = [UIColor blueColor];
     
     [pullUpView addSubview:listPullupMenu];
     listPullupMenu.userInteractionEnabled = NO;
@@ -204,9 +183,6 @@ PullableView *pullUpView;
     
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
     pullDownView.delegate = self;
-    //pullDownView.handleView.backgroundColor = [UIColor yellowColor];
-    
-    //pullDownView.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:pullDownView];
     [self.view bringSubviewToFront:viewSearch];
@@ -214,9 +190,7 @@ PullableView *pullUpView;
     [self.view bringSubviewToFront:viewNotification];
     listPulldownMenu.userInteractionEnabled = NO;
     for (UIView *view in [listPulldownMenu subviews]) {
-        //if ([view isKindOfClass:[UIButton class]]) {
         [pullDownView addSubview:view];
-        //}
     }
     listPulldownMenu.hidden = NO;
     listPulldownMenu.frame = CGRectMake(0, 0, listPulldownMenu.frame.size.width, listPulldownMenu.frame.size.height);
@@ -305,7 +279,6 @@ PullableView *pullUpView;
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [copyDisplayListArray addObjectsFromArray:sortedArray];
-    //copyListOfItems = [sortedArray mutableCopy];
     [smAppDelegate.displayList addObjectsFromArray:copyDisplayListArray];
     
 }
@@ -339,25 +312,13 @@ PullableView *pullUpView;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if ([segue.identifier isEqualToString:@"segueShowDetailAnno"]) {
-        //[self dismissModalViewControllerAnimated:YES];
         [self backToMapview:nil];
         [[segue destinationViewController] performSelector:@selector(showAnnotationDetailView:) withObject:(LocationItem*)sender];
-        //[self dismissModalViewControllerAnimated:YES];
     }
-    
-    //NSLog(@"In prepareForSegue:ListViewController");
-    //NSLog(@"segue destinationViewController = %@", [segue destinationViewController]);
-    
-    //LocationItem *locItem = (LocationItem*)[smAppDelegate.displayList objectAtIndex:0];
-    //[self showAnnotationDetailView:locItem];
-    
 }
 
 -(IBAction)gotoProfile:(id)sender
 {
-//    UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
-//    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
     [pullUpView setOpened:FALSE animated:TRUE];
     [self.view addSubview:circleView];
 }
@@ -453,11 +414,6 @@ PullableView *pullUpView;
 
 - (IBAction)gotoCircles:(id)sender
 {
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
-    //    ViewCircleListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewCircleListViewController"];
-    //    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:controller animated:YES];
-    
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"tabBarController"];
     [[UITabBar appearance] setTintColor:[UIColor blackColor]];
@@ -468,8 +424,6 @@ PullableView *pullUpView;
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
     NSLog(@"in listview plan %@",plan);
-    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
-    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"]; 
     [self.presentingViewController performSelector:@selector(showPinOnMapViewForPlan:) withObject:plan];
     [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:1.5];
 }
@@ -655,16 +609,10 @@ PullableView *pullUpView;
 - (void) buttonClicked:(LOCATION_ACTION_TYPE) action row:(int)row {
     LocationItem *anItem = (LocationItem*) [copyDisplayListArray objectAtIndex:row];
     NSLog(@"ListviewController: %d, row=%d name=%@", action, row, anItem.itemName);
-    //ShowOnMapController *controller;
     switch (action) {
         case LocationActionTypeGotoMap:
             
             NSLog(@"cordinate %f %f", anItem.coordinate.longitude, anItem.coordinate.latitude);
-            
-            //controller = [[ShowOnMapController alloc] initWithNibName:@"ShowOnMapController" bundle:nil andLocation:anItem.coordinate];
-            //controller.modalTransitionStyle = UIModalTransitionStylePartialCurl;
-            //[self presentModalViewController:controller animated:YES];
-            //[controller release];
             
             LocationItem *locItem = (LocationItem*)[copyDisplayListArray objectAtIndex:row];
             if(searching)
@@ -708,44 +656,8 @@ PullableView *pullUpView;
 	ovController.view.alpha = 0.5;
 	
 	ovController.rvController = self;
-	
-	//////////////[self.view insertSubview:ovController.view aboveSubview:itemList];
-	
-	//searching = YES;
-	/////////letUserSelectRow = NO;
-	////////itemList.scrollEnabled = NO;
-	
-    /*
-	self.navigationItem.rightBarButtonItem	= [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneSearching_Clicked:)] autorelease];
-	self.navigationItem.leftBarButtonItem.enabled = NO;
-    */
 }
-/*
-- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
-	
-	//Remove all objects first.
-	//[copyListOfItems removeAllObjects];
-	
-	if([searchText length] > 0) {
-		
-		[ovController.view removeFromSuperview];
-		searching = YES;
-		letUserSelectRow = YES;
-		itemList.scrollEnabled = YES;
-		[self searchTableView];
-	}
-	else {
-		
-		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
-		
-		searching = NO;
-		/////////letUserSelectRow = NO;
-		/////////itemList.scrollEnabled = NO;
-	}
-	
-	[itemList reloadData];
-}
-*/
+
 - (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
 	
     [searchBar resignFirstResponder];
@@ -760,11 +672,7 @@ PullableView *pullUpView;
 	}
 	else {
 		
-		//////[self.view insertSubview:ovController.view aboveSubview:itemList];
-		
 		searching = NO;
-		/////////letUserSelectRow = NO;
-		/////////itemList.scrollEnabled = NO;
 	}
 	
 	[itemList reloadData];
@@ -773,11 +681,6 @@ PullableView *pullUpView;
 - (void) searchTableView 
 {
 	NSString *searchText = searchBar.text;
-    /*
-    if ([searchText isEqualToString:@""]) {
-        return;
-    }
-    */
     [copyListOfItems removeAllObjects];
 	for (LocationItem *sTemp in copyDisplayListArray)
 	{
@@ -797,26 +700,20 @@ PullableView *pullUpView;
         itemList.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
     }
     
-    //itemList.contentOffset = CGPointZero;
     CGRect viewFrame = viewSearch.frame;
     viewFrame.origin.y += moveby;
     CGRect listPullDownFrame = pullDownView.frame;
     listPullDownFrame.origin.y += moveby;
-    //CGRect listPullDownMenuFrame = listPulldownMenu.frame;
-    //listPullDownMenuFrame.origin.y += moveby;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:0.3];    
     [viewSearch setFrame:viewFrame];  
-    //[listPulldown setFrame:listPullDownFrame]; 
-    //[listPulldownMenu setFrame:listPullDownMenuFrame]; 
     [pullDownView setFrame:listPullDownFrame];
     [UIView commitAnimations];    
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)theSearchBar
 {
-    //[self doneSearching_Clicked:nil];
     [self actionSearchButton:nil];
 }
 
@@ -827,10 +724,6 @@ PullableView *pullUpView;
 	
 	letUserSelectRow = YES;
 	searching = NO;
-    /*
-	self.navigationItem.rightBarButtonItem	= [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(actionCreateNewFolder:)] autorelease];
-	self.navigationItem.leftBarButtonItem.enabled = YES;
-     */
 	itemList.scrollEnabled = YES;
 	
 	[ovController.view removeFromSuperview];
@@ -853,7 +746,6 @@ PullableView *pullUpView;
         pullDownView.closedCenter = CGPointMake(160, 35);
     } else {
         [self moveSearchBarAnimation:44];
-        //listPulldownMenu.hidden = TRUE;
         [searchBar becomeFirstResponder];
         pullDownView.openedCenter = CGPointMake(160, 80 + 44);
         pullDownView.closedCenter = CGPointMake(160, 80);
@@ -883,7 +775,6 @@ PullableView *pullUpView;
             
             if(searching) 
                 anItem = (LocationItem *)[copyListOfItems objectAtIndex:indexPath.row];
-            //anItem.itemCoverPhotoUrl = [NSURL URLWithString:@"http://t3.gstatic.com/images?q=tbn:ANd9GcS_WDQIze9BFJYdPLXNwsNZxH8ZL2XhNH0k6pKBrjdRBqHUOgku&t=1"];
             
             if (anItem.itemCoverPhotoUrl) 
                 [imgCover loadFromURL:anItem.itemCoverPhotoUrl];

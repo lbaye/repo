@@ -94,8 +94,6 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent] autorelease];
         cell.frame = CellFrame;
         // Background
-        ////cell.backgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
-		////cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:itemBg] autorelease];
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
         imageView.tag = 123456789;
@@ -142,10 +140,6 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
 		[footerView addSubview:scrollAddress];
         
         // Map link
-//        mapIcon = [UIImageView imageViewWithRectImage:mapFrame andImage:[UIImage imageNamed:@"show_on_map.png"] withCornerradius:.10f];
-//        mapIcon.tag = 2011;
-//        mapIcon.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.7];
-//        [footerView addSubview:mapIcon];
 
         btnMap = [UIButton buttonWithType:UIButtonTypeCustom];
         btnMap.frame = mapFrame;

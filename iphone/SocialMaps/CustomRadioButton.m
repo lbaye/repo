@@ -81,15 +81,11 @@
             imageViewDrag.image = [UIImage imageNamed:@"location_bar_radio_cheked"];
             [self addSubview:imageViewDrag];
             
-            //[btnRadio setBackgroundImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"]
-              //                     forState:UIControlStateNormal];
         }
-        //else
             [btnRadio setBackgroundImage:[UIImage imageNamed:@"location_bar_radio.png"]
                                    forState:UIControlStateNormal];
         btnRadio.tag = startTag+i;
         [self addSubview:btnRadio];
-        //[btnRadio release];
         
         // Label
         UILabel *lblRadio = [[UILabel alloc] initWithFrame:lblFrame];
@@ -111,8 +107,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //UITouch *touch = [touches anyObject];
-    //[self limitMovement:touch];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event 
@@ -131,7 +125,6 @@
         radioFrame = CGRectMake(0 + CELL_PADDING+i*(self.frame.size.width-CELL_PADDING*2)/(numRadio == 0 ? 1 : numRadio-1)-21/2, (self.frame.size.height-21)/2, 21, 21);
         int diffTempX = radioFrame.origin.x - [touch locationInView:self].x;
         if (abs(diffTempX) < self.frame.size.width / numRadio / 1.5) {
-            //[imageViewDrag setFrame:radioFrame];
             [self buttonClicked: [self viewWithTag: 1000 + i]];
             break;
         }
@@ -174,12 +167,7 @@
     UIButton *newSel = (UIButton*) sender;
     NSLog(@"CustomRadioButton:buttonClicked %d", newSel.tag);
     if ((newSel.tag - 1000) != selIndex) {
-        //UIButton *lastSel = (UIButton*) [self viewWithTag:selIndex+1000];
         selIndex = newSel.tag - 1000;
-        //[newSel setBackgroundImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"]
-          //                  forState:UIControlStateNormal];
-        //[lastSel setBackgroundImage:[UIImage imageNamed:@"location_bar_radio.png"]
-          //                  forState:UIControlStateNormal];
         if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(radioButtonClicked:sender:)]) {
             [self.delegate radioButtonClicked:selIndex sender:[sender superview]];
         }

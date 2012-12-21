@@ -35,7 +35,6 @@
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	
-	//UILabel *lblCust;
 	UILabel *lblSender;
     UILabel *lblFixed; // "are near you:"
 	UILabel *lblTime;
@@ -202,7 +201,6 @@
 	lblTime.text = [self timeAsString];
 	
 	// Message
-    //msgFrame = CGRectMake(1, countFrame.size.height+senderFrame.size.height, tv.frame.size.width-2, msgHeight);
     msgFrame = CGRectMake(1, countFrame.size.height+senderFrame.size.height, tv.frame.size.width-2, msgHeight+4);
 
     txtMsg.frame = msgFrame;

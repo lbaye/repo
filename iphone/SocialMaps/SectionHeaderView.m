@@ -89,20 +89,6 @@ ViewCircleWisePeopleViewController *circleView;
         }
         //finish edit and rename button
         
-        // Set the colors for the gradient layer.
-//        static NSMutableArray *colors = nil;
-//        if (colors == nil) {
-//            colors = [[NSMutableArray alloc] initWithCapacity:3];
-//            UIColor *color = nil;
-//            color = [UIColor colorWithRed:0.128 green:0.188 blue:0.007 alpha:1.0];
-//            [colors addObject:(id)[color CGColor]];
-//            color = [UIColor colorWithRed:0.148 green:0.193 blue:0.028 alpha:1.0];
-//            [colors addObject:(id)[color CGColor]];
-//            color = [UIColor colorWithRed:0.102 green:0.152 blue:0.033 alpha:1.0];
-//            [colors addObject:(id)[color CGColor]];
-//        }
-//        [(CAGradientLayer *)self.layer setColors:colors];
-//        [(CAGradientLayer *)self.layer setLocations:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:0.48], [NSNumber numberWithFloat:1.0], nil]];
         [self setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_settings_list_bg.png"]]];
     }
     

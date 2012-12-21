@@ -32,12 +32,7 @@
                                     (ROW_HEIGHT+2)*NUM_ITEMS);
     [self setContentSize:contentSize];
     
-    /*CGRect myFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 
-     self.frame.size.width, (ROW_HEIGHT+2)*NUM_ITEMS);
-     self.frame = myFrame;*/
-    
-    //self.backgroundColor = [UIColor clearColor];
-    self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
+    self.backgroundColor = [UIColor colorWithRed:247.0/255.0
                                            green:247.0/255.0 
                                             blue:247.0/255.0 
                                            alpha:1.0];
@@ -157,46 +152,4 @@
     [self removeCustomRadioView:parent.tag];
 }
 
-
-//- (UIScrollView*) initWithFrame:(CGRect)scrollFrame infoList:(NSArray*)infoList
-//                         defList:(NSArray*)defList sender:(id) sender {
-//    self = [super initWithFrame:scrollFrame];
-//    if (self) {
-//        SettingsController *settingsView = (SettingsController*) sender;
-//        int itemCount = [infoList count];
-//        
-//        // Setup scroll view
-//        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:scrollFrame];
-//        CGSize contentSize = CGSizeMake(scrollView.frame.size.width, 
-//                                        (INFO_SHARING_ROW_HEIGHT+2)*itemCount);
-//        [scrollView setContentSize:contentSize];
-//        scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
-//                                                     green:247.0/255.0 
-//                                                      blue:247.0/255.0 
-//                                                     alpha:1.0];        
-//        int itemViewWidth = scrollFrame.size.width;
-//        // Setup the items
-//        int startTag = 10000;
-//        for (int i=0; i < itemCount; i++) {
-//            UIView *itemView = [[UIView alloc] initWithFrame:CGRectMake(0, 
-//                                        (INFO_SHARING_ROW_HEIGHT+2)*i, 
-//                                        itemViewWidth,INFO_SHARING_ROW_HEIGHT)];
-//            UIImageView *bgImageView = [[UIImageView alloc] 
-//                                         initWithFrame:CGRectMake(0, 0, itemViewWidth, INFO_SHARING_ROW_HEIGHT) ];
-//            [bgImageView setContentMode:UIViewContentModeScaleToFill];
-//
-//            bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
-//            [itemView addSubview:bgImageView];
-//            
-//            CGRect chkBoxFrame = CGRectMake(0, 0, itemView.frame.size.width, 
-//                                            itemView.frame.size.height);
-//            CustomCheckbox *chkBoxFirst = [[CustomCheckbox alloc] initWithFrame:chkBoxFrame boxLocType:LabelPositionLeft numBoxes:1 default:[NSArray arrayWithObject:(NSNumber*) [defList objectAtIndex:i]] labels:[NSArray arrayWithObject:[infoList objectAtIndex:i]]];
-//            chkBoxFirst.delegate = settingsView;
-//            chkBoxFirst.tag = startTag++;
-//            [itemView addSubview:chkBoxFirst];
-//            [self addSubview:itemView];
-//        }
-//    }
-//    return self;
-//}
 @end

@@ -19,7 +19,6 @@ UIPickerViewDelegate> {
     UITextField  *firstName;
     UITextField  *lastName;
     UITextField  *userName;
-    //NSString     *dateOfBirth;
     UITextField  *dobText;
     UIButton     *dateOfBirth;
     UITextField   *bio;
@@ -50,7 +49,6 @@ UIPickerViewDelegate> {
 @property (nonatomic, retain)UITextField  *firstName;
 @property (nonatomic, retain)UITextField  *lastName;
 @property (nonatomic, retain)UITextField  *userName;
-//@property (nonatomic, retain)NSString     *dateOfBirth;
 @property (nonatomic, retain)UIButton     *dateOfBirth;
 @property (nonatomic, retain)UITextField  *dobText;
 @property (nonatomic, retain)UITextField   *bio;

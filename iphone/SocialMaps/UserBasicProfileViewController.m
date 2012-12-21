@@ -107,9 +107,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getBasicProfileDone:) name:NOTIF_GET_BASIC_PROFILE_DONE object:nil];    
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBasicProfileDone:) name:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
     
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
@@ -124,7 +122,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [ImgesName addObject:@"sm_icon@2x"];
     [ImgesName addObject:@"sm_icon@2x"];
     
-//            [ImgesName addObject:[[NSBundle mainBundle] pathForResource:@"sm_icon@2x" ofType:@"png"]];
     userItemScrollView.delegate = self;
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
     lineView.frame=CGRectMake(10, profileView.frame.size.height, 300, 1);
@@ -414,8 +411,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         NSLog(@"GOT SERVICE DATA BASIC Profile.. :D  %@",[notif object]);
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
-        //     coverImageView.image;
-        //     profileImageView.image;
         userInfo=[notif object];
         nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
         [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
@@ -453,9 +448,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         
         [self performSelectorInBackground:@selector(loadImage) withObject:nil];
         [self performSelectorInBackground:@selector(loadImage2) withObject:nil];  
-        
-        //    [self performSelector:@selector(loadImage) withObject:nil afterDelay:0];
-        //    [self performSelector:@selector(loadImage2) withObject:nil afterDelay:0];
         
         //add annotation to map
         [mapView removeAnnotations:[self.mapView annotations]];
@@ -532,12 +524,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [self performSelector:@selector(hideActivity) withObject:nil afterDelay:1.0];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     [smAppDelegate hideActivityViewer];
-
-//    userInfo=[notif object];
-//    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//    NotificationController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-//	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//    [self presentModalViewController:controller animated:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -548,7 +534,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     NSLog(@"age button");
     entityFlag=1;
-//    [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"My age...";
     entityTextField.text=[NSString stringWithFormat:@"%d",userInfo.age];
     if (userInfo.dateOfBirth) {
@@ -856,7 +841,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }
         userItemScrollView.contentSize=CGSizeMake([ImgesName count]*65, 75);
@@ -908,7 +892,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 {
     NSLog(@"in download");
     if (isBackgroundTaskRunning==TRUE) {
-        //NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         NSString *Link = [ImgesName objectAtIndex:index];
         //Start download image from url
@@ -916,12 +899,9 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         if ((img) && ([dicImages_msg objectForKey:[ImgesName objectAtIndex:index]]==NULL))
         {
             //If download complete, set that image to dictionary
-//            [dicImages_msg setObject:img forKey:[ImgesName objectAtIndex:index]];
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //[self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //[pl release];
     }
 }
 
@@ -1036,8 +1016,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 - (void) showPinOnMapViewPlan:(Plan *)plan 
 {
     NSLog(@"profile %@",plan);
-    //UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"PlanStoryboard" bundle:nil];
-    //FriendsPlanListViewController* initialHelpView = [storyboard instantiateViewControllerWithIdentifier:@"friendsPlanListViewController"];
     if (profileFromList==TRUE) {
         [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:plan];
         [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.8];
@@ -1070,23 +1048,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     userInfo.dateOfBirth=selectedDate;
     ageLabel.text=[NSString stringWithFormat:@"%d",[UtilityClass getAgeFromBirthday:selectedDate]];
 }
-
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-////    NSLog(@"did scroll %f",scrollView.contentOffset.y);
-//    if (scrollView==profileScrollView)
-//    {
-//        if (scrollView.contentOffset.y < -60 || (scrollView.contentOffset.y>(scrollHeight+60)))
-//        {
-//            reloadCounter++;
-//            if (reloadCounter==1) {
-//            NSLog(@"At the top or bottom %f %d",scrollView.contentOffset.y,scrollHeight);
-//            [smAppDelegate showActivityViewer:self.view];
-//            [newsfeedView reload];
-//            }
-//        }
-//    }
-//}
 
 -(void)viewDidDisappear:(BOOL)animated
 {

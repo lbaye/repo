@@ -69,7 +69,6 @@
     [[annoView viewWithTag:11002] removeFromSuperview];
     
     CGRect imgFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH, ANNO_IMG_HEIGHT);
-    //UIImageView *locImage = [UIImageView imageViewForMapAnnotation:imgFrame andImage:locItem.itemIcon withCornerradius:10.0f];
     
     UIImageView *locImage = [[UIImageView alloc] initWithFrame:imgFrame];
     UIImageView *locImageSquare ;
@@ -91,9 +90,6 @@
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;
     
-    //[locImageSquare.layer setBorderWidth:1.0f];
-    //[locImageSquare.layer setBorderColor:[UIColor lightGrayColor].CGColor];
-    
     [locImageSquare release];
     
     CGRect annoFrame = CGRectMake(0, 0, ANNO_IMG_WIDTH+12, ANNO_IMG_HEIGHT);
@@ -106,12 +102,8 @@
     
     annoView.canShowCallout = NO;
     
-//    UIButton *button= [[UIButton alloc] initWithFrame:annoView.frame];
     [(UIButton *)[annoView viewWithTag:1234321] removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     [(UIButton *)[annoView viewWithTag:1234321] removeFromSuperview];
-//    [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
-//    button.tag=1234321;
-//    [annoView addSubview:button];
     
     changeState = [UIButton buttonWithType:UIButtonTypeCustom];
     changeState.frame = CGRectMake(imgFrame.size.width-12, 21, 26, 26);
@@ -174,7 +166,6 @@
             // TODO: for appstore submission do not show detailed annotation
             [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
         }else{
-        //locItem.currDisplayState = MapAnnotationStateNormal;
         [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     }
 
@@ -221,8 +212,6 @@
     [button removeTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     [button addTarget:self action:@selector(doNothing:) forControlEvents:UIControlEventTouchUpInside];
     button.tag=1234321;
-//    [annoView addSubview:button];
-//    [annoView sendSubviewToBack:button];
     button.frame=[annoView frame];
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];

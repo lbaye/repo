@@ -59,7 +59,6 @@ AppDelegate *smAppDelegate;
     progressView.progress = 0.0;
     [smAppDelegate.authToken retain];
     [smAppDelegate.userId retain];
-    //[self performSelectorOnMainThread:@selector(makeMyProgressBarMoving) withObject:nil waitUntilDone:NO];
 }
 
 - (void)viewDidUnload
@@ -120,16 +119,13 @@ AppDelegate *smAppDelegate;
         if (userInfoServiceLoginFlag == FALSE) 
         {
             NSLog(@"goto map view");
-            //        [self performSegueWithIdentifier: @"showMapView" sender: self];
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
             [controller retain];
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
-            
         }
     }
-    
 } 
 
 -(IBAction)discoverApp:(id)sender
@@ -142,8 +138,7 @@ AppDelegate *smAppDelegate;
     }
     else
     {
-//        [UtilityClass showAlert:@"Social Maps" :@"Enter valid password"];
-        [CustomAlert setBackgroundColor:[UIColor redColor] 
+        [CustomAlert setBackgroundColor:[UIColor redColor]
                         withStrokeColor:[UIColor redColor]];
         CustomAlert *loginAlert = [[CustomAlert alloc]
                                    initWithTitle:@"Cannot Discover"

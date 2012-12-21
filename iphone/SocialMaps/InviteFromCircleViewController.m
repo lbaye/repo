@@ -42,7 +42,6 @@ NSString *searchText4=@"";
 AppDelegate *smAppDelegate;
 int inviteCountSel=0;
 
-//rsvpFlag=
 bool searchFlag4=true;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -77,13 +76,6 @@ bool searchFlag4=true;
     NSArray *subviews = [inviteSearchBar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:3];
     cancelButton.tintColor = [UIColor darkGrayColor];
-//    cancelButton.titleLabel.text=@"   OK";
-    //    LocationItemPeople *aPeople=[[LocationItemPeople alloc] init];
-    // EventList *eventList=[[EventList alloc] init];
-    // NSLog(@"eventList.eventListArr: %@ eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
-    
     // Do any additional setup after loading the view.
     labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
 }
@@ -95,9 +87,6 @@ bool searchFlag4=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
-    // [self.mapContainer removeFromSuperview];
-    // [smAppDelegate showActivityViewer:self.view];
-    // [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start. %@",smAppDelegate);
     [self.inviteSearchBar setText:@""];
     smAppDelegate.currentModelViewController = self;
@@ -105,13 +94,10 @@ bool searchFlag4=true;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    // RestClient *rc=[[RestClient alloc] init];
-    // [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy];
     peopleListArray=[[self loadDummyData] mutableCopy];
     [self.inviteTableView reloadData];
-    
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -189,14 +175,12 @@ bool searchFlag4=true;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    static NSString *CellIdentifier = @"circleListTableCell";
     static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
     
     LocationItemPeople *people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
-    //    CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     CircleListCheckBoxTableCell *cell1= [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
     if (cell1 == nil)
     {
@@ -211,7 +195,6 @@ bool searchFlag4=true;
     cell1.inviteButton.tag=indexPath.row ;
     cell1.messageButton.tag=indexPath.row ;
     cell1.checkBoxButton.tag=indexPath.row ;
-    // NSLog(@"event.myResponse: %@",event.myResponse);
     NSLog(@"event: %@",people);
     
     // Leave cells empty if there's no data yet
@@ -247,7 +230,6 @@ bool searchFlag4=true;
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
-            //            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
             cell1.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
             cell1.regStsImgView.userInteractionEnabled=YES;
             cell1.regStsImgView.layer.masksToBounds = YES;
@@ -338,36 +320,10 @@ bool searchFlag4=true;
     
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-// UserFriends *aUserFriends=[[UserFriends alloc] init];
-// aUserFriends=[filteredList objectAtIndex:indexPath.row];
-// if (indexPath.row%2==0)
-// {
-// return 122;
-// }
-// else
-// {
-// return 172;
-// }
-// return 122;
-//}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    
-    // [smAppDelegate showActivityViewer:self.view];
-    // RestClient *rc=[[RestClient alloc] init];
-    // Event *aEvent=[[Event alloc] init];
-    // aEvent=[filteredList objectAtIndex:indexPath.row];
-    // globalEvent=[[Event alloc] init];
-    // globalEvent=aEvent;
-    // NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
-    // UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    // ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    // [self presentModalViewController:controller animated:YES];
     
 }
 
@@ -530,7 +486,6 @@ bool searchFlag4=true;
     // the 'Search' button.
     // If you wanted to display results as the user types
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     searchText4=inviteSearchBar.text;
     
     if ([searchText4 length]>0)
@@ -543,7 +498,6 @@ bool searchFlag4=true;
     else
     {
         searchText4=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
         NSLog(@"eventListGlobalArray: %@",friendListGlobalArray);

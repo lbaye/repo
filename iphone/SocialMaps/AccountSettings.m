@@ -32,25 +32,12 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
-    /*CGRect myFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 
-                                self.frame.size.width, (ROW_HEIGHT+2)*NUM_ITEMS);
-    self.frame = myFrame;*/
-    
-    //self.backgroundColor = [UIColor clearColor];
-    self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
+    self.backgroundColor = [UIColor colorWithRed:247.0/255.0
                                                  green:247.0/255.0 
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     int startTag = 2000;
     int rowNum = 0;
-    /*
-    //Erase history
-    SettingsMaster *eraseView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Erase history" subTitle:@"Erase all the messages, notifications, etc..." bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    
-    // Delete account
-    SettingsMaster *deleteView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Delete Account..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-    */
     SettingsMaster *logoutView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Log out of Socialmaps" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag - 1];
     
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -63,21 +50,13 @@
     
     // Personal information
     SettingsMaster *infoView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Personal information..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag+3];
-    /*
-    // Units
-    ToggleView *unitView = [[ToggleView alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Units..." labels:[NSArray arrayWithObjects:@"Metric",@"Imperial", nil] sender:self tag:startTag++];
-    */
-    // Setthe scrollable area size
     CGSize contentSize = CGSizeMake(self.frame.size.width, 
                                     (ROW_HEIGHT+2)*rowNum);
     [self setContentSize:contentSize];
                                                                           
-    //[self addSubview:eraseView];
-    //[self addSubview:deleteView];
     [self addSubview:logoutView];
     
     [self addSubview:infoView];
-    //[self addSubview:unitView];
     
     // Add a line at the bottom
     UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
@@ -408,8 +387,7 @@
     // Logout
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-//    [dicImages_msg removeAllObjects]; //delete dicImages_msg 
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     smAppDelegate.facebookLogin = FALSE;
     smAppDelegate.smLogin = FALSE;
     smAppDelegate.gotListing = FALSE;
@@ -424,8 +402,6 @@
     smAppDelegate.loginCount = [prefs integerForKey:@"loginCount"];
     smAppDelegate.deviceTokenId = [prefs stringForKey:@"deviceTokenId"];
     smAppDelegate.deviceTokenChanged = FALSE;
-//    smAppDelegate.fbAccessToken;
-//    smAppDelegate.fbId;
     [prefs removeObjectForKey:@"authToken"];
     [prefs synchronize];
     [userFriendslistArray removeAllObjects];

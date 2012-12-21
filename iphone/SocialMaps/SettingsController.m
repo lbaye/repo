@@ -30,7 +30,6 @@
 @synthesize notifCount;
 @synthesize settingsMainHeader;
 @synthesize backButton;
-//@synthesize defPlatforms;
 @synthesize smAppDelegate,totalNotifCount;
 UserDefault *userDefault;
 FacebookHelper *fbHelper;
@@ -56,23 +55,12 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //settingsScrollView.contentSize = CGSizeMake(310, 960);
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    defPlatforms = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:1], 
-//                             [NSNumber numberWithInt:0],
-//                             [NSNumber numberWithInt:0], nil] ;
     // Dummy notification
     int ignoreCount = 0;
     if (smAppDelegate.msgRead == TRUE)
@@ -96,12 +84,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
-    //UIButton *buttonTestFriendList = [UIButton buttonWithType:UIButtonTypeCustom];
-    //buttonTestFriendList.frame = CGRectMake(100, 300, 20, 20);
-    //buttonTestFriendList.backgroundColor = [UIColor redColor];
-    //[buttonTestFriendList addTarget:self action:@selector(actionTestFriendListButton) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:buttonTestFriendList];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -151,7 +133,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
         else
         {
             [smAppDelegate hideActivityViewer];
-            //            [UtilityClass showAlert:@"Please try again" :@"Can not connect with Facebook"];
         }
     }
     fbLoginCallbackCounter++;
@@ -213,7 +194,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     // Change button image
     UIButton *btn = (UIButton*) sender;
     [btn setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
-    //btn.imageView.image = [UIImage imageNamed:@"settings_arrow_light.png"];
     // Reset callback
     [btn removeTarget:self action:@selector(collapsePlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
     [btn addTarget:self action:@selector(expandPlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
@@ -240,7 +220,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     // Change button image
     UIButton *btn = (UIButton*) sender;
     [btn setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:UIControlStateNormal];
-    //btn.imageView.image = [UIImage imageNamed:@"settings_arrow.png"];
     // Reset callback
     [btn removeTarget:self action:@selector(expandPlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
     [btn addTarget:self action:@selector(collapsePlatformSettings:) forControlEvents:UIControlEventTouchUpInside];
@@ -258,17 +237,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = 1002;  
     [rowView addSubview:lineImage];
-    
-    //NSArray *platforms = [NSArray arrayWithObjects:@"Facebook", @"Twitter", @"Foursquare", nil];
-    //NSArray *defs      = [NSArray arrayWithObjects:[NSNumber numberWithBool:smAppDelegate.platformPrefs.facebook] , 
-                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.twitter],
-                          //[NSNumber numberWithBool:smAppDelegate.platformPrefs.fourSquare], nil];
-    
-    //CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:chkboxFrame boxLocType:LabelPositionRight numBoxes:[platforms count] default:defs labels:platforms];
-    //chkBox.tag = 1001;
-    //chkBox.backgroundColor = [UIColor clearColor];
-    //chkBox.delegate = self;
-    //[rowView addSubview:chkBox];
     
     UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonInviteFBFriend.frame = chkboxFrame;
@@ -310,8 +278,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     if ((![userDefault readFromUserDefaults:@"connectWithFBDone"]) && (smAppDelegate.smLogin==TRUE))
     {
         NSLog(@"do connect fb");
-
-        //    [smAppDelegate showActivityViewer:self.view];
         if ([facebookApi isSessionValid])
         {
             [fbHelper inviteFriends:nil];
@@ -335,16 +301,11 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                     @"friends_checkins",
                                     nil];
             [facebookApi authorize:permissions];
-            //    smAppDelegate.facebookLogin=TRUE;
             [permissions release];
         }
         [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
         [userDefault writeToUserDefaults:@"connectWithFBDone" withString:@"FBConnectedDone"];
     }
-//    if (smAppDelegate.smLogin==true)
-//    {
-//        [UtilityClass showAlert:@"" :@"Please connect with facebook"];
-//    }
     else
     {
         [fbHelper inviteFriends:NULL];
@@ -364,7 +325,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     // Change button image
     UIButton *btn = (UIButton*) sender;
     [btn setImage:[UIImage imageNamed:@"icon_arrow_down.png"] forState:UIControlStateNormal];
-    //btn.imageView.image = [UIImage imageNamed:@"icon_arrow_down.png"];
     // Reset callback
     [btn removeTarget:self action:@selector(collapseLayersSettings:) forControlEvents:UIControlEventTouchUpInside];
     [btn addTarget:self action:@selector(expandLayersSettings:) forControlEvents:UIControlEventTouchUpInside];
@@ -387,8 +347,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     UIButton *btn = (UIButton*) sender; 
     [btn setImage:[UIImage imageNamed:@"icon_arrow_up.png"] forState:
         UIControlStateNormal];
-    //UIControlStateNormal|UIControlStateSelected|UIControlStateHighlighted];
-    //btn.imageView.image = [UIImage imageNamed:@"icon_arrow_up.png"];
     // Reset callback
     [btn removeTarget:self action:@selector(expandLayersSettings:) forControlEvents:UIControlEventTouchUpInside];
     [btn addTarget:self action:@selector(collapseLayersSettings:) forControlEvents:UIControlEventTouchUpInside];
@@ -441,19 +399,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 4001;
-    /*
-     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-     5, 15, 15);
-     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-     closeButton.frame = closeFrame;
-     closeButton.tag   = 4002;
-     [closeButton addTarget:self 
-     action:@selector(closeSharingInfo:)
-     forControlEvents:UIControlEventTouchUpInside];
-     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-     forState:UIControlStateNormal];
-     [settingsHeader addSubview:closeButton];
-     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
 
@@ -476,19 +421,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 3001;
-    /*
-     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-     5, 15, 15);
-     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-     closeButton.frame = closeFrame;
-     closeButton.tag   = 3002;
-     [closeButton addTarget:self 
-     action:@selector(closeAccountSettings:)
-     forControlEvents:UIControlEventTouchUpInside];
-     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-     forState:UIControlStateNormal];
-     [settingsHeader addSubview:closeButton];
-     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
@@ -533,19 +465,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                   blue:247.0/255.0 
                                                  alpha:1.0];
     scrollView.tag = 5001;
-    /*
-     CGRect closeFrame = CGRectMake(settingsHeader.frame.size.width-15-5, 
-     5, 15, 15);
-     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-     closeButton.frame = closeFrame;
-     closeButton.tag   = 5002;
-     [closeButton addTarget:self 
-     action:@selector(closeLocationSharing:)
-     forControlEvents:UIControlEventTouchUpInside];
-     [closeButton setBackgroundImage:[UIImage imageNamed:@"xlose_icon.png"]
-     forState:UIControlStateNormal];
-     [settingsHeader addSubview:closeButton];
-     */
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
@@ -598,10 +517,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 - (void) closeLocationSharing:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    /*
-    UIButton *closeButton = (UIButton*) (sender);
-    [closeButton removeFromSuperview];
-     */
     UIScrollView *scrollView = (UIScrollView*) [self.view viewWithTag:5001];
     [scrollView removeFromSuperview];
 }
@@ -610,10 +525,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 - (void) closeSharingInfo:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    /*
-    UIButton *closeButton = (UIButton*) (sender);
-    [closeButton removeFromSuperview];
-     */
     UIScrollView *scrollView = (UIScrollView*) [self.view viewWithTag:4001];
     [scrollView removeFromSuperview];
 }
@@ -621,10 +532,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 - (void) closeAccountSettings:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    /*
-    UIButton *closeButton = (UIButton*) (sender);
-    [closeButton removeFromSuperview];
-     */
     AccountSettings *scrollView = (AccountSettings*) [self.view viewWithTag:3001];
     [scrollView removeFromSuperview];
     
@@ -633,10 +540,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 - (void) closeNotifSettings:(id) sender {
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Settings";
-    /*
-    UIButton *closeButton = (UIButton*) (sender);
-    [closeButton removeFromSuperview];
-     */
     AccountSettings *scrollView = (AccountSettings*) [self.view viewWithTag:6001];
     [scrollView removeFromSuperview];
     

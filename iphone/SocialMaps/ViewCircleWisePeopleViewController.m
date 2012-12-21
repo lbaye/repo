@@ -141,7 +141,6 @@ int renameCircleOndex;
     /*
      Check whether the section info array has been created, and if so whether the section count still matches the current section count. In general, you need to keep the section info synchronized with the rows and section. If you support editing in the table view, you need to appropriately update the section info during editing operations.
      */
-    //	if ((self.sectionInfoArray == nil) || ([self.sectionInfoArray count] != [self numberOfSectionsInTableView:self.circleTableView]))
     {
 		
         // For each play, set up a corresponding SectionInfo object to contain the default height for each row.
@@ -353,7 +352,6 @@ int renameCircleOndex;
         geoLocation.longitude=userFrnd.curlocLng;
         cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         [cell.inviteButton addTarget:self action:@selector(addToCircle:) forControlEvents:UIControlEventTouchUpInside];
-//        [cell.inviteButton addTarget:self action:@selector(removeFromCircle:) forControlEvents:UIControlEventTouchUpInside];
         [cell.messageButton addTarget:self action:@selector(messageButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         cell.showOnMapButton.hidden=YES;
         cell.profilePicImgView.image=[self getImageFromPeopleListByuserId:userFrnd.userId];
@@ -368,9 +366,7 @@ int renameCircleOndex;
         [cell.messageButton.layer setCornerRadius:6.0f];
         [cell.messageButton.layer setMasksToBounds:YES];
         cell.coverPicImgView.image=[UIImage imageNamed:@"cover_pic_default.png"];
-        //        [cell.coverPicImgView.image setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.coverImageUrl]];
         [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:userFrnd.coverImageUrl]];
-
         if ([userFrnd.regMedia isEqualToString:@"fb"]) 
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"icon_facebook.png"];
@@ -379,9 +375,6 @@ int renameCircleOndex;
         {
             cell.regStsImgView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         }
-        
-        //    cell.actAndSceneLabel.text=@"actAndScene";
-        //    cell.quotationTextView.text=@"Quotation";
         return cell;
     }
     else
@@ -438,7 +431,6 @@ int renameCircleOndex;
      Create the section header views lazily.
      */
     if (tableView==self.circleTableView) {
-//        NSLog(@"self.sectionInfoArray %@",self.sectionInfoArray);
         SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:section];
         if (!sectionInfo.headerView) {
             NSString *circleName;
@@ -485,44 +477,6 @@ int renameCircleOndex;
     [self presentModalViewController:controller animated:YES];
     NSLog(@"indexPath %@",indexPath);
 }
-
-//- (void)loadImagesForOnscreenRows {
-//    
-//    if ([sectionInfoArray_ count] > 0) {
-//        
-//        NSArray *visiblePaths = [circleSelectTableView indexPathsForVisibleRows];
-//        
-//        for (NSIndexPath *indexPath in visiblePaths) {
-//            
-//            CircleListTableCell *cell = (CircleListTableCell *)[circleSelectTableView cellForRowAtIndexPath:indexPath];
-//            
-//            //get the imageView on cell
-//            
-//            UIImageView *imgCover = (UIImageView*) [cell coverPicImgView];
-//            SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:indexPath.section];
-//            UserFriends *userFrnd=[sectionInfo.userCircle.friends objectAtIndex:indexPath.row];
-//            
-//            
-//            if (userFrnd.coverImageUrl) 
-//            {
-//                [imgCover loadFromURL:[NSURL URLWithString:userFrnd.coverImageUrl]];
-//            }
-//        }
-//    }
-//}
-//
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    
-//    if (!decelerate) 
-//        [self loadImagesForOnscreenRows];
-//}
-//
-//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    
-//    [self loadImagesForOnscreenRows];
-//    
-//}
-
 
 #pragma mark Section header delegate
 
@@ -716,7 +670,6 @@ int renameCircleOndex;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleSelectTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:[circleListDetailGlobalArray objectAtIndex:clickedButtonPath.row]])
     {
         [selectedCircleCheckArr removeObject:[circleListDetailGlobalArray objectAtIndex:clickedButtonPath.row]];
@@ -802,10 +755,6 @@ int renameCircleOndex;
             NSLog(@"userFnd.userName %@",userFnd.userName);
         }
     }
-//    [smAppDelegate hideActivityViewer];
-//    [smAppDelegate.window setUserInteractionEnabled:YES];
-//    [self.circleTableView reloadData];
-//    [self.view setNeedsDisplay];
     self.userCircle=circleListDetailGlobalArray;
     [self initData];
     [smAppDelegate hideActivityViewer];
@@ -914,10 +863,6 @@ int renameCircleOndex;
             NSLog(@"userFnd.userName %@",userFnd.userName);
         }
     }
-    //    [smAppDelegate hideActivityViewer];
-    //    [smAppDelegate.window setUserInteractionEnabled:YES];
-    //    [self.circleTableView reloadData];
-    //    [self.view setNeedsDisplay];
     self.userCircle=circleListDetailGlobalArray;
     [self initData];
     [smAppDelegate hideActivityViewer];
@@ -933,7 +878,6 @@ int renameCircleOndex;
     [self.circleTableView reloadSections:section withRowAnimation:UITableViewRowAnimationNone];
     [self.circleTableView beginUpdates];
     [self.circleTableView endUpdates];
-//    [self.circleTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
     [self.circleTableView  performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
     [self.circleTableView setNeedsDisplay];
     [self.circleTableView reloadData];

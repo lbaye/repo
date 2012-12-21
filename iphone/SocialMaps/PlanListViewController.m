@@ -93,7 +93,6 @@ int delCounter=0;
                 initWithStyle:UITableViewCellStyleDefault 
                 reuseIdentifier:CellIdentifier];
     }
-//    [self decorateTableCell:cell];
     Plan *plan=[planListArr objectAtIndex:indexPath.row];
     cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",smAppDelegate.userAccountPrefs.lastName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
     cell.addressLabel.text=plan.planAddress;
@@ -124,11 +123,6 @@ int delCounter=0;
                 [self startIconDownload:plan forIndexPath:indexPath];
                 NSLog(@"Downloading for index=%d",indexPath.row);
             }
-//            else if(searchFlags==true)
-//            {
-//                NSLog(@"search flag true start download");
-//                [self startIconDownload:plan forIndexPath:indexPath];
-//            }
             
             NSLog(@"plans %@   %@",plan.planImage,plan.planImageUrl);
             // if a download is deferred or in progress, return a placeholder image
@@ -176,7 +170,6 @@ int delCounter=0;
         [dicIcondownloaderPlans setObject:iconDownloader forKey:plan.planId];
         NSLog(@"imageDownloadsInProgress %@",dicIcondownloaderPlans);
         [iconDownloader startDownload];
-        //[downloadedImageDict setValue:iconDownloader.event.eventImage forKey:event.eventID];
         NSLog(@"start downloads ... %@ %d",plan.planId, indexPath.row);
         [iconDownloader release];   
     }
@@ -214,7 +207,6 @@ int delCounter=0;
         // Display the newly loaded image
         [dicImages_msg setValue:iconDownloader.plan.planImage forKey:planID];
         cell.planBgImg.image = iconDownloader.plan.planImage;
-        //[userProfileCopyImageArray replaceObjectAtIndex:indexPath.row withObject:iconDownloader.userFriends.userProfileImage];
         [self.planListTableView reloadData];
     }
 }
@@ -272,7 +264,6 @@ int delCounter=0;
     NSLog(@"tag %d",[sender tag]);
     NSLog(@"tag %d",[sender tag]);
     pointOnMapFlag=TRUE;
-//    if (profileFromList==FALSE)
     {
         [self.presentingViewController performSelector:@selector(showPinOnMapViewPlan:) withObject:[planListArr objectAtIndex:[sender tag]]];
         [self performSelector:@selector(dismissModalView) withObject:nil afterDelay:.3];

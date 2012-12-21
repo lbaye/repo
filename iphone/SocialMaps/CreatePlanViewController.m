@@ -301,7 +301,6 @@ int createCounter=0, updateCounter=0;
     
     for (int i=0; i<[selectedFriends count]; i++)
     {
-        //        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
         [permittedUserArr addObject:((UserFriends *)[selectedFriends objectAtIndex:i]).userId];
     }
     NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
@@ -367,7 +366,6 @@ int createCounter=0, updateCounter=0;
     plan.planGeolocation.latitude=aPlan.planGeolocation.latitude;
     plan.planGeolocation.longitude=aPlan.planGeolocation.longitude;
     [radio gotoButton:2];
-//    [radio gotoButton:[placeNameArr indexOfObject:aPlan.planAddress]];
     NSLog(@"[placeNameArr indexOfObject:aPlan.planAddress] %d",[placeNameArr indexOfObject:aPlan.planAddress]);
 }
 
@@ -420,7 +418,6 @@ int createCounter=0, updateCounter=0;
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm"];    
     dateString = [dateFormatter stringFromDate:date];            
     dateLabel.text=dateString;
-    //selectedDate=dateString 2012-09-12 08.50;
 }
 
 // NOTE: DDAnnotationCoordinateDidChangeNotification won't fire in iOS 4, use -mapView:annotationView:didChangeDragState:fromOldState: instead.
@@ -479,7 +476,6 @@ int createCounter=0, updateCounter=0;
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     NSLog(@"textview should begin");
-    //    [titleTextField resignFirstResponder];
     [UtilityClass beganEditing:(UIControl *)textView];
     if (!(textView.textColor == [UIColor blackColor])) 
     {
@@ -506,7 +502,6 @@ int createCounter=0, updateCounter=0;
 {
     [UtilityClass endEditing];
     if (!(textView.textColor == [UIColor lightGrayColor])) {
-        //        textView.text = @"Your comments...";
         textView.textColor = [UIColor lightGrayColor];
     }
     plan.planDescription=descriptionTextView.text;
@@ -522,10 +517,7 @@ int createCounter=0, updateCounter=0;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
-        //        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
-        //        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
-        
-		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 	}
 }
@@ -565,7 +557,6 @@ int createCounter=0, updateCounter=0;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-    //    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
     [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
@@ -651,9 +642,7 @@ int createCounter=0, updateCounter=0;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -699,7 +688,6 @@ int createCounter=0, updateCounter=0;
 {
     if (isBgDlRunning==TRUE)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         UserFriends *userFrnd=[[UserFriends alloc] init];
         userFrnd=[FriendList objectAtIndex:index];
@@ -714,15 +702,12 @@ int createCounter=0, updateCounter=0;
             [self reloadScrollview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrollview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndsScrollView.subviews];
     if ([selectedFriends containsObject:[FriendList objectAtIndex:[sender.view tag]]])
     {
@@ -749,15 +734,6 @@ int createCounter=0, updateCounter=0;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrollview];
 }
@@ -828,7 +804,6 @@ int createCounter=0, updateCounter=0;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -879,7 +854,6 @@ int createCounter=0, updateCounter=0;
     }    
     FriendList=[friendListArr mutableCopy];
     NSLog(@"frnd count %d",[FriendList count]);
-    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
 
@@ -890,7 +864,6 @@ int createCounter=0, updateCounter=0;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     if (searchBar==friendSearchbar)
     {
         searchText=friendSearchbar.text;
@@ -903,7 +876,6 @@ int createCounter=0, updateCounter=0;
         else
         {
             searchText=@"";
-            //[self loadFriendListsData]; TODO: commented this
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrollview];
@@ -925,12 +897,10 @@ int createCounter=0, updateCounter=0;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrollview];
     }
-    
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar 

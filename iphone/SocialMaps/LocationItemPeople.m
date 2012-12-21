@@ -22,7 +22,6 @@
     UILabel *lblAddress  = (UILabel*) [cell viewWithTag:2002];
     UILabel *lblName     = (UILabel*) [cell viewWithTag:2003];
     UILabel *lblDist     = (UILabel*) [cell viewWithTag:2004];
-    //UIView *line         = (UIView*) [cell viewWithTag:2005];
     UITextView   *txtMsg = (UITextView*) [cell viewWithTag:2006];
     UIImageView *regMedia = (UIImageView*) [cell viewWithTag:20012];
     UIImageView *checkinImage = (UIImageView*) [cell viewWithTag:20032];
@@ -59,8 +58,6 @@
     }
         
     if (txtMsg == nil) {
-        //CGSize msgStringSize = [userInfo.statusMsg sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
-        //CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width/2);
         
         CGRect msgFrame = CGRectMake(80, 
                                      lblName.frame.origin.y+lblName.frame.size.height,
@@ -195,10 +192,6 @@
 	// Message
     
     // Debug
-//    CGRect tmp = CGRectMake(lblAddress.frame.origin.x,lblAddress.frame.origin.y,cell.frame.size.width, 37);
-//    lblAddress.frame = tmp;
-//    lblAddress.text = [NSString stringWithFormat:@"%@ %@",userInfo.currentLocationLat,userInfo.currentLocationLng];
-
     Geolocation *geoLocation=[[Geolocation alloc] init];
     geoLocation.latitude=userInfo.currentLocationLat;
     geoLocation.longitude=userInfo.currentLocationLng;

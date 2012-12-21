@@ -33,7 +33,6 @@
         AppDelegate *smAppDelegate = [AppDelegate sharedInstance];
         numSections = 0;
         circleList = [[NSMutableArray alloc] init];
-        //self.frame = scrollFrame;
         for (int i=0; i < circleListGlobalArray.count; i++) {
             UserCircle *aCircle = (UserCircle*) [circleListGlobalArray objectAtIndex:i];
             if (aCircle.type != CircleTypeSystem) {
@@ -76,7 +75,6 @@
     [[self subviews]
      makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    //for (id item in circleListGlobalArray) {
     for (int i = 0; i < circleList.count; i++) {
         LocationCircleSettings *locCircle = (LocationCircleSettings*) [circleList objectAtIndex:i];
         UserCircle *aCircle = locCircle.circleInfo;

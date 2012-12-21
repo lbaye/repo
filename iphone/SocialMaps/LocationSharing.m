@@ -44,11 +44,6 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    /*CGRect myFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 
-     self.frame.size.width, (ROW_HEIGHT+2)*NUM_ITEMS);
-     self.frame = myFrame;*/
-    
-    //self.backgroundColor = [UIColor clearColor];
     [[self subviews]
      makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -68,39 +63,7 @@
     [self addSubview:enableSharing];
 
     if (sharingEnabled == 1) {
-        /*
-        int numFriendsInGroup = smAppDelegate.locSharingPrefs.custom.friends.count;
-        NSString *subTitle;
-        if (numFriendsInGroup <= 1)
-            subTitle = [NSString stringWithFormat:@"Currently %d friend in subgroup",numFriendsInGroup];
-        else
-            subTitle = [NSString stringWithFormat:@"Currently %d friends in subgroup",numFriendsInGroup];
-            
-        SettingsMaster *friendSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize for a subgroup of friends" subTitle:subTitle bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];    
-        [self addSubview:friendSharingView];
-        
-        // Don't show circle settings if no circle
-        int numCustomCircles=0;
-        for (int i=0; i < circleListGlobalArray.count; i++) {
-            UserCircle *aCircle = (UserCircle*) [circleListGlobalArray objectAtIndex:i];
-            if (aCircle.type != CircleTypeSystem) {
-                numCustomCircles++;
-            }
-        }
-        if (numCustomCircles > 0) {
-            SettingsMaster *circleSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for circles" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];  
-            circleSharingView.backgroundColor = [UIColor clearColor];
-            [self addSubview:circleSharingView];
-        } else {
-            startTag++;
-        }
-        
-        SettingsMaster *platformSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for platforms" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-        [self addSubview:platformSharingView];
-        
-        SettingsMaster *strangersSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for strangers" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag++];
-        [self addSubview:strangersSharingView];
-        */
+
         rowNum = 5;
         SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
         [self addSubview:locSharingView];
@@ -454,7 +417,6 @@
                 break;
             case 2003:
                 // Platform prefs
-                //[self removeLocSharingView:parent.tag];
                 if (newView == TRUE)
                     [self removeLocSharingView:parent.tag];
                 else

@@ -53,12 +53,6 @@ int fbRegCounter=0;
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
 - (void) checkNetwork {
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
@@ -146,11 +140,6 @@ int fbRegCounter=0;
     tapGesture1.numberOfTapsRequired = 1;
     [bgImgView addGestureRecognizer:tapGesture];
     [tapview addGestureRecognizer:tapGesture1];
-//    for (int i=0; i<[[dialogView subviews] count]; i++)
-//    {
-//        [[dialogView.subviews objectAtIndex:i] removeGestureRecognizer:tapGesture1];
-//    }
-//    NSLog(@"%@",dialogView.subviews);
     [tapGesture release];
     [tapGesture1 release];    
 }
@@ -247,9 +236,7 @@ int fbRegCounter=0;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    /*UIButton *button = (UIButton *)sender;
-    UIViewController *vc = [segue destinationViewController];
-    vc.title = button.titleLabel.text;*/
+
 }
 
 - (void)loginDone:(NSNotification *)notif
@@ -443,7 +430,6 @@ int fbRegCounter=0;
                     [self performSegueWithIdentifier: @"showLocSharingConsent" sender: self];
                 else 
                 {
-                    //            [self performSegueWithIdentifier: @"showMapView" sender: self];
                     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
                     MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
                     [controller retain];
@@ -527,7 +513,7 @@ int fbRegCounter=0;
         
         [loginAlert show];
         [loginAlert autorelease];
-    } else //if (![facebook isSessionValid])
+    } else
     {
         NSLog(@"asking FB permission");
         [smAppDelegate showActivityViewer:self.view];
@@ -549,18 +535,6 @@ int fbRegCounter=0;
         [facebook authorize:permissions];
         [permissions release];
     } 
-/*    else {
-        User *user = [[User alloc] init];
-        user.facebookId = smAppDelegate.fbId;
-        user.facebookAuthToken = smAppDelegate.fbAccessToken;
-
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient loginFacebook:(User *)user];
-        
-        [smAppDelegate.window setUserInteractionEnabled:NO];
-        [smAppDelegate showActivityViewer:self.view];
-    }
- */
 }
 
 - (IBAction)doForgotPassword:(id)sender {

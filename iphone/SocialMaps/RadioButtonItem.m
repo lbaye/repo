@@ -43,12 +43,6 @@
 {
     // Drawing code
     self.backgroundColor = [UIColor clearColor]; 
-    /*UIImageView *bgImageView = [[UIImageView alloc] 
-                                initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) ];
-    [bgImageView setContentMode:UIViewContentModeScaleToFill];
-    
-    bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
-    [self addSubview:bgImageView];*/
     
     CGSize titleStringSize = [titleString sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:14.0]];
     
@@ -81,7 +75,6 @@
     // Button
     CGRect buttonFrame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-5, 
                                      (self.frame.size.height-BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
-    //- (id)initWithFrame:(CGRect)frame labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag
     RadioButton *radio = [[RadioButton alloc] initWithFrame:buttonFrame labels:labels default:selectedBtn sender:self tag:btnTag];
     radio.delegate = parent;
     self.tag = btnTag;

@@ -52,7 +52,6 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -128,7 +127,6 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
     [request startAsynchronous];
 }
 
@@ -153,7 +151,6 @@ AppDelegate *smAppDelegate;
     [request setPostValue:userInfo.workStatus forKey:@"workStatus"];
     [request setPostValue:userInfo.relationshipStatus forKey:@"relationshipStatus"];
     [request setPostValue:userInfo.dateOfBirth forKey:@"dateOfBirth"];
-    //[request setPostValue:[UtilityClass convertDateToDBFormat:userInfo.dateOfBirth] forKey:@"dateOfBirth"];
     
     // Handle successful REST call
     [request setCompletionBlock:^{
@@ -162,7 +159,6 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -191,7 +187,6 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
     [request startAsynchronous];
 }
 
@@ -205,8 +200,6 @@ AppDelegate *smAppDelegate;
     
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"POST"];
-    //[request setPostValue:userInfo.email forKey:@"email"];
-    //[request setPostValue:userInfo.password forKey:@"password"];
     [request setPostValue:userInfo.facebookId forKey:@"facebookId"];
     [request setPostValue:userInfo.facebookAuthToken forKey:@"facebookAuthToken"]; 
     if (userInfo.lastName != NULL)
@@ -227,7 +220,6 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -295,7 +287,6 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FB_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
     [request startAsynchronous];
 }
 
@@ -314,7 +305,6 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -344,7 +334,6 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FORGOT_PW_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
     [request startAsynchronous];
 }
 
@@ -365,7 +354,6 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
         NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -410,8 +398,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLATFORM_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
  
 }
@@ -432,8 +419,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -474,8 +460,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_LAYER_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLayer");
+     NSLog(@"asyn srt getLayer");
     [request startAsynchronous];
 }
 
@@ -495,8 +480,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -897,8 +881,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARING_PREFS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getSharingPreference");
+     NSLog(@"asyn srt getSharingPreference");
     [request startAsynchronous];
 }
 
@@ -965,7 +948,6 @@ AppDelegate *smAppDelegate;
             UserInfo *afriend = [[UserInfo alloc] init];
             afriend.userId = id;
             [aCircle.friends addObject:afriend];
-//            NSLog(@"In getAccountSettings: Circle=%@, friend=%@", aCircle.circleName, afriend.userId);
         }
         if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
             aCircle.type = CircleTypeSystem;
@@ -984,75 +966,6 @@ AppDelegate *smAppDelegate;
 
     return aUserInfo;
 }
-/*
-- (NSDate*) getDateFromJsonStruct:(NSDictionary*) jsonObjects name:(NSString*) name {
-    NSString *date = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"date"];
-    NSString *timeZoneType = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"timezone_type"];
-    NSString *timeZone = [self getNestedKeyVal:jsonObjects key1:@"result" key2:name key3:@"timezone"];
-    
-    return [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-}
-
-- (UserInfo*) parseAccountSettings:(NSDictionary*) jsonObjects {
-    UserInfo *aUserInfo = [[UserInfo alloc] init];
-    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"id" key3:nil];
-    aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"email" key3:nil];
-    aUserInfo.firstName = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"firstName" key3:nil];
-    aUserInfo.lastName = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"lastName" key3:nil];
-    aUserInfo.userId = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"id" key3:nil];
-    aUserInfo.avatar = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"avatar" key3:nil];
-    aUserInfo.deactivated = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"deactivated" key3:nil];
-    aUserInfo.authToken = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"authToken" key3:nil];
-    aUserInfo.unit = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"settings" key3:@"unit"];
-    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"source" key3:nil];
-    aUserInfo.dateOfBirth = [self getDateFromJsonStruct:jsonObjects name:@"dateOfBirth"];
-    aUserInfo.bio = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"bio" key3:nil];
-    aUserInfo.gender = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"gender" key3:nil];
-    aUserInfo.username = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"username" key3:nil];
-    aUserInfo.interests = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"interests" key3:nil];
-    aUserInfo.workStatus = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"workStatus" key3:nil];
-    aUserInfo.relationshipStatus = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"relationshipStatus" key3:nil];
-    aUserInfo.source = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"source" key3:nil];
-    aUserInfo.currentLocationLat = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"currentLocation" key3:@"lat"];
-    aUserInfo.currentLocationLng = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"currentLocation" key3:@"lng"];
-    aUserInfo.enabled = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"enabled" key3:nil] boolValue];
-    aUserInfo.visible = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"visible" key3:nil] boolValue];
-    aUserInfo.regMedia = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"regMedia" key3:nil];
-    aUserInfo.loginCount = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"loginCount" key3:nil];
-    aUserInfo.lastLogin = [self getDateFromJsonStruct:jsonObjects name:@"lastLogin"];
-    aUserInfo.createDate = [self getDateFromJsonStruct:jsonObjects name:@"createDate"];
-    aUserInfo.updateDate = [self getDateFromJsonStruct:jsonObjects name:@"updateDate"];
-    aUserInfo.blockedUsers = [[NSMutableArray alloc] init];
-    aUserInfo.blockedUsers = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"blockedUsers" key3:nil];
-    aUserInfo.blockedBy = [[NSMutableArray alloc] init];
-    aUserInfo.blockedBy = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"blockedBy" key3:nil];
-    aUserInfo.distance = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"distance" key3:nil] integerValue];
-    aUserInfo.age = [[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"age" key3:nil] integerValue];
-    
-    aUserInfo.circles = [[NSMutableArray alloc] init];
-    for (NSDictionary *item in [jsonObjects objectForKey:@"circles"]) {
-        UserCircle *aCircle = [[UserCircle alloc] init];
-        NSString *type = [self getNestedKeyVal:item key1:@"type" key2:nil key3:nil];
-        aCircle.circleName = [self getNestedKeyVal:item key1:@"name" key2:nil key3:nil];
-        aCircle.friends    = [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil];
-        if ([type caseInsensitiveCompare:@"system"] == NSOrderedSame) {
-            aCircle.type = CircleTypeSystem;
-        } else {
-            aCircle.type = CircleTypeCustom;
-        }
-        [aUserInfo.circles addObject:aCircle];
-    }
-    aUserInfo.address = [[Address alloc] init];
-    aUserInfo.address.id = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"id"];
-    aUserInfo.address.street = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"street"];
-    aUserInfo.address.city = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"city"];
-    aUserInfo.address.state = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"state"];
-    aUserInfo.address.postCode = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"postCode"];
-    aUserInfo.address.country = [self getNestedKeyVal:jsonObjects key1:@"result" key2:@"address" key3:@"country"];
-    
-    return aUserInfo;
-}
-*/
 
 -(void)getAccountSettings:(NSString *)authToken:(NSString *)authTokenValue
 {
@@ -1070,8 +983,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1115,7 +1027,6 @@ AppDelegate *smAppDelegate;
             }
             
             friendListGlobalArray=[frndList mutableCopy];
-//            NSLog(@"getAccountSettings: %@",jsonObjects);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
         } 
@@ -1132,8 +1043,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getAccountSettings");
+     NSLog(@"asyn srt getAccountSettings");
     [request startAsynchronous];
 
 }
@@ -1154,8 +1064,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1194,8 +1103,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_BASIC_PROFILE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getBasicProfile");
+     NSLog(@"asyn srt getBasicProfile");
     [request startAsynchronous];
 
 }
@@ -1217,8 +1125,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1253,11 +1160,9 @@ AppDelegate *smAppDelegate;
             
             NSLog(@"getAccountSettings: %@",jsonObjects);
             
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:aUserInfo];
-        } 
+        }
         else 
         {
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -1265,11 +1170,9 @@ AppDelegate *smAppDelegate;
     
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ACCT_SETTINGS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getUserInfo");
+     NSLog(@"asyn srt getUserInfo");
     [request startAsynchronous];
     
 }
@@ -1291,8 +1194,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1333,8 +1235,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_GEOFENCE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getGeofence");
+     NSLog(@"asyn srt getGeofence");
     [request startAsynchronous];
 }
 -(ShareLocation*) parseLocationSharingSettings:(NSDictionary*) jsonObjects {
@@ -1452,8 +1353,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"getShareLocation : Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1492,8 +1392,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_SHARELOC_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getShareLocation");
+     NSLog(@"asyn srt getShareLocation");
     [request startAsynchronous];
 }
 
@@ -1552,8 +1451,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MY_PLACES_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getReplies");
+     NSLog(@"asyn srt getReplies");
     [request startAsynchronous];
 }
 
@@ -1573,8 +1471,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1633,8 +1530,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_NOTIFS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getNotifications");
+     NSLog(@"asyn srt getNotifications");
     [request startAsynchronous];
 
 }
@@ -1690,9 +1586,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
-//        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+          NSString *responseString = [request responseString];
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
         NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
@@ -1760,10 +1654,8 @@ AppDelegate *smAppDelegate;
                     if (people.isOnline) {
                         NSLog(@"people name = %@ isOnline = %d", people.firstName, people.isOnline);
                     }
-//                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
-//                    NSLog(@"User: first %@  last:%@  id:%@ friend:%d",people.firstName, people.lastName, people.userId, people.isFriend);
                 }
                 
                 if ([jsonObjects  objectForKey:@"places"]) 
@@ -1776,7 +1668,6 @@ AppDelegate *smAppDelegate;
                         place.location = [[Geolocation alloc] init];
                         place.location.latitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lat"] stringValue];
                         place.location.longitude=[[self getNestedKeyVal:item key1:@"geometry" key2:@"location" key3:@"lng"] stringValue];
-                        //                    NSLog(@"place location =  %@ %@", place.location.latitude, place.location.longitude);
                         place.northeast = [[Geolocation alloc] init];
                         place.northeast.latitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lat"] stringValue];
                         place.northeast.longitude=[[self getNestedKeyVal:item key1:@"viewport" key2:@"northeast" key3:@"lng"] stringValue];
@@ -1834,8 +1725,6 @@ AppDelegate *smAppDelegate;
                     people.source=[self getNestedKeyVal:item key1:@"refType" key2:nil key3:nil];
                     people.lastSeenAtDate=[self getNestedKeyVal:item key1:@"createdAt" key2:@"date" key3:@"date"];
                     people.lastSeenAt=people.lastSeenAt;
-//                    people.lastSeenAtDate=[[[item objectForKey:@"refType"] objectForKey:@"date"] objectForKey:@"date"];
-//                    NSLog(@"people.statusMsg rest: %@",people.statusMsg);
                     [searchLocation.peopleArr addObject:people];
                     
                 }
@@ -1860,8 +1749,6 @@ AppDelegate *smAppDelegate;
         isInProgress = FALSE;
     }];
     
-    //[request setDelegate:self];
-//    NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -1880,8 +1767,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -1939,7 +1825,6 @@ AppDelegate *smAppDelegate;
                 [aEvent setPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
                 
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
                 if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
                 {
@@ -1965,8 +1850,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getShareLocation");
+     NSLog(@"asyn srt getShareLocation");
     [request startAsynchronous];
 }
 
@@ -1985,8 +1869,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2053,7 +1936,6 @@ AppDelegate *smAppDelegate;
             }
             [aEvent setGuestList:guestList];
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
-//                NSLog(@"Is Kind of NSString: %@",jsonObjects);
             [aEvent setPermission:[self getNestedKeyVal:jsonObjects key1:@"permission" key2:nil key3:nil]];
             [aEvent.eventList addObject:aEvent];                        
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:aEvent];
@@ -2071,8 +1953,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_EVENT_DETAIL_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt get event detail.");
+     NSLog(@"asyn srt get event detail.");
     [request startAsynchronous];
 }
 
@@ -2127,8 +2008,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2163,8 +2043,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_EVENT_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -2183,8 +2062,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2217,8 +2095,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt get event detail.");
+     NSLog(@"asyn srt get event detail.");
     [request startAsynchronous];
 }
 
@@ -2239,8 +2116,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2316,8 +2192,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_RSVP_EVENT_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt save rsvp detail.");
+     NSLog(@"asyn srt save rsvp detail.");
     [request startAsynchronous];
 }
 
@@ -2359,8 +2234,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2435,8 +2309,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_EVENT_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn update event detail.");
+     NSLog(@"asyn update event detail.");
     [request startAsynchronous];
 }
 
@@ -2469,8 +2342,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2545,8 +2417,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_INVITE_FRIENDS_EVENT_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn invite friends in event detail.");
+     NSLog(@"asyn invite friends in event detail.");
     [request startAsynchronous];
 }
 
@@ -2555,11 +2426,7 @@ AppDelegate *smAppDelegate;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/notifications",WS_URL]];    
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
-    
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-    
     [request addRequestHeader:authToken value:authTokenValue];
-    
     [request addPostValue:[NSNumber numberWithBool: notificationPref.friend_requests_sm] forKey:@"friend_requests_sm"];
     [request addPostValue:[NSNumber numberWithBool: notificationPref.posts_by_friends_sm ] forKey:@"posts_by_friends_sm"];
     [request addPostValue:[NSNumber numberWithBool: notificationPref.comments_sm ] forKey:@"comments_sm"];
@@ -2586,8 +2453,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2616,11 +2482,9 @@ AppDelegate *smAppDelegate;
                         
             NSLog(@"notif.recommendations_mail: %i %d",[[self getNestedKeyVal:jsonObjects key1:@"result" key2:@"recommendations" key3:@"mail"] boolValue],notificationPref.proximity_radius);  
             NSLog(@"aNot %i %i",notificationPref.offline_notifications_sm,notificationPref.offline_notifications_mail);
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         else
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -2629,11 +2493,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 -(void) setPlatForm:(Platform *)platform:(NSString *)authToken:(NSString *)authTokenValue
@@ -2641,11 +2503,7 @@ AppDelegate *smAppDelegate;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/platforms",WS_URL]];    
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
-    
-//    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-    
     [request addRequestHeader:authToken value:authTokenValue];
-
     [request addPostValue:[NSNumber numberWithBool: platform.facebook] forKey:@"fb"];
     [request addPostValue:[NSNumber numberWithBool: platform.fourSquare] forKey:@"4sq"];
     [request addPostValue:[NSNumber numberWithBool: platform.googlePlus] forKey:@"googlePlus"];
@@ -2660,8 +2518,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2678,11 +2535,9 @@ AppDelegate *smAppDelegate;
             [platform setYahoo:[jsonObjects objectForKey:@"yahoo"]];
             [platform setBadoo:[jsonObjects objectForKey:@"badoo"]];
             NSLog(@"platform.facebook: %@",[jsonObjects objectForKey:@"fb"]);
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         else
         {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -2691,11 +2546,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
     {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 -(void) setLayer:(Layer *)layer:(NSString *)authToken:(NSString *)authTokenValue
@@ -2703,8 +2556,6 @@ AppDelegate *smAppDelegate;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/layers",WS_URL]];    
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
-    
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
     
     [request addRequestHeader:authToken value:authTokenValue];
     
@@ -2718,8 +2569,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -2732,11 +2582,9 @@ AppDelegate *smAppDelegate;
             [layer setTripadvisor:[jsonObjects objectForKey:@"tripadvisor"]];
             [layer setFoodspotting:[jsonObjects objectForKey:@"foodspotting"]];
             NSLog(@"l.wikipedia: %@",[jsonObjects objectForKey:@"wikipedia"]);
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         else
         {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -2745,11 +2593,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
 }
 
@@ -2758,8 +2604,6 @@ AppDelegate *smAppDelegate;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/sharing_preference_settings",WS_URL]];    
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
-    
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
     
     [request addRequestHeader:authToken value:authTokenValue];
     ///request value goes here....
@@ -3272,8 +3116,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -3656,12 +3499,9 @@ AppDelegate *smAppDelegate;
             {
                 NSLog(@"infoPref.firstNameStr %@  %@",informationPrefs.firstNameFrnd,informationPrefs.firstNameCircle);
             }
-            
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOGIN_DONE object:aUser];
-        } 
+        }
         else
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -3670,11 +3510,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 
@@ -3688,7 +3526,6 @@ AppDelegate *smAppDelegate;
     [request addPostValue:userInfo.firstName forKey:@"firstName"];
     [request addPostValue:userInfo.lastName forKey:@"lastName"];
     [request addPostValue:userInfo.email forKey:@"email"];
-//    [request addPostValue:userInfo.p forKey:@"password"];
     [request addPostValue:userInfo.avatar forKey:@"avatar"];
     [request addPostValue:userInfo.gender forKey:@"gender"];
     [request addPostValue:userInfo.username forKey:@"username"];
@@ -3710,8 +3547,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -3723,10 +3559,8 @@ AppDelegate *smAppDelegate;
             
             NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
             [UtilityClass showAlert:@"Social Maps" :@"Your Personal Information Saved"];
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -3735,11 +3569,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
 
 }
@@ -3763,7 +3595,6 @@ AppDelegate *smAppDelegate;
     {
         [request addPostValue:userInfo.email forKey:@"email"];
     }
-    //    [request addPostValue:userInfo.p forKey:@"password"];
     if(userInfo.avatar)
     {
         [request addPostValue:userInfo.avatar forKey:@"avatar"];
@@ -3831,8 +3662,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -3858,8 +3688,7 @@ AppDelegate *smAppDelegate;
          [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_BASIC_PROFILE_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
     
 }
@@ -3869,8 +3698,6 @@ AppDelegate *smAppDelegate;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/settings/geo_fence",WS_URL]];
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
-    
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
     
     [request addRequestHeader:authToken value:authTokenValue];
     
@@ -3884,8 +3711,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -3902,11 +3728,9 @@ AppDelegate *smAppDelegate;
             NSLog(@"layer.wiki: %@ %@ %@",aGeofence.lat,aGeofence.lng,[[jsonObjects objectForKey:@"result"] valueForKey:@"radius"]);  
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
 
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         else
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -3915,11 +3739,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 -(void)setShareLocation:(ShareLocation *)shareLocation:(NSString *)authToken:(NSString *)authTokenValue
@@ -3989,8 +3811,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4013,11 +3834,9 @@ AppDelegate *smAppDelegate;
             NSLog(@"setShareLocation: Status=%@", setShareLocation.status);
             NSLog(@"setShareLocation= %@",jsonObjects);
             
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-        } 
+        }
         else
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4026,11 +3845,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 - (void) updatePosition:(Geolocation*)currLocation authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
@@ -4038,7 +3855,6 @@ AppDelegate *smAppDelegate;
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
     
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
     
     [request addRequestHeader:authToken value:authTokenValue];
     
@@ -4051,8 +3867,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4077,8 +3892,7 @@ AppDelegate *smAppDelegate;
          NSLog(@"Failed in REST call: status=%d", [request responseStatusCode]);
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 
 }
 
@@ -4104,8 +3918,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4114,11 +3927,9 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201) {
             [UtilityClass showAlert:@"" :@"Message Sent"];
             NSLog(@"sendMessage successful:status=%d", responseStatus);
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send message"];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4127,11 +3938,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         NSLog(@"sendMessage failed: unknown error");
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 
 }
 
@@ -4145,7 +3954,6 @@ AppDelegate *smAppDelegate;
     
     [request addRequestHeader:authToken value:authTokenValue];
     
-    //[request setPostValue:title forKey:@"title"];
     [request setPostValue:description forKey:@"message"];
     [request setPostValue:latitude forKey:@"lat"];
     [request setPostValue:longitude forKey:@"lng"];
@@ -4164,8 +3972,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4174,13 +3981,9 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201) {
             [UtilityClass showAlert:@"" :@"Meet-up request sent"];
             NSLog(@"sendMessage successful:status=%d", responseStatus);
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
-            //getmeetuprequestdone
-            // [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_MEET_UP_REQUEST_DONE object:nil];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to send meet-up request"];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4189,11 +3992,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         NSLog(@"sendMeetup failed: unknown error");
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
 }
 
@@ -4216,8 +4017,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4242,8 +4042,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_UPDATE_MEET_UP_REQUEST_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
 }
 
@@ -4265,8 +4064,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4274,7 +4072,6 @@ AppDelegate *smAppDelegate;
         
         if (responseStatus == 200 || responseStatus == 201) {
             NSLog(@"sendMessage successful:status=%d", responseStatus);
-            //[UtilityClass showAlert:@"" :@"Reply sent"];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_REPLY_DONE object:content];
         } else {
             NSLog(@"sendMessage unsuccessful:status=%d", responseStatus);
@@ -4292,8 +4089,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SEND_REPLY_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
     
 }
 
@@ -4317,8 +4113,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4341,11 +4136,9 @@ AppDelegate *smAppDelegate;
     [request setFailedBlock:^{
         NSLog(@"sendFriendRequest failed: unknown error");
         [UtilityClass showAlert:@"" :@"Failed to send friend request"];
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 - (void) getFriendRequests:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
@@ -4363,8 +4156,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4422,8 +4214,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getFriendRequests");
+     NSLog(@"asyn srt getFriendRequests");
     [request startAsynchronous];
 }
 
@@ -4447,8 +4238,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4460,7 +4250,6 @@ AppDelegate *smAppDelegate;
                 MeetUpRequest *meetUpReq = [[MeetUpRequest alloc] init];
                 
                 meetUpReq.meetUpId = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
-                //meetUpReq.meetUpTitle  = [self getNestedKeyVal:item key1:@"title" key2:nil key3:nil];
                 meetUpReq.meetUpDescription  = [self getNestedKeyVal:item key1:@"message" key2:nil key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"time" key2:@"date" key3:nil];
                 NSString *timeZoneType = [self getNestedKeyVal:item key1:@"time" key2:@"timezone_type" key3:nil];
@@ -4502,21 +4291,17 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getMeetUpReq");
+     NSLog(@"asyn srt getMeetUpReq");
     [request startAsynchronous];
     
 }
 
 - (void) getInbox:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
     
-    //authTokenValue = @"44f89c2b1dc7b1b84dd57561556cb86486b5b38a";  //for test
-    
     NSLog(@"in RestClient getInbox");
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    //NSString *route = [NSString stringWithFormat:@"%@/messages/inbox",WS_URL];
     NSString *route = [NSString stringWithFormat:@"%@/messages/inbox?show_last_reply=1",WS_URL];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageInbox = [[NSMutableArray alloc] init];
@@ -4531,8 +4316,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4595,8 +4379,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_INBOX_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getInbox");
+     NSLog(@"asyn srt getInbox");
     [request startAsynchronous];
 
 }
@@ -4609,10 +4392,6 @@ AppDelegate *smAppDelegate;
     NSLog(@"ti = %@", ti);
     
     NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
-    
-    //if (!ti) {
-       //NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
-    //}
     
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageReplies = [[NSMutableArray alloc] init];
@@ -4685,8 +4464,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getReplies");
+     NSLog(@"asyn srt getReplies");
     [request startAsynchronous];
     
 }
@@ -4694,10 +4472,6 @@ AppDelegate *smAppDelegate;
 -(void)setMessageStatus:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId status:(NSString*)status
 {
     NSString *route = [NSString stringWithFormat:@"%@/messages/%@/status/%@", WS_URL, messageId, status];
-    
-    //if (!ti) {
-    //NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
-    //}
     
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageReplies = [[NSMutableArray alloc] init];
@@ -4736,8 +4510,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt set msg status");
+     NSLog(@"asyn srt set msg status");
     [request startAsynchronous];
 }
 
@@ -4782,94 +4555,9 @@ AppDelegate *smAppDelegate;
         [UtilityClass showAlert:@"" :@"Failed to save recipients"];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt update message recipients");
+     NSLog(@"asyn srt update message recipients");
     [request startAsynchronous];
 }
-
-/*
-- (void) getReplies:(NSString*)authToken authTokenVal:(NSString*)authTokenValue msgID:(NSString*)messageId {
-    
-    NSLog(@"in RestClient getReplies");
-    NSLog(@"authTokenValue = %@", authTokenValue);
-    NSLog(@"authToken = %@", authToken);
-    
-    NSString *route = [NSString stringWithFormat:@"%@/messages/%@", WS_URL, messageId];
-    NSURL *url = [NSURL URLWithString:route];
-    NSMutableArray *messageReplies = [[NSMutableArray alloc] init];
-    
-    NSLog(@"route = %@", route);
-    
-    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setRequestMethod:@"GET"];
-    [request addRequestHeader:authToken value:authTokenValue];
-    // Handle successful REST call
-    [request setCompletionBlock:^{
-        
-        // Use when fetching text data
-        int responseStatus = [request responseStatusCode];
-        NSString *responseString = [request responseString];
-        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
-        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-        NSError *error = nil;
-        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
-        
-        if (responseStatus == 200 || responseStatus == 204) 
-        {
-            NSArray *items = [jsonObjects objectForKey:@"replies"];
-            
-            for (NSDictionary *item in items)
-            {
-                MessageReply *messageReply = [[MessageReply alloc] init]; 
-                
-                NSString *content = [item objectForKey:@"content"];
-                messageReply.content = content;
-                NSLog(@"content is: %@",content);
-                
-                NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
-                NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
-                NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
-                messageReply.time = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
-                
-                NSString *senderName = [self getNestedKeyVal:item key1:@"sender" key2:@"firstName" key3:nil];
-                messageReply.senderName = senderName;
-                NSLog(@"sender name is: %@",senderName);
-                
-                NSString *senderID = [self getNestedKeyVal:item key1:@"sender" key2:@"id" key3:nil];
-                messageReply.senderID = senderID;
-                NSLog(@"sender id is: %@",senderID);
-                
-                NSString *senderAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
-                messageReply.senderAvater = senderAvater;
-                NSLog(@"sender avater is: %@",senderAvater);
-                
-                //messageReply.senderImage = nil;
-                
-                [messageReplies addObject:messageReply];
-            }
-            
-            NSLog(@"messageReplies = %@", messageReplies);
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:messageReplies];
-        } 
-        else 
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
-        }
-        [jsonParser release], jsonParser = nil;
-        [jsonObjects release];
-    }];
-    
-    // Handle unsuccessful REST call
-    [request setFailedBlock:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
-    }];
-    
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getReplies");
-    [request startAsynchronous];
-    
-}*/
 
 
 - (void) getNotificationMessages:(NSString*)authToken authTokenVal:(NSString*)authTokenValue {
@@ -4887,8 +4575,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4936,8 +4623,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_NOTIFICATIONS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getNotificationMessages");
+     NSLog(@"asyn srt getNotificationMessages");
     [request startAsynchronous];
 }
 
@@ -4958,8 +4644,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -4996,8 +4681,7 @@ AppDelegate *smAppDelegate;
          }
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 - (void) acceptFriendRequest:(NSString*)friendId authToken:(NSString*) authToken authTokenVal:(NSString*)authTokenValue {
@@ -5029,8 +4713,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5041,11 +4724,9 @@ AppDelegate *smAppDelegate;
             status = [[self getNestedKeyVal:jsonObjects key1:@"password" key2:nil key3:nil] boolValue];
             NSLog(@"Change password: %@ to %@, status = %d",oldpasswd, passwd, status);
             
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:platform];
-                    } 
+        }
         else
         {
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SETPROFILE_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -5054,11 +4735,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
-         //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startSynchronous];
+     [request startSynchronous];
 
     return status;
 
@@ -5071,8 +4750,6 @@ AppDelegate *smAppDelegate;
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setRequestMethod:@"PUT"];
     
-    //    [request setPostValue:@"Auth-Token" forKey:@"9068d1bdd04e1bdf66a24f97e7ddce46e71ca13b"];
-    
     [request addRequestHeader:authToken value:authTokenValue];
     
     [request addPostValue:@"iOS" forKey:@"device_type"];
@@ -5084,8 +4761,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5114,8 +4790,7 @@ AppDelegate *smAppDelegate;
          [UtilityClass showAlert:@"" :@"Failed to sync device for push notification, Plese log in again"];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 //Sharing Privacy update
@@ -5137,8 +4812,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5163,8 +4837,7 @@ AppDelegate *smAppDelegate;
          [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
      }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 //getting all circles from here
@@ -5184,8 +4857,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5218,8 +4890,6 @@ AppDelegate *smAppDelegate;
                     circle.type = CircleTypeCustom;
                 }
 
-//                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
-//                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
                 NSLog(@"circle.circleID: %@",circle.circleID);
                 NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
                 for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
@@ -5259,8 +4929,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_CIRCLES_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
     
 }
@@ -5287,8 +4956,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5321,8 +4989,6 @@ AppDelegate *smAppDelegate;
                 {
                     circle.type = CircleTypeCustom;
                 }
-                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
-                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
                 NSLog(@"circle.circleID: %@",circle.circleID);
                 NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
                 for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
@@ -5361,8 +5027,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_CIRCLE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -5389,8 +5054,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5423,8 +5087,6 @@ AppDelegate *smAppDelegate;
                     circle.type = CircleTypeCustom;
                 }
 
-                //                circle.type=[self getNestedKeyVal:jsonObjects key1:@"currentLocation" key2:@"lat" key3:nil];
-                //                circle.friends=[[[jsonObjects objectForKey:@"circles"] objectAtIndex:i] objectForKey:@"friends"];
                 NSLog(@"circle.circleID: %@",circle.circleID);
                 NSMutableArray *userFrnds=[[NSMutableArray alloc] init];
                 for (NSDictionary *frndDic in [self getNestedKeyVal:item key1:@"friends" key2:nil key3:nil]) 
@@ -5463,8 +5125,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_CIRCLE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -5485,8 +5146,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5522,8 +5182,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_CIRCLE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt delete circle");
+     NSLog(@"asyn srt delete circle");
     [request startAsynchronous];
 }
 
@@ -5544,8 +5203,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5581,8 +5239,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RENAME_USER_CIRCLE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt rename circle");
+     NSLog(@"asyn srt rename circle");
     [request startAsynchronous];
 }
 
@@ -5601,8 +5258,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5658,8 +5314,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_BLOCKED_USERS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
 
 }
@@ -5685,8 +5340,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5742,8 +5396,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_BLOCKED_USERS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
 }
 
@@ -5768,8 +5421,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5825,8 +5477,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SET_UNBLOCKED_USERS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlatForm");
+     NSLog(@"asyn srt getPlatForm");
     [request startAsynchronous];
 }
 
@@ -5846,8 +5497,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5903,10 +5553,7 @@ AppDelegate *smAppDelegate;
                 [aEvent setOwner:[self getNestedKeyVal:item key1:@"owner" key2:nil key3:nil]];           
                 [aEvent setEventType:[self getNestedKeyVal:item key1:@"event_type" key2:nil key3:nil]];
                 [aEvent setPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
-                
                 NSLog(@"aEvent.eventName: %@  aEvent.eventID: %@ %@",aEvent.eventName,aEvent.eventDistance,aEvent.eventAddress);
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
-                
                 if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
                 {
                     NSLog(@"Date comapre %@",date.date);
@@ -5932,8 +5579,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn start get all events for map");
+     NSLog(@"asyn start get all events for map");
     [request startAsynchronous];
 }
 
@@ -5953,8 +5599,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -5993,8 +5638,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getBasicProfile");
+     NSLog(@"asyn srt getBasicProfile");
     [request startAsynchronous];
     
 }
@@ -6017,8 +5661,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"request FBid,fbAuthToken %@ %@",FBid,fbAuthToken);
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -6055,8 +5698,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_FB_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt do connect fb");
+     NSLog(@"asyn srt do connect fb");
     [request startAsynchronous];
     
 }
@@ -6085,8 +5727,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6095,11 +5736,9 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201) {
             [UtilityClass showAlert:@"" :@"Place saved"];
             NSLog(@"save place successful:status=%d", responseStatus);
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         } else {
             NSLog(@"save place unsuccessful:status=%d", responseStatus);
             [UtilityClass showAlert:@"" :@"Failed to save place"];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -6108,11 +5747,9 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         NSLog(@"Save Place failed: unknown error");
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    [request startAsynchronous];
+     [request startAsynchronous];
 }
 
 - (void) getPlaces:(NSString*)authToken authTokenVal:(NSString*)authTokenValue 
@@ -6171,8 +5808,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLACES_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlaces");
+     NSLog(@"asyn srt getPlaces");
     [request startAsynchronous];
     
 }
@@ -6234,8 +5870,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PLACES_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getPlaces otherUsers");
+     NSLog(@"asyn srt getPlaces otherUsers");
     [request startAsynchronous];
     
 }
@@ -6265,8 +5900,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6372,8 +6006,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6382,7 +6015,6 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
         {
                 Photo *photo=[[Photo alloc] init];
-//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 photo.photoId=[self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
                 photo.description=[self getNestedKeyVal:jsonObjects key1:@"description" key2:nil key3:nil];
                 photo.imageUrl=[self getNestedKeyVal:jsonObjects key1:@"imageLarge" key2:nil key3:nil];
@@ -6407,8 +6039,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_UPLOAD_PHOTO object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt upload photo");
+     NSLog(@"asyn srt upload photo");
     [request startAsynchronous];
 }
 
@@ -6429,8 +6060,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6452,7 +6082,6 @@ AppDelegate *smAppDelegate;
             for (NSDictionary *photoDic in jsonObjects) 
             {
                 Photo *photo=[[Photo alloc] init];
-//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 photo.photoId=[self getNestedKeyVal:photoDic key1:@"id" key2:nil key3:nil];
                 photo.description=[self getNestedKeyVal:photoDic key1:@"description" key2:nil key3:nil];
                 photo.imageUrl=[self getNestedKeyVal:photoDic key1:@"imageLarge" key2:nil key3:nil];
@@ -6479,8 +6108,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_USER_ALL_PHOTO object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6501,8 +6129,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6538,8 +6165,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt upload photo");
+     NSLog(@"asyn srt upload photo");
     [request startAsynchronous];
 }
 
@@ -6560,8 +6186,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6583,7 +6208,6 @@ AppDelegate *smAppDelegate;
             for (NSDictionary *photoDic in jsonObjects) 
             {
                 Photo *photo=[[Photo alloc] init];
-                //                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 photo.photoId=[self getNestedKeyVal:photoDic key1:@"id" key2:nil key3:nil];
                 photo.description=[self getNestedKeyVal:photoDic key1:@"description" key2:nil key3:nil];
                 photo.imageUrl=[self getNestedKeyVal:photoDic key1:@"imageLarge" key2:nil key3:nil];
@@ -6610,8 +6234,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6632,8 +6255,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6655,7 +6277,6 @@ AppDelegate *smAppDelegate;
             for (NSDictionary *photoDic in jsonObjects) 
             {
                 Photo *photo=[[Photo alloc] init];
-//                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 photo.photoId=[self getNestedKeyVal:photoDic key1:@"id" key2:nil key3:nil];
                 photo.description=[self getNestedKeyVal:photoDic key1:@"description" key2:nil key3:nil];
                 photo.imageUrl=[self getNestedKeyVal:photoDic key1:@"imageLarge" key2:nil key3:nil];
@@ -6682,8 +6303,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_PHOTO_FOR_GEOTAG object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6723,8 +6343,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6759,8 +6378,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_GEOTAG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6781,8 +6399,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6804,7 +6421,6 @@ AppDelegate *smAppDelegate;
             for (NSDictionary *geotagDic in jsonObjects) 
             {
                 Geotag *geotag=[[Geotag alloc] init];
-                //                photo.userName=[self getNestedKeyVal:photoDic key1:@"title" key2:nil key3:nil];
                 geotag.geoTagID=[self getNestedKeyVal:geotagDic key1:@"id" key2:nil key3:nil];
                 geotag.geoTagTitle=[self getNestedKeyVal:geotagDic key1:@"title" key2:nil key3:nil];
                 geotag.geoTagDescription=[self getNestedKeyVal:geotagDic key1:@"description" key2:nil key3:nil];
@@ -6837,8 +6453,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_GEOTAG_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6868,8 +6483,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -6892,8 +6506,7 @@ AppDelegate *smAppDelegate;
         [UtilityClass showAlert:@"" : @"Failed to recommend this venue"];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -6914,8 +6527,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7007,8 +6619,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getFriendList");
+     NSLog(@"asyn srt getFriendList");
     [request startAsynchronous];
 }
 
@@ -7051,8 +6662,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7087,8 +6697,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_PLAN_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getLocation");
+     NSLog(@"asyn srt getLocation");
     [request startAsynchronous];
 }
 
@@ -7108,8 +6717,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7143,12 +6751,9 @@ AppDelegate *smAppDelegate;
                 [aPlan setPlanGeolocation:loc];
                 [aPlan setPlanAddress:[self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil]];
                 [aPlan setPlanDistance:[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil]];
-//                [aPlan setEventImageUrl:[self getNestedKeyVal:item key1:@"eventImage" key2:nil key3:nil]];
                 [aPlan setPlanDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
                 [aPlan setPlanImageUrl:[self getNestedKeyVal:item key1:@"image" key2:nil key3:nil]];
-//                [aPlan setEventDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
                 [aPlan setPlanPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
                 if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
                 {
@@ -7172,8 +6777,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_ALL_PLANS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn start get all events for map");
+     NSLog(@"asyn start get all events for map");
     [request startAsynchronous];
 }
 
@@ -7194,8 +6798,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7231,8 +6834,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_PLANS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt delete plan");
+     NSLog(@"asyn srt delete plan");
     [request startAsynchronous];
 }
 
@@ -7272,8 +6874,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7308,8 +6909,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_UPDATE_PLANS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn update plan");
+     NSLog(@"asyn update plan");
     [request startAsynchronous];
 }
 
@@ -7329,8 +6929,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7364,12 +6963,9 @@ AppDelegate *smAppDelegate;
                 [aPlan setPlanGeolocation:loc];
                 [aPlan setPlanAddress:[self getNestedKeyVal:item key1:@"location" key2:@"address" key3:nil]];
                 [aPlan setPlanDistance:[self getNestedKeyVal:item key1:@"distance" key2:nil key3:nil]];
-                //                [aPlan setEventImageUrl:[self getNestedKeyVal:item key1:@"eventImage" key2:nil key3:nil]];
                 [aPlan setPlanDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
                 [aPlan setPlanImageUrl:[self getNestedKeyVal:item key1:@"image" key2:nil key3:nil]];
-                //                [aPlan setEventDescription:[self getNestedKeyVal:item key1:@"description" key2:nil key3:nil]];
                 [aPlan setPlanPermission:[self getNestedKeyVal:item key1:@"permission" key2:nil key3:nil]];
-                //                NSLog(@"Is Kind of NSString: %@",jsonObjects);
                 
                 if ([[UtilityClass convertDateFromDisplay:date.date] compare:[NSDate date]] == NSOrderedDescending)
                 {
@@ -7393,8 +6989,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIENDS_PLANS_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn start get all events for map");
+     NSLog(@"asyn start get all events for map");
     [request startAsynchronous];
 }
 
@@ -7414,8 +7009,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7492,11 +7086,9 @@ AppDelegate *smAppDelegate;
                 [eachFriendsList addObject:eachFriend];
             }
             
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:eachFriendsList];
-        } 
+        }
         else 
         {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -7504,24 +7096,20 @@ AppDelegate *smAppDelegate;
     
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
-//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_FRIEND_LIST_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getFriendList");
+     NSLog(@"asyn srt getFriendList");
     [request startAsynchronous];
 }
 
 - (void) getMessageById:(NSString*)authToken authTokenVal:(NSString*)authTokenValue:(NSString*)messageId
 {
     
-    //authTokenValue = @"44f89c2b1dc7b1b84dd57561556cb86486b5b38a";  //for test
     
     NSLog(@"in RestClient getInbox");
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     
-    //NSString *route = [NSString stringWithFormat:@"%@/messages/inbox",WS_URL];
     NSString *route = [NSString stringWithFormat:@"%@/messages/%@/unread",WS_URL,messageId];
     NSURL *url = [NSURL URLWithString:route];
     NSMutableArray *messageInbox = [[NSMutableArray alloc] init];
@@ -7536,8 +7124,7 @@ AppDelegate *smAppDelegate;
         int responseStatus = [request responseStatusCode];
         
         // Use when fetching binary data
-        // NSData *responseData = [request responseData];
-        NSString *responseString = [request responseString];
+          NSString *responseString = [request responseString];
         NSLog(@"Response=%@, status=%d", responseString, responseStatus);
         SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
         NSError *error = nil;
@@ -7580,10 +7167,6 @@ AppDelegate *smAppDelegate;
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
                 NSLog(@"message notif sender = %@", msg.notifSender);
-//                if (![smAppDelegate.messages containsObject:msg])
-//                {
-//                    [smAppDelegate.messages insertObject:msg atIndex:0];
-//                }
                 int p=0;
                 for (int i=0; i<[smAppDelegate.messages count]; i++)
                 {
@@ -7618,8 +7201,7 @@ AppDelegate *smAppDelegate;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
     }];
     
-    //[request setDelegate:self];
-    NSLog(@"asyn srt getMessageById");
+     NSLog(@"asyn srt getMessageById");
     [request startAsynchronous];
     
 }

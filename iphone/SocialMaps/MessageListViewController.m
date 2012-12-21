@@ -227,7 +227,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [self doLeftViewAnimation:messageRepiesView];
     }
     [friendSearchbar resignFirstResponder];
-    //msgListTableView.tag = TAG_TABLEVIEW_INBOX;
     
     [messageRepiesView viewWithTag:TAG_MEETUP_VIEW].hidden = YES;
 }
@@ -468,8 +467,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSLog(@"gotReplyMessages");
     [smAppDelegate hideActivityViewer];
     
-    //isCheckingNewReplies = YES;
-    
     NSMutableArray *msgReplies = [notif object];
 
     if ([msgReplies count] == 0) {
@@ -625,7 +622,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         if ([smAppDelegate.userId isEqualToString:msgReply.senderID]) {
             imageViewReply.frame = CGRectMake(37, msgFrame.origin.y, 48, 48);
             
-            //lblTime.frame = CGRectMake(10, lblTime.frame.origin.y, lblTime.frame.size.width, lblTime.frame.size.height);
             lblTime.frame = timeFrame;
             txtMsg.frame = msgFrame;
             txtMsg.backgroundColor = [UIColor colorWithRed:163.0/255 green:232.0/255 blue:95.0/255 alpha:0.4];
@@ -659,7 +655,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             
             if (!iconDownloader)
             {
-                //imageViewReply.image = [UIImage imageNamed:@"girl.png"];
                 imageViewReply.image = nil;
                 if (tableView.dragging == NO && tableView.decelerating == NO) {
                     [self startReplyIconDownload:msgReply forIndexPath:indexPath];
@@ -756,7 +751,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
     lblTime.text = [UtilityClass timeAsString:msg.notifTime];
     
-    //NSString *lastReply = [msg.lastReply valueForKey:@"content"];
     NSLog(@"%@", msg.lastReply);
     if (![msg.lastReply isEqual:[NSNull null]]) {
         for (NSDictionary *lastReplyDic in msg.lastReply) {
@@ -780,9 +774,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if (!iconDownloader)
     {
     
-    //if ([[profileImageList objectAtIndex:indexPath.row] isEqual:@""])
-    //{
-        //cell.imageView.image = [UIImage imageNamed:@"girl.png"];
         cell.imageView.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
@@ -1083,12 +1074,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [iconDownloader startDownload];
         [iconDownloader release];  
         [userFriends release];
-    } //else {
-        //msgReply.senderImage = iconDownloader.userFriends.userProfileImage;
-        //UITableViewCell *cell = [messageReplyTableView cellForRowAtIndexPath:indexPath];
-        //UIImageView *imageViewReply = (UIImageView*) [cell viewWithTag:3006];
-        //imageViewReply.image = msgReply.senderImage;
-    //}
+    } 
 }
 
 // this method is used in case the user scrolled into a set of cells that don't have their app icons yet
@@ -1153,13 +1139,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             if (iconDownloader.userFriends.userProfileImage) {
                 [profileImageList replaceObjectAtIndex:i withObject:iconDownloader.userFriends.userProfileImage];
             } else {
-                //[profileImageList replaceObjectAtIndex:i withObject:[UIImage imageNamed:@"girl.png"]];
                 [profileImageList replaceObjectAtIndex:i withObject:[[UIImage alloc] init]];
             }
         }
     }
     [msgListTableView reloadData];
-    //NSLog(@"profileImageList = %@", profileImageList);
 }
 
 - (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
@@ -1175,9 +1159,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
         [iconDownloader release];
     }
-    
-    //[dicImages_msg setObject:image forKey:userFriends.imageUrl];
-    
+        
     int tag = scrollSubViewTag - 420;
     
     if (tag == 0) {
@@ -1204,7 +1186,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 // called by our ImageDownloader when an icon is ready to be displayed
 - (void)appImageDidLoad:(NSString *)userId
 {
-    //[dicImages_msg setObject:@"NO_OBJECT" forKey:userFrnd.imageUrl]; 
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
     if (iconDownloader != nil)
     {
@@ -1381,7 +1362,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     CGRect rect = view.frame;
 	
 	rect.origin.y -= kOFFSET_FOR_KEYBOARD;
-	//rect.size.height += kOFFSET_FOR_KEYBOARD;
 	
     view.frame = rect;
     [UIView commitAnimations];
@@ -1401,7 +1381,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     CGRect rect = view.frame;
 	
 	rect.origin.y += kOFFSET_FOR_KEYBOARD;
-	//rect.size.height -= kOFFSET_FOR_KEYBOARD;
     
     view.frame = rect;
 	
@@ -1420,7 +1399,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
     
     [messageReplyList release];
-    //[imageDownloadsInProgress release];
     [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];
@@ -1505,7 +1483,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     {
         searchText=@"";
         [selectedFriendsIndex removeAllObjects];
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
@@ -1669,7 +1646,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     {
         if(i< [filteredList count]) 
         { 
-            //UserFriends *userFrnd=[[UserFriends alloc] init];
             UserFriends *userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
             
@@ -1681,8 +1657,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             
             else 
             { 
-                if (!isDragging_msg && !isDecliring_msg) //&&([dicImages_msg objectForKey:[ImgesName objectAtIndex:i]]==nil))
-                    
+                if (!isDragging_msg && !isDecliring_msg)
                 {
                     if (!iconDownloader) {
                         iconDownloader = [[IconDownloader alloc] init];
@@ -1691,7 +1666,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     iconDownloader.userFriends = userFrnd;
                     iconDownloader.delegate = self;
                     [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
-                    iconDownloader.scrollSubViewTag = 420 + i;// [[frndListScrollView subviews] count];
+                    iconDownloader.scrollSubViewTag = 420 + i;
                     [iconDownloader startDownload];
                 }
             }

@@ -191,20 +191,7 @@ NSMutableArray *unreadMesg;
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-/*
-//for test remove later
-- (void)actionTestMessageBtn
-{
-    NSLog(@"actionTestMessageBtn");
-    
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-    [self presentModalViewController:nav animated:YES];
-     nav.navigationBarHidden = YES;
-}
-*/
+
 - (IBAction)showMessages:(id)sender {
     CGRect currFrame = notifTabArrow.frame;
     CGRect newFrame = CGRectMake(-438, currFrame.origin.y, 
@@ -256,16 +243,6 @@ NSMutableArray *unreadMesg;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    /*if ([[segue destinationViewController] isKindOfClass:[MapViewController class]]){
-        MapViewController *vc = [segue destinationViewController];
-        vc.messages = messages;
-        vc.friendRequests = friendRequests;
-        vc.notifications = notifications;
-        vc.msgRead = msgRead;
-        vc.notifRead = notifRead;
-        vc.ignoreCount = ignoreCount;
-        
-    }*/
     NSLog(@"In prepareForSegue:NotificationController");
 }
 
@@ -315,7 +292,6 @@ NSMutableArray *unreadMesg;
             msg = [unreadMesg objectAtIndex:indexPath.row];
             
             msg.msgStatus=@"read";
-            //[smAppDelegate.messages replaceObjectAtIndex:[smAppDelegate.messages indexOfObject:[unreadMesg objectAtIndex:indexPath.row]] withObject:msg];
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];

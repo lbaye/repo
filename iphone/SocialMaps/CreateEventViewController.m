@@ -174,18 +174,11 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         {
             [friendListArr addObject:frnds];
             NSLog(@"non invited added %@",frnds.userName);
-//        [friendListArr replaceObjectAtIndex:i withObject:frnds];
-//
         }
-                
-        
         NSLog(@"frnds.imageUrl %@  frnds.userName %@ frnds.userId %@",frnds.imageUrl,frnds.userName,frnds.userId);
-        
     }
-    
     filteredList1=[friendListArr mutableCopy];
     filteredList2=[friendListArr mutableCopy];
-    //    NSLog(@"smAppDelegate.placeList %@",smAppDelegate.placeList);
     
 }
 
@@ -362,7 +355,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         event.eventAddress=venueAddress;
         NSLog(@"geolocation: %@",self.geolocation);
         NSLog(@"globalEvent.eventName %@ globalEvent.eventLocation.latitude %@,globalEvent.eventLocation.longitude %@",event.eventAddress,event.eventLocation.latitude,event.eventLocation.longitude);
-//        [self performSelector:@selector(getCurrentAddress) withObject:nil afterDelay:0.1];
         [self eventFromVenue];
     }
     else if (editFlag==TRUE)
@@ -454,8 +446,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     editFlag=false;
     ImgesName=nil;
     frndListScrollView=nil;
-
-//    [self viewDidUnload];
 }
 
 -(void)myPlacesWasSelected:(NSNumber *)selectedIndex:(id)element
@@ -481,9 +471,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d %d", indx,[sender tag]);
-    
     [smAppDelegate hideActivityViewer];
-    //    [smAppDelegate.window setUserInteractionEnabled:NO];
     
     if ([sender tag] == 20001) 
     {
@@ -679,7 +667,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     
     for (int i=0; i<[customSelectedFriendsIndex count]; i++)
     {
-//        ((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId;
         [permittedUserArr addObject:((UserFriends *)[customSelectedFriendsIndex objectAtIndex:i]).userId];
     }
     NSLog(@"permittedCircleArr %@ permittedUserArr %@",permittedCircleArr,permittedUserArr);
@@ -761,7 +748,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 //show circle
 -(IBAction)showCircle:(id)sender
 {
-//    [ActionSheetPicker displayActionPickerWithView:sender data:circleList selectedIndex:2 target:self action:@selector(circleWasSelected::) title:@"Circle"];
     [self.view addSubview:circleView];
 }
 
@@ -829,11 +815,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         [msg appendString:@"short summary, "];
                 validationFlag=true;
     }
-//    if (event.eventLocation.longitude==NULL)
-//    {
-//        [msg appendString:@"event location, "];
-//                validationFlag=true;
-//    }
     if (event.eventDate.date==NULL)
     {
         [msg appendString:@"date"];
@@ -927,7 +908,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 - (void)circleWasSelected:(NSNumber *)selectedIndex:(id)element 
 {
 	//Selection was made
-//	int selectedCircleIndex = [selectedIndex intValue];
 }
 
 -(void)placeWasSelected:(NSNumber *)selectedIndex:(id)element 
@@ -979,7 +959,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     dateString = [dateFormatter stringFromDate:date];
     event.eventDate.date=[[NSString alloc] initWithString:dateString];
     dateButton.titleLabel.text=dateString;
-    //selectedDate=dateString 2012-09-12 08.50;
     NSLog(@"Selected Date: %@  %@ %@",dateString, event.eventDate.date,[UtilityClass convertNSDateToUnix:selectedDate]);
 }
 
@@ -1096,7 +1075,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.circleTableView indexPathForCell:clickedCell];
-//    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCircleCheckArr removeObject:clickedButtonPath];
@@ -1114,7 +1092,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     SelectCircleTableCell *clickedCell = (SelectCircleTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.customTableView indexPathForCell:clickedCell];
-    //    [clickedCell.9 setImage:[UIImage imageNamed:@"checkbox_unchecked.png"] forState:UIControlStateNormal];
     if ([selectedCustomCircleCheckArr containsObject:clickedButtonPath])
     {
         [selectedCustomCircleCheckArr removeObject:clickedButtonPath];
@@ -1137,10 +1114,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 	if (oldState == MKAnnotationViewDragStateDragging) 
     {
 		annotation = (DDAnnotation *)annotationView.annotation;
-//        annotation.coordinate.latitude=[smAppDelegate.currPosition.latitude doubleValue];
-//        annotation.coordinate.longitude=[smAppDelegate.currPosition.longitude doubleValue];
-        
-		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];		
+		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
         annotation.subtitle=[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 	}
 }
@@ -1180,7 +1154,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 //reload map
 -(void) reloadMap:(DDAnnotation *)annotation
 {
-//    =[UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
     [self performSelector:@selector(getLoc:) withObject:annotation afterDelay:0];
     [self.mapView setRegion:mapView.region animated:TRUE];
 }
@@ -1189,14 +1162,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     [UtilityClass getAddressFromLatLon:annotation.coordinate.latitude withLongitude:annotation.coordinate.longitude];
 }
-
-//- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation 
-//{
-//    
-//    self.currentLocation = newLocation;
-//    self.currentLat =  newLocation.coordinate.latitude; 
-//    self.currentLong =  newLocation.coordinate.longitude; 
-//}
 
 //draggable annotations changed
 
@@ -1219,7 +1184,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }
        NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
@@ -1231,7 +1195,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }   
         
@@ -1274,9 +1237,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
-//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1349,9 +1310,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
-//                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -1397,7 +1356,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 {
     if (isBackgroundTaskRunning==true)
     {
-//    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     UserFriends *userFrnd=[[UserFriends alloc] init];
     userFrnd=[filteredList1 objectAtIndex:index];
@@ -1412,15 +1370,12 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         [self reloadScrolview];
     }
     // Now, we need to reload scroll view to load downloaded image
-//    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-//    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -1447,15 +1402,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-//        else
-//        {
-//            UIView *im1=[subviews objectAtIndex:l];
-//            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-//            UIImageView *im2=[subviews2 objectAtIndex:0];
-//            [im2 setAlpha:0.4];
-//            im2.layer.borderWidth=2.0;
-//            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-//        }
     }
     [self reloadScrolview];
 }
@@ -1463,7 +1409,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 //handling selection from custom scroll view of friends selection
 -(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
 {
-//    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
     if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
     {
@@ -1522,7 +1467,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     if (searchBar==customSearchBar)
     {
         searchText=customSearchBar.text;
@@ -1536,7 +1480,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         else
         {
             searchText=@"";
-            //[self loadFriendListsData]; TODO: commented this
             [filteredList2 removeAllObjects];
             filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrolview];
@@ -1559,7 +1502,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     else
     {
         searchText=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList1 removeAllObjects];
         filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
@@ -1595,7 +1537,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     // searchBarTextDidEndEditing is fired whenever the 
     // UISearchBar loses focus
     // We don't need to do anything here.
-//    [self.eventListTableView reloadData];
     [self endEditing];
     [friendSearchbar resignFirstResponder];
     [customSearchBar resignFirstResponder];
@@ -1809,24 +1750,11 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     createNotf++;
     if (createNotf==1)
     {
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    //    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event Created."];
     }
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
     NSLog(@"dele %@",[notif object]);
-//    if (isFromVenue==TRUE)
-//    {
-//        [eventListGlobalArray addObject:event];
-//    }
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -1836,15 +1764,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     if (updateNotf==1) 
     {
     NSLog(@"dele %@",[notif object]);
-    ////    [self performSegueWithIdentifier:@"eventDetail" sender:self];
-    //    ViewEventDetailViewController *modalViewControllerTwo = [[ViewEventDetailViewController alloc] init];
-    ////    modalViewControllerTwo.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    [self presentModalViewController:modalViewControllerTwo animated:YES];
-    //    NSLog(@"GOT SERVICE DATA.. :D");
-    
-    //    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    //    ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
-    //    [self presentModalViewController:controller animated:YES];
     [UtilityClass showAlert:@"Social Maps" :@"Event updated."];
     }
     globalEvent=[notif object];

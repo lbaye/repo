@@ -89,7 +89,6 @@ bool showSM=true;
     cancelButton.titleLabel.text=@"   OK";
     
     CGRect filterFrame = CGRectMake(4+labelFrame.size.width, 0, listViewfilter.frame.size.width-labelFrame.size.width-4, listViewfilter.frame.size.height);
-    //    CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:3 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:smAppDelegate.showPeople],[NSNumber numberWithInt:smAppDelegate.showPlaces],[NSNumber numberWithInt:smAppDelegate.showDeals], nil] labels:[NSArray arrayWithObjects:@"People",@"Places",@"Deals", nil]];
     CustomCheckbox *chkBox = [[CustomCheckbox alloc] initWithFrame:filterFrame boxLocType:LabelPositionRight numBoxes:2 default:[NSArray arrayWithObjects:[NSNumber numberWithInt:showFB],[NSNumber numberWithInt:showSM], nil] labels:[NSArray arrayWithObjects:@"Facebook",@"Social Maps", nil]];
     chkBox.delegate = self;
     [listViewfilter addSubview:chkBox];
@@ -107,29 +106,15 @@ bool showSM=true;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
-//    [self.mapContainer removeFromSuperview];
-//    [smAppDelegate showActivityViewer:self.view];
-//    [smAppDelegate.window setUserInteractionEnabled:NO];
     NSLog(@"activity start.  %@",smAppDelegate);
     [self.circleSearchBar setText:@""];
     [msgView removeFromSuperview];
     
     smAppDelegate.currentModelViewController = self;
-    
-//    
-//    
-//    filteredList = [[eventListArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-//        NSString *first = [(Event*)a eventDistance];
-//        NSString *second = [(Event*)b eventDistance];
-//        return [first compare:second];
-//    }] mutableCopy];
-//    [self.circleListTableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-//    RestClient *rc=[[RestClient alloc] init];
-//    [rc getAllEvents:@"Auth-Token":smAppDelegate.authToken];  
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     filteredList=[[self loadDummyData] mutableCopy]; 
     eventListArray=[[self loadDummyData] mutableCopy];
@@ -219,7 +204,6 @@ bool showSM=true;
         circleListTableView.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
     }
     NSLog(@"moveby %d",moveby);
-    //itemList.contentOffset = CGPointZero;
     CGRect viewFrame = circleSearchBar.frame;
     viewFrame.origin.y += moveby;
     CGRect listPullDownFrame = listPulldown.frame;
@@ -335,7 +319,6 @@ bool showSM=true;
         [circleSearchBar resignFirstResponder];
     } else {
         [self moveSearchBarAnimation:44];
-        //listPulldownMenu.hidden = TRUE;
         [circleSearchBar becomeFirstResponder];
     }
 }
@@ -345,7 +328,6 @@ bool showSM=true;
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"CirclesStoryboard" bundle:nil];
     UITabBarController *controller =[storybrd instantiateViewControllerWithIdentifier:@"tabBarController"];
     controller.selectedIndex=0;
-//    controller.tabBar.frame=CGRectMake(0, -100, 32, 32);
     controller.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     
@@ -457,13 +439,11 @@ bool showSM=true;
     // Configure the cell...
     cell.addressLabel.text = [NSString stringWithFormat:@"event address"];
     cell.firstNameLabel.text = [NSString stringWithFormat:@"event name"];
-//    cell.eventDetail.text = [NSString stringWithFormat:@"1"];
     cell.distanceLabel.text = [NSString stringWithFormat:@"event distance"];
     cell.showOnMapButton.tag=indexPath.row;
     [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
     
     cell.showOnMapButton.tag=indexPath.row;
-    //    NSLog(@"event.myResponse: %@",event.myResponse);
     // Leave cells empty if there's no data yet
     if (nodeCount > 0)
 	{
@@ -486,7 +466,6 @@ bool showSM=true;
         }
         else if ([people.userInfo.source isEqualToString:@"facebook"])
         {
-//            regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
             cell.regStsImgView.image = [UIImage imageNamed:@"fbCheckinIcon.png"];
             cell.regStsImgView.userInteractionEnabled=YES;
             cell.regStsImgView.layer.masksToBounds = YES;
@@ -543,7 +522,6 @@ bool showSM=true;
     [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
-    //    cell.eventImage.image = eventPhoto;
     return cell;
 }
 
@@ -647,7 +625,6 @@ bool showSM=true;
     // the 'Search' button.
     // If you wanted to display results as the user types 
     // you would do that here.
-    //[self loadFriendListsData]; TODO: commented this
     searchText2=circleSearchBar.text;
     
     if ([searchText2 length]>0) 
@@ -660,13 +637,11 @@ bool showSM=true;
     else
     {
         searchText2=@"";
-        //[self loadFriendListsData]; TODO: commented this
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: smAppDelegate.peopleList];
         NSLog(@"eventListGlobalArray: %@",smAppDelegate.peopleList);
         [self.circleListTableView reloadData];
     }
-    
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar 

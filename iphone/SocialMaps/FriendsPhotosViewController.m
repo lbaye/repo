@@ -52,8 +52,6 @@ AppDelegate *smAppdelegate;
     rc=[[RestClient alloc] init];
     smAppdelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFriendsAllPhotoDone:) name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePhotoDone:) name:NOTIF_DELETE_USER_PHOTO_DONE object:nil];
-    //    [self reloadScrolview];
     [photoLabel setTitle:[NSString stringWithFormat:@"Photos of %@",userName] forState:UIControlStateNormal];
     [smAppdelegate showActivityViewer:self.view];
     [smAppdelegate.window setUserInteractionEnabled:NO];
@@ -150,7 +148,6 @@ AppDelegate *smAppdelegate;
 -(IBAction)deleteSelectedPhotosAction:(id)sender
 {
     NSLog(@"delete photos"); 
-    //    ((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId
     [smAppdelegate.window setUserInteractionEnabled:NO];
     [smAppdelegate showActivityViewer:self.view];
     [rc deletePhotoByPhotoId:@"Auth-Token" :smAppdelegate.authToken :((Photo *)[selectedFriendsIndex objectAtIndex:0]).photoId];
@@ -189,7 +186,6 @@ AppDelegate *smAppdelegate;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }
         NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
@@ -201,7 +197,6 @@ AppDelegate *smAppdelegate;
             }
             else if([view isKindOfClass :[UIImageView class]])
             {
-                // [view removeFromSuperview];
             }
         }   
         
@@ -324,9 +319,7 @@ AppDelegate *smAppdelegate;
                         imgView.image = [UIImage imageNamed:@"blank.png"];                   
                     }               
                 }
-                //            NSLog(@"userFrnd.imageUrl: %@",userFrnd.imageUrl);
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 320, 460)];
-                //                UIView *secView=[[UIView alloc] initWithFrame:CGRectMake(x2, 0, 65, 65)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
                 [name setNumberOfLines:0];
@@ -357,11 +350,6 @@ AppDelegate *smAppdelegate;
                     }
                 }
                 [aView addSubview:imgView];
-                //                [aView addSubview:name];
-                //                UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customScrollhandleTapGesture:)];
-                //                tapGesture.numberOfTapsRequired = 1;
-                //                [aView addGestureRecognizer:tapGesture];
-                //                [tapGesture release];           
                 [customScrollView addSubview:aView];
             }        
             x2+=320;
@@ -381,12 +369,6 @@ AppDelegate *smAppdelegate;
 {
     Photo *photo=[[Photo alloc] init];
     filteredList1=[[NSMutableArray alloc] init];
-    //    for (int i=0; i<[photoListArr count]; i++)
-    //    {
-    //        photo=[[Photo alloc] init];
-    //        [photoListArr addObject:photo];
-    //        NSLog(@"photo.imageUrl %@  photo.desc %@ photo.imgId %@",photo.imageUrl,photo.description,photo.photoId);
-    //    }
     filteredList1=[photoListArr mutableCopy];
     filteredList2=[photoListArr mutableCopy];
     NSLog(@"filtered count: %d",[filteredList1 count]);
@@ -396,7 +378,6 @@ AppDelegate *smAppdelegate;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         UserFriends *userFrnd=[[UserFriends alloc] init];
         userFrnd=[filteredList1 objectAtIndex:index];
@@ -411,8 +392,6 @@ AppDelegate *smAppdelegate;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
@@ -420,7 +399,6 @@ AppDelegate *smAppdelegate;
 {
     if (isBackgroundTaskRunning==true)
     {
-        //    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
         int index = [path intValue];
         Photo *photo=[[Photo alloc] init];
         photo=[filteredList1 objectAtIndex:index];
@@ -435,15 +413,12 @@ AppDelegate *smAppdelegate;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
-        //    [self performSelectorOnMainThread:@selector(reloadScrolview) withObject:path waitUntilDone:NO];
-        //    [pl release];
     }
 }
 
 //handling selection from scroll view of friends selection
 -(IBAction) handleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: photoScrollView.subviews];
     if ([selectedFriendsIndex containsObject:[filteredList1 objectAtIndex:[sender.view tag]]])
     {
@@ -471,15 +446,6 @@ AppDelegate *smAppdelegate;
             [im1.layer setCornerRadius:7.0];
             im1.layer.borderColor=[[UIColor greenColor]CGColor];
         }
-        //        else
-        //        {
-        //            UIView *im1=[subviews objectAtIndex:l];
-        //            NSArray* subviews2 = [NSArray arrayWithArray: im1.subviews];
-        //            UIImageView *im2=[subviews2 objectAtIndex:0];
-        //            [im2 setAlpha:0.4];
-        //            im2.layer.borderWidth=2.0;
-        //            im2.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-        //        }
     }
     [self reloadScrolview];
 }
@@ -487,7 +453,6 @@ AppDelegate *smAppdelegate;
 //handling selection from custom scroll view of friends selection
 -(IBAction) customScrollhandleTapGesture:(UIGestureRecognizer *)sender
 {
-    //    int imageIndex =((UITapGestureRecognizer *)sender).view.tag;
     NSArray* subviews = [NSArray arrayWithArray: customScrollView.subviews];
     if ([customSelectedFriendsIndex containsObject:[filteredList2 objectAtIndex:[sender.view tag]]])
     {
