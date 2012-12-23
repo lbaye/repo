@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file RecommendViewController.h
+ * @brief Send recommendation to specific friends.
+ */
+
 #import <UIKit/UIKit.h>
 
 @class Place;

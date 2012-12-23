@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MeetUpRequestListView.h
+ * @brief Show list of meetup requests for own user.
+ */
+
 #import <UIKit/UIKit.h>
 #import "MeetUpListButtonsView.h"
 #import "IconDownloader.h"

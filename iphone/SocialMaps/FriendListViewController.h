@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file FriendListViewController.h
+ * @brief Show friend list with userId. Sort options - alphabetic, distance, circle. 
+ */
+
 #import <UIKit/UIKit.h>
 
 typedef enum _FILTER_BY {

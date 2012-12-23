@@ -6,6 +6,12 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+
+/**
+ * @file MeetUpRequestController.h
+ * @brief Send meetup request to specific friends.
+ */
+
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>

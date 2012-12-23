@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PlaceListViewController.h
+ * @brief Show list of places for a specific user.
+ */
+
 #import <UIKit/UIKit.h>
 
 @class Place;

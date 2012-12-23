@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PlaceViewController.h
+ * @brief Save, delete and edit user's own Place.
+ */
+
 #import <UIKit/UIKit.h>
 #import "PhotoPicker.h"
 

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file EachFriendInList.h
+ * @brief Holds each friend in FriendList class.
+ */
+
 #import <Foundation/Foundation.h>
 
 @interface EachFriendInList : NSObject
@@ -15,7 +20,7 @@
     NSString *friendDistance;
     NSMutableArray *friendCircle;
     NSString *friendAvater;
-    
+
 }
 
 @property (nonatomic, retain) NSString *friendName;

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MessageListViewController.h
+ * @brief Show inbox and reply thread list.
+ */
+
 #import <UIKit/UIKit.h>
 #import "IconDownloader.h"
 

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file DirectionViewController.h
+ * @brief Create direction from source to destinatin coordinate. Close socilamaps and open map app installed in device.
+ */
+
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MeetUpListButtonsView.h
+ * @brief Show three meetup decision buttons - accept, decline and ignore. Disable button if that decision already taken.
+ */
+
 #import <UIKit/UIKit.h>
 
 @class MeetUpRequest;
