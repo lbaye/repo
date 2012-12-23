@@ -35,30 +35,30 @@
 @property (nonatomic,retain) IBOutlet UIButton *selectAllButton;
 
 /**
- * @brief cancel view and return to previous view
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel view and return to previous view
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancel:(id)sender;
 
 /**
- * @brief block selected user
- * @param (id) - action sender
- * @retval action
+ * @brief Block selected user
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)selectedUser:(id)sender;
 
 /**
- * @brief select all user
- * @param (id) - action sender
- * @retval action
+ * @brief Select all user
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)selectAllpeople:(id)sender;
 
 /**
- * @brief navigate user to notification screen
- * @param (id) - action sender
- * @retval action
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)actionNotificationButton:(id)sender;
 

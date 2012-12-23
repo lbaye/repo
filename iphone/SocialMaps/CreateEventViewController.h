@@ -136,177 +136,177 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) Geolocation *geolocation;
 
 /**
- * @brief save event name
- * @param (id) - action sender
- * @retval action
+ * @brief Save event name
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)nameButtonAction;
 
 /**
- * @brief save event sumary
- * @param (id) - action sender
- * @retval action
+ * @brief Save event sumary
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)summaryButtonAction;
 
 /**
- * @brief save event description
- * @param (id) - action sender
- * @retval action
+ * @brief Save event description
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)descriptionButtonAction;
 
 /**
- * @brief save event date
- * @param (id) - action sender
- * @retval action
+ * @brief Save event date
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)dateButtonAction:(id)sender;
 
 /**
- * @brief save event photo
- * @param (id) - action sender
- * @retval action
+ * @brief Save event photo
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)photoButtonAction;
 
 /**
- * @brief delete event photo
- * @param (id) - action sender
- * @retval action
+ * @brief Delete event photo
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)deleteButtonAction;    
 
 /**
- * @brief show user circle list
- * @param (id) - action sender
- * @retval action
+ * @brief Show user circle list
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)showCircle:(id)sender;
 
 /**
- * @brief guest can invite friends
- * @param (id) - action sender
- * @retval action
+ * @brief Guest can invite friends
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)guestCanInvite:(id)sender;
 
 /**
- * @brief unselect all friends
- * @param (id) - action sender
- * @retval action
+ * @brief Unselect all friends
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)unSelectAll:(id)sender;
 
 /**
- * @brief add all friends
- * @param (id) - action sender
- * @retval action
+ * @brief Add all friends
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)addAll:(id)sender;
 
 /**
- * @brief creates an event
- * @param (id) - action sender
- * @retval action
+ * @brief Creates an event
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)createEvent:(id)sender;
 
 /**
- * @brief cancel an event
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel an event
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancelEvent:(id)sender;
 
 /**
- * @brief save event entity
- * @param (id) - action sender
- * @retval action
+ * @brief Save event entity
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)saveEntity:(id)sender;
 
 /**
- * @brief cancel event entity
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel event entity
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancelEntity:(id)sender;
 
 /**
- * @brief save event map location
- * @param (id) - action sender
- * @retval action
+ * @brief Save event map location
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)saveMapLoc:(id)sender;
 
 /**
- * @brief cancel event map location
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel event map location
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancelMapLoc:(id)sender;
 
 /**
- * @brief save invited circle
- * @param (id) - action sender
- * @retval action
+ * @brief Save invited circle
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)saveCircle:(id)sender;
 
 /**
- * @brief cancel invited circle
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel invited circle
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancelCircle:(id)sender;
 
 /**
- * @brief save custom invited guest
- * @param (id) - action sender
- * @retval action
+ * @brief Save custom invited guest
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)saveCustom:(id)sender;
 
 /**
- * @brief cancel custom invited guest
- * @param (id) - action sender
- * @retval action
+ * @brief Cancel custom invited guest
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)cancelCustom:(id)sender;
 
 /**
- * @brief manage segment for inviting friends or circle 
- * @param (id) - action sender
- * @retval action
+ * @brief Manage segment for inviting friends or circle 
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)customSegment:(id)sender;
 
 /**
- * @brief control begin editing, move textfield if that hides by keyboard
- * @param (id) - action sender
- * @retval action
+ * @brief Control begin editing, move textfield if that hides by keyboard
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(void)beganEditing:(UISearchBar *)searchBar;
 
 /**
- * @brief control end editing, move textfield to original position if that hides by keyboard
- * @param (id) - action sender
- * @retval action
+ * @brief Control end editing, move textfield to original position if that hides by keyboard
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(void)endEditing;
 
 /**
- * @brief navigate user to previous screen
- * @param (id) - action sender
- * @retval action
+ * @brief Navigate user to previous screen
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)backButton:(id)sender;
 
 /**
- * @brief navigate user to notification screen
- * @param (id) - action sender
- * @retval action
+ * @brief Navigate user to notification screen
+ * @param (id) - Action sender
+ * @retval Action
  */
 -(IBAction)gotoNotification:(id)sender;
 

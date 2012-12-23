@@ -104,105 +104,105 @@ UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDeleg
 @property(nonatomic,retain) IBOutlet UIActivityIndicatorView *newsFeedImageIndicator;
 
 /**
- * @brief send friend request to user
+ * @brief Send friend request to user
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)friendRequestButton:(id)sender;
 
 /**
- * @brief navigate user to upload photo
+ * @brief Navigate user to upload photo
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)uploadPhotoButton:(id)sender;
 
 /**
- * @brief show user position on map
+ * @brief Show user position on map
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)viewOnMapButton:(id)sender;
 
 /**
- * @brief close point on map view
+ * @brief Close point on map view
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)closeMap:(id)sender;
 
 /**
- * @brief navigate user to previous screen
+ * @brief Navigate user to previous screen
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)backButton:(id)sender;
 
 /**
- * @brief hide keyboard
+ * @brief Hide keyboard
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)hideKeyboard:(id)sender;
 
 /**
- * @brief navigate user to notification screen
+ * @brief Navigate user to notification screen
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)gotoNotification:(id)sender;
 
 /**
- * @brief send message to friends
+ * @brief Send message to friends
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)sendMsg:(id)sender;
 
 /**
- * @brief cancel messaging to friends
+ * @brief Cancel messaging to friends
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)cancelMsg:(id)sender;
 
 /**
- * @brief show message view
+ * @brief Show message view
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)showMsgView:(id)sender;
 
 /**
- * @brief navigate user to direction screen
+ * @brief Navigate user to direction screen
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)getDirection:(id)sender;
 
 /**
- * @brief closes zoom view
+ * @brief Closes zoom view
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)closeZoomView:(id)sender;
 
 /**
- * @brief enlarge profile imAGE
+ * @brief Enlarge profile imAGE
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)goToZoomView:(id)sender;
 
 /**
- * @brief navigate user to view plan on map
+ * @brief Navigate user to view plan on map
  * @param (id) - action sender
  * @retval action
  **/
 - (void) showPinOnMapViewPlan:(Plan *)plan;
 
 /**
- * @brief closes newfeed image enlarged view
+ * @brief Closes newfeed image enlarged view
  * @param (id) - action sender
  * @retval action
  **/

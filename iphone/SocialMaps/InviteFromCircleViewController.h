@@ -33,28 +33,28 @@
 @property (nonatomic,retain) IBOutlet UIButton *selectAllButton;
 
 /**
- * @brief block selected user
+ * @brief Block selected user
  * @param (id) - action sender
  * @retval action
  */
 -(IBAction)cancel:(id)sender;
 
 /**
- * @brief invite selected user
+ * @brief Invite selected user
  * @param (id) - action sender
  * @retval action
  */
 -(IBAction)selectedUser:(id)sender;
 
 /**
- * @brief select all user
+ * @brief Select all user
  * @param (id) - action sender
  * @retval action
  */
 -(IBAction)selectAllpeople:(id)sender;
 
 /**
- * @brief navigate user to notification screen
+ * @brief Navigate user to notification screen
  * @param (id) - action sender
  * @retval action
  */

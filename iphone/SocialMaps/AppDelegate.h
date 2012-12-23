@@ -146,7 +146,7 @@
 /**
  * @brief Get shared instance of a object
  * @param none
- * @retval (id) - shared instance of a object
+ * @retval (id) - Shared instance of a object
  */
 + (id) sharedInstance;
 

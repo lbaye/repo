@@ -190,8 +190,6 @@
 	//spawn datepickerview
 	CGRect datePickerFrame = CGRectMake(0, 40, self.viewSize.width, 216);
 	_datePickerView = [[UIDatePicker alloc] initWithFrame:datePickerFrame];
-////    [self.datePickerView maximumDate]=[NSDate date];
-//    _datePickerView.maximumDate=[NSDate date];
 	self.datePickerView.datePickerMode = self.datePickerMode;
 	
 	[self.datePickerView setDate:self.selectedDate animated:NO];

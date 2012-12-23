@@ -52,23 +52,23 @@
 -(IBAction)viewPrevImage:(id)sender;
 
 /**
- * @brief show user next image
+ * @brief Show user next image
  * @param (id) - action sender
  * @retval action
  */
 -(IBAction)viewNextImage:(id)sender;
 
 /**
- * @brief navigate user to notification screen
+ * @brief Navigate user to notification screen
  * @param (id) - action sender
  * @retval action
  */
 -(IBAction)actionNotificationButton:(id)sender;
 
 /**
- * @brief navigate user to previous screen
+ * @brief Navigate user to previous screen
  * @param (id) - action sender
- * @retval action
+ * @retval Action
  */
 -(IBAction)backButtonAction:(id)sender;
 

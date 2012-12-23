@@ -22,14 +22,14 @@
 @property(nonatomic,retain) UserInfo *userInfo;
 
 /**
- * @brief navigate user to previous screen
+ * @brief Navigate user to previous screen
  * @param (id) - action sender
  * @retval action
  **/
 -(IBAction)backButtonAction:(id)sender;
 
 /**
- * @brief navigate user to notification screen
+ * @brief Navigate user to notification screen
  * @param (id) - action sender
  * @retval action
  **/
