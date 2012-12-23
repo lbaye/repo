@@ -44,6 +44,9 @@ class AdminUserController extends Controller
         $form = $this->get('form.factory')->create(new LoginType());
 
         $request = $this->get('request');
+        if ($this->get('session')->get('user')) {
+            return $this->redirect('userlist/1');
+        }
 
         if ('POST' == $request->getMethod()) {
             $form->bindRequest($request);
@@ -418,9 +421,12 @@ class AdminUserController extends Controller
             $entity = $dm->getRepository('AdminUserBundle:Place')->findOneBy(array('_id' => $id));
             if (!empty($entity)) {
                 $location = $entity->getLocation();
-                $entity->setLat($location['lat']);
-                $entity->setLng($location['lng']);
-                $entity->setAddress($location['address']);
+                if (!empty($location['lat']))
+                    $entity->setLat($location['lat']);
+                if (!empty($location['lng']))
+                    $entity->setLng($location['lng']);
+                if (!empty($location['address']))
+                    $entity->setAddress($location['address']);
             }
 
             $form = $this->get('form.factory')
