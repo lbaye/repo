@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file LoadingView.h
+ * @brief Display loading indicator.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface LoadingView : UIView

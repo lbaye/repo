@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MapViewController.h
+ * @brief Display all user, places, events and geotag on map view. User can navigate to other user's profile and can also navigate to different feature to different 
+ */
+
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CLLocationManager.h>

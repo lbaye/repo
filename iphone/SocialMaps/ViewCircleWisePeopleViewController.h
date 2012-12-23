@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ViewCircleWisePeopleViewController.h
+ * @brief Display people according to circle through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 #import "SectionHeaderView.h"

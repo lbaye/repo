@@ -6,18 +6,20 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file SettingsController.h
+ * @brief Display user defined settings through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "CustomCheckbox.h"
 #import "AppDelegate.h"
 
 @interface SettingsController : UIViewController<CustomCheckboxDelegate> {
-    //NSMutableArray *defPlatforms;
     AppDelegate     *smAppDelegate;
     IBOutlet UILabel *totalNotifCount;
 }
-//@property (nonatomic, retain) NSMutableArray *defPlatforms;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
-
 @property (retain, nonatomic) IBOutlet UIScrollView *settingsScrollView;
 @property (retain, nonatomic) IBOutlet UIView *platformView;
 @property (retain, nonatomic) IBOutlet UIView *layersView;

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MapAnnotation.h
+ * @brief Creates map annotation for people place, geotag and event.
+ */
+
 #import <MapKit/MapKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "LocationItem.h"

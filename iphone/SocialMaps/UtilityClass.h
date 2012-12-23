@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file UtilityClass.h
+ * @brief Contains some helper method needed throughout the project.
+ */
+
 #import <Foundation/Foundation.h>
 #import "Geolocation.h"
 

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ViewCircleListViewController.h
+ * @brief Display people list with distance wise sorted through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 

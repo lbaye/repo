@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file FriendsProfileViewController.h
+ * @brief Display friends and other user's profile through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "Plan.h"
 #import <UIKit/UIKit.h>

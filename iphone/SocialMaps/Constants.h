@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file Constants.h
+ * @brief Stores constants and singleton object.
+ */
+
 extern NSString * const WS_URL;
 extern NSString * const NOTIF_LOGIN_DONE;
 extern NSString * const NOTIF_REG_DONE;

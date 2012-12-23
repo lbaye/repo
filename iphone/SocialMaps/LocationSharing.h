@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file LocationSharing.h
+ * @brief Display location sharing view through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "SelectFriends.h"
 #import "RadioButton.h"

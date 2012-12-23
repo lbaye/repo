@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file CircleListTableCell.h
+ * @brief Custom table cell to display user list of table view in people list.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface CircleListTableCell : UITableViewCell

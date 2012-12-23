@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ODRefreshControl.h
+ * @brief Pull to refresh controller with animation.
+ */
+
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 

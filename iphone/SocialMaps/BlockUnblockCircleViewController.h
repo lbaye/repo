@@ -6,6 +6,11 @@
 // Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file BlockUnblockCircleViewController.h
+ * @brief Other user can be blocked/unblocked from this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "CircleImageDownloader.h"
 

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file FriendsPhotosViewController.h
+ * @brief Display friends and other user's photos through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface FriendsPhotosViewController : UIViewController

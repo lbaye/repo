@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file InfoSharing.h
+ * @brief Display information sharing preference through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #define INFO_SHARING_ROW_HEIGHT 45
 

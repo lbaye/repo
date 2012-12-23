@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PlanListViewController.h
+ * @brief User can view his created plan list and can delete plan through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "PlanImageDownloader.h"
 

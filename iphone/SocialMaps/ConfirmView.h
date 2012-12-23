@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ConfirmView.h
+ * @brief Confirms user about any operation.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface ConfirmView : UIView {

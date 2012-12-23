@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file FacebookHelper.h
+ * @brief Helper class to communicate with facebook ios sdk.
+ */
+
 #import <Foundation/Foundation.h>
 #import "FBConnect.h"
 

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file NotificationController.h
+ * @brief Display user's notification, friend request and unread messages through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "NotifRequest.h"
 #import "AppDelegate.h"

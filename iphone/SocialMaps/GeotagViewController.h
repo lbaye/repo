@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file GeotagViewController.h
+ * @brief Geotag created this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "UserFriends.h"
 #import "PhotoPicker.h"

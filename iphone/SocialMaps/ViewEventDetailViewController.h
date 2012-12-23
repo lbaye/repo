@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file ViewEventDetailViewController.h
+ * @brief Display an event detail through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
 #import "CustomRadioButton.h"

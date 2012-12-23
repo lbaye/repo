@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file CircleImageDownloader.h
+ * @brief Downloads image for circle.
+ */
+
 #import <Foundation/Foundation.h>
 @class LocationItemPeople;
 @class ViewCircleListViewController;

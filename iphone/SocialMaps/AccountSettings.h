@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file AccountSettings.h
+ * @brief Display account setings through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface AccountSettings : UIScrollView <UITextFieldDelegate>

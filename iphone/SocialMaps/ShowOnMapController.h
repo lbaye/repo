@@ -10,8 +10,6 @@
 #import <Mapkit/Mapkit.h>
 #import "Geolocation.h"
 
-//@class LocationItem;
-
 @interface ShowOnMapController : UIViewController {
 
     CLLocationCoordinate2D theCoordinate;

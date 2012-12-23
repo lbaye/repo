@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PhotoPickerOriginalImage.h
+ * @brief User can capture full screen image and select full screen image from gallery through this view controller.
+ */
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 

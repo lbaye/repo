@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file RestClient.h
+ * @brief Consumes all web services needed for this project
+ */
+
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequestDelegate.h"
 #import "Constants.h"

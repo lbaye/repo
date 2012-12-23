@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file UserDefault.h
+ * @brief Performs operations with user defaults.
+ */
+
 #import <Foundation/Foundation.h>
 
 

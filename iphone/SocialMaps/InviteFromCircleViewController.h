@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file InviteFromCircleViewController.h
+ * @brief Display second degree friends and send invitation to them to Socialmaps
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface InviteFromCircleViewController : UIViewController

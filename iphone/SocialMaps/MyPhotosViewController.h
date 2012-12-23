@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file MyPhotosViewController.h
+ * @brief Display user's uploaded photo to this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface MyPhotosViewController : UIViewController

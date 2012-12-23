@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file CreateEventViewController.h
+ * @brief Event created and updated through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "UserFriends.h"
 #import "PhotoPicker.h"

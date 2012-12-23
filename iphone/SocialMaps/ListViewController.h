@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ListViewController.h
+ * @brief Display people, place and event list, filter and search them. User can also view circle menu and navigate to different feature
+ */
+
 #import <UIKit/UIKit.h>
 #import "CustomCheckbox.h"
 #import "LocationItem.h"

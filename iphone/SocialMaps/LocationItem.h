@@ -6,10 +6,14 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file LocationItems.h
+ * @brief Contains common items of people list and place list and create table cell for list view
+ */
+
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-//#import "ListViewController.h"
 @class ListViewController;
 
 typedef enum _OBJECT_TYPES {
