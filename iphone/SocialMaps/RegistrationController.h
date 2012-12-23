@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file RegistrationController.h
+ * @brief User can register with user name, password and other information through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "ASIHTTPRequestDelegate.h"
 #import "User.h"

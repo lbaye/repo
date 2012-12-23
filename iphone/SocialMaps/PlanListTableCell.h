@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PlanListTableCell.h
+ * @brief Custom table cell for displaying plan list.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface PlanListTableCell : UITableViewCell

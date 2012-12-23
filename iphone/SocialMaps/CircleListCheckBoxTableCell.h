@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file CircleListCheckBoxTableCell.h
+ * @brief Custom table cell with checkbox for user selection of table view in people list.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface CircleListCheckBoxTableCell : UITableViewCell

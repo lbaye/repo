@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file IconDownloader.h
+ * @brief Downloads user image from server.
+ */
 
 @class UserFriends;
 @class MapViewController;

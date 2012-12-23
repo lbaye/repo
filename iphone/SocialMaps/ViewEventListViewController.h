@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file ViewEventListViewController.h
+ * @brief Display event list through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import <Mapkit/Mapkit.h>
 #import "EventImageDownloader.h"

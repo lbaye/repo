@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file LoginController.h
+ * @brief User can logged in with user name and password and also can connect with facebook through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
 #import "Constants.h"

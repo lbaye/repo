@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file ViewController.h
+ * @brief Display initial progress bar and load user defined data through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "LoginController.h"
 

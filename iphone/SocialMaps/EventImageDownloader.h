@@ -6,6 +6,12 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file EventImageDownloader.h
+ * @brief Downloads image for event.
+ */
+
+
 @class Event;
 @class ViewEventListViewController;
 

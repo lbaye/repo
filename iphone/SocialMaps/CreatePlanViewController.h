@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file CreatePlanViewController.h
+ * @brief Plan created and updated through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "Plan.h"
 #import "CustomRadioButton.h"

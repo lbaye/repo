@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file UploadNewPhotoViewController.h
+ * @brief User upload his photo for photo feature through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import "PhotoPickerOriginalImage.h"

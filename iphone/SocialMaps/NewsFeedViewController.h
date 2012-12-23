@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file NewsFeedViewController.h
+ * @brief Display user and friends combined newsfeed through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface NewsFeedViewController : UIViewController<UIScrollViewDelegate>

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PlanImageDownloader.h
+ * @brief Downloads image for plan.
+ */
+
 #import <Foundation/Foundation.h>
 
 @class Plan;

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file AppDelegate.h
+ * @brief Application starts with this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 #import "FBConnect.h"

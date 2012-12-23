@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file SelectCircleTableCell.h
+ * @brief Custom table cell for selection of circles.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface SelectCircleTableCell : UITableViewCell

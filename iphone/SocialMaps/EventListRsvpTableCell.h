@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file EventListRsvpTableCell.h
+ * @brief Custom table cell with event RSVP option.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface EventListRsvpTableCell : UITableViewCell

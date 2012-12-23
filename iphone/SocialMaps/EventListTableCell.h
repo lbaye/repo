@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2 Limited. All rights reserved.
 //
 
+/**
+ * @file EventListTableCell.h
+ * @brief Custom table cell to display event list.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface EventListTableCell : UITableViewCell

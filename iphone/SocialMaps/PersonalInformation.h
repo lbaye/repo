@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PersonalInformation.h
+ * @brief Display user's personal information through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import "PhotoPicker.h"
 #import "AppDelegate.h"

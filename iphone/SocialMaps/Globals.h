@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file Globals.h
+ * @brief Stores singleton objects of project.
+ */
+
 #import <Foundation/Foundation.h>
 #import "Event.h"
 #import "Plan.h"

@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file PhotoPicker.h
+ * @brief User can capture image and select image from gallery through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 
 @protocol PhotoPickerDelegate <NSObject>

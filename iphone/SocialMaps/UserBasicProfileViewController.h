@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file UserBasicProfileViewController.h
+ * @brief Display own profile through this view controller.
+ */
+
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "PhotoPicker.h"

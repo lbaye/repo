@@ -6,6 +6,11 @@
 //  Copyright (c) 2012 Genweb2. All rights reserved.
 //
 
+/**
+ * @file CustomAlert.h
+ * @brief Creates custom alert.
+ */
+
 #import <UIKit/UIKit.h>
 
 @interface CustomAlert : UIAlertView
