@@ -107,6 +107,10 @@ user_block_list:
     pattern:  /blockuserlist
     defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
 
+user_block_list_paging:
+    pattern:  /blockuserlist/{page}
+    defaults: { _controller: AdminUserBundle:AdminUser:userBlockList }
+
 place_search_result:
     pattern:  /placesearchresult/{page}
     defaults: { _controller: AdminUserBundle:AdminUser:searchPlace }
