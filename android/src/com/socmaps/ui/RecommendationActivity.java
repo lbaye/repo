@@ -38,6 +38,13 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * RecommendationActivity is used to recommend someone about a particular location. 
+ * Basically one user recommends other user and when recommends the recipient user can see the 
+ * direction of that location from his current location. 
+ *
+ */
+
 public class RecommendationActivity extends Activity {
 
 	Context context;
@@ -285,16 +292,6 @@ public class RecommendationActivity extends Activity {
 	private void showFriendList() {
 
 		btnFriendSelect.setTextAppearance(context, R.style.ButtonTextStyleBold);
-		/*
-		 * btnCircleSelect.setTextAppearance(context,
-		 * R.style.ButtonTextStyleNormal);
-		 */
-
-		/*
-		 * if (scrollViewCircles.getVisibility() == View.VISIBLE) {
-		 * scrollViewCircles.setVisibility(View.GONE); }
-		 */
-
 		scrollViewFriends.setVisibility(View.VISIBLE);
 	}
 

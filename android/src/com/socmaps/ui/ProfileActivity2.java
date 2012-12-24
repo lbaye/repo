@@ -46,6 +46,12 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
+/**
+ * ProfileActivity2 defines the Profile of Other's people. 
+ * Here the details of particular user & his/her newsfeed is shown. 
+ *
+ */
+
 public class ProfileActivity2 extends Activity implements OnClickListener {
 
 	Context context;

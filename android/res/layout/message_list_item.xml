@@ -80,7 +80,8 @@
             android:textSize="12dip"
             android:textStyle="normal"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end" 
+            android:background="@color/transparent"/>
     </LinearLayout>
 
 </RelativeLayout>

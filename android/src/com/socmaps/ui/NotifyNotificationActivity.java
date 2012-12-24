@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
+/**
+ * NotifyNotificationActivity class is used to notify user with all notification. 
+ */
+
 public class NotifyNotificationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

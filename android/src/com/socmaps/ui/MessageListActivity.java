@@ -28,6 +28,10 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
+/**
+ * MessageListActivity class for generating message list view and some user interaction.
+ *
+ */
 public class MessageListActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;
@@ -155,9 +159,10 @@ public class MessageListActivity extends Activity {
 							if (messageEntity.getStatus().equalsIgnoreCase(
 									"unread")) {
 
-								senderMessage.setBackgroundColor(Color.GRAY);
+								//senderMessage.setBackgroundColor(Color.GRAY);
 							}
 
+							v.invalidate();
 							messageListContainer.addView(v);
 						}
 					}

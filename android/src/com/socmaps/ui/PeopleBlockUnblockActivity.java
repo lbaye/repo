@@ -49,6 +49,10 @@ import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * PeopleBlockUnblockActivity class is used to block & unblock of a particular user or a group of users from the list of people. 
+ */
+
 public class PeopleBlockUnblockActivity extends Activity implements
 		OnClickListener, ListItemClickListener {
 

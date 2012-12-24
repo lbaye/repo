@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
@@ -54,6 +53,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 
+/**
+ * LayerPreferencesActivity class for generating all users and places list view and some user interaction.
+ *
+ */
 public class ListViewActivity extends Activity implements
 		OnCheckedChangeListener, OnClickListener, ListItemClickListener {
 

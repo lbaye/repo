@@ -72,6 +72,11 @@ import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
+
+/**
+ * EventEditActivity class for generating event edit view and some user interaction.
+ *
+ */
 public class EventEditActivity extends Activity implements PeoplePickerListener {
 
 	Button btnBack, btnNotification;

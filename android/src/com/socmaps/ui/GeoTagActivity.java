@@ -61,10 +61,14 @@ import com.socmaps.widget.LocationRadioGroup;
 import com.socmaps.widget.LocationRadioGroupListener;
 import com.socmaps.widget.NearByPlacesPicker;
 import com.socmaps.widget.NearByPlacesPickerListener;
-import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 
+
+/**
+ * GeoTagActivity class responsible for creating geo tag view.
+ *
+ */
 public class GeoTagActivity extends Activity implements PeoplePickerListener {
 
 	Button btnBack, btnNotification;

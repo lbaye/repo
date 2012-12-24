@@ -15,7 +15,13 @@ import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
-import com.socmaps.util.Utility;
+import com.socmaps.util.Utility; 
+
+/**
+ * SplashActivity class is used to show Splash in a certain amount of period. Each time when the application 
+ * is run Splash image will be shown with a progress bar. 
+ *
+ */
 
 public class SplashActivity extends Activity {
 	ProgressBar pbSplash;

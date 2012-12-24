@@ -2,7 +2,6 @@ package com.socmaps.ui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,6 +73,11 @@ import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
+
+/**
+ * EventNewActivity class for generating new event view to create new event and some user interaction.
+ *
+ */
 public class EventNewActivity extends Activity implements PeoplePickerListener {
 
 	Button btnBack, btnNotification;
@@ -1151,9 +1155,6 @@ public class EventNewActivity extends Activity implements PeoplePickerListener {
 							getString(R.string.errorMessageGallery),
 							Toast.LENGTH_SHORT).show();
 					Log.e("Gallery image", "OutOfMemoryError");
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO: handle exception

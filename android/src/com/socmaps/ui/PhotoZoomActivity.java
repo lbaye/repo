@@ -19,6 +19,11 @@ import android.widget.ProgressBar;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.images.ImageDownloader;
 
+/**
+ * PhotoZoomActivity class is used to zoom in a particular photo from the photo list album.
+ *
+ */
+
 public class PhotoZoomActivity extends Activity {
 
 	private ImageDownloader imageDownloader;
@@ -65,9 +70,6 @@ public class PhotoZoomActivity extends Activity {
 		photo_url = getIntent().getStringArrayExtra("PHOTO_URLS");
 
 		Log.w("PhotoZoomActivity photo_url size", photo_url.length + " what?");
-
-		// imageDownloader = new ImageDownloader();
-		// imageDownloader.setMode(ImageDownloader.Mode.CORRECT);
 		imageDownloader = ImageDownloader.getInstance();
 
 		inflater = (LayoutInflater) context
@@ -157,8 +159,7 @@ public class PhotoZoomActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			// return mImages.length;
-			// return URLS.length;
+			
 			return photo_url.length;
 		}
 
@@ -267,16 +268,17 @@ public class PhotoZoomActivity extends Activity {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			((ViewPager) container).removeView((View) object);
 		}
-	}
+	} 
+	
 
-	public void showHideButton(View v, View v1, View v2) {
+	private void showHideButton(View v, View v1, View v2) {
 		v.setVisibility(View.INVISIBLE);
 		v1.setVisibility(View.INVISIBLE);
 		v2.setVisibility(View.INVISIBLE);
 
 	}
 
-	public void showHideButtons(View v, View v1, View v2) {
+	private void showHideButtons(View v, View v1, View v2) {
 
 		if (v.getVisibility() == View.VISIBLE) {
 

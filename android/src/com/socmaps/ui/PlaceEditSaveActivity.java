@@ -44,6 +44,12 @@ import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.Utility;
 
+/**
+ * PlaceEditSaveActivity class is used to update or delete a particular saved place. 
+ * If the update operation is performed, then the updated info is sent to the server. 
+ * Delete operation will remove the place from the list & update the list.
+ */
+
 public class PlaceEditSaveActivity extends Activity implements OnClickListener {
 	private Context context;
 	private Button btnBack, btnPlaceNameEdit, btnPlaceDisEdit,

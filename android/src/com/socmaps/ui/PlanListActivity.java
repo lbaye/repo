@@ -42,6 +42,12 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * PlanListActivity class is used to depict the list of plans of user's & others users. 
+ * There is options of Edit & Delete if that is user's own Plan List. 
+ * No chance for Edit or Delete is it shows other particular user's Plan List. 
+ */
+
 public class PlanListActivity extends Activity implements OnClickListener,
 		BroadcastListener {
 

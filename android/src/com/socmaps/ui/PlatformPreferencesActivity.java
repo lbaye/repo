@@ -8,8 +8,8 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
@@ -19,9 +19,8 @@ import android.widget.Toast;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
-import com.google.android.gcm.GCMRegistrar;
+import com.facebook.android.FacebookError;
 import com.socmaps.entity.PlatformsPreferences;
 import com.socmaps.fb.BaseDialogListener;
 import com.socmaps.fb.FBUtility;
@@ -34,6 +33,11 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
+
+/**
+ * PlatformPreferencesActivity describes the preferences of platform. 
+ * User can choose either one based on his preference. 
+ */
 
 public class PlatformPreferencesActivity extends Activity implements
 		OnClickListener {

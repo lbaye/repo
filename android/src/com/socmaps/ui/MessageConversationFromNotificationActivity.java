@@ -38,6 +38,12 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * MessageConversationFromNotificationActivity class for generating view of
+ * message conversation from notification and user can participate to the
+ * particular conversation.
+ * 
+ */
 public class MessageConversationFromNotificationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

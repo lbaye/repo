@@ -39,6 +39,12 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * RegistrationActivity is used for registration an user. If an user has no account on SocialMap, he/she has to be 
+ * registered, this functionality has done here. 
+ *
+ */
+
 public class RegistrationActivity extends Activity {
 	EditText etEmail, etPassword, etFirstName, etLastName, etCity, etZipCode,
 			etService, etStreetAddress, etBio, etInterests;
@@ -468,9 +474,6 @@ public class RegistrationActivity extends Activity {
 							getString(R.string.errorMessageGallery),
 							Toast.LENGTH_SHORT).show();
 					Log.e("Gallery image", "OutOfMemoryError");
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO: handle exception

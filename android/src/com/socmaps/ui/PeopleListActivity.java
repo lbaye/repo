@@ -47,6 +47,13 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.MultiDirectionSlidingDrawer;
 
+/**
+ * PeopleListActivity class is used show a list of people based on distance, invitation, 
+ * circle & block/unblock. Each tab has different actions; in block/unblock, user can block/unblock a particular user, 
+ * in circle, user can create new circle & put people into it or put people from one circle to another or rename a circle, 
+ * in invitation, user can sent invitation to his facebook friends to use socialmap. 
+ */
+
 public class PeopleListActivity extends Activity implements OnClickListener,
 		ListItemClickListener, OnCheckedChangeListener {
 
@@ -462,10 +469,14 @@ public class PeopleListActivity extends Activity implements OnClickListener,
 
 			StaticValues.isHighlightAnnotation = true;
 			StaticValues.highlightAnnotationItem = people;
+			//finish(); 
+			
+			StaticValues.highlightAnnotationItem = people;
 
 			Intent intent = new Intent(context, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+			
 
 		}
 

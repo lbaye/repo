@@ -30,6 +30,11 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
+/**
+ * NotificationPreferencesActivity class is used to notify user based on his selected preferences, e.g. Friend Request, 
+ * Post by Friends, Comments, Messages, Recommendations, Offline Notification and so on. 
+ */
+
 public class NotificationPreferencesActivity extends Activity implements
 		OnClickListener {
 

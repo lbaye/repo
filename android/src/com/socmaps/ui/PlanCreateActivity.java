@@ -37,6 +37,10 @@ import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
+/** 
+ * PlanCreateActivity is used to create a plan & sent it to server. 
+ */
+
 public class PlanCreateActivity extends Activity implements
 		PeoplePickerListener {
 

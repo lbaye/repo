@@ -49,13 +49,6 @@ public class CustomBalloonOverlayViewSecondDegreePeople<Item extends OverlayItem
 
 	}
 
-	private boolean isValid(String value) {
-		if (value != null)
-			if (!value.equals(""))
-				return true;
-		return false;
-	}
-
 	@Override
 	protected void setBalloonData(CustomOverlayItem item, ViewGroup parent) {
 

@@ -38,6 +38,11 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 
+/**
+ * MessageConversationActivity class for generating message conversation view
+ * and user can participate to the particular conversation.
+ * 
+ */
 public class MessageConversationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

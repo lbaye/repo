@@ -17,12 +17,9 @@ public class CustomBalloonOverlayViewMeetup<Item extends OverlayItem> extends
 		BalloonOverlayView<CustomOverlayItem> {
 
 	private TextView address, distance;
-	private ImageDownloader imageDownloader;
-
 	protected CustomBalloonOverlayViewMeetup(Context context,
 			int balloonBottomOffset, ImageDownloader imageDownloader) {
 		this(context, balloonBottomOffset);
-		this.imageDownloader = imageDownloader;
 	}
 
 	protected CustomBalloonOverlayViewMeetup(Context context,

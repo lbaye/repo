@@ -29,6 +29,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
+/**
+ * AccountSettingsActivity class for generating information sharing setting view and some user interaction.
+ *
+ */
 public class InformationSharingSettingsActivity extends Activity implements
 		OnClickListener {
 	// ListView lvInformationSharing; For Customized ListView

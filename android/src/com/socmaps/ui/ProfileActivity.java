@@ -37,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +51,12 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
+
+/**
+ * ProfileActiviy describes the details user's own profile. It also shows, the activities of users 
+ * through Newsfeed. 
+ *
+ */
 
 public class ProfileActivity extends Activity implements OnClickListener {
 	Context context;

@@ -240,7 +240,6 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 				boolean isSelected = (Boolean) me.getValue();
 
 				if (isSelected) {
-					// Log.e("IsChecked", key);
 					selectedFriendList.add(key);
 					selectedFriendListAll.add(key);
 				}
@@ -255,7 +254,6 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 					if (selectedCircles.containsKey(circleId)) {
 						boolean isChecked = selectedCircles.get(circleId);
 						if (isChecked) {
-							// Log.e("IsCheckedCircle", circleId);
 							selectedCircleList.add(circleId);
 
 							List<People> friend = circles.get(i)
@@ -263,7 +261,6 @@ public class PeoplePicker extends Dialog implements OnClickListener {
 							if (friend != null) {
 								for (int j = 0; j < friend.size(); j++) {
 									String friendId = friend.get(j).getId();
-									// Log.e("IsChecked", friendId);
 									if (!selectedCircleFriendList
 											.contains(friendId)) {
 										selectedCircleFriendList.add(friendId);

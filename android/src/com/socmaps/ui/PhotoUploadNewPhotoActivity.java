@@ -46,6 +46,10 @@ import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
+/**
+ * PhotoUploadNewPhotoActivity class is used to upload new photos to the web server. 
+ */
+
 public class PhotoUploadNewPhotoActivity extends Activity implements
 		PeoplePickerListener {
 

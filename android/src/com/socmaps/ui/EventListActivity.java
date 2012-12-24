@@ -43,6 +43,12 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+
+/**
+ * EventListActivity class for generating event list view and some user interaction.
+ *
+ */
 public class EventListActivity extends Activity implements OnClickListener,
 		BroadcastListener {
 	private Context context;

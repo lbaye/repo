@@ -13,6 +13,11 @@ import android.widget.EditText;
 import com.socmaps.util.Constant;
 import com.socmaps.util.Utility;
 
+
+/**
+ * BetaLoginActivity class for generating beta login view.
+ *
+ */
 public class BetaLoginActivity extends Activity implements OnClickListener {
 	EditText etPassword;
 	Button btnLogin;

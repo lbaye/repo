@@ -1,8 +1,5 @@
 package com.socmaps.ui;
 
-import com.socmaps.util.Constant;
-import com.socmaps.util.Utility;
-
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
+import com.socmaps.util.Constant;
+import com.socmaps.util.Utility;
+
+
+/**
+ * MessageActivity class for generating message tab view and navigate tab .
+ *
+ */
 public class MessageActivity extends TabActivity {
 
 	ButtonActionListener buttonActionListener;

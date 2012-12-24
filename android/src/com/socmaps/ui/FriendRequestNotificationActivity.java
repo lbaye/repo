@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.readystatesoftware.mapviewballoons.R;
 import com.socmaps.entity.CirclesAndFriends;
 import com.socmaps.entity.FriendRequest;
-import com.socmaps.entity.MyInfo;
 import com.socmaps.util.Constant;
 import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
@@ -25,6 +24,11 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+/**
+ * FriendRequestNotificationActivity class for generating friend request notification view and some user interaction.
+ *
+ */
 public class FriendRequestNotificationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

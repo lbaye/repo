@@ -18,7 +18,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,6 +51,10 @@ import com.socmaps.widget.LocationRadioGroupListener;
 import com.socmaps.widget.NearByPlacesPicker;
 import com.socmaps.widget.NearByPlacesPickerListener;
 
+/**
+ * MeetupRequestNewActivity class for generating meet up request view to create new meet up and some user interaction.
+ *
+ */
 public class MeetupRequestNewActivity extends Activity {
 
 	Button btnBack, btnNotification;
@@ -616,6 +619,8 @@ public class MeetupRequestNewActivity extends Activity {
 			String key = (String) me.getKey();
 			selectedFriends.put(key, isSelect);
 		}
+		
+		
 	}
 
 	private void selectionCircles(boolean isSelect) {

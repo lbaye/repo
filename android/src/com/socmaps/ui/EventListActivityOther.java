@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.socmaps.entity.Event;
 import com.socmaps.entity.People;
-import com.socmaps.entity.Plan;
 import com.socmaps.images.ImageDownloader;
 import com.socmaps.listrow.EventRowFactory;
 import com.socmaps.listrow.ListItemClickListenerEvent;
@@ -47,6 +46,11 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+/**
+ * EventListActivityOther class for generating other user event list view and some user interaction.
+ *
+ */
 public class EventListActivityOther extends Activity implements
 		OnClickListener, BroadcastListener {
 	private Context context;

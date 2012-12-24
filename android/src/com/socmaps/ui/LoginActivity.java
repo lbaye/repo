@@ -1,7 +1,5 @@
 package com.socmaps.ui;
 
-import java.io.ByteArrayOutputStream;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,9 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.android.*;
-import com.facebook.android.Facebook.*;
-
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 import com.socmaps.entity.FacebookErrorResponse;
 import com.socmaps.entity.MyInfo;
 import com.socmaps.fb.BaseRequestListener;
@@ -37,16 +36,17 @@ import com.socmaps.fb.FBUtility;
 import com.socmaps.fb.SessionEvents;
 import com.socmaps.fb.SessionEvents.AuthListener;
 import com.socmaps.fb.SessionEvents.LogoutListener;
-/*import com.socmaps.fb.BaseRequestListener;
- import com.socmaps.fb.FBUtility;
- import com.socmaps.fb.LoginButton;
- import com.socmaps.fb.SessionStore;*/
 import com.socmaps.util.Constant;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+/**
+ * LoginActivity class for generating login view by two way (sm and fb) also navigate to register view.
+ *
+ */
 public class LoginActivity extends Activity {
 	EditText etEmail, etPassword;
 	CheckBox chkRememberPassword;

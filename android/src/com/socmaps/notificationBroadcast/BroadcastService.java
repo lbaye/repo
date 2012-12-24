@@ -6,6 +6,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * BroadcastService class is running on the background, it detects if the application has any notification or not. 
+ */
+
 public class BroadcastService extends Service {
 	private static final String TAG = "BroadcastService";
 	public static final String BROADCAST_ACTION = "com.socmaps.ui";

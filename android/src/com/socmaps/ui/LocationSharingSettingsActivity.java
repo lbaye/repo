@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.mapviewballoons.R;
-import com.socmaps.entity.Circle;
 import com.socmaps.entity.LocationSharing;
 import com.socmaps.entity.LsValues;
 import com.socmaps.entity.MyInfo;
@@ -43,6 +42,11 @@ import com.socmaps.widget.LocationPreferenceItemView;
 import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 
+
+/**
+ * LocationSharingSettingsActivity class for generating location sharing setting view and some user interaction.
+ *
+ */
 public class LocationSharingSettingsActivity extends Activity implements
 		OnClickListener {
 

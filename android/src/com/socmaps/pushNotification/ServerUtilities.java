@@ -163,10 +163,6 @@ public final class ServerUtilities {
 			conn.setUseCaches(false);
 			conn.setFixedLengthStreamingMode(bytes.length);
 			conn.setRequestMethod("PUT");
-			/*
-			 * conn.setRequestProperty("Content-Type",
-			 * "application/x-www-form-urlencoded;charset=UTF-8");
-			 */
 			conn.setRequestProperty("Auth-Token", Utility.getAuthToken(con));
 			// post the request
 			OutputStream out = conn.getOutputStream();

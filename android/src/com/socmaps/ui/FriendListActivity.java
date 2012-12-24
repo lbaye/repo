@@ -46,6 +46,11 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+
+/**
+ * FriendListActivity class for generating friend list (by distance,circle and a to z) view and some user interaction.
+ *
+ */
 public class FriendListActivity extends Activity implements OnClickListener {
 
 	private enum SelectedTab {

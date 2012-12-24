@@ -32,6 +32,11 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.PhotoZoomDialogPicker;
 
+/**
+ * PhotoListActivity is used to show photo list of user's himself or other particular user. 
+ * There is an option to zoom in a particular photo. 
+ */
+
 public class PhotoListActivity extends Activity implements OnClickListener {
 
 	private Context context;

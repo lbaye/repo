@@ -1271,7 +1271,6 @@ public class Utility {
 				String circleId = circles.get(i).getId();
 				boolean isChecked = selectedCircles.get(circleId);
 				if (isChecked) {
-					// Log.e("IsCheckedCircle", circleId);
 
 					List<People> friendList = circles.get(i).getFriendList();
 					if (friendList != null) {
@@ -1457,8 +1456,6 @@ public class Utility {
 				Message msg = Message.obtain();
 				msg.setTarget(handler);
 				if (result != null) {
-
-					// Log.e("Address response", result);
 
 					String address = null;
 					String name = null;

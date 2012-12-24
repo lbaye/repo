@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+/**
+ * SettingsActivity class is used to set up the application based on user's own preference. 
+ * From the SettingsActivity users can set up Accounting, Information, Lacation Sharing, Notification, 
+ * Platform, Layer. 
+ *
+ */
+
 public class SettingsActivity extends Activity {
 
 	Button btnBack, btnNotification, btnAccountSettings, btnInformationSharing,

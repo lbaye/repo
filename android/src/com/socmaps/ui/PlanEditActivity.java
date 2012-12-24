@@ -38,6 +38,12 @@ import com.socmaps.widget.PeoplePickerListener;
 import com.socmaps.widget.PermissionRadioGroup;
 import com.socmaps.widget.PermissionRadioGroupListener;
 
+/**
+ * PlanEditActivity class is used to edit a particular plan from the plan list 
+ * and that updated plan is send to server to update. 
+ *
+ */
+
 public class PlanEditActivity extends Activity implements PeoplePickerListener {
 
 	Button btnBack, btnNotification;

@@ -20,7 +20,6 @@ import com.socmaps.ui.R;
 public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 
 	Context context;
-	private int layoutResourceId;
 	private List<Circle> itemList = null;
 	private List<String> selectedCircleList = null;
 
@@ -43,7 +42,6 @@ public class CircleAddMoveToAdapter extends ArrayAdapter<Circle> {
 		super(context, layoutResourceId, itemList);
 		// TODO Auto-generated constructor stub
 		this.context = context;
-		this.layoutResourceId = layoutResourceId;
 		this.itemList = itemList;
 		this.selectedCircleList = selectedCircleList;
 

@@ -14,6 +14,11 @@ import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.Utility;
 
+
+/**
+ * MessageGroupActivity class for generating message group view and some user interaction.
+ *
+ */
 public class MessageGroupActivity extends ActivityGroup {
 
 	static MessageGroupActivity group;

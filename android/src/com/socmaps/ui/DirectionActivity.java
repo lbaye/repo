@@ -28,6 +28,10 @@ import com.socmaps.widget.LocationRadioGroupListener;
 import com.socmaps.widget.NearByPlacesPicker;
 import com.socmaps.widget.NearByPlacesPickerListener;
 
+/**
+ * DirectionActivity class for generating direction view and find out different types of direction using google map.
+ *
+ */
 public class DirectionActivity extends Activity implements OnClickListener {
 
 	ImageView ivDirectionWalk, ivDirectionCar, ivDirectionCycle,

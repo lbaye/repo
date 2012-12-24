@@ -30,6 +30,10 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * MeetupRequestListActivity class for generating meet up request list view and some user interaction.
+ *
+ */
 public class MeetupRequestListActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

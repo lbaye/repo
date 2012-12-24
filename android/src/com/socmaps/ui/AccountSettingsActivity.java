@@ -47,6 +47,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
+/**
+ * AccountSettingsActivity class for generating account setting view and some user interaction.
+ *
+ */
 public class AccountSettingsActivity extends Activity implements
 		OnClickListener {
 

@@ -37,6 +37,10 @@ import com.socmaps.util.Utility;
 import com.socmaps.widget.PeoplePicker;
 import com.socmaps.widget.PeoplePickerListener;
 
+/**
+ * EventDetailsActivity class for generating event details view and some user interaction.
+ *
+ */
 public class EventDetailsActivity extends Activity implements OnClickListener {
 
 	private TextView eventNameText, eventDateTimeText, shortSummaryText,
@@ -645,8 +649,7 @@ public class EventDetailsActivity extends Activity implements OnClickListener {
 				List<String> selectedCircleList,
 				List<String> selectedCircleFriendList,
 				List<String> selectedFriendListAll) {
-			// TODO Auto-generated method stub
-
+			
 			if (pickerName.equalsIgnoreCase(pickerInviteMore)) {
 				inviteMoreSelectedFriendList = selectedFriendList;
 				inviteMoreSelectedCircleList = selectedCircleList;

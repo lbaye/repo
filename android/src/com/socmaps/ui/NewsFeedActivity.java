@@ -24,6 +24,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.NewsFeedPhotoZoomDialogPicker;
 
+/**
+ * NewsFeedActivity is used to show the activities of a particular user(user himself or other user).
+ */
+
 public class NewsFeedActivity extends Activity implements OnClickListener {
 
 	private Context context;

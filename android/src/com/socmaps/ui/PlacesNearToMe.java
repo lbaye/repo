@@ -35,6 +35,12 @@ import com.socmaps.listrow.RowType;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * PlacesNearToMe class is used to show all the places that are in near position from my 
+ * own location. Places are shown in a list.
+ *
+ */
+
 public class PlacesNearToMe extends Activity implements OnClickListener,
 		ListItemClickListener {
 

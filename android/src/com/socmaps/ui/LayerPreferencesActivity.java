@@ -24,6 +24,10 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * LayerPreferencesActivity class for generating layer preference view and some user interaction.
+ *
+ */
 public class LayerPreferencesActivity extends Activity implements
 		OnClickListener {
 

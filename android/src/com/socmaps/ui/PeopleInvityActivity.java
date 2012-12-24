@@ -52,6 +52,10 @@ import com.socmaps.util.SharedPreferencesHelper;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * PeopleInvityActivity class is used to send invitation to second degree friends(facebook friends) of user. 
+ */
+
 public class PeopleInvityActivity extends Activity implements OnClickListener,
 		ListItemClickListener {
 

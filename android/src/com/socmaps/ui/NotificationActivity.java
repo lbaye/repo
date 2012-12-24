@@ -23,6 +23,11 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
+/** 
+ * NotificationActivity class is used to notify user about the messages that has received or pending friendship request or 
+ * other notification. It also shows some exact digit to figure out. 
+ */
+
 public class NotificationActivity extends TabActivity {
 
 	ButtonActionListener buttonActionListener;

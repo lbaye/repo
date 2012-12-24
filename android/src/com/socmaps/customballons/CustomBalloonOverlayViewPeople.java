@@ -19,7 +19,7 @@ public class CustomBalloonOverlayViewPeople<Item extends OverlayItem> extends
 
 	private TextView name, status, distance, age;
 
-	private ImageView image, ivOnline, ivOffline;
+	private ImageView image, ivOnline;
 	private ImageDownloader imageDownloader;
 
 	protected CustomBalloonOverlayViewPeople(Context context,

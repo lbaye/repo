@@ -27,6 +27,10 @@ import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 import com.socmaps.widget.ExpandablePanel;
 
+/**
+ * MessageNotificationActivity class for generating message notification view and some user interaction.
+ *
+ */
 public class MessageNotificationActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

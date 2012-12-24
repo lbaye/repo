@@ -40,7 +40,6 @@ public class PhotoZoomDialogPicker extends Dialog implements
 	private Context context;
 	private String pickerName;
 	private Button btnPhotoZoomRight, btnPhotoZoomLeft, btnClose;
-	// private ImageView ivPhotoZoom;
 	private RelativeLayout mainLayPhotoZoom;
 	LinearLayout photoContainer;
 	TextView tvLoading;

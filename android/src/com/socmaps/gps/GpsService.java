@@ -8,9 +8,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * GpsService class is used to obtain the current location(Latitude & Longitude) of an user. 
+ * This class also updates the current location when user is on moving. 
+ */
+
 public class GpsService {
 
-	private Context context;
 	private long minTime, minDistance;
 	private ILocationUpdateIndicator iLocationUpdateIndicator;
 	private LocationManager locationManager;
@@ -20,7 +24,6 @@ public class GpsService {
 
 	public GpsService(Context context,
 			ILocationUpdateIndicator iLocationUpdateIndicator) {
-		this.context = context;
 		this.iLocationUpdateIndicator = iLocationUpdateIndicator;
 		minTime = 10000;
 		minDistance = 15;

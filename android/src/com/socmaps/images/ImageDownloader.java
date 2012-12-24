@@ -95,7 +95,8 @@ public class ImageDownloader {
 		if (bitmap == null) {
 			forceDownload(url, imageView);
 		} else {
-			cancelPotentialDownload(url, imageView);
+			//mahadi: commented so that an active download can be continued
+			//cancelPotentialDownload(url, imageView);
 			imageView.setImageBitmap(bitmap);
 		}
 	}
@@ -432,7 +433,7 @@ public class ImageDownloader {
 	 *            The newly downloaded bitmap.
 	 */
 	private void addBitmapToCache(String url, Bitmap bitmap) {
-		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn") || url.contains("default-cover-photo.png"))
+		if ((url.contains("/avatar/") || url.contains("graph.facebook") || url.contains(".fbcdn") || url.contains("default-cover-photo.png") || url.contains("maps.gstatic.com"))
 				&& bitmap != null) {
 			synchronized (sHardBitmapCache) {
 				sHardBitmapCache.put(url, bitmap);

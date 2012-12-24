@@ -26,7 +26,6 @@ import com.socmaps.ui.R;
  */
 public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 
-	private Context context;
 	private String url;
 
 	LinearLayout photoContainer;
@@ -52,7 +51,6 @@ public class NewsFeedPhotoZoomDialogPicker extends Dialog {
 			ImageDownloader imageDownloader) {
 		super(context);
 
-		this.context = context;
 		this.url = url;
 
 		this.imageDownloader = imageDownloader;

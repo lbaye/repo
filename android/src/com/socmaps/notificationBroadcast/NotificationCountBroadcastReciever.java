@@ -4,6 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * NotificationCountBroadcastReciever class is used to receive new notification & also counts the number of 
+ * notification. 
+ */
+
 public class NotificationCountBroadcastReciever extends BroadcastReceiver {
 
 	private static BroadcastListener listener;

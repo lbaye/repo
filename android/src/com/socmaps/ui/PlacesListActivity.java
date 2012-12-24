@@ -46,6 +46,11 @@ import com.socmaps.util.ServerResponseParser;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/** 
+ * PlacesListActivity class is used to show those places in a list which are liked by user( user himself or a particular user). 
+ * There is options like Edit or Delete if is shows user's own place list.
+ */
+
 public class PlacesListActivity extends Activity implements OnClickListener,
 		ListItemClickListener {
 
@@ -345,7 +350,6 @@ public class PlacesListActivity extends Activity implements OnClickListener,
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 
-			// finish();
 		}
 
 	}

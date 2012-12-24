@@ -20,6 +20,12 @@ import com.socmaps.images.ImageDownloader;
 import com.socmaps.util.StaticValues;
 import com.socmaps.widget.PeopleCirclePrefaranceItemView;
 
+/**
+ * PeopleCircleActivity class is used to create new circle & 
+ * put people into it or put people from one circle to another or rename a circle. 
+ * It also shows the persons of a particular circle. 
+ */
+
 public class PeopleCircleActivity extends Activity implements OnClickListener {
 
 	private Context context;

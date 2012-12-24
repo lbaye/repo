@@ -40,6 +40,10 @@ import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
 
+/**
+ * MessageComposeActivity class for generating message compose view and some user interaction.
+ *
+ */
 public class MessageComposeActivity extends Activity {
 
 	ButtonActionListener buttonActionListener;

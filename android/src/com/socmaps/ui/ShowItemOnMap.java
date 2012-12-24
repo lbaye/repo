@@ -46,13 +46,18 @@ import com.socmaps.util.DialogsAndToasts;
 import com.socmaps.util.RestClient;
 import com.socmaps.util.StaticValues;
 import com.socmaps.util.Utility;
-import com.socmaps.widget.MultiDirectionSlidingDrawer;
+import com.socmaps.widget.MultiDirectionSlidingDrawer; 
+
+/**
+ * ShowItemOnMap class is used to pick up the location(with Latitude & Longitude) from the Map. 
+ * When the user needs to pick up the location apart from his current location or places near to him, this class 
+ * is called at that time to pick up the location. 
+ */
 
 public class ShowItemOnMap extends MapActivity implements BubleTapHandle,
 		OnClickListener {
 
 	Button closeButton;
-	// Button mOpenButton;
 	MultiDirectionSlidingDrawer topDrawer, bottomDrawer;
 
 	private static Context context;

@@ -101,8 +101,6 @@ public class PlaceRowFactory {
 		} else
 			holder.addressText.setVisibility(View.GONE);
 
-		// holder.distanceText.setText(Utility.getFormatedDistance(((PlaceEntity)placeEntity).getDistance())+"m");
-
 		if (place.getDistance() < Constant.MAX_ITEM_DISTANCE) {
 			holder.distanceText
 					.setText(Utility.getFormatedDistance(place.getDistance(),
