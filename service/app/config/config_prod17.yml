@@ -1,5 +1,5 @@
 web:
-  root: http://services.socialmapsapp.com/v1_6
+  root: http://services.socialmapsapp.com/v1_7
 
 mongodb:
   host: '10.239.65.85'
