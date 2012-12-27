@@ -16,6 +16,7 @@ use Document\Location as Location;
  * @ODM\InheritanceType("SINGLE_COLLECTION")
  * @ODM\DiscriminatorField(fieldName="type")
  * @ODM\DiscriminatorMap({"place"="Document\Place", "geotag"="Document\Geotag"})
+ * @ODM\DiscriminatorMap({"custom_place"="Document\CustomPlace", "geotag"="Document\Geotag"})
  */
 class Landmark extends Content implements ParticipativeDoc
 {
