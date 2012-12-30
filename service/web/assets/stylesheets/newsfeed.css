@@ -7,10 +7,12 @@ body {
   margin-top: 10px;
 }
 body .more {
+  clear: both;
   color: #67b000;
   text-align: center;
   cursor: pointer;
-  padding-bottom: 20px;
+  padding: 10px;
+  font-weight: bold;
 }
 body .more a {
   text-decoration: none;
@@ -26,6 +28,8 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  position: absolute;
+  width: 97%;
 }
 ul li {
   clear: both;
@@ -38,7 +42,8 @@ ul li {
   background: #fff;
   box-shadow: 0px 0px 6px #888;
   border-radius: 4px;
-  width: 90%;
+  /*width: 90%;*/
+
 }
 ul li .row {
   clear: both;
@@ -167,7 +172,7 @@ ul li .photo .row .image {
   width: 100%;
 }
 ul li .photo .row .image img {
-  width: 90%;
+  width: 94%;
 }
 ul li .list_of_likes {
   border-top: 1px solid #ccc;

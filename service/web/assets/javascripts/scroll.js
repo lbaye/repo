@@ -6,19 +6,18 @@ $(document).ready(function () {
     var authToken = container.attr("authToken");
     var moreDiv = $('.more');
 
-    if (parseInt($('.events').length) < 4) {
+    if (parseInt($('.content ul li').length) < 7) {
         moreDiv.hide();
     }
 
     moreDiv.click(function () {
         var success = function (res) {
             try {
-                $('.content ul').append(res);
-                var new_num = parseInt($('.events').length);
-                var old_num = parseInt(container.attr('count'));
-                container.attr("count", new_num);
+                var old_num = $('.content ul li').length;
+                $(res).insertBefore($('.content ul .more').parent());
+                var new_num = $('.content ul li').length;
 
-                if (new_num < (old_num + 4)) {
+                if ((new_num - old_num) < 5) {
                     moreDiv.hide();
                 } else {
                     $('.more span').show();
@@ -36,7 +35,7 @@ $(document).ready(function () {
             $('.more img').show();
         };
 
-        var offset = parseInt($('.events').length);
+        var offset = parseInt($('.content ul li').length - 2);
         container.attr("scroll", "no");
         $.ajax({
             type:'get',
