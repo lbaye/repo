@@ -1,6 +1,7 @@
 
 @SM_BG_COLOR: transparent;
 @SM_GREEN: #67b000;
+@SM_IMAGE_WIDTH: 90%;
 
 body {
     background: @SM_BG_COLOR;
@@ -69,9 +70,13 @@ ul {
             }
 
             .name {
-                max-width: 80%;
+                max-width: 60%;
                 float: left;
                 margin-top: 10px;
+                position: absolute;
+                z-index: 1000;
+                left: 65px;
+                text-shadow: 1px 0 0 #fff;
 
                 .right {
                   float: left;
@@ -115,7 +120,7 @@ ul {
                 margin-right: 5px;
                 margin-top: 30px;
                 position: absolute;
-                width: auto;
+                width: 60%;
                 z-index: 200;
                 -webkit-border-radius: 5px;
                 -moz-border-radius: 5px;
@@ -175,7 +180,7 @@ ul {
         .activity {
             .row {
                 .comment {
-                    width: auto;
+                    width: 60%;
                     /*max-width: 230px;*/
                     max-height: 27px;
                     overflow: hidden;
@@ -198,7 +203,7 @@ ul {
                     width: 100%;
 
                     img {
-                        width: 100%;
+                        width: @SM_IMAGE_WIDTH;
                     }
                 }
 

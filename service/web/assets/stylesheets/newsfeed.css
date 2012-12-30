@@ -61,9 +61,13 @@ ul li .row .avatar img {
   height: 40px;
 }
 ul li .row .name {
-  max-width: 80%;
+  max-width: 60%;
   float: left;
   margin-top: 10px;
+  position: absolute;
+  z-index: 1000;
+  left: 65px;
+  text-shadow: 1px 0 0 #fff;
 }
 ul li .row .name .right {
   float: left;
@@ -100,7 +104,7 @@ ul li .row .comment {
   margin-right: 5px;
   margin-top: 30px;
   position: absolute;
-  width: auto;
+  width: 60%;
   z-index: 200;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -145,7 +149,7 @@ ul li .tools .disabled {
   color: #888;
 }
 ul li .activity .row .comment {
-  width: auto;
+  width: 60%;
   /*max-width: 230px;*/
 
   max-height: 27px;
@@ -163,7 +167,7 @@ ul li .photo .row .image {
   width: 100%;
 }
 ul li .photo .row .image img {
-  width: 100%;
+  width: 90%;
 }
 ul li .list_of_likes {
   border-top: 1px solid #ccc;

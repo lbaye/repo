@@ -115,27 +115,28 @@
                       - if ($activity->getCreatedAt() != null)
                         = $activity->toHumanizeDate()
 
-                    - if ($activity->getOwner()->getId() == $currentUser->getId())
-                      - if ($activity->getObjectType() === 'geotag')
-                        - $geotag = $geotagRepo->find($activity->getObjectId())
-                        - $geoLocation = $geotag->getLocation()->toArray()
-                        - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+                    - if ($activity->getObjectType() === 'geotag')
+                      - $geotag = $geotagRepo->find($activity->getObjectId())
+                      - $geoLocation = $geotag->getLocation()->toArray()
+                      - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
-                        .comment
-                          has tagged "
-                          %a(href= $geotagLink)
-                            %strong= stripcslashes($activity->getTitle())
-                          "
-                          at
-                          %small= $geotag->getLocation()->getAddress()
+                      .comment
+                        has tagged "
+                        %a(href= $geotagLink)
+                          %strong= stripcslashes($activity->getTitle())
+                        "
+                        at
+                        %small= $geotag->getLocation()->getAddress()
 
-                      - if ($activity->getObjectType() === 'friend')
-                        - $friend = $userRepo->find($activity->getObjectId())
-                        - $friendLink = "self::profile:" . $friend->getId()
-                        .comment
-                          is now friend with
-                          %a(href=$friendLink)
-                            = $friend->getName()
+                    - if ($activity->getObjectType() === 'friend')
+                      - $friend = $userRepo->find($activity->getObjectId())
+                      - $friendLink = "self::profile:" . $friend->getId()
+                      .comment
+                        is now friend with
+                        %a(href=$friendLink)
+                          = $friend->getName()
+
+
                   %div.clearfix
 
                   .row
@@ -257,27 +258,26 @@
               - if ($activity->getCreatedAt() != null)
                 = $activity->toHumanizeDate()
 
-            - if ($activity->getOwner()->getId() == $currentUser->getId())
-              - if ($activity->getObjectType() === 'geotag')
-                - $geotag = $geotagRepo->find($activity->getObjectId())
-                - $geoLocation = $geotag->getLocation()->toArray()
-                - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
+            - if ($activity->getObjectType() === 'geotag')
+              - $geotag = $geotagRepo->find($activity->getObjectId())
+              - $geoLocation = $geotag->getLocation()->toArray()
+              - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
-                .comment
-                  has tagged "
-                  %a(href= $geotagLink)
-                    %strong= stripcslashes($activity->getTitle())
-                  "
-                  at
-                  %small= $geotag->getLocation()->getAddress()
+              .comment
+                has tagged "
+                %a(href= $geotagLink)
+                  %strong= stripcslashes($activity->getTitle())
+                "
+                at
+                %small= $geotag->getLocation()->getAddress()
 
-              - if ($activity->getObjectType() === 'friend')
-                - $friend = $userRepo->find($activity->getObjectId())
-                - $friendLink = "self::profile:" . $friend->getId()
-                .comment
-                  is now friend with
-                  %a(href=$friendLink)
-                    = $friend->getName()
+            - if ($activity->getObjectType() === 'friend')
+              - $friend = $userRepo->find($activity->getObjectId())
+              - $friendLink = "self::profile:" . $friend->getId()
+              .comment
+                is now friend with
+                %a(href=$friendLink)
+                  = $friend->getName()
                     
           %div.clearfix
 
