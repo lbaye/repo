@@ -8,25 +8,7 @@
 
 #import "Constants.h"
 
-//NSString * const WS_URL = @"http://174.143.240.157:81";
-//NSString * const WS_URL = @"http://203.76.126.69";
-//NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web"; //
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com";
-//NSString * const WS_URL = @"http://203.76.126.69/social-maps-service/web"; 
-//NSString * const WS_URL = @"http://192.168.1.71/stage_social_maps/web";
-//NSString * const WS_URL = @"http://203.76.126.69/stage_social_maps/web";
-//NSString * const WS_URL = @"http://203.76.126.69/integration_social_maps/web";
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_4";
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_5";
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest";
-//NSString * const WS_URL = @"http://192.168.1.212:8888";
-//NSString * const WS_URL = @"192.168.1.229/web";
-//NSString * const WS_URL = @"http://192.168.1.19/social_maps/web";
-//NSString * const WS_URL = @"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/v1_6";
-//NSString * const WS_URL = @"http://services.socialmapsapp.com/v1_6";
 NSString * const WS_URL = @"http://services.socialmapsapp.com/v1_7";
-
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
@@ -94,13 +76,7 @@ NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.lo
 NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifgetmessagewithiddone";
 NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
 
-//NSString * const FB_APPID = @"260432304058696";
-//NSString * const FB_APPID = @"171067529694083"; // SMTest
-//NSString * const FB_APPID = @"474672942546031";  // SMTest2
-//NSString * const FB_APPID = @"264070030370962";  // SMTest3
-//NSString * const FB_APPID = @"335618886520303";  // SMTest4
 NSString * const FB_APPID = @"260432304058696"; // Social Maps
-
 
 NSString * const kFontName			= @"HelveticaNeue";
 NSString * const kFontNameBold		= @"HelveticaNeue-Bold";
@@ -108,7 +84,7 @@ float const kStatusFontSize			= 14;
 float const kBenefitFontSize		= 14;
 float const kLabelFontSize          = 12;
 float const kNumbersFontSize		= 26;
-float const kNumbersLargeFontSize		= 48;
+float const kNumbersLargeFontSize	= 48;
 float const kSmallNumbersFontSize	= 17;
 float const kLargeLabelFontSize		= 16;
 float const kMediumLabelFontSize	= 14;

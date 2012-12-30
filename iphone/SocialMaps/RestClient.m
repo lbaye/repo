@@ -6536,13 +6536,7 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) 
         {
             NSMutableArray *friendList = [self getNestedKeyVal:jsonObjects key1:@"friends" key2:nil key3:nil];
-            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];;
-            if (friendListGlobalArray) {
-                [friendListGlobalArray removeAllObjects];
-            }
-            else {
-                friendListGlobalArray=[[NSMutableArray alloc] init];
-            }
+            NSMutableArray *circleList = [self getNestedKeyVal:jsonObjects key1:@"circles" key2:nil key3:nil];
             NSMutableArray *eachFriendsList = [[NSMutableArray alloc] init];
             
             for (NSDictionary *dicFriends in friendList) {
@@ -6554,24 +6548,6 @@ AppDelegate *smAppDelegate;
                 eachFriend.friendName = [dicFriends objectForKey:@"firstName"];
                 eachFriend.friendAvater = [dicFriends objectForKey:@"avatar"];
                 eachFriend.friendDistance = [dicFriends objectForKey:@"distance"];
-                
-                //user frnd global starts
-                UserFriends *frnd = [[UserFriends alloc] init];
-                frnd.userId = [self getNestedKeyVal:dicFriends key1:@"id" key2:nil key3:nil];
-                NSString *firstName = [self getNestedKeyVal:dicFriends key1:@"firstName" key2:nil key3:nil];
-                NSString *lastName = [self getNestedKeyVal:dicFriends key1:@"lastName" key2:nil key3:nil];
-                frnd.userName=[NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                frnd.imageUrl = [self getNestedKeyVal:dicFriends key1:@"avatar" key2:nil key3:nil];
-                frnd.distance = [[self getNestedKeyVal:dicFriends key1:@"distance" key2:nil key3:nil] doubleValue];
-                frnd.coverImageUrl = [self getNestedKeyVal:dicFriends key1:@"coverPhoto" key2:nil key3:nil];
-                frnd.address =[NSString stringWithFormat:@"%@, %@",[self getNestedKeyVal:dicFriends key1:@"address" key2:@"street" key3:nil],[self getNestedKeyVal:dicFriends key1:@"address" key2:@"city" key3:nil]];
-                frnd.statusMsg = [self getNestedKeyVal:dicFriends key1:@"status" key2:nil key3:nil];
-                frnd.regMedia = [self getNestedKeyVal:dicFriends key1:@"regMedia" key2:nil key3:nil];
-                
-                [friendListGlobalArray addObject:frnd];
-                NSLog(@"globalfrnd.userId: %@ %@ %lf %@ %@ %@ %@",frnd.userId,frnd.imageUrl,frnd.distance,frnd.coverImageUrl,frnd.address,frnd.statusMsg,frnd.regMedia);
-                //user friends global ends
-                
                 
                 for (NSDictionary *dicCircle in circleList) {
                     NSMutableArray *frndIdList = [dicCircle objectForKey:@"friends"];
