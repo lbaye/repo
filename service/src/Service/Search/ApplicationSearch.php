@@ -96,34 +96,51 @@ class ApplicationSearch implements ApplicationSearchInterface
             getInstance($this->dm, $this->config, \Service\Location\PlacesServiceFactory::CACHED_GOOGLE_PLACES)
             ->search($location, $keywords);
 
+        $customPlaces = array();
+        $customPlaces = $this->findCustomPlaces($location);
+
+        return array_merge($googlePlaces, $customPlaces);
+    }
+
+    private function findCustomPlaces($location)
+    {
         $customPlaces = $this->dm->createQueryBuilder('Document\CustomPlace')
             ->field('type')->equals('custom_place')
             ->getQuery()->execute();
 
         $result = array();
         foreach ($customPlaces as $customPlace) {
-
             $customPlaceStore['id'] = $customPlace->getId();
             $customPlaceStore['name'] = $customPlace->getTitle();
-            $customPlaceStore['icon'] = $customPlace->getIcon();
-            $customPlaceStore['photo'] = $customPlace->getPhoto();
+
+            $placeIcon['icon'] = $customPlace->getIcon();
+            if (!empty($placeIcon)) {
+                $customPlaceStore['icon'] = \Helper\Url::buildPlaceIconUrl($placeIcon);
+            }
+
+            $placePhoto['photo'] = $customPlace->getIcon();
+            if (!empty($placePhoto)) {
+                $customPlaceStore['streetViewImage'] = \Helper\Url::buildPlacePhotoUrl($placePhoto);
+            }
+
             $customPlaceStore['types'] = $customPlace->getCategory();
 
             $placeLocation = $customPlace->getLocation();
             if (!empty($placeLocation)) {
-
-                $customPlaceStore['location'] = $placeLocation->toArray();
-
-                $customPlaceStore['distance'] = \Helper\Location::distance(
-                    $customPlaceStore['location']['lat'], $customPlaceStore['location']['lng'],
-                    $location['lat'],
-                    $location['lng']);
-                $customPlaceStore['vicinity'] = $customPlaceStore['location']['address'];
+                $customPlaceStore['geometry']['location'] = $placeLocation->toArray();
+                if (!empty($customPlaceStore['geometry']['location'])) {
+                    $customPlaceStore['distance'] = \Helper\Location::distance(
+                        $customPlaceStore['geometry']['location']['lat'], $customPlaceStore['geometry']['location']['lng'],
+                        $location['lat'],
+                        $location['lng']);
+                    $customPlaceStore['vicinity'] = $customPlaceStore['geometry']['location']['address'];
+                }
             }
 
             $customPlaceStore['reference'] = "custom_place";
             $result[] = $customPlaceStore;
         }
-        return array_merge($googlePlaces, $result);
+
+        return $result;
     }
 }
