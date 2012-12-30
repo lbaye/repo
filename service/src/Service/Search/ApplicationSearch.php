@@ -123,7 +123,7 @@ class ApplicationSearch implements ApplicationSearchInterface
                 $customPlaceStore['streetViewImage'] = \Helper\Url::buildPlacePhotoUrl($placePhoto);
             }
 
-            $customPlaceStore['types'] = $customPlace->getCategory();
+            $customPlaceStore['types'] = array($customPlace->getCategory());
 
             $placeLocation = $customPlace->getLocation();
             if (!empty($placeLocation)) {
