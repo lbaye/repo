@@ -76,7 +76,7 @@ NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.lo
 NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifgetmessagewithiddone";
 NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
 
-NSString * const FB_APPID = @"260432304058696"; // Social Maps
+NSString * const FB_APPID = @"343783602384766"; // Social Maps
 
 NSString * const kFontName			= @"HelveticaNeue";
 NSString * const kFontNameBold		= @"HelveticaNeue-Bold";

@@ -41,6 +41,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb272972866144692</string>
@@ -49,11 +51,16 @@
 				<string>fb171067529694083</string>
 				<string>fb260432304058696</string>
 				<string>fb474672942546031</string>
+				<string>fb343783602384766</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>2.0</string>
+	<key>FacebookAppID</key>
+	<string>343783602384766</string>
+	<key>FacebookAppSecret</key>
+	<string>57df840ab5f4175b705e9b8468794db6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIMainStoryboardFile</key>
