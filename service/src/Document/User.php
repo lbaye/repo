@@ -135,7 +135,7 @@ class User
     protected $distance = 0;
 
     /** @ODM\Boolean */
-    protected $enabled;
+    protected $enabled = true;
 
     /** @ODM\Hash */
     protected $blockedUsers = array();
