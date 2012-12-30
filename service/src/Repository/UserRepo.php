@@ -870,6 +870,7 @@ class UserRepo extends Base
 
         $query->field('id')->notIn($excludedUserIds)
             ->field('visible')->equals(true)
+            ->field('enabled')->equals(true)
             ->hydrate(false)
             ->limit($limit);
 
