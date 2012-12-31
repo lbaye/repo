@@ -770,6 +770,7 @@ class UserRepo extends Base
         $avatarUrl = filter_var($avatar, FILTER_VALIDATE_URL);
 
         if ($avatarUrl !== false) {
+            $avatarUrl = preg_replace("/\&type=normal/i", "?type=normal", $avatarUrl);
             $user->setAvatar($avatarUrl);
         } else {
             @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
