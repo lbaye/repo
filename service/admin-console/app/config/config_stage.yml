@@ -5,9 +5,9 @@ framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
     profiler: { only_exceptions: false }
 
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
+#web_profiler:
+#    toolbar: false
+#    intercept_redirects: false
 
 # Twig Configuration
 twig:
@@ -37,7 +37,15 @@ doctrine_mongodb:
         default:
             server: mongodb://10.239.65.85:27017
             options: {}
-    default_database: socialmaps_stage
+    default_database: socialmaps_prodtest
     document_managers:
         default:
             auto_mapping: true
+
+swiftmailer:
+    transport:  smtp
+    encryption: ssl
+    auth_mode:  login
+    host:       smtp.gmail.com
+    username:   uddin.borhan@genweb2.com
+    password:   21212121
