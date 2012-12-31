@@ -309,14 +309,21 @@ class AdminUserController extends Controller
             if (!empty($postData['message'])) {
                 $messageData = $postData['message'];
             }
-            $message = \Swift_Message::newInstance()
+            $transport = \Swift_SmtpTransport::newInstance('smtp.googlemail.com', 465, "ssl")
+                ->setUsername('islam.rafiqul@genweb2.com')
+                ->setPassword('*rafiq123');
+            $mailer = \Swift_Mailer::newInstance($transport);
+            $message = \Swift_Message::newInstance($subject)
                 ->setSubject($subject)
                 ->setFrom($this->container->getParameter('sender_email'))
                 ->setTo($entity->getEmail())
                 ->setBody($this->renderView('AdminUserBundle:AdminUser:user.email.txt.twig',
                 array('entity' => $entity, 'postData' => $messageData)));
-            $this->get('mailer')->send($message);
-            $this->get('session')->setFlash('notice', 'Message sent successfully!');
+//            $this->get('mailer')->send($message);
+            $sent = $mailer->send($message);
+            if ($sent) {
+                $this->get('session')->setFlash('notice', 'Message sent successfully!');
+            }
         }
         return $this->render('AdminUserBundle:AdminUser:email.html.twig', array('form' => $form->createView()));
     }
