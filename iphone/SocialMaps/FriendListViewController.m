@@ -26,6 +26,7 @@
 @implementation FriendListViewController
 
 @synthesize userId;
+@synthesize labelUserName;
 
 - (void)viewDidLoad
 {
@@ -87,6 +88,7 @@
     searchBarFriendList = nil;
     [totalNotifCount release];
     totalNotifCount = nil;
+    [self setLabelUserName:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -103,8 +105,9 @@
 
 -(void)moveSearchBarAnimation:(int)moveby
 {
+    
     if (moveby > 0) {
-        scrollViewFriendList.contentInset = UIEdgeInsetsMake(43,0.0,0,0.0);
+        scrollViewFriendList.contentInset = UIEdgeInsetsMake(5,0.0,0,0.0);
     } else {
         scrollViewFriendList.contentInset = UIEdgeInsetsMake(0,0.0,0,0.0);
     }
@@ -506,6 +509,7 @@
     [scrollViewFriendList release];
     [searchBarFriendList release];
     [totalNotifCount release];
+    [labelUserName release];
     [super dealloc];
 }
 @end

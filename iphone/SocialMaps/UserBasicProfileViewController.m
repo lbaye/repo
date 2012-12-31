@@ -980,6 +980,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         [controller selectUserId:smAppDelegate.userId];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
+        controller.labelUserName.text = @"My friend list";
         [controller release];         
     }
     else if (imageIndex==2)
