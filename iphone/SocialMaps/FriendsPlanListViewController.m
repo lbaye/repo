@@ -29,7 +29,7 @@ NSMutableArray *planListArr;
 AppDelegate *smAppDelegate;
 RestClient *rc;
 NSMutableDictionary *dicIcondownloaderPlans;
-
+int frndPlanListCounter=0;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -41,6 +41,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    frndPlanListCounter=0;
     [super viewWillAppear:animated];
 }
 
@@ -48,6 +49,7 @@ NSMutableDictionary *dicIcondownloaderPlans;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    frndPlanListCounter=0;
     rc=[[RestClient alloc] init];
     smAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     [smAppDelegate showActivityViewer:self.view];
@@ -217,14 +219,25 @@ NSMutableDictionary *dicIcondownloaderPlans;
 
 - (void)getMyPlanes:(NSNotification *)notif
 {
-    planListArr=[notif object];
-    if ([planListArr count]==0)
+    if (frndPlanListCounter==0)
     {
-        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ has no plans",userInfo.lastName]];
+        if ([[notif object] isKindOfClass:[NSNull class]])
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"Network error"]];            
+        }
+        else if ([[notif object] isKindOfClass:[NSMutableArray class]]) 
+        {
+            planListArr=[notif object];
+            if ([planListArr count]==0)
+            {
+                [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ has no plans",userInfo.lastName]];
+            }
+            [planListTableView reloadData];
+            [smAppDelegate hideActivityViewer];
+            [smAppDelegate.window setUserInteractionEnabled:YES]; 
+        }
     }
-    [planListTableView reloadData];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
+    frndPlanListCounter++;
 }
 
 - (void)deletePlan:(NSNotification *)notif

@@ -224,7 +224,7 @@ UserDefault *userDefault;
         [aUser setFacebookId:fbId];
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
-        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture&type=normal", userName]]; 
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal", userName]]; 
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];

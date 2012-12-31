@@ -119,7 +119,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
-    [ImgesName addObject:@"sm_icon@2x"];
+    [ImgesName addObject:@"meet_up_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
     
     userItemScrollView.delegate = self;
@@ -874,6 +874,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
                 imgView.layer.borderWidth=0.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 [aView addSubview:imgView];
                 [aView addSubview:name];
                 [userItemScrollView addSubview:aView];

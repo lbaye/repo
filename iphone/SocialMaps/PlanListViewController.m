@@ -30,6 +30,7 @@ AppDelegate *smAppDelegate;
 RestClient *rc;
 NSMutableDictionary *dicIcondownloaderPlans;
 int delCounter=0;
+int planListCounter=0;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,6 +43,7 @@ int delCounter=0;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    planListCounter=0;
     [super viewWillAppear:animated];
     if (loadNewPlan==TRUE)
     {
@@ -232,14 +234,25 @@ int delCounter=0;
 
 - (void)getMyPlanes:(NSNotification *)notif
 {
-    planListArr=[notif object];
-    if ([planListArr count]==0)
+    if (planListCounter==0)
     {
-        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"You have no plans"]];
+        if ([[notif object] isKindOfClass:[NSNull class]])
+        {
+            [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"Network error"]];            
+        }
+        else if ([[notif object] isKindOfClass:[NSMutableArray class]]) 
+        {
+            planListArr=[notif object];
+            if ([planListArr count]==0)
+            {
+                [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"You have no plans"]];
+            }
+            [planListTableView reloadData];
+            [smAppDelegate hideActivityViewer];
+            [smAppDelegate.window setUserInteractionEnabled:YES]; 
+        }
     }
-    [planListTableView reloadData];
-    [smAppDelegate hideActivityViewer];
-    [smAppDelegate.window setUserInteractionEnabled:YES];
+    planListCounter++;
 }
 
 - (void)deletePlan:(NSNotification *)notif

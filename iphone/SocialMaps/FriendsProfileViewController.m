@@ -134,7 +134,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [ImgesName addObject:@"thum"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
-    [ImgesName addObject:@"sm_icon@2x"];
+    [ImgesName addObject:@"meet_up_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
     
     userItemScrollView.delegate = self;
@@ -639,24 +639,20 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [addFrndButton setTitle:@"Rejected" forState:UIControlStateNormal];
             [addFrndButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            [addFrndButton setImage:nil forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"requested"]) {
-            [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"pending"]) {
-            [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
             [frndStatusButton setHidden:YES];
         }
         else if ([friendShipStatus isEqualToString:@"friend"]) {
-            [addFrndButton setImage:nil forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             addFrndButton.userInteractionEnabled = NO;
@@ -979,6 +975,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 imgView.clipsToBounds = NO;
                 imgView.opaque = YES;
                 imgView.userInteractionEnabled=YES;
+                imgView.contentMode=UIViewContentModeScaleAspectFit;
                 imgView.layer.borderWidth=0.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];

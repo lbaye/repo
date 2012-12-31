@@ -212,6 +212,10 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     UIButton *cancelButton = [subviews objectAtIndex:2];
     cancelButton.tintColor = [UIColor darkGrayColor];
     
+    NSArray *subviews1 = [customSearchBar subviews];
+    UIButton *cancelButton1 = [subviews1 objectAtIndex:2];
+    cancelButton1.tintColor = [UIColor darkGrayColor];
+    
     frndListScrollView.delegate = self;
     customScrollView.delegate=self;
     friendListArr=[[NSMutableArray alloc] init];
