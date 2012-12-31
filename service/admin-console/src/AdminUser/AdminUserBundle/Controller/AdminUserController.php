@@ -145,7 +145,7 @@ class AdminUserController extends Controller
                 $dm->persist($entity);
                 $dm->flush();
 
-                return $this->redirect('../userlist');
+                return $this->redirect('../userlist/1');
             }
 
 //        $dm->refresh($user); // Add this line
@@ -223,7 +223,7 @@ class AdminUserController extends Controller
                     $dm->flush();
 
                     $this->get('session')->setFlash('notice', 'User added successfully!');
-                    return $this->redirect('../userlist');
+                    return $this->redirect('../userlist/1');
                 } else {
                     $this->get('session')->setFlash('notice', 'Already registered With this email!');
                 }
@@ -372,6 +372,10 @@ class AdminUserController extends Controller
                 $form->bindRequest($request);
                 $postData = $form->getData();
                 if ($form->isValid()) {
+                    if (empty($postData['title']) || empty($postData['icon']) || empty($postData['photo']) || empty($postData['lat']) || empty($postData['lng']) || empty($postData['address'])) {
+                        $this->get('session')->setFlash('notice', 'Required field can not be empty!');
+                        return $this->redirect('customplacelist/1');
+                    }
                     $postData['createDate'] = date('Y-m-d h:i:s a', time());
                     $postData['owner'] = $this->getUser();
                     $newLocation['lat'] = floatval($postData['lat']);
@@ -394,7 +398,7 @@ class AdminUserController extends Controller
                     }
 
                     $this->get('session')->setFlash('notice', 'Place added successfully!');
-                    return $this->redirect('placelist');
+                    return $this->redirect('customplacelist/1');
                 }
 
             }
@@ -438,6 +442,11 @@ class AdminUserController extends Controller
 
                 if ($form->isValid()) {
 
+                    if (empty($postData['title']) || empty($postData['lat']) || empty($postData['lng']) || empty($postData['address'])) {
+                        $this->get('session')->setFlash('notice', 'Required field can not be empty!');
+                        return $this->redirect('customplacelist/1');
+                    }
+
                     $newLocation['lat'] = floatval($postData->getLat());
                     $newLocation['lng'] = floatval($postData->getLng());
                     $newLocation['address'] = $postData->getAddress();
@@ -460,7 +469,7 @@ class AdminUserController extends Controller
                     }
 
                     $this->get('session')->setFlash('notice', 'Place updated successfully!');
-                    return $this->redirect('../placelist');
+                    return $this->redirect('../customplacelist/1');
                 }
 
             }
@@ -963,6 +972,89 @@ class AdminUserController extends Controller
             $pagerfanta->setCurrentPage($page);
             $entities = $pagerfanta->getCurrentPageResults();
             return $this->render('AdminUserBundle:AdminUser:blockusersearchresult.html.twig', array(
+                'form' => $form->createView(),
+                'entities' => $entities,
+                'pager' => $pagerfanta,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/customplacelist/1", defaults={"page" = 1}, name="manage_custom_place")
+     * @Route("/customplacelist/{page}", name="manage_custom_place")
+     * @param $page
+     * @Template()
+     */
+    public function customPlaceListAction($page = 1)
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
+
+        if ($this->get('session')->get('user')) {
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+            $qb = $dm->createQueryBuilder('AdminUserBundle:Place');
+            $qb->addOr($qb->expr()->field('type')->equals('custom_place'));
+
+            $adapter = new DoctrineODMMongoDBAdapter($qb);
+
+            $pagerfanta = new Pagerfanta($adapter);
+            $pagerfanta->setMaxPerPage(20);
+
+            $pagerfanta->setCurrentPage($page);
+            $entities = $pagerfanta->getCurrentPageResults();
+
+            return $this->render('AdminUserBundle:AdminUser:customplacelist.html.twig', array(
+                'form' => $form->createView(),
+                'entities' => $entities,
+                'pager' => $pagerfanta,
+            ));
+        } else {
+            $this->get('session')->setFlash('notice', 'You are not authorize!');
+            return $this->redirect('login');
+        }
+    }
+
+    /**
+     * @Route("/customplacesearchresult/1", defaults={"page" = 1}, name="manage_custom_place_paginated")
+     * @Route("/customplacesearchresult/{page}", name="manage_custom_place_paginated")
+     * @param $page
+     * @Template()
+     */
+    public function searchCustomPlaceAction($page = 1)
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new \AdminUser\AdminUserBundle\Form\SearchUserType());
+
+        if ($this->get('session')->get('user')) {
+
+            $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+            if ('POST' == $request->getMethod()) {
+                $form->bindRequest($request);
+                $postData = $form->getData();
+                if (!empty($postData['keyword'])) {
+                    $postData['keyword'] = strtolower($postData['keyword']);
+                }
+                $filterBy = $postData['keyword'];
+                $this->get('session')->set('filterBy', $filterBy);
+
+            } else {
+                $filterBy = $this->get('session')->get('filterBy');
+            }
+            $qb = $dm->createQueryBuilder('AdminUserBundle:Place');
+            $qb->addOr($qb->expr()->field('type')->equals('custom_place'));
+            $qb->addOr($qb->expr()->field('category')->equals(new \MongoRegex("/{$filterBy}/i")))
+                ->addOr($qb->expr()->field('title')->equals(new \MongoRegex("/{$filterBy}/i")))
+                ->addOr($qb->expr()->field('description')->equals(new \MongoRegex("/{$filterBy}/i")));
+            $adapter = new DoctrineODMMongoDBAdapter($qb);
+
+            $pagerfanta = new Pagerfanta($adapter);
+            $pagerfanta->setMaxPerPage(20);
+
+            $pagerfanta->setCurrentPage($page);
+            $entities = $pagerfanta->getCurrentPageResults();
+            return $this->render('AdminUserBundle:AdminUser:customplacesearchresult.html.twig', array(
                 'form' => $form->createView(),
                 'entities' => $entities,
                 'pager' => $pagerfanta,

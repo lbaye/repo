@@ -5,10 +5,14 @@
 {% block content %}
 <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberpagerfanta/css/pagerfantaDefault.css') }}" type="text/css"
       media="all"/>
-<a href="{{ path('admin_user_logoutpage') }}">Logout</a> <br/>
-<a href="{{ path('adminuser_userlist_paginated', {'page': 1}) }}"><< Back To User List</a>
+
+<a href="{{ path('user_block_list_paging', {'page': 1}) }}"><< Back To The Block User List</a>
 <table class="user_list" align="right">
     <tr>
+
+        <td width="550" align="center">
+            <strong>Search Result: Block User List</strong>
+        </td>
         <td>
             <form action="{{ path('user_block_search_result', {'page': 1}) }}" method="POST" id="search_keyword">
                 {{ form_rest(form) }}
