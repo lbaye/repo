@@ -22,6 +22,7 @@
                 {{ form_rest(form) }}
                 <input type="button" value="Get Address" id="get_location" class="btn btn-primary"/>
                 <input type="submit" value="Update Place" class="btn btn-primary"/>
+                <button data-href="{{ path('manage_place_paginated', {'page': 1}) }}" onclick="history.go(-1)" class="btn btn-info" type="button" id="commonCancel" name="Cancel">Cancel</button>
             </form>
         </td>
     </tr>

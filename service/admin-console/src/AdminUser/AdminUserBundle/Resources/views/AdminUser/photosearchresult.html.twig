@@ -7,10 +7,13 @@
 {% block content %}
 <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberpagerfanta/css/pagerfantaDefault.css') }}" type="text/css"
       media="all"/>
-<a href="{{ path('admin_user_logoutpage') }}">Logout</a> <br/>
+
 <a href="{{ path('manage_photo_paging', {'page': 1}) }}"><< Back To Photo List</a>
 <table class="user_list" align="right">
     <tr>
+        <td width="550" align="center">
+            <strong>Search Result: Photo List</strong>
+        </td>
         <td>
             <form action="{{ path('manage_photo_search', {'page': 1}) }}" method="POST" id="search_keyword">
                 {{ form_rest(form) }}

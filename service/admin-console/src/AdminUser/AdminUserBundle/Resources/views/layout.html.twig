@@ -37,12 +37,15 @@
 
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li class="active"><a href="{{ path('adminuser_userlist_paginated', {'page': 1}) }}">Home</a></li>
+                        <li class="active"><a href="{{ path('adminuser_userlist_paginated', {'page': 1}) }}">Home</a>
+                        </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ path('adminuser_userlist_paginated', {'page': 1}) }}">User List</a></li>
                                 <li><a href="{{ path('manage_place_paginated', {'page': 1}) }}">Place List</a></li>
+                                <li><a href="{{ path('manage_custom_place_paginated', {'page': 1}) }}">Custom Place
+                                    List</a></li>
                                 <li><a href="{{ path('add_place') }}">Add Place</a></li>
                                 <li><a href="{{ path('manage_photo_paging', {'page': 1}) }}">Manage Photos</a></li>
                                 <li><a href="{{ path('manage_event_paging', {'page': 1}) }}">Manage Events</a></li>
@@ -52,7 +55,8 @@
                         </li>
                     </ul>
                     <ul class="navbar-form pull-right" style="list-style:none;">
-                        <li><a href="{{ path('admin_user_logoutpage') }}">Logout</a></li>
+                        <li>{% if app.session.get('user') %}
+                            <a href="{{ path('admin_user_logoutpage') }}">Logout </a>{% endif %}</li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
