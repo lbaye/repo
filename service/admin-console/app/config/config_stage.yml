@@ -42,10 +42,10 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
-swiftmailer:
-    transport:  smtp
-    encryption: ssl
-    auth_mode:  login
-    host:       smtp.gmail.com
-    username:   uddin.borhan@genweb2.com
-    password:   21212121
+#swiftmailer:
+#    transport:  smtp
+#    encryption: ssl
+#    auth_mode:  login
+#    host:       smtp.gmail.com
+#    username:   uddin.borhan@genweb2.com
+#    password:   21212121
