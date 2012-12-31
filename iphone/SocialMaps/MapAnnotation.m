@@ -106,7 +106,7 @@
     [(UIButton *)[annoView viewWithTag:1234321] removeFromSuperview];
     
     changeState = [UIButton buttonWithType:UIButtonTypeCustom];
-    changeState.frame = CGRectMake(imgFrame.size.width-12, 21, 26, 26);
+    changeState.frame = CGRectMake(imgFrame.size.width-14, 21, 26, 26);
     [changeState addTarget:self action:@selector(changeStateClicked:) forControlEvents:UIControlEventTouchUpInside];
     [changeState setImage:[UIImage imageNamed:@"map_right_arrow.png"] forState:UIControlStateNormal];
     changeState.backgroundColor = [UIColor clearColor];
