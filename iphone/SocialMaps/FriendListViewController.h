@@ -38,6 +38,7 @@ typedef enum _FILTER_BY {
 }
 
 @property (nonatomic, retain) NSString* userId;
+@property (retain, nonatomic) IBOutlet UILabel *labelUserName;
 
 /**
  * @brief Navigate user to previous screen

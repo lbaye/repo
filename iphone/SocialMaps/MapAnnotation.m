@@ -106,7 +106,7 @@
     [(UIButton *)[annoView viewWithTag:1234321] removeFromSuperview];
     
     changeState = [UIButton buttonWithType:UIButtonTypeCustom];
-    changeState.frame = CGRectMake(imgFrame.size.width-12, 21, 26, 26);
+    changeState.frame = CGRectMake(imgFrame.size.width-14, 21, 26, 26);
     [changeState addTarget:self action:@selector(changeStateClicked:) forControlEvents:UIControlEventTouchUpInside];
     [changeState setImage:[UIImage imageNamed:@"map_right_arrow.png"] forState:UIControlStateNormal];
     changeState.backgroundColor = [UIColor clearColor];
@@ -149,7 +149,7 @@
     [annoView sendSubviewToBack:infoView];
     
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
-    btn.frame = CGRectMake(annoFrame.size.width-24, 21, 26, 26);
+    btn.frame = CGRectMake(annoFrame.size.width-26, 21, 26, 26);
     
     // For external users don't show details
     if ([locItem isKindOfClass:[LocationItemPeople class]]) {
@@ -217,7 +217,7 @@
     [annoView sendSubviewToBack:infoView];
     
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
-    btn.frame = CGRectMake(annoFrame.size.width-24, 23, 26, 26);
+    btn.frame = CGRectMake(annoFrame.size.width-26, 23, 26, 26);
     [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     [annoView bringSubviewToFront:btn];
     [annoView insertSubview:button belowSubview:[annoView viewWithTag:11002]];

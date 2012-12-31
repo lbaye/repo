@@ -1086,6 +1086,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         [controller selectUserId:userInfo.userId];
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
+        controller.labelUserName.text = [NSString stringWithFormat:@"%@'s friend list ", userInfo.firstName];
         [controller release];  
     }
     else if (imageIndex==2)
