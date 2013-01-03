@@ -55,9 +55,10 @@
                 <a title="Edit" class="btn btn-primary btn-mini edit-item"
                    href="{{ path('admin_user_updatepage', {'id': user.id}) }}"><i class="icon-edit icon-white"></i>Edit</a>
                 <br/><br/>
+                {% if user.email | length > 0 %}
                 <a title="Edit" class="btn btn-primary btn-mini edit-item"
                    href="{{ path('emailnotify_user', {'id': user.id}) }}">Email</a>
-
+                  {% endif %}
             </div>
         </td>
     </tr>

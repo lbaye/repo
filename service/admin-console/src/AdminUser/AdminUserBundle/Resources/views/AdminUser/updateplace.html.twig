@@ -10,11 +10,12 @@
             <form action="" method="POST" id="update_form" enctype="multipart/form-data">
                 <h2 class="form-signin-heading">Update Place</h2>
                 {% if entity.photo | length > 0 %}
+
                 Place Photo: <img src="{{ image_path }}{{ entity.photo }}" class="img-polaroid" width="250">
                 {% endif %}
 
                 {% if entity.icon | length > 0 %}
-                Place Icon: <img src="{{ image_path }}{{ entity.icon }}" class="img-polaroid" >
+                Place Icon: <img src="{{ image_path }}{{ entity.icon }}" class="img-polaroid" width="150" >
                 {% endif %}
 
                 {{ form_errors(form) }}
