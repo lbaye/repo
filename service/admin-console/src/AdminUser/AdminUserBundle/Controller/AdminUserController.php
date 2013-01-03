@@ -319,7 +319,6 @@ class AdminUserController extends Controller
                 ->setTo($entity->getEmail())
                 ->setBody($this->renderView('AdminUserBundle:AdminUser:user.email.txt.twig',
                 array('entity' => $entity, 'postData' => $messageData)));
-//            $this->get('mailer')->send($message);
             $sent = $mailer->send($message);
             if ($sent) {
                 $this->get('session')->setFlash('notice', 'Message sent successfully!');
@@ -379,6 +378,7 @@ class AdminUserController extends Controller
                 $form->bindRequest($request);
                 $postData = $form->getData();
                 if ($form->isValid()) {
+
                     if (empty($postData['title']) || empty($postData['icon']) || empty($postData['photo']) || empty($postData['lat']) || empty($postData['lng']) || empty($postData['address'])) {
                         $this->get('session')->setFlash('notice', 'Required field can not be empty!');
                         return $this->redirect('customplacelist/1');
@@ -396,12 +396,8 @@ class AdminUserController extends Controller
                     $dm->persist($this->document);
                     $dm->flush();
 
-                    if (!empty($postData['icon'])) {
-                        $placeIcon = $postData['icon'];
-                    }
-
-                    if (!empty($postData['photo'])) {
-                        $this->savePlacePhoto($this->document->getId(), $postData['photo'], $postData['createDate'], $placeIcon);
+                    if (!empty($postData['photo']) && !empty($postData['icon'])) {
+                        $this->savePlacePhoto($this->document->getId(), $postData['photo'], $postData['createDate'], $postData['icon']);
                     }
 
                     $this->get('session')->setFlash('notice', 'Place added successfully!');
@@ -439,6 +435,8 @@ class AdminUserController extends Controller
                 if (!empty($location['address']))
                     $entity->setAddress($location['address']);
             }
+            $prevPhoto = $entity->getPhoto();
+            $prevIcon = $entity->getIcon();
 
             $form = $this->get('form.factory')
                 ->create(new \AdminUser\AdminUserBundle\Form\UpdatePlaceType(), $entity);
@@ -448,8 +446,12 @@ class AdminUserController extends Controller
                 $postData = $form->getData();
 
                 if ($form->isValid()) {
+                    $title = $postData->getTitle();
+                    $lat = $postData->getLat();
+                    $lng = $postData->getLng();
+                    $address = $postData->getAddress();
 
-                    if (empty($postData['title']) || empty($postData['lat']) || empty($postData['lng']) || empty($postData['address'])) {
+                    if (empty($title) || empty($lat) || empty($lng) || empty($address)) {
                         $this->get('session')->setFlash('notice', 'Required field can not be empty!');
                         return $this->redirect('customplacelist/1');
                     }
@@ -458,21 +460,36 @@ class AdminUserController extends Controller
                     $newLocation['lng'] = floatval($postData->getLng());
                     $newLocation['address'] = $postData->getAddress();
                     $postData->setLocation($newLocation);
+                    $isUploadedPhoto = 1;
+                    $isUploadedIcon = 1;
+                    if (is_null($postData->getPhoto())) {
+                        $postData->setPhoto($prevPhoto);
+                        $isUploadedPhoto = null;
+                    }
+
+                    if (is_null($postData->getIcon())) {
+                        $postData->setIcon($prevIcon);
+                        $isUploadedIcon = null;
+                    }
 
                     $dm->persist($postData);
                     $dm->flush();
 
-                    $existPlaceIcon = $postData->getIcon();
-                    $existPlacePhoto = $postData->getPhoto();
+                    if ($isUploadedPhoto || $isUploadedIcon) {
 
-                    if (!empty($existPlaceIcon)) {
-                        $placeIcon = $postData->getIcon();
-                    } else {
-                        $placeIcon = null;
-                    }
+                        if ($isUploadedPhoto) {
+                            $placePhoto = $postData->getPhoto();
+                        } else {
+                            $placePhoto = null;
+                        }
 
-                    if (!empty($existPlacePhoto)) {
-                        $this->updatePlacePhoto($id, $postData->getPhoto(), date('Y-m-d h:i:s a', time()), $placeIcon);
+                        if ($isUploadedIcon) {
+                            $placeIcon = $postData->getIcon();
+                        } else {
+                            $placeIcon = null;
+                        }
+                        $this->updatePlacePhoto($id, $placePhoto, date('Y-m-d h:i:s a', time()), $placeIcon);
+
                     }
 
                     $this->get('session')->setFlash('notice', 'Place updated successfully!');
@@ -513,16 +530,19 @@ class AdminUserController extends Controller
 
         $dirPath = "/images/place-photo/";
         $iconDirPath = "/images/place-icon/";
-        $rootDir = __DIR__ . '/../../../../../web';
-        $destination = $rootDir . "/" . $dirPath;
-        $iconDestination = $rootDir . "/" . $iconDirPath;
+        $twig = $this->container->get('twig');
+        $globals = $twig->getGlobals();
+
+        $rootDir = $globals['image_real_path'];
+        $destination = $rootDir . $dirPath;
+        $iconDestination = $rootDir . $iconDirPath;
 
         $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
 
         if ($photoUrl !== false) {
             $place->setPhoto($photoUrl);
         } else {
-            if (!file_exists($rootDir . "/" . $dirPath)) {
+            if (!file_exists($rootDir . $dirPath)) {
                 mkdir($destination, 0777, true);
             }
 
@@ -541,7 +561,7 @@ class AdminUserController extends Controller
             if ($iconUrl !== false) {
                 $place->setIcon($iconUrl);
             } else {
-                if (!file_exists($rootDir . "/" . $iconDirPath)) {
+                if (!file_exists($rootDir . $iconDirPath)) {
                     mkdir($iconDestination, 0777, true);
                 }
 
@@ -584,27 +604,32 @@ class AdminUserController extends Controller
 
         $dirPath = "/images/place-photo/";
         $iconDirPath = "/images/place-icon/";
-        $rootDir = __DIR__ . '/../../../../../web';
-        $destination = $rootDir . "/" . $dirPath;
-        $iconDestination = $rootDir . "/" . $iconDirPath;
+        $twig = $this->container->get('twig');
+        $globals = $twig->getGlobals();
 
-        $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
+        $rootDir = $globals['image_real_path'];
+        $destination = $rootDir . $dirPath;
+        $iconDestination = $rootDir . $iconDirPath;
 
-        if ($photoUrl !== false) {
-            $place->setPhoto($photoUrl);
-        } else {
-            if (!file_exists($rootDir . "/" . $dirPath)) {
-                mkdir($destination, 0777, true);
+        if (!is_null($placePhoto)) {
+            $photoUrl = filter_var($placePhoto, FILTER_VALIDATE_URL);
+
+            if ($photoUrl !== false) {
+                $place->setPhoto($photoUrl);
+            } else {
+                if (!file_exists($rootDir . $dirPath)) {
+                    mkdir($destination, 0777, true);
+                }
+
+                if (in_array($_FILES['updateplace']['type']['photo'], $valid_mime_types)) {
+                    $ext = explode('.', $_FILES['updateplace']['name']['photo']);
+                    $ext = end($ext);
+                    $filePath = $destination . $place->getId() . "." . $ext;
+                    move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
+                }
+
+                $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
             }
-
-            if (in_array($_FILES['updateplace']['type']['photo'], $valid_mime_types)) {
-                $ext = explode('.', $_FILES['updateplace']['name']['photo']);
-                $ext = end($ext);
-                $filePath = $destination . $place->getId() . "." . $ext;
-                move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
-            }
-
-            $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
         }
         if (!is_null($placeIcon)) {
             $iconUrl = filter_var($placeIcon, FILTER_VALIDATE_URL);
@@ -612,7 +637,7 @@ class AdminUserController extends Controller
             if ($iconUrl !== false) {
                 $place->setIcon($iconUrl);
             } else {
-                if (!file_exists($rootDir . "/" . $iconDirPath)) {
+                if (!file_exists($rootDir . $iconDirPath)) {
                     mkdir($iconDestination, 0777, true);
                 }
 
