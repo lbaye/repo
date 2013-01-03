@@ -71,7 +71,7 @@ UserInfo *userInfo;
 NSMutableArray *nameArr;
 BOOL coverImgFlag;
 BOOL isDirtyFrnd=FALSE;
-NSMutableArray *selectedScrollIndex;
+NSMutableArray *selectedScrollIndex, *iconArray;
 UIImageView *lineView;
 int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
@@ -131,11 +131,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     ImgesName=[[NSMutableArray alloc] init];
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
-    [ImgesName addObject:@"thum"];
+    [ImgesName addObject:@"friends_icon"];
     [ImgesName addObject:@"events_icon"];
     [ImgesName addObject:@"places_icon"];
     [ImgesName addObject:@"meet_up_icon"];
     [ImgesName addObject:@"sm_icon@2x"];
+    
+    iconArray=[[NSMutableArray alloc] initWithObjects:@"photos_icon_small.png",@"friends_icon_small.png",@"events_icon_small.png",@"icon_48x48.png",@"icon_meetup_new.png",@"photos_icon_small.png", nil];
     
     userItemScrollView.delegate = self;
     lineView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"line.png"]];
@@ -976,10 +978,15 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 imgView.opaque = YES;
                 imgView.userInteractionEnabled=YES;
                 imgView.contentMode=UIViewContentModeScaleAspectFit;
-                imgView.layer.borderWidth=0.0;
+                imgView.layer.borderWidth=1.0;
                 imgView.layer.masksToBounds = YES;
                 [imgView.layer setCornerRadius:5.0];
+                imgView.layer.borderColor=[[UIColor lightTextColor]CGColor];
+                UIImageView *iconview=[[UIImageView alloc] initWithFrame:CGRectMake(5, 42, 15, 15)];
+                iconview.contentMode=UIViewContentModeScaleAspectFit;                
+                [iconview setImage:[UIImage imageNamed:[iconArray objectAtIndex:i]]];
                 [aView addSubview:imgView];
+                [aView addSubview:iconview];
                 [aView addSubview:name];
                 [userItemScrollView addSubview:aView];
                 UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
@@ -1058,7 +1065,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         NSArray* subviews1 = [NSArray arrayWithArray: im.subviews];
         UIImageView *im1=[subviews1 objectAtIndex:0];
         [im1 setAlpha:1.0];
-        im1.layer.borderWidth=2.0;
+        im1.layer.borderWidth=1.0;
         im1.layer.masksToBounds = YES;
         [im1.layer setCornerRadius:7.0];
         
@@ -1068,7 +1075,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         }
         else 
         {
-            im1.layer.borderColor=[[UIColor grayColor]CGColor];
+            im1.layer.borderColor=[[UIColor lightTextColor]CGColor];
         }
     }
     if (imageIndex==0) 
