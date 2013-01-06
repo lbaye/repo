@@ -118,7 +118,7 @@ class ApplicationSearch implements ApplicationSearchInterface
                 $customPlaceStore['icon'] = \Helper\Url::buildPlaceIconUrl($placeIcon);
             }
 
-            $placePhoto['photo'] = $customPlace->getIcon();
+            $placePhoto['photo'] = $customPlace->getPhoto();
             if (!empty($placePhoto)) {
                 $customPlaceStore['streetViewImage'] = \Helper\Url::buildPlacePhotoUrl($placePhoto);
             }

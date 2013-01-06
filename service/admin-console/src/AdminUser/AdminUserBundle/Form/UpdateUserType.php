@@ -10,8 +10,12 @@ class UpdateUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', 'email');
-        $builder->add('firstName', 'text');
-        $builder->add('lastName', 'text');
+        $builder->add('firstName', 'text', array(
+            'label' => 'First Name'
+        ));
+        $builder->add('lastName', 'text', array(
+            'label' => 'Last Name'
+        ));
         $builder->add('enabled', 'choice', array(
             'choices' => array(false => 'Block', true => 'Unblock'),
             'required' => true,
@@ -22,7 +26,7 @@ class UpdateUserType extends AbstractType
         ));
         $builder->add('regMedia', 'choice', array(
             'choices' => array('sm' => 'Social Maps', 'fb' => 'Facebook'),
-            'required' => true,
+            'required' => true,'label' => 'Reg Media'
         ));
 
     }
