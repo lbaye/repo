@@ -550,7 +550,8 @@ class AdminUserController extends Controller
                 $ext = explode('.', $_FILES['addplace']['name']['photo']);
                 $ext = end($ext);
                 $filePath = $destination . $place->getId() . "." . $ext;
-                move_uploaded_file($_FILES['addplace']['tmp_name']['photo'], $filePath);
+//                move_uploaded_file($_FILES['addplace']['tmp_name']['photo'], $filePath);
+                $this->imageResize(320, 130, $_FILES['addplace']['tmp_name']['photo'], $filePath);
             }
 
             $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -569,7 +570,8 @@ class AdminUserController extends Controller
                     $ext = explode('.', $_FILES['addplace']['name']['icon']);
                     $ext = end($ext);
                     $filePath = $iconDestination . $place->getId() . "." . $ext;
-                    move_uploaded_file($_FILES['addplace']['tmp_name']['icon'], $filePath);
+//                    move_uploaded_file($_FILES['addplace']['tmp_name']['icon'], $filePath);
+                    $this->imageResize(71, 71, $_FILES['addplace']['tmp_name']['icon'], $filePath);
                 }
 
                 $place->setIcon($iconDirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -625,7 +627,8 @@ class AdminUserController extends Controller
                     $ext = explode('.', $_FILES['updateplace']['name']['photo']);
                     $ext = end($ext);
                     $filePath = $destination . $place->getId() . "." . $ext;
-                    move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
+//                    move_uploaded_file($_FILES['updateplace']['tmp_name']['photo'], $filePath);
+                    $this->imageResize(320, 130, $_FILES['updateplace']['tmp_name']['photo'], $filePath);
                 }
 
                 $place->setPhoto($dirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -645,7 +648,8 @@ class AdminUserController extends Controller
                     $ext = explode('.', $_FILES['updateplace']['name']['icon']);
                     $ext = end($ext);
                     $filePath = $iconDestination . $place->getId() . "." . $ext;
-                    move_uploaded_file($_FILES['updateplace']['tmp_name']['icon'], $filePath);
+//                    move_uploaded_file($_FILES['updateplace']['tmp_name']['icon'], $filePath);
+                    $this->imageResize(71, 71, $_FILES['updateplace']['tmp_name']['icon'], $filePath);
                 }
 
                 $place->setIcon($iconDirPath . $place->getId() . "." . $ext . "?" . $timeStamp);
@@ -1092,5 +1096,47 @@ class AdminUserController extends Controller
                 'pager' => $pagerfanta,
             ));
         }
+    }
+
+    public function imageResize($maxWidth, $maxHeight, $image, $filePath, $original = null)
+    {
+        $image_info = getimagesize($image);
+        $image_type = $image_info[2];
+        if ($image_type == IMAGETYPE_JPEG) {
+
+            $image = imagecreatefromjpeg($image);
+        } elseif ($image_type == IMAGETYPE_GIF) {
+
+            $image = imagecreatefromgif($image);
+        } elseif ($image_type == IMAGETYPE_PNG) {
+
+            $image = imagecreatefrompng($image);
+        }
+        // Get current dimensions
+        $oldWidth = imagesx($image);
+        $oldHeight = imagesy($image);
+
+        // Calculate the scaling we need to do to fit the image inside our frame
+        $scale = min($maxWidth / $oldWidth, $maxHeight / $oldHeight);
+
+        // Get the new dimensions
+        $newWidth = ceil($scale * $oldWidth);
+        $newHeight = ceil($scale * $oldHeight);
+
+        // Create new empty image
+        $new = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Resize old image into new
+        imagecopyresampled($new, $image,
+            0, 0, 0, 0,
+            $newWidth, $newHeight, $oldWidth, $oldHeight);
+
+        // Catch the imagedata
+        imagejpeg($new, $filePath, 100);
+
+        // Destroy resources
+        if ($original == 1)
+            imagedestroy($image);
+        imagedestroy($new);
     }
 }

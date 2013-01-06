@@ -28,7 +28,7 @@
         <th>First Name</th>
         <th>Last Name</th>
         <th>Gender</th>
-        <th>RegMedia</th>
+        <th>Reg Media</th>
         <th>Status</th>
         <th class="actionHeader">Actions</th>
     </tr>
@@ -57,7 +57,7 @@
                 <br/><br/>
                 {% if user.email | length > 0 %}
                 <a title="Edit" class="btn btn-primary btn-mini edit-item"
-                   href="{{ path('emailnotify_user', {'id': user.id}) }}">Email</a>
+                   href="{{ path('emailnotify_user', {'id': user.id}) }}" style="width: 34px;">Email</a>
                   {% endif %}
             </div>
         </td>
