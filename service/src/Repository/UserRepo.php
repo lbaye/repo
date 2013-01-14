@@ -773,12 +773,7 @@ class UserRepo extends Base
             $avatarUrl = preg_replace("/\&type=normal/i", "?type=normal", $avatarUrl);
             $user->setAvatar($avatarUrl);
         } else {
-            $thumbPath = "/images/avatar/thumb";
-            $baseThumbDir = ROOTDIR . "/images/avatar/thumb/";
-
-            if (!file_exists(ROOTDIR . "/" . $baseThumbDir)) {
-                mkdir($baseThumbDir, 0777, true);
-            }
+            $thumbPath = $this->setThumbAvatarPath();
             @ImageHelper::saveResizeAvatarFromBase64($avatar, ROOTDIR . $filePath, ROOTDIR . $thumbPath);
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
@@ -788,6 +783,18 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return $user;
+    }
+
+    public function setThumbAvatarPath()
+    {
+        $thumbPath = "/images/avatar/thumb";
+        $baseThumbDir = ROOTDIR . "/images/avatar/thumb/";
+
+        if (!file_exists(ROOTDIR . "/" . $baseThumbDir)) {
+            mkdir($baseThumbDir, 0777, true);
+            return $thumbPath;
+        }
+        return $thumbPath;
     }
 
     public function saveCoverPhoto($id, $coverPhoto)
@@ -845,7 +852,7 @@ class UserRepo extends Base
 
         if (!empty($users)) {
             foreach ($users as $userHash) {
-                $this->prepareUserData($userHash, $location, $key, $getAvatarForSearch = 1);
+                $this->prepareUserData($userHash, $location, $key, 1);
                 $filteredUsers[] = $userHash;
             }
 
@@ -909,11 +916,12 @@ class UserRepo extends Base
 
         # Setting up absolute urls for user avatar and cover photo
         $userHash['avatar'] = $this->_buildAvatarUrl($userHash);
-        if ($getAvatarForSearch) {
+        $isFbAvatar = preg_match("/graph.facebook.com/i", $userHash['avatar']);
+
+        if (($getAvatarForSearch) && empty($isFbAvatar)) {
             $userHash['avatar'] = preg_replace("/avatar/", "avatar/thumb", $userHash['avatar']);
         }
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
-
         # Set Online/offline status
         $userHash['online'] = $userObj->isOnlineUser();
 
