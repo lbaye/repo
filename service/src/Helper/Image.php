@@ -64,4 +64,18 @@ class Image
             imagedestroy($image);
         imagedestroy($new);
     }
+
+    public static function saveResizeAvatarFromBase64($base64Str, $fPath, $tPath)
+    {
+        $img = imagecreatefromstring(base64_decode($base64Str));
+
+        if (empty($img))
+            return false;
+
+        if ($img != false) {
+            self::imageResize(50, 50, $img, $tPath);
+            self::imageResize(100, 100, $img, $fPath);
+            return true;
+        }
+    }
 }

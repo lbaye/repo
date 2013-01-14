@@ -13,7 +13,8 @@ use Service\Search\ApplicationSearchFactory as ApplicationSearchFactory;
 /**
  * Perform search on users, places and external users
  */
-class Search extends Base {
+class Search extends Base
+{
     /**
      * Maximum allowed older checkins to show in the list.
      */
@@ -21,7 +22,8 @@ class Search extends Base {
 
     private $extUserRepo;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         $this->userRepository = $this->dm->getRepository('Document\User');
@@ -41,7 +43,8 @@ class Search extends Base {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all() {
+    public function all()
+    {
         $this->debug('Preparing search result');
         $data = $this->request->request->all();
 
@@ -55,7 +58,8 @@ class Search extends Base {
         }
     }
 
-    protected function performSearch($data) {
+    protected function performSearch($data)
+    {
         $this->debug('No cache found, Creating cache search cache');
         $appSearch = ApplicationSearchFactory::getInstance(
             ApplicationSearchFactory::AS_DEFAULT, $this->user, $this->dm, $this->config);
@@ -69,18 +73,20 @@ class Search extends Base {
      *
      * Retrieve all people from the specific location
      */
-    public function allPeopleList() {
+    public function allPeopleList()
+    {
         $data = $this->request->request->all();
         $appSearch = ApplicationSearchFactory::
-                getInstance(ApplicationSearchFactory::AS_DEFAULT,
-                            $this->user, $this->dm, $this->config);
+            getInstance(ApplicationSearchFactory::AS_DEFAULT,
+            $this->user, $this->dm, $this->config);
 
         return $this->_generateResponse(
             $appSearch->searchPeople($data, array('limit' => \Helper\Constants::PEOPLE_LIMIT)));
     }
 
     /** TODO: Finalize deals search */
-    protected function deals($data) {
+    protected function deals($data)
+    {
         return array();
     }
 }
