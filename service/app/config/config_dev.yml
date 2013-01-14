@@ -1,10 +1,10 @@
 web:
-  root: http://api.socialmaps.local:8888
+  root: http://192.168.1.71/social_maps/web
 
 mongodb:
   host: 'localhost'
   port: 27017
-  database: 'socialmaps_staged'
+  database: 'socialmaps'
 
 logging:
   # DEBUG, WARN, ERROR
