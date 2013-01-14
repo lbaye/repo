@@ -77,7 +77,6 @@ class Url
 
     public static function getStreetViewImageOrReturnEmpty($config, array $location, $size = "320x130")
     {
-
         $key = $config['googlePlace']['apiKey'];
         $baseUrl = $config['web']['root'];
 
@@ -102,6 +101,9 @@ class Url
         } else {
             return self::buildStreetViewImage($key, $location, $size);
         }
+    }
 
+    public static function buildFacebookAvatar($fbId) {
+        return 'https://graph.facebook.com/' . $fbId . '/picture?type=normal';
     }
 }

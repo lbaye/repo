@@ -7,13 +7,17 @@ namespace Service\Venue;
  */
 class GooglePlaces extends Base
 {
-    protected $apiKey;
-    protected $endpoint;
+    private $apiKey;
+    private $endpoint;
+    private $config;
 
-    public function __construct($apiKey, $endpoint = "https://maps.googleapis.com/maps/api/place/search/json")
+    public function __construct(
+        $apiKey, $config = array(),
+        $endpoint = "https://maps.googleapis.com/maps/api/place/search/json")
     {
         $this->apiKey = $apiKey;
         $this->endpoint = $endpoint;
+        $this->config = $config;
     }
 
     public function search($keyword = null, $location = array(), $radius = '2000')
@@ -42,9 +46,14 @@ class GooglePlaces extends Base
             $sorted = array();
 
             foreach ($content->results as &$result) {
-                $result->distance = \Helper\Location::distance($location['lat'], $location['lng'], $result->geometry->location->lat, $result->geometry->location->lng);
-                //$result->streetViewImage = "http://maps.googleapis.com/maps/api/streetview?size=450x200&location={$result->geometry->location->lat},%20{$result->geometry->location->lng}&sensor=false&key=$this->apiKey";
-                $result->streetViewImage = $this->get_street_view_image($result->geometry->location->lat,$result->geometry->location->lng, $this->apiKey );
+                $result->distance = \Helper\Location::distance(
+                    $location['lat'], $location['lng'],
+                    $result->geometry->location->lat,
+                    $result->geometry->location->lng);
+
+                $result->streetViewImage = \Helper\Url::getStreetViewImageOrReturnEmpty(
+                    $this->config, (array) $result->geometry->location);
+
                 $sorted[] = $result;
             }
 
@@ -67,9 +76,6 @@ class GooglePlaces extends Base
     }
 
     private function get_street_view_image($lat, $lng, $key) {
-
-        $lat = $location['lat'];
-        $lng = $location['lng'];
         $endpoint = "http://maps.google.com/cbk?output=json&hl=en&ll=" . $lat . "," . $lng . "&radius=50&cb_client=maps_sv&v=4&key=" . $key ;
 
         $handler = curl_init();
