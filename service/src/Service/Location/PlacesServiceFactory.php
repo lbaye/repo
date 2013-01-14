@@ -34,7 +34,9 @@ class PlacesServiceFactory {
         switch ($type) {
             case self::GOOGLE_PLACES:
                 return new GooglePlacesService(
-                    $logger, self::$mConfiguration['googlePlace']['apiKey']);
+                    $logger,
+                    self::$mConfiguration['googlePlace']['apiKey'],
+                    self::$mConfiguration);
 
             case self::CACHED_GOOGLE_PLACES:
                 return new CachedGooglePlacesService(

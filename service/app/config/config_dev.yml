@@ -1,5 +1,7 @@
 web:
-  root: http://192.168.1.71/social_maps/web
+
+  root: http://192.168.1.220:8888
+
 
 mongodb:
   host: 'localhost'

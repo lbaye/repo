@@ -33,7 +33,7 @@ class Util {
         } elseif ($diff < (3600 * 24 * 30)) {
             return (int)($diff / (3600 * 24)) . " " . Util::pluralizee("day", (int)($diff / (3600*24))) . " ago";
         } elseif ($diff < (3600 * 24 * 365)) {
-            return (int)($diff / 3600 * 24 * 30) . " " . Util::pluralizee("month", (int)($diff / (3600*24*30))) . " ago";
+            return (int)($diff / (3600 * 24 * 30)) . " " . Util::pluralizee("month", (int)($diff / (3600*24*30))) . " ago";
         } else {
             return (int)($diff / (3600 * 24 * 365)) . " " . Util::pluralizee("year", (int)($diff / (3600 * 24 * 365))) . " ago";
         }

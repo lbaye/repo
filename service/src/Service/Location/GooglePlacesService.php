@@ -13,10 +13,10 @@ class GooglePlacesService implements IPlacesService {
     private $mApiInstance;
     private $mLogger;
 
-    public function __construct(Logger $logger, $pApiKey) {
+    public function __construct(Logger $logger, $pApiKey, $config = array()) {
         $this->mLogger = $logger;
         $this->mApiKey = $pApiKey;
-        $this->mApiInstance = new \Service\Venue\GooglePlaces($this->mApiKey);
+        $this->mApiInstance = new \Service\Venue\GooglePlaces($this->mApiKey, $config);
     }
 
     function search(array $location, $keywords, $radius = 2000) {
