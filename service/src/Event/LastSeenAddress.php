@@ -41,6 +41,7 @@ class LastSeenAddress extends Base
 
                 $this->setAddress($user);
                 $this->setCoverPhotoIfStreetImage($user);
+                $this->fixInvalidFacebookAvatar($user);
                 $this->storeChanges($user);
 
                 $this->services['dm']->clear();
@@ -74,13 +75,27 @@ class LastSeenAddress extends Base
         if ($user->hasCurrentLocation()) {
             $coverImage = $user->getCoverPhoto();
             $streetImage = (preg_match('/^https?:\/\/maps.googleapis.com/', $coverImage) > 0) ? 1 : 0;
+            $defaultImage = preg_match('/default\-cover\-photo\.png/', $coverImage) > 0 ? 1 : 0;
 
             // If Not user defined image
-            if (empty($coverImage) || $streetImage) {
+            if (empty($coverImage) || $streetImage || $defaultImage) {
                 $current_location = $user->getCurrentLocation();
                 $coverImage = \Helper\Url::getStreetViewImageOrReturnEmpty($this->conf, $current_location);
                 $user->setCoverPhoto($coverImage);
                 $this->debug('Updating user cover photo - ' . $user->getName() . ' - ' . $coverImage);
+            }
+        }
+    }
+
+    private function fixInvalidFacebookAvatar(\Document\User &$user) {
+        $pictureUrl = $user->getAvatar();
+        $fbId = $user->getFacebookId();
+
+        if (!empty($fbId) && !empty($pictureUrl)) {
+            $invalidParam = preg_match('/picture&type=/', $pictureUrl) > 0 ? 1 : 0;
+
+            if ($invalidParam) {
+                $user->setAvatar(\Helper\Url::buildFacebookAvatar($fbId));
             }
         }
     }

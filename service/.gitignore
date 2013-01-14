@@ -10,5 +10,5 @@ composer.phar
 nohup.out
 admin-console/vendor
 admin-console/app/cache
-
+logs/*
 !.gitignore
