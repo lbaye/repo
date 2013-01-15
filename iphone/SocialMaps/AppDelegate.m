@@ -311,7 +311,9 @@ static AppDelegate *sharedInstance=nil;
             else
                 controller.willSelectMeetUp = NO;
             
-            [self.currentModelViewController presentModalViewController:controller animated:NO];
+            UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+            [self.currentModelViewController presentModalViewController:nav animated:YES];
+            nav.navigationBarHidden = YES;
             
         } else if (newNotif.notifType == PushNotificationEventInvite) {
             
