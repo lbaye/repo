@@ -1324,16 +1324,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
     
-    
-    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3]; 
 	
-    
-    
     if (totalVisibleCellHeight > 55) {
         CGRect rect = self.view.frame;
-        
         int moveBy = -totalVisibleCellHeight + 55;
         
         if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
