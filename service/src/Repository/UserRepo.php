@@ -20,7 +20,7 @@ class UserRepo extends Base
     const EVENT_ADDED_FRIEND = 'added_friend';
     static $DEFAULT_USER_FIELDS = array('_id', 'firstName', 'lastName', 'currentLocation', 'email',
         'status', 'avatar', 'coverPhoto', 'distance',
-        'age', 'gender', 'lastSeenAt', 'relationshipStatus',
+        'age', 'gender', 'lastSeenAt', 'relationshipStatus', 'username',
         'workStatus', 'dateOfBirth', 'regMedia', 'address', 'lastPulse');
 
     protected $loggerName = 'Repository::UserRepo';
@@ -773,8 +773,7 @@ class UserRepo extends Base
             $avatarUrl = preg_replace("/\&type=normal/i", "?type=normal", $avatarUrl);
             $user->setAvatar($avatarUrl);
         } else {
-            $thumbPath = $this->setThumbAvatarPath();
-            @ImageHelper::saveResizeAvatarFromBase64($avatar, ROOTDIR . $filePath, ROOTDIR . $thumbPath);
+            @ImageHelper::saveImageFromBase64($avatar, ROOTDIR . $filePath);
             $user->setAvatar($filePath . "?" . $timeStamp);
         }
 
@@ -783,18 +782,6 @@ class UserRepo extends Base
         $this->dm->flush();
 
         return $user;
-    }
-
-    public function setThumbAvatarPath()
-    {
-        $thumbPath = "/images/avatar/thumb";
-        $baseThumbDir = ROOTDIR . "/images/avatar/thumb/";
-
-        if (!file_exists(ROOTDIR . "/" . $baseThumbDir)) {
-            mkdir($baseThumbDir, 0777, true);
-            return $thumbPath;
-        }
-        return $thumbPath;
     }
 
     public function saveCoverPhoto($id, $coverPhoto)
@@ -852,7 +839,7 @@ class UserRepo extends Base
 
         if (!empty($users)) {
             foreach ($users as $userHash) {
-                $this->prepareUserData($userHash, $location, $key, 1);
+                $this->prepareUserData($userHash, $location, $key);
                 $filteredUsers[] = $userHash;
             }
 
@@ -893,7 +880,7 @@ class UserRepo extends Base
         return $query->getQuery()->execute();
     }
 
-    private function prepareUserData(&$userHash, &$location, &$key, $getAvatarForSearch = null)
+    private function prepareUserData(&$userHash, &$location, &$key)
     {
         # Set user database id to "id" field
         $id = $userHash['_id']->__toString();
@@ -908,6 +895,10 @@ class UserRepo extends Base
                 $userHash['address'] = null;
         }
 
+        # Ensure null is set if no user name is set
+        if (isset($userHash['username']) && empty($userHash['username']))
+            $userHash['username'] = null;
+
         # Retrieve user object
         $userObj = $this->find($userHash['id']);
 
@@ -916,16 +907,10 @@ class UserRepo extends Base
 
         # Setting up absolute urls for user avatar and cover photo
         $userHash['avatar'] = $this->_buildAvatarUrl($userHash);
-        $isFbAvatar = preg_match("/graph.facebook.com/i", $userHash['avatar']);
-
-        if (($getAvatarForSearch) && empty($isFbAvatar)) {
-            $userHash['avatar'] = preg_replace("/avatar/", "avatar/thumb", $userHash['avatar']);
-        }
         $userHash['coverPhoto'] = $this->_buildCoverPhotoUrl($userHash);
+
         # Set Online/offline status
         $userHash['online'] = $userObj->isOnlineUser();
-
-        $userHash['userName'] = $userObj->getUserName();
 
         # Set street view image if no cover photo is set
         $noCoverPhotoSet = !isset($userHash['coverPhoto']) || empty($userHash['coverPhoto']);

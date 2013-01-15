@@ -208,10 +208,14 @@ class Place extends Base
     private function addOwnerInfo(&$data)
     {
         $owner = $this->LocationMarkRepository->getOwnerByPlaceId($data['id']);
+        $username = $owner->getUsername();
+        if (empty($username)) $username = null;
+
         $data['owner'] = array(
             'id' => $owner->getId(),
             'firstName' => $owner->getFirstName(),
             'lastName' => $owner->getLastName(),
+            'username' => $username,
             'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
         );
     }
