@@ -564,6 +564,24 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:messageSelected");
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
     
+    for (NotifMessage *notifMessage in smAppDelegate.messages) {
+        if ([notifMessage.recipients count] == 2) {
+            for (NSDictionary *recipient in notifMessage.recipients) {
+                NSString *recipientID = [recipient valueForKey:@"id"];
+                if ([recipientID isEqualToString:locItem.userInfo.userId]) {
+                    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+                    controller.selectedMessage = notifMessage;
+                    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+                    [self presentModalViewController:nav animated:YES];
+                    nav.navigationBarHidden = YES;
+                    return;
+                }
+            }
+        }
+    }
+    
     UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 
                                                                    self.view.frame.origin.y+40, 
                                                                    self.view.frame.size.width, 
@@ -611,7 +629,6 @@ ButtonClickCallbackData callBackData;
     [messageView addSubview:sendButton];
     
     [[self view] addSubview:messageView];
-
 }
 
 - (void)planselected:(id <MKAnnotation>)anno
@@ -992,6 +1009,16 @@ ButtonClickCallbackData callBackData;
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"Map drag ended");
         smAppDelegate.needToCenterMap = FALSE;
+        
+        //VISIBLE MAP AREA COORDINATE IS NEEDED FOR ADD ANNOTATION ACCORDING TO MAP POSITION SERVICE CALL
+        MKMapRect mRect = self.mapView.visibleMapRect;
+        MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
+        MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
+        CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+        CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+        
+        NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
+        NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
     }
 }
 

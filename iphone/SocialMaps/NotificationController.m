@@ -297,7 +297,9 @@ NSMutableArray *unreadMesg;
             MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
             controller.selectedMessage = msg;
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-            [self presentModalViewController:controller animated:YES];
+            UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+            [self presentModalViewController:nav animated:YES];
+            nav.navigationBarHidden = YES;
             
             [unreadMesg removeObjectAtIndex:indexPath.row];
             [self.notificationItems reloadData];
