@@ -1048,7 +1048,7 @@ ButtonClickCallbackData callBackData;
 
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
-    [locationManager stopUpdatingLocation];
+//    [locationManager stopUpdatingLocation];
     _mapView = nil;
     [self setMapPulldown:nil];
     [self setShareAllButton:nil];
@@ -1220,13 +1220,14 @@ ButtonClickCallbackData callBackData;
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
     NSLog(@"MapViewController:didFailWithError error code=%d msg=%@", [inError code], [inError localizedFailureReason]);
     _mapView.showsUserLocation = NO;
+    NSLog(@"location manager failed with error");
     [manager stopUpdatingLocation];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    NSLog(@"location manager update location");
     if (newLocation.coordinate.longitude == 0.0 && newLocation.coordinate.latitude == 0.0)
         return;
-    
     // Calculate move from last position
     CLLocation *lastPos = [[CLLocation alloc] initWithLatitude:[smAppDelegate.currPosition.latitude doubleValue] longitude:[smAppDelegate.lastPosition.longitude doubleValue]];
     
@@ -1261,6 +1262,23 @@ ButtonClickCallbackData callBackData;
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
         
         [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    }
+    if (elapsedTime > 300 && smAppDelegate.isAppInBackgound==TRUE)
+    {
+        smAppDelegate.lastPosition = smAppDelegate.currPosition;
+        smAppDelegate.currPosition.latitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.latitude];
+        smAppDelegate.currPosition.longitude = [NSString stringWithFormat:@"%f", newLocation.coordinate.longitude];
+        smAppDelegate.currPosition.positionTime = [NSDate date];
+        
+        [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
+        [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
+        
+        
+        // Send new location to server
+        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        
+        [restClient updatePosition:smAppDelegate.currPosition authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        NSLog(@"update location in background after every 5 mins");
     }
 
 }

@@ -61,8 +61,14 @@
 	<string>343783602384766</string>
 	<key>FacebookAppSecret</key>
 	<string>57df840ab5f4175b705e9b8468794db6</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>UIPrerenderedIcon</key>
