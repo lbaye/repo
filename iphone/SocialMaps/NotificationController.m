@@ -16,6 +16,7 @@
 #import "MessageListViewController.h"
 #import "UtilityClass.h"
 #import "ODRefreshControl.h"
+#import "Globals.h"
 
 @implementation NotificationController
 
@@ -82,7 +83,7 @@ NSMutableArray *unreadMesg;
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
      msgCount.text = @"";
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest/%@/minifeed.html?authToken=%@&r=1353821908.182321",smAppDelegate.userId,smAppDelegate.authToken]]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/minifeed.html?authToken=%@&r=1353821908.182321",WS_URL,smAppDelegate.userId,smAppDelegate.authToken]]]];
     ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:self.webView.scrollView];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
 
@@ -285,10 +286,9 @@ NSMutableArray *unreadMesg;
 	selectedItemIndex = indexPath.section;
     
     NotifMessage *msg;
-    
+    notifBadgeFlag=FALSE;
     switch (selectedType) {
         case Message:
-            
             msg = [unreadMesg objectAtIndex:indexPath.row];
             
             msg.msgStatus=@"read";

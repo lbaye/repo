@@ -1471,26 +1471,6 @@ ButtonClickCallbackData callBackData;
 
 - (IBAction)gotoDirections:(id)sender 
 {
-    Platform *aPlatform=[[Platform alloc] init];
-    aPlatform.facebook=@"1";
-    aPlatform.fourSquare=@"1";
-    aPlatform.gmail=@"1";
-    aPlatform.googlePlus=@"1";
-    aPlatform.twitter=@"1";
-    aPlatform.yahoo=@"1";
-    aPlatform.badoo=@"1";
-    
-    NotificationPref *aNotificationPref=[[NotificationPref alloc] init];
-    aNotificationPref.friend_requests_sm=@"1";
-    
-    Layer *alayer=[[Layer alloc] init];
-    alayer.wikipedia=@"1";
-    UserInfo *userInfo=[[UserInfo alloc] init];
-    Geofence *geo=[[Geofence alloc] init];
-    geo.lat=@"23.2323";
-    geo.lng=@"90.1212";
-    geo.radius=@"2";
-    userInfo.firstName=@"sample ";
    // viewEventList
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];

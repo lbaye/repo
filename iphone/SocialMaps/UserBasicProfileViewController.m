@@ -414,8 +414,8 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
         userInfo=[notif object];
-        nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
-        [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
+        nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.userFirstName];
+        [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.userFirstName] forState:UIControlStateNormal];
         statusMsgLabel.text=@"";
         
         addressOrvenueLabel.text=userInfo.address.street;
@@ -597,7 +597,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     entityFlag=5;
     [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"Enter first name...";
-    entityTextField.text=userInfo.firstName;    
+    entityTextField.text=userInfo.userFirstName;    
 }
 
 -(IBAction)hideKeyboard:(id)sender
