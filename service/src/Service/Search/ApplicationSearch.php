@@ -37,7 +37,19 @@ class ApplicationSearch implements ApplicationSearchInterface
     public function searchPeople(array $params, $options = array())
     {
         $limit = isset($options['limit']) ? $options['limit'] : 2000;
-        $location = array('lat' => (float)$params['lat'], 'lng' => (float)$params['lng']);
+        $location = array();
+
+        if (isset($params['ne-position']) && isset($params['sw-position']))
+            $location = array(
+                'ne' => explode(',', $params['ne-position']),
+                'sw' => explode(',', $params['sw-position'])
+            );
+
+        if (isset($params['lat']) && isset($params['lng']))
+            $location = array_merge(
+                $location, array('lat' => (float)$params['lat'],
+                                'lng' => (float) $params['lng']));
+
         $keywords = isset($params['keyword']) ? $params['keyword'] : null;
         $key = $this->config['googlePlace']['apiKey'];
         return $this->userRepository->searchWithPrivacyPreference($keywords, $location, $limit, $key);

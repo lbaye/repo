@@ -877,6 +877,14 @@ class UserRepo extends Base
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
 
+        if (isset($location['sw']) && isset($location['ne'])) {
+            $query->field('currentLocation');
+            $locationParams = array();
+            foreach (array_merge($location['ne'], $location['sw']) as $position)
+                $locationParams[] = (float) $position;
+            call_user_func_array(array($query, 'withinBox'), $locationParams);
+        }
+
         return $query->getQuery()->execute();
     }
 
