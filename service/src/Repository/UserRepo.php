@@ -20,7 +20,7 @@ class UserRepo extends Base
     const EVENT_ADDED_FRIEND = 'added_friend';
     static $DEFAULT_USER_FIELDS = array('_id', 'firstName', 'lastName', 'currentLocation', 'email',
         'status', 'avatar', 'coverPhoto', 'distance',
-        'age', 'gender', 'lastSeenAt', 'relationshipStatus',
+        'age', 'gender', 'lastSeenAt', 'relationshipStatus', 'username',
         'workStatus', 'dateOfBirth', 'regMedia', 'address', 'lastPulse');
 
     protected $loggerName = 'Repository::UserRepo';
@@ -877,6 +877,14 @@ class UserRepo extends Base
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
 
+        if (isset($location['sw']) && isset($location['ne'])) {
+            $query->field('currentLocation');
+            $locationParams = array();
+            foreach (array_merge($location['ne'], $location['sw']) as $position)
+                $locationParams[] = (float) $position;
+            call_user_func_array(array($query, 'withinBox'), $locationParams);
+        }
+
         return $query->getQuery()->execute();
     }
 
@@ -894,6 +902,10 @@ class UserRepo extends Base
             if (empty($userHash['address']))
                 $userHash['address'] = null;
         }
+
+        # Ensure null is set if no user name is set
+        if (isset($userHash['username']) && empty($userHash['username']))
+            $userHash['username'] = null;
 
         # Retrieve user object
         $userObj = $this->find($userHash['id']);
@@ -962,7 +974,7 @@ class UserRepo extends Base
                     $then = (int)($then['sec']);
                     $diff = $now - $then;
 
-                    $target_user_hash['lastSeenAt'] = $target_user_hash['lastSeenAt'] . " about " . Util::humanizeTimeDiff($diff);
+                    $target_user_hash['lastSeenAt'] .= " about " . Util::humanizeTimeDiff($diff);
                 }
             }
 

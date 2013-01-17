@@ -238,7 +238,9 @@ abstract class Base {
             return array();
     }
 
-    protected function _getUserSummaryList(array $userIds, array $fields = array('id', 'firstName', 'lastName', 'avatar')) {
+    protected function _getUserSummaryList(
+        array $userIds, array $fields = array('id', 'username', 'firstName', 'lastName', 'avatar')) {
+        
         $userData = $this->userRepository->getAllByIds($userIds);
 
         $locationHelper = new \Helper\Location();

@@ -126,10 +126,14 @@ class Photo extends Content implements ParticipativeDoc {
             $hash['location'] = $location->toArray();
 
         $owner = $this->getOwner();
+        $username = $owner->getUsername();
+        if (empty($username)) $username = null;
+
         $hash['owner'] = array(
             'id' => $owner->getId(),
             'firstName' => $owner->getFirstName(),
             'lastName' => $owner->getLastName(),
+            'username' => $username,
             'avatar' => \Helper\Url::buildAvatarUrl(array('avatar' => $owner->getAvatar()))
         );
 

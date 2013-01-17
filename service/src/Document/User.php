@@ -336,7 +336,7 @@ class User
     public function toArray($detail = true)
     {
         $shortFields = array(
-            'id', 'email', 'firstName', 'lastName', 'avatar'
+            'id', 'email', 'firstName', 'lastName', 'avatar', 'username'
         );
 
         $detailFields = array(
@@ -345,6 +345,7 @@ class User
             'facebookId',
             'firstName',
             'lastName',
+            'username',
             'avatar',
             'enabled',
             'status',
@@ -379,6 +380,9 @@ class User
         } else {
             $items['address'] = null;
         }
+
+        if (isset($items['username']) && empty($items['username']))
+            $items['username'] = null;
 
         return $items;
     }

@@ -15,6 +15,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
        image_path:      "http://ec2-46-51-157-204.eu-west-1.compute.amazonaws.com/prodtest"
+       image_real_path: "/var/sm-data"
 
 monolog:
     handlers:

@@ -411,7 +411,9 @@ class User extends Base
         foreach ($circles as $circle) {
 
             $friends = $circle->toArray();
-            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $friends['friends'] = $this->_getUserSummaryList(
+                $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                            'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
             $result[] = $friends;
         }
 
@@ -436,7 +438,9 @@ class User extends Base
         foreach ($circles as $circle) {
 
             $friends = $circle->toArray();
-            $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $friends['friends'] = $this->_getUserSummaryList(
+                $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                            'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
             $result[] = $friends;
 
         }
@@ -468,7 +472,9 @@ class User extends Base
             $user = $this->user;
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia'));
+            $userData['friends'] = $this->_getFriendList(
+                $user, array('id', 'firstName', 'lastName', 'avatar', 'distance',
+                            'address', 'regMedia', 'username'));
 
             $this->requestForCacheUpdate($user);
 
@@ -693,7 +699,9 @@ class User extends Base
         foreach ($circles as $circle) {
             if ($circle->getId() == $id) {
                 $friends = $circle->toArray();
-                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $friends['friends'] = $this->_getUserSummaryList(
+                    $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                                'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
                 $result[] = $friends;
             }
         }
@@ -744,7 +752,9 @@ class User extends Base
             foreach ($allCircles as $circle) {
 
                 $friends = $circle->toArray();
-                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $friends['friends'] = $this->_getUserSummaryList(
+                    $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                                'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
                 $updateResult[] = $friends;
             }
 
@@ -778,7 +788,9 @@ class User extends Base
         if ($user instanceof \Document\User) {
             $data = $user->toArrayDetailed();
             $userData['circles'] = $data['circles'];
-            $userData['friends'] = $this->_getFriendList($user, array('id', 'firstName', 'lastName', 'avatar', 'distance', 'address', 'regMedia', 'coverPhoto'));
+            $userData['friends'] = $this->_getFriendList(
+                $user, array('id', 'firstName', 'lastName', 'avatar', 'distance',
+                            'address', 'regMedia', 'coverPhoto', 'username'));
 
             $this->response->setContent(json_encode($userData));
             $this->response->setStatusCode(Status::OK);
@@ -863,7 +875,9 @@ class User extends Base
             foreach ($circles as $circle) {
                 if ($circle->getId() == $id) {
                     $updateFriends = $circle->toArray();
-                    $updateFriends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                    $updateFriends['friends'] = $this->_getUserSummaryList(
+                        $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                                    'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
                     $updateResult[] = $updateFriends;
                 }
             }
@@ -906,7 +920,9 @@ class User extends Base
             foreach ($allCircles as $circle) {
 
                 $friends = $circle->toArray();
-                $friends['friends'] = $this->_getUserSummaryList($circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+                $friends['friends'] = $this->_getUserSummaryList(
+                    $circle->getFriends(), array('id', 'firstName', 'lastName', 'avatar', 'status',
+                                                'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
                 $updateResult[] = $friends;
             }
 
@@ -970,7 +986,9 @@ class User extends Base
 
             $user = $this->user->getBlockedUsers();
 
-            $userDetail = $this->_getUserSummaryList($user, array('id', 'firstName', 'lastName', 'avatar', 'status', 'coverPhoto', 'distance', 'address', 'regMedia'));
+            $userDetail = $this->_getUserSummaryList(
+                $user, array('id', 'firstName', 'lastName', 'avatar', 'status',
+                            'coverPhoto', 'distance', 'address', 'regMedia', 'username'));
 
             $this->response->setContent(json_encode($userDetail));
             $this->response->setStatusCode(Status::OK);
