@@ -100,6 +100,7 @@ class MessageRepo extends Base {
         return $message;
     }
 
+
     private function addToThread(MessageDocument $message) {
         $message->getThread()->getReplies()->add($message);
         $this->dm->persist($message->getThread());
@@ -148,7 +149,7 @@ class MessageRepo extends Base {
         $this->setRecipients($data, $message, $sender);
 
         # Set thread object
-        $this->setThreadDependentProperties($formFields, $data, $message);
+        $message = $this->setThreadDependentProperties($formFields, $data, $message, $sender);
 
         foreach ($formFields as $field) {
             if (isset($data[$field]) && !is_null($data[$field])) {
@@ -162,7 +163,8 @@ class MessageRepo extends Base {
     }
 
     private function setThreadDependentProperties(
-        array &$formFields, array $data, MessageDocument $message) {
+        array &$formFields, array $data, MessageDocument $message, UserDocument $sender = null) {
+
 
         if (!empty($data['thread'])) {
             $thread = $this->find($data['thread']);
@@ -176,6 +178,39 @@ class MessageRepo extends Base {
 
             $message->setUpdateDate(new \DateTime());
         }
+
+        else {
+            $recipientList = $data['recipients'];
+            $recipientList[] = $sender->getId();
+            $recipientIds = array();
+
+
+            foreach ($recipientList as $recipientId) $recipientIds[] = new \MongoId($recipientId);
+
+            $threadArray = $this->findThreadByRecipientList($recipientIds);
+
+            if(!empty($threadArray)) {
+
+                $thread = $this->find($threadArray['_id']);
+
+                $message->setThread($thread);
+                $message->setRecipients($thread->getRecipients());
+                $message->setUpdateDate(new \DateTime());
+            }
+        }
+
+        return $message;
+    }
+
+
+    private function findThreadByRecipientList($recipientList){
+
+        $query = $this->createQueryBuilder('Document\Message')
+            ->field('recipients')->all($recipientList)->hydrate(false);
+        $message = $query->getQuery()->getSingleResult();
+
+        return $message;
+
     }
 
     private function setRecipients(array $data, MessageDocument &$message, $sender = null) {
