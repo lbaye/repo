@@ -201,7 +201,6 @@ class MessageRepo extends Base
             $threadArray = $this->findThreadByRecipientList($recipientIds);
 
             if (!empty($threadArray)) {
-
                 $thread = $this->find($threadArray['_id']);
 
                 $message->setThread($thread);
@@ -212,27 +211,25 @@ class MessageRepo extends Base
 
     }
 
-
-    private function findThreadByRecipientList($recipientList)
+    private function findThreadByRecipientList($recipients)
     {
-
-        $query = $this->createQueryBuilder('Document\Message')
-            ->field('recipients')->all($recipientList)->hydrate(false);
-        $message = $query->getQuery()->getSingleResult();
-
-        return $message;
-
+        return $this->createQueryBuilder('Document\Message')
+            ->field('recipients')->all($recipients)->size(count($recipients))
+            ->hydrate(false)->getQuery()->getSingleResult();
     }
 
     private function setRecipients(array $data, MessageDocument &$message, $sender = null)
     {
         if (!empty($data['recipients'])) {
             $recipients = $data['recipients'];
-            $recipientsObjects = array($sender);
+            $recipientsObjects = array($sender->getId() => $sender);
 
-            foreach ($recipients as $recipient)
-                $recipientsObjects[] = $this->getUserRepository()->find($recipient);
-            $message->setRecipients(array_filter($recipientsObjects));
+            foreach ($recipients as $recipient) {
+                $obj = $this->getUserRepository()->find($recipient);
+                $recipientsObjects[$obj->getId()] = $obj;
+            }
+
+            $message->setRecipients(array_values($recipientsObjects));
         }
     }
 

@@ -91,7 +91,10 @@ class Messages extends Base {
             $message->setStatus('read');
             $this->_sendNotification($postData, $message);
 
-            $this->response->setContent(json_encode($message->toArray(true)));
+            $messageOrThread = $message->getThread() != null ? $message->getThread() : $message;
+            $this->messageRepository->refresh($messageOrThread);
+
+            $this->response->setContent(json_encode($messageOrThread->toArray(true)));
             $this->response->setStatusCode(Status::CREATED);
 
         } catch (\Exception $e) {
