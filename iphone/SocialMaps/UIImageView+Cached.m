@@ -17,7 +17,7 @@ static char const * const ObjectTagKey = "ObjectTag";
 
 @dynamic imageInfo;
 
-#define TAG_INDICATOR_VIEW	420
+//#define TAG_INDICATOR_VIEW	420
 
 - (ImageInfo*)getImageInfo {
     ImageInfo *imageInfoObj = (ImageInfo*)objc_getAssociatedObject(self, ObjectTagKey);
@@ -31,18 +31,16 @@ static char const * const ObjectTagKey = "ObjectTag";
 - (void) observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
     if ([keyPath isEqual:@"image"]) {
         [self performSelectorOnMainThread:@selector(setImage:) withObject:((ImageInfo*)object).image waitUntilDone:NO];
-        [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
-        NSLog(@"remove indicator");
+        //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+        //NSLog(@"remove indicator");
     }
 }
 
-- (void)checkPreviousDownload:(ImageInfo*)imageInfo {
+- (void)canclePreviousDownload:(ImageInfo*)imageInfo {
     if ([self getImageInfo]) {
         [[self getImageInfo] removeObserver:self forKeyPath:@"image"];
         NSLog(@"removeOvserver");
-    } else {
-        NSLog(@"one download");
-    }
+    } 
     [self setImageInfo:imageInfo];
     [imageInfo addObserver:self forKeyPath:@"image" options:0 context:NULL];
 }
@@ -52,14 +50,14 @@ static char const * const ObjectTagKey = "ObjectTag";
 {
     if (url) {
         self.image = nil;
-        [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+        //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
         ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURL:url]);
 
-        [self checkPreviousDownload:imageInfo];
+        [self canclePreviousDownload:imageInfo];
         
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
-        } else {
+        } /*else {
             UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
             //activityIndicator.backgroundColor = [UIColor blackColor];
             activityIndicator.frame = CGRectMake((self.frame.size.width - activityIndicator.frame.size.width) / 2, (self.frame.size.height - activityIndicator.frame.size.height) / 2, activityIndicator.frame.size.width, activityIndicator.frame.size.height);
@@ -68,23 +66,23 @@ static char const * const ObjectTagKey = "ObjectTag";
             [self addSubview:activityIndicator];
             [activityIndicator release];
             NSLog(@"Start indicator");
-        }
+        }*/
     } else {
         ImageInfo *_imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
-        [self checkPreviousDownload:_imageInfo];
+        [self canclePreviousDownload:_imageInfo];
     }
 }
 
 -(void)setImageForUrlIfAvailable:(NSURL *)url
 {
-    [[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
+    //[[self viewWithTag:TAG_INDICATOR_VIEW] removeFromSuperview];
     self.image = nil;
     if (url) {
         ImageInfo *imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
         }
-        [self checkPreviousDownload:imageInfo];
+        [self canclePreviousDownload:imageInfo];
     }
 }
 

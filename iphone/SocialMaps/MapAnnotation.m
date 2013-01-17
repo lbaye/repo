@@ -10,6 +10,7 @@
 #import "LocationItemPeople.h"
 #import "LocationItemPlace.h"
 #import "UIImageView+roundedCorner.h"
+#import "UIImageView+Cached.h"
 #import "AppDelegate.h"
 #import "MapAnnotationEvent.h"
 
@@ -85,7 +86,8 @@
     locImage.tag = 11000;
     
     [locImage addSubview:locImageSquare];
-    locImageSquare.image = locItem.itemIcon;
+    //locImageSquare.image = locItem.itemIcon;
+    [locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
     [locImageSquare.layer setCornerRadius:4.0f];
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;

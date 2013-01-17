@@ -136,7 +136,7 @@
 
 + (void) removeAllCache 
 {
-    [[self cache] removeAllObjects];
+    //[[self cache] removeAllObjects];
 }
 
 @end

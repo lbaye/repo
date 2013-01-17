@@ -2002,10 +2002,11 @@ ButtonClickCallbackData callBackData;
                         
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
+                        aPerson.itemAvaterURL = item.avatar;
                         
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
-                        
+                        /*
                         if ([item.avatar length] > 0) {// Need to retrieve avatar image
                             icon = [UIImage imageNamed:@"thum.png"];
                             __block int itemIndex = smAppDelegate.peopleList.count-1;
@@ -2025,7 +2026,7 @@ ButtonClickCallbackData callBackData;
                                 });
                             });
                         }
-
+                        */
                         [aPerson release];
                     } else {
                         // Item exists, update location only
@@ -2118,9 +2119,10 @@ ButtonClickCallbackData callBackData;
                     LocationItemPlace *aPlace = [[LocationItemPlace alloc] initWithName:item.name address:item.vicinity type:ObjectTypePlace category:[item.typeArr lastObject] coordinate:loc dist:distanceFromMe icon:icon bg:bg itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
                     
                     aPlace.placeInfo = item;
+                    aPlace.itemAvaterURL = item.icon;
                     [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeList.count] forKey:item.ID];
                     [smAppDelegate.placeList addObject:aPlace];
-                    
+                    /*
                     if ([item.icon length] > 0) {
                         // Need to retrieve avatar image
                         icon = [UIImage imageNamed:@"thum.png"];
@@ -2141,6 +2143,7 @@ ButtonClickCallbackData callBackData;
                             });
                         });
                     } 
+                    */
                     [aPlace release];
                 } else {
                     // Item exists, recalculate distance only

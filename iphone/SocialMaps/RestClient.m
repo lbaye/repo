@@ -1655,7 +1655,7 @@ AppDelegate *smAppDelegate;
                         NSLog(@"people name = %@ isOnline = %d", people.firstName, people.isOnline);
                     }
                     [searchLocation.peopleArr addObject:people];
-                    
+                    [people release];
                 }
                 
                 if ([jsonObjects  objectForKey:@"places"]) 
@@ -1684,6 +1684,7 @@ AppDelegate *smAppDelegate;
                         [place setVicinity:[item objectForKey:@"vicinity"] ];
                         [place setCoverPhotoUrl:[item objectForKey:@"streetViewImage"]];
                         [searchLocation.placeArr addObject:place];
+                        [place release];
                     }
                 }
                 for (NSDictionary *item in [jsonObjects  objectForKey:@"facebookFriends"])
@@ -1726,6 +1727,7 @@ AppDelegate *smAppDelegate;
                     people.lastSeenAtDate=[self getNestedKeyVal:item key1:@"createdAt" key2:@"date" key3:@"date"];
                     people.lastSeenAt=people.lastSeenAt;
                     [searchLocation.peopleArr addObject:people];
+                    [people release];
                     
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{

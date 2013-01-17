@@ -15,13 +15,13 @@
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>
-#import "IconDownloader.h"
+//#import "IconDownloader.h"
 
 @class AppDelegate;
 @class LocationItemPlace;
 
-@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate, IconDownloaderDelegate> {
-    
+@interface MeetUpRequestController : UIViewController <CustomRadioButtonDelegate, UIScrollViewDelegate, MKMapViewDelegate, UITableViewDataSource, UITableViewDelegate> 
+{    
     IBOutlet UILabel *labelAddress;
     IBOutlet UIScrollView *frndListScrollView;
     IBOutlet UISearchBar  *friendSearchbar;

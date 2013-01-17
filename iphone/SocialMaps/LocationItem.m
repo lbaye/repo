@@ -10,6 +10,7 @@
 #import "LocationItem.h"
 #import "Constants.h"
 #import "UIImageView+roundedCorner.h"
+#import "UIImageView+Cached.h"
 #import "UtilityClass.h"
 
 @implementation LocationItem
@@ -26,6 +27,7 @@
 @synthesize delegate;
 @synthesize typeName;
 @synthesize itemCoverPhotoUrl;
+@synthesize itemAvaterURL;
 
 - (id)initWithName:(NSString*)name address:(NSString*)address type:(OBJECT_TYPES)type
 category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(float)dist icon:(UIImage*)icon bg:(UIImage*)bg itemCoverPhotoUrl:(NSURL*)_coverPhotoUrl {
@@ -203,7 +205,8 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         lblDist.text = [NSString stringWithFormat:@"%dm", (int)itemDistance];
                     
     // Icon
-    imgIcon.image = itemIcon;
+    //imgIcon.image = itemIcon;
+    [imgIcon setImageForUrlIfAvailable:[NSURL URLWithString:itemAvaterURL]];
     
 	return cell;
 

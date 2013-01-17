@@ -204,19 +204,14 @@ PullableView *pullUpView;
     
 }
 
-- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened {
-    if (opened)
-    {
-        NSLog(@"Now I'm open!");
+- (void)pullableView:(PullableView *)pView didChangeState:(BOOL)opened 
+{
+    if (opened) {
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_close.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = nil;
-    }
-    else
-    {
+    } else {
         ((UIImageView*)[pView.handleView viewWithTag:420]).image = [UIImage imageNamed:@"btn_footer_slider_open.png"];
         ((UIImageView*)[pView.handleView viewWithTag:840]).image = [UIImage imageNamed:@"slide_close_bar.png"];
-        
-        NSLog(@"Now I'm closed, pull me up again!");
     }
 }
 
@@ -771,6 +766,7 @@ PullableView *pullUpView;
             //get the imageView on cell
             
             UIImageView *imgCover = (UIImageView*) [cell viewWithTag:123456789];
+            UIImageView *imgIcon = (UIImageView*) [cell viewWithTag:2010];
             
             LocationItem *anItem = (LocationItem*)[copyDisplayListArray objectAtIndex:indexPath.row];
             
@@ -779,6 +775,9 @@ PullableView *pullUpView;
             
             if (anItem.itemCoverPhotoUrl) 
                 [imgCover loadFromURL:anItem.itemCoverPhotoUrl];
+            
+            if (anItem.itemAvaterURL)
+                 [imgIcon loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
             
         }
     }
