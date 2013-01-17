@@ -57,16 +57,7 @@ static char const * const ObjectTagKey = "ObjectTag";
         
         if (imageInfo.image != NULL) {
             self.image = imageInfo.image;
-        } /*else {
-            UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-            //activityIndicator.backgroundColor = [UIColor blackColor];
-            activityIndicator.frame = CGRectMake((self.frame.size.width - activityIndicator.frame.size.width) / 2, (self.frame.size.height - activityIndicator.frame.size.height) / 2, activityIndicator.frame.size.width, activityIndicator.frame.size.height);
-            [activityIndicator startAnimating];
-            activityIndicator.tag = TAG_INDICATOR_VIEW;
-            [self addSubview:activityIndicator];
-            [activityIndicator release];
-            NSLog(@"Start indicator");
-        }*/
+        } 
     } else {
         ImageInfo *_imageInfo = ((ImageInfo*)[CachedImages getImageFromURLIfAvailable:url]);
         [self canclePreviousDownload:_imageInfo];

@@ -706,77 +706,7 @@ DDAnnotation *annotation;
         [aView addGestureRecognizer:tapGesture];
         [tapGesture release];
         [frndListScrollView addSubview:aView];
-
-      
         
-        /*
-        if(i< [filteredList count]) 
-        { 
-            UserFriends *userFrnd=[filteredList objectAtIndex:i];
-            imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            
-            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFrnd.userId];
-            
-            if (iconDownloader && iconDownloader.userFriends.userProfileImage.size.height > 5){
-                imgView.image = iconDownloader.userFriends.userProfileImage; 
-            }
-            
-            else 
-            { 
-                if(!isDragging_msg && !isDecliring_msg)   
-                {
-                    if (!iconDownloader) {
-                        iconDownloader = [[IconDownloader alloc] init];
-                    }
-                    
-                    iconDownloader.userFriends = userFrnd;
-                    iconDownloader.delegate = self;
-                    
-                    iconDownloader.scrollSubViewTag = 420 + i;
-                    [imageDownloadsInProgress setObject:iconDownloader forKey:userFrnd.userId];
-                    [iconDownloader startDownload];
-                    
-                }
-            }
-            
-            UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 45, 45)];
-            UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(2, 28, 45 - 4, 15)];
-            [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
-            [name setNumberOfLines:1];
-            [name setTextColor:[UIColor whiteColor]];
-            [name setText:userFrnd.userName];
-            [name setBackgroundColor:[UIColor colorWithWhite:0 alpha:.3]];
-            imgView.userInteractionEnabled = YES;
-            imgView.tag = i;
-            aView.tag=i;
-            imgView.exclusiveTouch = YES;
-            imgView.clipsToBounds = NO;
-            imgView.opaque = YES;
-            imgView.layer.borderColor=[[UIColor clearColor] CGColor];
-            imgView.userInteractionEnabled=YES;
-            imgView.layer.borderWidth=2.0;
-            imgView.layer.masksToBounds = YES;
-            [imgView.layer setCornerRadius:7.0];
-            
-            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
-            
-            for (int c=0; c<[selectedFriendsIndex count]; c++)
-            {
-                if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
-                {
-                    imgView.layer.borderColor=[[UIColor greenColor] CGColor];
-                }
-            }
-            
-            [aView addSubview:imgView];
-            [aView addSubview:name];
-            UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-            tapGesture.numberOfTapsRequired = 1;
-            [aView addGestureRecognizer:tapGesture];
-            [tapGesture release];
-            
-            [frndListScrollView addSubview:aView];
-        }*/
         x+=50;
     }
 }
@@ -795,44 +725,7 @@ DDAnnotation *annotation;
     }
     [self reloadScrolview];
 }
-/*                   
-- (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
-{
-    NSLog(@"appImageDidLoadForScrollView");
-    
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
-    if (iconDownloader) {
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-    } else {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.userFriends = userFriends;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-        [iconDownloader release];
-    }
-    
-    int tag = scrollSubViewTag - 420;
-    
-    if (tag == 0) {
-        for (UIView *view in [frndListScrollView subviews]) {
-            if (view.tag == 0) {
-                for (UIImageView *imageView in [view subviews]) {
-                    if ([imageView isKindOfClass:[UIImageView class]]) {
-                        imageView.image = image;
-                        break;
-                    }
-                }
-            }
-        }
-    } else {
-        for (UIImageView *imageView in [[frndListScrollView viewWithTag:tag] subviews]) {
-            if ([imageView isKindOfClass:[UIImageView class]]) {
-                imageView.image = image;
-                break;
-            }
-        }
-    }
-}
-*/
+
 -(void)loadDummydata
 {
     UserFriends *frnds=[[UserFriends alloc] init];
@@ -908,7 +801,6 @@ DDAnnotation *annotation;
 }
 
 - (void)dealloc {
-    //[imageDownloadsInProgress release];
     [tableViewPlaces release];
     [textViewPersonalMsg release];
     [viewComposePersonalMsg release];

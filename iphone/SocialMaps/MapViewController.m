@@ -2006,27 +2006,6 @@ ButtonClickCallbackData callBackData;
                         
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
-                        /*
-                        if ([item.avatar length] > 0) {// Need to retrieve avatar image
-                            icon = [UIImage imageNamed:@"thum.png"];
-                            __block int itemIndex = smAppDelegate.peopleList.count-1;
-                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:item.avatar]];
-                                UIImage* image = [[UIImage alloc] initWithData:imageData];
-                                [imageData release];
-                                
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    if ([smAppDelegate.peopleList count] > itemIndex) {
-                                        //it was crashing sometimes... errorlog trying to get objectAtIndex of an empty array... above if condition added - Rishi
-                                        LocationItemPeople *person = [smAppDelegate.peopleList objectAtIndex:itemIndex];
-                                        person.itemIcon = image;
-                                        if (smAppDelegate.showPeople == TRUE)
-                                            [self mapAnnotationInfoUpdated:person];
-                                    }
-                                });
-                            });
-                        }
-                        */
                         [aPerson release];
                     } else {
                         // Item exists, update location only
@@ -2056,10 +2035,9 @@ ButtonClickCallbackData callBackData;
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
 
-                                aPerson.userInfo.avatar = item.avatar;
-                                [self downloadImage:aPerson];
+                                //aPerson.userInfo.avatar = item.avatar;
+                                aPerson.itemAvaterURL = item.avatar;
                             }
-                            
                             
                             [self mapAnnotationInfoUpdated:aPerson];
                         }
@@ -2122,28 +2100,6 @@ ButtonClickCallbackData callBackData;
                     aPlace.itemAvaterURL = item.icon;
                     [smAppDelegate.placeIndex setValue:[NSNumber numberWithInt:smAppDelegate.placeList.count] forKey:item.ID];
                     [smAppDelegate.placeList addObject:aPlace];
-                    /*
-                    if ([item.icon length] > 0) {
-                        // Need to retrieve avatar image
-                        icon = [UIImage imageNamed:@"thum.png"];
-                        int itemIndex = smAppDelegate.placeIndex.count-1;
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:item.icon]];
-                            UIImage* image = [[UIImage alloc] initWithData:imageData];
-                            [imageData release];
-
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                if ([smAppDelegate.placeList count] > itemIndex) {
-                                    //it was crashing sometimes... errorlog trying to get objectAtIndex of an empty array... above if condition added - Rishi
-                                    LocationItemPlace *place = [smAppDelegate.placeList objectAtIndex:itemIndex];
-                                    place.itemIcon = image;
-                                    if (smAppDelegate.showPlaces == TRUE)
-                                        [self mapAnnotationInfoUpdated:place];
-                                }
-                            });
-                        });
-                    } 
-                    */
                     [aPlace release];
                 } else {
                     // Item exists, recalculate distance only
@@ -2178,33 +2134,6 @@ ButtonClickCallbackData callBackData;
         }
     }
 }
-
-- (void)downloadImage:(LocationItemPeople*)person 
-{
-    if ([person.userInfo.avatar length] > 0) {// Need to retrieve avatar image
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:person.userInfo.avatar]];
-            UIImage* image = [[UIImage alloc] initWithData:imageData];
-            [imageData release];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                    person.itemIcon = image;
-                person.currDisplayState = MapAnnotationStateNormal;
-                if (smAppDelegate.showPeople == TRUE) {
-                    [_mapView removeAnnotation:(id <MKAnnotation>)person];
-                    [_mapView addAnnotation:(id <MKAnnotation>)person];
-                }
-                
-                    if (smAppDelegate.showPeople == TRUE)
-                        [self mapAnnotationInfoUpdated:person];
-                
-            });
-        });
-    }
-}
-
 
 // GCD async notifications
 - (void)gotNotifMessages:(NSNotification *)notif {
