@@ -1131,10 +1131,17 @@ class User
 
     public function getName()
     {
-        return implode(
-            " ", array_filter(
-            array($this->firstName,
-                $this->lastName)));
+        $userName = $this->getUsername();
+
+        if (!(is_null($userName) || empty($userName))) {
+            return $userName;
+        } else {
+            return implode(
+                " ", array_filter(
+                array($this->firstName,
+                    $this->lastName)));
+
+        }
     }
 
     public function updateBlockedUser($user)
