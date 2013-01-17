@@ -78,4 +78,58 @@ class Image
             return true;
         }
     }
+
+    public static function makeThumbImageForAvatars()
+    {
+
+        $thumbImagePath = ROOTDIR . "/images/avatar/thumb";
+        $avatarFolderPath = ROOTDIR . '/images/avatar';
+
+        // change current directory to avatar folder
+        chdir($avatarFolderPath);
+
+        // make a list of avatar images
+
+        $fList = array();
+
+        if ($handle = opendir($avatarFolderPath)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && substr($file, 0, 2) != "._" && $file != ".." && $file != "thumb") {
+                    $fList[] = $file;
+                }
+            }
+            closedir($handle);
+        }
+
+        // Ensure /avatar/thumb exists
+
+        if (!file_exists($thumbImagePath))
+            mkdir($thumbImagePath, 0777, true);
+
+        // save resized avatar images in thumb folder
+
+        self::saveThumbImages($fList, $thumbImagePath);
+    }
+
+    private static function saveThumbImages($fList, $thumbImagePath)
+    {
+
+        foreach ($fList as $filename) {
+
+            $image_info = getimagesize($filename);
+            $image_type = $image_info[2];
+
+            if ($image_type == IMAGETYPE_JPEG) {
+                $image = imagecreatefromjpeg($filename);
+            } elseif ($image_type == IMAGETYPE_GIF) {
+                $image = imagecreatefromgif($filename);
+            } elseif ($image_type == IMAGETYPE_PNG) {
+                $image = imagecreatefrompng($filename);
+            }
+
+            $target_file = $thumbImagePath . "/" . $filename;
+            self::imageResize(50, 50, $image, $target_file, 1);
+        }
+    }
+
 }
