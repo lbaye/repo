@@ -82,8 +82,8 @@ class Image
     public static function makeThumbImageForAvatars()
     {
 
-        $thumbImagePath = ROOTDIR . "/images/avatar/thumb";
-        $avatarFolderPath = ROOTDIR . '/images/avatar';
+        $thumbImagePath = ROOTDIR . "images/avatar/thumb";
+        $avatarFolderPath = ROOTDIR . 'images/avatar';
 
         // change current directory to avatar folder
         chdir($avatarFolderPath);
@@ -107,7 +107,6 @@ class Image
             mkdir($thumbImagePath, 0777, true);
 
         // save resized avatar images in thumb folder
-
         self::saveThumbImages($fList, $thumbImagePath);
     }
 
