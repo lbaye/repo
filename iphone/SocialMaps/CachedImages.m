@@ -54,19 +54,6 @@
     return imageInfo;
 }
 
-+ (ImageInfo*)getImageFromURL:(NSURL*)URL andIndexPath:(NSIndexPath*)indexPath {
-    
-    ImageInfo *imageInfo = [[self cache] objectForKey:URL.description];
-    
-    if (!imageInfo) {
-        imageInfo = [[[ImageInfo alloc] init] autorelease];
-        imageInfo.imagePath = URL;
-        [self cacheFromURL:imageInfo];
-    } 
-    
-    return imageInfo;
-}
-
 + (ImageInfo*)getImageFromURLIfAvailable:(NSURL*)URL {
     
     ImageInfo *imageInfo = [[self cache] objectForKey:URL.description];
@@ -136,7 +123,7 @@
 
 + (void) removeAllCache 
 {
-    //[[self cache] removeAllObjects];
+    [[self cache] removeAllObjects];
 }
 
 @end

@@ -48,6 +48,7 @@
 #import "FriendListViewController.h"
 #import "CreatePlanViewController.h"
 #import "ListViewController.h"
+#import "CachedImages.h"
 
 @interface MapViewController ()
 
@@ -760,6 +761,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)didReceiveMemoryWarning
 {
+    NSLog(@"didReceiveMemoryWarining");
+    [CachedImages removeAllCache];
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.

@@ -378,9 +378,17 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"didReceiveMemoryWarining");
+    [CachedImages removeAllCache];
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    // Release any cached data, images, etc that aren't in use.
+}
+
 - (void)dealloc {
     [filteredList release];
-    [CachedImages removeAllCache];
     [selectedFriendsIndex release];
     [totalNotifCount release];
     [friendSearchbar release];

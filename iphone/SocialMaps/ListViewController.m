@@ -55,6 +55,7 @@ PullableView *pullUpView;
 
 - (void)didReceiveMemoryWarning
 {
+    [CachedImages removeAllCache];
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
@@ -127,12 +128,6 @@ PullableView *pullUpView;
     
     smAppDelegate.currentModelViewController = self;
     [self displayNotificationCount];
-}
-
-- (void) viewDidDisappear:(BOOL)animated
-{
-    [CachedImages removeAllCache];
-    [super viewDidDisappear:animated];
 }
 
 - (void)dropViewDidBeginRefreshing:(ODRefreshControl *)refreshControl

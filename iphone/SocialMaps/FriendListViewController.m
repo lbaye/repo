@@ -502,8 +502,17 @@
 
 //searchbar delegate method end
 
-- (void)dealloc {
+- (void)didReceiveMemoryWarning
+{
     [CachedImages removeAllCache];
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)dealloc {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_LIST_DONE object:nil];
     [circleList release];
     [scrollViewFriendList release];
