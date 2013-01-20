@@ -282,7 +282,6 @@
 
 
 - (void)dealloc {
-	//	NSLog(@"ActionSheet Dealloc");
 	self.actionSheet = nil;
 	self.popOverController = nil;
 

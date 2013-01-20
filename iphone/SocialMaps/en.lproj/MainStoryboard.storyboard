@@ -5112,7 +5112,7 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
                                                     <action selector="actionSendReplyBtn:" destination="npU-ox-hYr" eventType="touchUpInside" id="me6-fM-fe5"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Snx-6c-NgD">
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Snx-6c-NgD">
                                                 <rect key="frame" x="239" y="36.5" width="72" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
@@ -5627,6 +5627,9 @@ AAAASAAAAAAAAAAAAAAAAAAAAjQ
         </class>
         <class className="NSDictionary" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSDictionary.h"/>
+        </class>
+        <class className="NSMutableDictionary" superclassName="NSDictionary">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSMutableDictionary.h"/>
         </class>
         <class className="NotificationController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NotificationController.h"/>
