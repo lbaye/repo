@@ -110,7 +110,7 @@ class MessageRepo extends Base
     }
 
     private function updateThreadContent(MessageDocument $message) {
-        $message->getThread()->setContent($message->getContent());
+        $message->getThread()->setLastMessage($message->getContent());
     }
 
     private function persistThread(MessageDocument $message) {
@@ -171,12 +171,11 @@ class MessageRepo extends Base
         # Set thread object
         $this->setThreadDependentProperties($formFields, $data, $message, $sender);
 
-        foreach ($formFields as $field) {
-            if (isset($data[$field]) && !is_null($data[$field])) {
+        foreach ($formFields as $field)
+            if (isset($data[$field]) && !is_null($data[$field]))
                 $message->{"set{$field}"}($data[$field]);
-            }
-        }
 
+        $message->setLastMessage($message->getContent());
         $message->setSender($sender);
 
         return $message;

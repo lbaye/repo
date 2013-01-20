@@ -68,6 +68,9 @@ class Message
         'lat' => 0
     );
 
+    /** @ODM\String */
+    protected $lastMessage;
+
     private $runValidation = true;
 
     public function setRunValidation($state) {
@@ -269,7 +272,7 @@ class Message
     {
         $serializableFields = array(
             'id', 'subject', 'content', 'metaType', 'metaContent', 'createDate',
-            'updateDate', 'status', 'readBy'
+            'updateDate', 'status', 'readBy', 'lastMessage'
         );
 
         $result = array();
@@ -332,6 +335,14 @@ class Message
     public function getMetaType()
     {
         return $this->metaType;
+    }
+
+    public function setLastMessage($lastMessage) {
+        $this->lastMessage = $lastMessage;
+    }
+
+    public function getLastMessage() {
+        return $this->lastMessage;
     }
 
 }
