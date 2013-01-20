@@ -2023,9 +2023,11 @@ ButtonClickCallbackData callBackData;
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
                         
-                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar] || ![item.workStatus isEqualToString:aPerson.userInfo.workStatus] || ![item.city isEqualToString:aPerson.userInfo.city] || item.isOnline != aPerson.userInfo.isOnline)) {
+                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || (item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.relationsipStatus && ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.workStatus && ![item.workStatus isEqualToString:aPerson.userInfo.workStatus]) || (item.city && ![item.city isEqualToString:aPerson.userInfo.city]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline))) {
+                            
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
                             NSLog(@"lastSeenAt %@", item.lastSeenAt);
+                            
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
                             aPerson.itemDistance = distanceFromMe;
                             aPerson.userInfo.relationsipStatus = item.relationsipStatus;
