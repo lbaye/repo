@@ -568,7 +568,7 @@ ButtonClickCallbackData callBackData;
         if ([notifMessage.recipients count] == 2) {
             for (NSDictionary *recipient in notifMessage.recipients) {
                 NSString *recipientID = [recipient valueForKey:@"id"];
-                if (recipientID && [recipientID isEqualToString:locItem.userInfo.userId]) {
+                if ([recipientID isKindOfClass:[NSString class]] && [recipientID isEqualToString:locItem.userInfo.userId]) {
                     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
                     MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
                     controller.selectedMessage = notifMessage;
