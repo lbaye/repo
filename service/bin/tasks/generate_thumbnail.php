@@ -33,4 +33,3 @@ $users = $bootstrap->dm->createQueryBuilder('Document\User')->hydrate(false)->ge
 \Helper\Image::makeThumbImageForAvatars();
 
 $logger->info('Generated thumbs for all images.');
-$client->runTasks();

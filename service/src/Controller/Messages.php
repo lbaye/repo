@@ -104,6 +104,39 @@ class Messages extends Base {
         return $this->response;
     }
 
+    /**
+     * Retrieve an existing thread for the given recipients list.
+     * If not found an existing thread create new one.
+     *
+     * @return void
+     */
+    public function createOrGetMessageThread() {
+        $postData = $this->request->request->all();
+
+        if (!isset($postData['recipients']))
+            return $this->_generateErrorResponse('"recipients[]" is required parameter');
+
+        try {
+            # Find or create new message thread
+            $message = $this->messageRepository->findOrCreateMessageThread($this->user, $postData);
+
+            if ($message->hasContent()) {
+                # Send notification if content is set
+                $this->_sendNotification($postData, $message);
+            }
+
+            $this->messageRepository->refresh($message);
+
+            $this->response->setContent(json_encode($message->toArray(true)));
+            $this->response->setStatusCode(Status::OK);
+
+        } catch (\Exception $e) {
+            $this->_generate500($e->getMessage());
+        }
+
+        return $this->response;
+    }
+
     private function _sendNotification($postData, \Document\Message $message) {
         if ($message->getThread())
             $this->notifyNewReplyRecipients($postData, $message);
@@ -166,34 +199,36 @@ class Messages extends Base {
 
         $docsAsArr = array();
         foreach ($messages as $message) {
-            $messageArr = $message->toArray(true);
+            if (count($message->getReplies()) > 0 || $message->hasContent()) {
+                $messageArr = $message->toArray(true);
 
-            $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
+                $messageArr['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['sender']);
 
-            foreach ($messageArr['recipients'] AS &$recipient) {
-                $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
-            }
-
-            if ($showLastReply == true) {
-
-                if (!empty($messageArr['replies'])) {
-
-                    $messageArr['replies'] = array(end($messageArr['replies']));
-                    $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
-                } else {
-                    $messageArr['replies'] = null;
+                foreach ($messageArr['recipients'] AS &$recipient) {
+                    $recipient['avatar'] = \Helper\Url::buildAvatarUrl($recipient);
                 }
-            } else {
-                unset($messageArr['replies']);
-            }
 
-            if (!in_array($this->user->getId(), $messageArr['readBy'])) {
-                $messageArr['status'] = 'unread';
-            } else {
-                $messageArr['status'] = 'read';
-            }
+                if ($showLastReply == true) {
 
-            $docsAsArr[] = $messageArr;
+                    if (!empty($messageArr['replies'])) {
+
+                        $messageArr['replies'] = array(end($messageArr['replies']));
+                        $messageArr['replies'][0]['sender']['avatar'] = \Helper\Url::buildAvatarUrl($messageArr['replies'][0]['sender']);
+                    } else {
+                        $messageArr['replies'] = null;
+                    }
+                } else {
+                    unset($messageArr['replies']);
+                }
+
+                if (!in_array($this->user->getId(), $messageArr['readBy'])) {
+                    $messageArr['status'] = 'unread';
+                } else {
+                    $messageArr['status'] = 'read';
+                }
+
+                $docsAsArr[] = $messageArr;
+            }
         }
 
         $this->_generateResponse($docsAsArr);

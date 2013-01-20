@@ -96,6 +96,8 @@ class MessageRepo extends Base
             $thread = $message->getThread();
             if (!empty($thread)) {
                 $this->addToThread($message);
+                $this->updateThreadContent($message);
+                $this->persistThread($message);
                 if (!is_null($user))
                     $this->clearReadBy($thread, $user);
             }
@@ -107,12 +109,18 @@ class MessageRepo extends Base
         return $message;
     }
 
+    private function updateThreadContent(MessageDocument $message) {
+        $message->getThread()->setContent($message->getContent());
+    }
+
+    private function persistThread(MessageDocument $message) {
+        $this->dm->persist($message->getThread());
+        $this->dm->flush();
+    }
 
     private function addToThread(MessageDocument $message)
     {
         $message->getThread()->getReplies()->add($message);
-        $this->dm->persist($message->getThread());
-        $this->dm->flush();
     }
 
     private function clearReadBy(MessageDocument $message, UserDocument $user)
@@ -174,6 +182,28 @@ class MessageRepo extends Base
         return $message;
     }
 
+    public function findOrCreateMessageThread(\Document\User $user, array $postData) {
+        $recipients = array_unique(array_merge($postData['recipients'], array($user->getId())));
+        $thread = $this->findThreadByRecipients($recipients);
+        
+        if (empty($thread))
+            return $this->createThread($user, $postData);
+        else
+            return $thread;
+    }
+
+    private function createThread(\Document\User $user, array $postData) {
+        $message = $this->map($postData, $user);
+        $message->setRunValidation(false);
+        $message->addReadStatusFor($user);
+        $this->insert($message, $user);
+
+        // Don't put it before insert operation. this is intentional
+        $message->setStatus('read');
+
+        return $message;
+    }
+
     private function setThreadDependentProperties(
         array &$formFields, array $data, MessageDocument $message, UserDocument $sender = null)
     {
@@ -194,15 +224,10 @@ class MessageRepo extends Base
             $recipientList = $data['recipients'];
             $recipientList[] = $sender->getId();
             $recipientList = array_unique($recipientList);
-            $recipientIds = array();
 
-            foreach ($recipientList as $recipientId) $recipientIds[] = new \MongoId($recipientId);
+            $thread = $this->findThreadByRecipients($recipientList);
 
-            $threadArray = $this->findThreadByRecipientList($recipientIds);
-
-            if (!empty($threadArray)) {
-                $thread = $this->find($threadArray['_id']);
-
+            if (!empty($thread)) {
                 $message->setThread($thread);
                 $message->setRecipients($thread->getRecipients());
                 $message->setUpdateDate(new \DateTime());
@@ -211,11 +236,14 @@ class MessageRepo extends Base
 
     }
 
-    private function findThreadByRecipientList($recipients)
+    private function findThreadByRecipients($recipients)
     {
+        $recipientIds = array();
+        foreach ($recipients as $recipientId) $recipientIds[] = new \MongoId($recipientId);
+
         return $this->createQueryBuilder('Document\Message')
-            ->field('recipients')->all($recipients)->size(count($recipients))
-            ->hydrate(false)->getQuery()->getSingleResult();
+            ->field('recipients')->all($recipientIds)->size(count($recipientIds))
+            ->getQuery()->getSingleResult();
     }
 
     private function setRecipients(array $data, MessageDocument &$message, $sender = null)
