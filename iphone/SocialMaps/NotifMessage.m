@@ -21,6 +21,7 @@
 @synthesize lat;
 @synthesize lng;
 @synthesize address;
+@synthesize notifUpdateTime;
 
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller{
     CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];

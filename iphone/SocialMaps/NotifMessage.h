@@ -31,5 +31,6 @@
 @property (nonatomic, retain) NSString *address;
 @property (nonatomic, retain) NSString *lat;
 @property (nonatomic, retain) NSString *lng;
+@property (nonatomic, retain) NSDate *notifUpdateTime;
 
 @end

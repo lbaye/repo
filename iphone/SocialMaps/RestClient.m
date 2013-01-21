@@ -4379,10 +4379,17 @@ AppDelegate *smAppDelegate;
                 }
                 msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
                 msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
+                
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
                 NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
                 msg.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                
+                date = [self getNestedKeyVal:item key1:@"updateDate" key2:@"date" key3:nil];
+                timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
+                timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
+                msg.notifUpdateTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+                
                 msg.notifAvater = [self getNestedKeyVal:item key1:@"sender" key2:@"avatar" key3:nil];
                 msg.notifID = [self getNestedKeyVal:item key1:@"id" key2:nil key3:nil];
                 msg.recipients = [item valueForKey:@"recipients"];

@@ -550,7 +550,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         }
         
         if ([[[circleListGlobalArray objectAtIndex:indexPath.row] circleName] isEqual:[NSNull null]] ) {
-            //cell.circrcleName.text=@"Custom";
             cell.circrcleName.text = [NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]];
         } else {
             NSLog(@"circle name %@", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName]);
@@ -774,7 +773,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
-    lblTime.text = [UtilityClass timeAsString:msg.notifTime];
+    lblTime.text = [UtilityClass timeAsString:msg.notifUpdateTime];
     
     NSLog(@"%@", msg.lastReply);
     if (![msg.lastReply isEqual:[NSNull null]]) {
@@ -791,14 +790,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     } else {
         txtMsg.text = msg.notifMessage;
     }
-    
-    
-    
+ 
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
     
     if (!iconDownloader)
     {
-    
         cell.imageView.image = nil;
         if (tableView.dragging == NO && tableView.decelerating == NO) {
             NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
