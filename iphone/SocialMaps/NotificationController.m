@@ -55,9 +55,8 @@ NSMutableArray *unreadMesg;
                                  currFrame.size.width, currFrame.size.height);
     notifTabArrow.frame = newFrame;
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMessageStatus:) name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendsRequestAccepted:) name:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
-    // Dummy cotifications
+    
+    // Dummy notifications
     int ignoreCount = 0;
     smAppDelegate.msgRead = TRUE;
     
@@ -78,6 +77,7 @@ NSMutableArray *unreadMesg;
     selectedType = Message;
     smAppDelegate.msgRead = TRUE;
     unreadMesg=[[NSMutableArray alloc] init];
+    
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
@@ -93,6 +93,8 @@ NSMutableArray *unreadMesg;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
     [super viewWillDisappear:animated];
 }
 
@@ -124,6 +126,8 @@ NSMutableArray *unreadMesg;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNewMessageDone:) name:NOTIF_GET_MESSAGE_WITH_ID_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFriendRequests:) name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setMessageStatus:) name:NOTIF_SET_MESSAGE_STATUS_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendsRequestAccepted:) name:NOTIF_FRIENDS_REQUEST_ACCEPTED object:nil];
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient getFriendRequests:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     [smAppDelegate showActivityViewer:self.view];
@@ -234,7 +238,7 @@ NSMutableArray *unreadMesg;
 }
 
 - (void)dealloc {
-    
+    [webView stopLoading];
     [notifTabArrow release];    
     [msgCount release];
     [reqCount release];

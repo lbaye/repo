@@ -443,6 +443,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         self.msgParentID = self.selectedMessage.notifID;
         [self setMsgReplyTableView:selectedMessage];
 
+    } else {
+        [UtilityClass showAlert:@"" :@"Network Error"];
     }
 }
 
@@ -921,9 +923,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.lat = msg.lat;
     messageReply.lng = msg.lng;
     
+    NSLog(@"notif id = %@", msg.notifID);
+    
     [messageReplyList removeAllObjects];
-    if (![messageReply.senderID isEqualToString:@"sender_id"] && ![selectedMessage.notifID isEqualToString:@"NewMsg"] &&[selectedMessage.notifMessage isKindOfClass:[NSString class]])
-            [messageReplyList addObject:messageReply];
+    if (![messageReply.senderID isEqualToString:@"sender_id"])
+        if (![msg.notifID isEqualToString:@"NewMsg"])
+            if ([messageReply.content isKindOfClass:[NSString class]])
+                [messageReplyList addObject:messageReply];
     [messageReply release];
     
     if (msg.recipients.count > 2) {

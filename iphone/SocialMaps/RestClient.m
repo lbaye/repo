@@ -7323,6 +7323,7 @@ AppDelegate *smAppDelegate;
             }
             
             msg.notifSender = senderName;
+            msg.notifSenderId = [self getNestedKeyVal:jsonObjects key1:@"sender" key2:@"id" key3:nil];
             
             NSString *content = [self getNestedKeyVal:jsonObjects key1:@"content" key2:nil key3:nil];
             msg.notifMessage  = content;
