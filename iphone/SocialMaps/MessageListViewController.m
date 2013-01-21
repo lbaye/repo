@@ -91,6 +91,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotInboxMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendReplyDone:) name:NOTIF_SEND_REPLY_DONE object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewThreadDone:) name:NOTIF_GET_NEW_THREAD_DONE object:nil];
+
     
     //friends list
     frndListScrollView.delegate = self;
@@ -127,7 +130,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidAppear:(BOOL)animated
 {
-
     [super viewDidAppear:animated];
     
     if (self.selectedMessage) {
@@ -138,10 +140,15 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [self actionMeetUpBtn:nil];
     }
     
-    [self actionRefreshBtn:nil];
-    
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    
+    if ([selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+        NSLog(@"reciepientId = %@", selectedMessage.notifSenderId);
+        [restClient getThread:self.selectedMessage.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    } else {
+        [self actionRefreshBtn:nil];
+        [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    }
     
     smAppDelegate.currentModelViewController = self;
 }
@@ -314,7 +321,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         if (![textViewReplyMsg.superview viewWithTag:5005] && !isCheckingNewReplies) 
         {
             RestClient *restClient = [[[RestClient alloc] init] autorelease];
-            [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+            
+            if ([selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+                [UtilityClass showAlert:@"" :@"Please wait"];
+            } else {
+                NSLog(@"msg parent id %@", msgParentID);
+                [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+            }
+            
             [self showHideIndicatorOnTextview:textViewReplyMsg];
         } 
         else {
@@ -419,6 +433,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+}
+
+- (void)getNewThreadDone:(NSNotification*)notif
+{
+    if (notif.object) {
+        
+        self.selectedMessage = notif.object;
+        self.msgParentID = self.selectedMessage.notifID;
+        [self setMsgReplyTableView:selectedMessage];
+
+    }
 }
 
 - (void)sendReplyDone:(NSNotification *)notif
@@ -901,7 +926,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.lng = msg.lng;
     
     [messageReplyList removeAllObjects];
-    if (![messageReply.senderID isEqualToString:@"sender_id"])
+    if (![messageReply.senderID isEqualToString:@"sender_id"] && ![selectedMessage.notifID isEqualToString:@"NewMsg"] &&[selectedMessage.notifMessage isKindOfClass:[NSString class]])
             [messageReplyList addObject:messageReply];
     [messageReply release];
     
@@ -912,14 +937,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     
     [messageReplyTableView reloadData];
-    [self doRightViewAnimation:messageRepiesView];
+    if (messageRepiesView.hidden) {
+        [self doRightViewAnimation:messageRepiesView];
+    }
     
-    msgParentID = msg.notifID;
-    self.timeSinceLastUpdate = @"420";
-    [smAppDelegate showActivityViewer:self.view];
-    [self startReqForReplyMessages];
-    if (!replyTimer) {
-        replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+    if (![selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+        
+        msgParentID = msg.notifID;
+        self.timeSinceLastUpdate = @"420";
+        [smAppDelegate showActivityViewer:self.view];
+        [self startReqForReplyMessages];
+        if (!replyTimer) {
+            replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+        }
     }
 }
 
@@ -1060,7 +1090,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 {
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
     NSLog(@"%@", msgReply.senderName);
-    if (iconDownloader == nil)
+    if (iconDownloader == nil && msgReply.senderID)
     {
         iconDownloader = [[IconDownloader alloc] init];
         UserFriends *userFriends = [[UserFriends alloc] init];
@@ -1308,40 +1338,42 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)scrollSelfViewUp
 {
     NSLog(@"scrollSelfView");
+    if ([messageReplyList count]) {
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+        [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    }    
+        NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
     
-    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
-    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
-    
-    NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
-    
-    int totalVisibleCellHeight = 0;
-    
-    for (NSIndexPath *indexPath in visiblePaths)
-    {
-        MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
-        totalVisibleCellHeight += [self getRowHeight:messageReplyTableView :msgReply];
-    }
-    
-    NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3]; 
-	
-    if (totalVisibleCellHeight > 55) {
-        CGRect rect = self.view.frame;
-        int moveBy = -totalVisibleCellHeight + 55;
+        int totalVisibleCellHeight = 0;
         
-        if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
-            moveBy = -kOFFSET_FOR_KEYBOARD; 
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
+            totalVisibleCellHeight += [self getRowHeight:messageReplyTableView :msgReply];
         }
         
-        rect.origin.y = moveBy;
-        self.view.frame = rect;
-        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
-    } else {
-        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
-	}
-    [UIView commitAnimations];
+        NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
+        
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.3]; 
+        
+        if (totalVisibleCellHeight > 55) {
+            CGRect rect = self.view.frame;
+            int moveBy = -totalVisibleCellHeight + 55;
+            
+            if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
+                moveBy = -kOFFSET_FOR_KEYBOARD; 
+            }
+            
+            rect.origin.y = moveBy;
+            self.view.frame = rect;
+            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+        } else {
+            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+        }
+        [UIView commitAnimations];
+    
+    
 }
 
 -(void)setViewMovedUp:(UIView*)view
@@ -1392,6 +1424,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_NEW_THREAD_DONE object:nil];
     
     [messageReplyList release];
     [profileImageList release];

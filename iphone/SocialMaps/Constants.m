@@ -75,6 +75,8 @@ NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED=@"com.genweb2.socialmaps.friends
 NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.locationsharingsettingdone";
 NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifgetmessagewithiddone";
 NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
+NSString * const NOTIF_GET_NEW_THREAD_DONE=@"com.genweb2.socialmaps.notifgetnewthread";
+
 
 NSString * const FB_APPID = @"343783602384766"; // Social Maps
 

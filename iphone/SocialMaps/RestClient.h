@@ -780,4 +780,13 @@
  */
 - (void) getMessageById:(NSString*)authToken authTokenVal:(NSString*)authTokenValue:(NSString*)messageId;
 
+/**
+ * @brief Get parent message by recipient id 
+ * @param (NSString) - Auth Token
+ * @param (NSString) - Auth Token Value
+ * @param (NSString) - Recipient Id
+ * @retval none
+ */
+- (void)getThread:(NSString*)recipientId authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
+
 @end

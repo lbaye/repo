@@ -564,71 +564,19 @@ ButtonClickCallbackData callBackData;
     NSLog(@"MapViewController:messageSelected");
     LocationItemPeople *locItem = (LocationItemPeople*) anno;
     
-    for (NotifMessage *notifMessage in smAppDelegate.messages) {
-        if ([notifMessage.recipients count] == 2) {
-            for (NSDictionary *recipient in notifMessage.recipients) {
-                NSString *recipientID = [recipient valueForKey:@"id"];
-                if ([recipientID isKindOfClass:[NSString class]] && [recipientID isEqualToString:locItem.userInfo.userId]) {
-                    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-                    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
-                    controller.selectedMessage = notifMessage;
-                    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-                    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-                    [self presentModalViewController:nav animated:YES];
-                    nav.navigationBarHidden = YES;
-                    return;
-                }
-            }
-        }
-    }
+    NotifMessage *notifMessage = [[NotifMessage alloc] init];
+    notifMessage.notifID = @"NewMsg";
+    notifMessage.notifSenderId = locItem.userInfo.userId;
+    NSLog(@"receipient id = %@", notifMessage.notifSenderId);
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.selectedMessage = notifMessage;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    [notifMessage release];
     
-    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 
-                                                                   self.view.frame.origin.y+40, 
-                                                                   self.view.frame.size.width, 
-                                                                   (self.view.frame.size.height-90)/2)];
-    messageView.backgroundColor = [UIColor blackColor];
-    
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 10, messageView.frame.size.width-20, 
-                                                                        messageView.frame.size.height-45)];
-    [textView.layer setCornerRadius:10.0f];
-    [textView.layer setMasksToBounds:YES];
-    textView.backgroundColor = [UIColor whiteColor];
-    textView.delegate = self;
-    textView.tag = 20000;
-    [textView setReturnKeyType: UIReturnKeyDone];
-    [messageView addSubview:textView];
-    
-    // BUttons
-    UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelBtn.backgroundColor = [UIColor clearColor];
-    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-    [cancelBtn addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
-    CGRect cancelFrame = CGRectMake(messageView.frame.size.width/2-80, messageView.frame.size.height-5-30, 60, 30);
-    cancelBtn.frame = cancelFrame;
-    [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    UIImageView *sep = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"sp.png"]];
-    CGRect sepFrame = CGRectMake(messageView.frame.size.width/2, messageView.frame.size.height-5-30, 
-                                 1, 30);
-    sep.frame = sepFrame;
-    [messageView addSubview:sep];
-    [sep release];
-    
-    callBackData.locItem = locItem;
-    callBackData.txtView = textView;
-    
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    sendButton.backgroundColor = [UIColor clearColor];
-    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
-    [sendButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
-    CGRect sendFrame = CGRectMake(messageView.frame.size.width/2+20, messageView.frame.size.height-5-30, 60, 30);
-    sendButton.frame = sendFrame;
-    [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    [messageView addSubview:cancelBtn];
-    [messageView addSubview:sendButton];
-    
-    [[self view] addSubview:messageView];
 }
 
 - (void)planselected:(id <MKAnnotation>)anno

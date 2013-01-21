@@ -7174,8 +7174,6 @@ AppDelegate *smAppDelegate;
 
 - (void) getMessageById:(NSString*)authToken authTokenVal:(NSString*)authTokenValue:(NSString*)messageId
 {
-    
-    
     NSLog(@"in RestClient getInbox");
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
@@ -7279,5 +7277,75 @@ AppDelegate *smAppDelegate;
     [request startAsynchronous];
     
 }
+
+- (void)getThread:(NSString*)recipientId authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue
+{
+    NSString *route = [NSString stringWithFormat:@"%@/messages/thread",WS_URL];
+    NSLog(@"route = %@", route);
+    NSLog(@"recipientId = %@", recipientId);
+    
+    NSURL *url = [NSURL URLWithString:route];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:authToken value:authTokenValue];
+    [request addPostValue:recipientId forKey:@"recipients[]"];
+
+    [request setCompletionBlock:^{
+        
+        // Use when fetching text data
+        int responseStatus = [request responseStatusCode];
+        
+        // Use when fetching binary data
+        NSString *responseString = [request responseString];
+        NSLog(@"Response=%@, status=%d", responseString, responseStatus);
+        SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+        NSError *error = nil;
+        NSDictionary *jsonObjects = [jsonParser objectWithString:responseString error:&error];
+        
+        if (responseStatus == 200 || responseStatus == 204) 
+        {
+            NotifMessage *msg = [[NotifMessage alloc] init];
+            
+            msg.notifID = [self getNestedKeyVal:jsonObjects key1:@"id" key2:nil key3:nil];
+            NSLog(@"msg.id = %@", msg.notifID);
+            NSString *senderName = [self getNestedKeyVal:jsonObjects key1:@"sender" key2:@"firstName" key3:nil];
+            
+            if ([[self getNestedKeyVal:jsonObjects key1:@"sender" key2:@"username" key3:nil] isKindOfClass:[NSString class]])
+            {
+                senderName = [self getNestedKeyVal:jsonObjects key1:@"sender" key2:@"username" key3:nil];
+            }
+            
+            msg.notifSender = senderName;
+            
+            NSString *content = [self getNestedKeyVal:jsonObjects key1:@"content" key2:nil key3:nil];
+            msg.notifMessage  = content;
+            
+            NSString *date = [self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"date" key3:nil];
+            NSString *timeZoneType = [self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone_type" key3:nil];
+            NSString *timeZone = [self getNestedKeyVal:jsonObjects key1:@"createDate" key2:@"timezone" key3:nil];
+            msg.notifTime = [UtilityClass convertDate:date tz_type:timeZoneType tz:timeZone];
+            msg.notifAvater = [self getNestedKeyVal:jsonObjects key1:@"sender" key2:@"avatar" key3:nil];
+            msg.recipients = [jsonObjects valueForKey:@"recipients"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_NEW_THREAD_DONE object:msg];
+        } 
+        else 
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_NEW_THREAD_DONE object:nil];
+        }
+        [jsonParser release], jsonParser = nil;
+        [jsonObjects release];
+    }];
+    
+    // Handle unsuccessful REST call
+    [request setFailedBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_NEW_THREAD_DONE object:nil];
+    }];
+    
+    NSLog(@"asyn srt getReplies");
+    [request startAsynchronous];
+    
+}
+
 
 @end
