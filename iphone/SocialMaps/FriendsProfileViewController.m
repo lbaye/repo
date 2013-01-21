@@ -29,6 +29,8 @@
 #import "FriendListViewController.h"
 #import "FriendsPlanListViewController.h"
 #import "ODRefreshControl.h"
+#import "NotifMessage.h"
+#import "MessageListViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -460,7 +462,19 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)showMsgView:(id)sender
 {
-    [self.view addSubview:msgView];
+    NotifMessage *notifMessage = [[NotifMessage alloc] init];
+    notifMessage.notifID = @"NewMsg";
+    notifMessage.notifSenderId = userInfo.userId;
+    NSLog(@"receipient id = %@", notifMessage.notifSenderId);
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.selectedMessage = notifMessage;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    [notifMessage release];
+
 }
 
 -(void) displayNotificationCount {
