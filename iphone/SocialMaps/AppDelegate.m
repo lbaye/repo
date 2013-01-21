@@ -258,6 +258,9 @@ static AppDelegate *sharedInstance=nil;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     if (gotListing == TRUE && isAppInBackgound == TRUE) {
         
+        RestClient *rc=[[RestClient alloc] init];
+        [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
+        
         if (newNotif.notifType == PushNotificationMessage || newNotif.notifType == PushNotificationMeetupRequest) {
             
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
@@ -388,6 +391,7 @@ static AppDelegate *sharedInstance=nil;
         }
         else if (newNotif.notifType == PushNotificationMessage)
         {
+            NSLog(@"did received push for msg");
             RestClient *rc=[[RestClient alloc] init];
             [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
             if ([self.currentModelViewController isKindOfClass:[NotificationController class]])

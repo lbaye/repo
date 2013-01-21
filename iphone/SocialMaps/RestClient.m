@@ -7229,8 +7229,8 @@ AppDelegate *smAppDelegate;
                 {
                     msg.notifSender=[self getNestedKeyVal:item key1:@"sender" key2:@"username" key3:nil];
                 }
-                msg.notifMessage  = [self getNestedKeyVal:item key1:@"content" key2:nil key3:nil];
-                msg.notifSubject  = [self getNestedKeyVal:item key1:@"subject" key2:nil key3:nil];
+                msg.notifMessage  = [self getNestedKeyVal:item key1:@"lastMessage" key2:nil key3:nil];
+                msg.notifSubject  = [self getNestedKeyVal:item key1:@"replies" key2:@"subject" key3:nil];
                 NSString *date = [self getNestedKeyVal:item key1:@"createDate" key2:@"date" key3:nil];
                 NSString *timeZoneType = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone_type" key3:nil];
                 NSString *timeZone = [self getNestedKeyVal:item key1:@"createDate" key2:@"timezone" key3:nil];
@@ -7244,7 +7244,7 @@ AppDelegate *smAppDelegate;
                 msg.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
                 msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
-                
+                NSLog(@"msg.NotifMessage %@ %@",msg.notifMessage,msg.msgStatus);
                 NSLog(@"message notif sender = %@", msg.notifSender);
                 int p=0;
                 for (int i=0; i<[smAppDelegate.messages count]; i++)
@@ -7253,14 +7253,17 @@ AppDelegate *smAppDelegate;
                     if ([message.notifID isEqualToString:messageId])
                     {
                         NSLog(@"match found");
+                        message.msgStatus=@"unread";
                         p++;
+                        [smAppDelegate.messages removeObject:message];
+                        break;
                     }
                     NSLog(@"message loop");
                 }
-                if (p==0) 
-                {
+               // if (p==0) 
+                //{
                     [smAppDelegate.messages insertObject:msg atIndex:0];
-                }
+                //}
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
 

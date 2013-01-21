@@ -139,6 +139,7 @@ NSMutableArray *unreadMesg;
     for (int i=0; i<[messageList count]; i++)
     {
         NSString *msgSts=((NotifMessage *)[messageList objectAtIndex:i]).msgStatus;
+        
         if ([msgSts isEqualToString:@"unread"])
         {
             [unReadMessage addObject:[messageList objectAtIndex:i]];
@@ -519,9 +520,9 @@ NSMutableArray *unreadMesg;
 
 -(void)gotNewMessageDone:(NSNotification *)notif
 {
-    NSLog(@"got new message");
     msgCount.text = [NSString stringWithFormat:@"%d",[[UtilityClass getUnreadMessage:smAppDelegate.messages] count]];
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
+    NSLog(@"got new message %@",unreadMesg);
     [notificationItems reloadData];
     [self displayNotificationCount];
 }
