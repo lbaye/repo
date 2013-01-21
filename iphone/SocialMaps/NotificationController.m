@@ -79,6 +79,16 @@ NSMutableArray *unreadMesg;
     unreadMesg=[[NSMutableArray alloc] init];
     
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
+    
+    for (NotifMessage *msg in unreadMesg) {
+        NSString *lastReply = [self getLastReply:msg.lastReply];
+        if (lastReply) {
+            msg.notifMessage = lastReply;
+        } else {
+            msg.notifMessage = msg.lastReply;
+        }
+    }
+    
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
@@ -252,6 +262,26 @@ NSMutableArray *unreadMesg;
     NSLog(@"In prepareForSegue:NotificationController");
 }
 
+- (NSString*)getLastReply:(NSDictionary*)lastReply
+{
+    NSLog(@"last reply %@", lastReply);
+    if ([lastReply count] <= 0) {
+        return nil;
+    }
+    NSDictionary *lastReplyDic = [(NSMutableArray *) lastReply objectAtIndex:[lastReply count]-1];
+    
+    NSString *lastReplyMsg = [lastReplyDic valueForKey:@"content"];
+    
+    if ((lastReplyMsg == NULL) || [lastReplyMsg isEqual:[NSNull null]]) {
+        return nil;
+    } else {
+        NSLog(@"lastREplymsg = %@", lastReplyMsg);
+        return lastReplyMsg;
+    }
+    
+    return nil;
+}
+
 // Tableview stuff
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"IndexPath:%d,%d",indexPath.section,indexPath.row);
@@ -271,7 +301,9 @@ NSMutableArray *unreadMesg;
             break;
         case Message:
             msg = [unreadMesg objectAtIndex:indexPath.row];
-            NSLog(@"MSG:sender=%@",msg.notifSender);
+            NSLog(@"MSG:sender = %@", msg.notifSender);
+            NSLog(@"MSG:lastReply = %@", msg.lastReply);
+            NSLog(@"MSG:msgContent = %@", msg.notifMessage);
             cell = [msg getTableViewCell:tv sender:self];
             break;
         case Request:
