@@ -46,8 +46,9 @@ class SendPushNotification extends Base
 
             if (!empty($users)) {
                 $userHash = $users[$workload->user_id];
-                $this->_sendPushNotification($userHash, $workload->notification);
-                $this->debug("Push notification sent to user - {$userHash['firstName']}");
+                $succeed = $this->_sendPushNotification($userHash, $workload->notification);
+                if ($succeed)
+                    $this->debug("Push notification sent to user - {$userHash['firstName']}");
             } else {
                 $this->debug("No valid user for id - {$workload->user_id} found");
             }
@@ -84,11 +85,19 @@ class SendPushNotification extends Base
         $this->debug("Sending push notification to user - {$userHash['firstName']} ({$userHash['_id']})");
         $pushSettings = $userHash['pushSettings'];
 
-        $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
+        if (isset($pushSettings['device_id']) && !empty($pushSettings['device_id'])) {
+            $pushNotifier = \Service\PushNotification\PushFactory::getNotifier(@$pushSettings['device_type']);
 
-        if ($pushNotifier) {
-            $this->info("Sending push notification for {$pushSettings['device_type']}");
-            echo $pushNotifier->send($notificationHash, array($pushSettings['device_id'])) . PHP_EOL;
+            if ($pushNotifier) {
+                $this->info("Sending push notification for {$pushSettings['device_type']} with id ({$pushSettings['device_id']})");
+                echo $pushNotifier->send($notificationHash, array($pushSettings['device_id'])) . PHP_EOL;
+            }
+
+            return true;
+        } else {
+            $this->info("Device id not found.");
+
+            return false;
         }
     }
 }
