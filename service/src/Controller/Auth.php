@@ -93,12 +93,12 @@ class Auth extends Base
             $this->response->setStatusCode(201);
 
         } catch (\Exception\ResourceAlreadyExistsException $e) {
-
+            $this->warn(sprintf('Failed to create new account %s', $e->getMessage()));
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
         } catch (\InvalidArgumentException $e) {
-
+            $this->warn(sprintf('Failed to create new account %s', $e->getMessage()));
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
