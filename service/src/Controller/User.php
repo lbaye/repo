@@ -302,9 +302,11 @@ class User extends Base
             $this->response->setContent(json_encode($user->toArrayDetailed()));
             $this->response->setStatusCode(Status::CREATED);
         } catch (\Exception\ResourceAlreadyExistsException $e) {
+            $this->warn(sprintf('Failed to create new account %s', $e->getMessage()));
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
         } catch (\InvalidArgumentException $e) {
+            $this->warn(sprintf('Failed to create new account %s', $e->getMessage()));
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
         }
