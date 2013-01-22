@@ -40,7 +40,7 @@ class Auth extends Base
     public function create()
     {
         $data = $this->request->request->all();
-
+        $this->debug(sprintf('Registering new user - %s', json_encode($data)));
 
         if (!empty($data['email'])) {
             $data['email'] = strtolower($data['email']);
@@ -50,7 +50,9 @@ class Auth extends Base
             $required_fields = array('email', 'firstName', 'lastName', 'password', 'avatar');
             foreach ($required_fields as $key) {
                 if (empty($data[$key])) {
-                    $this->response->setContent(json_encode(array('message' => "`$key` is required field.")));
+                    $content = json_encode(array('message' => "`$key` is required field."));
+                    $this->warn($content);
+                    $this->response->setContent($content);
                     $this->response->setStatusCode(Status::NOT_ACCEPTABLE);
                     return $this->response;
                 }
@@ -66,6 +68,7 @@ class Auth extends Base
             }
 
             $user = $this->userRepository->insert($data);
+            $this->debug('New user registered successfully.');
 
             if (!empty($data['avatar'])) {
                 $user = $this->userRepository->saveAvatarImage($user->getId(), $data['avatar']);
@@ -102,10 +105,13 @@ class Auth extends Base
             $this->response->setContent(json_encode(array('result' => $e->getMessage())));
             $this->response->setStatusCode($e->getCode());
 
+        } catch (\Exception $e) {
+            $this->warn(sprintf('Failed to create new account %s', $e->getMessage()));
+            $this->response->setContent(json_encode(array('result' => $e->getMessage())));
+            $this->response->setStatusCode($e->getCode());
         }
 
         return $this->response;
-
     }
 
 

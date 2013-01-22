@@ -359,7 +359,7 @@ class Settings extends Base {
                     $this->_sendProximityAlerts($this->user);
                     $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
                 } else {
-                    $this->debug('User has not moved 100m away');
+                    $this->debug('User has not moved 500m away');
                 }
 
             } catch (\Exception $e) {
