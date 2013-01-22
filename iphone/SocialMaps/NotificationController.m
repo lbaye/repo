@@ -84,8 +84,6 @@ NSMutableArray *unreadMesg;
         NSString *lastReply = [self getLastReply:msg.lastReply];
         if (lastReply) {
             msg.notifMessage = lastReply;
-        } else {
-            msg.notifMessage = msg.lastReply;
         }
     }
     
@@ -265,21 +263,19 @@ NSMutableArray *unreadMesg;
 - (NSString*)getLastReply:(NSDictionary*)lastReply
 {
     NSLog(@"last reply %@", lastReply);
-    if ([lastReply count] <= 0) {
+    if ([lastReply isKindOfClass:[NSNull class]]) {
         return nil;
     }
     NSDictionary *lastReplyDic = [(NSMutableArray *) lastReply objectAtIndex:[lastReply count]-1];
     
     NSString *lastReplyMsg = [lastReplyDic valueForKey:@"content"];
-    
+
     if ((lastReplyMsg == NULL) || [lastReplyMsg isEqual:[NSNull null]]) {
         return nil;
     } else {
         NSLog(@"lastREplymsg = %@", lastReplyMsg);
         return lastReplyMsg;
     }
-    
-    return nil;
 }
 
 // Tableview stuff
