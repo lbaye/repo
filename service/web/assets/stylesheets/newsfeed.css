@@ -172,6 +172,7 @@ ul li .photo .row .image {
   width: 100%;
 }
 ul li .photo .row .image img {
+  margin-top: 12px;
   width: 94%;
 }
 ul li .list_of_likes {
