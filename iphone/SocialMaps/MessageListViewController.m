@@ -505,20 +505,27 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         for (int j = 0; j < [messageReplyList count]; j++) {
             if ([((MessageReply*)[msgReplies objectAtIndex:i]).msgId isEqualToString:((MessageReply*)[messageReplyList objectAtIndex:j]).msgId]) {
                 [msgReplies removeObjectAtIndex:i];
+                if ([msgReplies count] == 0) {
+                    isCheckingNewReplies = NO;
+                    return;
+                }
             }
         }
     }
     
-    if ([msgReplies count] == 0) {
-        isCheckingNewReplies = NO;
-        return;
-    }
+    NSMutableArray *tempDeleteList = [[NSMutableArray alloc] init];
     
     for (MessageReply *msgReply in messageReplyList) {
         if ([msgReply.msgId isEqualToString:@"temp"]) {
-            [messageReplyList removeObject:msgReply];
+            [tempDeleteList addObject:msgReply];
         }
     }
+    
+    for (MessageReply *msgReply in tempDeleteList) {
+        [messageReplyList removeObject:msgReply];
+    }
+    [tempDeleteList release];
+    
     
     [messageReplyList addObjectsFromArray:msgReplies];
     [messageReplyTableView reloadData];
