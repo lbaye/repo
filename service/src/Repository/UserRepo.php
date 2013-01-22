@@ -886,6 +886,8 @@ class UserRepo extends Base
         $query->field('id')->notIn($excludedUserIds)
             ->field('visible')->equals(true)
             ->field('enabled')->equals(true)
+            ->field('currentLocation.lat')->notEqual(0)
+            ->field('currentLocation.lng')->notEqual(0)
             ->hydrate(false)
             ->limit($limit);
 

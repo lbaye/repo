@@ -63,7 +63,7 @@
                             %h4
                               = $photo->getOwner()->getName()
                           %span
-                            has uploaded a new picture.
+                            uploaded a new picture.
                     .time
                       = $activity->toHumanizeDate()
 
@@ -121,7 +121,7 @@
                       - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
                       .comment
-                        has tagged "
+                        was tagged "
                         %a(href= $geotagLink)
                           %strong= stripcslashes($activity->getTitle())
                         "
@@ -206,7 +206,7 @@
                     %h4
                       = $photo->getOwner()->getName()
                   %span
-                    has uploaded a new picture.
+                    uploaded a new picture.
             .time
               = $activity->toHumanizeDate()
 
@@ -266,7 +266,7 @@
               - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
               .comment
-                has tagged "
+                was tagged "
                 %a(href= $geotagLink)
                   %strong= stripcslashes($activity->getTitle())
                 "
