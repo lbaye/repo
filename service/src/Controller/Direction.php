@@ -69,7 +69,7 @@ class Direction extends Base
 
     private function _createPushMessage()
     {
-        return $this->user->getFirstName() . " has shared a direction with you.";
+        return $this->user->getUsernameOrFirstName() . " has shared a direction with you.";
     }
 
     private function _initRepository($type)

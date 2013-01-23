@@ -192,7 +192,7 @@ class Auth extends Base
             $user = $this->userRepository->validateFbLogin($data);
 
             if ($user instanceof \Document\User) {
-                $this->debug(sprintf('Found existing fb user - %s', $user->getFirstName()));
+                $this->debug(sprintf('Found existing fb user - %s', $user->getUsernameOrFirstName()));
                 $this->userRepository->setCurrentUser($user);
 
                 if (!empty($data['avatar'])) {

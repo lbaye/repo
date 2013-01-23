@@ -154,7 +154,7 @@ class Messages extends Base {
         if (!empty($recipients)) {
             $this->_sendPushNotification(
                 $recipients,
-                \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::REPLY_MESSAGE, $this->user->getUsernameOrFirstName()),
                 \Helper\AppMessage::REPLY_MESSAGE,
                 $thread->getId());
         }
@@ -167,7 +167,7 @@ class Messages extends Base {
         if (!empty($filteredRecipientsIds)) {
             $this->_sendPushNotification(
                 $filteredRecipientsIds,
-                \Helper\AppMessage::getMessage(\Helper\AppMessage::NEW_MESSAGE, $this->user->getFirstName()),
+                \Helper\AppMessage::getMessage(\Helper\AppMessage::NEW_MESSAGE, $this->user->getUsernameOrFirstName()),
                 \Helper\AppMessage::NEW_MESSAGE,
                 $message->getId());
         }
@@ -373,7 +373,7 @@ class Messages extends Base {
     }
 
     private function _createPushMessage($msgText) {
-        return $this->user->getFirstName() . $msgText;
+        return $this->user->getUsernameOrFirstName() . $msgText;
     }
 
     /**

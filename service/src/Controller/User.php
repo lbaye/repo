@@ -495,7 +495,7 @@ class User extends Base
     {
         $this->_sendPushNotification(
             array($friendId),
-            AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getFirstName()),
+            AppMessage::getMessage(AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getUsernameOrFirstName()),
             AppMessage::ACCEPTED_FRIEND_REQUEST, $this->user->getId()
         );
     }
@@ -806,7 +806,7 @@ class User extends Base
 
     private function _createPushMessage()
     {
-        return AppMessage::getMessage(AppMessage::FRIEND_REQUEST, $this->user->getFirstName());
+        return AppMessage::getMessage(AppMessage::FRIEND_REQUEST, $this->user->getUsernameOrFirstName());
     }
 
     /**

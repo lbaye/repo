@@ -476,7 +476,7 @@ class Place extends Base
 
     private function _createPushMessage($metaTitle, $staticMsg)
     {
-        return AppMessage::getMessage($staticMsg, $this->user->getFirstName(), $metaTitle);
+        return AppMessage::getMessage($staticMsg, $this->user->getUsernameOrFirstName(), $metaTitle);
 
     }
 }

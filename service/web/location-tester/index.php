@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Proximity alert simulator</title>
     <script src="jquery-1.9.0.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyD_R73_cR92W83gUHkiqw35-yO4erVYsaw&sensor=false"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmrty97gLWu-15X5hOU6zLRx3-QJZgbRM&sensor=false"></script>
     <script>
       function initialize() {
         var myLatlng = new google.maps.LatLng(-25.363882,131.044922);

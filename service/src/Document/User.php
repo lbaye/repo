@@ -1339,4 +1339,11 @@ class User
         return (is_array($value) && !empty($value[$key]));
     }
 
+    public function getUsernameOrFirstName() {
+        if ($this->username != null && !empty($this->username))
+            return $this->getUsername();
+        else
+            return $this->getFirstName();
+    }
+
 }
