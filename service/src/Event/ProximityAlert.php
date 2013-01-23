@@ -40,7 +40,7 @@ class ProximityAlert extends Base
                 if (!empty($user)) {
                     $this->debug('Searching nearby friends for user - ' . $user->getUsernameOrFirstName());
                     $this->services['dm']->refresh($user);
-                    $this->notifyNearbyFriends($user);
+                    $this->notifyNearbyFriends($user, $workload->newLoc, $workload->oldLoc);
                 } else {
                     $this->debug("No such user found for id - " . $workload->user_id);
                 }
@@ -62,19 +62,15 @@ class ProximityAlert extends Base
         return !empty($workload->user_id);
     }
 
-    private function notifyNearbyFriends(\Document\User $user)
+    private function notifyNearbyFriends(\Document\User $user, $newLoc = null, $oldLoc = null)
     {
-        if (empty($user))
-            return;
+        if (empty($user)) return;
 
         $this->debug("Sending notification to {$user->getUsernameOrFirstName()}'s nearby friends");
         $this->logCurrentLocation($user);
 
-        # If current location is not 100 meters far from last location
-        # Do nothing
-
         # Find friends from the nearby radius
-        $friends = $this->findNearbyFriends($user);
+        $friends = $this->findClosebyFriends($user, $newLoc, $oldLoc);
         $this->debug('Found ' . count($friends) . ' friends from - ' . $user->getUsernameOrFirstName());
 
         if (count($friends) > 0) {
@@ -89,10 +85,36 @@ class ProximityAlert extends Base
         }
     }
 
+    private function findClosebyFriends(\Document\User $user, $newLoc, $oldLoc) {
+        $this->debug('Finding closeby friends comparing users last location');
+        $this->debug('Old location - ' . json_encode($oldLoc));
+        $this->debug('New location - ' . json_encode($newLoc));
 
-    private function findNearbyFriends(\Document\User $user)
+        $friendsSetNew = $this->findNearbyFriends($user, (array) $newLoc);
+        $friendsSetOld = $this->findNearbyFriends($user, (array) $oldLoc);
+
+        $this->debug('Friends from New SET - ' . json_encode($friendsSetNew));
+        $this->debug('Friends from Old SET - ' . json_encode($friendsSetOld));
+
+        // Get friends who has just in new radius
+        $friends = array_diff($friendsSetNew, $friendsSetOld);
+
+        $this->debug('Friends from difference - ' . json_encode($friends));
+
+        return $friends;
+    }
+
+    private function mapWithId(array &$users) {
+        $this->debug('Map with id');
+        var_dump($users);
+        $items = array();
+        foreach ($users as $k => $user) $items[$user['_id']] = $user;
+        return $items;
+    }
+
+    private function findNearbyFriends(\Document\User &$user, array $location = null)
     {
-        $from = $user->getCurrentLocation();
+        $from = empty($location) ? $user->getCurrentLocation() : $location;
 
         $friendIds = array();
         $friends = $user->getFriends();
@@ -100,7 +122,7 @@ class ProximityAlert extends Base
 
         $friends = $this->services['dm']
             ->createQueryBuilder('Document\User')
-            ->select('firstName', 'lastName', 'currentLocation', 'pushSettings', 'username')
+            ->select('_id', 'firstName', 'lastName', 'currentLocation', 'pushSettings', 'username')
             ->field('id')->in($friendIds)
             ->hydrate(false);
 

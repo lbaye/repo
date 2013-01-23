@@ -348,7 +348,6 @@ class Settings extends Base {
             $this->debug('Updating current location');
             $this->user->setCurrentLocation($newLocation);
             $this->_updateVisibility($this->user);
-            $this->persistOnly();
 
             // Update additional information
             try {
@@ -356,7 +355,8 @@ class Settings extends Base {
 
                 if ($this->hasMovedAway($oldLocation, $newLocation)) {
                     $this->debug('User has moved far away');
-                    $this->_sendProximityAlerts($this->user);
+                    $this->persistOnly();
+                    $this->_sendProximityAlerts($this->user, $oldLocation, $newLocation);
                     $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
                 } else {
                     $this->debug('User has not moved 100m away');
@@ -426,7 +426,7 @@ class Settings extends Base {
         $this->dm->flush();
     }
 
-    private function _sendProximityAlerts(\Document\User $user) {
+    private function _sendProximityAlerts(\Document\User $user, array $oldLocation, array $newLocation) {
         $this->debug('Sending proximity alert');
         $this->addTask(\Helper\Constants::APN_PROXIMITY_ALERT,
                        json_encode(array(
@@ -434,6 +434,8 @@ class Settings extends Base {
                                         'user_id' => $user->getId(),
                                         'timestamp' => time(),
                                         'validity' => 7200, // 2 hours
+                                        'oldLoc' => $oldLocation,
+                                        'newLoc' => $newLocation
                                    )));
     }
 
