@@ -394,14 +394,12 @@ static AppDelegate *sharedInstance=nil;
             NSLog(@"did received push for msg");
             RestClient *rc=[[RestClient alloc] init];
             [rc getMessageById:@"Auth-Token" authTokenVal:authToken:[newNotif.objectIds objectAtIndex:0]];
+            /*
             if ([self.currentModelViewController isKindOfClass:[NotificationController class]])
             {
                 [[(NotificationController *)[self currentModelViewController] notificationItems] reloadData];
             }
-            else
-            {
-                
-            }
+            */
         }
     }
 }

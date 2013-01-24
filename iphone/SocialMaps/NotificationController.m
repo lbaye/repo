@@ -80,13 +80,6 @@ NSMutableArray *unreadMesg;
     
     unreadMesg=[self getUnreadMessage:smAppDelegate.messages];
     
-    for (NotifMessage *msg in unreadMesg) {
-        NSString *lastReply = [self getLastReply:msg.lastReply];
-        if (lastReply) {
-            msg.notifMessage = lastReply;
-        }
-    }
-    
     // NotifRequest delegate
     NSLog(@"smAppDelegate.meetUpRequests %@",smAppDelegate.meetUpRequests);
     [self setNotificationImage];
@@ -258,24 +251,6 @@ NSMutableArray *unreadMesg;
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     NSLog(@"In prepareForSegue:NotificationController");
-}
-
-- (NSString*)getLastReply:(NSDictionary*)lastReply
-{
-    NSLog(@"last reply %@", lastReply);
-    if ([lastReply isKindOfClass:[NSNull class]]) {
-        return nil;
-    }
-    NSDictionary *lastReplyDic = [(NSMutableArray *) lastReply objectAtIndex:[lastReply count]-1];
-    
-    NSString *lastReplyMsg = [lastReplyDic valueForKey:@"content"];
-
-    if ((lastReplyMsg == NULL) || [lastReplyMsg isEqual:[NSNull null]]) {
-        return nil;
-    } else {
-        NSLog(@"lastREplymsg = %@", lastReplyMsg);
-        return lastReplyMsg;
-    }
 }
 
 // Tableview stuff

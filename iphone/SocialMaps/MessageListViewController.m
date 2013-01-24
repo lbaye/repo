@@ -492,6 +492,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) getReplyMessages:(NSNotification *)notif {
     NSLog(@"gotReplyMessages");
+    notifBadgeFlag=FALSE;
     [smAppDelegate hideActivityViewer];
     
     NSMutableArray *msgReplies = [notif object];
@@ -536,7 +537,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
         [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
-   
+  
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
     self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
     NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
