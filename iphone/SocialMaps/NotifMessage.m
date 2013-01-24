@@ -23,9 +23,75 @@
 @synthesize address;
 @synthesize notifUpdateTime;
 
+
+- (NSString*)getLastReply
+{
+    NSLog(@"last reply %@", lastReply);
+    if ([lastReply isKindOfClass:[NSNull class]]) {
+        return nil;
+    }
+    NSDictionary *lastReplyDic = [(NSMutableArray *) lastReply objectAtIndex:[lastReply count]-1];
+    
+    NSString *lastReplyMsg = [lastReplyDic valueForKey:@"content"];
+    
+    NSString *lastMsg;
+    
+    if ((lastReplyMsg == NULL) || [lastReplyMsg isEqual:[NSNull null]]) {
+        lastMsg = nil;
+    } else {
+        lastMsg = lastReplyMsg;
+    }
+    
+    if (lastMsg) {
+        return lastMsg;
+    }
+    
+    return notifMessage;
+}
+
+- (NSString*) timeAsString {
+    NSString *timeStr = nil;
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];
+    
+    NSDateComponents *today = [[NSDateComponents alloc] init];
+    NSDateComponents *todayComponents =
+    [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit) fromDate:[NSDate date]];
+    today.day = [todayComponents day];
+    today.month = [todayComponents month];
+    today.year = [todayComponents year];
+    today.hour = 0;
+    today.minute = 0;
+    today.second = 0;
+    NSDate *todayDate = [gregorian dateFromComponents:today];
+    NSDate *yesterdayDate = [[NSDate alloc] initWithTimeInterval:-24*60*60 sinceDate:todayDate];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    NSLog(@"today %@", [dateFormatter stringFromDate:todayDate]);
+    NSLog(@"yesterday %@", [dateFormatter stringFromDate:yesterdayDate]);
+    NSLog(@"notif %@", [dateFormatter stringFromDate:notifUpdateTime]);
+    
+    if ([notifUpdateTime timeIntervalSinceDate:todayDate] >= 0) {
+        // Today
+        [dateFormatter setDateFormat:@"HH:mm"];
+        timeStr = [dateFormatter stringFromDate:notifUpdateTime];
+    }else if ([notifUpdateTime timeIntervalSinceDate:yesterdayDate] >= 0){
+        // Yesterday
+        timeStr = @"Yesterday";
+        
+    } else {
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+        
+        timeStr = [dateFormatter stringFromDate:notifUpdateTime];
+    }
+    return timeStr;
+}
+
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller{
     CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
-    CGSize msgStringSize = [notifMessage sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    CGSize msgStringSize = [[self getLastReply] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGSize fixedStringSize = [@"says:" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width);
     bool hideMoreButton = msgRows <= NUM_LINES_IN_BRIEF_VIEW;
@@ -144,7 +210,7 @@
 	
 	// Message
     txtMsg.frame = msgFrame;
-    txtMsg.text = notifMessage;
+    txtMsg.text = [self getLastReply];
     txtMsg.userInteractionEnabled = FALSE;
     
     // Button
@@ -177,7 +243,7 @@
     CGFloat cellRowHeight;
     
     CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
-    CGSize msgStringSize = [notifMessage sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
+    CGSize msgStringSize = [[self getLastReply] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     UIImage *btnImage = [UIImage imageNamed:@"collapse_icon.png"];
     CGSize btnSize = btnImage.size;
     CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width);
