@@ -1193,9 +1193,7 @@ ButtonClickCallbackData callBackData;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)inError{
     NSLog(@"MapViewController:didFailWithError error code=%d msg=%@", [inError code], [inError localizedFailureReason]);
-    _mapView.showsUserLocation = NO;
     NSLog(@"location manager failed with error");
-    [manager stopUpdatingLocation];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
