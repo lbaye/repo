@@ -274,7 +274,6 @@ ButtonClickCallbackData callBackData;
     }
     
     //by Rishi
-    //selectedAnno = anno;
     
     [self.view setNeedsDisplay];
 }
