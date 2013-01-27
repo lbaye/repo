@@ -1182,7 +1182,6 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [smAppDelegate hideActivityViewer];
     
     if (!smAppDelegate.timerGotListing) 
     {
