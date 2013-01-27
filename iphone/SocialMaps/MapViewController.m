@@ -797,7 +797,7 @@ ButtonClickCallbackData callBackData;
     afriend=[[UserFriends alloc] init];
     userDefault=[[UserDefault alloc] init];
     searchText=[[NSString alloc] init];
-
+    
     fbHelper=[FacebookHelper sharedInstance];
     
     _mapPulldown.hidden = TRUE;
@@ -2004,23 +2004,29 @@ ButtonClickCallbackData callBackData;
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-                        if (CLLocationCoordinate2DIsValid(aPerson.coordinate))
-                        {
-                            aPerson.coordinate = loc;
-                        }
+                        
 
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
+                        aPerson.itemDistance = distanceFromMe;
+                        aPerson.userInfo.relationsipStatus = item.relationsipStatus;
+                        aPerson.userInfo.workStatus = item.workStatus;
+                        aPerson.userInfo.city = item.city;
+                        aPerson.userInfo.firstName = item.firstName;
+                        aPerson.userInfo.lastName = item.lastName;
                         
-                        if (smAppDelegate.showPeople == TRUE && (aPerson.itemDistance - distanceFromMe > .5 || aPerson.itemDistance - distanceFromMe < -.5 || ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus] || ![item.relationsipStatus isEqualToString:aPerson.userInfo.relationsipStatus] || ![item.avatar isEqualToString:aPerson.userInfo.avatar] || ![item.workStatus isEqualToString:aPerson.userInfo.workStatus] || ![item.city isEqualToString:aPerson.userInfo.city] || item.isOnline != aPerson.userInfo.isOnline)) {
+                        if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline) || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude)) 
+                        {
+                            
+                            if (CLLocationCoordinate2DIsValid(loc))
+                            {
+                                aPerson.coordinate = loc;
+                            }
+                            
                             NSLog(@"update only %@", aPerson.userInfo.firstName);
-                            NSLog(@"lastSeenAt %@", item.lastSeenAt);
+                            
                             aPerson.userInfo.friendshipStatus = item.friendshipStatus;
-                            aPerson.itemDistance = distanceFromMe;
-                            aPerson.userInfo.relationsipStatus = item.relationsipStatus;
-                            aPerson.userInfo.workStatus = item.workStatus;
-                            aPerson.userInfo.city = item.city;
                             aPerson.userInfo.isOnline = item.isOnline;
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
@@ -2028,7 +2034,6 @@ ButtonClickCallbackData callBackData;
                                 aPerson.userInfo.avatar = item.avatar;
                                 [self downloadImage:aPerson];
                             }
-                            
                             
                             [self mapAnnotationInfoUpdated:aPerson];
                         }
