@@ -1563,11 +1563,21 @@ ButtonClickCallbackData callBackData;
 
 -(IBAction)addCircleView:(id)sender
 {
+    [pullUpView setOpened:FALSE animated:TRUE];
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [self.view addSubview:circleView];
 }
 
 -(IBAction)removeCircleView:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [circleView removeFromSuperview];
 }
 

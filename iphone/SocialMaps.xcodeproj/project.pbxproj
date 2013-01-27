@@ -38,6 +38,10 @@
 		208726DA15FF04D500444CC2 /* UserBasicProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */; };
 		208726E215FF149D00444CC2 /* profile_brush_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E015FF149D00444CC2 /* profile_brush_icon.png */; };
 		208726E315FF149D00444CC2 /* profile_pen_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 208726E115FF149D00444CC2 /* profile_pen_icon.png */; };
+		208CED5C16B506A800434D49 /* icon_friend_request.png in Resources */ = {isa = PBXBuildFile; fileRef = 208CED5B16B506A800434D49 /* icon_friend_request.png */; };
+		208CED6016B510D100434D49 /* icon_directions_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 208CED5D16B510D100434D49 /* icon_directions_new.png */; };
+		208CED6116B510D100434D49 /* icon_meet_up_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 208CED5E16B510D100434D49 /* icon_meet_up_new.png */; };
+		208CED6216B510D100434D49 /* icon_myplaces.png in Resources */ = {isa = PBXBuildFile; fileRef = 208CED5F16B510D100434D49 /* icon_myplaces.png */; };
 		2095B3CE165BAFD3007C295A /* PlanListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2095B3CD165BAFD3007C295A /* PlanListViewController.m */; };
 		2095B3D2165BBA4F007C295A /* PlanListTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2095B3D1165BBA4F007C295A /* PlanListTableCell.m */; };
 		20B0E7DE15D7A9CF009A500A /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B0E7D515D7A9CF009A500A /* Globals.m */; };
@@ -467,7 +471,6 @@
 		B028A4D4161C8B0B00D99D3E /* circle_menu_item_settings_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C2161C8B0B00D99D3E /* circle_menu_item_settings_pressed.png */; };
 		B028A4D5161C8B0B00D99D3E /* circle_menu_item_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C3161C8B0B00D99D3E /* circle_menu_item_settings.png */; };
 		B028A4D6161C8B0B00D99D3E /* icon_world.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4C4161C8B0B00D99D3E /* icon_world.png */; };
-		B028A4D9161C8C0900D99D3E /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = B028A4D8161C8C0900D99D3E /* circle.png */; };
 		B032F99C162C52C4002AFCDB /* icon_48x48.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99A162C52C0002AFCDB /* icon_48x48.png */; };
 		B032F99D162C52C4002AFCDB /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = B032F99B162C52C1002AFCDB /* icon_57x57.png */; };
 		B04EFA3116591358002C2D6B /* EachFriendInList.m in Sources */ = {isa = PBXBuildFile; fileRef = B04EFA3016591358002C2D6B /* EachFriendInList.m */; };
@@ -547,6 +550,10 @@
 		208726D815FF04D500444CC2 /* UserBasicProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserBasicProfileViewController.xib; sourceTree = "<group>"; };
 		208726E015FF149D00444CC2 /* profile_brush_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_brush_icon.png; sourceTree = "<group>"; };
 		208726E115FF149D00444CC2 /* profile_pen_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_pen_icon.png; sourceTree = "<group>"; };
+		208CED5B16B506A800434D49 /* icon_friend_request.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_friend_request.png; sourceTree = "<group>"; };
+		208CED5D16B510D100434D49 /* icon_directions_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_directions_new.png; sourceTree = "<group>"; };
+		208CED5E16B510D100434D49 /* icon_meet_up_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_meet_up_new.png; sourceTree = "<group>"; };
+		208CED5F16B510D100434D49 /* icon_myplaces.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_myplaces.png; sourceTree = "<group>"; };
 		2095B3CC165BAFD3007C295A /* PlanListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanListViewController.h; sourceTree = "<group>"; };
 		2095B3CD165BAFD3007C295A /* PlanListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanListViewController.m; sourceTree = "<group>"; };
 		2095B3D0165BBA4F007C295A /* PlanListTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanListTableCell.h; sourceTree = "<group>"; };
@@ -1161,7 +1168,6 @@
 		B028A4C2161C8B0B00D99D3E /* circle_menu_item_settings_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle_menu_item_settings_pressed.png; sourceTree = "<group>"; };
 		B028A4C3161C8B0B00D99D3E /* circle_menu_item_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle_menu_item_settings.png; sourceTree = "<group>"; };
 		B028A4C4161C8B0B00D99D3E /* icon_world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_world.png; sourceTree = "<group>"; };
-		B028A4D8161C8C0900D99D3E /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		B032F99A162C52C0002AFCDB /* icon_48x48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_48x48.png; path = Images/icon_48x48.png; sourceTree = SOURCE_ROOT; };
 		B032F99B162C52C1002AFCDB /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = Images/icon_57x57.png; sourceTree = SOURCE_ROOT; };
 		B04EFA2F16591358002C2D6B /* EachFriendInList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EachFriendInList.h; sourceTree = "<group>"; };
@@ -1488,10 +1494,8 @@
 		4F98A2BC15BB387D000B3124 = {
 			isa = PBXGroup;
 			children = (
-				20C92B881618042D000B3D58 /* MessageUI.framework */,
 				4F469CD115FD1CC4008341C2 /* Default@2x.png */,
 				4F469CCF15FD1CB5008341C2 /* Default.png */,
-				2063A1E115F3332100529CB2 /* QuartzCore.framework */,
 				4F1B8DDC15E40FB0004AC402 /* sm_icon@2x.png */,
 				4FE4253B15C0699F00A6B6A3 /* FB */,
 				4F24A3D515BF643300DC66B7 /* sm_icon.png */,
@@ -1515,8 +1519,10 @@
 			isa = PBXGroup;
 			children = (
 				4F9B281315BF53BC00CBA657 /* CoreLocation.framework */,
-				4F1FE46615BF327C00D2484F /* libsqlite3.dylib */,
+				20C92B881618042D000B3D58 /* MessageUI.framework */,
+				2063A1E115F3332100529CB2 /* QuartzCore.framework */,
 				4F8257B215BD82E000760CE1 /* libz.dylib */,
+				4F1FE46615BF327C00D2484F /* libsqlite3.dylib */,
 				4FE425C515C06A4C00A6B6A3 /* FBiOSSDK.framework */,
 				4F8257B015BD82C900760CE1 /* MobileCoreServices.framework */,
 				4F8257AE15BD82B200760CE1 /* SystemConfiguration.framework */,
@@ -1730,7 +1736,6 @@
 				4FE4261315C06FAD00A6B6A3 /* checkbox_unchecked.png */,
 				4F4CA52315C45351004234E5 /* checkin_icon.png */,
 				B028A4B3161C8B0B00D99D3E /* circle_menu_bg.png */,
-				B028A4D8161C8C0900D99D3E /* circle.png */,
 				B028A4B4161C8B0B00D99D3E /* circle_menu_item_deals_pressed.png */,
 				B028A4B5161C8B0B00D99D3E /* circle_menu_item_deals.png */,
 				B028A4B6161C8B0B00D99D3E /* circle_menu_item_friends_pressed.png */,
@@ -1782,11 +1787,15 @@
 				20BBD9461635589200538777 /* icon_beta_badge.png */,
 				20BFC310161707B000F76226 /* icon_facebook.png */,
 				4F1B99B315CC377D0066BF16 /* icon_filter.png */,
+				208CED5B16B506A800434D49 /* icon_friend_request.png */,
 				4FE4261A15C06FAD00A6B6A3 /* icon_lock.png */,
 				20B5D56A1612EE27001105AF /* icon_event.png */,
 				20CF83401611F9770075E647 /* icon_friend_request_selected.png */,
 				20B3CB221626ED1A0099D49E /* icon_lock_green.png */,
 				20CF83411611F9770075E647 /* icon_message_notification_selected.png */,
+				208CED5D16B510D100434D49 /* icon_directions_new.png */,
+				208CED5E16B510D100434D49 /* icon_meet_up_new.png */,
+				208CED5F16B510D100434D49 /* icon_myplaces.png */,
 				20CF83421611F9780075E647 /* icon_notify_selected.png */,
 				4F1B99B215CC377D0066BF16 /* icon_monocole_selected.png */,
 				4FF09BEA15CFBC8000F8AD19 /* icon_settings.png */,
@@ -2364,7 +2373,6 @@
 				B028A4D4161C8B0B00D99D3E /* circle_menu_item_settings_pressed.png in Resources */,
 				B028A4D5161C8B0B00D99D3E /* circle_menu_item_settings.png in Resources */,
 				B028A4D6161C8B0B00D99D3E /* icon_world.png in Resources */,
-				B028A4D9161C8C0900D99D3E /* circle.png in Resources */,
 				B08997F416203E1F003A9FA9 /* list_view_icon_black.png in Resources */,
 				B08997F716203E2E003A9FA9 /* map_view_icon_black.png in Resources */,
 				20B3CB1716269E000099D49E /* GeoTagStoryboard.storyboard in Resources */,
@@ -2417,6 +2425,10 @@
 				2041AC2116836132002BDCB0 /* people_family.png in Resources */,
 				2041AC2316836143002BDCB0 /* plus.png in Resources */,
 				2041AC2516836175002BDCB0 /* globe.png in Resources */,
+				208CED5C16B506A800434D49 /* icon_friend_request.png in Resources */,
+				208CED6016B510D100434D49 /* icon_directions_new.png in Resources */,
+				208CED6116B510D100434D49 /* icon_meet_up_new.png in Resources */,
+				208CED6216B510D100434D49 /* icon_myplaces.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
