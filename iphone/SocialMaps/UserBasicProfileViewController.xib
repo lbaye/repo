@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1296</int>
+		<int key="IBDocument.SystemTarget">1536</int>
 		<string key="IBDocument.SystemVersion">11G63</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2840</string>
 		<string key="IBDocument.AppKitVersion">1138.51</string>
 		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1181</string>
+			<string key="NS.object.0">1926</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
+			<string>IBMKMapView</string>
+			<string>IBProxyObject</string>
+			<string>IBUIActivityIndicatorView</string>
 			<string>IBUIBarButtonItem</string>
 			<string>IBUIButton</string>
-			<string>IBUILabel</string>
-			<string>IBUITextField</string>
-			<string>IBProxyObject</string>
-			<string>IBUIWebView</string>
-			<string>IBUIToolbar</string>
-			<string>IBUIScrollView</string>
-			<string>IBUIView</string>
-			<string>IBMKMapView</string>
 			<string>IBUIImageView</string>
-			<string>IBUIActivityIndicatorView</string>
+			<string>IBUILabel</string>
+			<string>IBUIScrollView</string>
+			<string>IBUITextField</string>
+			<string>IBUIToolbar</string>
+			<string>IBUIView</string>
+			<string>IBUIWebView</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -592,6 +592,7 @@
 						<object class="NSColor" key="IBUIBackgroundColor" id="580972303">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
+							<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
@@ -703,6 +704,7 @@
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MC45Njg2Mjc0NTEgMC45Njg2Mjc0NTEgMC45Njg2Mjc0NTEAA</bytes>
+									<string key="IBUIColorCocoaTouchKeyPath">tableCellGroupedBackgroundColor</string>
 								</object>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -982,7 +984,7 @@
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
 								<double key="IBUITitleEdgeInsets.left">12</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
-								<string key="IBUINormalTitle">Geotag...</string>
+								<string key="IBUINormalTitle">Geotag</string>
 								<reference key="IBUIHighlightedTitleColor" ref="463006362"/>
 								<reference key="IBUINormalTitleColor" ref="805250279"/>
 								<reference key="IBUINormalTitleShadowColor" ref="333926605"/>
@@ -1008,7 +1010,7 @@
 								<double key="IBUITitleEdgeInsets.bottom">0.0</double>
 								<double key="IBUITitleEdgeInsets.left">12</double>
 								<double key="IBUITitleEdgeInsets.right">0.0</double>
-								<string key="IBUINormalTitle">Upload Photos...</string>
+								<string key="IBUINormalTitle">Upload Photos</string>
 								<reference key="IBUIHighlightedTitleColor" ref="463006362"/>
 								<reference key="IBUINormalTitleColor" ref="805250279"/>
 								<reference key="IBUINormalTitleShadowColor" ref="333926605"/>
@@ -1026,9 +1028,9 @@
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<object class="NSCustomResource" key="IBUIImage" id="136416130">
+								<object class="NSCustomResource" key="IBUIImage" id="671134111">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">photos_icon_small.png</string>
+									<string key="NSResourceName">icon_gallery.png</string>
 								</object>
 							</object>
 							<object class="IBUIButton" id="645454644">
@@ -1179,14 +1181,14 @@
 							<object class="IBUIImageView" id="622365962">
 								<reference key="NSNextResponder" ref="957796693"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{126, 351}, {17, 17}}</string>
+								<string key="NSFrame">{{126, 353}, {17, 17}}</string>
 								<reference key="NSSuperview" ref="957796693"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="479603200"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<reference key="IBUIImage" ref="136416130"/>
+								<reference key="IBUIImage" ref="671134111"/>
 							</object>
 						</array>
 						<string key="NSFrame">{{0, 45}, {320, 415}}</string>
@@ -2367,7 +2369,7 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1296" key="NS.object.0"/>
+			<real value="1536" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
@@ -2378,16 +2380,16 @@
 			<string key="bubble_count_icon.png">{55, 57}</string>
 			<string key="f_logo.png">{140, 140}</string>
 			<string key="header.png">{640, 91}</string>
+			<string key="icon_gallery.png">{43, 43}</string>
 			<string key="img_close_gray.png">{19, 19}</string>
 			<string key="line_arrow_up_right.png">{600, 14}</string>
 			<string key="logo_3.png">{221, 41}</string>
-			<string key="photos_icon_small.png">{34, 34}</string>
 			<string key="profile_brush_icon.png">{36, 34}</string>
 			<string key="search_field.png">{410, 80}</string>
 			<string key="show_on_map.png">{43, 43}</string>
 			<string key="sm_icon@2x.png">{114, 114}</string>
 			<string key="sp2.png">{1, 60}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1181</string>
+		<string key="IBCocoaTouchPluginVersion">1926</string>
 	</data>
 </archive>

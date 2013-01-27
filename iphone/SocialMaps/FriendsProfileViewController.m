@@ -362,21 +362,35 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)friendRequestButton:(id)sender
 {
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-    [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
-    [addFrndButton setUserInteractionEnabled:NO];
-    [frndStatusButton setHidden:YES];
+    if ([userInfo.friendshipStatus isEqualToString:@"friend"]) 
+    {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is already your friend.",userInfo.firstName]];
+    }
+    else
+    {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
+        [addFrndButton setEnabled:NO];
+        [frndStatusButton setHidden:YES];
+    }
 }
 
 -(IBAction)uploadPhotoButton:(id)sender
 {
-    NSLog(@"meet up request");
-    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
-    controller.selectedfriendId = userInfo.userId;
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
-    [controller release];
+    if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+    {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+    }
+    else
+    {        
+        NSLog(@"meet up request");
+        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+        controller.selectedfriendId = userInfo.userId;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
+    }
 }
 
 -(IBAction)getDirection:(id)sender
@@ -655,31 +669,27 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [addFrndButton setTitle:@"Rejected" forState:UIControlStateNormal];
             [addFrndButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"requested"]) {
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"pending"]) {
             [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         }
         else if ([friendShipStatus isEqualToString:@"friend"]) {
             [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:NO];
         }
     }
     
-    if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
-    {
-        [meetUpButton setEnabled:NO];
-    }
     [userInfo retain];
     }
     else
