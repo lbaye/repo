@@ -63,12 +63,12 @@
         
         CGSize subtitleStringSize = [subtitleString sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0]];
         CGRect subtitleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height*2)/2+titleFrame.size.height, 
-                                          subtitleStringSize.width, subtitleStringSize.height);
+                                          subtitleStringSize.width, subtitleStringSize.height * 2);
         subTitle = [[UILabel alloc] initWithFrame:subtitleFrame];
         subTitle.text = subtitleString;
         subTitle.font = [UIFont fontWithName:@"Helvetica" size:12.0];
         subTitle.backgroundColor = [UIColor clearColor];
-        
+        subTitle.numberOfLines = 2;
         [self addSubview:title];
         [self addSubview:subTitle];
     }

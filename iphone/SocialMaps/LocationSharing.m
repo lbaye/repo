@@ -59,7 +59,7 @@
     rowNum = 0;
     //Erase history
     // Location sharing information
-    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
+    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"You are sharing your location with \nAll users/Friends only/No one." labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
     [self addSubview:enableSharing];
 
     if (sharingEnabled == 1) {

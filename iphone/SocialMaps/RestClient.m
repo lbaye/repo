@@ -3862,9 +3862,11 @@ AppDelegate *smAppDelegate;
             NSLog(@"setShareLocation: Status=%@", setShareLocation.status);
             NSLog(@"setShareLocation= %@",jsonObjects);
             
+            [[NSNotificationCenter defaultCenter] postNotificationName:SET_SHARE_LOCATION_DONE object:setShareLocation];
         }
         else
         {
+            [[NSNotificationCenter defaultCenter] postNotificationName:SET_SHARE_LOCATION_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -3873,6 +3875,7 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^
      {
+         [[NSNotificationCenter defaultCenter] postNotificationName:SET_SHARE_LOCATION_DONE object:nil];
      }];
     
      [request startAsynchronous];

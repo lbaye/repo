@@ -876,14 +876,21 @@ ButtonClickCallbackData callBackData;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
     
-    if (indx == 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-        [alertView show];
-        [alertView release];
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"on"] == NSOrderedSame) {
+        if (indx == 0) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [alertView show];
+            [alertView release];
+        } else {
+            RestClient *restClient = [[[RestClient alloc] init] autorelease];
+            [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+        }
     } else {
-        RestClient *restClient = [[[RestClient alloc] init] autorelease];
-        [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
+        [UtilityClass showAlert:@"" :@"Location sharing is switched off in settings, enable it to share your location."];
+        [self setRadioButton];
     }
+    
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -892,7 +899,7 @@ ButtonClickCallbackData callBackData;
         RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"1"]];
     } else {
-         [radio gotoButton:smAppDelegate.shareLocationOption];
+        [self setRadioButton];
     }
 }
 
@@ -917,7 +924,7 @@ ButtonClickCallbackData callBackData;
         }
         
     } else {
-        [radio gotoButton:smAppDelegate.shareLocationOption];
+        [self setRadioButton];
         [UtilityClass showAlert:@"" :@"Could not handle request due to network error, try again."];
     }
     
@@ -1004,6 +1011,8 @@ ButtonClickCallbackData callBackData;
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SET_SHARE_LOCATION_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -1157,11 +1166,14 @@ ButtonClickCallbackData callBackData;
     smAppDelegate.currentModelViewController = self;
     
     [self displayNotificationCount];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettingsDone:) name:SET_SHARE_LOCATION_DONE object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [smAppDelegate hideActivityViewer];
     
     if (!smAppDelegate.timerGotListing) 
     {
@@ -1499,6 +1511,18 @@ ButtonClickCallbackData callBackData;
     }
 }
 
+- (void)saveSettingsDone:(NSNotification *)notif
+{
+    ShareLocation *shareLocation = notif.object;
+    if (shareLocation) {
+        if ([shareLocation.status caseInsensitiveCompare:@"Off"] == NSOrderedSame) {
+            
+        } 
+    }else {
+        [UtilityClass showAlert:@"" :@"Error saving changes, please try again."];
+    }
+    [self setRadioButton];
+}
 
 - (IBAction)gotoBreadcrumbs:(id)sender
 {
@@ -2149,10 +2173,23 @@ ButtonClickCallbackData callBackData;
     [smAppDelegate.meetUpRequests addObjectsFromArray:notifs];
     NSLog(@"AppDelegate: gotMeetUpNotifications - %@", smAppDelegate.meetUpRequests);
     NSLog(@"userAccountPref %d", smAppDelegate.shareLocationOption);
-    [radio gotoButton:smAppDelegate.shareLocationOption];
-     
+
+    if (smAppDelegate.shareLocationOption < 0) {
+        smAppDelegate.shareLocationOption = 0;
+    }
+    
+    [self setRadioButton];
+    
     [self displayNotificationCount];
 }
+
+- (void)setRadioButton {
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame)
+        [radio gotoButton:2];
+    else
+        [radio gotoButton:smAppDelegate.shareLocationOption];
+}
+
 - (void)sentFriendRequest:(NSNotification *)notif {
     callBackData.locItem.userInfo.friendshipStatus = @"requested";
     [self mapAnnotationChanged:callBackData.locItem];
