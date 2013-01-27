@@ -33,6 +33,7 @@
     UIImageView *imageViewDrag;
     CGRect endDragRect;
     CGRect startDragRect;
+    UIColor *textColor;
 }
 @property (nonatomic) int numRadio;
 @property (nonatomic) int selIndex;
@@ -57,5 +58,12 @@
  * @retval none
  */
 - (void) gotoButton:(int)buttonNumber;
+
+/**
+ * @brief Set text color or radio buttons 
+ * @param (UIColor) - Color of the text
+ * @retval none
+ */
+- (id)initWithFrame:(CGRect)frame numButtons:(int)numButtons labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag color:(UIColor*)color;
 
 @end

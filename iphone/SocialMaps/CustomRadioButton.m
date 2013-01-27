@@ -26,10 +26,25 @@
         self.labels   = lbl;
         self.backgroundColor = [UIColor clearColor];
         self.tag = tag;
+        textColor = nil;
     }
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame numButtons:(int)numButtons labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag color:(UIColor*)color
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        self.numRadio = numButtons;
+        self.selIndex = def;
+        self.labels   = lbl;
+        self.backgroundColor = [UIColor clearColor];
+        self.tag = tag;
+        textColor = color;
+    }
+    return self;
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -91,6 +106,7 @@
         UILabel *lblRadio = [[UILabel alloc] initWithFrame:lblFrame];
         lblRadio.backgroundColor = [UIColor clearColor];
         lblRadio.text     = [labels objectAtIndex:i];
+        if (textColor) lblRadio.textColor = textColor;
         lblRadio.font     = [UIFont fontWithName:@"Helvetica" size:10.0];
         [self addSubview:lblRadio];
         [lblRadio release];   

@@ -287,12 +287,12 @@ ButtonClickCallbackData callBackData;
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
         [self searchAnnotations];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35/*- 105*/);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35);
         pullDownView.closedCenter = CGPointMake(160, -5 - 69 + 34);
     } else {
         [self moveSearchBarAnimation:44];
         [searchBar becomeFirstResponder];
-        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35 /*105*/ + 44);
+        pullDownView.openedCenter = CGPointMake(160, 120 + 69 - 35 + 44);
         pullDownView.closedCenter = CGPointMake(160, -5 + 44 - 69 + 34);
     }
 }
@@ -553,7 +553,16 @@ ButtonClickCallbackData callBackData;
     LocationItem *locItem = (LocationItem*) anno;
     
     DirectionViewController *controller = [[DirectionViewController alloc] initWithNibName:@"DirectionViewController" bundle:nil];
-    controller.coordinateTo = locItem.coordinate;
+    
+    if (!anno) {
+        CLLocationCoordinate2D theCoordinate;
+        theCoordinate.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+        theCoordinate.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+        controller.coordinateTo = theCoordinate;
+    } else {
+        controller.coordinateTo = locItem.coordinate;
+    }
+    
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
     [controller release];
@@ -848,7 +857,7 @@ ButtonClickCallbackData callBackData;
     
     int adjustPosX = 25;
     
-    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0 + adjustPosX, 13, 310 - adjustPosX * 2, 41) numButtons:3 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000];
+    radio = [[CustomRadioButton alloc] initWithFrame:CGRectMake(0 + adjustPosX, 13, 310 - adjustPosX * 2, 41) numButtons:3 labels:[NSArray arrayWithObjects:@"All users",@"Friends only",@"No one",nil]  default:smAppDelegate.shareLocationOption sender:self tag:2000 color:[UIColor whiteColor]];
     radio.delegate = self;
     [viewSharingPrefMapPullDown addSubview:radio];
     
@@ -1454,12 +1463,14 @@ ButtonClickCallbackData callBackData;
 }
 
 - (IBAction)gotoDirections:(id)sender 
-{
+{/*
    // viewEventList
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    */
+    [self directionSelected:nil];
 }
 
 -(void)getAllEvents
@@ -1779,9 +1790,9 @@ ButtonClickCallbackData callBackData;
     
     
     pullDownView = [[PullableView alloc] initWithFrame:CGRectMake(xOffset, 0, 320, 219)];
-    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 - 35/*- 105*/);
+    pullDownView.openedCenter = CGPointMake(160 + xOffset, 120 + 69 - 35);
     pullDownView.closedCenter = CGPointMake(160 + xOffset, -5 - 69 + 34);
-    pullDownView.center = pullDownView.openedCenter;
+    pullDownView.center = pullDownView.closedCenter;
     pullDownView.handleView.frame = CGRectMake(0, pullDownView.frame.size.height - 25, 320, 25);
     pullDownView.delegate = self;
     
