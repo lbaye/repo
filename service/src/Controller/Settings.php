@@ -190,6 +190,7 @@ class Settings extends Base {
     public function push() {
         $data = $this->request->request->all();
         $settings = $this->user->getPushSettings();
+        $oldDeviceId = $settings['device_id'];
 
         if ($this->request->getMethod() == 'GET') {
             return $this->_generateResponse(array('result' => $settings));
@@ -200,6 +201,8 @@ class Settings extends Base {
             if (isset($data[$opt]))
                 $settings[$opt] = $data[$opt];
         }
+
+        $this->userRepository->resetDuplicateDeviceId($oldDeviceId);
 
         $this->user->setPushSettings($settings);
         return $this->persistAndReturn($settings);

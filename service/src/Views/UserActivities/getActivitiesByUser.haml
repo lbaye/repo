@@ -121,12 +121,12 @@
                       - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
                       .comment
-                        was tagged "
-                        %a(href= $geotagLink)
-                          %strong= stripcslashes($activity->getTitle())
-                        "
+                        was geo-tagged
                         at
                         %small= $geotag->getLocation()->getAddress()
+                        = ' - '
+                        %a(href= $geotagLink)
+                          %strong= stripcslashes($activity->getTitle())
 
                     - if ($activity->getObjectType() === 'friend')
                       - $friend = $userRepo->find($activity->getObjectId())
@@ -266,12 +266,12 @@
               - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
               .comment
-                was tagged "
-                %a(href= $geotagLink)
-                  %strong= stripcslashes($activity->getTitle())
-                "
+                was geo-tagged 
                 at
                 %small= $geotag->getLocation()->getAddress()
+                = ' - '
+                %a(href= $geotagLink)
+                  %strong= stripcslashes($activity->getTitle())
 
             - if ($activity->getObjectType() === 'friend')
               - $friend = $userRepo->find($activity->getObjectId())
