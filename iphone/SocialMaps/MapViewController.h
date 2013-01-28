@@ -71,6 +71,8 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *viewSharingPrefMapPullDown;
     CustomRadioButton *radio;
     BOOL shouldTimerStop;
+    IBOutlet UIImageView *mapViewImg;
+    IBOutlet UIImageView *listViewImg;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -105,6 +107,9 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
 @property(nonatomic,retain) IBOutlet UIView *circleView;
 @property(nonatomic,retain) IBOutlet UIView *connectToFBView;
+@property(nonatomic,retain) IBOutlet UIImageView *mapViewImg;
+@property(nonatomic,retain) IBOutlet UIImageView *listViewImg;
+
 
 /**
  * @brief Show pull down menu
@@ -415,10 +420,27 @@ typedef enum _SHARING_TYPES {
 - (IBAction)closeConnectWithFB:(id)sender;
 
 /**
+ * @brief Selection of map view on pull down menu
+ * @param (id) - Action sender
+ * @retval none
+ */
+
+- (IBAction)selectMapView:(id)sender;
+
+/**
+ * @brief Selection of list view on pull down menu
+ * @param (id) - Action sender
+ * @retval none
+ */
+
+- (IBAction)selectListView:(id)sender;
+
+/**
  * @brief Show pin for point on map option of map view
  * @param (id) - Action sender
  * @retval none
  */
+
 - (void) showPinOnMapViewForPlan:(Plan*)plan;
 
 /**

@@ -37,6 +37,8 @@
     IBOutlet UIView *viewNotification;
     PullableView *pullDownView;
     NSMutableArray *copyDisplayListArray;
+    IBOutlet UIImageView *mapViewImg;
+    IBOutlet UIImageView *listViewImg;
 }
 @property (nonatomic) OBJECT_TYPES selectedType;
 @property (nonatomic) int selectedItemIndex;
@@ -51,6 +53,8 @@
 @property (retain, nonatomic) IBOutlet UITableView *itemList;
 @property (retain, nonatomic) IBOutlet UILabel *listNotifCount;
 @property(nonatomic,retain) IBOutlet UILabel *totalNotifCount;
+@property(nonatomic,retain) IBOutlet UIImageView *mapViewImg;
+@property(nonatomic,retain) IBOutlet UIImageView *listViewImg;
 
 /**
  * @brief Navigate user to map screen
@@ -231,10 +235,17 @@
 - (IBAction)gotonDeals:(id)sender;
 
 /**
+ * @brief Select List view
+ * @param (id) - Action sender
+ * @retval action
+ */
+- (IBAction)selectListView:(id)sender;
+/**
  * @brief Load images for onscreen images
  * @param none
  * @retval none
  */
+
 - (void)loadImagesForOnscreenRows;
 
 @end
