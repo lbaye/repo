@@ -283,7 +283,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (IBAction)actionShowHideSearchBtn:(id)sender {
-    if (viewSearch.frame.origin.y > 44) {
+    if (viewSearch.frame.origin.y >= 44) {
         [self moveSearchBarAnimation:-44];
         searchBar.text = @"";
         [self searchAnnotations];
