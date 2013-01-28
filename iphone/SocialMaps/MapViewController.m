@@ -339,7 +339,7 @@ ButtonClickCallbackData callBackData;
                 if (i == 0) {
                     [self didTapMap];
                     [self showAnnotationDetailView:anno];
-                    
+                    [self mapAnnotationInfoUpdated:anno];
                 }
             }
         }
