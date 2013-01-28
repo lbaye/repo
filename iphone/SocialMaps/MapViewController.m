@@ -2055,6 +2055,7 @@ ButtonClickCallbackData callBackData;
                         aPerson.userInfo.city = item.city;
                         aPerson.userInfo.firstName = item.firstName;
                         aPerson.userInfo.lastName = item.lastName;
+                        aPerson.itemName=[NSString stringWithFormat:@"%@ %@",aPerson.userInfo.firstName,aPerson.userInfo.lastName];
                         
                         if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline) || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude)) 
                         {
