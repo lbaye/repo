@@ -32,6 +32,9 @@ class Message
     /** @ODM\ReferenceOne(targetDocument="User", simple=true) */
     protected $sender;
 
+    /** @ODM\ReferenceOne(targetDocument="User", simple=true) */
+    protected $lastSender;
+
     /** @ODM\ReferenceOne(targetDocument="Message", simple=true) */
     protected $thread;
 
@@ -150,6 +153,16 @@ class Message
         return $this->sender;
     }
 
+    public function setLastSender($lastSender)
+    {
+        $this->lastSender = $lastSender;
+    }
+
+    public function getLastSender()
+    {
+        return $this->lastSender;
+    }
+
     public function setSubject($subject)
     {
         $this->subject = $subject;
@@ -207,6 +220,9 @@ class Message
         # Add sender information
         if ($this->getSender() != null)
             $items['sender'] = $this->getSender()->toArray(false);
+        # Add last sender information
+        if ($this->getLastSender() != null)
+            $items['lastSender'] = $this->getLastSender()->toArray(false);
 
         # Add recipients
         $items['recipients'] = $this->toArrayOfUsers($this->getRecipients());

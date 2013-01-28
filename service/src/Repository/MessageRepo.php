@@ -98,8 +98,11 @@ class MessageRepo extends Base
                 $this->addToThread($message);
                 $this->updateThreadContent($message);
                 $this->persistThread($message);
-                if (!is_null($user))
+                if (!is_null($user)){
                     $this->clearReadBy($thread, $user);
+                    $this->updateThreadLastSender($message, $user);
+                    $this->persistThread($message);
+                }
             }
 
         } catch (\Exception $e) {
@@ -111,6 +114,10 @@ class MessageRepo extends Base
 
     private function updateThreadContent(MessageDocument $message) {
         $message->getThread()->setLastMessage($message->getContent());
+    }
+
+    private function updateThreadLastSender(MessageDocument $message, UserDocument $user) {
+        $message->getThread()->setLastSender($user);
     }
 
     private function persistThread(MessageDocument $message) {
