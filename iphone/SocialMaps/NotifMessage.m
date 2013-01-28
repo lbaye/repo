@@ -28,7 +28,7 @@
 {
     NSLog(@"last reply %@", lastReply);
     if ([lastReply isKindOfClass:[NSNull class]]) {
-        return nil;
+        return notifMessage;
     }
     NSDictionary *lastReplyDic = [(NSMutableArray *) lastReply objectAtIndex:[lastReply count]-1];
     
