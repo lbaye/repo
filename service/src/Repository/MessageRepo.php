@@ -185,6 +185,9 @@ class MessageRepo extends Base
         $message->setLastMessage($message->getContent());
         $message->setSender($sender);
 
+        if($message->getLastSender() == null)
+            $message->setLastSender($sender);
+
         return $message;
     }
 
