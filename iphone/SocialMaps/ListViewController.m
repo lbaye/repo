@@ -41,6 +41,7 @@
 @synthesize smAppDelegate;
 @synthesize totalNotifCount;
 @synthesize circleView;
+@synthesize mapViewImg,listViewImg;
 
 PullableView *pullUpView;
 
@@ -324,8 +325,8 @@ PullableView *pullUpView;
 }
 
 - (IBAction)backToMapview:(id)sender {
-    [self removeFromParentViewController];
-    
+    [mapViewImg setImage:[UIImage imageNamed:@"map_view_icon.png"]];
+    [self performSelector:@selector(loadPrevImage) withObject:nil afterDelay:0.2];
 }
 
 - (IBAction)closePullup:(id)sender {
@@ -473,6 +474,29 @@ PullableView *pullUpView;
 -(IBAction)gotonDeals:(id)sender
 {
     [UtilityClass showAlert:@"Social Maps" :@"This feature is coming soon."];    
+}
+
+- (IBAction)selectMapView:(id)sender
+{
+    NSLog(@"asdasd");
+}
+
+- (IBAction)selectListView:(id)sender
+{
+    NSLog(@"go to list view");
+    [listViewImg setImage:[UIImage imageNamed:@"list_view_icon_black.png"]];
+    [self performSelector:@selector(loadPrevListImage) withObject:nil afterDelay:0.2];
+}
+
+-(void)loadPrevImage
+{
+    [mapViewImg setImage:[UIImage imageNamed:@"map_view_icon_black.png"]];
+    [self removeFromParentViewController];
+}
+
+-(void)loadPrevListImage
+{
+    [listViewImg setImage:[UIImage imageNamed:@"list_view_icon.png"]];
 }
 
 - (void)dealloc {

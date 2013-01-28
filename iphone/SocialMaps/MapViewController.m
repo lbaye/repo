@@ -86,6 +86,8 @@
 @synthesize selectedAnno;
 @synthesize circleView;
 @synthesize mapAnnoEvent,connectToFBView;
+@synthesize mapViewImg;
+@synthesize listViewImg;
 
 UserFriends *afriend;
 __strong NSString *searchText;
@@ -1439,6 +1441,33 @@ ButtonClickCallbackData callBackData;
     initialHelpView.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:initialHelpView animated:YES];
 }
+
+- (IBAction)selectMapView:(id)sender
+{
+    NSLog(@"asdasd");
+    [mapViewImg setImage:[UIImage imageNamed:@"map_view_icon_black.png"]];
+    [self performSelector:@selector(loadPrevImage) withObject:nil afterDelay:0.2];
+}
+
+- (IBAction)selectListView:(id)sender
+{
+    NSLog(@"go to list view");
+    [listViewImg setImage:[UIImage imageNamed:@"list_view_icon.png"]];
+    [self performSelector:@selector(loadPrevListImage) withObject:nil afterDelay:0.2];
+}
+
+-(void)loadPrevImage
+{
+    [mapViewImg setImage:[UIImage imageNamed:@"map_view_icon.png"]];    
+}
+
+-(void)loadPrevListImage
+{
+    [listViewImg setImage:[UIImage imageNamed:@"list_view_icon_black.png"]];
+    [self performSegueWithIdentifier:@"goToListView" sender:self];
+
+}
+
 
 -(IBAction)gotoCircle:(id)sender
 {
