@@ -273,8 +273,6 @@ ButtonClickCallbackData callBackData;
         }
     }
     
-    //by Rishi
-    
     [self.view setNeedsDisplay];
 }
 
@@ -452,7 +450,21 @@ ButtonClickCallbackData callBackData;
     
     [self mapAnnotationInfoUpdated:anno];
     selectedAnno = anno;
-   
+    
+    [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:anno afterDelay:.5];
+}
+
+- (void)bringAnnotationOnTopAfterDelay:(id <MKAnnotation>) anno
+{
+    MKAnnotationView* annotationView = [_mapView viewForAnnotation:anno];
+    if (annotationView != nil) {
+        [annotationView.superview bringSubviewToFront:annotationView];
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:(id <MKAnnotation>)selectedAnno afterDelay:.5];
 }
 
 - (void) viewEventDetail:(id <MKAnnotation>)anno {
