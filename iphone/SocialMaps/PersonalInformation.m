@@ -202,7 +202,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     firstName = [self getTextField:itemFrame text:@"First name..." tag:currTag++];
     firstName.delegate = parent;
-    firstName.text = smAppDelegate.userAccountPrefs.firstName;
+    firstName.text = smAppDelegate.userAccountPrefs.userFirstName;
     [self addSubview:firstName];
     heightOffset += TEXT_HEIGHT + 5;
 
@@ -219,7 +219,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     lastName = [self getTextField:itemFrame text:@"Last name..." tag:currTag++];
     lastName.delegate = parent;
-    lastName.text = smAppDelegate.userAccountPrefs.lastName;
+    lastName.text = smAppDelegate.userAccountPrefs.userLastName;
     [self addSubview:lastName];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -407,6 +407,8 @@
     smAppDelegate.userAccountPrefs.gender = gender.text;
     smAppDelegate.userAccountPrefs.firstName = firstName.text;
     smAppDelegate.userAccountPrefs.lastName = lastName.text;
+    smAppDelegate.userAccountPrefs.userFirstName = firstName.text;
+    smAppDelegate.userAccountPrefs.userLastName = lastName.text;
     smAppDelegate.userAccountPrefs.username = userName.text;
     
     // Convert DOB to NSDate

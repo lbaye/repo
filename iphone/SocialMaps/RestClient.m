@@ -912,6 +912,8 @@ AppDelegate *smAppDelegate;
     aUserInfo.email = [self getNestedKeyVal:jsonObjects key1:@"email" key2:nil key3:nil];
     aUserInfo.firstName = [self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil];
     aUserInfo.lastName = [self getNestedKeyVal:jsonObjects key1:@"lastName" key2:nil key3:nil];
+    aUserInfo.userFirstName = [[self getNestedKeyVal:jsonObjects key1:@"firstName" key2:nil key3:nil] mutableCopy];
+    aUserInfo.userLastName = [[self getNestedKeyVal:jsonObjects key1:@"lastName" key2:nil key3:nil] mutableCopy];
     if (([[self getNestedKeyVal:jsonObjects key1:@"username" key2:nil key3:nil] isKindOfClass:[NSString class]])&&(![[self getNestedKeyVal:jsonObjects key1:@"username" key2:nil key3:nil] isEqualToString:@""]))
     {
         aUserInfo.firstName=[self getNestedKeyVal:jsonObjects key1:@"username" key2:nil key3:nil];
