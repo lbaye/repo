@@ -221,7 +221,7 @@ class Message
         if ($this->getSender() != null)
             $items['sender'] = $this->getSender()->toArray(false);
         # Add last sender information
-        if ($this->getSender() != null)
+        if ($this->getLastSender() != null)
             $items['lastSender'] = $this->getLastSender()->toArray(false);
 
         # Add recipients
