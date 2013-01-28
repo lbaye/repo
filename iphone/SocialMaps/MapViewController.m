@@ -49,6 +49,7 @@
 #import "CreatePlanViewController.h"
 #import "ListViewController.h"
 #import "CachedImages.h"
+#import "UIImageView+Cached.h"
 
 @interface MapViewController ()
 
@@ -1344,6 +1345,19 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [mapView bringSubviewToFront:view];
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    for (id<MKAnnotation> annotation in _mapView.annotations) {
+        if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
+        {
+            LocationItem *selLocation = (LocationItem*) annotation;
+            MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
+            UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+            [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
+        }
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

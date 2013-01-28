@@ -87,7 +87,8 @@
     
     [locImage addSubview:locImageSquare];
     //locImageSquare.image = locItem.itemIcon;
-    [locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
+    ///////[locImageSquare loadFromURL:[NSURL URLWithString:locItem.itemAvaterURL]];
+    [locImageSquare setImageForUrlIfAvailable:[NSURL URLWithString:locItem.itemAvaterURL]];
     [locImageSquare.layer setCornerRadius:4.0f];
     [locImageSquare.layer setMasksToBounds:YES];
     locImageSquare.tag = 110001;
