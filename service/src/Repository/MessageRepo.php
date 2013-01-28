@@ -188,8 +188,6 @@ class MessageRepo extends Base
         if($message->getLastSender() == null)
             $message->setLastSender($sender);
 
-
-
         return $message;
     }
 
