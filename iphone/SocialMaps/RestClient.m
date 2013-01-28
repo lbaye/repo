@@ -4403,8 +4403,10 @@ AppDelegate *smAppDelegate;
                 msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
                 
-                NSLog(@"longitude = %@", msg.lng);
-                
+                msg.lastSenderName = [self getNestedKeyVal:item key1:@"lastSender" key2:@"username" key3:nil];
+                if (![msg.lastSenderName isKindOfClass:[NSString class]]) {
+                    msg.lastSenderName = msg.notifSender;
+                }
                 [messageInbox addObject:msg];
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
@@ -7253,8 +7255,12 @@ AppDelegate *smAppDelegate;
                 msg.address = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"address"];
                 msg.lat = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lat"];
                 msg.lng = [self getNestedKeyVal:item key1:@"metaContent" key2:@"content" key3:@"lng"];
-                NSLog(@"msg.NotifMessage %@ %@",msg.notifMessage,msg.msgStatus);
-                NSLog(@"message notif sender = %@", msg.notifSender);
+                
+                msg.lastSenderName = [self getNestedKeyVal:item key1:@"lastSender" key2:@"username" key3:nil];
+                if (![msg.lastSenderName isKindOfClass:[NSString class]]) {
+                    msg.lastSenderName = msg.notifSender;
+                }
+                
                 int p=0;
                 for (int i=0; i<[smAppDelegate.messages count]; i++)
                 {

@@ -22,7 +22,7 @@
 @synthesize lng;
 @synthesize address;
 @synthesize notifUpdateTime;
-
+@synthesize lastSenderName;
 
 - (NSString*)getLastReply
 {
@@ -47,6 +47,17 @@
     }
     
     return notifMessage;
+}
+
+- (NSString*)getLastSenderName
+{
+    NSLog(@"last sendername %@", lastSenderName);
+    
+    if (lastSenderName) {
+        return lastSenderName;
+    }
+    
+    return notifSender;
 }
 
 - (NSString*) timeAsString {
@@ -90,7 +101,7 @@
 }
 
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(NotificationController*)controller{
-    CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
+    CGSize senderStringSize = [[self getLastSenderName] sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize msgStringSize = [[self getLastReply] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGSize fixedStringSize = [@"says:" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     CGFloat msgRows = ceil(msgStringSize.width/tv.frame.size.width);
@@ -199,7 +210,7 @@
     
 	// Sender
     lblSender.frame = senderFrame;
-	lblSender.text = notifSender;
+	lblSender.text = [self getLastSenderName];
     
     lblFixed.frame = fixedFrame;
     lblFixed.text  = @"says:";
@@ -242,7 +253,7 @@
 - (CGFloat) getRowHeight:(UITableView*)tv {
     CGFloat cellRowHeight;
     
-    CGSize senderStringSize = [notifSender sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
+    CGSize senderStringSize = [[self getLastSenderName] sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize msgStringSize = [[self getLastReply] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:kSmallLabelFontSize]];
     UIImage *btnImage = [UIImage imageNamed:@"collapse_icon.png"];
     CGSize btnSize = btnImage.size;
