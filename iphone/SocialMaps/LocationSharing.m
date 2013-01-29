@@ -41,6 +41,15 @@
     return self;
 }
 
+- (NSString*)getSharingStatus {
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame)
+        return @"No one";
+    else if (smAppDelegate.shareLocationOption == 1)
+        return @"Friends only";
+    else
+        return @"All users";
+}
+
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
@@ -59,7 +68,7 @@
     rowNum = 0;
     //Erase history
     // Location sharing information
-    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"You are sharing your location with \nAll users/Friends only/No one." labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
+    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:[NSString stringWithFormat:@"You are sharing your location with: \n%@", [self getSharingStatus]] labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
     [self addSubview:enableSharing];
 
     if (sharingEnabled == 1) {
