@@ -100,6 +100,9 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     [restClient setPlatForm:smAppDelegate.platformPrefs :@"Auth-Token" :smAppDelegate.authToken];
     // Save location sharing settings
     [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif
@@ -308,8 +311,32 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     }
     else
     {
-        [fbHelper inviteFriends:NULL];
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        if ([facebookApi isSessionValid])
+        {
+        [fbHelper inviteFriends:nil];
         NSLog(@"invite friends in else");
+        }
+        else
+        {
+            NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                    @"email",
+                                    @"user_likes",
+                                    @"user_photos",
+                                    @"publish_checkins",
+                                    @"photo_upload",
+                                    @"user_location",
+                                    @"user_birthday",
+                                    @"user_about_me",
+                                    @"publish_stream",
+                                    @"read_stream",
+                                    @"friends_status",
+                                    @"user_checkins",
+                                    @"friends_checkins",
+                                    nil];
+            [facebookApi authorize:permissions];
+            [permissions release];
+        }
     }
 }
 

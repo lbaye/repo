@@ -763,8 +763,6 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sentFriendRequest:) name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsForMapView:) name:NOTIF_GET_ALL_EVENTS_FOR_MAP_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllGeotagsForMapView:) name:NOTIF_GET_ALL_GEOTAG_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
     
     filteredList = [[NSMutableArray alloc] initWithArray: userFriendslistArray];
     
@@ -1041,6 +1039,9 @@ ButtonClickCallbackData callBackData;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_FRIEND_REQUEST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+
     userFriendslistArray=[[NSMutableArray alloc] init];
 
 }
@@ -1049,9 +1050,6 @@ ButtonClickCallbackData callBackData;
 {
     NSLog(@"MapViewController:viewDidUnload" );
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
-
     [userDefault writeToUserDefaults:@"lastLatitude" withString:smAppDelegate.currPosition.latitude];
     [userDefault writeToUserDefaults:@"lastLongitude" withString:smAppDelegate.currPosition.longitude];
 //    [locationManager stopUpdatingLocation];
@@ -1196,8 +1194,10 @@ ButtonClickCallbackData callBackData;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (!smAppDelegate.timerGotListing) 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+
+    if (!smAppDelegate.timerGotListing)
     {
         NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
@@ -1523,7 +1523,7 @@ ButtonClickCallbackData callBackData;
 {
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:YES];
-    
+    [UtilityClass showAlert:@"Social Maps" :[notif object]];
     [userDefault writeToUserDefaults:@"connectWithFB" withString:@"FBConnect"];
     NSLog(@"Connected with fb :D %@",[notif object]);
 }
