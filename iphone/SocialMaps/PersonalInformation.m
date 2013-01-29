@@ -13,6 +13,7 @@
 #import "UtilityClass.h"
 #import "RestClient.h"
 #import "NSData+Base64.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define BUTTON_WIDTH 60
 #define BUTTON_HEIGHT 30
@@ -117,7 +118,12 @@
     CGRect itemFrame = CGRectMake(10, heightOffset, PIC_WIDTH, PIC_HEIGHT);
     picBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     picBtn.frame = itemFrame;
-    [picBtn addTarget:self 
+    picBtn.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    picBtn.userInteractionEnabled=YES;
+    picBtn.layer.borderWidth=1.0;
+    picBtn.layer.masksToBounds = YES;
+    [picBtn.layer setCornerRadius:5.0];
+    [picBtn addTarget:self
                   action:@selector(picButtonClicked:)
         forControlEvents:UIControlEventTouchUpInside];
     if (smAppDelegate.userAccountPrefs.icon == nil)
