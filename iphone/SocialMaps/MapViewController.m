@@ -1034,8 +1034,6 @@ ButtonClickCallbackData callBackData;
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:SET_SHARE_LOCATION_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIEND_REQ_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_MEET_UP_REQUEST_DONE object:nil];
@@ -1190,14 +1188,13 @@ ButtonClickCallbackData callBackData;
     
     [self displayNotificationCount];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettingsDone:) name:SET_SHARE_LOCATION_DONE object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (!smAppDelegate.timerGotListing) 
+    if (!smAppDelegate.timerGotListing)
     {
         NSLog(@"!smAppDelegate.timerGotListing %d", !smAppDelegate.timerGotListing);
         RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
@@ -1221,6 +1218,8 @@ ButtonClickCallbackData callBackData;
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedLocationSharingSetting:) name:NOTIF_LOCATION_SHARING_SETTING_DONE object:nil];
+    
+    if (smAppDelegate.gotListing) [self setRadioButton];
     
     NSLog(@"viewDidAppear finished");
 }
@@ -1364,7 +1363,7 @@ ButtonClickCallbackData callBackData;
 
     NSLog(@"In prepareForSegue:MapViewController");
     
-    if ([segue.destinationViewController isKindOfClass:[ListViewController class]])
+    if ([segue.destinationViewController isKindOfClass:[ListViewController class]] )
         shouldTimerStop = NO;
         
     LocationItem *selLocation = (LocationItem*) selectedAnno;
@@ -1503,13 +1502,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (IBAction)gotoDirections:(id)sender 
-{/*
-   // viewEventList
-    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-    ViewEventListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"viewEventList"];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
-    */
+{
     [self directionSelected:nil];
 }
 
@@ -1560,19 +1553,6 @@ ButtonClickCallbackData callBackData;
             [smAppDelegate hideActivityViewer];
         }
     }
-}
-
-- (void)saveSettingsDone:(NSNotification *)notif
-{
-    ShareLocation *shareLocation = notif.object;
-    if (shareLocation) {
-        if ([shareLocation.status caseInsensitiveCompare:@"Off"] == NSOrderedSame) {
-            
-        } 
-    }else {
-        [UtilityClass showAlert:@"" :@"Error saving changes, please try again."];
-    }
-    [self setRadioButton];
 }
 
 - (IBAction)gotoBreadcrumbs:(id)sender
@@ -2245,7 +2225,7 @@ ButtonClickCallbackData callBackData;
         smAppDelegate.shareLocationOption = 0;
     }
     
-    [self setRadioButton];
+    if (!smAppDelegate.gotListing) [self setRadioButton];
     
     [self displayNotificationCount];
 }

@@ -92,14 +92,26 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettingsDone:) name:SET_SHARE_LOCATION_DONE object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    RestClient *restClient = [[RestClient alloc] init];
-    [restClient setLayer:smAppDelegate.layerPrefs :@"Auth-Token" :smAppDelegate.authToken];
-    [restClient setPlatForm:smAppDelegate.platformPrefs :@"Auth-Token" :smAppDelegate.authToken];
-    // Save location sharing settings
-    [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SET_SHARE_LOCATION_DONE object:nil];
+}
+
+- (void)saveSettingsDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    ShareLocation *shareLocation = notif.object;
+    if (shareLocation) {
+        smAppDelegate.locSharingPrefs = shareLocation;
+        [UtilityClass showAlert:@"" :@"Location sharing data saved successfully."];
+        [self goBack:nil];
+    } else {
+        [UtilityClass showAlert:@"" :@"Error saving changes, please try again."];
+    }
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif

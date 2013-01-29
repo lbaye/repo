@@ -17,14 +17,18 @@
 #import "NewLocationItem.h"
 #import "AppDelegate.h"
 #import "CustomCounter.h"
+#import "CustomSaveView.h"
 
 @interface LocationSharing : UIScrollView<SelectFriendsDelegate, RadioButtonDelegate, NewLocationItemDelegate,
-                                        CustomCounterDelegate> {
+                                        CustomCounterDelegate, CustomSaveButtonDelegate> {
     int     rowNum;
     AppDelegate *smAppDelegate;
+    
 }
+
 @property (nonatomic) int rowNum;
 @property (nonatomic, retain) AppDelegate *smAppDelegate;
+@property (nonatomic, retain) NSString *locSharingStatus;
 
 /**
  * @brief Initialize scroll view with position and size

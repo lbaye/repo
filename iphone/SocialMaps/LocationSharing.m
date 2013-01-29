@@ -24,12 +24,15 @@
 #import "UserCircle.h"
 #import "NewLocationItem.h"
 #import "Globals.h"
+#import "RestClient.h"
 
 #define ROW_HEIGHT 62
 
 @implementation LocationSharing
+
 @synthesize rowNum;
 @synthesize smAppDelegate;
+@synthesize locSharingStatus;
 
 - (LocationSharing*) initWithFrame:(CGRect)scrollFrame {
     self = [super initWithFrame:scrollFrame];
@@ -37,6 +40,7 @@
         self.frame = scrollFrame;
         [self setScrollEnabled:TRUE];
         smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.locSharingStatus = smAppDelegate.locSharingPrefs.status;
     }
     return self;
 }
@@ -57,7 +61,7 @@
      makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     int sharingEnabled = 0;
-    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"on"] == NSOrderedSame)
+    if ([self.locSharingStatus caseInsensitiveCompare:@"on"] == NSOrderedSame)
         sharingEnabled = 1;
 
     self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
@@ -70,12 +74,14 @@
     // Location sharing information
     RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:[NSString stringWithFormat:@"You are sharing your location with: \n%@", [self getSharingStatus]] labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
     [self addSubview:enableSharing];
+    [enableSharing release];
 
     if (sharingEnabled == 1) {
 
         rowNum = 5;
         SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
         [self addSubview:locSharingView];
+        [locSharingView release];
     }
     
     // Setthe scrollable area size
@@ -88,7 +94,23 @@
     sep.backgroundColor = [UIColor lightGrayColor];
     sep.tag = 30000;
     [self addSubview:sep];
+    [sep release];
+    
+    CustomSaveView *viewSaveSettingPref = [[CustomSaveView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 50, self.frame.size.width, 45)];
+    [self addSubview:viewSaveSettingPref];
+    viewSaveSettingPref.delegate = self;
+    viewSaveSettingPref.tag = 30001;
+    [viewSaveSettingPref release];
 
+}
+
+- (void) customSaveButtonClicked:(id)sender
+{
+    NSLog(@"customSaveButtonClicked");
+    [smAppDelegate showActivityViewer:self.superview];
+    smAppDelegate.locSharingPrefs.status = self.locSharingStatus;
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -521,9 +543,9 @@
 - (void) buttonSelected:(int)indx sender:(id)sender {
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
     if (indx == 1)
-        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"On"];
+        self.locSharingStatus = [NSString stringWithFormat:@"On"];
     else
-        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"Off"];
+        self.locSharingStatus = [NSString stringWithFormat:@"Off"];
     [self setNeedsDisplay];
 }
 
