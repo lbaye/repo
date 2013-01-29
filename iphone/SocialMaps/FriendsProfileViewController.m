@@ -31,6 +31,7 @@
 #import "ODRefreshControl.h"
 #import "NotifMessage.h"
 #import "MessageListViewController.h"
+#import "UserBasicProfileViewController.h"
 
 @interface FriendsProfileViewController ()
 
@@ -288,9 +289,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         {
             NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
             NSLog(@"userID string: %@",userId);
-            if ([userId isEqualToString:userInfo.userId])
+            if ([userId isEqualToString:smAppDelegate.userId])
             {
                 NSLog(@"own profile");
+                UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+
             }
             else
             {
