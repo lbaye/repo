@@ -482,8 +482,8 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     else if ((view = [self.view viewWithTag:3001]))
         [self closeAccountSettings:nil];
     
-    if (!view)
-        [self performSegueWithIdentifier:@"backToMap" sender:sender];
+    if (!view) [self dismissModalViewControllerAnimated:YES];
+    
 }
 
 - (IBAction)setLocationSharing:(id)sender
