@@ -496,7 +496,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
-    CGRect scrollFrame = CGRectMake(05, 80, 310, 380);
+    CGRect scrollFrame = CGRectMake(05, 100, 310, 360);
     LocationSharing *scrollView = [[LocationSharing alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                  green:247.0/255.0 

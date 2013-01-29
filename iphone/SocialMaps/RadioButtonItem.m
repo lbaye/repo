@@ -46,6 +46,15 @@
     
     CGSize titleStringSize = [titleString sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:14.0]];
     
+    UIImageView *bgImageView = [[UIImageView alloc]
+                                initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height) ];
+    [bgImageView setContentMode:UIViewContentModeScaleToFill];
+    
+    bgImageView.image = [UIImage imageNamed:@"img_settings_list_bg.png"];
+    bgImageView.tag   = btnTag + 100000;
+    [self addSubview:bgImageView];
+    [bgImageView release];
+    
     if (subtitleString == nil || [subtitleString isEqualToString:@""]) {
         subTitle = nil;
         CGRect titleFrame = CGRectMake(10, (self.frame.size.height-titleStringSize.height)/2, titleStringSize.width, titleStringSize.height);
