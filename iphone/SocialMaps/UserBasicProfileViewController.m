@@ -238,6 +238,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)viewOnMapButton:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [self.view addSubview:mapContainer];
 }
 
@@ -261,6 +265,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)closeMap:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [mapContainer removeFromSuperview];
 }
 
@@ -459,7 +468,12 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
         MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
         [self.mapView setRegion:adjustedRegion animated:YES]; 
-        
+        mapContainer.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        mapContainer.userInteractionEnabled=YES;
+        mapContainer.layer.borderWidth=1.0;
+        mapContainer.layer.masksToBounds = YES;
+        [mapContainer.layer setCornerRadius:5.0];
+
         NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
         DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
         

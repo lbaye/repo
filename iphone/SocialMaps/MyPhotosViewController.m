@@ -215,7 +215,7 @@ AppDelegate *smAppdelegate;
                 Photo *photo=[[Photo alloc] init];
                 photo=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-                
+                if ([photo isKindOfClass:[Photo class]]) {
                 if ((photo.photoThum==NULL)||[photo.photoThum isEqual:[NSNull null]])
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
@@ -287,7 +287,8 @@ AppDelegate *smAppdelegate;
                 [imgView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [photoScrollView addSubview:aView];
-            }        
+                }
+            }
         }
         
         //handling custom scroller
@@ -297,6 +298,7 @@ AppDelegate *smAppdelegate;
             { 
                 Photo *photo=[[Photo alloc] init];
                 photo=[filteredList2 objectAtIndex:i];
+                if ([photo isKindOfClass:[Photo class]]) {
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
                 if (photo.imageUrl == nil) 
                 {
@@ -356,7 +358,8 @@ AppDelegate *smAppdelegate;
                 }
                 [aView addSubview:imgView];
                 [customScrollView addSubview:aView];
-            }        
+                }
+            }
             x2+=320;
         }
     }

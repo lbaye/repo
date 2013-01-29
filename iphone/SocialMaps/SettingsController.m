@@ -81,8 +81,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     userDefault=[[UserDefault alloc] init];
     facebookApi = [[FacebookHelper sharedInstance] facebook];
     fbHelper=[[FacebookHelper alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    
     
 }
 
@@ -93,10 +92,15 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     
     smAppDelegate.currentModelViewController = self;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettingsDone:) name:SET_SHARE_LOCATION_DONE object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:SET_SHARE_LOCATION_DONE object:nil];
 }
@@ -171,8 +175,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [self setSettingsScrollView:nil];
     [self setPlatformView:nil];
     [self setLayersView:nil];
@@ -320,8 +322,32 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     }
     else
     {
-        [fbHelper inviteFriends:NULL];
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        if ([facebookApi isSessionValid])
+        {
+        [fbHelper inviteFriends:nil];
         NSLog(@"invite friends in else");
+        }
+        else
+        {
+            NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                    @"email",
+                                    @"user_likes",
+                                    @"user_photos",
+                                    @"publish_checkins",
+                                    @"photo_upload",
+                                    @"user_location",
+                                    @"user_birthday",
+                                    @"user_about_me",
+                                    @"publish_stream",
+                                    @"read_stream",
+                                    @"friends_status",
+                                    @"user_checkins",
+                                    @"friends_checkins",
+                                    nil];
+            [facebookApi authorize:permissions];
+            [permissions release];
+        }
     }
 }
 

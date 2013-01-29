@@ -242,6 +242,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)viewOnMapButton:(id)sender
 {
+    
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     [self.view addSubview:mapContainer];
 }
 
@@ -409,6 +413,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)closeMap:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [mapContainer removeFromSuperview];
 }
 
@@ -632,6 +641,12 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
+    mapContainer.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    mapContainer.userInteractionEnabled=YES;
+    mapContainer.layer.borderWidth=1.0;
+    mapContainer.layer.masksToBounds = YES;
+    [mapContainer.layer setCornerRadius:5.0];
+
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
     theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
