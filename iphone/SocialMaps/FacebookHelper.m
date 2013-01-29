@@ -92,7 +92,27 @@ UserDefault *userDefault;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSLog(@"Access Token is %@", facebook.accessToken );
     NSLog(@"Expiration Date is %@", facebook.expirationDate );
-    
+    if (![facebook.accessToken isKindOfClass:[NSString class]])
+    {
+        NSLog(@"got facebook access token null so asking for permission again");
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"email",
+                                @"user_likes",
+                                @"user_photos",
+                                @"publish_checkins",
+                                @"photo_upload",
+                                @"user_location",
+                                @"user_birthday",
+                                @"user_about_me",
+                                @"publish_stream",
+                                @"read_stream",
+                                @"friends_status",
+                                @"user_checkins",
+                                @"friends_checkins",
+                                nil];
+        [facebook authorize:permissions];
+        [permissions release];
+    }
     if ([facebook accessToken]) 
     {
         [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];        
