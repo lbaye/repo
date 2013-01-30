@@ -86,8 +86,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [textViewReplyMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewReplyMsg.layer setMasksToBounds:YES];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotInboxMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendReplyDone:) name:NOTIF_SEND_REPLY_DONE object:nil];
@@ -131,7 +129,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
     if (self.selectedMessage) {
         [self setMsgReplyTableView:self.selectedMessage];
     } 
@@ -155,6 +153,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     if (replyTimer) {
         [replyTimer invalidate];
         replyTimer = nil;
@@ -1442,7 +1441,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         replyTimer = nil;
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_NEW_THREAD_DONE object:nil];

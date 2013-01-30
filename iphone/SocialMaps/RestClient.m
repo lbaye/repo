@@ -32,6 +32,7 @@
 #import "AppDelegate.h"
 #import "Place.h"
 #import "EachFriendInList.h"
+#import "MessageListViewController.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -4413,9 +4414,16 @@ AppDelegate *smAppDelegate;
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
             NSLog(@"got inbox %d",[messageInbox count]);
+            
             smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            smAppDelegate.messages = [messageInbox mutableCopy];
-            [smAppDelegate.currentModelViewController viewDidAppear:NO];
+            if ([messageInbox count]>0)
+            {
+                smAppDelegate.messages = [messageInbox mutableCopy];
+                if (![smAppDelegate.currentModelViewController isKindOfClass:[MessageListViewController class]])
+                {
+                    [smAppDelegate.currentModelViewController viewDidAppear:NO];
+                }
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_INBOX_DONE object:messageInbox];
         } 
         else 
