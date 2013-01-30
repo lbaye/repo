@@ -959,12 +959,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         
         msgParentID = msg.notifID;
         self.timeSinceLastUpdate = @"420";
-        [smAppDelegate showActivityViewer:self.view];
         [self startReqForReplyMessages];
         if (!replyTimer) {
             replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
         }
     }
+    [smAppDelegate showActivityViewer:self.view];
 }
 
 - (void)startReqForReplyMessages
