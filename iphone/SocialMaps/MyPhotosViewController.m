@@ -61,7 +61,7 @@ AppDelegate *smAppdelegate;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
     [zoomView removeFromSuperview];
     isBackgroundTaskRunning=true;
     getAllPhotoCounter=0;
@@ -76,6 +76,14 @@ AppDelegate *smAppdelegate;
     }
     
     smAppdelegate.currentModelViewController = self;
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
