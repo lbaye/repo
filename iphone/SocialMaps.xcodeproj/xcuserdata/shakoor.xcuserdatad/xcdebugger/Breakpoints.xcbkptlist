@@ -42,44 +42,5 @@
          landmarkName = "-shareWithFriends:"
          landmarkType = "5">
       </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "381265633.00349"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "900"
-         endingLineNumber = "900"
-         landmarkName = "-radioButtonClicked:sender:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/RestClient.m"
-         timestampString = "381265953.251189"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "4876"
-         endingLineNumber = "4876"
-         landmarkName = "-setSharingPrivacySettings:authTokenVal:privacyType:sharingOption:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "381266134.851454"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "917"
-         endingLineNumber = "917"
-         landmarkName = "-alertView:clickedButtonAtIndex:"
-         landmarkType = "5">
-      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
