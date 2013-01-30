@@ -1022,6 +1022,9 @@ ButtonClickCallbackData callBackData;
 {
     [super viewWillDisappear:animated];
     
+    LocationItem *selLocation = (LocationItem*) selectedAnno;
+    selLocation.currDisplayState = MapAnnotationStateNormal;
+    
     if (smAppDelegate.timerGotListing && shouldTimerStop) {
         [smAppDelegate.timerGotListing invalidate];
         smAppDelegate.timerGotListing = nil;
