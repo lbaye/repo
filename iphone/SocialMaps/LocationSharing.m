@@ -542,10 +542,13 @@
 // RadioButtonDelegate method
 - (void) buttonSelected:(int)indx sender:(id)sender {
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
-    if (indx == 1)
+    if (indx == 1) {
         self.locSharingStatus = [NSString stringWithFormat:@"On"];
-    else
+        smAppDelegate.shareLocationOption = 1;
+    } else {
         self.locSharingStatus = [NSString stringWithFormat:@"Off"];
+        smAppDelegate.shareLocationOption = 2;
+    }
     [self setNeedsDisplay];
 }
 
