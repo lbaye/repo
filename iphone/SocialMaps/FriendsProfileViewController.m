@@ -196,6 +196,12 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [self reloadScrolview];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self displayNotificationCount];
+}
+
 -(void)reloadProfileScrollView
 {
     [[profileScrollView viewWithTag:123123123] removeFromSuperview];

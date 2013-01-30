@@ -2717,8 +2717,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2743,8 +2743,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Abdullah Md. Zubair (4FW5AH48E2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
