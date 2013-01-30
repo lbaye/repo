@@ -852,7 +852,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [recipientIds addObject:_id];
             
             // Add first name to title string buffer
-            [recipientNames addObject:[recipient valueForKey:@"firstName"]];
+            
+            NSString *name = [recipient valueForKey:@"username"];
+            
+            if (![name isKindOfClass:[NSString class]]) {
+                name = [recipient valueForKey:@"firstName"];
+            }
+            
+            [recipientNames addObject:name];
             
             NSString *recipientAvater = [recipient valueForKey:@"avatar"];
             
