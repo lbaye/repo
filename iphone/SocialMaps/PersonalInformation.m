@@ -407,7 +407,7 @@
 
 - (void) submitButtonClicked:(id)sender {
     NSLog(@"PersonalInformation:submitButtonClicked called");
-    
+    [smAppDelegate showActivityViewer:smAppDelegate.window];
     // Assign new settings
     smAppDelegate.userAccountPrefs.email = email.text;
     smAppDelegate.userAccountPrefs.gender = gender.text;

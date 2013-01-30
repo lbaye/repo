@@ -153,7 +153,7 @@
         [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         profileBtn.tag = 11008;
         [infoView addSubview:[annoView viewWithTag:1234321]]; 
-//        [infoView addSubview:profileBtn];    
+        [infoView addSubview:profileBtn];
     }
   
     return annoView;

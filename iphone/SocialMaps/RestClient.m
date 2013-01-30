@@ -3586,7 +3586,7 @@ AppDelegate *smAppDelegate;
         if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204 || responseStatus == 400) 
         {
             UserInfo *aUserInfo = [self parseAccountSettings:jsonObjects user:nil];
-            
+            [smAppDelegate hideActivityViewer];
             NSLog(@"setSettingsPrefs: response = %@", jsonObjects);
             [UtilityClass showAlert:@"Social Maps" :@"Your Personal Information Saved"];
         }
