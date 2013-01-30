@@ -64,7 +64,7 @@ AppDelegate *smAppdelegate;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
     [zoomView removeFromSuperview];
     isBackgroundTaskRunning=true;
     
@@ -95,6 +95,14 @@ AppDelegate *smAppdelegate;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_FRIENDS_ALL_PHOTO object:nil];
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 - (IBAction)backButtonAction:(id)sender

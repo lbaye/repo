@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Mv0-7P-2pJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Mv0-7P-2pJ">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
         <development version="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
     <scenes>
         <!--Friends Photos View Controller-->
@@ -40,7 +40,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="backButtonAction:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="sTG-oz-an3"/>
                                             <action selector="backButtonAction:" destination="SHD-ec-WVP" eventType="touchUpInside" id="v6j-Q1-wfI"/>
                                         </connections>
                                     </button>
@@ -57,7 +56,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="actionNotificationButton:" destination="Mv0-7P-2pJ" eventType="touchUpInside" id="nFo-48-SOH"/>
                                             <action selector="actionNotificationButton:" destination="SHD-ec-WVP" eventType="touchUpInside" id="zMq-P9-mr6"/>
                                         </connections>
                                     </button>
@@ -851,7 +849,7 @@
         <image name="line_arrow_down_left.png" width="600" height="14"/>
         <image name="location_bar_radio_cheked.png" width="42" height="42"/>
         <image name="logo_3.png" width="221" height="41"/>
-        <image name="sp2.png" width="1" height="60"/>
+        <image name="sp2.png" width="1" height="59"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

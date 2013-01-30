@@ -78,7 +78,7 @@ int uploadPhotoCounter=0;
     [mainScrollView setContentSize:CGSizeMake(320, upperView.frame.size.height+lowerView.frame.size.height)];
     [mainScrollView addSubview:upperView];
     [mainScrollView addSubview:lowerView];
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
     rc=[[RestClient alloc] init];
     photo=[[Photo alloc] init];
     selectedFriends=[[NSMutableArray alloc] init];
@@ -137,6 +137,14 @@ int uploadPhotoCounter=0;
     [circleTableView setHidden:YES];
     [frndsScrollView setHidden:NO];
     [friendSearchbar setHidden:NO];
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(IBAction)myPhotos:(id)sender
