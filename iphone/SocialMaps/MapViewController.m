@@ -897,7 +897,10 @@ ButtonClickCallbackData callBackData;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d", indx);
     
-    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"on"] == NSOrderedSame) {
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame) {
+        [UtilityClass showAlert:@"" :@"Location sharing is switched off in settings, enable it to share your location."];
+        [self setRadioButton];
+    } else {
         if (indx == 0) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Do you want to share your location with everyone?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
             [alertView show];
@@ -906,12 +909,7 @@ ButtonClickCallbackData callBackData;
             RestClient *restClient = [[[RestClient alloc] init] autorelease];
             [restClient setSharingPrivacySettings:@"Auth-Token" authTokenVal:smAppDelegate.authToken privacyType:@"shareLocation" sharingOption:[NSString stringWithFormat:@"%d", indx + 1]];
         }
-    } else {
-        [UtilityClass showAlert:@"" :@"Location sharing is switched off in settings, enable it to share your location."];
-        [self setRadioButton];
     }
-    
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

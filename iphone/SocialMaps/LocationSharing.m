@@ -46,7 +46,7 @@
 }
 
 - (NSString*)getSharingStatus {
-    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame)
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame || smAppDelegate.shareLocationOption == 2)
         return @"No one";
     else if (smAppDelegate.shareLocationOption == 1)
         return @"Friends only";
@@ -60,9 +60,9 @@
     [[self subviews]
      makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    int sharingEnabled = 0;
-    if ([self.locSharingStatus caseInsensitiveCompare:@"on"] == NSOrderedSame)
-        sharingEnabled = 1;
+    int sharingEnabled = 1;
+    if ([self.locSharingStatus caseInsensitiveCompare:@"off"] == NSOrderedSame)
+        sharingEnabled = 0;
 
     self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                            green:247.0/255.0 
