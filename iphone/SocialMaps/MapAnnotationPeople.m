@@ -153,7 +153,7 @@
         [profileBtn addTarget:self action:@selector(handleUserAction:) forControlEvents:UIControlEventTouchUpInside];
         profileBtn.tag = 11008;
         [infoView addSubview:[annoView viewWithTag:1234321]]; 
-        [infoView addSubview:profileBtn];    
+//        [infoView addSubview:profileBtn];    
     }
   
     return annoView;
@@ -186,9 +186,9 @@
     geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
     geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
     NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-12, annoView.frame.size.height-4);
+    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-15, annoView.frame.size.height-40);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
-    UIView *sudoView=[[UIView alloc] initWithFrame:detailView.frame];
+    UIView *sudoView=[[UIView alloc] initWithFrame:detFrame];
     [sudoView setBackgroundColor:[UIColor clearColor]];
     [sudoView setTag:12321123];
     detailView.backgroundColor = [UIColor clearColor];
@@ -209,19 +209,18 @@
     }
     else
     {
-        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><b>%@</b><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ AWAY <br> %@ <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in: <b>%@</b><br> Work at: <b>%@</b><br></span></body></html>", 
+        detailInfoHtml = [[[NSString alloc] initWithFormat:@"<html><head><title>Benefit equivalence</title></head><body style=\"font-family:Helvetica; font-size:12px; background-color:transparent; line-height:2.0\"> <b> %@ %@</b><! - Age: !><span style=\"line-height:1.0\"> %@ </span ><br> <span style=\"line-height:1.0\"> %@ </span> <b> <br> <span style=\"color:#71ab01; font-size:12px; line-height:1.5\"> %@ AWAY <br> </span> </b> <span style=\"line-height:1.2\">Gender: <b>%@</b> <br> Relationship status: <b> %@ </b> <br> Living in: <b>%@</b><br> Work at: <b>%@</b><br></span></body></html>", 
                            locItemPeople.userInfo.firstName==nil?@"":locItemPeople.userInfo.firstName, 
                            locItemPeople.userInfo.lastName==nil?@"":locItemPeople.userInfo.lastName, 
                            age, 
-                           locItemPeople.userInfo.statusMsg==nil?@"":locItemPeople.userInfo.statusMsg, 
-                           locItemPeople.userInfo.distance==nil?@"":distStr, 
-                           @"", // Address of current location - use CLGeocoder
-                           locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender, 
+                           locItemPeople.userInfo.statusMsg==nil?@"&nbsp;":locItemPeople.userInfo.statusMsg, 
+                           locItemPeople.userInfo.distance==nil?@"":distStr,
+                           locItemPeople.userInfo.gender==nil?@"":locItemPeople.userInfo.gender,
                            locItemPeople.userInfo.relationsipStatus==nil?@"":locItemPeople.userInfo.relationsipStatus, 
                            locItemPeople.userInfo.city==nil?@"":locItemPeople.userInfo.city, 
                            locItemPeople.userInfo.workStatus==nil?@"":locItemPeople.userInfo.workStatus] autorelease];
     }
-      
+    
     [detailView loadHTMLString:detailInfoHtml baseURL:nil];
     detailView.delegate = self;
     [infoView addSubview:detailView];
@@ -322,9 +321,9 @@
     } else if ([friendShipStatus isEqualToString:@"friend"]) { 
         addFriendBtn.hidden = YES;
     }
-    
     [sudoView setFrame:CGRectMake(detFrame.origin.x, detFrame.origin.y, detFrame.size.width, infoView.frame.size.height-10-27)];
-    [annoView insertSubview:sudoView aboveSubview:detailView];
+    [sudoView setBackgroundColor:[UIColor clearColor]];
+    [annoView insertSubview:sudoView belowSubview:[annoView viewWithTag:11001]];
     return annoView;
 }
 

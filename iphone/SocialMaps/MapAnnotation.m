@@ -199,6 +199,11 @@
         {
             infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
         }
+        else
+        {
+            infoFrame = CGRectMake(0, 0, 250-12, ANNO_IMG_HEIGHT+100);
+            annoView.frame = CGRectMake(0, 0, 250, ANNO_IMG_HEIGHT+100);;
+        }
     }
     infoView = [[UIView alloc] initWithFrame:infoFrame];
     infoView.backgroundColor = [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0]; 
@@ -215,14 +220,13 @@
     button.frame=[annoView frame];
     [annoView addSubview:infoView];
     [annoView sendSubviewToBack:infoView];
-    
     UIButton *btn = (UIButton*) [annoView viewWithTag:11001];
     btn.frame = CGRectMake(annoFrame.size.width-26, 23, 26, 26);
     [btn setImage:[UIImage imageNamed: @"map_info_collapse.png"] forState:UIControlStateNormal];
     [annoView bringSubviewToFront:btn];
-    [annoView insertSubview:button belowSubview:[annoView viewWithTag:11002]];
+    [btn bringSubviewToFront:annoView];
     NSLog(@"annoview: %@ %@",annoView,[annoView subviews]);
-    annoView.tag=12211221;    
+    annoView.tag=12211221;
     return annoView;
 }
 

@@ -155,6 +155,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidDisappear:(BOOL)animated
 {
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
     NSArray *allDownloads = [imageDownloadsInProgress allValues];
     [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
     [super viewDidDisappear:animated];

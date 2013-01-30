@@ -500,8 +500,13 @@ NSMutableArray *unreadMesg;
     [notificationItems reloadData];
 }
 
-- (IBAction)actionBackMe:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+- (IBAction)actionBackMe:(id)sender
+{
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentModalViewController:controller animated:YES];
+
 }
 
 - (void)gotFriendRequests:(NSNotification *)notif {
