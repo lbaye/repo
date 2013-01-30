@@ -186,14 +186,14 @@
     geoLocation.latitude=locItemPeople.userInfo.currentLocationLat;
     geoLocation.longitude=locItemPeople.userInfo.currentLocationLng;
     NSString *distStr=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-15, annoView.frame.size.height-40);
+    CGRect detFrame = CGRectMake(ANNO_IMG_WIDTH+5, 2, annoView.frame.size.width-4-ANNO_IMG_WIDTH-15, annoView.frame.size.height-42);
     UIWebView *detailView = [[[UIWebView alloc] initWithFrame:detFrame] autorelease];
     UIView *sudoView=[[UIView alloc] initWithFrame:detFrame];
     [sudoView setBackgroundColor:[UIColor clearColor]];
     [sudoView setTag:12321123];
     detailView.backgroundColor = [UIColor clearColor];
     detailView.opaque = NO;
-    
+    detailView.userInteractionEnabled=YES;
     NSString *age = [self getAgeString:locItemPeople];
     NSString *detailInfoHtml;
     if ([locItemPeople.userInfo.source isEqualToString:@"facebook"])
