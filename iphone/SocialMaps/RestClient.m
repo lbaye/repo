@@ -4412,8 +4412,10 @@ AppDelegate *smAppDelegate;
                 [messageInbox addObject:msg];
             }
             NSLog(@"Is Kind of NSString: %@",jsonObjects);
-            
-            
+            NSLog(@"got inbox %d",[messageInbox count]);
+            smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            smAppDelegate.messages = [messageInbox mutableCopy];
+            [smAppDelegate.currentModelViewController viewDidAppear:NO];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_INBOX_DONE object:messageInbox];
         } 
         else 

@@ -28,6 +28,7 @@
 #import "FriendsProfileViewController.h"
 #import "MapViewController.h"
 #import "LoadingView.h"
+#import "RestClient.h"
 
 @implementation AppDelegate
 
@@ -431,6 +432,11 @@ static AppDelegate *sharedInstance=nil;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     self.isAppInBackgound = NO;
+    RestClient *rc = [[RestClient alloc] init];
+    if ([authToken isKindOfClass:[NSString class]]) {
+        [rc getInbox:@"Auth-Token" authTokenVal:authToken];
+    }
+
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
