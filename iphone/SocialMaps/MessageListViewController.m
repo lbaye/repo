@@ -456,14 +456,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [self showHideIndicatorOnTextview:textViewReplyMsg];
     
     if (notif.object) {
-        NSLog(@"message sent = %@", notif.object);
-        MessageReply *messageReply = [[MessageReply alloc] init];
-        messageReply.content = textViewReplyMsg.text;
-        messageReply.senderID = smAppDelegate.userId;
-        messageReply.msgId = @"temp";
-        [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(addTempReplyInTableView:) userInfo:messageReply repeats:YES];
-        [messageReply release];
+        [self startReqForReplyMessages];
+        [self clearTextView:textViewReplyMsg];
+    } else {
+        [UtilityClass showAlert:@"" :@"Error sending reply, try again."];
     }
+    
 }
 
 - (void)addTempReplyInTableView:(NSTimer*)timer
@@ -516,20 +514,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             }
         }
     }
-    
-    NSMutableArray *tempDeleteList = [[NSMutableArray alloc] init];
-    
-    for (MessageReply *msgReply in messageReplyList) {
-        if ([msgReply.msgId isEqualToString:@"temp"]) {
-            [tempDeleteList addObject:msgReply];
-        }
-    }
-    
-    for (MessageReply *msgReply in tempDeleteList) {
-        [messageReplyList removeObject:msgReply];
-    }
-    [tempDeleteList release];
-    
     
     [messageReplyList addObjectsFromArray:msgReplies];
     [messageReplyTableView reloadData];
@@ -967,7 +951,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         self.timeSinceLastUpdate = @"420";
         [self startReqForReplyMessages];
         if (!replyTimer) {
-            replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+            replyTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
         }
     }
     [smAppDelegate showActivityViewer:self.view];

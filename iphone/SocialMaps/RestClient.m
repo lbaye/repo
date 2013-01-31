@@ -33,6 +33,7 @@
 #import "Place.h"
 #import "EachFriendInList.h"
 #import "MessageListViewController.h"
+#import "MapViewController.h"
 
 @implementation RestClient
 AppDelegate *smAppDelegate;
@@ -4419,7 +4420,7 @@ AppDelegate *smAppDelegate;
             if ([messageInbox count]>0)
             {
                 smAppDelegate.messages = [messageInbox mutableCopy];
-                if (![smAppDelegate.currentModelViewController isKindOfClass:[MessageListViewController class]])
+                if (![smAppDelegate.currentModelViewController isKindOfClass:[MessageListViewController class]] && ![smAppDelegate.currentModelViewController isKindOfClass:[MapViewController class]])
                 {
                     [smAppDelegate.currentModelViewController viewDidAppear:NO];
                 }
@@ -4450,6 +4451,13 @@ AppDelegate *smAppDelegate;
     NSLog(@"authTokenValue = %@", authTokenValue);
     NSLog(@"authToken = %@", authToken);
     NSLog(@"ti = %@", ti);
+    
+    static BOOL isReplyInProgress = FALSE;
+    
+    if (isReplyInProgress)
+        return;
+    
+    isReplyInProgress = TRUE;
     
     NSString *route = [NSString stringWithFormat:@"%@/messages/%@/replies?since=%@", WS_URL, messageId, ti];
     
@@ -4516,10 +4524,12 @@ AppDelegate *smAppDelegate;
             NSLog(@"messageReplies = %@", messageReplies);
 
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:messageReplies];
+            isReplyInProgress = FALSE;
         } 
         else 
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
+            isReplyInProgress = FALSE;
         }
         [jsonParser release], jsonParser = nil;
         [jsonObjects release];
@@ -4528,6 +4538,7 @@ AppDelegate *smAppDelegate;
     // Handle unsuccessful REST call
     [request setFailedBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_GET_REPLIES_DONE object:nil];
+        isReplyInProgress = FALSE;
     }];
     
      NSLog(@"asyn srt getReplies");
