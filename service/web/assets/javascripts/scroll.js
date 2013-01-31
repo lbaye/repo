@@ -8,19 +8,19 @@ $(document).ready(function () {
 
     if (parseInt($('.content ul li').length) < 6) {
         moreDiv.hide();
-        ('.joinDate').show();
+        $('.joinDate').show();
     }
 
     moreDiv.click(function () {
         var success = function (res) {
             try {
                 var old_num = $('.content ul li').length;
-                $(res).insertBefore($('.content ul .more').parent());
+                $(res).insertBefore($('.content ul li.joinDate'));
                 var new_num = $('.content ul li').length;
 
                 if ((new_num - old_num) < 5) {
                     moreDiv.hide();
-                    ('.joinDate').show();
+                    $('.joinDate').show();
                 } else {
                     $('.more span').show();
                     $('.more img').hide();

@@ -223,3 +223,6 @@ ul li .tiny .name {
   font-size: 120%;
   font-weight: bold;
 }
+.joinDate {
+  display: none;
+}
