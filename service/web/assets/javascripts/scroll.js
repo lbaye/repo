@@ -6,8 +6,9 @@ $(document).ready(function () {
     var authToken = container.attr("authToken");
     var moreDiv = $('.more');
 
-    if (parseInt($('.content ul li').length) < 7) {
+    if (parseInt($('.content ul li').length) < 6) {
         moreDiv.hide();
+        ('.joinDate').show();
     }
 
     moreDiv.click(function () {
@@ -19,6 +20,7 @@ $(document).ready(function () {
 
                 if ((new_num - old_num) < 5) {
                     moreDiv.hide();
+                    ('.joinDate').show();
                 } else {
                     $('.more span').show();
                     $('.more img').hide();

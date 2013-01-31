@@ -47,7 +47,7 @@ class Auth extends Base
         }
 
         try {
-            $required_fields = array('email', 'firstName', 'lastName', 'password', 'avatar');
+            $required_fields = array('email', 'password', 'avatar');
             foreach ($required_fields as $key) {
                 if (empty($data[$key])) {
                     $content = json_encode(array('message' => "`$key` is required field."));

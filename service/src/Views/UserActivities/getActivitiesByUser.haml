@@ -13,30 +13,6 @@
       .content(count="0" target=$target authToken=$authToken baseUrl=$baseUrl)
         %ul
           - $userProfileLink =  "self::profile:" . $contextUser->getId()
-          %li
-            .activity.tiny
-              .row
-                .avatar
-                  - $avatarPath = $contextUser->getAvatar()
-                  - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
-
-                  %a(href= $userProfileLink)
-                    %img.lazy(src=$avatarPath)
-                .name
-                  %div
-                    .left
-                      %a(href= $userProfileLink)
-                        %h4
-                          = $contextUser->getName()
-                      %span
-                        joined
-                        %strong SocialMaps
-                        on
-                      - $date = (array)$contextUser->getCreateDate()
-                      = date('F Y',strtotime($date['date']))
-                      .
-
-            %div.clearfix
 
           - foreach($activities as $activity)
             - $liked = $activityRepo->hasLiked($activity, $currentUser) ? 'true' : 'false'
@@ -159,6 +135,31 @@
                           Like
 
                   .row.list_of_likes(id=$rowLikesId style='display:none')
+
+          %li.joinDate
+            .activity.tiny
+              .row
+                .avatar
+                  - $avatarPath = $contextUser->getAvatar()
+                  - $avatarPath = (preg_match('/^https?:\/\//', $avatarPath) > 0) ? $avatarPath : $baseUrl . $avatarPath
+
+                  %a(href= $userProfileLink)
+                    %img.lazy(src=$avatarPath)
+                .name
+                  %div
+                    .left
+                      %a(href= $userProfileLink)
+                        %h4
+                          = $contextUser->getName()
+                      %span
+                        joined
+                        %strong SocialMaps
+                        on
+                      - $date = (array)$contextUser->getCreateDate()
+                      = date('F Y',strtotime($date['date']))
+                      .
+
+            %div.clearfix
 
           %li
             .more
