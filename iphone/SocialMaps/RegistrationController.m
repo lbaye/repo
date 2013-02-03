@@ -225,7 +225,8 @@
     userInfo.firstName = regFirstName.text;
     userInfo.lastName = regName.text;
     userInfo.gender = regGender.text;
-
+    userInfo.userName = userNameTextField.text;
+    
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
@@ -239,7 +240,7 @@
         [loginAlert show];
         [loginAlert autorelease];
     } else if ([userInfo.email isEqualToString:@""] || userInfo.email == nil ||
-        [userInfo.password isEqualToString:@""] || userInfo.password == nil ||
+        [userInfo.password isEqualToString:@""] || ![self NSStringIsValidEmail:userInfo.email] ||
         [userInfo.userName isEqualToString:@""] || userInfo.userName == nil ||
         regPhoto == nil ||[regGender.text isEqualToString:@""])
     {
@@ -248,9 +249,9 @@
         {
             [message appendString:@"image, "];            
         }
-        if ([userInfo.email isEqualToString:@""] || userInfo.email == nil)
+        if ([self NSStringIsValidEmail:userInfo.email]==FALSE)
         {
-            [message appendString:@"email address, "];
+            [message appendString:@"valid email address, "];
         }
         if ([userInfo.password isEqualToString:@""] || userInfo.password == nil)
         {
@@ -297,6 +298,16 @@
         [appDelegate.window setUserInteractionEnabled:NO];
         [appDelegate showActivityViewer:self.view];
     }
+}
+
+-(BOOL) NSStringIsValidEmail:(NSString *)checkString
+{
+    BOOL stricterFilter = YES; 
+    NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSString *laxString = @".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
+    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:checkString];
 }
 
 - (void)regDone:(NSNotification *)notif

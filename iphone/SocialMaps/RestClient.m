@@ -185,12 +185,23 @@ AppDelegate *smAppDelegate;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
         }
-        else if ((responseStatus == 400) || (responseStatus == 406) || (responseStatus == 500))
+        else if ((responseStatus == 400) || (responseStatus == 500))
         {
             NSString *message=[jsonObjects objectForKey:@"result"];
+            if(![message isKindOfClass:[NSString class]])
+            {
+                message=@"Please provide all information required";
+            }
             NSLog(@"Failed reg %@ ",message);
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:message];
             
+        }
+        else if (responseStatus==406)
+        {
+            NSString *message=@"Please provide all information required";
+            NSLog(@"Failed reg %@ ",message);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:message];
+
         }
         else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
