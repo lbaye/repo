@@ -37,6 +37,7 @@ PhotoPickerDelegate> {
     IBOutlet UITextField *serviceTxtField;
     IBOutlet UITextField *relatioshipStatusTxtField;
     IBOutlet UIScrollView *registrationScrollView;
+    IBOutlet UITextField *userNameTextField;
 }
 
 @property (retain, nonatomic) NSMutableArray *arrayGender;
@@ -63,6 +64,7 @@ PhotoPickerDelegate> {
 @property(nonatomic,retain) IBOutlet UITextField *serviceTxtField;
 @property(nonatomic,retain) IBOutlet UITextField *relatioshipStatusTxtField;
 @property(nonatomic,retain) IBOutlet UIScrollView *registrationScrollView;
+@property(nonatomic,retain) IBOutlet UITextField *userNameTextField;
 
 /**
  * @brief Gender selection of an user

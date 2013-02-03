@@ -12,6 +12,7 @@
     NSString* id;
     NSString* firstName;
     NSString* lastName;
+    NSString* userName;
     NSString* email;
     NSString* password;
     NSString* gender;
@@ -44,6 +45,7 @@
 }
 
 @property (atomic, retain) NSString *id;
+@property (atomic,retain) NSString* userName;
 @property (atomic, retain) NSString *firstName;
 @property (atomic, retain) NSString *lastName;
 @property (atomic, retain) NSString *email;

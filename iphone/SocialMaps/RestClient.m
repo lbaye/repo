@@ -143,6 +143,7 @@ AppDelegate *smAppDelegate;
     [request setRequestMethod:@"POST"];
     [request setPostValue:userInfo.email forKey:@"email"];
     [request setPostValue:userInfo.password forKey:@"password"];
+    [request setPostValue:userInfo.userName forKey:@"username"];
     [request setPostValue:userInfo.lastName forKey:@"lastName"];
     [request setPostValue:userInfo.firstName forKey:@"firstName"];
     [request setPostValue:userInfo.avatar forKey:@"avatar"]; 
@@ -179,9 +180,19 @@ AppDelegate *smAppDelegate;
             [aUser setAuthToken:[jsonObjects objectForKey:@"authToken"]];
             [aUser setEmail:[jsonObjects objectForKey:@"email"]];
             [aUser setId:[jsonObjects objectForKey:@"id"]];
+            NSString *message=[jsonObjects objectForKey:@"result"];
+            NSLog(@"After reg %@ %@",aUser.email,message);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:aUser];
-        } else {
+        }
+        else if ((responseStatus == 400) || (responseStatus == 406) || (responseStatus == 500))
+        {
+            NSString *message=[jsonObjects objectForKey:@"result"];
+            NSLog(@"Failed reg %@ ",message);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:message];
+            
+        }
+        else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REG_DONE object:nil];
         }
         [jsonParser release], jsonParser = nil;

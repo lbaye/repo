@@ -12,6 +12,7 @@
 @synthesize id;
 @synthesize firstName;
 @synthesize lastName;
+@synthesize userName;
 @synthesize email;
 @synthesize password;
 @synthesize gender;

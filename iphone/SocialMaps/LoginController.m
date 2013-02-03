@@ -75,17 +75,21 @@ int fbRegCounter=0;
     fbRegCounter=0;
 }
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDone:) name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forgotPWDone:) name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_FB_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbFriendListDone:) name:NOTIF_FBFRIENDLIST_DONE object:nil];
-    
+
+}
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
@@ -164,12 +168,18 @@ int fbRegCounter=0;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBFRIENDLIST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FB_REG_DONE object:nil];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

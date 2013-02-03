@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <development version="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -2294,7 +2294,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="6zM-3c-rbo">
-                                <rect key="frame" x="1000" y="90" width="320" height="322"/>
+                                <rect key="frame" x="0.0" y="90" width="320" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RZo-k2-fpF" userLabel="invisibleButton">
@@ -2339,7 +2339,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="u8t-IQ-A8U" userLabel="regEmail">
-                                        <rect key="frame" x="90" y="83" width="210" height="31"/>
+                                        <rect key="frame" x="98" y="83" width="210" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
@@ -2348,7 +2348,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" id="YDV-ki-ww0" userLabel="regPassword">
-                                        <rect key="frame" x="90" y="130" width="124" height="31"/>
+                                        <rect key="frame" x="98" y="130" width="124" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
@@ -2357,13 +2357,13 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Gender..." minimumFontSize="17" background="email_acc_creat.png" id="0hA-AE-fWD" userLabel="regMF">
-                                        <rect key="frame" x="222" y="130" width="78" height="31"/>
+                                        <rect key="frame" x="230" y="130" width="78" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zZb-OZ-5AB" userLabel="regCallMFPicker">
-                                        <rect key="frame" x="282" y="130" width="18" height="31"/>
+                                        <rect key="frame" x="290" y="130" width="18" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="down_arrow.png">
@@ -2377,26 +2377,24 @@
                                             <action selector="selectGender:" destination="dhQ-Hm-f8i" eventType="touchUpInside" id="rIX-gI-gWI"/>
                                         </connections>
                                     </button>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="fE4-Hy-TC7" userLabel="regName">
-                                        <rect key="frame" x="93" y="229" width="207" height="31"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Email" lineBreakMode="tailTruncation" minimumFontSize="10" id="MNz-yP-iAZ">
+                                        <rect key="frame" x="8" y="88" width="42" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="jxb-ua-zOe" userLabel="regEmail">
+                                        <rect key="frame" x="98" y="180" width="210" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
-                                            <outlet property="delegate" destination="dhQ-Hm-f8i" id="ZSg-Je-ASF"/>
+                                            <outlet property="delegate" destination="dhQ-Hm-f8i" id="1ap-H4-945"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" minimumFontSize="17" id="Cen-ro-9ad" userLabel="regFirstName">
-                                        <rect key="frame" x="93" y="180" width="207" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                        <connections>
-                                            <outlet property="delegate" destination="dhQ-Hm-f8i" id="dqN-ne-Csk"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Email" lineBreakMode="tailTruncation" minimumFontSize="10" id="MNz-yP-iAZ">
-                                        <rect key="frame" x="8" y="88" width="42" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="User name" lineBreakMode="tailTruncation" minimumFontSize="10" id="8Xq-c8-o7v">
+                                        <rect key="frame" x="8" y="185" width="83" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2409,22 +2407,8 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="First Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="Hd3-LV-NOp">
-                                        <rect key="frame" x="8" y="185" width="75" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="Yfo-6O-bXq">
-                                        <rect key="frame" x="8" y="233" width="77" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FpB-0Z-xAY" userLabel="MoreInfo">
-                                        <rect key="frame" x="0.0" y="285" width="321" height="37"/>
+                                        <rect key="frame" x="0.0" y="219" width="321" height="37"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" backgroundImage="bar_more_info.png">
@@ -2439,67 +2423,67 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" id="YlI-nE-Iiy">
-                                <rect key="frame" x="1000" y="1" width="320" height="405"/>
+                                <rect key="frame" x="1000" y="0.0" width="320" height="500"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Date of Birth:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="h7Z-dZ-LDz">
-                                        <rect key="frame" x="10" y="14" width="102" height="21"/>
+                                        <rect key="frame" x="10" y="111" width="102" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Biography:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="QeR-ps-PIi">
-                                        <rect key="frame" x="10" y="59" width="102" height="21"/>
+                                        <rect key="frame" x="10" y="156" width="102" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Street Address:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="4ay-6t-oDz">
-                                        <rect key="frame" x="10" y="146" width="121" height="21"/>
+                                        <rect key="frame" x="10" y="243" width="121" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="City:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="NUK-zv-aa0">
-                                        <rect key="frame" x="10" y="190" width="35" height="21"/>
+                                        <rect key="frame" x="10" y="287" width="35" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="ZIP Code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="5km-n3-Bl4">
-                                        <rect key="frame" x="10" y="233" width="78" height="21"/>
+                                        <rect key="frame" x="10" y="330" width="78" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Country:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="RvA-P1-xKg">
-                                        <rect key="frame" x="10" y="277" width="78" height="21"/>
+                                        <rect key="frame" x="10" y="374" width="78" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Service:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ctS-0N-fRj">
-                                        <rect key="frame" x="10" y="321" width="78" height="21"/>
+                                        <rect key="frame" x="10" y="418" width="78" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Relationship Status:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="Cz4-ih-8iC">
-                                        <rect key="frame" x="10" y="364" width="156" height="21"/>
+                                        <rect key="frame" x="10" y="461" width="156" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date of birth..." minimumFontSize="17" clearButtonMode="whileEditing" id="9vG-LG-8hz">
-                                        <rect key="frame" x="174" y="9" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="106" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2508,7 +2492,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Biography..." minimumFontSize="17" clearButtonMode="whileEditing" id="h6r-kY-QpU">
-                                        <rect key="frame" x="174" y="54" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="151" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2517,14 +2501,14 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Interests:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="OmN-Tf-a4F">
-                                        <rect key="frame" x="10" y="102" width="102" height="21"/>
+                                        <rect key="frame" x="10" y="199" width="102" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Interests..." minimumFontSize="17" clearButtonMode="whileEditing" id="hfG-E5-l5E">
-                                        <rect key="frame" x="174" y="97" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="194" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2533,7 +2517,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Street Address..." minimumFontSize="17" clearButtonMode="whileEditing" id="UGd-JI-rya">
-                                        <rect key="frame" x="174" y="141" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="238" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2542,7 +2526,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City..." minimumFontSize="17" clearButtonMode="whileEditing" id="5gN-ZO-lVb">
-                                        <rect key="frame" x="174" y="185" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="282" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2551,7 +2535,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ZIP Code..." minimumFontSize="17" clearButtonMode="whileEditing" id="iFK-mY-iVC">
-                                        <rect key="frame" x="174" y="228" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="325" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2560,7 +2544,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Country..." minimumFontSize="17" clearButtonMode="whileEditing" id="u62-N5-JzY">
-                                        <rect key="frame" x="174" y="272" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="369" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2569,7 +2553,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service..." minimumFontSize="17" clearButtonMode="whileEditing" id="oQe-Nn-iAu">
-                                        <rect key="frame" x="174" y="316" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="413" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2578,7 +2562,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Relationship status..." minimumFontSize="17" clearButtonMode="whileEditing" id="Jhv-bA-6Vw">
-                                        <rect key="frame" x="174" y="359" width="139" height="31"/>
+                                        <rect key="frame" x="174" y="456" width="139" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -2587,7 +2571,7 @@
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z75-pe-iiA" userLabel="regCallMFPicker">
-                                        <rect key="frame" x="291" y="9" width="18" height="31"/>
+                                        <rect key="frame" x="291" y="106" width="18" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="down_arrow.png">
@@ -2602,7 +2586,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BUM-G9-VNE" userLabel="regCallMFPicker">
-                                        <rect key="frame" x="291" y="272" width="18" height="31"/>
+                                        <rect key="frame" x="291" y="369" width="18" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="down_arrow.png">
@@ -2617,7 +2601,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lKj-gC-o5E" userLabel="regCallMFPicker">
-                                        <rect key="frame" x="291" y="359" width="18" height="31"/>
+                                        <rect key="frame" x="291" y="456" width="18" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="down_arrow.png">
@@ -2631,6 +2615,38 @@
                                             <action selector="selectRelStatus:" destination="dhQ-Hm-f8i" eventType="touchUpInside" id="Yei-hv-g3v"/>
                                         </connections>
                                     </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name..." minimumFontSize="17" id="TRb-Kc-waU" userLabel="regName">
+                                        <rect key="frame" x="174" y="59" width="139" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="dhQ-Hm-f8i" id="nTB-Ue-Vk0"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name..." minimumFontSize="17" id="jh1-JQ-XHk" userLabel="regFirstName">
+                                        <rect key="frame" x="174" y="10" width="139" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica-LightOblique" family="Helvetica" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="dhQ-Hm-f8i" id="WEp-dn-OKs"/>
+                                        </connections>
+                                    </textField>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="First Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="Q4E-hL-Ujp">
+                                        <rect key="frame" x="10" y="15" width="78" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="C0a-Bd-2eK">
+                                        <rect key="frame" x="10" y="63" width="78" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
@@ -2649,14 +2665,15 @@
                         <outlet property="moreInfoView" destination="YlI-nE-Iiy" id="NnV-22-48N"/>
                         <outlet property="picSelButton" destination="fdX-zz-gNU" id="I73-5K-Vrd"/>
                         <outlet property="regEmail" destination="u8t-IQ-A8U" id="wPN-Rr-7vk"/>
-                        <outlet property="regFirstName" destination="Cen-ro-9ad" id="lRr-Mo-0Ug"/>
+                        <outlet property="regFirstName" destination="jh1-JQ-XHk" id="RrU-ST-PbO"/>
                         <outlet property="regGender" destination="0hA-AE-fWD" id="ZfX-TI-I1m"/>
-                        <outlet property="regName" destination="fE4-Hy-TC7" id="F6B-Ue-q0Z"/>
+                        <outlet property="regName" destination="TRb-Kc-waU" id="ejU-Go-SjJ"/>
                         <outlet property="regPassword" destination="YDV-ki-ww0" id="vx6-E5-HqO"/>
                         <outlet property="registrationScrollView" destination="Ye7-7q-OVx" id="pfK-Po-uzA"/>
                         <outlet property="relatioshipStatusTxtField" destination="Jhv-bA-6Vw" id="DCR-bX-keG"/>
                         <outlet property="serviceTxtField" destination="oQe-Nn-iAu" id="D1p-29-m8E"/>
                         <outlet property="streetAdressTxtField" destination="UGd-JI-rya" id="hhd-bY-Flp"/>
+                        <outlet property="userNameTextField" destination="jxb-ua-zOe" id="UHS-1z-bca"/>
                         <outlet property="zipCodeTxtField" destination="iFK-mY-iVC" id="Swv-Jc-WDU"/>
                         <segue destination="hmN-q9-RwG" kind="modal" identifier="regBackToLogin" modalTransitionStyle="crossDissolve" id="55q-NQ-wYQ"/>
                     </connections>
@@ -5679,6 +5696,7 @@
                 <relationship kind="outlet" name="selMaleFemale" candidateClass="UIPickerView"/>
                 <relationship kind="outlet" name="serviceTxtField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="streetAdressTxtField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="userNameTextField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="zipCodeTxtField" candidateClass="UITextField"/>
             </relationships>
         </class>
@@ -5797,7 +5815,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qvJ-bu-e6k"/>
         <segue reference="AQm-b1-ECC"/>
+        <segue reference="iBt-8B-WyX"/>
     </inferredMetricsTieBreakers>
 </document>
