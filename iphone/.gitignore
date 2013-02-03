@@ -3,4 +3,4 @@
 *.xcuserdatad
 Images/.DS_Store
 *.orig
-
+*.pbxproj
