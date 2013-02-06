@@ -303,6 +303,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 [self presentModalViewController:controller animated:YES];
 
             }
+            else if([userId isEqualToString:userInfo.userId])
+            {
+                NSLog(@"same profile");
+            }
             else
             {
                 FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];

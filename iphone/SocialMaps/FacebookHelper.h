@@ -15,9 +15,9 @@
 #import "FBConnect.h"
 
 @interface FacebookHelper : NSObject <FBSessionDelegate, FBRequestDelegate> {
-    Facebook    *facebook;
+    Facebook    *facebookApi;
 }
-@property (nonatomic, retain) Facebook *facebook;
+@property (nonatomic, retain) Facebook *facebookApi;
 
 /**
  * @brief Return shared instance of an object

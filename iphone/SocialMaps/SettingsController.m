@@ -79,7 +79,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     
     [self displayNotificationCount];
     userDefault=[[UserDefault alloc] init];
-    facebookApi = [[FacebookHelper sharedInstance] facebook];
+    facebookApi = [[FacebookHelper sharedInstance] facebookApi];
     fbHelper=[[FacebookHelper alloc] init];
     
     
@@ -322,7 +322,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     }
     else
     {
-        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebookApi];
         if ([facebookApi isSessionValid])
         {
         [fbHelper inviteFriends:nil];

@@ -464,7 +464,7 @@ static AppDelegate *sharedInstance=nil;
 // For iOS 4.2+ support
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    return [fbHelper.facebook handleOpenURL:url];
+    return [fbHelper.facebookApi handleOpenURL:url];
 }
 
 -(void)hideActivityViewer

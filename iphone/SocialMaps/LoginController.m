@@ -131,7 +131,7 @@ int fbRegCounter=0;
     [prefs synchronize];
 
     
-    facebook = [[FacebookHelper sharedInstance] facebook];
+    facebook = [[FacebookHelper sharedInstance] facebookApi];
     
     bgImgView.userInteractionEnabled = YES;
     bgImgView.exclusiveTouch = YES;

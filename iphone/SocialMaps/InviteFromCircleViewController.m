@@ -378,7 +378,7 @@ bool searchFlag4=true;
     }
     else 
     {
-        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebookApi];
         if ([facebookApi isSessionValid])
         {
             NSMutableArray *idArr=[[NSMutableArray alloc] init];

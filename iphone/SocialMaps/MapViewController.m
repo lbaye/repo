@@ -1377,7 +1377,7 @@ ButtonClickCallbackData callBackData;
 -(IBAction)connectWithFB:(id)sender
 {
     NSLog(@"do connect fb");
-    Facebook *facebookApi = [[FacebookHelper sharedInstance] facebook];
+    Facebook *facebookApi = [[FacebookHelper sharedInstance] facebookApi];
     if ([facebookApi isSessionValid])
     {
         [fbHelper inviteFriends:nil];        
