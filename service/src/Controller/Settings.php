@@ -360,7 +360,7 @@ class Settings extends Base {
                     $this->debug('User has moved far away');
                     $this->persistOnly();
                     $this->_sendProximityAlerts($this->user, $oldLocation, $newLocation);
-                    $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
+//                    $this->requestForCacheUpdate($this->user, $oldLocation, $newLocation);
                 } else {
                     $this->debug('User has not moved 100m away');
                 }
@@ -382,11 +382,20 @@ class Settings extends Base {
     }
 
     private function hasMovedAway($oldLocation, $newLocation) {
-        $distance = \Helper\Location::distance(
-            $oldLocation['lat'], $oldLocation['lng'],
-            $newLocation['lat'], $newLocation['lng']); # Meter
+        $this->debug('Old location - ' . json_encode($oldLocation));
+        $this->debug('New location - ' . json_encode($newLocation));
 
-        return $distance > self::ALLOWED_DISTANCE;
+        if ($oldLocation['lat'] == 0 && $oldLocation['lng'] == 0) {
+            return true;
+        } else {
+            $distance = \Helper\Location::distance(
+                $oldLocation['lat'], $oldLocation['lng'],
+                $newLocation['lat'], $newLocation['lng']); # Meter
+
+            $this->debug('Distance - ' . $distance);
+
+            return $distance > self::ALLOWED_DISTANCE;
+        }
     }
 
     /*
