@@ -48,7 +48,7 @@
 
     <div class="container">
 
-   <form class="form-horizontal" action="http://services.socialmapsapp.com/v1_9/auth/reset_pass" method="POST">
+   <form class="form-horizontal" action="http://services.socialmapsapp.com/v2_0/auth/reset_pass" method="POST">
   <fieldset>
     <legend>Change Password</legend>
     <div class="control-group">
