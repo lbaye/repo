@@ -380,12 +380,12 @@ class Auth extends Base
 
             $this->response->setContent(json_encode(array('message' => "password and retype password didn't match")));
             $this->response->setStatusCode(Status::OK);
+        } else {
+            $userId = $user->getId();
+            $password = $this->userRepository->resetPassword($data, $userId);
+            $this->response->setContent(json_encode(array('password' => $password)));
+            $this->response->setStatusCode(Status::OK);
         }
-
-        $userId = $user->getId();
-        $password = $this->userRepository->resetPassword($data, $userId);
-        $this->response->setContent(json_encode(array('password' => $password)));
-        $this->response->setStatusCode(Status::OK);
 
         return $this->response;
     }
