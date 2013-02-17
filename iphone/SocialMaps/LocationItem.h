@@ -91,7 +91,7 @@ typedef enum _LOCATION_ACTION_TYPE {
  * @retval (NSComparisonResult) - Comparison result
  */
 - (NSComparisonResult) compareDistance:(LocationItem*) other;
-
+- (void) updateDistance:(CLLocationCoordinate2D)coord ;
 /**
  * @brief Get location item table cell
  * @param (UITableView) - Parent trable view for table cell

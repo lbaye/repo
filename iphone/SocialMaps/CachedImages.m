@@ -10,7 +10,7 @@
 #import "ImageInfo.h"
 
 
-#define MAX_CACHED_IMAGES	200
+#define MAX_CACHED_IMAGES	80
 //NSCache should autometically handle releasing cached objects when a memory warning is received
 
 @implementation CachedImages

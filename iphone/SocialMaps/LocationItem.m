@@ -55,6 +55,11 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         return NSOrderedSame;
 }
 
+- (void) updateDistance:(CLLocationCoordinate2D)coord {
+    CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+    CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude];
+    self.itemDistance = [myLoc distanceFromLocation:userLoc];
+}
 - (UITableViewCell*) getTableViewCell:(UITableView*)tv sender:(ListViewController*)controller {
     CGSize nameStringSize = [itemName sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kLargeLabelFontSize]];
     CGSize addressStringSize = [itemAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:kSmallLabelFontSize]];

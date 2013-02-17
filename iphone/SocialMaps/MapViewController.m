@@ -767,6 +767,10 @@ ButtonClickCallbackData callBackData;
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Received memory warning!!!" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"", nil];
+    [alertView show];
+    [alertView release];
+
 }
 
 #pragma mark - View lifecycle
@@ -1016,13 +1020,43 @@ ButtonClickCallbackData callBackData;
         
         //VISIBLE MAP AREA COORDINATE IS NEEDED FOR ADD ANNOTATION ACCORDING TO MAP POSITION SERVICE CALL
         MKMapRect mRect = self.mapView.visibleMapRect;
+        MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
+                                                   mRect.origin.y+((MKMapRectGetMaxY(mRect)-mRect.origin.y))*.2+
+                                                   (MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
         MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
         MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
         CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
         CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+        CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
         
         NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
         NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
+        NSLog(@"Center     point = %f,%f", centerCoord.latitude, centerCoord.longitude);
+        NSLog(@"originX = %f, originY = %f, maxX = %f, maxY = %f, minX = %f, minY = %f",
+              mRect.origin.x, mRect.origin.y,
+              MKMapRectGetMaxX(mRect), MKMapRectGetMaxY(mRect),
+              MKMapRectGetMinX(mRect), MKMapRectGetMinY(mRect));
+        
+        // Update distance from center of map
+        if (smAppDelegate.showPeople == TRUE) {
+            for (LocationItem *item in smAppDelegate.peopleList) {
+                [item updateDistance:centerCoord];
+            }
+        }
+        if (smAppDelegate.showPlaces == TRUE) {
+            for (LocationItem *item in smAppDelegate.placeList) {
+                [item updateDistance:centerCoord];
+            }
+        }
+
+        if (smAppDelegate.showEvents == TRUE) {
+            for (LocationItem *item in smAppDelegate.eventList) {
+                [item updateDistance:centerCoord];
+            }
+        }
+        [self getSortedDisplayList];
+        [self loadAnnotations:TRUE];
+        [_mapView setNeedsDisplay];
     }
 }
 
@@ -1134,15 +1168,17 @@ ButtonClickCallbackData callBackData;
         NSLog(@"MapViewController:loadAnnotations");
         MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
         for (id<MKAnnotation> annotation in _mapView.annotations) {
-            [_mapView removeAnnotation:annotation];
+            if (![smAppDelegate.displayList containsObject:annotation])
+                [_mapView removeAnnotation:annotation];
         }
-        [_mapView removeAnnotations:_mapView.annotations];
+        //[_mapView removeAnnotations:_mapView.annotations];
         for (int i=0; i < smAppDelegate.displayList.count; i++) {
             LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
             
             if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
             {
-                [_mapView addAnnotation:anno];
+                if (![_mapView.annotations containsObject:anno])
+                    [_mapView addAnnotation:anno];
             }
         }
         
@@ -1881,6 +1917,26 @@ ButtonClickCallbackData callBackData;
     CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
     _mapView.centerCoordinate = lastPos;
     NSLog(@"MapViewController: updateLocation lat:%f lng:%f", lastPos.latitude, lastPos.longitude);
+    
+    // Update distance from center of map
+    if (smAppDelegate.showPeople == TRUE) {
+        for (LocationItem *item in smAppDelegate.peopleList) {
+            [item updateDistance:lastPos];
+        }
+    }
+    if (smAppDelegate.showPlaces == TRUE) {
+        for (LocationItem *item in smAppDelegate.placeList) {
+            [item updateDistance:lastPos];
+        }
+    }
+    
+    if (smAppDelegate.showEvents == TRUE) {
+        for (LocationItem *item in smAppDelegate.eventList) {
+            [item updateDistance:lastPos];
+        }
+    }
+    [self getSortedDisplayList];
+    
     if ([CLLocationManager locationServicesEnabled]) {
         _mapView.showsUserLocation=YES;
         // Send new location to server
@@ -1889,6 +1945,18 @@ ButtonClickCallbackData callBackData;
     } else {
         _mapView.showsUserLocation=NO;
     }
+    
+    // 1
+    CLLocationCoordinate2D zoomLocation;
+    
+    // Current location
+    zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
+    zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    
+    // 2
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:YES];
     smAppDelegate.needToCenterMap = TRUE;
     [_mapView setNeedsDisplay];
 
@@ -1899,13 +1967,14 @@ ButtonClickCallbackData callBackData;
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
     if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
-    if (smAppDelegate.showPlaces == TRUE) 
+    if (smAppDelegate.showPlaces == TRUE)
         [tempList addObjectsFromArray:smAppDelegate.placeList];
     if (smAppDelegate.showEvents == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.eventList];
         // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
-    [smAppDelegate.displayList addObjectsFromArray:sortedArray];
+    [smAppDelegate.displayList addObjectsFromArray:[sortedArray subarrayWithRange:NSMakeRange(0, 19)]];
+    //[smAppDelegate.displayList addObjectsFromArray:sortedArray];
 }
 
 - (CLLocationDistance) getDistanceFromMe:(CLLocationCoordinate2D) loc {
@@ -2057,8 +2126,8 @@ ButtonClickCallbackData callBackData;
                                 //aPerson.userInfo.avatar = item.avatar;
                                 aPerson.itemAvaterURL = item.avatar;
                             }
-                            
-                            [self mapAnnotationInfoUpdated:aPerson];
+                            if ([smAppDelegate.displayList containsObject:aPerson])
+                                [self mapAnnotationInfoUpdated:aPerson];
                         }
                     }
                 }
