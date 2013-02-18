@@ -77,6 +77,8 @@ extern NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED;
 extern NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE;
 extern NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE;
 extern NSString * const NOTIF_SEND_REPLY_DONE;
+extern NSString * const NOTIF_GET_NEW_THREAD_DONE;
+extern NSString * const SET_SHARE_LOCATION_DONE;
 
 // Font related stuff
 extern NSString * const kFontName;
@@ -93,3 +95,6 @@ extern float const kSmallLabelFontSize;
 extern float const kNumberRGBRed;
 extern float const kNumberRGBGreen;
 extern float const kNumberRGBBlue;
+
+// Maximum number of visible annotation
+extern int const MAX_VISIBLE_ANNO;

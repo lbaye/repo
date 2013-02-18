@@ -216,6 +216,7 @@ DDAnnotation *annotation;
     
     [restClient sendMeetUpRequest:[NSString stringWithFormat:@"%@ has invited you to meet up at ", smAppDelegate.userAccountPrefs.username] description:textViewPersonalMsg.text latitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.latitude] longitude:[NSString stringWithFormat:@"%lf",annotation.coordinate.longitude] address:labelAddress.text time:dateString recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     [self dismissModalViewControllerAnimated:YES];
+    [userIDs release];
 }
 
 - (IBAction)actionSelectAll:(id)sender {
@@ -341,6 +342,7 @@ DDAnnotation *annotation;
         [labelPlaceName setFont:[UIFont fontWithName:kFontName size:kMediumLabelFontSize]];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
+        [labelPlaceName release];
     } 
 
     UILabel *labelPlaceName = (UILabel*)[cell.contentView viewWithTag:1001];
@@ -498,7 +500,7 @@ DDAnnotation *annotation;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [selectedFriendsIndex removeAllObjects];
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
@@ -728,11 +730,9 @@ DDAnnotation *annotation;
 
 -(void)loadDummydata
 {
-    UserFriends *frnds=[[UserFriends alloc] init];
-    
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
+        UserFriends *frnds=[[UserFriends alloc] init];
         frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {

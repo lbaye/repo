@@ -187,4 +187,11 @@
  */
 - (void) getUserInformation:(NSString*) token ;
 
+/**
+ * @brief Initialize data
+ * @param none
+ * @retval none
+ */
+-(void)initData;
+
 @end

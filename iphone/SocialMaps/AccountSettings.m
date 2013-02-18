@@ -45,6 +45,7 @@
         // Change password
         SettingsMaster *changePWView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Change password..." subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:startTag+2];
         [self addSubview:changePWView];
+        [changePWView release];
     }
    
     
@@ -55,14 +56,15 @@
     [self setContentSize:contentSize];
                                                                           
     [self addSubview:logoutView];
-    
+    [logoutView release];
     [self addSubview:infoView];
-    
+    [infoView release];
     // Add a line at the bottom
     UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x, rowNum*(ROW_HEIGHT+2), self.frame.size.width, 1)];
     sep.backgroundColor = [UIColor lightGrayColor];
     sep.tag = 4000;
     [self addSubview:sep];
+    [sep release];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -97,7 +99,7 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
-    
+    [lineImage release];
     CGRect newFrame = CGRectMake(0, aview.frame.origin.y, aview.frame.size.width, aview.frame.size.height+info.frame.size.height+7);
     aview.frame = newFrame;
     [aview addSubview:info];
@@ -106,6 +108,7 @@
                                     self.contentSize.height+info.frame.size.height+7);
     [self setContentSize:contentSize];
     [self cascadeHeightChange:tag incr:info.frame.size.height+7];
+    [info release];
     [self setNeedsLayout];
 }
 
@@ -141,7 +144,7 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
-    
+    [lineImage release];
     CGRect newFrame = CGRectMake(0, aview.frame.origin.y, aview.frame.size.width, aview.frame.size.height+resetPw.frame.size.height+7);
     aview.frame = newFrame;
     [aview addSubview:resetPw];
@@ -150,6 +153,7 @@
                                     self.contentSize.height+resetPw.frame.size.height+7);
     [self setContentSize:contentSize];
     [self cascadeHeightChange:tag incr:resetPw.frame.size.height+7];
+    [resetPw release];
     [self setNeedsLayout];
 }
 
@@ -179,14 +183,14 @@
 
     ConfirmView *confirm = [[ConfirmView alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT-7) title:msg sender:self tag:tag+1000];
     [aview addSubview:confirm];
-    
+    [confirm release];
     // Create the line with image line_arrow_down_left.png
     CGRect lineFrame = CGRectMake(0, aview.frame.size.height, 310, 7);
     UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
-
+    [lineImage release];
     CGRect newFrame = CGRectMake(0, aview.frame.origin.y, aview.frame.size.width, aview.frame.size.height+ROW_HEIGHT);
     aview.frame = newFrame;
 
@@ -227,12 +231,12 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
-    
+    [lineImage release];
     CGRect newFrame = CGRectMake(0, aview.frame.origin.y, aview.frame.size.width, aview.frame.size.height+locSharing.frame.size.height+7);
     aview.frame = newFrame;
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
-    
+    [locSharing release];
     CGSize contentSize = CGSizeMake(self.contentSize.width, 
                                     self.contentSize.height+locSharing.frame.size.height+7);
     [self setContentSize:contentSize];
@@ -407,16 +411,7 @@
     [userFriendslistArray removeAllObjects];
     [userFriendslistIndex removeAllObjects];
     
-    // Preferences data structure
-    smAppDelegate.platformPrefs = [[[Platform alloc] init] autorelease];
-    smAppDelegate.layerPrefs    = [[[Layer alloc] init] autorelease];
-    smAppDelegate.informationPrefs = [[[InformationPrefs alloc] init] autorelease];
-    smAppDelegate.userAccountPrefs = [[[UserInfo alloc] init] autorelease];
-    smAppDelegate.userAccountPrefs.icon = nil;
-    smAppDelegate.geofencePrefs = [[[Geofence alloc] init] autorelease];
-    smAppDelegate.locSharingPrefs = [[[ShareLocation alloc] init] autorelease];
-    smAppDelegate.notifPrefs = [[[NotificationPref alloc] init] autorelease];
-    
+    [smAppDelegate initData];
     [smAppDelegate.peopleList removeAllObjects];
     [smAppDelegate.peopleIndex removeAllObjects];
     [smAppDelegate.placeList removeAllObjects];

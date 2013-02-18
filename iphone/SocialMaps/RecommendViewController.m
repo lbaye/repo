@@ -298,7 +298,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     }
     else
     {
-        searchText = @"";
+        searchTexts = @"";
         [self actionRemoveAllFriendsButton:nil];
         [self initScrollView:friendListGlobalArray];
     }

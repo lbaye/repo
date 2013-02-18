@@ -33,7 +33,7 @@
 	return storedLanguage;	
 }
 
--(NSMutableArray *)readDataFromUserDefaults:(NSString*)keyName
+-(NSArray *)readDataFromUserDefaults:(NSString*)keyName
 {
 	NSUserDefaults *defaults = [[NSUserDefaults standardUserDefaults] retain];
 	NSData *data = [defaults objectForKey:keyName];
@@ -42,7 +42,7 @@
 	
 	[defaults release];
 	
-	return [myArray mutableCopy];	
+	return myArray;	
 }
 
 -(void)writeDataToUserDefaults:(NSString *)keyName withArray:(NSMutableArray *)myArray

@@ -24,7 +24,10 @@
 
 -(id)init
 {
-    planGeolocation=[[Geolocation alloc] init];
+    self=[super init];
+    if (self) {
+        planGeolocation=[[Geolocation alloc] init];
+    }
     return self;
 }
 

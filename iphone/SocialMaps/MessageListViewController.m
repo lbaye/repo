@@ -22,6 +22,7 @@
 #import "SelectCircleTableCell.h"
 #import "DirectionViewController.h"
 #import "UITextView+PlaceHolder.h"
+#import "UIImageView+Cached.h"
 
 #define     SENDER_NAME_START_POSX  60
 #define     CELL_HEIGHT             60
@@ -33,7 +34,6 @@
 #define     SENDER_NAME_REPLY_START_POSX    90
 
 @implementation MessageListViewController
-
 
 @synthesize msgParentID;
 @synthesize timeSinceLastUpdate;
@@ -47,7 +47,7 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 bool searchFlag;
 __strong NSMutableArray *filteredList,*friendListArr, *circleList;
 __strong NSString *searchTexts;
-NSMutableDictionary *imageDownloadsInProgress, *friendsNameArr, *friendsIDArr;
+NSMutableDictionary *friendsNameArr, *friendsIDArr;
 static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
@@ -58,16 +58,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    imageDownloadsInProgress = [NSMutableDictionary dictionary];
-    [imageDownloadsInProgress retain];
-    
-    profileImageList = [[NSMutableArray alloc] init];
     messageReplyList = [[NSMutableArray alloc] init];
-    
-    [profileImageList addObject:@""]; //crash fix when no message in list 
-    for (int i = 0; i < [smAppDelegate.messages count]; i++) {
-        [profileImageList addObject:@""];
-    }
     
     msgListTableView.delegate = self;
     msgListTableView.dataSource = self;
@@ -86,11 +77,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [textViewReplyMsg.layer setBorderColor:[UIColor lightGrayColor].CGColor];
     [textViewReplyMsg.layer setMasksToBounds:YES];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotInboxMessages:) name:NOTIF_GET_INBOX_DONE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendReplyDone:) name:NOTIF_SEND_REPLY_DONE object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewThreadDone:) name:NOTIF_GET_NEW_THREAD_DONE object:nil];
+
     
     //friends list
     frndListScrollView.delegate = self;
@@ -117,6 +109,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     tableViewCircle.delegate = self;
     
     [textViewReplyMsg setPlaceHolderText:@"Your Message..."];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -127,9 +120,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (void) viewDidAppear:(BOOL)animated
 {
-
     [super viewDidAppear:animated];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getReplyMessages:) name:NOTIF_GET_REPLIES_DONE object:nil];
     if (self.selectedMessage) {
         [self setMsgReplyTableView:self.selectedMessage];
     } 
@@ -138,18 +130,29 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [self actionMeetUpBtn:nil];
     }
     
-    [self actionRefreshBtn:nil];
-    
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
     
+    if ([selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+        NSLog(@"reciepientId = %@", selectedMessage.notifSenderId);
+        [restClient getThread:self.selectedMessage.notifSenderId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    } else {
+        [self actionRefreshBtn:nil];
+        [restClient getMeetUpRequest:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    }
+    
+    [self loadImagesForOnscreenRows];
     smAppDelegate.currentModelViewController = self;
 }
 
 - (void) viewDidDisappear:(BOOL)animated
 {
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
+    
+    if (replyTimer) {
+        [replyTimer invalidate];
+        replyTimer = nil;
+    }
+    
     [super viewDidDisappear:animated];
 }
 
@@ -158,11 +161,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // terminate all pending download connections
-    NSArray *allDownloads = [imageDownloadsInProgress allValues];
-    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)viewDidUnload
@@ -311,10 +309,17 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     if ([textViewReplyMsg.text isEqualToString:@""] || [textViewReplyMsg.text isEqualToString:@"Your Message..."]) {
         [UtilityClass showAlert:@"" :@"Please enter your message"];
     } else {
-        if (![textViewReplyMsg.superview viewWithTag:5005] && !isCheckingNewReplies) 
+        if (![textViewReplyMsg.superview viewWithTag:5005]) 
         {
             RestClient *restClient = [[[RestClient alloc] init] autorelease];
-            [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+            
+            if ([selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+                [UtilityClass showAlert:@"" :@"Please wait"];
+            } else {
+                NSLog(@"msg parent id %@", msgParentID);
+                [restClient sendReply:msgParentID content:textViewReplyMsg.text authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+            }
+            
             [self showHideIndicatorOnTextview:textViewReplyMsg];
         } 
         else {
@@ -378,8 +383,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [smAppDelegate.messages removeAllObjects];
     [smAppDelegate.messages addObjectsFromArray:msg];
     
-    for (int i = 0; i < [smAppDelegate.messages count]; i++) {
-        [profileImageList addObject:@""];
+    for (int i = 0; i < [smAppDelegate.messages count]; i++)
+    {
         if ([self.selectedMessage.notifSenderId isEqualToString:@"sender_id"] && [self.selectedMessage.notifID isEqualToString:[(NotifMessage*)[smAppDelegate.messages objectAtIndex:i] notifID]]) {
             NotifMessage *notifMsg = (NotifMessage*)[smAppDelegate.messages objectAtIndex:i];
             MessageReply *messageReply = [[MessageReply alloc] init];
@@ -390,6 +395,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             messageReply.senderID = notifMsg.notifSenderId;
             messageReply.senderAvater = notifMsg.notifAvater;
             [messageReplyList insertObject:messageReply atIndex:0];
+            [messageReply release];
             [messageReplyTableView reloadData];
         }
     }
@@ -410,7 +416,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     NSString * subject = [NSString stringWithFormat:@"Message from %@ %@", smAppDelegate.userAccountPrefs.firstName,
                           smAppDelegate.userAccountPrefs.lastName];
     
-    NSMutableArray *userIDs = [self getUserIds];
+    NSMutableArray *userIDs = [[self getUserIds] retain];
     
     for (UserCircle *userCircle in selectedCircleCheckOriginalArr) 
         [userIDs addObjectsFromArray:userCircle.friends];
@@ -419,6 +425,20 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+    [userIDs release];
+}
+
+- (void)getNewThreadDone:(NSNotification*)notif
+{
+    if (notif.object) {
+        
+        self.selectedMessage = notif.object;
+        self.msgParentID = self.selectedMessage.notifID;
+        [self setMsgReplyTableView:selectedMessage];
+
+    } else {
+        [UtilityClass showAlert:@"" :@"Network Error"];
+    }
 }
 
 - (void)sendReplyDone:(NSNotification *)notif
@@ -426,16 +446,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     [self showHideIndicatorOnTextview:textViewReplyMsg];
     
     if (notif.object) {
-        NSLog(@"message sent = %@", notif.object);
-        MessageReply *messageReply = [[MessageReply alloc] init];
-        messageReply.content = textViewReplyMsg.text;
-        messageReply.senderID = smAppDelegate.userId;
-        messageReply.msgId = @"temp";
-        [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(addTempReplyInTableView:) userInfo:messageReply repeats:YES];
-        [messageReply release];
+        [self startReqForReplyMessages];
+        [self clearTextView:textViewReplyMsg];
+    } else {
+        [UtilityClass showAlert:@"" :@"Error sending reply, try again."];
     }
+    
 }
-
+/*
 - (void)addTempReplyInTableView:(NSTimer*)timer
 {
     if (!isCheckingNewReplies) {
@@ -448,7 +466,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         isCheckingNewReplies = YES;
     }
 }
-
+*/
 - (NSMutableArray*)getUserIds
 {
     NSMutableArray *userIDs = [[NSMutableArray alloc] init];
@@ -460,17 +478,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     NSLog(@"user id %@", userIDs);
 
-    return userIDs;
+    return [userIDs autorelease];
 }
 
-- (void) getReplyMessages:(NSNotification *)notif {
+- (void) getReplyMessages:(NSNotification *)notif
+{
     NSLog(@"gotReplyMessages");
+    
+    notifBadgeFlag=FALSE;
     [smAppDelegate hideActivityViewer];
     
     NSMutableArray *msgReplies = [notif object];
-
+    
     if ([msgReplies count] == 0) {
-        isCheckingNewReplies = NO;
         return;
     }
     
@@ -478,18 +498,10 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         for (int j = 0; j < [messageReplyList count]; j++) {
             if ([((MessageReply*)[msgReplies objectAtIndex:i]).msgId isEqualToString:((MessageReply*)[messageReplyList objectAtIndex:j]).msgId]) {
                 [msgReplies removeObjectAtIndex:i];
+                if ([msgReplies count] == 0) {
+                    return;
+                }
             }
-        }
-    }
-    
-    if ([msgReplies count] == 0) {
-        isCheckingNewReplies = NO;
-        return;
-    }
-    
-    for (MessageReply *msgReply in messageReplyList) {
-        if ([msgReply.msgId isEqualToString:@"temp"]) {
-            [messageReplyList removeObject:msgReply];
         }
     }
     
@@ -502,11 +514,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
         [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
-   
+  
     NSTimeInterval ti =[((MessageReply*)[messageReplyList objectAtIndex:[messageReplyList count] - 1]).time timeIntervalSince1970];
     self.timeSinceLastUpdate = [NSString stringWithFormat:@"%f", ti];
-    NSLog(@"timeSinceLastUpdate %@", self.timeSinceLastUpdate);
-    isCheckingNewReplies = NO;
 }
 
 
@@ -519,13 +529,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                                        dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil)
         {
-            cell = [[SelectCircleTableCell alloc]
+            cell = [[[SelectCircleTableCell alloc]
                     initWithStyle:UITableViewCellStyleDefault 
-                    reuseIdentifier:CellIdentifier];
+                    reuseIdentifier:CellIdentifier] autorelease];
         }
         
         if ([[[circleListGlobalArray objectAtIndex:indexPath.row] circleName] isEqual:[NSNull null]] ) {
-            //cell.circrcleName.text=@"Custom";
             cell.circrcleName.text = [NSString stringWithFormat:@"Custom (%d)",[((UserCircle *)[circleListGlobalArray objectAtIndex:indexPath.row]).friends count]];
         } else {
             NSLog(@"circle name %@", [[circleListGlobalArray objectAtIndex:indexPath.row] circleName]);
@@ -602,7 +611,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             txtViewTxtMsg.userInteractionEnabled = NO;
             [cell.contentView addSubview:txtViewTxtMsg];
             
-            
             //Thumb Image
             UIImageView *imageViewReply = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 48, 48)];
             imageViewReply.tag = 3006;
@@ -612,6 +620,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [imageViewReply.layer setMasksToBounds:YES];
             [cell addSubview:imageViewReply];
             imageViewReply.hidden = YES;
+            [imageViewReply release];
         }
         
         UILabel     *lblSender  = (UILabel*) [cell viewWithTag:3002];
@@ -649,20 +658,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         lblTime.text = [UtilityClass timeAsString:msgReply.time];
         txtMsg.text = msgReply.content;
         
-        if (msgReply.metaType) {
-            
-            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
-            
-            if (!iconDownloader)
-            {
-                imageViewReply.image = nil;
-                if (tableView.dragging == NO && tableView.decelerating == NO) {
-                    [self startReplyIconDownload:msgReply forIndexPath:indexPath];
-                }            
-            }  else {
-                imageViewReply.image = iconDownloader.userFriends.userProfileImage;
-            }
-            
+        if (msgReply.metaType)
+        {
+            [imageViewReply setImageForUrlIfAvailable:[NSURL URLWithString:msgReply.senderAvater]];
             imageViewReply.hidden = NO;
             
             if (![cell viewWithTag:10001]) {
@@ -736,22 +734,29 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         lblTxtMsgContainer.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:lblTxtMsgContainer];
         
-        [cell.imageView.layer setCornerRadius:6.0f];
-        [cell.imageView.layer setBorderWidth:2.0];
-        [cell.imageView.layer setBorderColor:[UIColor darkGrayColor].CGColor];
-        [cell.imageView.layer setMasksToBounds:YES];
+        //Thumb Image
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(8, 5, 48, 48)];
+        imageView.tag = 2006;
+        [imageView.layer setCornerRadius:6.0f];
+        [imageView.layer setBorderWidth:2.0];
+        [imageView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+        [imageView.layer setMasksToBounds:YES];
+        [cell addSubview:imageView];
+        [imageView release];
     } 
     
     UILabel *lblSender  = (UILabel*) [cell viewWithTag:2002];
     UILabel *lblTime    = (UILabel*) [cell viewWithTag:2004];
     UILabel *txtMsg     = (UILabel*) [cell viewWithTag:2005];
+    UIImageView *thumbImageView = (UIImageView*) [cell viewWithTag:2006];
     
-    NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
+    NSDictionary *titleAndAvatar = [[self buildMessageTitleAndAvatar:msg] retain];
     
     lblSender.text = [titleAndAvatar valueForKey:@"title"]; 
-    lblTime.text = [UtilityClass timeAsString:msg.notifTime];
+    lblTime.text = [UtilityClass timeAsString:msg.notifUpdateTime];
+    [thumbImageView setImageForUrlIfAvailable:[NSURL URLWithString:[titleAndAvatar valueForKey:@"avatar"]]];
+    [titleAndAvatar release];
     
-    NSLog(@"%@", msg.lastReply);
     if (![msg.lastReply isEqual:[NSNull null]]) {
         for (NSDictionary *lastReplyDic in msg.lastReply) {
             
@@ -767,30 +772,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         txtMsg.text = msg.notifMessage;
     }
     
-    
-    
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:[titleAndAvatar valueForKey:@"id"]];
-    
-    if (!iconDownloader)
-    {
-    
-        cell.imageView.image = nil;
-        if (tableView.dragging == NO && tableView.decelerating == NO) {
-            NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
-            recipientWrappedInMessage.notifID = msg.notifID;
-            recipientWrappedInMessage.notifMessage = msg.notifMessage;
-            recipientWrappedInMessage.notifSender = msg.notifSender;
-            recipientWrappedInMessage.notifSenderId = [titleAndAvatar valueForKey:@"id"];
-            recipientWrappedInMessage.notifSubject = msg.notifSubject;
-            recipientWrappedInMessage.notifTime = msg.notifTime;
-            recipientWrappedInMessage.notifAvater = [titleAndAvatar valueForKey:@"avatar"];
-            
-            [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
-        }            
-    }  else {
-        cell.imageView.image = iconDownloader.userFriends.userProfileImage;
-    }
-
     if ([msg.msgStatus isEqualToString:@"unread"]) {
         cell.contentView.backgroundColor = [UIColor colorWithRed:163.0/255 green:232.0/255 blue:95.0/255 alpha:0.4];
     } else {
@@ -817,15 +798,14 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             [recipientIds addObject:_id];
             
             // Add first name to title string buffer
-            [recipientNames addObject:[recipient valueForKey:@"firstName"]];
             
-            NSString *recipientAvater = [recipient valueForKey:@"avatar"];
+            NSString *name = [recipient valueForKey:@"username"];
             
-            NSLog(@"******* ToDo: appStore_V1 has latest code for null url avater checking******");
-            if ((recipientAvater==NULL)||[recipientAvater isEqual:[NSNull null]])
-            {
-                recipientAvater=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
+            if (![name isKindOfClass:[NSString class]]) {
+                name = [recipient valueForKey:@"firstName"];
             }
+            
+            [recipientNames addObject:name];
             
             // Add avatar to avatar array
             NSString *urlAvatar = [recipient valueForKey:@"avatar"];
@@ -846,6 +826,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [titleAndAvatar setObject:[[message.notifSender componentsSeparatedByString:@" "] objectAtIndex:0] forKey:@"title"];
     }
     
+    [recipientNames release];
+    
     // If avatar array is not empty
     if ([avatarImages count] > 0) {
         // Take first avatar element from array
@@ -859,9 +841,12 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         [titleAndAvatar setObject: message.notifSenderId forKey: @"id"];
     }
     
+    [recipientIds release];
+    [avatarImages release];
+    
     NSLog(@"TitleAndAvatar: Message - %@, %@", message.notifMessage, titleAndAvatar);
     
-    return titleAndAvatar;
+    return [titleAndAvatar autorelease];
 }
 
 
@@ -900,9 +885,13 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     messageReply.lat = msg.lat;
     messageReply.lng = msg.lng;
     
+    NSLog(@"notif id = %@", msg.notifID);
+    
     [messageReplyList removeAllObjects];
     if (![messageReply.senderID isEqualToString:@"sender_id"])
-            [messageReplyList addObject:messageReply];
+        if (![msg.notifID isEqualToString:@"NewMsg"])
+            if ([messageReply.content isKindOfClass:[NSString class]])
+                [messageReplyList addObject:messageReply];
     [messageReply release];
     
     if (msg.recipients.count > 2) {
@@ -912,15 +901,20 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     
     [messageReplyTableView reloadData];
-    [self doRightViewAnimation:messageRepiesView];
-    
-    msgParentID = msg.notifID;
-    self.timeSinceLastUpdate = @"420";
-    [smAppDelegate showActivityViewer:self.view];
-    [self startReqForReplyMessages];
-    if (!replyTimer) {
-        replyTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+    if (messageRepiesView.hidden) {
+        [self doRightViewAnimation:messageRepiesView];
     }
+    
+    if (![selectedMessage.notifID isEqualToString:@"NewMsg"]) {
+        
+        msgParentID = msg.notifID;
+        self.timeSinceLastUpdate = @"420";
+        [self startReqForReplyMessages];
+        if (!replyTimer) {
+            replyTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(startReqForReplyMessages) userInfo:nil repeats:YES];
+        }
+    }
+    [smAppDelegate showActivityViewer:self.view];
 }
 
 - (void)startReqForReplyMessages
@@ -1035,182 +1029,23 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 #pragma mark -
 #pragma mark Table cell image support
 
-- (void)startIconDownload:(NotifMessage*)msg forIndexPath:(NSIndexPath *)indexPath
-{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msg.notifSenderId];
-   
-   if (iconDownloader == nil && msg.notifAvater != nil)
-   {
-        iconDownloader = [[IconDownloader alloc] init];
-        UserFriends *userFriends = [[UserFriends alloc] init];
-        userFriends.userId = msg.notifSenderId;
-        userFriends.imageUrl = msg.notifAvater;
-        iconDownloader.userFriends = userFriends;
-        NSLog(@"iconDownloader.userFriends.imageUrl = %@",iconDownloader.userFriends.imageUrl);
-        iconDownloader.indexPathInTableView = indexPath;
-        iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:msg.notifSenderId];
-        [iconDownloader startDownload];
-        [iconDownloader release];  
-        [userFriends release];
-   } 
-}
-
-- (void)startReplyIconDownload:(MessageReply*)msgReply forIndexPath:(NSIndexPath *)indexPath
-{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:msgReply.senderID];
-    NSLog(@"%@", msgReply.senderName);
-    if (iconDownloader == nil)
-    {
-        iconDownloader = [[IconDownloader alloc] init];
-        UserFriends *userFriends = [[UserFriends alloc] init];
-        userFriends.userId = msgReply.senderID;
-        userFriends.imageUrl = msgReply.senderAvater;
-        iconDownloader.userFriends = userFriends;
-        NSLog(@"iconDownloader.userFriends.imageUrl = %@",iconDownloader.userFriends.imageUrl);
-        iconDownloader.indexPathInTableView = indexPath;
-        iconDownloader.delegate = self;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:msgReply.senderID];
-        [iconDownloader startDownload];
-        [iconDownloader release];  
-        [userFriends release];
-    } 
-}
-
 // this method is used in case the user scrolled into a set of cells that don't have their app icons yet
 - (void)loadImagesForOnscreenRows
 {
-    //pending for msgReply tableView
-    if (!messageRepiesView.hidden) {        
-        if ([messageReplyList count] > 0)
-        {
-            NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
-            
-            for (NSIndexPath *indexPath in visiblePaths)
-            {
-                UIImage *replyImage = ((MessageReply*)[messageReplyList objectAtIndex:indexPath.row]).senderImage;
-                NSLog(@"messageReplyList image = %@", replyImage);
-                MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
-                if (!replyImage) // avoid the app icon download if the app already has an icon
-                {
-                    [self startReplyIconDownload:msgReply forIndexPath:indexPath];
-                }
-            }
-        }
-        
+    if (!messageRepiesView.hidden)
         return;
-    }
     
-    if ([profileImageList count] > 0)
+    if ([smAppDelegate.messages count] > 0)
     {
         NSArray *visiblePaths = [msgListTableView indexPathsForVisibleRows];
-        
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            UIImage *profileImage = (UIImage*)[profileImageList objectAtIndex:indexPath.row];
-            
-            if (!profileImage || [[profileImageList objectAtIndex:indexPath.row] isEqual:@""]) // avoid the app icon download if the app already has an icon
-            {
-                NotifMessage *msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
-                
-                NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
-                NotifMessage *recipientWrappedInMessage = [[NotifMessage alloc] init];
-                recipientWrappedInMessage.notifID = [NSString stringWithFormat:@"%lf", rand() * rand()];
-                recipientWrappedInMessage.notifMessage = msg.notifMessage;
-                recipientWrappedInMessage.notifSender = msg.notifSender;
-                recipientWrappedInMessage.notifSenderId = [titleAndAvatar valueForKey:@"id"];
-                recipientWrappedInMessage.notifSubject = msg.notifSubject;
-                recipientWrappedInMessage.notifTime = msg.notifTime;
-                recipientWrappedInMessage.notifAvater = [titleAndAvatar valueForKey:@"avatar"];
-                
-                [self startIconDownload:recipientWrappedInMessage forIndexPath:indexPath];
-                
-                //[self startIconDownload:msg forIndexPath:indexPath];
-            }
+            UITableViewCell *cell = [msgListTableView cellForRowAtIndexPath:indexPath];
+            UIImageView *imgIcon = (UIImageView*) [cell viewWithTag:2006];
+            NotifMessage *msg = [smAppDelegate.messages objectAtIndex:indexPath.row];
+            NSDictionary *titleAndAvatar = [self buildMessageTitleAndAvatar:msg];
+            [imgIcon loadFromURL:[NSURL URLWithString:[titleAndAvatar valueForKey:@"avatar"]]];
         }
-    }
-}
-
-- (void)setDuplicateSenderImage:(IconDownloader *)iconDownloader
-{
-    for (int i = 0; i < [smAppDelegate.messages count]; i++) {
-        NotifMessage *msg = [smAppDelegate.messages objectAtIndex:i];
-        if ([msg.notifSenderId isEqualToString:iconDownloader.userFriends.userId]) {
-            if (iconDownloader.userFriends.userProfileImage) {
-                [profileImageList replaceObjectAtIndex:i withObject:iconDownloader.userFriends.userProfileImage];
-            } else {
-                [profileImageList replaceObjectAtIndex:i withObject:[[UIImage alloc] init]];
-            }
-        }
-    }
-    [msgListTableView reloadData];
-}
-
-- (void)appImageDidLoadForScrollView:(UserFriends*)userFriends:(UIImage*)image:(int)scrollSubViewTag
-{
-    NSLog(@"appImageDidLoadForScrollView");
-
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFriends.userId];
-    if (iconDownloader) {
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-    } else {
-        iconDownloader = [[IconDownloader alloc] init];
-        iconDownloader.userFriends = userFriends;
-        [imageDownloadsInProgress setObject:iconDownloader forKey:userFriends.userId];
-        [iconDownloader release];
-    }
-        
-    int tag = scrollSubViewTag - 420;
-    
-    if (tag == 0) {
-        for (UIView *view in [frndListScrollView subviews]) {
-            if (view.tag == 0) {
-                for (UIImageView *imageView in [view subviews]) {
-                    if ([imageView isKindOfClass:[UIImageView class]]) {
-                        imageView.image = image;
-                        break;
-                    }
-                }
-            }
-        }
-    } else {
-        for (UIImageView *imageView in [[frndListScrollView viewWithTag:tag] subviews]) {
-            if ([imageView isKindOfClass:[UIImageView class]]) {
-                imageView.image = image;
-                break;
-            }
-        }
-    }
-}
-
-// called by our ImageDownloader when an icon is ready to be displayed
-- (void)appImageDidLoad:(NSString *)userId
-{
-    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userId];
-    if (iconDownloader != nil)
-    {
-        if (!messageRepiesView.hidden) {
-            for (MessageReply *msgReply in messageReplyList) {
-                if (msgReply.senderID == userId) {
-                    msgReply.senderImage = iconDownloader.userFriends.userProfileImage;
-                }
-            }
-            [messageReplyTableView reloadData];
-            return;
-        }
-        
-        UITableViewCell *cell = [msgListTableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
-        
-        NSLog(@"Avatar for User - %@, User id - %@ and avatar url - %@ image = %@", 
-              iconDownloader.userFriends.userName,
-              iconDownloader.userFriends.userId, 
-              iconDownloader.userFriends.imageUrl,
-              iconDownloader.userFriends.userProfileImage);
-        
-        cell.imageView.image = iconDownloader.userFriends.userProfileImage;
-        [profileImageList replaceObjectAtIndex:iconDownloader.indexPathInTableView.row withObject:iconDownloader.userFriends.userProfileImage];
-        
-        [self setDuplicateSenderImage:iconDownloader];
     }
 }
 
@@ -1308,40 +1143,42 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 - (void)scrollSelfViewUp
 {
     NSLog(@"scrollSelfView");
+    if ([messageReplyList count]) {
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
+        [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    }    
+        NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
     
-    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [messageReplyList count] -1 inSection:0];
-    [messageReplyTableView scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
-    
-    NSArray *visiblePaths = [messageReplyTableView indexPathsForVisibleRows];
-    
-    int totalVisibleCellHeight = 0;
-    
-    for (NSIndexPath *indexPath in visiblePaths)
-    {
-        MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
-        totalVisibleCellHeight += [self getRowHeight:messageReplyTableView :msgReply];
-    }
-    
-    NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3]; 
-	
-    if (totalVisibleCellHeight > 55) {
-        CGRect rect = self.view.frame;
-        int moveBy = -totalVisibleCellHeight + 55;
+        int totalVisibleCellHeight = 0;
         
-        if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
-            moveBy = -kOFFSET_FOR_KEYBOARD; 
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            MessageReply *msgReply = [messageReplyList objectAtIndex:indexPath.row];
+            totalVisibleCellHeight += [self getRowHeight:messageReplyTableView :msgReply];
         }
         
-        rect.origin.y = moveBy;
-        self.view.frame = rect;
-        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
-    } else {
-        msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
-	}
-    [UIView commitAnimations];
+        NSLog(@"Total visible cell heitht %d", totalVisibleCellHeight);
+        
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.3]; 
+        
+        if (totalVisibleCellHeight > 55) {
+            CGRect rect = self.view.frame;
+            int moveBy = -totalVisibleCellHeight + 55;
+            
+            if (messageReplyTableView.frame.size.height < totalVisibleCellHeight) {
+                moveBy = -kOFFSET_FOR_KEYBOARD; 
+            }
+            
+            rect.origin.y = moveBy;
+            self.view.frame = rect;
+            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD - moveBy, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+        } else {
+            msgReplyCreationView.frame = CGRectMake(0, 300 - kOFFSET_FOR_KEYBOARD, msgReplyCreationView.frame.size.width, msgReplyCreationView.frame.size.height);
+        }
+        [UIView commitAnimations];
+    
+    
 }
 
 -(void)setViewMovedUp:(UIView*)view
@@ -1389,12 +1226,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         replyTimer = nil;
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_REPLIES_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_INBOX_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SEND_REPLY_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_GET_NEW_THREAD_DONE object:nil];
     
     [messageReplyList release];
-    [profileImageList release];
     [messageCreationView release];
     [textViewNewMsg release];
     [msgWritingView release];
@@ -1476,7 +1312,6 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     }
     else
     {
-        searchText=@"";
         [selectedFriendsIndex removeAllObjects];
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: friendListArr];
@@ -1643,9 +1478,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
         { 
             UserFriends *userFrnd=[filteredList objectAtIndex:i];
             imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
-            
-            IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:userFrnd.userId];
-            
+            /*
             if (iconDownloader && iconDownloader.userFriends.userProfileImage.size.height > 5){
                 imgView.image = iconDownloader.userFriends.userProfileImage; 
             } 
@@ -1665,7 +1498,11 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     [iconDownloader startDownload];
                 }
             }
-
+             */
+            
+            if (!isDragging_msg && !isDecliring_msg)
+                 [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+            
             UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 65, 65)];
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 45, 60, 20)];
             [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -1684,7 +1521,8 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
             imgView.layer.masksToBounds = YES;
             [imgView.layer setCornerRadius:7.0];
             
-            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
+            imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
+            
             for (int c=0; c<[selectedFriendsIndex count]; c++)
             {
                 if (i==[[selectedFriendsIndex objectAtIndex:c] intValue]) 
@@ -1692,13 +1530,19 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
                     imgView.layer.borderColor=[[UIColor greenColor] CGColor];
                 }
             }
+            
             [aView addSubview:imgView];
+            [imgView release];
             [aView addSubview:name];
+            [name release];
+            
             UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
             tapGesture.numberOfTapsRequired = 1;
             [aView addGestureRecognizer:tapGesture];
             [tapGesture release];
+            
             [frndListScrollView addSubview:aView];
+            [aView release];
         }
         x+=65;
     }
@@ -1724,12 +1568,9 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 -(void)loadDummydata
 {
-    UserFriends *frnds=[[UserFriends alloc] init];
-    
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
-        frnds=[friendListGlobalArray objectAtIndex:i];
+        UserFriends *frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {
             frnds.imageUrl=[[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
@@ -1791,7 +1632,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 
 - (IBAction)actionSaveAddPplButton:(id)sender 
 {
-    NSMutableArray *userIDs = [self getUserIds];
+    NSMutableArray *userIDs = [[self getUserIds] retain];
     for (UserCircle *userCircle in selectedCircleCheckOriginalArr) 
         [userIDs addObjectsFromArray:userCircle.friends];
     
@@ -1799,6 +1640,7 @@ static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient updateMessageRecipients:@"Auth-Token" authTokenVal:smAppDelegate.authToken msgID:msgParentID recipients:userIDs];
+    [userIDs release];
     [self actionCancelAddPplButton:nil];
 }
 

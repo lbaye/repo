@@ -39,6 +39,8 @@
         catImage.tag   = 2007;
 		catImage.hidden = TRUE; // Temporary - until we get proper icon image
 		[cell.contentView addSubview:catImage];
+        [catImage release];
+        catImage = nil;
     }
     
     UIButton   *review = (UIButton*) [cell viewWithTag:2008];  
@@ -80,7 +82,8 @@
     // Decide on category icon based on passed in value
     NSString* iconPath = [[NSBundle mainBundle] pathForResource:@"category_dining" ofType:@"png"];
     UIImage *catIcon = [[UIImage alloc] initWithContentsOfFile:iconPath];
-    return catIcon;
+    //return catIcon;
+    return [catIcon autorelease];
 }
 
 // Button click handlers

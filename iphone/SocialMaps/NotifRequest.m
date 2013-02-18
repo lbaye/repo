@@ -178,11 +178,8 @@
         decline     = (UIButton*) [cell viewWithTag:2008];
         ignore     = (UIButton*) [cell viewWithTag:2009];
         lblCount   = (UILabel*) [cell viewWithTag:2013];
-        accept      = (UIButton*) [cell viewWithTag:2007];
         btnAcceptBg      = (UIImageView*) [cell viewWithTag:2010];
-        decline      = (UIButton*) [cell viewWithTag:2008];
         btnDeclineBg = (UIImageView*) [cell viewWithTag:2011];
-        ignore      = (UIButton*) [cell viewWithTag:2009];
         btnIgnoreBg = (UIImageView*) [cell viewWithTag:2012];
 	}
     

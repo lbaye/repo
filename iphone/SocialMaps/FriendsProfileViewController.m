@@ -29,6 +29,10 @@
 #import "FriendListViewController.h"
 #import "FriendsPlanListViewController.h"
 #import "ODRefreshControl.h"
+#import "NotifMessage.h"
+#import "MessageListViewController.h"
+#import "UserBasicProfileViewController.h"
+#import "NSData+Base64.h"
 
 @interface FriendsProfileViewController ()
 
@@ -98,11 +102,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [addressOrvenueLabel.layer setCornerRadius:3.0f];
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;
+    photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    photoPicker.delegate = self;
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
     
     nameLabl.layer.shadowRadius = 5.0f;
     nameLabl.layer.shadowOpacity = .9;
@@ -122,7 +126,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     rc=[[RestClient alloc] init];
     userInfo=[[UserInfo alloc] init];
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:profileScrollView] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getOtherUserProfileDone:) name:NOTIF_GET_OTHER_USER_PROFILE_DONE object:nil];    
     
@@ -191,6 +195,13 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     [profileScrollView addSubview:indicator];
     [profileScrollView addSubview:profileView];
     [self reloadScrolview];
+    [indicator release];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self displayNotificationCount];
 }
 
 -(void)reloadProfileScrollView
@@ -240,6 +251,10 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)viewOnMapButton:(id)sender
 {
+    
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
     [self.view addSubview:mapContainer];
 }
 
@@ -253,12 +268,9 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 
 - (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
-    NSString *fragment, *scheme;
     
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         [webView stopLoading];
-        fragment = [[request URL] fragment];
-        scheme = [[request URL] scheme];
         NSString *dataStr=[[request URL] absoluteString];
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
@@ -282,9 +294,18 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         {
             NSString *userId=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:3];
             NSLog(@"userID string: %@",userId);
-            if ([userId isEqualToString:userInfo.userId])
+            if ([userId isEqualToString:smAppDelegate.userId])
             {
                 NSLog(@"own profile");
+                UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
+                controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                [self presentModalViewController:controller animated:YES];
+                [controller release];
+
+            }
+            else if([userId isEqualToString:userInfo.userId])
+            {
+                NSLog(@"same profile");
             }
             else
             {
@@ -292,7 +313,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 controller.friendsId=userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                
+                [controller release];
             }
         }
         else if ([tagStr isEqualToString:@"geotag"])
@@ -340,7 +361,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"newsfeed image url: %@",imageUrlStr);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
         if (img)
@@ -352,29 +372,42 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         {
             newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
         }
-        
+        [img release];
         NSLog(@"image setted after download newsfeed image. %@",img);
-        [pl drain];
     }
 }
 
 -(IBAction)friendRequestButton:(id)sender
 {
-    RestClient *restClient = [[[RestClient alloc] init] autorelease];
-    [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
-    [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
-    [addFrndButton setUserInteractionEnabled:NO];
-    [frndStatusButton setHidden:YES];
+    if ([userInfo.friendshipStatus isEqualToString:@"friend"]) 
+    {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is already your friend.",userInfo.firstName]];
+    }
+    else
+    {
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
+        [restClient sendFriendRequest:userInfo.userId message:@"" authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [addFrndButton setTitle:@"Requested..." forState:UIControlStateNormal];
+        [addFrndButton setEnabled:NO];
+        [frndStatusButton setHidden:YES];
+    }
 }
 
 -(IBAction)uploadPhotoButton:(id)sender
 {
-    NSLog(@"meet up request");
-    MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
-    controller.selectedfriendId = userInfo.userId;
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentModalViewController:controller animated:YES];
-    [controller release];
+    if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
+    {
+        [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ is not in your friend list.",userInfo.firstName]];
+    }
+    else
+    {        
+        NSLog(@"meet up request");
+        MeetUpRequestController *controller = [[MeetUpRequestController alloc] initWithNibName:@"MeetUpRequestController" bundle:nil];
+        controller.selectedfriendId = userInfo.userId;
+        controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentModalViewController:controller animated:YES];
+        [controller release];
+    }
 }
 
 -(IBAction)getDirection:(id)sender
@@ -393,6 +426,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)closeMap:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [mapContainer removeFromSuperview];
 }
 
@@ -460,7 +498,19 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
 
 -(IBAction)showMsgView:(id)sender
 {
-    [self.view addSubview:msgView];
+    NotifMessage *notifMessage = [[NotifMessage alloc] init];
+    notifMessage.notifID = @"NewMsg";
+    notifMessage.notifSenderId = userInfo.userId;
+    NSLog(@"receipient id = %@", notifMessage.notifSenderId);
+    UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MessageListViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"messageList"];
+    controller.selectedMessage = notifMessage;
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+    [self presentModalViewController:nav animated:YES];
+    nav.navigationBarHidden = YES;
+    [notifMessage release];
+
 }
 
 -(void) displayNotificationCount {
@@ -604,6 +654,12 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     //add annotation to map
     [mapView removeAnnotations:[self.mapView annotations]];
+    mapContainer.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    mapContainer.userInteractionEnabled=YES;
+    mapContainer.layer.borderWidth=1.0;
+    mapContainer.layer.masksToBounds = YES;
+    [mapContainer.layer setCornerRadius:5.0];
+
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [userInfo.currentLocationLat doubleValue];
     theCoordinate.longitude = [userInfo.currentLocationLng doubleValue];
@@ -613,7 +669,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     
     NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
 	DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-    
+        [geoLocation release];
     if ((!userInfo.address.city) || ([userInfo.address.city isEqualToString:@""]))
     {
         annotation.title =[NSString stringWithFormat:@"Address not found"];
@@ -641,31 +697,27 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [addFrndButton setTitle:@"Rejected" forState:UIControlStateNormal];
             [addFrndButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"requested"]) {
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
             [addFrndButton setTitle:@"Requested" forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         } else if ([friendShipStatus isEqualToString:@"pending"]) {
             [addFrndButton setTitle:@"Pending" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:YES];
         }
         else if ([friendShipStatus isEqualToString:@"friend"]) {
             [addFrndButton setTitle:@"Friend" forState:UIControlStateNormal];
             [addFrndButton setBackgroundImage:[UIImage imageNamed:@"btn_bg_light_small.png"] forState:UIControlStateNormal];
-            addFrndButton.userInteractionEnabled = NO;
+            addFrndButton.enabled = NO;
             [frndStatusButton setHidden:NO];
         }
     }
     
-    if (![userInfo.friendshipStatus isEqualToString:@"friend"]) 
-    {
-        [meetUpButton setEnabled:NO];
-    }
     [userInfo retain];
     }
     else
@@ -686,6 +738,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                                           cancelButtonTitle:@"Yes"
                                           otherButtonTitles:@"No", nil];
     [alert show];
+    [alert release];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -762,7 +815,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
     }
 	annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+	annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2dm",userInfo.distance];
 	[self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
     [self.mapView addAnnotation:annotation];
     
@@ -840,7 +893,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
         if (img)
@@ -857,7 +909,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         }
         
         NSLog(@"image setted after download1. %@",img);
-        [pl drain];
+        [img release];
     }
 }
 
@@ -870,8 +922,6 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
     }
     else
     {
-        
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         //temp use
         UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
@@ -888,8 +938,8 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             profileImageView.image=[UIImage imageNamed:@"sm_icon@2x.png"];
         }
         
-        NSLog(@"image setted after download2. %@",img2);    
-        [pl drain];
+        NSLog(@"image setted after download2. %@",img2);
+        [img2 release];
     }
 }
 
@@ -992,7 +1042,11 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
                 UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
                 tapGesture.numberOfTapsRequired = 1;
                 [aView addGestureRecognizer:tapGesture];
-                [tapGesture release];  
+                [tapGesture release];
+                [aView release];
+                [name release];
+                [iconview release];
+                [imgView release];
             }       
             x+=65;   
         }
@@ -1013,6 +1067,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
+        [img release];
     }
 }
 
@@ -1205,6 +1260,7 @@ int newsFeedscrollHeight,reloadFeedCounter=0, reloadFrndsProfileCounter=0;
         [msgView resignFirstResponder];
         [textViewNewMsg resignFirstResponder];
         [msgView removeFromSuperview];
+        [userIDs release];
     }
 }
 

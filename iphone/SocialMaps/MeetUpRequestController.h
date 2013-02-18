@@ -15,7 +15,6 @@
 #import <UIKit/UIKit.h>
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>
-//#import "IconDownloader.h"
 
 @class AppDelegate;
 @class LocationItemPlace;
@@ -34,7 +33,6 @@
     BOOL isDragging_msg;
     BOOL isDecliring_msg;
     CGFloat animatedDistance;
-    NSMutableDictionary *dicImages_msg;
     NSMutableArray *ImgesName;
     
     AppDelegate *smAppDelegate;

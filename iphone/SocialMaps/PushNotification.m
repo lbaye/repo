@@ -42,7 +42,7 @@
 
 + (PushNotification*)parsePayload:(NSDictionary*) payload
 {
-    PushNotification *newNotif = [[PushNotification alloc] init];
+    PushNotification *newNotif = [[[PushNotification alloc] init] autorelease];
     newNotif.message = [[payload objectForKey:@"aps"] objectForKey:@"alert"];
     newNotif.badgeCount = 0;
     if ([[payload objectForKey:@"aps"] objectForKey:@"badge"] != [NSNull null])

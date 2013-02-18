@@ -209,7 +209,6 @@ LocationItem *locationItem;
     eventBtn.backgroundColor = [UIColor clearColor];
     eventBtn.tag = 11003;
     [infoView addSubview:eventBtn];
-    NSLog(@"eventBtn.frame %@",eventBtn.frame);
     
     // Plan
     UIImage *planImg = [UIImage imageNamed:@"place_plan.png"];

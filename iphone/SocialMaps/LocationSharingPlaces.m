@@ -62,10 +62,10 @@
         
         // Dividers
         if (i > 0) {
-            UIView *sep;
-            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
+            UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
             sep.backgroundColor = [UIColor lightGrayColor];
             [aLoc addSubview:sep];
+            [sep release];
         }
 
         [self addSubview:aLoc];
@@ -120,12 +120,16 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
+    lineImage = nil;
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
+    [locSharing release];
+    locSharing = nil;
 }
 
 - (void) addPlaceSharingView:(int)tag prefs:(int)prefs{
@@ -148,6 +152,8 @@
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
+    [lineImage release];
+    [locSharing release];
 }
 
 - (void) removePlaceSharingView:(int)tag {

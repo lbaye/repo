@@ -54,6 +54,10 @@
 
         timeStr = [dateFormatter stringFromDate:notifTime];
     }
+    [dateFormatter release];
+    [yesterdayDate release];
+    [today release];
+    [gregorian release];
     return timeStr;
 }
 
@@ -81,8 +85,7 @@
     UILabel *lblFixed; // "are near you:"
 	UILabel *lblTime;
     UITextView *txtMsg;
-    UIView *line;
-    
+        
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:@"notifList"];
     
     if (cell == nil) {
@@ -128,17 +131,18 @@
         
         // Line
         CGRect lineFrame = CGRectMake(0, CellFrame.size.height-3, CellFrame.size.width, 2);
-        line = [[UIView alloc] initWithFrame:lineFrame];
+        UIView *line = [[UIView alloc] initWithFrame:lineFrame];
+        line.frame = lineFrame;
         line.tag = 2006;
         line.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:line];
-		
+        [line release];
+        line = nil;
     } else {
 		lblSender  = (UILabel*) [cell viewWithTag:2002];
         lblFixed  = (UILabel*) [cell viewWithTag:2003];
 		lblTime    = (UILabel*) [cell viewWithTag:2004];
 		txtMsg     = (UITextView*) [cell viewWithTag:2005];
-        line       = (UIView*) [cell viewWithTag:2006];
 	}
     
 	// Sender
@@ -158,8 +162,6 @@
     txtMsg.userInteractionEnabled = FALSE;
     
     // Bottom line
-    CGRect lineFrame = CGRectMake(0, CellFrame.size.height-3, CellFrame.size.width, 2);
-    line.frame = lineFrame;
     
 	return cell;
 }

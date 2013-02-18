@@ -112,7 +112,7 @@
 - (void) updateButtonClicked:(id)sender {
     NSLog(@"ResetPassword:updateButtonClicked called");
     if ([passwordNew.text isEqualToString:passwordConfirm.text]) {
-        RestClient *restClient = [[RestClient alloc] init];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         bool stat = [restClient changePassword:passwordNew.text oldpasswd:password.text authToken:@"Auth-Token" authTokenVal:appDelegate.authToken];
         if (stat == TRUE) {

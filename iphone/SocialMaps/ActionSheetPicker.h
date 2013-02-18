@@ -14,7 +14,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ActionSheetPicker : NSObject <UIPickerViewDelegate, UIPickerViewDataSource> 
+@interface ActionSheetPicker : NSObject <UIPickerViewDelegate, UIPickerViewDataSource>
 {
 	UIView *_view;
 	
@@ -64,10 +64,10 @@
 + (void)displayActionPickerWithView:(UIView *)aView datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action title:(NSString *)title;
 
 //display for date of birth
-+ (void)displayActionPickerWithView:(UIView *)aView dateOfBirthPickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action title:(NSString *)title ;
++ (void)displayActionPickerWithView:(UIView *)aView dateOfBirthPickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate target:(id)target action:(SEL)action title:(NSString *)title;
 
 
-- (id)initForDateOfBirthWithContainingView:(UIView *)aView datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate;
+- (id)initForDateOfBirthWithContainingView:(UIView *)aView datePickerMode:(UIDatePickerMode)datePickerMode selectedDate:(NSDate *)selectedDate  target:(id)target action:(SEL)action title:(NSString *)title;
 
 - (id)initWithContainingView:(UIView *)aView target:(id)target action:(SEL)action;
 

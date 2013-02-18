@@ -46,5 +46,7 @@
 @synthesize status;
 @synthesize shareLocationOption;
 @synthesize friendshipStatus;
+@synthesize userFirstName;
+@synthesize userLastName;
 
 @end

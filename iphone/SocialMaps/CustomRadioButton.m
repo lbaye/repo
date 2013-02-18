@@ -26,10 +26,25 @@
         self.labels   = lbl;
         self.backgroundColor = [UIColor clearColor];
         self.tag = tag;
+        textColor = nil;
     }
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame numButtons:(int)numButtons labels:(NSArray*)lbl default:(int)def sender:(id)sender tag:(int)tag color:(UIColor*)color
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        self.numRadio = numButtons;
+        self.selIndex = def;
+        self.labels   = lbl;
+        self.backgroundColor = [UIColor clearColor];
+        self.tag = tag;
+        textColor = color;
+    }
+    return self;
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -50,6 +65,7 @@
     UIImageView *rectView = [[UIImageView alloc] initWithFrame:rectFrame];
     rectView.backgroundColor = [UIColor colorWithRed:102.0/255.0 green:102.0/255.0 blue:102.0/255.0 alpha:1.0];
     [self addSubview:rectView];
+    [rectView release];
     int offset = 0;
     if (numRadio == 1)
         offset = (self.frame.size.width-CELL_PADDING*2-radioSize.width)/2;
@@ -91,6 +107,7 @@
         UILabel *lblRadio = [[UILabel alloc] initWithFrame:lblFrame];
         lblRadio.backgroundColor = [UIColor clearColor];
         lblRadio.text     = [labels objectAtIndex:i];
+        if (textColor) lblRadio.textColor = textColor;
         lblRadio.font     = [UIFont fontWithName:@"Helvetica" size:10.0];
         [self addSubview:lblRadio];
         [lblRadio release];   

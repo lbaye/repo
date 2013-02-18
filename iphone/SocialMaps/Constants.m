@@ -9,7 +9,6 @@
 #import "Constants.h"
 
 NSString * const WS_URL = @"http://services.socialmapsapp.com/v2_0";
-//NSString * const WS_URL = @"http://services.socialmapsapp.com/prodtest";
 NSString * const NOTIF_LOGIN_DONE = @"com.genweb2.socialmaps.logindone";
 NSString * const NOTIF_REG_DONE = @"com.genweb2.socialmaps.regdone";
 NSString * const NOTIF_FORGOT_PW_DONE = @"com.genweb2.socialmaps.forgotpwdone";
@@ -76,6 +75,9 @@ NSString * const NOTIF_FRIENDS_REQUEST_ACCEPTED=@"com.genweb2.socialmaps.friends
 NSString * const NOTIF_LOCATION_SHARING_SETTING_DONE=@"com.genweb2.socialmaps.locationsharingsettingdone";
 NSString * const NOTIF_GET_MESSAGE_WITH_ID_DONE=@"com.genweb2.socialmaps.notifgetmessagewithiddone";
 NSString * const NOTIF_SEND_REPLY_DONE=@"com.genweb2.socialmaps.notifsendreplydone";
+NSString * const NOTIF_GET_NEW_THREAD_DONE=@"com.genweb2.socialmaps.notifgetnewthread";
+NSString * const SET_SHARE_LOCATION_DONE=@"com.genweb2.socialmaps.setsharelocation";
+
 
 NSString * const FB_APPID = @"343783602384766"; // Social Maps
 
@@ -94,3 +96,4 @@ float const kNumberRGBRed			= 0.44;
 float const kNumberRGBGreen			= 0.67;
 float const kNumberRGBBlue			= 0.0;
 
+int const MAX_VISIBLE_ANNO          = 40;

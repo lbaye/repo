@@ -47,6 +47,22 @@
  */
 - (id)objectWithString:(NSString *)repr;
 
+
+/**
+ @brief Return the object represented by the given string
+ 
+ This method calls objectWithString: internally. If an error occurs, and if @p error
+ is not nil, it creates an NSError object and returns this through its second argument.
+ 
+ @param jsonText the json string to parse
+ @param error pointer to an NSError object to populate on error
+ 
+ @return The NSArray or NSDictionary represented by the object, or nil if an error occured.
+ */
+
+- (id)objectWithString:(NSString*)jsonText
+                 error:(NSError**)error;
+
 @end
 
 

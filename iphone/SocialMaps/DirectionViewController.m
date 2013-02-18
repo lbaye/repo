@@ -373,7 +373,7 @@
 {
     //Use r for transit, b for bicycle, d for driving, h for avoid highways, t for avoid tolls.
     
-    NSString *selectedTransportMode;
+    NSString *selectedTransportMode = @"";
     
     switch (transportMode) {
         case 1:
@@ -393,7 +393,7 @@
     }
     
     //close our app and open map app installed in iPhone
-    NSString *urlString=[NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f&dirflg=%@", annotationFrom.coordinate.latitude, annotationFrom.coordinate.longitude, annotationTo.coordinate.latitude, annotationTo.coordinate.longitude, selectedTransportMode];
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f&dirflg=%@", annotationFrom.coordinate.latitude, annotationFrom.coordinate.longitude, annotationTo.coordinate.latitude, annotationTo.coordinate.longitude, selectedTransportMode];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
     
     [self dismissModalViewControllerAnimated:YES];
@@ -476,6 +476,7 @@
         [labelPlaceName setFont:[UIFont fontWithName:kFontName size:kMediumLabelFontSize]];
         labelPlaceName.tag = 1001;
         [cell.contentView addSubview:labelPlaceName];
+        [labelPlaceName release];
     } 
     
     UILabel *labelPlaceName = (UILabel*)[cell.contentView viewWithTag:1001];
@@ -503,7 +504,7 @@
     }
     
     
-    UIButton *selectBtn;
+    UIButton *selectBtn = nil;
     
     for (UIView *eachView in [cell.contentView subviews]) {
         if ([eachView isKindOfClass:[UIButton class]]) {
@@ -512,7 +513,7 @@
         }
     }
     
-    int selectedPlaceIndex;
+    int selectedPlaceIndex = 0;
     
     if (tableView == tableViewPlacesFrom) {
         selectedPlaceIndex = selectedPlaceIndexFrom;

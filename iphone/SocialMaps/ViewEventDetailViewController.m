@@ -27,7 +27,7 @@
 @synthesize inviteEventButton,totalNotifCount;               
 @synthesize addressScollview,imagesName,results,frndsScrollView,circleTableView,friendSearchbar,segmentControl,customView;
 
-NSMutableArray *imageArr, *nameArr, *idArr;
+NSMutableArray *imageArr, *nameArrEventDetail, *idArr;
 bool menuOpen=NO;
 AppDelegate *smAppDelegate;
 int notfCounter=0;
@@ -60,7 +60,7 @@ NSString *searchText;
     RestClient *rc=[[RestClient alloc] init];
     NSLog(@"globalEvent %@ %@",globalEvent,globalEvent.eventID);
     [rc getEventDetailById:globalEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
-
+    [rc release];
 
 }
 
@@ -73,8 +73,7 @@ NSString *searchText;
     NSLog(@"smAppDelegate.userId: %@",smAppDelegate.userId);
     [smAppDelegate showActivityViewer:self.view];
     [smAppDelegate.window setUserInteractionEnabled:NO];
-    Event *aEvent=[[Event alloc] init];
-    aEvent=globalEvent;
+    Event *aEvent=globalEvent;
     NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
     
     isBackgroundTaskRunning=TRUE;
@@ -99,7 +98,6 @@ NSString *searchText;
     }
     
     [mapView removeAnnotations:[self.mapView annotations]];
-    aEvent=[[Event alloc] init];
     aEvent=globalEvent;
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];
@@ -192,13 +190,13 @@ NSString *searchText;
 {
     circleList=[[NSMutableArray alloc] init];
     [circleList removeAllObjects];
-    UserCircle *circle=[[UserCircle alloc]init];
+    UserCircle *circle;
     for (int i=0; i<[circleListGlobalArray count]; i++)
     {
         circle=[circleListGlobalArray objectAtIndex:i];
         [circleList addObject:circle.circleName];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
+    UserFriends *frnds;
     ImgesName = [[NSMutableArray alloc] init];    
     searchTexts=[[NSString alloc] initWithString:@""];
     friendsNameArr=[[NSMutableArray alloc] init];
@@ -210,7 +208,6 @@ NSString *searchText;
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
     {
-        frnds=[[UserFriends alloc] init];
         frnds=[friendListGlobalArray objectAtIndex:i];
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
         {
@@ -238,7 +235,7 @@ NSString *searchText;
     [self.mapContainer removeFromSuperview];
     detNotfCounter=0;
     imagesName = [[NSMutableArray alloc] init];
-    nameArr=[[NSMutableArray alloc] init];
+    nameArrEventDetail = [[NSMutableArray alloc] init];
     idArr=[[NSMutableArray alloc] init];
     smAppDelegate.currentModelViewController = self;
     [customView removeFromSuperview];
@@ -315,6 +312,7 @@ NSString *searchText;
                 break;
         }
     }
+    [rc release];
 }
 
 -(void)loadImageView
@@ -336,6 +334,7 @@ NSString *searchText;
         eventImgView.image=[UIImage imageNamed:@"blank.png"];
     }
     NSLog(@"image setted after download. %@",img);
+        [img release];
     }
 }
 
@@ -371,8 +370,7 @@ NSString *searchText;
         {
             if(i< [FriendList count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[FriendList objectAtIndex:i];
+                UserFriends *userFrnd=[FriendList objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
@@ -436,6 +434,9 @@ NSString *searchText;
                 [aView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [frndsScrollView addSubview:aView];
+                [aView release];
+                [name release];
+                [imgView release];
             }        
             x+=80;
         }
@@ -447,8 +448,7 @@ NSString *searchText;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[FriendList objectAtIndex:index];
+        UserFriends *userFrnd=[FriendList objectAtIndex:index];
         
         NSString *Link = userFrnd.imageUrl;
         //Start download image from url
@@ -459,6 +459,7 @@ NSString *searchText;
             [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
             [self reloadFriendsScrollview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -475,8 +476,7 @@ NSString *searchText;
     {
         [selectedFriends addObject:[FriendList objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[FriendList objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[FriendList objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriends : %@ %@",selectedFriends,frndsScrollView);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -515,6 +515,7 @@ NSString *searchText;
     [rc setEventRsvp:globalEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
+    [rc release];
 
 }
 
@@ -526,6 +527,7 @@ NSString *searchText;
     [rc setEventRsvp:globalEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
+    [rc release];
 
 }
 
@@ -537,7 +539,7 @@ NSString *searchText;
     [rc setEventRsvp:globalEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
-
+    [rc release];
 }
 
 -(IBAction)closeMap:(id)sender
@@ -603,8 +605,6 @@ NSString *searchText;
             [globalEvent.permittedCircles addObject:circleId];
             NSLog(@"circleID %@",circleId);
             [circleIDList addObject:circleId];
-            [circle release];
-            [circleId release];
         }
         
         [smAppDelegate showActivityViewer:self.view];
@@ -637,9 +637,8 @@ NSString *searchText;
     [smAppDelegate showActivityViewer:self.view];    
     [smAppDelegate.window setUserInteractionEnabled:NO];
 
-    RestClient *rc=[[RestClient alloc] init];
-    Event *aEvent=[[Event alloc] init];
-    aEvent=globalEvent;
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
+    Event *aEvent=globalEvent;
     NSLog(@"aEvent.eventID: %@  smAppDelegate.authToken: %@",aEvent.eventID,smAppDelegate.authToken);
     [rc deleteEventById:aEvent.eventID:@"Auth-Token":smAppDelegate.authToken];
 }
@@ -698,6 +697,9 @@ NSString *searchText;
         [aView addSubview:imgView];
         [aView addSubview:name];
         [guestScrollView addSubview:aView];
+        [aView release];
+        [name release];
+        [imgView release];
         NSLog(@" :%d",i*60);
     }
 }
@@ -792,8 +794,8 @@ NSString *searchText;
             [name setFont:[UIFont fontWithName:@"Helvetica" size:10]];
             [name setNumberOfLines:0];
             
-            if ([nameArr count]-1>=i) {
-                [name setText:[nameArr objectAtIndex:i]];
+            if ([nameArrEventDetail count]-1>=i) {
+                [name setText:[nameArrEventDetail objectAtIndex:i]];
             }
             
             [name setBackgroundColor:[UIColor clearColor]];
@@ -825,7 +827,10 @@ NSString *searchText;
             [imgView.layer setCornerRadius:7.0];
             [aView addSubview:imgView];
             [aView addSubview:name];
-            [guestScrollView addSubview:aView];           
+            [guestScrollView addSubview:aView];
+            [imgView release];
+            [aView release];
+            [name release];
         }       
             x+=65;   
     }
@@ -836,16 +841,13 @@ NSString *searchText;
 {
     if (isBackgroundTaskRunning==TRUE) 
     {
-    NSAutoreleasePool *pl = [[NSAutoreleasePool alloc] init];
     int index = [path intValue];
     NSString *Link = [imagesName objectAtIndex:index];
     //Start download image from url
-        UIImage *img;
-        if ([Link isEqual:[NSNull null]]) {
-            img = [UIImage imageNamed:@"blank.png"];
-        }
-        else {
-            img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
+        UIImage *img = [UIImage imageNamed:@"blank.png"];
+        if ([Link isEqual:[NSString class]])
+        {
+            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
         }
     if((img) && ([dicImages_msg objectForKey:[imagesName objectAtIndex:index]]==NULL))
     {
@@ -856,7 +858,6 @@ NSString *searchText;
         
     }
     // Now, we need to reload scroll view to load downloaded image
-    [pl release];
     }
 }
 
@@ -933,15 +934,6 @@ NSString *searchText;
     SelectCircleTableCell *cell = [circleTableView
                                    dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    
-    if (cell == nil)
-    {
-        cell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-        
-    }
-    
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
     {
@@ -1007,7 +999,7 @@ NSString *searchText;
         }
         else
         {
-            searchText=@"";
+            searchTexts=@"";
             [FriendList removeAllObjects];
             FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadFriendsScrollview];
@@ -1017,7 +1009,7 @@ NSString *searchText;
     {
         
     }
-    searchText=friendSearchbar.text;
+    searchTexts=friendSearchbar.text;
     
     if ([searchText length]>0) 
     {
@@ -1026,7 +1018,7 @@ NSString *searchText;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [FriendList removeAllObjects];
         FriendList = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadFriendsScrollview];
@@ -1151,12 +1143,11 @@ NSString *searchText;
     {
         UserFriends *frnd;
         [imagesName removeAllObjects];
-        [nameArr removeAllObjects];
+        [nameArrEventDetail removeAllObjects];
         [idArr removeAllObjects];
         
         for (int i=0; i<[globalEvent.guestList count]; i++)
         {
-            frnd=[[UserFriends alloc] init];
             frnd=[globalEvent.guestList objectAtIndex:i];
             NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
             if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
@@ -1168,7 +1159,7 @@ NSString *searchText;
                 NSLog(@"img url not null %d",i);            
             }
             [imagesName addObject:frnd.imageUrl];
-            [nameArr addObject:frnd.userName];
+            [nameArrEventDetail addObject:frnd.userName];
             [idArr addObject:frnd.userId];
         }
 
@@ -1187,15 +1178,14 @@ NSString *searchText;
 
 -(void)loadScrollData
 {
-    UserFriends *frnd;
+    
     [imagesName removeAllObjects];
-    [nameArr removeAllObjects];
+    [nameArrEventDetail removeAllObjects];
     [idArr removeAllObjects];
     
     for (int i=0; i<[globalEvent.guestList count]; i++)
     {
-        frnd=[[UserFriends alloc] init];
-        frnd=[globalEvent.guestList objectAtIndex:i];
+        UserFriends *frnd=[globalEvent.guestList objectAtIndex:i];
         NSLog(@"UserFriendsImg %@ frnd %@",frnd.imageUrl,frnd);
         if ((frnd.imageUrl==NULL)||[frnd.imageUrl isEqual:[NSNull null]])
         {
@@ -1206,7 +1196,7 @@ NSString *searchText;
             NSLog(@"img url not null %d",i);            
         }
         [imagesName addObject:frnd.imageUrl];
-        [nameArr addObject:frnd.userName];
+        [nameArrEventDetail addObject:frnd.userName];
         [idArr addObject:frnd.userId];
     }
 

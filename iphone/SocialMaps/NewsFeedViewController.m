@@ -44,7 +44,7 @@ UILabel *statusLabel;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:newsFeedScroller];
+    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:newsFeedScroller] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     // Do any additional setup after loading the view from its nib.
 }
@@ -81,12 +81,8 @@ UILabel *statusLabel;
 }
 
 - (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
-    NSString *fragment, *scheme;
-    
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         [webView stopLoading];
-        fragment = [[request URL] fragment];
-        scheme = [[request URL] scheme];
         NSString *dataStr=[[request URL] absoluteString];
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
@@ -116,6 +112,7 @@ UILabel *statusLabel;
                 UserBasicProfileViewController *controller =[[UserBasicProfileViewController alloc] init];
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
+                [controller release];
             }
             else
             {
@@ -123,7 +120,7 @@ UILabel *statusLabel;
                 controller.friendsId=userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 [self presentModalViewController:controller animated:YES];
-                
+                [controller release];
             }
         }
         else if ([tagStr isEqualToString:@"geotag"])
@@ -138,7 +135,7 @@ UILabel *statusLabel;
         return NO;
         [[UIApplication sharedApplication] openURL: [request URL]];
     }
-    
+
     return YES;
 }
 
@@ -172,7 +169,6 @@ UILabel *statusLabel;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"newsfeed image url: %@",imageUrlStr);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
         if (img)
@@ -184,9 +180,8 @@ UILabel *statusLabel;
         {
             newsfeedImgView.image=[UIImage imageNamed:@"blank.png"];
         }
-        
+        [img release];
         NSLog(@"image setted after download newsfeed image. %@",img);
-        [pl drain];
     }
 }
 

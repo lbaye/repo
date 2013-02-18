@@ -66,6 +66,14 @@
     [self addSubview:bioView];
     [self addSubview:addressView];
     [self addSubview:relstatView];
+    
+    [nameView release];
+    [emailView release];
+    [genderView release];
+    [dobView release];
+    [bioView release];
+    [addressView release];
+    [relstatView release];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -104,6 +112,8 @@
                                     self.contentSize.height+radio.frame.size.height+7);
     [self setContentSize:contentSize];
     [self cascadeHeightChange:tag incr:radio.frame.size.height+7];
+    [radio release];
+    [lineImage release];
     [self setNeedsLayout];
 }
 

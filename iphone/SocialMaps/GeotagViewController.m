@@ -23,6 +23,7 @@
 #import "NotificationController.h"
 #import "CustomRadioButton.h"
 #import "Places.h"
+#import "NSData+Base64.h"
 
 @interface GeotagViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -104,9 +105,7 @@ int geoCounter=0;
     
     circleList=[[NSMutableArray alloc] init];
     
-    [circleList removeAllObjects];
-    
-    UserCircle *circle=[[UserCircle alloc]init];
+    UserCircle *circle;
     guestListIdArr=[[NSMutableArray alloc] init];
     
     
@@ -120,7 +119,7 @@ int geoCounter=0;
         
     }
     
-    UserFriends *frnds=[[UserFriends alloc] init];
+    UserFriends *frnds;
     
     ImgesName = [[NSMutableArray alloc] init];    
     
@@ -139,9 +138,6 @@ int geoCounter=0;
     for (int i=0; i<[friendListGlobalArray count]; i++)
         
     {
-        
-        frnds=[[UserFriends alloc] init];
-        
         frnds=[friendListGlobalArray objectAtIndex:i];
         
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
@@ -187,11 +183,11 @@ int geoCounter=0;
     [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     isBackgroundTaskRunning=true;
 	// Do any additional setup after loading the view.
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;	
+    photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
+    photoPicker.delegate = self;
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;	
     [upperView removeFromSuperview];
     [lowerView removeFromSuperview];
     
@@ -233,6 +229,7 @@ int geoCounter=0;
     eventImagview.layer.borderWidth=5.0;
     eventImagview.layer.cornerRadius=5.0;
     eventImagview.layer.borderColor = [[UIColor colorWithCGColor:colorCMYK] CGColor];
+    CGColorRelease(colorCMYK);
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
@@ -735,6 +732,7 @@ int geoCounter=0;
     {
         [UtilityClass showAlert:@"Social Maps" :msg];
     }
+    [msg release];
 }
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
@@ -851,13 +849,13 @@ int geoCounter=0;
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
     NSDate *date =selectedDate;
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateFormat:@"yyyy-MM-dd hh.mm"];    
     dateString = [dateFormatter stringFromDate:date];    
     dateButton.titleLabel.text=dateString;
+    [dateFormatter release];
 }
 
 
@@ -910,17 +908,6 @@ int geoCounter=0;
     
     SelectCircleTableCell *customCell = [customTableView
                                          dequeueReusableCellWithIdentifier:CustomCellIdentifier];
-    
-    if (cell == nil)
-    {
-        cell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CellIdentifier];
-        
-        customCell = [[SelectCircleTableCell alloc]
-                      initWithStyle:UITableViewCellStyleDefault 
-                      reuseIdentifier:CustomCellIdentifier];
-    }
     
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
@@ -1067,8 +1054,8 @@ int geoCounter=0;
     NSLog(@"event create scroll init");
     if (isBackgroundTaskRunning==true)
     {
-        int x=0; //declared for imageview x-axis point    
-        int x2=0; //declared for imageview x-axis point            
+        int x=0; //declared for imageview x-axis point
+        
         NSArray* subviews = [NSArray arrayWithArray: frndListScrollView.subviews];
         UIImageView *imgView;
         for (UIView* view in subviews) 
@@ -1081,7 +1068,7 @@ int geoCounter=0;
             {
             }
         }
-        NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+        NSArray* subviews1 = [NSArray arrayWithArray: customScrollView.subviews];
         for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
@@ -1101,8 +1088,7 @@ int geoCounter=0;
         {
             if(i< [filteredList1 count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[filteredList1 objectAtIndex:i];
+                UserFriends *userFrnd=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
@@ -1166,6 +1152,9 @@ int geoCounter=0;
                 [aView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [frndListScrollView addSubview:aView];
+                [aView release];
+                [imgView release];
+                [name release];
             }        
             x+=80;
         }
@@ -1179,8 +1168,7 @@ int geoCounter=0;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        UserFriends *userFrnd=[[UserFriends alloc] init];
-        userFrnd=[filteredList1 objectAtIndex:index];
+        UserFriends *userFrnd=[filteredList1 objectAtIndex:index];
         
         NSString *Link = userFrnd.imageUrl;
         //Start download image from url
@@ -1192,6 +1180,7 @@ int geoCounter=0;
             [self reloadScrolview];
         }
         // Now, we need to reload scroll view to load downloaded image
+        [img release];
     }
 }
 
@@ -1207,8 +1196,7 @@ int geoCounter=0;
     {
         [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList1 objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[filteredList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -1301,7 +1289,7 @@ int geoCounter=0;
         }
         else
         {
-            searchText=@"";
+            searchTexts=@"";
             [filteredList2 removeAllObjects];
             filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrolview];
@@ -1321,7 +1309,7 @@ int geoCounter=0;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [filteredList1 removeAllObjects];
         filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
@@ -1650,6 +1638,7 @@ int geoCounter=0;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    [picSel release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -82,7 +82,7 @@ int frndPlanListCounter=0;
     
     int nodeCount = [planListArr count];
     Plan *plan=[planListArr objectAtIndex:indexPath.row];
-    cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",userInfo.lastName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
+    cell.planDescriptionView.text=[NSString stringWithFormat:@"%@ has planned to %@ at %@ %@",userInfo.firstName,plan.planDescription,[[plan.planAddress componentsSeparatedByString:@","] objectAtIndex:0],[UtilityClass getCurrentTimeOrDate:plan.planeDate]];
     cell.addressLabel.text=plan.planAddress;
     CGSize lblStringSize1 = [plan.planAddress sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0f]];
     
@@ -230,7 +230,7 @@ int frndPlanListCounter=0;
             planListArr=[notif object];
             if ([planListArr count]==0)
             {
-                [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ has no plans",userInfo.lastName]];
+                [UtilityClass showAlert:@"" :[NSString stringWithFormat:@"%@ has no plans",userInfo.firstName]];
             }
             [planListTableView reloadData];
             [smAppDelegate hideActivityViewer];

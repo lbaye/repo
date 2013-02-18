@@ -10,7 +10,7 @@
 
 @implementation UIImageView (roundedCorner)
 +(UIImageView*) imageViewWithRect:(CGRect)frame andImage:(NSString*)file withCornerradius:(NSInteger)rad {
-    UIImageView *imgView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:file]];
+    UIImageView *imgView = [[[UIImageView alloc] initWithImage: [UIImage imageNamed:file]] autorelease];
     imgView.frame = frame;
     [imgView.layer setMasksToBounds:YES];
     [imgView.layer setCornerRadius:10.0];
@@ -21,7 +21,7 @@
 }
 
 +(UIImageView*) imageViewWithRectImage:(CGRect)frame andImage:(UIImage*)img withCornerradius:(NSInteger)rad {
-    UIImageView *imgView = [[UIImageView alloc] initWithImage: img];
+    UIImageView *imgView = [[[UIImageView alloc] initWithImage: img] autorelease];
     imgView.frame = frame;
     [imgView.layer setMasksToBounds:YES];
     [imgView.layer setCornerRadius:10.0];
@@ -59,8 +59,7 @@
 
 
     CGImageRef masked = CGImageCreateWithMask([scaledImage CGImage], mask);
-    
-	return [[UIImageView alloc]  initWithImage:[UIImage imageWithCGImage:masked]];
+	return [[[UIImageView alloc]  initWithImage:[UIImage imageWithCGImage:masked]] autorelease];
 }
 
 -(void) setBorderColor:(UIColor*)color {

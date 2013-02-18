@@ -14,6 +14,7 @@
 @synthesize email;
 @synthesize firstName;
 @synthesize lastName;
+@synthesize userName;
 @synthesize avatar;
 @synthesize enabled;
 @synthesize lastLogin;    

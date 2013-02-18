@@ -23,6 +23,7 @@ typedef enum _FRIENDSHIP_STATUS {
     NSString *email;
     NSString *firstName;
     NSString *lastName;
+    NSString *userName;
     NSString *avatar;
     NSString *enabled;
     NSDate *lastLogin;    
@@ -85,5 +86,6 @@ typedef enum _FRIENDSHIP_STATUS {
 @property(nonatomic,retain) NSString *source;
 @property(nonatomic,retain) NSString *lastSeenAtDate;
 @property(nonatomic,assign) BOOL    isOnline;
+@property(nonatomic,retain) NSString *userName;
 
 @end

@@ -15,7 +15,7 @@
 #import "AppDelegate.h"
 
 @implementation FacebookHelper
-@synthesize facebook;
+@synthesize facebookApi;
 
 static FacebookHelper *sharedInstance=nil;
 bool frndListFlag=FALSE;
@@ -40,13 +40,13 @@ UserDefault *userDefault;
     self = [super init];
     if (self) {
         // Work your initialising magic here as you normally would
-        facebook = [[Facebook alloc] initWithAppId:FB_APPID andDelegate:self];
+        facebookApi = [[Facebook alloc] initWithAppId:FB_APPID andDelegate:self];
 
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         if ([defaults objectForKey:@"FBAccessTokenKey"] 
             && [defaults objectForKey:@"FBExpirationDateKey"]) {
-            facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-            facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+            facebookApi.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+            facebookApi.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
         }
     }
     
@@ -90,19 +90,39 @@ UserDefault *userDefault;
 
 - (void)fbDidLogin {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSLog(@"Access Token is %@", facebook.accessToken );
-    NSLog(@"Expiration Date is %@", facebook.expirationDate );
-    
-    if ([facebook accessToken]) 
+    NSLog(@"Access Token is %@", facebookApi.accessToken );
+    NSLog(@"Expiration Date is %@", facebookApi.expirationDate );
+    if (![facebookApi.accessToken isKindOfClass:[NSString class]])
     {
-        [prefs setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];        
+        NSLog(@"got facebook access token null so asking for permission again");
+        NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                @"email",
+                                @"user_likes",
+                                @"user_photos",
+                                @"publish_checkins",
+                                @"photo_upload",
+                                @"user_location",
+                                @"user_birthday",
+                                @"user_about_me",
+                                @"publish_stream",
+                                @"read_stream",
+                                @"friends_status",
+                                @"user_checkins",
+                                @"friends_checkins",
+                                nil];
+        [facebookApi authorize:permissions];
+        [permissions release];
     }
-    [prefs setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    if ([facebookApi accessToken])
+    {
+        [prefs setObject:[facebookApi accessToken] forKey:@"FBAccessTokenKey"];
+    }
+    [prefs setObject:[facebookApi expirationDate] forKey:@"FBExpirationDateKey"];
     [prefs synchronize];
     NSLog(@"did log in");
     [self getUserInfo:self];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    smAppDelegate.fbAccessToken = [facebook accessToken];
+    smAppDelegate.fbAccessToken = [facebookApi accessToken];
 }
 
 - (void)fbDidNotLogin:(BOOL)cancelled {
@@ -127,20 +147,18 @@ UserDefault *userDefault;
 }
 
 - (void)getUserInfo:(id)sender {
-    [facebook requestWithGraphPath:@"me" andDelegate:self];
+    [facebookApi requestWithGraphPath:@"me" andDelegate:self];
 }
 
 - (void)getUserFriendListRequest:(id)sender
 {
     frndListFlag=TRUE;
-    [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
+    [facebookApi requestWithGraphPath:@"me/friends" andDelegate:self];
 }
 
 -(void)getUserFriendListFromFB:(id)result
 {
-    NSArray * items=[[NSArray alloc] init];
-    
-    items= [[(NSDictionary *)result objectForKey:@"data"]retain];
+    NSArray *items= [[(NSDictionary *)result objectForKey:@"data"]retain];
     NSLog(@"getUserFriendListFromFB items %d",[items count]);
 
     for (int i=0; i<[items count]; i++) 
@@ -219,12 +237,12 @@ UserDefault *userDefault;
         User *aUser = [[User alloc] init];
         [aUser setFirstName:firstName];
         [aUser setLastName:lastName];
-        [aUser setFacebookAuthToken:[facebook accessToken]];
+        [aUser setFacebookAuthToken:[facebookApi accessToken]];
         [aUser setEmail:email];
         [aUser setFacebookId:fbId];
         [aUser setGender:gender];
         [aUser setDateOfBirth:dob];
-        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal", userName]]; 
+        [aUser setAvatar:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=normal", fbId]];
         AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FBLOGIN_DONE object:aUser];
@@ -238,7 +256,7 @@ UserDefault *userDefault;
         if (smAppDelegate.smLogin==TRUE)
         {
             NSLog(@"callin get connect fb");
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebook.accessToken];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DO_CONNECT_WITH_FB object:facebookApi.accessToken];
         }
 
         [prefs synchronize];
@@ -255,7 +273,7 @@ UserDefault *userDefault;
 
 -(void)inviteFriends:(NSMutableArray *)frndList
 {
-    facebook = [[FacebookHelper sharedInstance] facebook];
+    facebookApi = [[FacebookHelper sharedInstance] facebookApi];
     AppDelegate *smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary* params;
@@ -283,9 +301,9 @@ UserDefault *userDefault;
     
         
     NSLog(@"facebook params: %@", params);
-    NSLog(@"delegate %@  userdef %@ fb %@", smAppDelegate.fbAccessToken,[prefs stringForKey:@"FBAccessTokenKey"],[facebook accessToken]);
+    NSLog(@"delegate %@  userdef %@ fb %@", smAppDelegate.fbAccessToken,[prefs stringForKey:@"FBAccessTokenKey"],[facebookApi accessToken]);
 
-    [facebook dialog:@"apprequests" andParams:params andDelegate:self];
+    [facebookApi dialog:@"apprequests" andParams:params andDelegate:self];
 
 
 }

@@ -39,6 +39,7 @@
             locPlatform.privacy.duration = 0;
             numSections++;
             [smAppDelegate.locSharingPrefs.platforms addObject:locPlatform];
+            [locPlatform release];
         }
         CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (ROW_HEIGHT+2)*numSections);
         self.frame = newFrame;
@@ -69,10 +70,10 @@
         
         // Dividers
         if (i > 0) {
-            UIView *sep;
-            sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
+            UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
             sep.backgroundColor = [UIColor lightGrayColor];
             [aPlatform addSubview:sep];
+            [sep release];
         }
         [self addSubview:aPlatform];
         [aPlatform release];
@@ -130,12 +131,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
+    [locSharing release];
 }
 
 - (void) removeLocSharingView:(int)tag {

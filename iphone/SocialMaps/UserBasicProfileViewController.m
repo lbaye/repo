@@ -26,6 +26,7 @@
 #import "Globals.h"
 #import "ODRefreshControl.h"
 #import "FriendsProfileViewController.h"
+#import "NSData+Base64.h"
 
 @interface UserBasicProfileViewController ()
 
@@ -84,11 +85,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [distanceLabel.layer setCornerRadius:3.0f];
     selectedScrollIndex=[[NSMutableArray alloc] init];
     [self displayNotificationCount];
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;
+    photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
+    photoPicker.delegate = self;
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
     nameButton.titleLabel.layer.shadowRadius = 5.0f;
     nameButton.titleLabel.layer.shadowOpacity = .9;
     nameButton.titleLabel.layer.shadowOffset = CGSizeZero;
@@ -112,7 +113,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [rc getUserProfile:@"Auth-Token":smAppDelegate.authToken];
     nameArr=[[NSMutableArray alloc] init];
     ImgesName=[[NSMutableArray alloc] init];
-    ODRefreshControl *refreshControl = [[ODRefreshControl alloc] initInScrollView:profileScrollView];
+    ODRefreshControl *refreshControl = [[[ODRefreshControl alloc] initInScrollView:profileScrollView] autorelease];
     [refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
     nameArr=[[NSMutableArray alloc] initWithObjects:@"Photos",@"Friends",@"Events",@"Places",@"Meet-up",@"Plan", nil];
     [ImgesName addObject:@"photos_icon"];
@@ -138,6 +139,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     [profileScrollView addSubview:indicator];
     [profileScrollView addSubview:profileView];
     [self reloadScrolview];
+    [indicator release];
 }
 
 -(void)reloadProfileScrollView
@@ -238,6 +240,10 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)viewOnMapButton:(id)sender
 {
+    CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [self.view addSubview:mapContainer];
 }
 
@@ -261,6 +267,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 
 -(IBAction)closeMap:(id)sender
 {
+    // Set up the animation
+	CATransition *animation = [CATransition animation];
+	[animation setType:kCATransitionFade];
+	[[self.view layer] addAnimation:animation forKey:@"layerAnimation"];
+
     [mapContainer removeFromSuperview];
 }
 
@@ -414,8 +425,8 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         [smAppDelegate hideActivityViewer];
         [smAppDelegate.window setUserInteractionEnabled:YES];
         userInfo=[notif object];
-        nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.firstName];
-        [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.firstName] forState:UIControlStateNormal];
+        nameLabl.text=[NSString stringWithFormat:@" %@",userInfo.userFirstName];
+        [nameButton setTitle:[NSString stringWithFormat:@" %@",userInfo.userFirstName] forState:UIControlStateNormal];
         statusMsgLabel.text=@"";
         
         addressOrvenueLabel.text=userInfo.address.street;
@@ -459,7 +470,12 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(theCoordinate, 1000, 1000);
         MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];  
         [self.mapView setRegion:adjustedRegion animated:YES]; 
-        
+        mapContainer.layer.borderColor=[[UIColor lightTextColor] CGColor];
+        mapContainer.userInteractionEnabled=YES;
+        mapContainer.layer.borderWidth=1.0;
+        mapContainer.layer.masksToBounds = YES;
+        [mapContainer.layer setCornerRadius:5.0];
+
         NSLog(@"lat %lf ",[userInfo.currentLocationLat doubleValue]);
         DDAnnotation *annotation = [[[DDAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
         
@@ -472,7 +488,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
             annotation.title =[NSString stringWithFormat:@"%@",userInfo.address.city];
         }
         annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-        annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2lfm",userInfo.distance];
+        annotation.subtitle=[NSString stringWithFormat:@"Distance: %.2dm",userInfo.distance];
         if (CLLocationCoordinate2DIsValid(annotation.coordinate))
         {
             [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
@@ -499,6 +515,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
                                           cancelButtonTitle:@"Yes"
                                           otherButtonTitles:@"No", nil];
     [alert show];
+    [alert release];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -597,7 +614,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     entityFlag=5;
     [self.view addSubview:statusContainer];
     entityTextField.placeholder=@"Enter first name...";
-    entityTextField.text=userInfo.firstName;    
+    entityTextField.text=userInfo.userFirstName;    
 }
 
 -(IBAction)hideKeyboard:(id)sender
@@ -630,7 +647,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.coverPhoto]]];
         if (img)
@@ -647,7 +663,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         }
         
         NSLog(@"image setted after download1. %@",img);
-        [pl drain];
+        [img release];
     }
 }
 
@@ -662,8 +678,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     }
     else
     {
-        
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"userInfo.avatar: %@ userInfo.coverPhoto: %@",userInfo.avatar,userInfo.coverPhoto);
         //temp use
         UIImage *img2=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:userInfo.avatar]]];
@@ -681,7 +695,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         }
         
         NSLog(@"image setted after download2. %@",img2);    
-        [pl drain];
+        [img2 release];
     }
 }
 
@@ -697,7 +711,6 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
     }
     else
     {
-        NSAutoreleasePool *pl=[[NSAutoreleasePool alloc] init];
         NSLog(@"newsfeed image url: %@",imageUrlStr);
         UIImage *img=[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrlStr]]];
         if (img)
@@ -711,7 +724,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
         }
         
         NSLog(@"image setted after download newsfeed image. %@",img);
-        [pl drain];
+        [img release];
     }
 }
 
@@ -749,12 +762,8 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
 }
 
 - (BOOL)webView: (UIWebView*)webView shouldStartLoadWithRequest: (NSURLRequest*)request navigationType: (UIWebViewNavigationType)navigationType {
-    NSString *fragment, *scheme;
-    
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         [webView stopLoading];
-        fragment = [[request URL] fragment];
-        scheme = [[request URL] scheme];
         NSString *dataStr=[[request URL] absoluteString];
         NSLog(@"Data String: %@",dataStr);
         NSString *tagStr=[[dataStr componentsSeparatedByString:@":"] objectAtIndex:2];
@@ -787,7 +796,8 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
                 FriendsProfileViewController *controller =[[FriendsProfileViewController alloc] init];
                 controller.friendsId=userId;
                 controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-                [self presentModalViewController:controller animated:YES];   
+                [self presentModalViewController:controller animated:YES];
+                [controller release];
             }
         }
         else if ([tagStr isEqualToString:@"geotag"])
@@ -889,7 +899,11 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
                 UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
                 tapGesture.numberOfTapsRequired = 1;
                 [aView addGestureRecognizer:tapGesture];
-                [tapGesture release];  
+                [tapGesture release];
+                [aView release];
+                [imgView release];
+                [iconview release];
+                [name release];
             }       
             x+=65;   
         }
@@ -910,6 +924,7 @@ int scrollHeight,reloadCounter=0, reloadProfileCounter=0;
             //If download complete, set that image to dictionary
             [self reloadScrolview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }

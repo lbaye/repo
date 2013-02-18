@@ -4,68 +4,42 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "382860141.58663"
+         timestampString = "382913984.293793"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1166"
-         endingLineNumber = "1166"
-         landmarkName = "-loadAnnotations:"
+         startingLineNumber = "1761"
+         endingLineNumber = "1761"
+         landmarkName = "-dealsClicked:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "382860141.58663"
+         timestampString = "382913984.293793"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1170"
-         endingLineNumber = "1170"
-         landmarkName = "-loadAnnotations:"
+         startingLineNumber = "1749"
+         endingLineNumber = "1749"
+         landmarkName = "-placesClicked:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "SocialMaps/MapViewController.m"
-         timestampString = "382860141.58663"
+         timestampString = "382913984.293793"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1230"
-         endingLineNumber = "1230"
-         landmarkName = "-viewWillAppear:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "382860141.58663"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1413"
-         endingLineNumber = "1413"
-         landmarkName = "-mapView:regionDidChangeAnimated:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "SocialMaps/MapViewController.m"
-         timestampString = "382855126.962466"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1018"
-         endingLineNumber = "1018"
-         landmarkName = "-didDragMap:"
+         startingLineNumber = "1755"
+         endingLineNumber = "1755"
+         landmarkName = "-dealsClicked:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

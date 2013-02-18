@@ -112,6 +112,19 @@ static char ctrl[0x22];
     return o;
 }
 
+- (id)objectWithString:(NSString*)repr error:(NSError**)error_ {
+	id tmp = [self objectWithString:repr];
+    if (tmp)
+        return tmp;
+    
+    if (error_) {
+		NSDictionary *ui = [NSDictionary dictionaryWithObjectsAndKeys:error, NSLocalizedDescriptionKey, nil];
+        *error_ = [NSError errorWithDomain:@"org.brautaset.SBJsonParser.ErrorDomain" code:0 userInfo:ui];
+	}
+	
+    return nil;
+}
+
 /*
  In contrast to the public methods, it is an error to omit the error parameter here.
  */

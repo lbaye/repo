@@ -13,6 +13,7 @@
 #import "UtilityClass.h"
 #import "RestClient.h"
 #import "NSData+Base64.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define BUTTON_WIDTH 60
 #define BUTTON_HEIGHT 30
@@ -73,13 +74,13 @@
                                       self.frame.size.width, PIC_HEIGHT + 15 +  BUTTON_HEIGHT + 13*(5+TEXT_HEIGHT));
         self.frame = viewFrame;
         
-        self.selGender = [[UIPickerView alloc] init];
+        selGender = [[UIPickerView alloc] init];
         
-        self.photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
-        self.photoPicker.delegate = self;
+        photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
+        photoPicker.delegate = self;
         
-        self.picSel = [[UIImagePickerController alloc] init];
-        self.picSel.allowsEditing = YES;
+        picSel = [[UIImagePickerController alloc] init];
+        picSel.allowsEditing = YES;
         
         arrayGender = [[NSMutableArray alloc] init];
         [arrayGender addObject:@"Female"];
@@ -92,7 +93,7 @@
 
 - (UITextField*) getTextField:(CGRect)frame text:(NSString*)txt
                           tag:(int)tag {
-    UITextField *txtField = [[UITextField alloc] initWithFrame:frame];
+    UITextField *txtField = [[[UITextField alloc] initWithFrame:frame] autorelease];
     txtField.placeholder = txt;
     txtField.backgroundColor = [UIColor clearColor];
     txtField.textColor = [UIColor blackColor];
@@ -117,7 +118,12 @@
     CGRect itemFrame = CGRectMake(10, heightOffset, PIC_WIDTH, PIC_HEIGHT);
     picBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     picBtn.frame = itemFrame;
-    [picBtn addTarget:self 
+    picBtn.layer.borderColor=[[UIColor lightTextColor] CGColor];
+    picBtn.userInteractionEnabled=YES;
+    picBtn.layer.borderWidth=1.0;
+    picBtn.layer.masksToBounds = YES;
+    [picBtn.layer setCornerRadius:5.0];
+    [picBtn addTarget:self
                   action:@selector(picButtonClicked:)
         forControlEvents:UIControlEventTouchUpInside];
     if (smAppDelegate.userAccountPrefs.icon == nil)
@@ -132,7 +138,7 @@
     UIImageView *lineSep = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sp.png"]];
     lineSep.frame = itemFrame;
     [self addSubview:lineSep];
-
+    [lineSep release];
     itemFrame = CGRectMake(10+PIC_WIDTH+20+20, 5+(PIC_HEIGHT-TEXT_HEIGHT)/2, TEXT_WIDTH, TEXT_HEIGHT);
     UILabel *lbl = [[UILabel alloc] initWithFrame:itemFrame];
     lbl.backgroundColor = [UIColor clearColor];
@@ -202,7 +208,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     firstName = [self getTextField:itemFrame text:@"First name..." tag:currTag++];
     firstName.delegate = parent;
-    firstName.text = smAppDelegate.userAccountPrefs.firstName;
+    firstName.text = smAppDelegate.userAccountPrefs.userFirstName;
     [self addSubview:firstName];
     heightOffset += TEXT_HEIGHT + 5;
 
@@ -219,7 +225,7 @@
     itemFrame = CGRectMake(10+5+LABEL_WIDTH, heightOffset, TEXT_WIDTH, TEXT_HEIGHT);
     lastName = [self getTextField:itemFrame text:@"Last name..." tag:currTag++];
     lastName.delegate = parent;
-    lastName.text = smAppDelegate.userAccountPrefs.lastName;
+    lastName.text = smAppDelegate.userAccountPrefs.userLastName;
     [self addSubview:lastName];
     heightOffset += TEXT_HEIGHT + 5;
     
@@ -401,12 +407,14 @@
 
 - (void) submitButtonClicked:(id)sender {
     NSLog(@"PersonalInformation:submitButtonClicked called");
-    
+    [smAppDelegate showActivityViewer:smAppDelegate.window];
     // Assign new settings
     smAppDelegate.userAccountPrefs.email = email.text;
     smAppDelegate.userAccountPrefs.gender = gender.text;
     smAppDelegate.userAccountPrefs.firstName = firstName.text;
     smAppDelegate.userAccountPrefs.lastName = lastName.text;
+    smAppDelegate.userAccountPrefs.userFirstName = firstName.text;
+    smAppDelegate.userAccountPrefs.userLastName = lastName.text;
     smAppDelegate.userAccountPrefs.username = userName.text;
     
     // Convert DOB to NSDate
@@ -426,7 +434,7 @@
         smAppDelegate.userAccountPrefs.avatar = imgBase64Data;
     }
     
-    RestClient *restClient = [[RestClient alloc] init];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient setAccountSettings:smAppDelegate.userAccountPrefs :@"Auth-Token" :smAppDelegate.authToken];
     [self endEditing:TRUE];
 }

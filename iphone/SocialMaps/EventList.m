@@ -12,7 +12,11 @@
 @synthesize eventListArr;
 -(id)init
 {
-    eventListArr=[[NSMutableArray alloc] init];
+    self=[super init];
+    if (self)
+    {
+        eventListArr=[[NSMutableArray alloc] init];
+    }
     return self;
 }
 

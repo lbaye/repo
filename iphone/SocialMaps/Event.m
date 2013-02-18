@@ -33,9 +33,13 @@
 
 - (id)init
 {
+    self=[super init];
+    if(self)
+    {
     eventDate=[[Date alloc] init];
     eventCreateDate=[[Date alloc] init];
     eventLocation=[[Geolocation alloc] init];
+    }
     return self;
 }
 @end

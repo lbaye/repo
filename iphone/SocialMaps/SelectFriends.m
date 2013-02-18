@@ -64,7 +64,7 @@
         
         int buttonWidth = self.frame.size.width/4*3/2;
         
-        NSString *lblText = [NSString stringWithString:@"Choose a subgroup of friends"];
+        NSString *lblText = @"Choose a subgroup of friends";
         CGSize txtSize = [lblText sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:24]];
         CGRect lblFrame = CGRectMake(10, 10, txtSize.width, txtSize.height);                
         UILabel *lbl = [[UILabel alloc] initWithFrame:lblFrame];
@@ -73,12 +73,14 @@
         lbl.backgroundColor = [UIColor clearColor];
         lbl.textColor = [UIColor blackColor];
         [self addSubview:lbl];
+        [lbl release];
         
         // Create the line with image line_arrow_down_left.png
         CGRect lineFrame = CGRectMake(0, lblFrame.origin.y+lblFrame.size.height+1, 310, 7);
         UIImageView *lineImage = [[UIImageView alloc] initWithFrame:lineFrame];
         lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
         [self addSubview:lineImage];
+        [lineImage release];
         
         // Create top buttons
         // Select
@@ -120,6 +122,7 @@
         UIImageView *sepImageView = [[UIImageView alloc] initWithFrame:sepFrame];
         sepImageView.image = [UIImage imageNamed:@"sp.png"];
         [self addSubview:sepImageView];
+        [sepImageView release];
         
         // Circles
         CGSize circleSize = [@"Circle..." sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0]];
@@ -220,6 +223,7 @@
         UIImageView *sep2ImageView = [[UIImageView alloc] initWithFrame:sep2Frame];
         sep2ImageView.image = [UIImage imageNamed:@"sp.png"];
         [self addSubview:sep2ImageView];
+        [sep2ImageView release];
         
         CGRect okFrame = CGRectMake(self.frame.size.width/2+(self.frame.size.width/2-buttonWidth)/2, 
                                     photoSel.frame.origin.y+2+photoSel.frame.size.height, 
@@ -281,7 +285,7 @@
         [photoScrollView addSubview:firstName];
         
         // Last name
-        UILabel *lastName = [[UILabel alloc] initWithFrame:CGRectMake(imgFrame.origin.x, 
+        UILabel *lastName = [[UILabel alloc] initWithFrame:CGRectMake(imgFrame.origin.x,
                                                                       imgFrame.origin.y+imgFrame.size.height+15, 
                                                                       imgWidth, 16)];
         lastName.text = aFriend.lastName; 
@@ -290,6 +294,7 @@
         lastName.textColor = [UIColor blackColor];
         lastName.textAlignment = UITextAlignmentCenter;
         [photoScrollView addSubview:lastName];
+        [lastName release];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];
         [friendImg addGestureRecognizer:tap];

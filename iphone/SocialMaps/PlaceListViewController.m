@@ -31,6 +31,7 @@
 @synthesize placeType;
 @synthesize otherUserId;
 @synthesize userName;
+@synthesize placeList;
 
 - (void)viewDidLoad
 {
@@ -126,6 +127,8 @@
     CLLocation *userLoc = [[CLLocation alloc] initWithCoordinate:loc altitude:0 horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
     CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
     
+    [userLoc release];
+    [myLoc release];
     return distanceFromMe;
 }
 
@@ -145,7 +148,7 @@
     place.photoURL = aPlaceItem.itemCoverPhotoUrl;
     place.latitude = [aPlaceItem.placeInfo.location.latitude floatValue];
     place.longitude = [aPlaceItem.placeInfo.location.longitude floatValue];
-    return place;
+    return [place autorelease];
 }
 
 - (Place*)getPlaceFromList:(int)row
@@ -392,7 +395,7 @@
 // GCD async notifications
 - (void)gotPlaces:(NSNotification *)notif 
 {
-    placeList = [notif object];
+    self.placeList = [notif object];
 
     NSLog(@"placeList = %@", placeList);
     [tableViewPlaceList reloadData];

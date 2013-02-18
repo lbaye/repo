@@ -36,7 +36,7 @@ typedef enum _SHARING_TYPES {
 @interface MapViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate,
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
-                                MapAnnotationDelegate, IconDownloaderDelegate,
+                                MapAnnotationDelegate,
                                 UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
@@ -71,6 +71,8 @@ typedef enum _SHARING_TYPES {
     IBOutlet UIView *viewSharingPrefMapPullDown;
     CustomRadioButton *radio;
     BOOL shouldTimerStop;
+    IBOutlet UIImageView *mapViewImg;
+    IBOutlet UIImageView *listViewImg;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;
@@ -105,6 +107,9 @@ typedef enum _SHARING_TYPES {
 @property(nonatomic,retain) IBOutlet UISearchBar *friendSearchBar;
 @property(nonatomic,retain) IBOutlet UIView *circleView;
 @property(nonatomic,retain) IBOutlet UIView *connectToFBView;
+@property(nonatomic,retain) IBOutlet UIImageView *mapViewImg;
+@property(nonatomic,retain) IBOutlet UIImageView *listViewImg;
+
 
 /**
  * @brief Show pull down menu
@@ -247,27 +252,6 @@ typedef enum _SHARING_TYPES {
 - (IBAction)closePullupMenu:(id)sender;
 
 /**
- * @brief Close invite friends
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)closeInviteFrnds:(id)sender;
-
-/**
- * @brief Invite all facebook friends to social map
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)inviteAllUsers:(id)sender;
-
-/**
- * @brief Invite selected facebook friends to social map
- * @param (id) - Action sender
- * @retval action
- */
-- (IBAction)inviteSelectedUsers:(id)sender;
-
-/**
  * @brief Navigate user to profile screen
  * @param (id) - Action sender
  * @retval action
@@ -294,13 +278,6 @@ typedef enum _SHARING_TYPES {
  * @retval none
  */
 - (void) resetShareButton:(SHARING_TYPES)newSel;
-
-/**
- * @brief Invite selected user
- * @param (NSMutableArray) - Selected rows
- * @retval none
- */
-- (void)sendInvitationToSelectedUser:(NSMutableArray *)selectedRows;
 
 /**
  * @brief Changes an annotation
@@ -415,10 +392,27 @@ typedef enum _SHARING_TYPES {
 - (IBAction)closeConnectWithFB:(id)sender;
 
 /**
+ * @brief Selection of map view on pull down menu
+ * @param (id) - Action sender
+ * @retval none
+ */
+
+- (IBAction)selectMapView:(id)sender;
+
+/**
+ * @brief Selection of list view on pull down menu
+ * @param (id) - Action sender
+ * @retval none
+ */
+
+- (IBAction)selectListView:(id)sender;
+
+/**
  * @brief Show pin for point on map option of map view
  * @param (id) - Action sender
  * @retval none
  */
+
 - (void) showPinOnMapViewForPlan:(Plan*)plan;
 
 /**

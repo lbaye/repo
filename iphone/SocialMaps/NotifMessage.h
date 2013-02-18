@@ -19,6 +19,7 @@
     NSString    *address;
     NSString    *lat;
     NSString    *lng;
+    NSString    *lastSenderName;
 }
 
 @property (atomic) bool showDetail;
@@ -31,5 +32,7 @@
 @property (nonatomic, retain) NSString *address;
 @property (nonatomic, retain) NSString *lat;
 @property (nonatomic, retain) NSString *lng;
+@property (nonatomic, retain) NSDate *notifUpdateTime;
+@property (nonatomic, retain) NSString *lastSenderName;
 
 @end

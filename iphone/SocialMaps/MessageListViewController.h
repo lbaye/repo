@@ -12,13 +12,12 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "IconDownloader.h"
 
 @class AppDelegate;
 @class MessageReply;
 @class NotifMessage;
 
-@interface MessageListViewController : UIViewController <IconDownloaderDelegate, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface MessageListViewController : UIViewController <UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource> {
     
     IBOutlet    UITableView     *msgListTableView;
     IBOutlet    UIView          *messageCreationView;
@@ -29,10 +28,9 @@
     IBOutlet    UIView          *messageRepiesView;
     IBOutlet    UITextView      *textViewReplyMsg;
     IBOutlet    UITableView     *messageReplyTableView;
-    IBOutlet UIView *msgReplyCreationView;
+    IBOutlet    UIView          *msgReplyCreationView;
     
     AppDelegate                 *smAppDelegate;
-    NSMutableArray              *profileImageList;
     NSMutableArray              *messageReplyList;
     
     NSTimer                     *replyTimer;
@@ -50,7 +48,6 @@
     BOOL isDragging_msg;
     BOOL isDecliring_msg;
     CGFloat animatedDistance;
-    NSMutableArray *ImgesName;
     
     NotifMessage *selectedMessage;
     IBOutlet UILabel *totalNotifCount;
@@ -65,7 +62,6 @@
     NSMutableArray *selectedCircleCheckOriginalArr;
     
     BOOL            isGroupChat;
-    BOOL            isCheckingNewReplies;
 }
 
 @property (nonatomic, retain) NSString *msgParentID;

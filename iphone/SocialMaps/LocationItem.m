@@ -38,8 +38,8 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         itemCategory = category;
         coordinate = coord;
         itemDistance = dist;
-        itemIcon = icon;
-        itemBg = bg;
+        self.itemIcon = icon;
+        self.itemBg = bg;
         currDisplayState = MapAnnotationStateNormal;
         itemCoverPhotoUrl = [_coverPhotoUrl copy];
     }
@@ -83,16 +83,12 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
     tv.backgroundColor = [UIColor clearColor];
 	tv.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	
-	//UILabel *lblCust;
 	UILabel *lblName;
 	UILabel *lblAddress;
-    UIScrollView *scrollAddress;
     UILabel *lblDist;
     UIView  *footerView;
     UIImageView *imgIcon;
     UIButton    *btnMap;
-    UIImageView *mapIcon;
-    UIView      *line;
     
     NSLog(@"LocationItem: cellIdent=%@", cellIdent);
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellIdent];
@@ -132,7 +128,7 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
         [cell.contentView addSubview:footerView];
         
 		// Address
-        scrollAddress = [[UIScrollView alloc] initWithFrame:scrollFrame];
+        UIScrollView *scrollAddress = [[UIScrollView alloc] initWithFrame:scrollFrame];
         CGSize addrContentsize = CGSizeMake(addressStringSize.width, scrollAddress.frame.size.height);
         scrollAddress.contentSize = addrContentsize;
         scrollAddress.tag=20031;
@@ -167,18 +163,19 @@ category:(NSString*)category coordinate:(CLLocationCoordinate2D)coord dist:(floa
 		        
         // Line
         CGRect lineFrame = CGRectMake(0, CellFrame.size.height-3, CellFrame.size.width, 2);
-        line = [[UIView alloc] initWithFrame:lineFrame];
+        UIView *line = [[UIView alloc] initWithFrame:lineFrame];
         line.tag = 2005;
         line.backgroundColor = [UIColor grayColor];
         [cell.contentView addSubview:line];
-		
+        [footerView release];
+		[line release];
+        [scrollAddress release];
+        scrollAddress = nil;
     } else {
 		lblAddress  = (UILabel*) [cell viewWithTag:2002];
         lblName     = (UILabel*) [cell viewWithTag:2003];
 		lblDist     = (UILabel*) [cell viewWithTag:2004];
-        line        = (UIView*) [cell viewWithTag:2005];
         imgIcon     = (UIImageView*) [cell viewWithTag:2010];
-        mapIcon     = (UIImageView*) [cell viewWithTag:2011];
 	}
     
     // Name

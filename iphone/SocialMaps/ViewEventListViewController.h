@@ -33,7 +33,7 @@
     IBOutlet UIButton *myEventButton;
     IBOutlet UIButton *publicEventButton;
     IBOutlet UILabel *totalNotifCount;
-
+    
 }
 @property(nonatomic,retain) IBOutlet UITableView *eventListTableView;
 @property(nonatomic,retain) IBOutlet UISearchBar *eventSearchBar;

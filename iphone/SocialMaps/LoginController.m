@@ -75,17 +75,21 @@ int fbRegCounter=0;
     fbRegCounter=0;
 }
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginDone:) name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forgotPWDone:) name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbLoginDone:) name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbRegDone:) name:NOTIF_FB_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbFriendListDone:) name:NOTIF_FBFRIENDLIST_DONE object:nil];
-    
+
+}
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
@@ -127,7 +131,7 @@ int fbRegCounter=0;
     [prefs synchronize];
 
     
-    facebook = [[FacebookHelper sharedInstance] facebook];
+    facebook = [[FacebookHelper sharedInstance] facebookApi];
     
     bgImgView.userInteractionEnabled = YES;
     bgImgView.exclusiveTouch = YES;
@@ -164,12 +168,18 @@ int fbRegCounter=0;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_LOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FORGOT_PW_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBLOGIN_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FBFRIENDLIST_DONE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_FB_REG_DONE object:nil];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -269,7 +279,7 @@ int fbRegCounter=0;
         }
     
         // Always Register device token. This takes care of multiple user using same device
-        RestClient *restClient = [[RestClient alloc] init];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
         
         if (smAppDelegate.loginCount == 1)
@@ -370,7 +380,7 @@ int fbRegCounter=0;
             smAppDelegate.email = txtEmail.text;
             smAppDelegate.password = txtPassword.text;
         }
-        RestClient *restClient = [[RestClient alloc] init];
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient login:txtEmail.text password:txtPassword.text];
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:self.view];
@@ -381,7 +391,7 @@ int fbRegCounter=0;
 - (void)fbFriendListDone:(NSNotification *)notif
 {
     NSLog(@"In LoginController:fbFriendListDone");
-    User *user = [[User alloc] init];
+    User *user = [[[User alloc] init] autorelease];
     user.facebookId = smAppDelegate.fbId;
     user.facebookAuthToken = smAppDelegate.fbAccessToken;
 
@@ -423,7 +433,7 @@ int fbRegCounter=0;
                 [smAppDelegate getUserInformation:regInfo.authToken];
                 
                 // Always Register device token. This takes care of multiple user using same device
-                RestClient *restClient = [[RestClient alloc] init];
+                RestClient *restClient = [[[RestClient alloc] init] autorelease];
                 [restClient setPushNotificationSettings:smAppDelegate.deviceTokenId authToken:@"Auth-Token" authTokenVal:regInfo.authToken];
                 
                 if (smAppDelegate.loginCount == 1)
@@ -432,9 +442,10 @@ int fbRegCounter=0;
                 {
                     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
                     MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-                    [controller retain];
+                    [controller retain]; //why??
                     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                     [self presentModalViewController:controller animated:YES];
+                    [controller release];
                 }
             } else {
                 if (smAppDelegate.smLogin==FALSE)
@@ -566,7 +577,7 @@ int fbRegCounter=0;
 }
 
 - (IBAction)sendReset:(id)sender {
-    RestClient *restClient = [[RestClient alloc] init];
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient forgotPassword:txtForgotPWEmail.text];
     [self.view endEditing:YES];
     

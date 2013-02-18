@@ -47,7 +47,7 @@ AppDelegate *smAppDelegate;
     {
         NSLog(@"viewcontroller smAppDelegate.authToken: %@ %i %i",smAppDelegate.authToken,[smAppDelegate.authToken isKindOfClass:[NSString class]],[smAppDelegate.authToken isMemberOfClass:[NSNull class]]);
         [smAppDelegate getPreferenceSettings:smAppDelegate.authToken];
-        RestClient *rc=[[RestClient alloc] init];
+        RestClient *rc=[[[RestClient alloc] init] autorelease];
         [rc getUserFriendList:@"Auth-Token" tokenValue:smAppDelegate.authToken andUserId:smAppDelegate.userId];
         userInfoServiceLoginFlag=FALSE;
     }
@@ -57,8 +57,6 @@ AppDelegate *smAppDelegate;
     }
 	// Do any additional setup after loading the view, typically from a nib.
     progressView.progress = 0.0;
-    [smAppDelegate.authToken retain];
-    [smAppDelegate.userId retain];
 }
 
 - (void)viewDidUnload
@@ -121,7 +119,7 @@ AppDelegate *smAppDelegate;
             NSLog(@"goto map view");
             UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
             MapViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"mapViewController"];
-            [controller retain];
+            [controller retain]; //why?
             controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             [self presentModalViewController:controller animated:YES];
         }

@@ -65,6 +65,7 @@ CGFloat animatedDistance;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];	
 	[formatter setDateFormat:@"yyyy-MM-dd"];
 	NSString *stringFromDate = [formatter stringFromDate:adate];
+    [formatter release];
     return stringFromDate;
 }
 
@@ -152,7 +153,7 @@ CGFloat animatedDistance;
     today.second = 0;
     NSDate *todayDate = [gregorian dateFromComponents:today];
     NSDate *yesterdayDate = [[NSDate alloc] initWithTimeInterval:-24*60*60 sinceDate:todayDate];
-    
+    [gregorian release];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     if ([notifTime timeIntervalSinceDate:todayDate] >= 0) {
@@ -169,6 +170,9 @@ CGFloat animatedDistance;
         
         timeStr = [dateFormatter stringFromDate:notifTime];
     }
+    [dateFormatter release];
+    [yesterdayDate release];
+    [today release];
     return timeStr;
 }
 
@@ -248,7 +252,7 @@ CGFloat animatedDistance;
 
 +(NSMutableArray *)getUnreadMessage:(NSMutableArray *)messageList
 {
-    NSMutableArray *unReadMessage=[[NSMutableArray alloc] init];
+    NSMutableArray *unReadMessage=[[[NSMutableArray alloc] init] autorelease];
     for (int i=0; i<[messageList count]; i++)
     {
         NSString *msgSts=((NotifMessage *)[messageList objectAtIndex:i]).msgStatus;
@@ -414,7 +418,8 @@ CGFloat animatedDistance;
     {
         distanceText = [NSString stringWithFormat:@"%.2fm", distanceFromMe];
     }
-    
+    [myLoc release];
+    [userLoc release];
     return distanceText;
 }
 
@@ -424,7 +429,9 @@ CGFloat animatedDistance;
     Geolocation *myPos = smAppDelegate.currPosition;
     CLLocation *myLoc = [[CLLocation alloc] initWithLatitude:[myPos.latitude floatValue] longitude:[myPos.longitude floatValue]];
     CLLocation *userLoc = [[CLLocation alloc] initWithLatitude:[location.latitude floatValue] longitude:[location.longitude floatValue]];
-    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];    
+    CLLocationDistance distanceFromMe = [myLoc distanceFromLocation:userLoc];
+    [userLoc release];
+    [myLoc release];
     return distanceFromMe;
 }
 

@@ -17,9 +17,7 @@
 #import "CustomRadioButton.h"
 #import <Mapkit/Mapkit.h>
 
-@interface GeotagViewController : UIViewController<UIPickerViewDataSource, 
-UIPickerViewDelegate,
-UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
+@interface GeotagViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PhotoPickerDelegate,MKMapViewDelegate,UIScrollViewDelegate,CustomRadioButtonDelegate>
 {
     IBOutlet UILabel *createLabel;
     IBOutlet UIButton *createButton;

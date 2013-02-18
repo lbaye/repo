@@ -16,7 +16,6 @@
 #import "CircleListTableCell.h"
 #import "CircleListCheckBoxTableCell.h"
 #import "CircleImageDownloader.h"
-#import "CustomCheckbox.h"
 #import "LocationItemPeople.h"
 #import "RestClient.h"
 #import "NotificationController.h"
@@ -72,7 +71,7 @@ bool showSM=true;
     
     smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    NSString *lblStr = [NSString stringWithString:@"Show in list:"];
+    NSString *lblStr = @"Show in list:";
     CGSize   strSize = [lblStr sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14.0f]];
     
     CGRect labelFrame = CGRectMake(2, (listViewfilter.frame.size.height-strSize.height)/2, strSize.width, strSize.height);
@@ -82,7 +81,7 @@ bool showSM=true;
     label.textColor = [UIColor blackColor];
     label.backgroundColor = [UIColor clearColor];
     [listViewfilter addSubview:label];
-    
+    [label release];
     NSArray *subviews = [circleSearchBar subviews];
     UIButton *cancelButton = [subviews objectAtIndex:2];
     cancelButton.tintColor = [UIColor darkGrayColor];
@@ -132,18 +131,18 @@ bool showSM=true;
 {
     for (int i=0; i<[smAppDelegate.peopleList count]; i++)
     {
-        LocationItemPeople *people=[[LocationItemPeople alloc] init];
-        people = (LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i];
+        LocationItemPeople *people = (LocationItemPeople *)[smAppDelegate.peopleList objectAtIndex:i];
         Geolocation *geoLocation=[[Geolocation alloc] init];
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
         people.userInfo.distance=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
         [smAppDelegate.peopleList replaceObjectAtIndex:i withObject:people];
+        [geoLocation release];
     }
     
     
     
-    smAppDelegate.peopleList = [[smAppDelegate.peopleList sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+    smAppDelegate.peopleList = [NSMutableArray arrayWithArray: [smAppDelegate.peopleList sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
                      {
                          People *firstPeople = [(LocationItemPeople*)a userInfo];
                          People *secondPeople = [(LocationItemPeople*)a userInfo];
@@ -157,7 +156,7 @@ bool showSM=true;
                              return (NSComparisonResult)NSOrderedAscending;
                          }
                          return (NSComparisonResult)NSOrderedSame;
-                     }] mutableCopy];
+                     }]];
     return smAppDelegate.peopleList;
 }
 
@@ -246,6 +245,7 @@ bool showSM=true;
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     [filteredList addObjectsFromArray:sortedArray];
+    [tempList release];
 }
 
 - (void)getAllEventsDone:(NSNotification *)notif
@@ -387,6 +387,7 @@ bool showSM=true;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [userIDs release];
     }
 }
 
@@ -423,19 +424,11 @@ bool showSM=true;
     static NSString *CellIdentifier = @"circleListTableCell";
     int nodeCount = [filteredList count];
     
-    LocationItemPeople *people=[[LocationItemPeople alloc] init];
-    people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+    LocationItemPeople *people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
 
     
     CircleListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-            cell = [[CircleListTableCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault 
-                    reuseIdentifier:CellIdentifier];
-    }
-    
     // Configure the cell...
     cell.addressLabel.text = [NSString stringWithFormat:@"event address"];
     cell.firstNameLabel.text = [NSString stringWithFormat:@"event name"];
@@ -493,12 +486,12 @@ bool showSM=true;
         {
             cell.friendShipStatus.hidden=YES;
         }
-        cell.profilePicImgView.image=people.itemIcon;
+        [cell.profilePicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.itemAvaterURL]];
         cell.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell.profilePicImgView.userInteractionEnabled=YES;
         cell.profilePicImgView.layer.borderWidth=1.0;
         cell.profilePicImgView.layer.masksToBounds = YES;
-        cell.coverPicImgView.image=people.itemBg;
+        
         [cell.profilePicImgView.layer setCornerRadius:5.0];
         [cell.showOnMapButton addTarget:self action:@selector(viewLocationButton:) forControlEvents:UIControlEventTouchUpInside];
         [cell.inviteButton addTarget:self action:@selector(inviteButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -508,7 +501,7 @@ bool showSM=true;
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
         cell.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-
+        [geoLocation release];
         [self showIsOnlineImage:cell.profilePicImgView :people];
     }
     [cell.footerView.layer setCornerRadius:6.0f];
@@ -517,8 +510,6 @@ bool showSM=true;
     [cell.messageButton.layer setCornerRadius:6.0f];
     [cell.messageButton.layer setMasksToBounds:YES];
     
-    UIImageView *imageView = cell.coverPicImgView;
-    [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
     [cell.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
     
     NSLog(@"downloadedImageDict c: %@ %d",downloadedImageDict,[downloadedImageDict count]);
@@ -565,6 +556,7 @@ bool showSM=true;
     controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 - (void)loadImagesForOnscreenRows {
@@ -583,10 +575,12 @@ bool showSM=true;
             
             LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
             
-            if (anItem.userInfo.coverPhotoUrl) 
-            {
+            if (anItem.userInfo.coverPhotoUrl)
                 [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
-            }
+            
+            
+            if (anItem.itemAvaterURL)
+                [cell.profilePicImgView loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
         }
     }
 }

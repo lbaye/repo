@@ -28,10 +28,12 @@
 
 - (id)init
 {
-    geoTagLocation=[[Geolocation alloc] init];
-    frndList=[[NSMutableArray alloc] init];
-    circleList=[[NSMutableArray alloc] init];
-
+    self=[super init];
+    if (self) {
+        geoTagLocation=[[Geolocation alloc] init];
+        frndList=[[NSMutableArray alloc] init];
+        circleList=[[NSMutableArray alloc] init];
+    }
     return self;
 }
 

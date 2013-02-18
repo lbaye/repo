@@ -26,7 +26,6 @@
 
 - (void)dealloc
 {
-    [UserFriends release];
     [indexPathInTableView release];
     
     [activeDownload release];

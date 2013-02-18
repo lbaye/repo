@@ -70,8 +70,7 @@ bool searchFlags=true;
     downloadedImageDict=[[NSMutableDictionary alloc] init];
     dicIcondownloaderEvents = [[NSMutableDictionary alloc] init];
     [super viewDidLoad];
-    EventList *eventList=[[EventList alloc] init];
-    NSLog(@"eventList.eventListArr: %@  eventListGlobalArray: %@",eventList.eventListArr,eventListGlobalArray);
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRsvpDone:) name:NOTIF_SET_RSVP_EVENT_DONE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAllEventsDone:) name:NOTIF_GET_ALL_EVENTS_DONE object:nil];
 
@@ -119,18 +118,14 @@ bool searchFlags=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    for (int i=0; i<[eventListGlobalArray count]; i++)
-    {
-        NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-        Event *aEvent=[[Event alloc] init];
-        aEvent=[eventListGlobalArray objectAtIndex:i];
-        if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null]))
-        {
+    for (int i=0; i<[eventListGlobalArray count]; i++) {
+        Event *aEvent=[eventListGlobalArray objectAtIndex:i];
+        
+        if (!(aEvent.eventImageUrl)||(aEvent.eventImageUrl==(NSString *)[NSNull null])) {
             aEvent.eventImageUrl=[[NSBundle mainBundle] pathForResource:@"blank" ofType:@"png"];
         }
+        
         NSLog(@"aEvent.eventImageUrl: %@",aEvent.eventImageUrl);
-        [eventListGlobalArray replaceObjectAtIndex:i withObject:aEvent];
-        [pool drain];
     }
     return eventListGlobalArray;
 }
@@ -214,14 +209,13 @@ bool searchFlags=true;
 {
     NSLog(@"friends event");
         [self.eventSearchBar resignFirstResponder];
-    Event *event;
+    
     [filteredList removeAllObjects];
-    for (int i=0; i<[eventListArray count]; i++)
-    {
-        event=[[Event alloc] init];
-        event=[eventListArray objectAtIndex:i];
-        if ([event.eventType isEqualToString:@"friends_event"])
-        {
+    for (int i=0; i<[eventListArray count]; i++) {
+        
+        Event *event = [eventListArray objectAtIndex:i];
+
+        if ([event.eventType isEqualToString:@"friends_event"]) {
             [filteredList addObject:event];
         }
     }
@@ -244,12 +238,11 @@ bool searchFlags=true;
 {
     NSLog(@"my event");
         [self.eventSearchBar resignFirstResponder];
-    Event *event;
+    
     [filteredList removeAllObjects];
     for (int i=0; i<[eventListArray count]; i++)
     {
-        event=[[Event alloc] init];
-        event=[eventListArray objectAtIndex:i];
+        Event *event = [eventListArray objectAtIndex:i];
         if ([event.eventType isEqualToString:@"my_event"])
         {
             [filteredList addObject:event];
@@ -274,12 +267,10 @@ bool searchFlags=true;
 {
     NSLog(@"public event");
         [self.eventSearchBar resignFirstResponder];
-    Event *event;
     [filteredList removeAllObjects];
     for (int i=0; i<[eventListArray count]; i++)
     {
-        event=[[Event alloc] init];
-        event=[eventListArray objectAtIndex:i];
+        Event *event=[eventListArray objectAtIndex:i];
         if ([event.permission isEqualToString:@"public"])
         {
             [filteredList addObject:event];
@@ -347,9 +338,8 @@ bool searchFlags=true;
     static NSString *CellIdentifier = @"eventListCell";
     static NSString *CellIdentifier1 = @"eventListCellRsvp";
     int nodeCount = [filteredList count];
-    
-    Event *event=[[Event alloc] init];
-    event = [filteredList objectAtIndex:indexPath.row];
+   
+    Event *event = [filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     
     EventListTableCell *cell = (EventListTableCell *)[tableView
@@ -357,25 +347,7 @@ bool searchFlags=true;
     EventListRsvpTableCell *cell1= (EventListRsvpTableCell *)[tableView
                                     dequeueReusableCellWithIdentifier:CellIdentifier1];
     NSLog(@"cell %@ cell1 %@",cell, cell );
-    if (cell == nil)
-    {
-        if ((event.isInvited==false)&&([NSNumber numberWithBool:event.isInvited]!=NULL))
-        {
-            cell = [[EventListTableCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault 
-                    reuseIdentifier:CellIdentifier];
-                        
-            NSLog(@"cell is null");
 
-        }
-    }
-    if (cell1 == nil)
-    {
-        cell1 = [[EventListRsvpTableCell alloc]
-                 initWithStyle:UITableViewCellStyleDefault 
-                 reuseIdentifier:CellIdentifier1];
-            NSLog(@"in create cell1");
-    }
     
     CustomRadioButton *radio =(CustomRadioButton *)[cell1.contentView viewWithTag:20001];
     if (radio==NULL)
@@ -555,11 +527,10 @@ bool searchFlags=true;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:indexPath.row];
+    Event *aEvent=[filteredList objectAtIndex:indexPath.row];
     if (aEvent.isInvited==false)
     {
-            return 122;
+        return 122;
     }
     else
     {
@@ -572,15 +543,15 @@ bool searchFlags=true;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults]; 
     smAppDelegate.authToken=[prefs stringForKey:@"authToken"];
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:indexPath.row];
+    
+    Event *aEvent=[filteredList objectAtIndex:indexPath.row];
     globalEvent=[[Event alloc] init];
     globalEvent=aEvent;
     NSLog(@"globalEvent.eventImage: %@",globalEvent.eventImage);
     UIStoryboard *storybrd = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     ViewEventDetailViewController *controller =[storybrd instantiateViewControllerWithIdentifier:@"eventDetail"];
     [self presentModalViewController:controller animated:YES];
-
+    
 }
 
 //Lazy loading method starts
@@ -682,7 +653,6 @@ bool searchFlags=true;
     }
     else
     {
-        searchText=@"";
         [filteredList removeAllObjects];
         filteredList = [[NSMutableArray alloc] initWithArray: eventListGlobalArray];
         NSLog(@"eventListGlobalArray: %@",eventListGlobalArray);
@@ -793,10 +763,8 @@ bool searchFlags=true;
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
     
-    
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
-    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
     
     [rc setEventRsvp:aEvent.eventID:@"yes":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
@@ -812,12 +780,12 @@ bool searchFlags=true;
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];    
     
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
-    RestClient *rc=[[RestClient alloc] init];
-    
+    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
     [rc setEventRsvp:aEvent.eventID:@"no":@"Auth-Token":smAppDelegate.authToken];
-    NSLog(@"clickedButtonPath %@",clickedButtonPath); 
+    
+    NSLog(@"clickedButtonPath %@",clickedButtonPath);
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
 
@@ -832,11 +800,10 @@ bool searchFlags=true;
     [clickedCell.noButton setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
     [clickedCell.maybesButton setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];    
     NSLog(@"clickedButtonPath %@",clickedButtonPath);
-    
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
-    RestClient *rc=[[RestClient alloc] init];
-    
+   
+    Event *aEvent=[filteredList objectAtIndex:clickedButtonPath.row];
+
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
     [rc setEventRsvp:aEvent.eventID:@"maybe":@"Auth-Token":smAppDelegate.authToken];
     [smAppDelegate hideActivityViewer];
     [smAppDelegate.window setUserInteractionEnabled:NO];
@@ -846,10 +813,8 @@ bool searchFlags=true;
 - (void) radioButtonClicked:(int)indx sender:(id)sender {
     NSLog(@"radioButtonClicked index = %d %d", indx,[[[sender superview] superview] tag]);
     
-    
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:[[[sender superview] superview] tag]];
-    RestClient *rc=[[RestClient alloc] init];
+    Event *aEvent=[filteredList objectAtIndex:[[[sender superview] superview] tag]];
+    RestClient *rc=[[[RestClient alloc] init] autorelease];
     
     [smAppDelegate hideActivityViewer];
     
@@ -899,8 +864,7 @@ bool searchFlags=true;
     [self.view addSubview:self.mapContainer];
     NSLog(@"clickedButtonPath %@",clickedButtonPath); 
     
-    Event *aEvent=[[Event alloc] init];
-    aEvent=[filteredList objectAtIndex:[sender tag]];
+    Event *aEvent=[filteredList objectAtIndex:[sender tag]];
     [self.mapView removeAnnotations:[self.mapView annotations]];
     CLLocationCoordinate2D theCoordinate;
 	theCoordinate.latitude = [aEvent.eventLocation.latitude doubleValue];

@@ -61,7 +61,7 @@ AppDelegate *smAppdelegate;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    labelNotifCount.text = [NSString stringWithFormat:@"%d", [UtilityClass getNotificationCount]];
+    [self displayNotificationCount];
     [zoomView removeFromSuperview];
     isBackgroundTaskRunning=true;
     getAllPhotoCounter=0;
@@ -76,6 +76,14 @@ AppDelegate *smAppdelegate;
     }
     
     smAppdelegate.currentModelViewController = self;
+}
+
+-(void) displayNotificationCount {
+    int totalNotif= [UtilityClass getNotificationCount];
+    if (totalNotif == 0)
+        labelNotifCount.text = @"";
+    else
+        labelNotifCount.text = [NSString stringWithFormat:@"%d",totalNotif];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -192,7 +200,7 @@ AppDelegate *smAppdelegate;
             {
             }
         }
-        NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+        NSArray* subviews1 = [NSArray arrayWithArray: customScrollView.subviews];
         for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
@@ -212,10 +220,9 @@ AppDelegate *smAppdelegate;
         {
             if(i< [filteredList1 count]) 
             { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[filteredList1 objectAtIndex:i];
+                Photo *photo=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-                
+                if ([photo isKindOfClass:[Photo class]]) {
                 if ((photo.photoThum==NULL)||[photo.photoThum isEqual:[NSNull null]])
                 {
                     imgView.image = [UIImage imageNamed:@"blank.png"];
@@ -287,7 +294,11 @@ AppDelegate *smAppdelegate;
                 [imgView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [photoScrollView addSubview:aView];
-            }        
+                [name release];
+                [imgView release];
+                [aView release];
+                }
+            }
         }
         
         //handling custom scroller
@@ -295,8 +306,8 @@ AppDelegate *smAppdelegate;
         {
             if(i< [filteredList2 count]) 
             { 
-                Photo *photo=[[Photo alloc] init];
-                photo=[filteredList2 objectAtIndex:i];
+                Photo *photo=[filteredList2 objectAtIndex:i];
+                if ([photo isKindOfClass:[Photo class]]) {
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
                 if (photo.imageUrl == nil) 
                 {
@@ -356,7 +367,11 @@ AppDelegate *smAppdelegate;
                 }
                 [aView addSubview:imgView];
                 [customScrollView addSubview:aView];
-            }        
+                [aView release];
+                [name release];
+                [imgView release];
+                }
+            }
             x2+=320;
         }
     }
@@ -372,11 +387,9 @@ AppDelegate *smAppdelegate;
 
 -(void)loadData:(NSMutableArray *)photoListArr
 {
-    filteredList1=[[NSMutableArray alloc] init];
-    smAppdelegate.myPhotoList=[photoListArr mutableCopy];
+    smAppdelegate.myPhotoList=photoListArr;
     filteredList1=[photoListArr mutableCopy];
     filteredList2=[photoListArr mutableCopy];
-    [smAppdelegate.myPhotoList retain];
     [filteredList1 retain];
     [filteredList2 retain];
     [selectedFriendsIndex retain];
@@ -388,8 +401,7 @@ AppDelegate *smAppdelegate;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        Photo *photo=[[Photo alloc] init];
-        photo=[filteredList1 objectAtIndex:index];
+        Photo *photo=[filteredList1 objectAtIndex:index];
         NSLog(@"DL large image called");
         NSString *Link = photo.imageUrl;
         //Start download image from url
@@ -400,6 +412,7 @@ AppDelegate *smAppdelegate;
             [dicImages_msg setObject:img forKey:photo.imageUrl];
             [self reloadScrolview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -409,8 +422,7 @@ AppDelegate *smAppdelegate;
     if (isBackgroundTaskRunning==true)
     {
         int index = [path intValue];
-        Photo *photo=[[Photo alloc] init];
-        photo=[filteredList1 objectAtIndex:index];
+        Photo *photo=[filteredList1 objectAtIndex:index];
         
         NSString *Link = photo.photoThum;
         //Start download image from url
@@ -421,6 +433,7 @@ AppDelegate *smAppdelegate;
             [dicImages_msg setObject:img forKey:photo.photoThum];
             [self reloadScrolview];
         }
+        [img release];
         // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -439,8 +452,7 @@ AppDelegate *smAppdelegate;
         [selectedFriendsIndex removeAllObjects];
         [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     }
-    Photo *photo=[[Photo alloc] init];
-    photo=[filteredList1 objectAtIndex:[sender.view tag]];
+    Photo *photo=[filteredList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -472,8 +484,7 @@ AppDelegate *smAppdelegate;
     {
         [customSelectedFriendsIndex addObject:[filteredList2 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList2 objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[filteredList2 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {

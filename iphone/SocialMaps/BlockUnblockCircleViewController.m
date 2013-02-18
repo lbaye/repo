@@ -121,7 +121,7 @@ bool searchFlag3=true;
 
 -(NSMutableArray *)loadDummyData
 {
-    NSMutableArray *peopleList=[[NSMutableArray alloc] init];
+    NSMutableArray *peopleList=[[[NSMutableArray alloc] init] autorelease];
     
     for (int i=0; i<[smAppDelegate.peopleList count]; i++)
     {
@@ -210,6 +210,7 @@ bool searchFlag3=true;
             [peopleListArray removeObjectAtIndex:i];
         }
     }
+    [userIDArr release];
 }
 
 - (void)loadImagesForOnscreenRows {
@@ -229,9 +230,10 @@ bool searchFlag3=true;
             LocationItemPeople *anItem = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
             
             if (anItem.userInfo.coverPhotoUrl) 
-            {
                 [imgCover loadFromURL:[NSURL URLWithString:anItem.userInfo.coverPhotoUrl]];
-            }
+            
+            if (anItem.itemAvaterURL)
+                [cell.profilePicImgView loadFromURL:[NSURL URLWithString:anItem.itemAvaterURL]];
         }
     }
 }
@@ -310,7 +312,7 @@ bool searchFlag3=true;
     CircleListCheckBoxTableCell *clickedCell = (CircleListCheckBoxTableCell *)[[sender superview] superview];
     NSIndexPath *clickedButtonPath = [self.blockTableView indexPathForCell:clickedCell];    
     NSLog(@"unblock user");
-    LocationItemPeople *ppl=[[LocationItemPeople alloc] init];
+    LocationItemPeople *ppl;
     //Un-Block user operation on people list starts here
     NSLog(@"[filteredList count] %d",[filteredList count]);
     if ([filteredList count]>clickedButtonPath.row) 
@@ -328,16 +330,9 @@ bool searchFlag3=true;
 {
     static NSString *CellIdentifier1 = @"circleListCheckBoxTableCell";
     int nodeCount = [filteredList count];
-    LocationItemPeople *people=[[LocationItemPeople alloc] init];
-    people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
+    LocationItemPeople *people = (LocationItemPeople *)[filteredList objectAtIndex:indexPath.row];
     NSLog(@"[filteredList count] %d",[filteredList count]);
     CircleListCheckBoxTableCell *cell1= [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
-    if (cell1 == nil)
-    {
-            cell1 = [[CircleListCheckBoxTableCell alloc]
-                     initWithStyle:UITableViewCellStyleDefault
-                     reuseIdentifier:CellIdentifier1];
-    }
     
     // Configure the cell... 
     [cell1.footerView.layer setCornerRadius:6.0f];
@@ -358,7 +353,6 @@ bool searchFlag3=true;
     if (nodeCount > 0)
     {
         // Set up the cell...
-        
         NSString *cellValue;	
         cellValue=people.itemName;
         cell1.firstNameLabel.text = cellValue;
@@ -367,12 +361,10 @@ bool searchFlag3=true;
         geoLocation.latitude=people.userInfo.currentLocationLat;
         geoLocation.longitude=people.userInfo.currentLocationLng;
         cell1.distanceLabel.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-
+        [geoLocation release];
         // Only load cached images; defer new downloads until scrolling ends
         NSLog(@"nodeCount > 0 %@",people.itemBg);
-        
- 	    UIImageView *imageView = cell1.coverPicImgView;
-        [imageView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
+     
         [cell1.coverPicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.userInfo.coverPhotoUrl]];
         
         cell1.regStsImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
@@ -435,7 +427,7 @@ bool searchFlag3=true;
             }
         }
         
-        cell1.profilePicImgView.image=people.itemIcon;
+        [cell1.profilePicImgView setImageForUrlIfAvailable:[NSURL URLWithString:people.itemAvaterURL]];
         cell1.profilePicImgView.layer.borderColor=[[UIColor lightTextColor] CGColor];
         cell1.profilePicImgView.userInteractionEnabled=YES;
         cell1.profilePicImgView.layer.borderWidth=1.0;
@@ -494,6 +486,7 @@ bool searchFlag3=true;
     controller.friendsId=((LocationItemPeople *)[filteredList objectAtIndex:indexPath.row]).userInfo.userId;
     controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentModalViewController:controller animated:YES];
+    [controller release];
 }
 
 //Lazy loading method starts
@@ -527,6 +520,7 @@ bool searchFlag3=true;
     [rc blockUserList:@"Auth-Token":smAppDelegate.authToken :userIdArr];
     [selectedPeople removeAllObjects];
     [self.blockTableView reloadData];
+    [userIdArr release];
 }
 
 -(IBAction)selectAllpeople:(id)sender
@@ -578,6 +572,7 @@ bool searchFlag3=true;
     
     RestClient *restClient = [[[RestClient alloc] init] autorelease];
     [restClient sendMessage:subject content:textViewNewMsg.text recipients:userIDs authToken:@"Auth-Token" authTokenVal:smAppDelegate.authToken];
+        [userIDs release];
     }
 }
 
@@ -631,7 +626,7 @@ bool searchFlag3=true;
     {
         searchText3=@"";
         [filteredList removeAllObjects];
-        filteredList = [[NSMutableArray alloc] initWithArray: [[self loadDummyData] mutableCopy]];
+        filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
         NSLog(@"peopleListArray: %@",peopleListArray);
         [self.blockTableView reloadData];
     }
@@ -669,7 +664,7 @@ bool searchFlag3=true;
     searchText3=@"";
     
     [filteredList removeAllObjects];
-    filteredList = [[NSMutableArray alloc] initWithArray: [[self loadDummyData] mutableCopy]];
+    filteredList = [[NSMutableArray alloc] initWithArray: [self loadDummyData]];
     for (int i=0; i<[peopleListArray count]; i++)
     {
         [allUserIdArr addObject:((LocationItemPeople *)[peopleListArray objectAtIndex:i]).userInfo.userId];

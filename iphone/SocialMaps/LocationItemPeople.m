@@ -196,7 +196,7 @@
     geoLocation.latitude=userInfo.currentLocationLat;
     geoLocation.longitude=userInfo.currentLocationLng;
     lblDist.text=[UtilityClass getDistanceWithFormattingFromLocation:geoLocation];
-    
+    [geoLocation release];
 	return cell;
 }
 

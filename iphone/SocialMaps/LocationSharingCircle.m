@@ -42,11 +42,12 @@
                 LocationCircleSettings *locCircle;
                 if (filteredArray.count == 0) {
                     locCircle = [[LocationCircleSettings alloc] init];
-                    locCircle.circleInfo = [[UserCircle alloc] init];
-                    locCircle.privacy = [[LocationPrivacySettings alloc] init];
+                    locCircle.circleInfo = [[[UserCircle alloc] init] autorelease];
+                    locCircle.privacy = [[[LocationPrivacySettings alloc] init] autorelease];
                     locCircle.privacy.radius   = 2;
                     locCircle.privacy.duration = 0;
                     [smAppDelegate.locSharingPrefs.circles addObject:locCircle];
+                    [locCircle release];
                 } else 
                     locCircle = (LocationCircleSettings*) [filteredArray objectAtIndex:0];
                 locCircle.circleInfo.circleID = aCircle.circleID;
@@ -88,9 +89,11 @@
             sep = [[UIView alloc] initWithFrame:CGRectMake(self.frame.origin.x+10, 0, self.frame.size.width-10, 1)];
             sep.backgroundColor = [UIColor lightGrayColor];
             [circleGroup addSubview:sep];
+            [sep release];
         }
 
         [self addSubview:circleGroup];
+        [circleGroup release];
     }
     
     // Set the scrollable area size
@@ -152,6 +155,8 @@
     [aview addSubview:locSharing];
         
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [locSharing release];
+    [lineImage release];
     [self setNeedsLayout];
 }
 

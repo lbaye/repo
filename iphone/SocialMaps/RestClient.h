@@ -64,13 +64,6 @@
 - (void) register:(User*) userInfo;
 
 /**
- * @brief Register with user facebook information
- * @param (User) - User information
- * @retval none
- */
-- (void) registerFB:(User*) userInfo;
-
-/**
  * @brief Forgot password
  * @param (NSString) - Email address
  * @retval none
@@ -654,15 +647,6 @@
 - (void) deletePlaceByPlaceId:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)placeId;
 
 /**
- * @brief Get photos for geotag with user id
- * @param (NSString) - Auth Token
- * @param (NSString) - Auth Token Value
- * @param (NSString) - User id
- * @retval none
- */
--(void) getGeotagPhotos:(NSString *)authToken:(NSString *)authTokenValue:(NSString *)userId;
-
-/**
  * @brief Creates a geotag
  * @param (Geotag) - Geotag object
  * @param (NSString) - Auth Token
@@ -779,5 +763,14 @@
  * @retval none
  */
 - (void) getMessageById:(NSString*)authToken authTokenVal:(NSString*)authTokenValue:(NSString*)messageId;
+
+/**
+ * @brief Get parent message by recipient id 
+ * @param (NSString) - Auth Token
+ * @param (NSString) - Auth Token Value
+ * @param (NSString) - Recipient Id
+ * @retval none
+ */
+- (void)getThread:(NSString*)recipientId authToken:(NSString*)authToken authTokenVal:(NSString*)authTokenValue;
 
 @end

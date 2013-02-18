@@ -196,6 +196,7 @@
     
     [scrollViewFriendList addSubview:thumbView];
     [thumbView release];
+
 }
 
 -(void) handleTapGesture:(UIGestureRecognizer *)sender 
@@ -210,11 +211,13 @@
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controller animated:YES];
+        [controller release];
     } else {
         FriendsProfileViewController *controllerFriend = [[FriendsProfileViewController alloc] init];
         controllerFriend.friendsId = friendId;
         controllerFriend.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         [self presentModalViewController:controllerFriend animated:YES];
+        [controllerFriend release];
     }
     
 }
@@ -405,7 +408,6 @@
     } 
     else
     {
-        searchText = @"";
         [filteredList removeAllObjects];
         
         if (searchBarFriendList.selectedScopeButtonIndex == 2) 

@@ -79,10 +79,9 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     
     [self displayNotificationCount];
     userDefault=[[UserDefault alloc] init];
-    facebookApi = [[FacebookHelper sharedInstance] facebook];
+    facebookApi = [[FacebookHelper sharedInstance] facebookApi];
     fbHelper=[[FacebookHelper alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    
     
 }
 
@@ -92,14 +91,31 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     [self displayNotificationCount];
     
     smAppDelegate.currentModelViewController = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectFBDone:) name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getConnectwithFB:) name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettingsDone:) name:SET_SHARE_LOCATION_DONE object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    RestClient *restClient = [[RestClient alloc] init];
-    [restClient setLayer:smAppDelegate.layerPrefs :@"Auth-Token" :smAppDelegate.authToken];
-    [restClient setPlatForm:smAppDelegate.platformPrefs :@"Auth-Token" :smAppDelegate.authToken];
-    // Save location sharing settings
-    [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SET_SHARE_LOCATION_DONE object:nil];
+}
+
+- (void)saveSettingsDone:(NSNotification *)notif
+{
+    [smAppDelegate hideActivityViewer];
+    ShareLocation *shareLocation = notif.object;
+    if (shareLocation) {
+        smAppDelegate.locSharingPrefs = shareLocation;
+        [UtilityClass showAlert:@"" :@"Location sharing data saved successfully."];
+        [self goBack:nil];
+    } else {
+        [UtilityClass showAlert:@"" :@"Error saving changes, please try again."];
+    }
 }
 
 - (void)getConnectwithFB:(NSNotification *)notif
@@ -109,7 +125,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     {
 
         NSLog(@"");
-        RestClient *rc=[[RestClient alloc] init];
+        RestClient *rc=[[[RestClient alloc] init] autorelease];
         [smAppDelegate showActivityViewer:self.view];
         NSLog(@"fb access token in map: 1: %@ 2: %@ 3: %@",[notif object],smAppDelegate.fbId,[userDefault readFromUserDefaults:@"FBUserId"]);
         [fbHelper inviteFriends:nil];
@@ -159,8 +175,6 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_WITH_FB object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_DO_CONNECT_FB_DONE object:nil];
     [self setSettingsScrollView:nil];
     [self setPlatformView:nil];
     [self setLayersView:nil];
@@ -237,6 +251,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = 1002;  
     [rowView addSubview:lineImage];
+    [lineImage release];
     
     UIButton *buttonInviteFBFriend = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonInviteFBFriend.frame = chkboxFrame;
@@ -308,8 +323,32 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     }
     else
     {
-        [fbHelper inviteFriends:NULL];
+        Facebook *facebookApi = [[FacebookHelper sharedInstance] facebookApi];
+        if ([facebookApi isSessionValid])
+        {
+        [fbHelper inviteFriends:nil];
         NSLog(@"invite friends in else");
+        }
+        else
+        {
+            NSArray *permissions = [[NSArray alloc] initWithObjects:
+                                    @"email",
+                                    @"user_likes",
+                                    @"user_photos",
+                                    @"publish_checkins",
+                                    @"photo_upload",
+                                    @"user_location",
+                                    @"user_birthday",
+                                    @"user_about_me",
+                                    @"publish_stream",
+                                    @"read_stream",
+                                    @"friends_status",
+                                    @"user_checkins",
+                                    @"friends_checkins",
+                                    nil];
+            [facebookApi authorize:permissions];
+            [permissions release];
+        }
     }
 }
 
@@ -362,6 +401,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = 1004;  
     [rowView addSubview:lineImage];
+    [lineImage release];
     
     NSArray *layers = [NSArray arrayWithObjects:@"Wikipedia", @"Tripadvisor", @"Foodspotting", nil];
     NSArray *def    = [NSArray arrayWithObjects:[NSNumber numberWithBool: smAppDelegate.layerPrefs.wikipedia], 
@@ -401,7 +441,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     scrollView.tag = 4001;
     [self.view addSubview:scrollView];
     [self.view bringSubviewToFront:settingsHeader];
-
+    [scrollView release];
 }
 
 - (IBAction)setAccountSettings:(id)sender 
@@ -422,6 +462,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 3001;
     [self.view addSubview:scrollView];
+    [scrollView release];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
 
@@ -444,8 +485,8 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     else if ((view = [self.view viewWithTag:3001]))
         [self closeAccountSettings:nil];
     
-    if (!view)
-        [self performSegueWithIdentifier:@"backToMap" sender:sender];
+    if (!view) [self dismissModalViewControllerAnimated:YES];
+    
 }
 
 - (IBAction)setLocationSharing:(id)sender
@@ -458,7 +499,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
     UILabel *settingsHdrLabel = (UILabel*)[settingsHeader viewWithTag:2];    
     settingsHdrLabel.text = @"Location sharing";
     
-    CGRect scrollFrame = CGRectMake(05, 80, 310, 380);
+    CGRect scrollFrame = CGRectMake(05, 100, 310, 360);
     LocationSharing *scrollView = [[LocationSharing alloc] initWithFrame:scrollFrame];
     scrollView.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                                  green:247.0/255.0 
@@ -466,6 +507,7 @@ int connectFBCounter=0, fbLoginCallbackCounter=0;
                                                  alpha:1.0];
     scrollView.tag = 5001;
     [self.view addSubview:scrollView];
+    [scrollView release];
     [self.view bringSubviewToFront:settingsHeader];
     [self.view bringSubviewToFront:settingsMainHeader];
 

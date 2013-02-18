@@ -10,6 +10,10 @@
 #import "LoadingView.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface LoadingView ()
+    CGPathRef NewPathWithRoundRect(CGRect rect, CGFloat cornerRadius);
+@end
+
 //
 // NewPathWithRoundRect
 //

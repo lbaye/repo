@@ -124,6 +124,7 @@
 + (void) removeAllCache 
 {
     [[self cache] removeAllObjects];
+    [[self keyArray] removeAllObjects];
 }
 
 @end

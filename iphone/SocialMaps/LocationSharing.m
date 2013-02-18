@@ -24,12 +24,15 @@
 #import "UserCircle.h"
 #import "NewLocationItem.h"
 #import "Globals.h"
+#import "RestClient.h"
 
 #define ROW_HEIGHT 62
 
 @implementation LocationSharing
+
 @synthesize rowNum;
 @synthesize smAppDelegate;
+@synthesize locSharingStatus;
 
 - (LocationSharing*) initWithFrame:(CGRect)scrollFrame {
     self = [super initWithFrame:scrollFrame];
@@ -37,8 +40,18 @@
         self.frame = scrollFrame;
         [self setScrollEnabled:TRUE];
         smAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.locSharingStatus = smAppDelegate.locSharingPrefs.status;
     }
     return self;
+}
+
+- (NSString*)getSharingStatus {
+    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"off"] == NSOrderedSame || smAppDelegate.shareLocationOption == 2)
+        return @"No one";
+    else if (smAppDelegate.shareLocationOption == 1)
+        return @"Friends only";
+    else
+        return @"All users";
 }
 
 - (void)drawRect:(CGRect)rect
@@ -47,9 +60,9 @@
     [[self subviews]
      makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    int sharingEnabled = 0;
-    if ([smAppDelegate.locSharingPrefs.status caseInsensitiveCompare:@"on"] == NSOrderedSame)
-        sharingEnabled = 1;
+    int sharingEnabled = 1;
+    if ([self.locSharingStatus caseInsensitiveCompare:@"off"] == NSOrderedSame)
+        sharingEnabled = 0;
 
     self.backgroundColor = [UIColor colorWithRed:247.0/255.0 
                                            green:247.0/255.0 
@@ -59,14 +72,16 @@
     rowNum = 0;
     //Erase history
     // Location sharing information
-    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:@"" labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
+    RadioButtonItem *enableSharing = [[RadioButtonItem alloc] initWithFrame:CGRectMake(0, rowNum++*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Location sharing" subTitle:[NSString stringWithFormat:@"You are sharing your location with: \n%@", [self getSharingStatus]] labels:[NSArray arrayWithObjects:@"Off", @"On", nil] defBtn:sharingEnabled sender:self tag:startTag++];
     [self addSubview:enableSharing];
+    [enableSharing release];
 
     if (sharingEnabled == 1) {
 
         rowNum = 5;
         SettingsMaster *locSharingView = [[SettingsMaster alloc] initWithFrame:CGRectMake(0,(rowNum++ - 4)*(ROW_HEIGHT+2), self.frame.size.width, ROW_HEIGHT) title:@"Customize sharing for locations" subTitle:@"" bgImage:@"img_settings_list_bg.png" type:SettingsDisplayTypeExpand sender:self tag:2005];
         [self addSubview:locSharingView];
+        [locSharingView release];
     }
     
     // Setthe scrollable area size
@@ -79,7 +94,23 @@
     sep.backgroundColor = [UIColor lightGrayColor];
     sep.tag = 30000;
     [self addSubview:sep];
+    [sep release];
+    
+    CustomSaveView *viewSaveSettingPref = [[CustomSaveView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 50, self.frame.size.width, 45)];
+    [self addSubview:viewSaveSettingPref];
+    viewSaveSettingPref.delegate = self;
+    viewSaveSettingPref.tag = 30001;
+    [viewSaveSettingPref release];
 
+}
+
+- (void) customSaveButtonClicked:(id)sender
+{
+    NSLog(@"customSaveButtonClicked");
+    [smAppDelegate showActivityViewer:self.superview];
+    smAppDelegate.locSharingPrefs.status = self.locSharingStatus;
+    RestClient *restClient = [[[RestClient alloc] init] autorelease];
+    [restClient setShareLocation:smAppDelegate.locSharingPrefs :@"Auth-Token" :smAppDelegate.authToken];
 }
 
 - (void) cascadeHeightChange:(int)indx incr:(int)incr {
@@ -123,11 +154,13 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [locSharing release];
     [self setNeedsLayout];
 }
 
@@ -144,11 +177,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
+    [locSharing release];
+    
     [self setNeedsLayout];
 }
 
@@ -165,6 +201,7 @@
     [newLocation addSubview:aline];
     [aline release];
     [aview addSubview:newLocation];
+    [newLocation release];
     
     LocationSharingPlaces *locSharing = [[LocationSharingPlaces alloc] initWithFrame:CGRectMake(0, aview.frame.size.height+7+selFrame.size.height, aview.frame.size.width, ROW_HEIGHT-7) sender:self tag:tag+1000];
     
@@ -174,12 +211,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     NSLog(@"LocationSharing:addLocSharingPlaceView locSharing=%f", locSharing.frame.size.height);
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
+    [locSharing release];
     [self setNeedsLayout];
 }
 - (void) removeLocSharingPlaceView:(int)tag {
@@ -214,9 +253,11 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
+    [locSharing release];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7];
     [self setNeedsLayout];
@@ -247,6 +288,7 @@
     CGRect selFrame = CGRectMake(0, aview.frame.size.height+7, aview.frame.size.width, ROW_HEIGHT);
     SettingsMaster * selectFriends = [[SettingsMaster alloc] initWithFrame:selFrame title:@"Select subgroup of friends" subTitle:@"" bgImage:@"" type:SettingsDisplayTypeDetail sender:self tag:tag+1002 level:1];
     [aview addSubview:selectFriends];
+    [selectFriends release];
     
     // Draw a line
     UIView *aline = [[UIView alloc] initWithFrame:CGRectMake(10, aview.frame.size.height+7+ROW_HEIGHT-1, 
@@ -254,6 +296,7 @@
     aline.backgroundColor = [UIColor lightGrayColor];
     aline.tag   = tag+1003;
     [aview addSubview:aline];
+    [aline release];
     
     LocationSharingPref *locSharing = [[LocationSharingPref alloc] initWithFrame:CGRectMake(0, 
                                                 aview.frame.size.height+7+selFrame.size.height, 
@@ -268,11 +311,14 @@
     lineImage.image = [UIImage imageNamed:@"line_arrow_down_left.png"];
     lineImage.tag   = tag+1001;  
     [aview addSubview:lineImage];
+    [lineImage release];
+    lineImage = nil;
     
     locSharing.backgroundColor = [UIColor clearColor];
     [aview addSubview:locSharing];
     
     [self cascadeHeightChange:tag incr:locSharing.frame.size.height+7+selFrame.size.height];
+    [locSharing release];
     [self setNeedsLayout];
 }
 
@@ -363,6 +409,7 @@
                     [circles addObject:aCircle];
             }
             SelectFriends *selFriends = [[SelectFriends alloc] initWithFrame:CGRectMake(5, 46, 310, 480-46-20) friends:smAppDelegate.friendList circles:circles];
+            
             selFriends.delegate = self;
             selFriends.tag = 420;
             selFriends.backgroundColor = [UIColor colorWithRed:247.0/255.0 
@@ -371,6 +418,7 @@
                                                          alpha:1.0];
             [[self superview]  addSubview:selFriends];
             [selFriends release];
+            [circles release];
             
         } else if (parent.tag == 3007) {
             // Show New Location view
@@ -511,10 +559,11 @@
 // RadioButtonDelegate method
 - (void) buttonSelected:(int)indx sender:(id)sender {
     NSLog(@"LocationSharing: buttonSelected index=%d", indx);
-    if (indx == 1)
-        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"On"];
-    else
-        smAppDelegate.locSharingPrefs.status = [NSString stringWithFormat:@"Off"];
+    if (indx == 1) {
+        self.locSharingStatus = [NSString stringWithFormat:@"On"];
+    } else {
+        self.locSharingStatus = [NSString stringWithFormat:@"Off"];
+    }
     [self setNeedsDisplay];
 }
 

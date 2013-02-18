@@ -23,7 +23,6 @@
 @synthesize regFirstName;
 @synthesize picSelButton;
 @synthesize regGender;
-@synthesize selMaleFemale;
 @synthesize arrayGender;
 @synthesize userInfo;
 @synthesize picSel;
@@ -41,6 +40,7 @@
 @synthesize relatioshipStatusTxtField;
 @synthesize basicInfoView;
 @synthesize registrationScrollView;
+@synthesize userNameTextField;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,6 +61,11 @@
 
 #pragma mark - View lifecycle
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regDone:) name:NOTIF_REG_DONE object:nil];
+}
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -71,7 +76,6 @@
     
     [arrayGender addObject:@"Female"];
     [arrayGender addObject:@"Male"];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regDone:) name:NOTIF_REG_DONE object:nil];
     
     
     [registrationScrollView setContentSize:CGSizeMake(320, basicInfoView.frame.size.height+moreInfoView.frame.size.height)];
@@ -82,18 +86,17 @@
     [registrationScrollView addSubview:basicInfoView];
     [registrationScrollView addSubview:moreInfoView];
     
-    self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
-    self.photoPicker.delegate = self;
+    photoPicker = [[PhotoPicker alloc] initWithNibName:nil bundle:nil];
+    photoPicker.delegate = self;
     
-    self.picSel = [[UIImagePickerController alloc] init];
-	self.picSel.allowsEditing = YES;
-	self.picSel.delegate = self;	
+    picSel = [[UIImagePickerController alloc] init];
+	picSel.allowsEditing = YES;
+	picSel.delegate = self;
 }
 
 
 - (void)viewDidUnload
 {
-    [self setSelMaleFemale:nil];
     [self setRegGender:nil];
     [self setRegEmail:nil];
     [self setRegPassword:nil];
@@ -103,7 +106,11 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REG_DONE object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -113,7 +120,7 @@
 }
 
 - (void)dealloc {
-    [selMaleFemale release];
+    [photoPicker release];
     [regGender release];
     [regEmail release];
     [regPassword release];
@@ -158,10 +165,10 @@
     if ([theTextField isEqual:regEmail]) {
         [regPassword becomeFirstResponder];
     } else if ([theTextField isEqual:regPassword]){
-        [regFirstName becomeFirstResponder];
-    } else if ([theTextField isEqual:regFirstName]){//regFirstName   regName
-        [regName becomeFirstResponder];
-    }else if ([theTextField isEqual:regName]){
+        [userNameTextField becomeFirstResponder];
+    }
+    else if ([theTextField isEqual:userNameTextField])
+    {
         [theTextField resignFirstResponder];
     }
     else {
@@ -171,6 +178,7 @@
     userInfo.email = regEmail.text;
     userInfo.password = regPassword.text;
     userInfo.lastName = regName.text;
+    userInfo.userName = userNameTextField.text;
     userInfo.firstName = regFirstName.text;
     userInfo.gender = regGender.text;
 	return YES;
@@ -179,6 +187,7 @@
 - (IBAction)selectDateOfBirthAction:(id)sender
 {
     NSLog(@"select date");
+    [self resignAllTextFields];
     [ActionSheetPicker displayActionPickerWithView:sender dateOfBirthPickerMode:UIDatePickerModeDate selectedDate:[NSDate date] target:self action:@selector(dateWasSelected::) title:@"Select date of birth"];
 }
 
@@ -199,6 +208,7 @@
 }
 
 - (IBAction)selectGender:(id)sender {
+        [self resignAllTextFields];
     [ActionSheetPicker displayActionPickerWithView:sender data:arrayGender selectedIndex:0 target:self action:@selector(genderWasSelected::) title:@"Select Gender"];
 }
 
@@ -208,6 +218,13 @@
 }
 
 - (IBAction)createAccount:(id)sender {
+    userInfo.email = regEmail.text;
+    userInfo.password = regPassword.text;
+    userInfo.firstName = regFirstName.text;
+    userInfo.lastName = regName.text;
+    userInfo.gender = regGender.text;
+    userInfo.userName = userNameTextField.text;
+    
     if (![UtilityClass hasConnectivity]) {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
@@ -221,9 +238,8 @@
         [loginAlert show];
         [loginAlert autorelease];
     } else if ([userInfo.email isEqualToString:@""] || userInfo.email == nil ||
-        [userInfo.password isEqualToString:@""] || userInfo.password == nil ||
-        [userInfo.lastName isEqualToString:@""] || userInfo.lastName == nil ||
-        [userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil ||
+        [userInfo.password isEqualToString:@""] || ![self NSStringIsValidEmail:userInfo.email] ||
+        [userInfo.userName isEqualToString:@""] || userInfo.userName == nil ||
         regPhoto == nil ||[regGender.text isEqualToString:@""])
     {
         NSMutableString *message=[[NSMutableString alloc] initWithString:@"Please provide "];        
@@ -231,9 +247,9 @@
         {
             [message appendString:@"image, "];            
         }
-        if ([userInfo.email isEqualToString:@""] || userInfo.email == nil)
+        if ([self NSStringIsValidEmail:userInfo.email]==FALSE)
         {
-            [message appendString:@"email address, "];
+            [message appendString:@"valid email address, "];
         }
         if ([userInfo.password isEqualToString:@""] || userInfo.password == nil)
         {
@@ -243,16 +259,12 @@
         {
             [message appendString:@"gender, "];
         }
-        if ([userInfo.firstName isEqualToString:@""] || userInfo.firstName == nil)
+        if ([userInfo.userName isEqualToString:@""] || userInfo.userName == nil)
         {
-            [message appendString:@"first name, "];
+            [message appendString:@"user name, "];
         }
         
-        if ([userInfo.lastName isEqualToString:@""] || userInfo.lastName == nil)
-        {
-            [message appendString:@"last name "];
-        }
-        [CustomAlert setBackgroundColor:[UIColor redColor] 
+        [CustomAlert setBackgroundColor:[UIColor redColor]
                         withStrokeColor:[UIColor redColor]];
         CustomAlert *loginAlert = [[CustomAlert alloc]
                                    initWithTitle:@"Required information missing"
@@ -262,7 +274,7 @@
                                    otherButtonTitles:nil];
         
         [loginAlert show];
-        [loginAlert autorelease];
+        [loginAlert release];
     } else {
         NSData *imgdata = UIImagePNGRepresentation(regPhoto);
         NSString *imgBase64Data = [imgdata base64EncodedString];
@@ -286,13 +298,24 @@
     }
 }
 
+-(BOOL) NSStringIsValidEmail:(NSString *)checkString
+{
+    BOOL stricterFilter = YES; 
+    NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSString *laxString = @".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
+    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:checkString];
+}
+
 - (void)regDone:(NSNotification *)notif
 {
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate hideActivityViewer];
     [appDelegate.window setUserInteractionEnabled:YES];
     
-    User * regInfo = [notif object];
+    if ([notif.object isKindOfClass:[User class]]) {
+        User * regInfo = [notif object];
     if (regInfo != nil) {
         [CustomAlert setBackgroundColor:[UIColor grayColor] 
                         withStrokeColor:[UIColor grayColor]];
@@ -308,12 +331,15 @@
         NSLog(@"Please login using your email and password");
         
         [self performSegueWithIdentifier: @"regBackToLogin" sender: self];
-    } else {
+    }
+    }
+    else if([notif.object isKindOfClass:[NSString class]])
+    {
         [CustomAlert setBackgroundColor:[UIColor redColor] 
                         withStrokeColor:[UIColor redColor]];
         CustomAlert *loginAlert = [[CustomAlert alloc]
                                    initWithTitle:@"Cannot Register"
-                                   message:@"Please provide all information required"
+                                   message:notif.object
                                    delegate:nil
                                    cancelButtonTitle:@"Done"
                                    otherButtonTitles:nil];
@@ -327,9 +353,28 @@
     [self.view endEditing:YES];
 }
 
+-(void)resignAllTextFields
+{
+    [regGender resignFirstResponder];
+    [regEmail resignFirstResponder];
+    [regPassword resignFirstResponder];
+    [regName resignFirstResponder];
+    [regFirstName resignFirstResponder];
+    [dateOfBirthTxtField resignFirstResponder];
+    [biographyTxtField resignFirstResponder];
+    [interestsTxtField resignFirstResponder];
+    [streetAdressTxtField resignFirstResponder];
+    [cityTxtField resignFirstResponder];
+    [zipCodeTxtField resignFirstResponder];
+    [countryTxtField resignFirstResponder];
+    [serviceTxtField resignFirstResponder];
+    [relatioshipStatusTxtField resignFirstResponder];
+    [userNameTextField resignFirstResponder];
+}
 
 - (IBAction)selPicOption:(id)sender
 {
+    [self resignAllTextFields];
     [self.photoPicker getPhoto:self];
 }
 

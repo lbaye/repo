@@ -21,6 +21,7 @@
 #import "SelectCircleTableCell.h"
 #import <Foundation/Foundation.h> 
 #import "NotificationController.h"
+#import "NSData+Base64.h"
 
 @interface CreateEventViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
@@ -98,7 +99,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     
     [circleList removeAllObjects];
     
-    UserCircle *circle=[[UserCircle alloc]init];
     guestListIdArr=[[NSMutableArray alloc] init];
     
     
@@ -106,13 +106,11 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         
     {
         
-        circle=[circleListGlobalArray objectAtIndex:i];
+        UserCircle *circle=[circleListGlobalArray objectAtIndex:i];
         
         [circleList addObject:circle.circleName];
         
     }
-    
-    UserFriends *frnds=[[UserFriends alloc] init];
     
     ImgesName = [[NSMutableArray alloc] init];    
     
@@ -144,12 +142,8 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
     
     for (int i=0; i<[friendListGlobalArray count]; i++)
-        
     {
-        
-        frnds=[[UserFriends alloc] init];
-        
-        frnds=[friendListGlobalArray objectAtIndex:i];
+        UserFriends *frnds=[friendListGlobalArray objectAtIndex:i];
         
         if ((frnds.imageUrl==NULL)||[frnds.imageUrl isEqual:[NSNull null]])
             
@@ -184,7 +178,12 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 - (id)init
 {
-    self.geolocation=[[Geolocation alloc] init];
+    self=[super init];
+    if (self)
+    {
+        //
+    }
+
     return self;
 }
 
@@ -195,7 +194,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 	// Do any additional setup after loading the view.
     self.photoPicker = [[[PhotoPicker alloc] initWithNibName:nil bundle:nil] autorelease];
     self.photoPicker.delegate = self;
-    self.picSel = [[UIImagePickerController alloc] init];
+    self.picSel = [[[UIImagePickerController alloc] init] autorelease];
 	self.picSel.allowsEditing = YES;
 	self.picSel.delegate = self;	
     [upperView removeFromSuperview];
@@ -232,6 +231,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     neearMeAddressArr=[[NSMutableArray alloc] init];
     myPlaceArr=[[NSMutableArray alloc] init];
     placeNameArr=[[NSMutableArray alloc] init];
+    geolocation=[[Geolocation alloc] init];
     for (int i=0; i<[smAppDelegate.placeList count]; i++)
     {
         LocationItemPlace *aPlaceItem = (LocationItemPlace*)[smAppDelegate.placeList objectAtIndex:i];
@@ -278,7 +278,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     radio1 = [[CustomRadioButton alloc] initWithFrame:CGRectMake(11, 69, 297, 49) numButtons:4 labels:[NSArray arrayWithObjects:@"Current location",@"My places",@"Places near to me",@"Point on map",nil]  default:0 sender:self tag:20002];
     radio1.delegate = self;
     [upperView addSubview:radio1];
-    RestClient *rc = [[RestClient alloc] init];
+    RestClient *rc = [[[RestClient alloc] init] autorelease];
     [rc getMyPlaces:@"Auth-Token" :smAppDelegate.authToken];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createEventDone:) name:NOTIF_CREATE_EVENT_DONE object:nil];    
     
@@ -834,10 +834,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         [smAppDelegate showActivityViewer:self.view];
         RestClient *rc=[[RestClient alloc] init];
         UserFriends *frnd;
-        NSMutableArray *userIDs=[[NSMutableArray alloc] init];
+        NSMutableArray *userIDs=[[[NSMutableArray alloc] init] autorelease];
         for (int i=0; i<[selectedFriendsIndex count]; i++)
         {
-            frnd=[[UserFriends alloc] init];
             frnd=[selectedFriendsIndex objectAtIndex:i];
             [userIDs addObject:frnd.userId];
             event.guestList=userIDs;
@@ -870,9 +869,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             [rc createEvent:event:@"Auth-Token":smAppDelegate.authToken];
         }
         NSLog(@"event.eventName %@ event.eventDescription %@ event.eventShortSummary %@  guests: %@ event.eventImageUrl %@ event.eventDate %@",event.eventName,event.eventDescription,event.eventShortSummary,event.guestList,event.eventImageUrl,event.eventDate.date);
-
+        [rc release];
     }
-    
+    [msg release];
 }
 
 -(IBAction)cancelEvent:(id)sender
@@ -933,12 +932,10 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
         NSLog(@"venueAddress: %@",venueAddress);
         addressLabel.text=venueAddress;
-        LocationItemPlace *locItemPlace;
         for (int i=0; i<[smAppDelegate.placeList count]; i++)
         {
             if ([((LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i]).itemAddress isEqualToString:venueAddress])
             {
-                locItemPlace = (LocationItemPlace *)[smAppDelegate.placeList objectAtIndex:i];
                 [curLoc setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
                 [myPlace setImage:[UIImage imageNamed:@"location_bar_radio_none.png"] forState:UIControlStateNormal];
                 [neamePlace setImage:[UIImage imageNamed:@"location_bar_radio_cheked.png"] forState:UIControlStateNormal];
@@ -954,16 +951,17 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 - (void)dateWasSelected:(NSDate *)selectedDate:(id)element 
 {
     NSDate *date =selectedDate;
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     event.eventDate.date=[UtilityClass convertNSDateToUnix:date];
-    dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm Z"];    
     dateString = [dateFormatter stringFromDate:date];
-    event.eventDate.date=[[NSString alloc] initWithString:dateString];
+    event.eventDate.date=dateString;
     dateButton.titleLabel.text=dateString;
     NSLog(@"Selected Date: %@  %@ %@",dateString, event.eventDate.date,[UtilityClass convertNSDateToUnix:selectedDate]);
+    [dateFormatter release];
+
 }
 
 
@@ -1017,16 +1015,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     SelectCircleTableCell *customCell = [customTableView
                                    dequeueReusableCellWithIdentifier:CustomCellIdentifier];
 
-    if (cell == nil)
-    {
-            cell = [[SelectCircleTableCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault 
-                    reuseIdentifier:CellIdentifier];
-        
-        customCell = [[SelectCircleTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault 
-                reuseIdentifier:CustomCellIdentifier];
-    }
+    
     
     // Configure the cell...
     if ([[circleList objectAtIndex:indexPath.row] isEqual:[NSNull null]]) 
@@ -1072,7 +1061,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 -(void)handleTableViewCheckbox:(id)sender
@@ -1190,7 +1179,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             {
             }
         }
-       NSArray* subviews1 = [[NSArray arrayWithArray: customScrollView.subviews] mutableCopy];
+       NSArray* subviews1 = [NSArray arrayWithArray: customScrollView.subviews];
         for (UIView* view in subviews1) 
         {
             if([view isKindOfClass :[UIView class]])
@@ -1201,7 +1190,6 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
             {
             }
         }   
-        
         frndListScrollView.contentSize=CGSizeMake([filteredList1 count]*80, 100);
         customScrollView.contentSize=CGSizeMake([filteredList2 count]*65, 65);
         
@@ -1210,8 +1198,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         {
             if(i< [filteredList1 count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[filteredList1 objectAtIndex:i];
+                UserFriends *userFrnd=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
                 if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
@@ -1286,8 +1273,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         {
             if(i< [filteredList2 count]) 
             { 
-                UserFriends *userFrnd=[[UserFriends alloc] init];
-                userFrnd=[filteredList2 objectAtIndex:i];
+                UserFriends *userFrnd=[filteredList2 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
                 if (userFrnd.imageUrl == nil) 
                 {
@@ -1350,6 +1336,9 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
                 [aView addGestureRecognizer:tapGesture];
                 [tapGesture release];           
                 [customScrollView addSubview:aView];
+                [aView release];
+                [name release];
+                [imgView release];
             }        
             x2+=65;
         }
@@ -1361,18 +1350,18 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     if (isBackgroundTaskRunning==true)
     {
     int index = [path intValue];
-    UserFriends *userFrnd=[[UserFriends alloc] init];
-    userFrnd=[filteredList1 objectAtIndex:index];
+    UserFriends *userFrnd=[filteredList1 objectAtIndex:index];
 
     NSString *Link = userFrnd.imageUrl;
     //Start download image from url
     UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-    if(img)
+    if([img isKindOfClass:[UIImage class]])
     {
         //If download complete, set that image to dictionary
         [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
         [self reloadScrolview];
     }
+        [img release];
     // Now, we need to reload scroll view to load downloaded image
     }
 }
@@ -1389,8 +1378,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
         [selectedFriendsIndex addObject:[filteredList1 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList1 objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[filteredList1 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -1422,8 +1410,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
         [customSelectedFriendsIndex addObject:[filteredList2 objectAtIndex:[sender.view tag]]];
     }
-    UserFriends *frnds=[[UserFriends alloc] init];
-    frnds=[filteredList2 objectAtIndex:[sender.view tag]];
+    UserFriends *frnds=[filteredList2 objectAtIndex:[sender.view tag]];
     NSLog(@"selectedFriendsIndex2 : %@",selectedFriendsIndex);
     for (int l=0; l<[subviews count]; l++)
     {
@@ -1483,7 +1470,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
         }
         else
         {
-            searchText=@"";
+            searchTexts=@"";
             [filteredList2 removeAllObjects];
             filteredList2 = [[NSMutableArray alloc] initWithArray: friendListArr];
             [self reloadScrolview];
@@ -1495,7 +1482,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     {
         
     }
-    searchText=friendSearchbar.text;
+    searchTexts=friendSearchbar.text;
     
     if ([searchText length]>0) 
     {
@@ -1505,7 +1492,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
     }
     else
     {
-        searchText=@"";
+        searchTexts=@"";
         [filteredList1 removeAllObjects];
         filteredList1 = [[NSMutableArray alloc] initWithArray: friendListArr];
         [self reloadScrolview];
@@ -1797,6 +1784,7 @@ NSMutableArray *guestListIdArr, *myPlaceArr, *placeNameArr;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [geolocation release];
     // Release any retained subviews of the main view.
 }
 
