@@ -767,10 +767,6 @@ ButtonClickCallbackData callBackData;
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Received memory warning!!!" delegate:self cancelButtonTitle:@"" otherButtonTitles:@"", nil];
-    [alertView show];
-    [alertView release];
-
 }
 
 #pragma mark - View lifecycle
@@ -1028,6 +1024,8 @@ ButtonClickCallbackData callBackData;
         CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
         CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
         CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
+        smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
+        smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
         
         NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
         NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
@@ -1091,6 +1089,7 @@ ButtonClickCallbackData callBackData;
         [smAppDelegate.timerGotListing invalidate];
         smAppDelegate.timerGotListing = nil;
     }
+    smAppDelegate.mapDrawnFirstTime = TRUE;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -1163,7 +1162,15 @@ ButtonClickCallbackData callBackData;
     if (CLLocationCoordinate2DIsValid(zoomLocation)) {
         
         // 2
-        MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+        MKCoordinateRegion viewRegion;
+        if (smAppDelegate.resetZoom == TRUE && smAppDelegate.displayList.count > 0 ) {
+            viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+            smAppDelegate.resetZoom = FALSE;
+        } else {
+            NSLog(@"SPAN = %f, %f", smAppDelegate.currZoom.latitudeDelta, smAppDelegate.currZoom.longitudeDelta);
+            viewRegion = MKCoordinateRegionMake(zoomLocation, smAppDelegate.currZoom);
+        }
+        
         // 3
         NSLog(@"MapViewController:loadAnnotations");
         MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
@@ -1177,8 +1184,13 @@ ButtonClickCallbackData callBackData;
             
             if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
             {
-                if (![_mapView.annotations containsObject:anno])
+                if (![_mapView.annotations containsObject:anno]) {
                     [_mapView addAnnotation:anno];
+                    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
+                    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+                    if (avaterImageView.image == nil)
+                        [avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
+                }
             }
         }
         
@@ -1206,11 +1218,18 @@ ButtonClickCallbackData callBackData;
     CLLocationCoordinate2D zoomLocation;
     
     // Current location
-    zoomLocation.latitude = [smAppDelegate.currPosition.latitude doubleValue];
-    zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
+    zoomLocation.latitude = [smAppDelegate.screenCenterPosition.latitude doubleValue];
+    zoomLocation.longitude = [smAppDelegate.screenCenterPosition.longitude doubleValue];
     
     // 2
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+    MKCoordinateRegion viewRegion;
+    if (smAppDelegate.resetZoom == TRUE) {
+        viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+        smAppDelegate.resetZoom = FALSE;
+    } else
+        viewRegion = MKCoordinateRegionMake(zoomLocation, smAppDelegate.currZoom);
+    
+    //MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
     [_mapView setRegion:adjustedRegion animated:YES]; 
     
@@ -1385,6 +1404,13 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    NSLog(@"SPAN changed = %f,%f", _mapView.region.span.latitudeDelta, _mapView.region.span.longitudeDelta);
+    //if (_mapView.region.span.latitudeDelta < 123 || smAppDelegate.currZoom.latitudeDelta == .02)
+    if (smAppDelegate.mapDrawnFirstTime == TRUE)
+        smAppDelegate.mapDrawnFirstTime = FALSE;
+    else
+        smAppDelegate.currZoom = _mapView.region.span;
+    
     for (id<MKAnnotation> annotation in _mapView.annotations) {
         if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
         {
@@ -1956,8 +1982,9 @@ ButtonClickCallbackData callBackData;
     // 2
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
-    [_mapView setRegion:adjustedRegion animated:YES];
+    [_mapView setRegion:adjustedRegion animated:NO];
     smAppDelegate.needToCenterMap = TRUE;
+    [self loadAnnotations:TRUE];
     [_mapView setNeedsDisplay];
 
 }

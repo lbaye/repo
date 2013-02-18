@@ -69,6 +69,7 @@
 @synthesize notifPrefs;
 @synthesize currPosition;
 @synthesize lastPosition;
+@synthesize screenCenterPosition;
 @synthesize showDeals;
 @synthesize showPeople;
 @synthesize showPlaces;
@@ -82,11 +83,14 @@
 @synthesize deviceTokenChanged;
 @synthesize facebookLogin;
 @synthesize smLogin,geotagList;
+@synthesize resetZoom;
 @synthesize currentModelViewController;
 @synthesize isAppInBackgound;
 @synthesize shareLocationOption;
 @synthesize timerGotListing;
 @synthesize myPhotoList;
+@synthesize currZoom;
+@synthesize mapDrawnFirstTime;
 
 static AppDelegate *sharedInstance=nil;
 
@@ -168,16 +172,23 @@ static AppDelegate *sharedInstance=nil;
     // Location coordinates
     currPosition = [[Geolocation alloc] init];
     lastPosition = [[Geolocation alloc] init];
-                    
+    screenCenterPosition = [[Geolocation alloc] init];
+    currZoom.latitudeDelta = .02;
+    currZoom.longitudeDelta = .02;
+    
     UserDefault *userDefaults = [[UserDefault alloc] init];
     currPosition.latitude = [userDefaults readFromUserDefaults:@"lastLatitude"];
     currPosition.longitude = [userDefaults readFromUserDefaults:@"lastLongitude"];
+    screenCenterPosition.latitude = [userDefaults readFromUserDefaults:@"lastLatitude"];
+    screenCenterPosition.longitude = [userDefaults readFromUserDefaults:@"lastLongitude"];
     [userDefaults release];
     
     showPeople = TRUE;
     showDeals  = FALSE;
     showPlaces = FALSE;
     showEvents = FALSE;
+    resetZoom  = TRUE;
+    mapDrawnFirstTime = TRUE;
     
     msgRead = FALSE;
     notifRead = FALSE;
