@@ -271,8 +271,7 @@ PullableView *pullUpView;
     }
     // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
-    int maxAnno = sortedArray.count >= MAX_VISIBLE_ANNO ? MAX_VISIBLE_ANNO : sortedArray.count;
-    [copyDisplayListArray addObjectsFromArray:[sortedArray subarrayWithRange:NSMakeRange(0, maxAnno)]];
+    [copyDisplayListArray addObjectsFromArray:sortedArray];
     [smAppDelegate.displayList addObjectsFromArray:copyDisplayListArray];
     [tempList release];
 }
