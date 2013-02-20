@@ -341,7 +341,7 @@ ButtonClickCallbackData callBackData;
                 if (i == 0) {
                     [self didTapMap];
                     [self showAnnotationDetailView:anno];
-                    [self mapAnnotationInfoUpdated:anno];
+                    //[self mapAnnotationInfoUpdated:anno];
                 }
             }
         }
@@ -363,6 +363,7 @@ ButtonClickCallbackData callBackData;
     [self mapAnnotationChanged:selLocation];
     [mapAnno changeStateToSummary:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
+    [self mapAnnotationInfoUpdated:anno];
 }
 
 -(void) startMoveMap:(LocationItem*)locItem
@@ -996,6 +997,28 @@ ButtonClickCallbackData callBackData;
         else
             smAppDelegate.currZoom = _mapView.region.span;
         
+        if (viewSearch.frame.origin.y >= 44) {
+         
+            for (id<MKAnnotation> annotation in _mapView.annotations) {
+                if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(self.mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
+                {
+                    LocationItem *selLocation = (LocationItem*) annotation;
+                    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
+                    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+                    if (avaterImageView.image == nil ) {
+                        if (selLocation.itemAvaterURL && [selLocation.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+                            [avaterImageView loadFromURL:[NSURL fileURLWithPath:selLocation.itemAvaterURL isDirectory:NO]];
+                        } else {
+                            [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
+                        }
+                    }
+                }
+            }
+            
+            return;
+            
+        }
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
             MKMapRect mRect = self.mapView.visibleMapRect;
@@ -1093,8 +1116,7 @@ ButtonClickCallbackData callBackData;
 {
     [super viewWillDisappear:animated];
     
-    LocationItem *selLocation = (LocationItem*) selectedAnno;
-    selLocation.currDisplayState = MapAnnotationStateNormal;
+    [self didTapMap];
     
     if (smAppDelegate.timerGotListing && shouldTimerStop) {
         [smAppDelegate.timerGotListing invalidate];
