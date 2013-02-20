@@ -363,7 +363,7 @@ ButtonClickCallbackData callBackData;
     [self mapAnnotationChanged:selLocation];
     [mapAnno changeStateToSummary:selLocation];
     [self performSelector:@selector(startMoveMap:) withObject:selLocation afterDelay:.8];
-    [self mapAnnotationInfoUpdated:anno];
+    
 }
 
 -(void) startMoveMap:(LocationItem*)locItem
@@ -377,6 +377,8 @@ ButtonClickCallbackData callBackData;
     }
     
     [self.mapView setVisibleMapRect:r animated:YES];
+    
+    [self mapAnnotationInfoUpdated:locItem];
 }
 
 -(void) startMoveAndAddPin:(Place*)place
