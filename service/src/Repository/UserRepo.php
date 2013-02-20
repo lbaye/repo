@@ -794,7 +794,7 @@ class UserRepo extends Base
             mkdir($fullThumbPath, 0777, true);
             return $fullThumbPath;
         }
-        
+
         return $fullThumbPath;
     }
 
@@ -845,10 +845,10 @@ class UserRepo extends Base
     }
 
     public function search($keyword = null, $location = array(),
-                           $limit = Constants::PEOPLE_LIMIT, $key = null)
+                           $limit = Constants::PEOPLE_LIMIT, $key = null, $hour = null, $minute = null)
     {
 
-        $users = $this->searchNearByPeople($keyword, $location, array('limit' => $limit, 'offset' => 0));
+        $users = $this->searchNearByPeople($keyword, $location, array('limit' => $limit, 'offset' => 0), $hour, $minute);
         $filteredUsers = array();
 
         if (!empty($users)) {
@@ -863,7 +863,7 @@ class UserRepo extends Base
         return array();
     }
 
-    public function searchNearByPeople($keywords, array $location, array $options = array())
+    public function searchNearByPeople($keywords, array $location, array $options = array(), $hour = null, $minute = null)
     {
         // Set all required parameters
         $limit = $options['limit'];
@@ -883,13 +883,29 @@ class UserRepo extends Base
         $query = $this->createQueryBuilder('Document\User');
         call_user_func_array(array($query, 'select'), $selectableFields);
 
-        $query->field('id')->notIn($excludedUserIds)
-            ->field('visible')->equals(true)
-            ->field('enabled')->equals(true)
-            ->field('currentLocation.lat')->notEqual(0)
-            ->field('currentLocation.lng')->notEqual(0)
-            ->hydrate(false)
-            ->limit($limit);
+//        $hour = date('H');
+//        $minute = date('i');
+        if (isset($hour) || isset($minute))
+            $_dateTime = new \DateTime($hour . 'hours ' . $minute . ' minutes ago');
+//         ->field('updateDate')->gte($_dateTime)
+        if (!isset($_dateTime)) {
+            $query->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
+                ->hydrate(false)
+                ->limit($limit);
+        } else {
+            $query->field('id')->notIn($excludedUserIds)
+                ->field('visible')->equals(true)
+                ->field('enabled')->equals(true)
+                ->field('currentLocation.lat')->notEqual(0)
+                ->field('currentLocation.lng')->notEqual(0)
+                ->field('updateDate')->gte($_dateTime)
+                ->hydrate(false)
+                ->limit($limit);
+        }
 
         //$query->field('currentLocation')->withinCenter($location['lng'], $location['lat'], \Controller\Search::DEFAULT_RADIUS);
 
@@ -897,7 +913,7 @@ class UserRepo extends Base
             $query->field('currentLocation');
             $locationParams = array();
             foreach (array_merge($location['ne'], $location['sw']) as $position)
-                $locationParams[] = (float) $position;
+                $locationParams[] = (float)$position;
             call_user_func_array(array($query, 'withinBox'), $locationParams);
         }
 
@@ -978,9 +994,10 @@ class UserRepo extends Base
         }
     }
 
-    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null)
+    public function searchWithPrivacyPreference($keyword = null, $location = array(), $limit = 20, $key = null, $hour, $minute)
     {
-        $people_around = $this->search($keyword, $location, $limit, $key);
+
+        $people_around = $this->search($keyword, $location, $limit, $key, $hour, $minute);
         $visible_people = array();
 
         # TODO: How to fix less than $limit items
@@ -1256,12 +1273,13 @@ class UserRepo extends Base
         }
     }
 
-    public function resetDuplicateDeviceId($deviceId) {
+    public function resetDuplicateDeviceId($deviceId)
+    {
         $this->createQueryBuilder('Document\User')
-                ->update()
-                ->field('pushSettings.device_id')->equals($deviceId)
-                ->field('pushSettings.device_id')->set(null)
-                ->getQuery()->execute();
+            ->update()
+            ->field('pushSettings.device_id')->equals($deviceId)
+            ->field('pushSettings.device_id')->set(null)
+            ->getQuery()->execute();
         $this->dm->flush();
     }
 }
