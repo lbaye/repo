@@ -865,7 +865,7 @@ ButtonClickCallbackData callBackData;
         [smAppDelegate.window setUserInteractionEnabled:NO];
         [smAppDelegate showActivityViewer:smAppDelegate.window];
 
-        RestClient *restClient = [[[RestClient alloc] init] autorelease]; 
+        RestClient *restClient = [[[RestClient alloc] init] autorelease];
         [restClient getAllEventsForMap :@"Auth-Token" :smAppDelegate.authToken];
         [restClient getAllGeotag:@"Auth-Token" :smAppDelegate.authToken];
         
@@ -874,6 +874,7 @@ ButtonClickCallbackData callBackData;
         }
     }
     
+    displayListForMap = [[NSMutableArray alloc] init];
 }
 
 - (void)setCheckUncheckButton
@@ -995,8 +996,6 @@ ButtonClickCallbackData callBackData;
         else
             smAppDelegate.currZoom = _mapView.region.span;
         
-        [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:(id <MKAnnotation>)selectedAnno afterDelay:.5];
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
             MKMapRect mRect = self.mapView.visibleMapRect;
@@ -1056,6 +1055,9 @@ ButtonClickCallbackData callBackData;
                                 [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
                             }
                         }
+                    } else if ([annotation isKindOfClass:[MKUserLocation class]]) {
+                        MKAnnotationView *view = [_mapView viewForAnnotation:(MKUserLocation *)annotation];
+                        [[view superview] bringSubviewToFront:view];
                     }
                 }
                 
@@ -1172,7 +1174,7 @@ ButtonClickCallbackData callBackData;
         
         // 2
         MKCoordinateRegion viewRegion;
-        if (smAppDelegate.resetZoom == TRUE && smAppDelegate.displayList.count > 0 ) {
+        if (smAppDelegate.resetZoom == TRUE && displayListForMap.count > 0 ) {
             viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
             smAppDelegate.resetZoom = FALSE;
         } else {
@@ -1184,12 +1186,12 @@ ButtonClickCallbackData callBackData;
         NSLog(@"MapViewController:loadAnnotations");
         MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
         for (id<MKAnnotation> annotation in _mapView.annotations) {
-            if (![smAppDelegate.displayList containsObject:annotation])
+            if (![displayListForMap containsObject:annotation] && ![annotation isKindOfClass:[MKUserLocation class]])
                 [_mapView removeAnnotation:annotation];
         }
         //[_mapView removeAnnotations:_mapView.annotations];
-        for (int i=0; i < smAppDelegate.displayList.count; i++) {
-            LocationItem *anno = (LocationItem*) [smAppDelegate.displayList objectAtIndex:i];
+        for (int i=0; i < displayListForMap.count; i++) {
+            LocationItem *anno = (LocationItem*) [displayListForMap objectAtIndex:i];
             
             if ( CLLocationCoordinate2DIsValid(anno.coordinate)==TRUE) 
             {
@@ -1410,6 +1412,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:(id <MKAnnotation>)selectedAnno afterDelay:.5];
+    
     //VISIBLE MAP AREA COORDINATE IS NEEDED FOR ADD ANNOTATION ACCORDING TO MAP POSITION SERVICE CALL
     
 }
@@ -1423,7 +1427,7 @@ ButtonClickCallbackData callBackData;
 - (void)dealloc 
 {
     NSLog(@"Deallocating MapViewController");
-    
+    [displayListForMap release];
     [radio release];
     [copySearchAnnotationList release];
     [_mapPulldown release];
@@ -1997,7 +2001,7 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) getSortedDisplayList {
-    [smAppDelegate.displayList removeAllObjects];
+    //[smAppDelegate.displayList removeAllObjects];
     NSMutableArray *tempList = [[NSMutableArray alloc] init];
     if (smAppDelegate.showPeople == TRUE) 
         [tempList addObjectsFromArray:smAppDelegate.peopleList];
@@ -2008,7 +2012,13 @@ ButtonClickCallbackData callBackData;
         // Sort by distance
     NSArray *sortedArray = [tempList sortedArrayUsingSelector:@selector(compareDistance:)];
     int maxAnno = sortedArray.count > MAX_VISIBLE_ANNO ? MAX_VISIBLE_ANNO : sortedArray.count;
-    [smAppDelegate.displayList addObjectsFromArray:[sortedArray subarrayWithRange:NSMakeRange(0, maxAnno)]];
+
+    if ([smAppDelegate.displayList count] == 0)
+        [smAppDelegate.displayList addObjectsFromArray:sortedArray];
+    
+    [displayListForMap removeAllObjects];
+    [displayListForMap addObjectsFromArray:[sortedArray subarrayWithRange:NSMakeRange(0, maxAnno)]];
+    NSLog(@"displayList for map count = %d", [displayListForMap count]);
     
     [tempList release];
 }
@@ -2176,7 +2186,7 @@ ButtonClickCallbackData callBackData;
                                 //aPerson.userInfo.avatar = item.avatar;
                                 aPerson.itemAvaterURL = item.avatar;
                             }
-                            if ([smAppDelegate.displayList containsObject:aPerson])
+                            if ([displayListForMap containsObject:aPerson])
                                 [self performSelectorOnMainThread:@selector(mapAnnotationInfoUpdated:) withObject:aPerson waitUntilDone:NO];
                             //[self mapAnnotationInfoUpdated:aPerson];
                         }

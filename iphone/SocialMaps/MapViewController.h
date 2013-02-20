@@ -37,7 +37,8 @@ typedef enum _SHARING_TYPES {
                                 UITextFieldDelegate, UITextViewDelegate,UIPickerViewDataSource, 
                                 UIPickerViewDelegate,UIScrollViewDelegate, 
                                 MapAnnotationDelegate,
-                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate> {
+                                UIGestureRecognizerDelegate, PullableViewDelegate, CustomRadioButtonDelegate>
+{
     BOOL _doneInitialZoom;
     CLLocationManager   *locationManager;
     SHARING_TYPES       selSharingType;
@@ -73,6 +74,8 @@ typedef enum _SHARING_TYPES {
     BOOL shouldTimerStop;
     IBOutlet UIImageView *mapViewImg;
     IBOutlet UIImageView *listViewImg;
+                                    
+    NSMutableArray *displayListForMap;
 }
 
 @property (retain, nonatomic) IBOutlet MKMapView *mapView;

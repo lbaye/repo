@@ -80,6 +80,9 @@
         
         
         if( [[self cache] count] >= MAX_CACHED_IMAGES ) {
+            
+            //TODO: SOMETIMES [[self keyArray] objectAtIndex:0] EQUAL NILL CRASH IN SIMULATOR NEVER FOUND IN DEVICE
+            
             [[self cache] removeObjectForKey:[[self keyArray] objectAtIndex:0]];
             [[self keyArray] removeObjectAtIndex:0];
             NSLog(@"Remove cache");
