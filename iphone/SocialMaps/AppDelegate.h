@@ -150,7 +150,7 @@
 @property (nonatomic, retain) UIViewController *currentModelViewController;
 @property (nonatomic,retain)  NSMutableArray *myPhotoList;
 @property (nonatomic, assign) BOOL isAppInBackgound;
-@property (nonatomic) MKCoordinateSpan currZoom;
+@property (nonatomic, assign) MKCoordinateSpan currZoom;
 
 /**
  * @brief Get shared instance of a object

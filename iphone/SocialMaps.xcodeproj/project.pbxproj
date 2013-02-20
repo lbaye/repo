@@ -2697,8 +2697,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2710,8 +2710,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2724,8 +2724,8 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Warif Akhand (TAHTYBJ322)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Martin Adonis (APPDYZ3U29)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2737,8 +2737,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D25E2D71-1FE9-44EF-883B-BD732F7893A7";
+				PROVISIONING_PROFILE = "CD069319-254D-4C18-8108-24A1E627310C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CD069319-254D-4C18-8108-24A1E627310C";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

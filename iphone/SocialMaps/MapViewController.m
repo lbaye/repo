@@ -1221,10 +1221,15 @@ ButtonClickCallbackData callBackData;
             {
                 if (![_mapView.annotations containsObject:anno]) {
                     [_mapView addAnnotation:anno];
-                    //MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
-                    //UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
-                    //if (avaterImageView.image == nil)
-                        //[avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
+                    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
+                    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+                    if (avaterImageView.image == nil ) {
+                        if (anno.itemAvaterURL && [anno.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+                            [avaterImageView loadFromURL:[NSURL fileURLWithPath:anno.itemAvaterURL isDirectory:NO]];
+                        } else {
+                            [avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
+                        }
+                    }
                 }
             }
         }
@@ -1975,8 +1980,13 @@ ButtonClickCallbackData callBackData;
 }
 
 - (void) updateLocation:(id) sender {
+    smAppDelegate.resetZoom = TRUE;
     CLLocationCoordinate2D lastPos = CLLocationCoordinate2DMake([smAppDelegate.currPosition.latitude doubleValue], [smAppDelegate.currPosition.longitude doubleValue]);
     _mapView.centerCoordinate = lastPos;
+    smAppDelegate.screenCenterPosition.latitude = [NSString stringWithString:smAppDelegate.currPosition.latitude];
+    smAppDelegate.screenCenterPosition.longitude = [NSString stringWithString:smAppDelegate.currPosition.longitude];
+    [smAppDelegate setCurrZoom:MKCoordinateSpanMake(0.02, 0.02)];
+    
     NSLog(@"MapViewController: updateLocation lat:%f lng:%f", lastPos.latitude, lastPos.longitude);
     
     // Update distance from center of map
