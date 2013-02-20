@@ -989,46 +989,78 @@ ButtonClickCallbackData callBackData;
         NSLog(@"Map drag ended");
         smAppDelegate.needToCenterMap = FALSE;
         
-        //VISIBLE MAP AREA COORDINATE IS NEEDED FOR ADD ANNOTATION ACCORDING TO MAP POSITION SERVICE CALL
-        MKMapRect mRect = self.mapView.visibleMapRect;
-        MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
-                                                   mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
-        MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
-        MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
-        CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
-        CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
-        CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
-        smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
-        smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
+        NSLog(@"SPAN changed = %f,%f", _mapView.region.span.latitudeDelta, _mapView.region.span.longitudeDelta);
+        if (smAppDelegate.mapDrawnFirstTime == TRUE)
+            smAppDelegate.mapDrawnFirstTime = FALSE;
+        else
+            smAppDelegate.currZoom = _mapView.region.span;
         
-        NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
-        NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
-        NSLog(@"Center     point = %f,%f", centerCoord.latitude, centerCoord.longitude);
-        NSLog(@"originX = %f, originY = %f, maxX = %f, maxY = %f, minX = %f, minY = %f",
-              mRect.origin.x, mRect.origin.y,
-              MKMapRectGetMaxX(mRect), MKMapRectGetMaxY(mRect),
-              MKMapRectGetMinX(mRect), MKMapRectGetMinY(mRect));
+        [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:(id <MKAnnotation>)selectedAnno afterDelay:.5];
         
-        // Update distance from center of map
-        if (smAppDelegate.showPeople == TRUE) {
-            for (LocationItem *item in smAppDelegate.peopleList) {
-                [item updateDistance:centerCoord];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            MKMapRect mRect = self.mapView.visibleMapRect;
+            MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
+                                                       mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
+            MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
+            MKMapPoint swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
+            CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+            CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+            CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
+            smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
+            smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
+            
+            NSLog(@"North-East point = %f,%f", neCoord.latitude, neCoord.longitude);
+            NSLog(@"South-West point = %f,%f", swCoord.latitude, swCoord.longitude);
+            NSLog(@"Center     point = %f,%f", centerCoord.latitude, centerCoord.longitude);
+            NSLog(@"originX = %f, originY = %f, maxX = %f, maxY = %f, minX = %f, minY = %f",
+                  mRect.origin.x, mRect.origin.y,
+                  MKMapRectGetMaxX(mRect), MKMapRectGetMaxY(mRect),
+                  MKMapRectGetMinX(mRect), MKMapRectGetMinY(mRect));
+            
+            // Update distance from center of map
+            if (smAppDelegate.showPeople == TRUE) {
+                for (LocationItem *item in smAppDelegate.peopleList) {
+                    [item updateDistance:centerCoord];
+                }
             }
-        }
-        if (smAppDelegate.showPlaces == TRUE) {
-            for (LocationItem *item in smAppDelegate.placeList) {
-                [item updateDistance:centerCoord];
+            if (smAppDelegate.showPlaces == TRUE) {
+                for (LocationItem *item in smAppDelegate.placeList) {
+                    [item updateDistance:centerCoord];
+                }
             }
-        }
-
-        if (smAppDelegate.showEvents == TRUE) {
-            for (LocationItem *item in smAppDelegate.eventList) {
-                [item updateDistance:centerCoord];
+            
+            if (smAppDelegate.showEvents == TRUE) {
+                for (LocationItem *item in smAppDelegate.eventList) {
+                    [item updateDistance:centerCoord];
+                }
             }
-        }
-        [self getSortedDisplayList];
-        [self loadAnnotations:TRUE];
-        [_mapView setNeedsDisplay];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [self getSortedDisplayList];
+                [self loadAnnotations:TRUE];
+                [_mapView setNeedsDisplay];
+                
+                
+                for (id<MKAnnotation> annotation in _mapView.annotations) {
+                    if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(self.mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
+                    {
+                        LocationItem *selLocation = (LocationItem*) annotation;
+                        MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
+                        UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+                        if (avaterImageView.image == nil ) {
+                            if (selLocation.itemAvaterURL && [selLocation.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
+                                [avaterImageView loadFromURL:[NSURL fileURLWithPath:selLocation.itemAvaterURL isDirectory:NO]];
+                            } else {
+                                [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
+                            }
+                        }
+                    }
+                }
+                
+            });
+        });
     }
 }
 
@@ -1163,10 +1195,10 @@ ButtonClickCallbackData callBackData;
             {
                 if (![_mapView.annotations containsObject:anno]) {
                     [_mapView addAnnotation:anno];
-                    MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
-                    UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
-                    if (avaterImageView.image == nil)
-                        [avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
+                    //MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:anno];
+                    //UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
+                    //if (avaterImageView.image == nil)
+                        //[avaterImageView loadFromURL:[NSURL URLWithString:anno.itemAvaterURL]];
                 }
             }
         }
@@ -1378,35 +1410,8 @@ ButtonClickCallbackData callBackData;
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
-    NSLog(@"SPAN changed = %f,%f", _mapView.region.span.latitudeDelta, _mapView.region.span.longitudeDelta);
-    if (smAppDelegate.mapDrawnFirstTime == TRUE)
-        smAppDelegate.mapDrawnFirstTime = FALSE;
-    else
-        smAppDelegate.currZoom = _mapView.region.span;
-    MKMapRect mRect = self.mapView.visibleMapRect;
-    MKMapPoint centerMapPoint = MKMapPointMake(mRect.origin.x+(MKMapRectGetMaxX(mRect)-mRect.origin.x)/2,
-                                               mRect.origin.y+(MKMapRectGetMaxY(mRect)-mRect.origin.y)/2);
-    CLLocationCoordinate2D centerCoord = MKCoordinateForMapPoint(centerMapPoint);
-    smAppDelegate.screenCenterPosition.latitude = [NSString stringWithFormat:@"%f",centerCoord.latitude];
-    smAppDelegate.screenCenterPosition.longitude = [NSString stringWithFormat:@"%f",centerCoord.longitude];
-
-    [self performSelector:@selector(bringAnnotationOnTopAfterDelay:) withObject:(id <MKAnnotation>)selectedAnno afterDelay:.5];
+    //VISIBLE MAP AREA COORDINATE IS NEEDED FOR ADD ANNOTATION ACCORDING TO MAP POSITION SERVICE CALL
     
-    for (id<MKAnnotation> annotation in _mapView.annotations) {
-        if (![annotation isKindOfClass:[MKUserLocation class]] && MKMapRectContainsPoint(mapView.visibleMapRect, MKMapPointForCoordinate(annotation.coordinate)))
-        {
-            LocationItem *selLocation = (LocationItem*) annotation;
-            MKAnnotationView *mapAnnotationView = [_mapView viewForAnnotation:annotation];
-            UIImageView *avaterImageView = (UIImageView*)[mapAnnotationView viewWithTag:110001];
-            if (avaterImageView.image == nil ) {
-                if (selLocation.itemAvaterURL && [selLocation.itemAvaterURL rangeOfString:[[NSBundle mainBundle] resourcePath]].location != NSNotFound) {
-                    [avaterImageView loadFromURL:[NSURL fileURLWithPath:selLocation.itemAvaterURL isDirectory:NO]];
-                } else {
-                    [avaterImageView loadFromURL:[NSURL URLWithString:selLocation.itemAvaterURL]];
-                }
-            }
-        }
-    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -2025,43 +2030,60 @@ ButtonClickCallbackData callBackData;
     NSLog(@"got listing");
     SearchLocation * listings = [notif object];
     if (listings != nil) {
-        if (listings.peopleArr != nil) {
-            NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
-            for (People *item in listings.peopleArr) {
-                [newItems setValue:item.userId forKey:item.userId];
-            }
-            // Build items to discard
-            NSMutableArray *discardedItems = [[NSMutableArray alloc] init];
-            for (NSString *itemID in smAppDelegate.peopleIndex) {
-                if ([newItems objectForKey:itemID] == nil) {
-                    // Item does not exist so remove it
-                    int indx = [[smAppDelegate.peopleIndex objectForKey:itemID] intValue];
-                    [discardedItems addObject:[NSNumber numberWithInt: indx]];
-                }
-            }
-            if (discardedItems.count > 0) {
-                // Sort the discarded items in descending order
-                NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
-                NSArray *sortedIndices = [discardedItems sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
-                
-                // Remove the discarded items
-                for (int i=0; i < sortedIndices.count; i++) {
-                    int indx = [[sortedIndices objectAtIndex:i] intValue];
-                    [_mapView removeAnnotation:[smAppDelegate.peopleList objectAtIndex:indx]];
-                    [smAppDelegate.peopleList removeObjectAtIndex:indx];
-                    [self.view setNeedsDisplay];
-                }
-                // Now rebuild the index
-                [smAppDelegate.peopleIndex removeAllObjects];
-                for (LocationItemPeople *aPerson in smAppDelegate.peopleList) {
-                    [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleIndex.count] forKey:aPerson.userInfo.userId];
-                }
-            }
-            [newItems release];
-            [discardedItems release];
+        
+        //block start
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
+            if (listings.peopleArr != nil) {
+                NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
+                for (People *item in listings.peopleArr) {
+                    [newItems setValue:item.userId forKey:item.userId];
+                }
+                // Build items to discard
+                NSMutableArray *discardedItems = [[NSMutableArray alloc] init];
+                for (NSString *itemID in smAppDelegate.peopleIndex) {
+                    if ([newItems objectForKey:itemID] == nil) {
+                        // Item does not exist so remove it
+                        int indx = [[smAppDelegate.peopleIndex objectForKey:itemID] intValue];
+                        [discardedItems addObject:[NSNumber numberWithInt: indx]];
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    if (discardedItems.count > 0) {
+                        // Sort the discarded items in descending order
+                        NSSortDescriptor* sortOrder = [NSSortDescriptor sortDescriptorWithKey: @"self" ascending: NO];
+                        NSArray *sortedIndices = [discardedItems sortedArrayUsingDescriptors: [NSArray arrayWithObject: sortOrder]];
+                        
+                        // Remove the discarded items
+                        for (int i=0; i < sortedIndices.count; i++) {
+                            int indx = [[sortedIndices objectAtIndex:i] intValue];
+                            [_mapView removeAnnotation:[smAppDelegate.peopleList objectAtIndex:indx]];
+                            [smAppDelegate.peopleList removeObjectAtIndex:indx];
+                            //[self.view setNeedsDisplay]; //after removing all annotation setNeedsDisply once will be enough no need to call it inside loop
+                        }
+                        [self.view setNeedsDisplay];
+                        // Now rebuild the index
+                        [smAppDelegate.peopleIndex removeAllObjects];
+                        for (LocationItemPeople *aPerson in smAppDelegate.peopleList) {
+                            [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleIndex.count] forKey:aPerson.userInfo.userId];
+                        }
+                    }
+                    [newItems release];
+                    [discardedItems release];
+                });
+            }
+        ////});
+        
+        
+        ////dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        
             for (People *item in listings.peopleArr) {
                 // Ignore logged in user
+                
+                
                 
                 if ([item.friendshipStatus isEqualToString:@"friend"]) {
                     
@@ -2090,36 +2112,24 @@ ButtonClickCallbackData callBackData;
                         [frnd release];
                     }
                 }
-                 
+                
+                
+                
+                
                 if (![smAppDelegate.userId isEqualToString:item.userId]) {
                     // Do we already have this in the list?
                     __block NSNumber *indx;
-        
+                    
                     if ((indx=[smAppDelegate.peopleIndex objectForKey:item.userId]) == nil) {
-                        UIImage *icon;
-                        NSString *iconPath;
-                        if ([item.avatar length] == 0) {
-                            if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                                iconPath = [[NSBundle mainBundle] pathForResource:@"Photo-1" ofType:@"png"];
-                            else if ([item.gender caseInsensitiveCompare:@"male"] == NSOrderedSame)
-                                iconPath = [[NSBundle mainBundle] pathForResource:@"Photo-2" ofType:@"png"];
-                            else
-                                iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
-                        } else {
-                            iconPath = [[NSBundle mainBundle] pathForResource:@"thum" ofType:@"png"];
-                        }
-                        icon = [[UIImage alloc] initWithContentsOfFile:iconPath];
-                        NSString *bgPath = [[NSBundle mainBundle] pathForResource:@"listview_bg" ofType:@"png"];
-                        UIImage *bg = [[UIImage alloc] initWithContentsOfFile:bgPath];
                         
                         CLLocationCoordinate2D loc;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
-
+                        
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         
-                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:icon bg:bg itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
-                        [bg release];
+                        LocationItemPeople *aPerson = [[LocationItemPeople alloc] initWithName:[NSString stringWithFormat:@"%@ %@", item.firstName, item.lastName] address:item.lastSeenAt type:ObjectTypePeople category:item.gender coordinate:loc dist:distanceFromMe icon:nil bg:nil itemCoverPhotoUrl:[NSURL URLWithString:item.coverPhotoUrl]];
+                        //[bg release];
                         item.distance = [NSString stringWithFormat:@"%.0f", distanceFromMe];
                         aPerson.userInfo = item;
                         aPerson.itemAvaterURL = item.avatar;
@@ -2127,6 +2137,7 @@ ButtonClickCallbackData callBackData;
                         [smAppDelegate.peopleIndex setValue:[NSNumber numberWithInt:smAppDelegate.peopleList.count] forKey:item.userId];
                         [smAppDelegate.peopleList addObject:aPerson];
                         [aPerson release];
+                        
                     } else {
                         // Item exists, update location only
                         LocationItemPeople *aPerson = [smAppDelegate.peopleList objectAtIndex:[indx intValue]];
@@ -2135,7 +2146,7 @@ ButtonClickCallbackData callBackData;
                         loc.latitude = [item.currentLocationLat doubleValue];
                         loc.longitude = [item.currentLocationLng doubleValue];
                         
-
+                        
                         CLLocationDistance distanceFromMe = [self getDistanceFromMe:loc];
                         aPerson.itemAddress = item.lastSeenAt;
                         aPerson.itemCoverPhotoUrl = [NSURL URLWithString:item.coverPhotoUrl];
@@ -2147,7 +2158,7 @@ ButtonClickCallbackData callBackData;
                         aPerson.userInfo.lastName = item.lastName;
                         aPerson.itemName=[NSString stringWithFormat:@"%@ %@",aPerson.userInfo.firstName,aPerson.userInfo.lastName];
                         
-                        if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline) || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude)) 
+                        if (smAppDelegate.showPeople == TRUE && ((item.friendshipStatus && ![item.friendshipStatus isEqualToString:aPerson.userInfo.friendshipStatus]) || (item.avatar && ![item.avatar isEqualToString:aPerson.userInfo.avatar]) || (item.isOnline && item.isOnline != aPerson.userInfo.isOnline) || loc.latitude != aPerson.coordinate.latitude || loc.longitude != aPerson.coordinate.longitude))
                         {
                             
                             if (CLLocationCoordinate2DIsValid(loc))
@@ -2161,18 +2172,18 @@ ButtonClickCallbackData callBackData;
                             aPerson.userInfo.isOnline = item.isOnline;
                             
                             if (![item.avatar isEqualToString:aPerson.userInfo.avatar]) {
-
+                                
                                 //aPerson.userInfo.avatar = item.avatar;
                                 aPerson.itemAvaterURL = item.avatar;
                             }
                             if ([smAppDelegate.displayList containsObject:aPerson])
-                                [self mapAnnotationInfoUpdated:aPerson];
+                                [self performSelectorOnMainThread:@selector(mapAnnotationInfoUpdated:) withObject:aPerson waitUntilDone:NO];
+                            //[self mapAnnotationInfoUpdated:aPerson];
                         }
                     }
                 }
             }
 
-        }  
         if (listings.placeArr != nil) {
             NSMutableDictionary *newItems = [[NSMutableDictionary alloc] init];
             for (Places *item in listings.placeArr) {
@@ -2244,22 +2255,29 @@ ButtonClickCallbackData callBackData;
             }
 
         }
-        if (smAppDelegate.gotListing == FALSE) {
-            smAppDelegate.gotListing = TRUE;
-            [smAppDelegate.window setUserInteractionEnabled:YES];
-            [smAppDelegate hideActivityViewer];
-        }
-        [self getSortedDisplayList];
-        
-        //by Rishi
-        if (!isFirstTimeDownloading) { 
-            //for first time
-            [self loadAnnotationForEvents];
-            [self loadAnnotationForGeotag];
-            [self loadAnnotations:YES];
-            [self.view setNeedsDisplay];
-            isFirstTimeDownloading = YES;
-        }
+            
+        dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (smAppDelegate.gotListing == FALSE) {
+                    smAppDelegate.gotListing = TRUE;
+                    [smAppDelegate.window setUserInteractionEnabled:YES];
+                    [smAppDelegate hideActivityViewer];
+                }
+                [self getSortedDisplayList];
+                
+                
+                //by Rishi
+                if (!isFirstTimeDownloading) {
+                    //for first time
+                    [self loadAnnotationForEvents];
+                    [self loadAnnotationForGeotag];
+                    [self loadAnnotations:YES];
+                    [self.view setNeedsDisplay];
+                    isFirstTimeDownloading = YES;
+                }
+            });
+    
+        });
     }
 }
 
