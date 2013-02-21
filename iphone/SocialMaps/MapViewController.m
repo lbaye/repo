@@ -1199,7 +1199,8 @@ ButtonClickCallbackData callBackData;
         // 2
         MKCoordinateRegion viewRegion;
         if (smAppDelegate.resetZoom == TRUE && displayListForMap.count > 0 ) {
-            viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+            viewRegion = MKCoordinateRegionMake(zoomLocation, MKCoordinateSpanMake(0.02, 0.02));
+            //MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
             smAppDelegate.resetZoom = FALSE;
         } else {
             NSLog(@"SPAN = %f, %f", smAppDelegate.currZoom.latitudeDelta, smAppDelegate.currZoom.longitudeDelta);
@@ -1264,13 +1265,12 @@ ButtonClickCallbackData callBackData;
     // 2
     MKCoordinateRegion viewRegion;
     if (smAppDelegate.resetZoom == TRUE) {
-        viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+        viewRegion = MKCoordinateRegionMake(zoomLocation, MKCoordinateSpanMake(0.02, 0.02));
         smAppDelegate.resetZoom = FALSE;
     } else
         viewRegion = MKCoordinateRegionMake(zoomLocation, smAppDelegate.currZoom);
     
-    //MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
-    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];  
+    MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
     [_mapView setRegion:adjustedRegion animated:YES]; 
     
     if (smAppDelegate.gotListing == TRUE)
@@ -2025,7 +2025,7 @@ ButtonClickCallbackData callBackData;
     zoomLocation.longitude = [smAppDelegate.currPosition.longitude doubleValue];
     
     // 2
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 0.5*METERS_PER_MILE, 0.5*METERS_PER_MILE);
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMake(zoomLocation, MKCoordinateSpanMake(0.02, 0.02));
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
     [_mapView setRegion:adjustedRegion animated:NO];
     smAppDelegate.needToCenterMap = TRUE;
