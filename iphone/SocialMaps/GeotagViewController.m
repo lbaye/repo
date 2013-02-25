@@ -24,10 +24,10 @@
 #import "CustomRadioButton.h"
 #import "Places.h"
 #import "NSData+Base64.h"
+#import "UIImageView+Cached.h"
 
 @interface GeotagViewController ()
 - (void)coordinateChanged_:(NSNotification *)notification;
--(void)DownLoad:(NSNumber *)path;
 @end
 
 @implementation GeotagViewController
@@ -1091,31 +1091,9 @@ int geoCounter=0;
                 UserFriends *userFrnd=[filteredList1 objectAtIndex:i];
                 imgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
                 
-                if ((userFrnd.imageUrl==NULL)||[userFrnd.imageUrl isEqual:[NSNull null]])
-                {
-                    imgView.image = [UIImage imageNamed:@"thum.png"];
-                } 
-                else if([dicImages_msg valueForKey:userFrnd.imageUrl]) 
-                { 
-                    //If image available in dictionary, set it to imageview 
-                    imgView.image = [dicImages_msg valueForKey:userFrnd.imageUrl]; 
-                } 
-                else 
-                { 
-                    if((!isDragging_msg && !isDecliring_msg)&&([dicImages_msg objectForKey:userFrnd.imageUrl]==nil))
-                        
-                    {
-                        //If scroll view moves set a placeholder image and start download image. 
-                        [dicImages_msg setObject:[UIImage imageNamed:@"thum.png"] forKey:userFrnd.imageUrl]; 
-                        [self performSelectorInBackground:@selector(DownLoad:) withObject:[NSNumber numberWithInt:i]];  
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                    }
-                    else 
-                    { 
-                        // Image is not available, so set a placeholder image
-                        imgView.image = [UIImage imageNamed:@"thum.png"];                   
-                    }               
-                }
+                if(!isDragging_msg && !isDecliring_msg)
+                    [imgView loadFromURL:[NSURL URLWithString:userFrnd.imageUrl]];
+                
                 UIView *aView=[[UIView alloc] initWithFrame:CGRectMake(x, 0, 80, 80)];
                 UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 20)];
                 [name setFont:[UIFont fontWithName:@"Helvetica-Light" size:10]];
@@ -1136,7 +1114,7 @@ int geoCounter=0;
                 imgView.layer.borderColor=[[UIColor lightGrayColor] CGColor];                    
                 for (int c=0; c<[selectedFriendsIndex count]; c++)
                 {
-                    if ([[filteredList1 objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]]) 
+                    if ([[filteredList1 objectAtIndex:i] isEqual:[selectedFriendsIndex objectAtIndex:c]])
                     {
                         imgView.layer.borderColor=[[UIColor greenColor] CGColor];
                         NSLog(@"found selected: %@",[selectedFriendsIndex objectAtIndex:c]);
@@ -1160,27 +1138,6 @@ int geoCounter=0;
         }
         
         //handling custom scroller
-    }
-}
-
--(void)DownLoad:(NSNumber *)path
-{
-    if (isBackgroundTaskRunning==true)
-    {
-        int index = [path intValue];
-        UserFriends *userFrnd=[filteredList1 objectAtIndex:index];
-        
-        NSString *Link = userFrnd.imageUrl;
-        //Start download image from url
-        UIImage *img = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:Link]]];
-        if(img)
-        {
-            //If download complete, set that image to dictionary
-            [dicImages_msg setObject:img forKey:userFrnd.imageUrl];
-            [self reloadScrolview];
-        }
-        // Now, we need to reload scroll view to load downloaded image
-        [img release];
     }
 }
 
@@ -1408,7 +1365,6 @@ int geoCounter=0;
     [self loadDummydata];
     searchTexts = friendSearchbar.text;
     NSLog(@"in search method..");
-    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
     
     [filteredList1 removeAllObjects];
     
@@ -1420,7 +1376,6 @@ int geoCounter=0;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
         
         for (UserFriends *sTemp in friendListArr)
         {
@@ -1437,8 +1392,7 @@ int geoCounter=0;
         }
     }
     searchFlag=false;    
-    
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList1,friendListArr,[filteredList1 count],[friendListArr count], dicImages_msg);
+
     [self reloadScrolview];
 }
 
@@ -1447,7 +1401,6 @@ int geoCounter=0;
     [self loadDummydata];
     searchTexts = customSearchBar.text;
     NSLog(@"in search method..");
-    NSLog(@"filteredList99 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
     
     [filteredList2 removeAllObjects];
     
@@ -1459,8 +1412,6 @@ int geoCounter=0;
     }
     else
     {
-        NSLog(@"filteredList999 %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
-        
         for (UserFriends *sTemp in friendListArr)
         {
             NSRange titleResultsRange = [sTemp.userName rangeOfString:searchTexts options:NSCaseInsensitiveSearch];		
@@ -1476,8 +1427,7 @@ int geoCounter=0;
         }
     }
     searchFlag=false;    
-    
-    NSLog(@"filteredList %@ %@  %d  %d  imageDownloadsInProgress: %@",filteredList2,friendListArr,[filteredList2 count],[friendListArr count], dicImages_msg);
+
     [self reloadScrolview];
 }
 
