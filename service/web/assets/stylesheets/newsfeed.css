@@ -170,7 +170,7 @@ ul li .photo .row .image {
   z-index: 100;
   overflow: hidden;
   height: 120px;
-  width: 100%;
+  /*width: 100%;*/
 }
 ul li .photo .row .image img {
   margin-top: 12px;
