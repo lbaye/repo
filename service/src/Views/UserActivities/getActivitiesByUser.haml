@@ -103,6 +103,9 @@
                         = ' - '
                         %a(href= $geotagLink)
                           %strong= stripcslashes($activity->getTitle())
+                        - if ($geotag->getPhoto())
+                          - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                          %img.lazy(src=$geoPhotoFullPath)
 
                     - if ($activity->getObjectType() === 'friend')
                       - $friend = $userRepo->find($activity->getObjectId())
@@ -241,7 +244,7 @@
                 - else
                   Like
 
-             
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 
@@ -267,12 +270,17 @@
               - $geotagLink = "self::geotag:" . $geotag->getTitle() . ":" . $geoLocation['lat'] . ":" . $geoLocation['lng'] . ":" . $geotag->getId()
 
               .comment
-                was geo-tagged 
+                was geo-tagged
                 at
                 %small= $geotag->getLocation()->getAddress()
                 = ' - '
                 %a(href= $geotagLink)
                   %strong= stripcslashes($activity->getTitle())
+                - if ($geotag->getPhoto())
+                  - $geoPhotoFullPath = $baseUrl . $geotag->getPhoto();
+                  %img.lazy(src=$geoPhotoFullPath)
+
+
 
             - if ($activity->getObjectType() === 'friend')
               - $friend = $userRepo->find($activity->getObjectId())
@@ -281,7 +289,7 @@
                 is now friend with
                 %a(href=$friendLink)
                   = $friend->getName()
-                    
+
           %div.clearfix
 
           .row
@@ -302,7 +310,7 @@
                   Likes
                 - else
                   Like
-                  
+
           .row.list_of_likes(id=$rowLikesId style='display:none')
 
 

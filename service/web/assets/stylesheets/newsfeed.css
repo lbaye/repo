@@ -175,6 +175,7 @@ ul li .photo .row .image {
 ul li .photo .row .image img {
   margin-top: 12px;
   width: 94%;
+  height: 100%;
 }
 ul li .list_of_likes {
   border-top: 1px solid #ccc;
