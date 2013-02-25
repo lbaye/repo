@@ -100,7 +100,7 @@
         regMedia=[[UIImageView alloc] initWithFrame:CGRectMake(85,20,20,20)];
         regMedia.layer.borderColor=[[UIColor lightTextColor] CGColor];
         regMedia.userInteractionEnabled=YES;
-        regMedia.layer.borderWidth=1.0;
+        //regMedia.layer.borderWidth=1.0;
         regMedia.layer.masksToBounds = YES;
         [regMedia.layer setCornerRadius:5.0];
         regMedia.tag=20012;
@@ -116,7 +116,7 @@
     
     if ([userInfo.regMedia isEqualToString:@"fb"]) 
     {
-        regMedia.image = [UIImage imageNamed:@"icon_facebook.png"];
+        regMedia.image = [UIImage imageNamed:@"blank.png"];
         checkinImage.image = [UIImage imageNamed:@"blank.png"];
     }
     else if ([userInfo.source isEqualToString:@"facebook"])
